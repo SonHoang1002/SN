@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/post_center.dart';
+import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
 
 class Post extends StatefulWidget {
@@ -14,7 +16,7 @@ class _PostState extends State<Post> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [PostHeader()],
+      children: const [PostHeader(), PostCenter(), PostFooter()],
     );
   }
 }
