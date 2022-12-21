@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
+import 'package:social_network_app_mobile/screen/Post/post.dart';
 
 class Feed extends StatefulWidget {
   final Function(bool) isHideBottomNavBar;
@@ -120,7 +121,8 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                 height: 5,
                 margin: const EdgeInsets.only(top: 10, bottom: 10),
                 color: Colors.grey.withOpacity(0.5),
-              )
+              ),
+              const Post()
             ],
           ),
         ),
