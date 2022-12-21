@@ -18,6 +18,7 @@ class AvatarSocial extends StatelessWidget {
         height: height,
         path,
         fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Text("Error"),
       ),
     );
   }

@@ -37,6 +37,8 @@ dependencies:
   provider: ^6.0.5
   font_awesome_flutter: ^10.3.0
   flutter_svg: ^1.1.6
+  intl: ^0.18.0
+  get_time_ago: ^1.2.0
 
 dev_dependencies:
   flutter_test:

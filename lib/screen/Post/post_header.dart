@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
-class PostHeader extends StatelessWidget {
-  const PostHeader({Key? key}) : super(key: key);
+class PostHeader extends StatefulWidget {
+  final dynamic post;
+  const PostHeader({Key? key, this.post}) : super(key: key);
+
+  @override
+  State<PostHeader> createState() => _PostHeaderState();
+}
+
+class _PostHeaderState extends State<PostHeader> {
+  @override
+  void initState() {
+    GetTimeAgo.setDefaultLocale('vi');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var account = widget.post['account'];
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12),
       child: Row(
@@ -19,13 +34,14 @@ class PostHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 5),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
                   child: AvatarSocial(
-                    width: 32,
-                    height: 32,
-                    path:
-                        'https://snapi.emso.asia/system/media_attachments/files/108/853/138/654/944/677/original/cc4c8fd4be1d7a96.jpg',
+                    width: 34,
+                    height: 34,
+                    path: account['avatar_media']['show_url'].contains('.jpg')
+                        ? account['avatar_media']['show_url']
+                        : account['avatar_media']['preview_url'],
                   ),
                 ),
                 const SizedBox(
@@ -36,9 +52,9 @@ class PostHeader extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: size.width * 0.6,
-                      child: const Text(
-                        "Truyền hình quốc hội Việt Nam",
-                        style: TextStyle(
+                      child: Text(
+                        account['display_name'],
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -46,15 +62,19 @@ class PostHeader extends StatelessWidget {
                       height: 3,
                     ),
                     Row(
-                      children: const [
+                      children: [
                         Text(
-                          "15 phút",
-                          style: TextStyle(
-                              color: greyColor, fontWeight: FontWeight.w500),
+                          GetTimeAgo.parse(
+                              DateTime.parse(widget.post['created_at'])),
+                          style: const TextStyle(color: greyColor),
                         ),
-                        Text(" · "),
-                        Icon(FontAwesomeIcons.earthAsia,
-                            size: 15, color: greyColor)
+                        const Text(" · "),
+                        Icon(
+                            typeVisibility.firstWhere((element) =>
+                                element['key'] ==
+                                widget.post['visibility'])['icon'],
+                            size: 15,
+                            color: greyColor)
                       ],
                     )
                   ],
@@ -84,5 +104,10 @@ class PostHeader extends StatelessWidget {
             )
           ]),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

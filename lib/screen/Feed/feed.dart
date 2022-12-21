@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
+import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
 class Feed extends StatefulWidget {
   final Function(bool) isHideBottomNavBar;
@@ -113,17 +115,18 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
         ),
         body: SizedBox(
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const CreatePostButton(),
-              Container(
-                height: 5,
-                margin: const EdgeInsets.only(top: 10, bottom: 10),
-                color: Colors.grey.withOpacity(0.5),
-              ),
-              const Post()
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const CreatePostButton(),
+                const CrossBar(),
+                Column(
+                    children: List.generate(
+                        posts.length, (index) => Post(post: posts[index])))
+              ],
+            ),
           ),
         ),
       ),
