@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/constant/post_type.dart';
 
+import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
+import 'post_card.dart';
 import 'PostType/avatar_banner.dart';
 
 class PostCenter extends StatefulWidget {
@@ -21,13 +23,10 @@ class _PostCenterState extends State<PostCenter> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                widget.post['content'],
-                style: const TextStyle(fontSize: 15),
-              ),
+            PostContent(
+              post: widget.post,
             ),
+            PostCard(post: widget.post),
             postType != '' ? renderPostType(postType) : Container(),
           ],
         ));
