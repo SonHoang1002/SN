@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class PostCard extends StatelessWidget {
   final dynamic post;
@@ -24,10 +25,7 @@ class PostCard extends StatelessWidget {
                   },
                   child: Column(
                     children: [
-                      Image.network(
-                        card['url'] ?? card['link'],
-                        width: size.width,
-                      ),
+                      ImageCacheRender(path: card['url'] ?? card['link']),
                       Container(
                         width: size.width,
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -61,8 +59,8 @@ class PostCard extends StatelessWidget {
             : Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: ClipRect(
-                  child: Image.network(
-                    card['link'],
+                  child: ImageCacheRender(
+                    path: card['link'],
                     width: size.width,
                   ),
                 ),

@@ -4,6 +4,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
 import 'post_card.dart';
 import 'PostType/avatar_banner.dart';
+import 'post_media.dart';
 
 class PostCenter extends StatefulWidget {
   final dynamic post;
@@ -26,6 +27,7 @@ class _PostCenterState extends State<PostCenter> {
             PostContent(
               post: widget.post,
             ),
+            postType == '' ? PostMedia(post: widget.post) : const SizedBox(),
             PostCard(post: widget.post),
             postType != '' ? renderPostType(postType) : Container(),
           ],
