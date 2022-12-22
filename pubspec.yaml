@@ -39,6 +39,8 @@ dependencies:
   flutter_svg: ^1.1.6
   intl: ^0.18.0
   get_time_ago: ^1.2.0
+  firebase_messaging: ^14.1.4
+  firebase_core: ^2.4.0
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
@@ -25,6 +26,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    FirebaseMessaging.instance
+        .getToken()
+        .then((value) => print('token $value'));
+
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300));
 

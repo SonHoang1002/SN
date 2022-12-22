@@ -20,7 +20,7 @@ class _PostState extends State<Post> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PostHeader(post: widget.post),
-        const PostCenter(),
+        PostCenter(post: widget.post),
         const PostFooter(),
         const CrossBar(),
       ],

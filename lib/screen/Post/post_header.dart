@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
@@ -24,6 +25,16 @@ class _PostHeaderState extends State<PostHeader> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var account = widget.post['account'];
+    String description = '';
+
+    var postType = widget.post['post_type'];
+
+    if (postType == postAvatarAccount) {
+      description = ' đã cập nhật ảnh đại diện';
+    } else if (postType == postBannerAccount) {
+      description = ' đã cập nhật ảnh bìa';
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12),
       child: Row(
@@ -52,10 +63,21 @@ class _PostHeaderState extends State<PostHeader> {
                   children: [
                     SizedBox(
                       width: size.width * 0.6,
-                      child: Text(
-                        account['display_name'],
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                      child: RichText(
+                        text: TextSpan(
+                          text: account['display_name'],
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: description,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal)),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(
