@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_player.dart';
-import 'package:social_network_app_mobile/widget/video_player.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -36,8 +35,11 @@ class _PostMediaState extends State<PostMedia> {
   renderLayoutMedia(medias) {
     if (medias.length == 1) {
       if (checkIsImage(medias[0])) {
-        return FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage, image: medias[0]['url']);
+        return Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage, image: medias[0]['url']),
+        );
       } else {
         return Padding(
           padding: const EdgeInsets.only(top: 8),

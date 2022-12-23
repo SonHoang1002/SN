@@ -41,12 +41,13 @@ dependencies:
   get_time_ago: ^1.2.0
   firebase_messaging: ^14.1.4
   firebase_core: ^2.4.0
-  flutter_linkify: ^5.0.2
   url_launcher: ^6.1.7
   transparent_image: ^2.0.0
   video_player: ^2.4.10
   flick_video_player: ^0.5.0
   visibility_detector: ^0.3.3
+  expandable_text: ^2.3.0
+  flutter_linkify: ^5.0.2
 
 dev_dependencies:
   flutter_test:

@@ -20,7 +20,7 @@ class _PostCenterState extends State<PostCenter> {
   Widget build(BuildContext context) {
     String postType = widget.post['post_type'] ?? '';
     return Container(
-        margin: const EdgeInsets.only(top: 20, bottom: 20),
+        margin: const EdgeInsets.only(top: 10, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -29,7 +29,7 @@ class _PostCenterState extends State<PostCenter> {
             ),
             postType == '' ? PostMedia(post: widget.post) : const SizedBox(),
             PostCard(post: widget.post),
-            postType != '' ? renderPostType(postType) : Container(),
+            postType != '' ? renderPostType(postType) : const SizedBox(),
           ],
         ));
   }
@@ -37,6 +37,8 @@ class _PostCenterState extends State<PostCenter> {
   renderPostType(postType) {
     if ([postAvatarAccount, postBannerAccount].contains(postType)) {
       return AvatarBanner(postType: postType, post: widget.post);
+    } else {
+      return const SizedBox();
     }
   }
 }

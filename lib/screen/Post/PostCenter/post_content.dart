@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:social_network_app_mobile/widget/linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PostContent extends StatelessWidget {
@@ -49,7 +49,8 @@ class PostContent extends StatelessWidget {
                   throw 'Không thể mở link!';
                 }
               },
-              style: const TextStyle(fontSize: 15),
+              style: const TextStyle(
+                  fontSize: 15, overflow: TextOverflow.ellipsis),
               options: const LinkifyOptions(humanize: false),
             )
             // Text(
