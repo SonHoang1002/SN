@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
+import 'PostType/post_target.dart';
 import 'post_card.dart';
 import 'PostType/avatar_banner.dart';
 import 'post_media.dart';
@@ -37,6 +38,9 @@ class _PostCenterState extends State<PostCenter> {
   renderPostType(postType) {
     if ([postAvatarAccount, postBannerAccount].contains(postType)) {
       return AvatarBanner(postType: postType, post: widget.post);
+    }
+    if (postType == postTarget) {
+      return PostTarget(post: widget.post);
     } else {
       return const SizedBox();
     }

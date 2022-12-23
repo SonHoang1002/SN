@@ -38,6 +38,12 @@ class _PostHeaderState extends State<PostHeader> {
       description = ' đã cập nhật ảnh đại diện';
     } else if (postType == postBannerAccount) {
       description = ' đã cập nhật ảnh bìa';
+    } else if (postType == postTarget) {
+      if (widget.post['status_target']['target_status'] == postTargetStatus) {
+        description = ' đã hoàn thành một mục tiêu';
+      } else {
+        description = ' đã công bố mục tiêu mới';
+      }
     }
 
     if (mentions.isNotEmpty) {
