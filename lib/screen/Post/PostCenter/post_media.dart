@@ -42,11 +42,10 @@ class _PostMediaState extends State<PostMedia> {
         return Padding(
           padding: const EdgeInsets.only(top: 8),
           child: FeedVideo(
-              path:
-                  'https://pt2.emso.vn/static/streaming-playlists/hls/424e4bc7-95b5-4fe0-b287-eaeff468caf3/659dc9e8-f9a3-4d76-a635-5da5cff560ae-master.m3u8',
+              path: medias[0]['remote_url'] ?? medias[0]['url'],
               flickMultiManager: flickMultiManager,
               image:
-                  'https://pt2.emso.vn/lazy-static/previews/a2aa536d-b8c9-4a71-a12e-ed1c91bc6224.jpg'),
+                  medias[0]['preview_remote_url'] ?? medias[0]['preview_url']),
         );
       }
     } else {
