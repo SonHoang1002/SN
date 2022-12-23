@@ -30,6 +30,7 @@ class _PostHeaderState extends State<PostHeader> {
     var size = MediaQuery.of(context).size;
     var account = widget.post['account'];
     var mentions = widget.post['mentions'] ?? [];
+    var statusActivity = widget.post['status_activity'] ?? {};
     String description = '';
 
     var postType = widget.post['post_type'];
@@ -50,6 +51,13 @@ class _PostHeaderState extends State<PostHeader> {
       description = ' cùng với ';
     }
 
+    if (statusActivity['data_type'] == postStatusEmoji) {
+      description = ' đang cảm thấy ${statusActivity['name']}';
+    } else if (statusActivity['data_type'] == postStatusActivity) {
+      description =
+          ' ${statusActivity['parent']['name'].toLowerCase()} ${statusActivity['name'].toLowerCase()}';
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12),
       child: Row(
@@ -61,7 +69,7 @@ class _PostHeaderState extends State<PostHeader> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 5),
+                  padding: const EdgeInsets.only(top: 1),
                   child: AvatarSocial(
                     width: 34,
                     height: 34,
@@ -129,14 +137,15 @@ class _PostHeaderState extends State<PostHeader> {
                         Text(
                           GetTimeAgo.parse(
                               DateTime.parse(widget.post['created_at'])),
-                          style: const TextStyle(color: greyColor),
+                          style:
+                              const TextStyle(color: greyColor, fontSize: 12),
                         ),
-                        const Text(" · "),
+                        const Text(" · ", style: TextStyle(color: greyColor)),
                         Icon(
                             typeVisibility.firstWhere((element) =>
                                 element['key'] ==
                                 widget.post['visibility'])['icon'],
-                            size: 15,
+                            size: 13,
                             color: greyColor)
                       ],
                     )
