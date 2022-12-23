@@ -28,11 +28,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    if (!Platform.isWindows) {
-      FirebaseMessaging.instance
-          .getToken()
-          .then((value) => print('token $value'));
-    }
+    // if (!Platform.isWindows) {
+    //   FirebaseMessaging.instance
+    //       .getToken()
+    //       .then((value) => print('token $value'));
+    // }
 
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300));
