@@ -41,7 +41,7 @@ class PostContent extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Linkify(
-              text: post['content'],
+              text: post['content'] ?? '',
               onOpen: (link) async {
                 if (await canLaunchUrl(Uri.parse(link.url))) {
                   await launchUrl(Uri.parse(link.url));

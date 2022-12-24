@@ -23,7 +23,7 @@ class _PostMediaState extends State<PostMedia> {
 
   @override
   Widget build(BuildContext context) {
-    List medias = widget.post['media_attachments'];
+    List medias = widget.post['media_attachments'] ?? [];
 
     return renderLayoutMedia(medias);
   }

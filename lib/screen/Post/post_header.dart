@@ -28,7 +28,7 @@ class _PostHeaderState extends State<PostHeader> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var account = widget.post['account'];
+    var account = widget.post['account'] ?? {};
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
     String description = '';
@@ -77,9 +77,11 @@ class _PostHeaderState extends State<PostHeader> {
                   child: AvatarSocial(
                     width: 34,
                     height: 34,
-                    path: account['avatar_media']['show_url'].contains('.jpg')
-                        ? account['avatar_media']['show_url']
-                        : account['avatar_media']['preview_url'],
+                    path: account['avatar_media'] != null
+                        ? account['avatar_media']['show_url'].contains('.jpg')
+                            ? account['avatar_media']['show_url']
+                            : account['avatar_media']['preview_url']
+                        : '',
                   ),
                 ),
                 const SizedBox(
@@ -146,9 +148,10 @@ class _PostHeaderState extends State<PostHeader> {
                         ),
                         const Text(" · ", style: TextStyle(color: greyColor)),
                         Icon(
-                            typeVisibility.firstWhere((element) =>
-                                element['key'] ==
-                                widget.post['visibility'])['icon'],
+                            typeVisibility.firstWhere(
+                                (element) =>
+                                    element['key'] == widget.post['visibility'],
+                                orElse: () => {})['icon'],
                             size: 13,
                             color: greyColor)
                       ],
