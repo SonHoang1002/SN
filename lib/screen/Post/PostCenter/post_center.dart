@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/screen/Post/PostCenter/post_poll_cente
 import 'PostType/post_target.dart';
 import 'post_card.dart';
 import 'PostType/avatar_banner.dart';
+import 'post_life_event.dart';
 import 'post_media.dart';
 
 class PostCenter extends StatefulWidget {
@@ -36,6 +37,9 @@ class _PostCenterState extends State<PostCenter> {
                 : const SizedBox(),
             widget.post['poll'] != null
                 ? PostPollCenter(post: widget.post)
+                : const SizedBox(),
+            widget.post['life_event'] != null
+                ? PostLifeEvent(post: widget.post)
                 : const SizedBox(),
             postType != '' ? renderPostType(postType) : const SizedBox(),
           ],

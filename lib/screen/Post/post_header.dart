@@ -51,6 +51,11 @@ class _PostHeaderState extends State<PostHeader> {
       description = ' cùng với ';
     }
 
+    if (widget.post['life_event'] != null) {
+      description =
+          ' đã thêm một ${widget.post['life_event']['name'].toLowerCase()}';
+    }
+
     if (widget.post['poll'] != null) {
       description = ' đã tạo một cuộc thăm dò ý kiến';
     }

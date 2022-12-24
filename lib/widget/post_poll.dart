@@ -17,7 +17,7 @@ class FlutterPolls extends HookWidget {
     this.heightBetweenTitleAndOptions = 10,
     required this.pollOptions,
     this.heightBetweenOptions,
-    this.votesText = 'Votes',
+    this.votesText = 'bình chọn',
     this.votesTextStyle,
     this.metaWidget,
     this.createdBy,
