@@ -30,7 +30,8 @@ class _PostCenterState extends State<PostCenter> {
               post: widget.post,
             ),
             postType == '' ? PostMedia(post: widget.post) : const SizedBox(),
-            widget.post['card'] != null
+            widget.post['card'] != null &&
+                    widget.post['media_attachments'].length == 0
                 ? PostCard(post: widget.post)
                 : const SizedBox(),
             widget.post['poll'] != null

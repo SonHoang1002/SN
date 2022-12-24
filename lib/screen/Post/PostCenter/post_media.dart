@@ -35,10 +35,21 @@ class _PostMediaState extends State<PostMedia> {
   renderLayoutMedia(medias) {
     if (medias.length == 1) {
       if (checkIsImage(medias[0])) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage, image: medias[0]['url']),
+        return ClipRect(
+          child: Align(
+            alignment: Alignment.topCenter,
+            heightFactor:
+                medias[0]['meta']['original']['aspect'] < 0.4 ? 0.6 : 1,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: FadeInImage.memoryNetwork(
+                placeholder: kTransparentImage,
+                image: medias[0]['url'],
+                imageErrorBuilder: (context, error, stackTrace) =>
+                    const SizedBox(),
+              ),
+            ),
+          ),
         );
       } else {
         return Padding(

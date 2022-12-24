@@ -94,6 +94,7 @@ class _FlickMultiPlayerState extends State<FlickMultiPlayer> {
               child: Image.network(
             widget.image!,
             fit: BoxFit.fitWidth,
+            errorBuilder: (context, error, stackTrace) => const SizedBox(),
           )),
           controls: const FlickLandscapeControls(),
           iconThemeData: const IconThemeData(

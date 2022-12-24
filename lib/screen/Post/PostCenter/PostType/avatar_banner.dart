@@ -34,7 +34,10 @@ class AvatarBanner extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(width: 0.3, color: greyColor)),
-              child: Image.network(path),
+              child: Image.network(
+                path,
+                errorBuilder: (context, error, stackTrace) => const SizedBox(),
+              ),
             ),
           );
   }
