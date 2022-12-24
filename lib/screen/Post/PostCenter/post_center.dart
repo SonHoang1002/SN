@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/post_poll_center.dart';
 import 'PostType/post_target.dart';
 import 'post_card.dart';
 import 'PostType/avatar_banner.dart';
@@ -29,7 +30,12 @@ class _PostCenterState extends State<PostCenter> {
               post: widget.post,
             ),
             postType == '' ? PostMedia(post: widget.post) : const SizedBox(),
-            PostCard(post: widget.post),
+            widget.post['card'] != null
+                ? PostCard(post: widget.post)
+                : const SizedBox(),
+            widget.post['poll'] != null
+                ? PostPollCenter(post: widget.post)
+                : const SizedBox(),
             postType != '' ? renderPostType(postType) : const SizedBox(),
           ],
         ));

@@ -48,6 +48,8 @@ dependencies:
   visibility_detector: ^0.3.3
   expandable_text: ^2.3.0
   flutter_linkify: ^5.0.2
+  flutter_hooks: ^0.18.5+1
+  percent_indicator: ^4.2.2
 
 dev_dependencies:
   flutter_test:

@@ -51,6 +51,10 @@ class _PostHeaderState extends State<PostHeader> {
       description = ' cùng với ';
     }
 
+    if (widget.post['poll'] != null) {
+      description = ' đã tạo một cuộc thăm dò ý kiến';
+    }
+
     if (statusActivity['data_type'] == postStatusEmoji) {
       description = ' đang cảm thấy ${statusActivity['name']}';
     } else if (statusActivity['data_type'] == postStatusActivity) {
