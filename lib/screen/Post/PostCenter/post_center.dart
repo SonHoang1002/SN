@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
-import 'package:social_network_app_mobile/screen/Post/PostCenter/post_poll_center.dart';
+
 import 'PostType/post_target.dart';
 import 'post_card.dart';
 import 'PostType/avatar_banner.dart';
+import 'post_content.dart';
 import 'post_life_event.dart';
 import 'post_media.dart';
+import 'post_poll_center.dart';
+import 'post_share.dart';
 
 class PostCenter extends StatefulWidget {
   final dynamic post;
@@ -40,6 +41,9 @@ class _PostCenterState extends State<PostCenter> {
                 : const SizedBox(),
             widget.post['life_event'] != null
                 ? PostLifeEvent(post: widget.post)
+                : const SizedBox(),
+            widget.post['reblog'] != null
+                ? PostShare(post: widget.post)
                 : const SizedBox(),
             postType != '' ? renderPostType(postType) : const SizedBox(),
           ],

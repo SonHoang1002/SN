@@ -12,7 +12,8 @@ import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 class PostHeader extends StatefulWidget {
   final dynamic post;
-  const PostHeader({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostHeader({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   State<PostHeader> createState() => _PostHeaderState();
@@ -54,6 +55,10 @@ class _PostHeaderState extends State<PostHeader> {
     if (widget.post['life_event'] != null) {
       description =
           ' đã thêm một ${widget.post['life_event']['name'].toLowerCase()}';
+    }
+
+    if (widget.post['reblog'] != null) {
+      description = ' đã chia sẻ một bài viết';
     }
 
     if (widget.post['poll'] != null) {
@@ -165,27 +170,29 @@ class _PostHeaderState extends State<PostHeader> {
                 )
               ],
             ),
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {},
-                  child: const Icon(
-                    FontAwesomeIcons.ellipsis,
-                    size: 22,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: const Icon(
-                    FontAwesomeIcons.xmark,
-                    size: 22,
-                  ),
-                )
-              ],
-            )
+            widget.type != postReblog
+                ? Row(
+                    children: [
+                      InkWell(
+                        onTap: () {},
+                        child: const Icon(
+                          FontAwesomeIcons.ellipsis,
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: const Icon(
+                          FontAwesomeIcons.xmark,
+                          size: 22,
+                        ),
+                      )
+                    ],
+                  )
+                : const SizedBox()
           ]),
     );
   }

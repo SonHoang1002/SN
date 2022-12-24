@@ -6,3 +6,5 @@ String postTargetStatus = 'completed';
 
 String postStatusEmoji = 'emoji';
 String postStatusActivity = 'activity';
+
+String postReblog = 'reblog';
