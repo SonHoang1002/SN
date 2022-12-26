@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class AvatarSocial extends StatelessWidget {
   final double width;
@@ -19,13 +20,7 @@ class AvatarSocial extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(
           isGroup != null && isGroup == true ? 10 : width / 2),
-      child: Image.network(
-        width: width,
-        height: height,
-        path,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => const Text("Error"),
-      ),
+      child: ImageCacheRender(path: path, width: width, height: height),
     );
   }
 }
