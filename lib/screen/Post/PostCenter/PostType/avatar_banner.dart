@@ -13,9 +13,7 @@ class AvatarBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var media = post['media_attachments'][0];
-    String path = media['show_url'].contains('.jpg')
-        ? media['show_url']
-        : media['preview_url'];
+    String path = media['preview_url'];
     return postType == postAvatarAccount
         ? Center(
             child: Container(

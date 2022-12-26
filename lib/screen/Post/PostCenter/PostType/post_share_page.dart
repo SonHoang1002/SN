@@ -21,7 +21,7 @@ class PostSharePage extends StatelessWidget {
           decoration: const BoxDecoration(
               border: Border(top: BorderSide(width: 0.2, color: greyColor))),
           child: ImageCacheRender(
-            path: page['banner']['show_url'] ?? page['banner']['preview_url'],
+            path: page['banner']['preview_url'],
           ),
         ),
         Container(
@@ -36,8 +36,7 @@ class PostSharePage extends StatelessWidget {
                     AvatarSocial(
                         width: 50,
                         height: 50,
-                        path: page['avatar_media']['show_url'] ??
-                            page['avatar_media']['preview_url']),
+                        path: page['avatar_media']['preview_url']),
                     const SizedBox(
                       width: 10,
                     ),

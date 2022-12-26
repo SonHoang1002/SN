@@ -11,12 +11,14 @@ class ImageCacheRender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeInImage.memoryNetwork(
-      placeholder: kTransparentImage,
-      image: path,
-      width: width,
-      height: height,
-      imageErrorBuilder: (context, error, stackTrace) => const SizedBox(),
-    );
+    return path.contains('.jpg')
+        ? FadeInImage.memoryNetwork(
+            placeholder: kTransparentImage,
+            image: path,
+            width: width,
+            height: height,
+            imageErrorBuilder: (context, error, stackTrace) => const SizedBox(),
+          )
+        : const SizedBox();
   }
 }

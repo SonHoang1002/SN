@@ -30,6 +30,8 @@ class _PostHeaderState extends State<PostHeader> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var account = widget.post['account'] ?? {};
+    var group = widget.post['group'];
+    var page = widget.post['page'];
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
     String description = '';
@@ -92,18 +94,7 @@ class _PostHeaderState extends State<PostHeader> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 1),
-                  child: AvatarSocial(
-                    width: 34,
-                    height: 34,
-                    path: account['avatar_media'] != null
-                        ? account['avatar_media']['show_url'].contains('.jpg')
-                            ? account['avatar_media']['show_url']
-                            : account['avatar_media']['preview_url']
-                        : '',
-                  ),
-                ),
+                AvatarPost(group: group, page: page, account: account),
                 const SizedBox(
                   width: 5,
                 ),
@@ -112,68 +103,50 @@ class _PostHeaderState extends State<PostHeader> {
                   children: [
                     SizedBox(
                       width: size.width * 0.6,
-                      child: RichText(
-                        text: TextSpan(
-                          text: account['display_name'],
-                          style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black),
-                          children: [
-                            TextSpan(
-                                text: description,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.normal)),
-                            mentions.isNotEmpty
-                                ? TextSpan(text: mentions[0]['display_name'])
-                                : const TextSpan(),
-                            mentions.isNotEmpty && mentions.length >= 2
-                                ? const TextSpan(
-                                    text: ' và ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal))
-                                : const TextSpan(),
-                            mentions.isNotEmpty && mentions.length == 2
-                                ? TextSpan(
-                                    text: mentions[1]['display_name'],
-                                  )
-                                : const TextSpan(),
-                            mentions.isNotEmpty && mentions.length > 2
-                                ? TextSpan(
-                                    text: '${mentions.length - 1} người khác',
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    PageMention(
-                                                        mentions: mentions)));
-                                      })
-                                : const TextSpan(),
-                          ],
-                        ),
-                      ),
+                      child: BlockNamePost(
+                          account: account,
+                          description: description,
+                          mentions: mentions,
+                          group: group,
+                          page: page),
                     ),
                     const SizedBox(
                       height: 3,
                     ),
                     Row(
                       children: [
-                        Text(
-                          GetTimeAgo.parse(
-                              DateTime.parse(widget.post['created_at'])),
-                          style:
-                              const TextStyle(color: greyColor, fontSize: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            group != null
+                                ? Text(account['display_name'],
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black))
+                                : const SizedBox(),
+                            Row(
+                              children: [
+                                Text(
+                                  GetTimeAgo.parse(DateTime.parse(
+                                      widget.post['created_at'])),
+                                  style: const TextStyle(
+                                      color: greyColor, fontSize: 12),
+                                ),
+                                const Text(" · ",
+                                    style: TextStyle(color: greyColor)),
+                                Icon(
+                                    typeVisibility.firstWhere(
+                                        (element) =>
+                                            element['key'] ==
+                                            widget.post['visibility'],
+                                        orElse: () => {})['icon'],
+                                    size: 13,
+                                    color: greyColor)
+                              ],
+                            ),
+                          ],
                         ),
-                        const Text(" · ", style: TextStyle(color: greyColor)),
-                        Icon(
-                            typeVisibility.firstWhere(
-                                (element) =>
-                                    element['key'] == widget.post['visibility'],
-                                orElse: () => {})['icon'],
-                            size: 13,
-                            color: greyColor)
                       ],
                     )
                   ],
@@ -210,5 +183,135 @@ class _PostHeaderState extends State<PostHeader> {
   @override
   void dispose() {
     super.dispose();
+  }
+}
+
+class BlockNamePost extends StatelessWidget {
+  const BlockNamePost({
+    super.key,
+    required this.account,
+    required this.description,
+    required this.mentions,
+    this.group,
+    this.page,
+  });
+
+  final dynamic account;
+  final String description;
+  final dynamic mentions;
+  final dynamic group;
+  final dynamic page;
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        text: group != null
+            ? group['title']
+            : page != null
+                ? page['title']
+                : account['display_name'],
+        style: const TextStyle(
+            fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+        children: [
+          TextSpan(
+              text: description,
+              style: const TextStyle(fontWeight: FontWeight.normal)),
+          mentions.isNotEmpty
+              ? TextSpan(text: mentions[0]['display_name'])
+              : const TextSpan(),
+          mentions.isNotEmpty && mentions.length >= 2
+              ? const TextSpan(
+                  text: ' và ', style: TextStyle(fontWeight: FontWeight.normal))
+              : const TextSpan(),
+          mentions.isNotEmpty && mentions.length == 2
+              ? TextSpan(
+                  text: mentions[1]['display_name'],
+                )
+              : const TextSpan(),
+          mentions.isNotEmpty && mentions.length > 2
+              ? TextSpan(
+                  text: '${mentions.length - 1} người khác',
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) =>
+                                  PageMention(mentions: mentions)));
+                    })
+              : const TextSpan(),
+        ],
+      ),
+    );
+  }
+}
+
+class AvatarPost extends StatelessWidget {
+  const AvatarPost({
+    super.key,
+    required this.account,
+    this.group,
+    this.page,
+  });
+
+  final dynamic group;
+  final dynamic page;
+  final dynamic account;
+
+  @override
+  Widget build(BuildContext context) {
+    String accountLink = account['avatar_media'] != null
+        ? account['avatar_media']['preview_url']
+        : '';
+    String pageLink = page != null && page['avatar_media'] != null
+        ? page['avatar_media']['preview_url']
+        : '';
+    return group != null
+        ? SizedBox(
+            width: 50,
+            height: 50,
+            child: Stack(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      image: DecorationImage(
+                          image: NetworkImage(group['banner']['preview_url']),
+                          fit: BoxFit.cover)),
+                ),
+                Positioned(
+                    bottom: 7,
+                    right: 7,
+                    child: Avatar(type: 'group', path: accountLink))
+              ],
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 1),
+            child: Avatar(path: page != null ? pageLink : accountLink),
+          );
+  }
+}
+
+class Avatar extends StatelessWidget {
+  const Avatar({
+    super.key,
+    required this.path,
+    this.type,
+  });
+
+  final String path;
+  final dynamic type;
+
+  @override
+  Widget build(BuildContext context) {
+    return AvatarSocial(
+      width: type != null ? 25 : 36,
+      height: type != null ? 25 : 36,
+      path: path,
+    );
   }
 }
