@@ -8,3 +8,4 @@ String postStatusEmoji = 'emoji';
 String postStatusActivity = 'activity';
 
 String postReblog = 'reblog';
+String postShareEvent = 'event_shared';

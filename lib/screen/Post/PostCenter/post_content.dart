@@ -18,6 +18,7 @@ class PostContent extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: NetworkImage(backgroundObject['url']),
+                onError: (exception, stackTrace) => const SizedBox(),
                 fit: BoxFit.cover),
           ),
           child: Padding(

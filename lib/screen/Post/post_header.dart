@@ -46,6 +46,8 @@ class _PostHeaderState extends State<PostHeader> {
       } else {
         description = ' đã công bố mục tiêu mới';
       }
+    } else if (widget.post['post_type'] == postShareEvent) {
+      description = ' đã chia sẻ một sự kiện';
     }
 
     if (mentions.isNotEmpty) {
