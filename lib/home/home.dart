@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import 'package:social_network_app_mobile/screen/Feed/feed.dart';
@@ -47,7 +48,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       Container(),
       Container(),
       Container(),
-      Container(),
     ];
   }
 
@@ -77,17 +77,51 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             elevation: 0,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             type: BottomNavigationBarType.fixed,
-            items: const <BottomNavigationBarItem>[
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: SvgPicture.asset(
+                  _selectedIndex == 0 ? "assets/HomeFC.svg" : "assets/home.svg",
+                  width: 20,
+                  height: 20,
+                ),
                 label: '',
               ),
-              BottomNavigationBarItem(icon: Icon(Icons.bolt), label: ''),
-              BottomNavigationBarItem(icon: Icon(Icons.tv), label: ''),
-              BottomNavigationBarItem(icon: Icon(Icons.people), label: ''),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications), label: ''),
-              BottomNavigationBarItem(icon: Icon(Icons.menu), label: ''),
+                  icon: Padding(
+                    padding: const EdgeInsets.only(top: 7.0),
+                    child: SvgPicture.asset(
+                      _selectedIndex == 1
+                          ? "assets/MomentFc.svg"
+                          : "assets/Moment.svg",
+                      width: 38,
+                      height: 38,
+                    ),
+                  ),
+                  label: ''),
+              BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    "assets/Plus.svg",
+                    width: 20,
+                    height: 20,
+                    color: _selectedIndex == 2 ? primaryColor : greyColor,
+                  ),
+                  label: ''),
+              BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    _selectedIndex == 3
+                        ? "assets/WatchFC.svg"
+                        : "assets/Watch.svg",
+                    width: 20,
+                    height: 20,
+                  ),
+                  label: ''),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.menu,
+                    color: _selectedIndex == 4 ? primaryColor : greyColor,
+                    size: 30,
+                  ),
+                  label: ''),
             ],
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,

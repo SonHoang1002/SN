@@ -280,6 +280,7 @@ class AvatarPost extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                       image: DecorationImage(
                           image: NetworkImage(group['banner']['preview_url']),
+                          onError: (exception, stackTrace) => const SizedBox(),
                           fit: BoxFit.cover)),
                 ),
                 Positioned(

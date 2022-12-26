@@ -77,6 +77,15 @@ flutter:
     - assets/post_media.svg
     - assets/target.svg
     - assets/win.svg
+    - assets/chat.svg
+    - assets/Moment.svg
+    - assets/MomentFc.svg
+    - assets/Plus.svg
+    - assets/Watch.svg
+    - assets/WatchFC.svg
+    - assets/home.svg
+    - assets/HomeFC.svg
+    - assets/notification.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
