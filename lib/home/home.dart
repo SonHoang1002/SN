@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:social_network_app_mobile/screen/Menu/menu.dart';
+import 'package:social_network_app_mobile/screen/Watch/watch.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import 'package:social_network_app_mobile/screen/Feed/feed.dart';
@@ -38,16 +40,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300));
 
+    functionHidden(isHideBottomNavBar) {
+      isHideBottomNavBar
+          ? animationController.forward()
+          : animationController.reverse();
+    }
+
     _pages = <Widget>[
-      Feed(isHideBottomNavBar: (isHideBottomNavBar) {
-        isHideBottomNavBar
-            ? animationController.forward()
-            : animationController.reverse();
-      }),
+      Feed(isHideBottomNavBar: functionHidden),
       Container(),
       Container(),
-      Container(),
-      Container(),
+      Watch(isHideBottomNavBar: functionHidden),
+      Menu(isHideBottomNavBar: functionHidden)
     ];
   }
 

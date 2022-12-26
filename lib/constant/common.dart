@@ -20,3 +20,6 @@ List typeVisibility = [
     "subLabel": 'Không hiển thị trên bảng tin của người khác'
   }
 ];
+
+String linkAvatarDefault =
+    'https://snapi.emso.asia/avatars/original/missing.png';

@@ -35,22 +35,22 @@ class ThemeManager with ChangeNotifier {
 
 class MyThemes {
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.grey.shade900,
-    cardColor: Colors.grey.shade800,
-    primaryColor: Colors.grey.withOpacity(0.6),
-    appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade900),
-    // textTheme: const TextTheme(displayLarge: TextStyle(color: white)),
-    colorScheme:
-        const ColorScheme.dark().copyWith(background: Colors.grey.shade800),
-  );
+      scaffoldBackgroundColor: Colors.grey.shade900,
+      cardColor: Colors.grey.shade800,
+      primaryColor: Colors.grey.withOpacity(0.6),
+      appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade900),
+      // textTheme: const TextTheme(displayLarge: TextStyle(color: white)),
+      colorScheme:
+          const ColorScheme.dark().copyWith(background: Colors.grey.shade800),
+      canvasColor: Colors.black);
 
   static final lightTheme = ThemeData(
-    scaffoldBackgroundColor: white,
-    cardColor: white,
-    primaryColor: white,
-    appBarTheme: const AppBarTheme(backgroundColor: white),
-    // textTheme: const TextTheme(displayLarge: TextStyle(color: Colors.black)),
-    colorScheme:
-        const ColorScheme.light().copyWith(background: const Color(0xfff1f2f5)),
-  );
+      scaffoldBackgroundColor: white,
+      cardColor: white,
+      primaryColor: white,
+      appBarTheme: const AppBarTheme(backgroundColor: white),
+      // textTheme: const TextTheme(displayLarge: TextStyle(color: Colors.black)),
+      colorScheme: const ColorScheme.light()
+          .copyWith(background: const Color(0xfff1f2f5)),
+      canvasColor: const Color(0xffdcdcdc));
 }

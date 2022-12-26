@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 class UserItem extends StatelessWidget {
@@ -9,10 +10,7 @@ class UserItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const AvatarSocial(
-            width: 32,
-            height: 32,
-            path: 'https://snapi.emso.asia/avatars/original/missing.png'),
+        AvatarSocial(width: 32, height: 32, path: linkAvatarDefault),
         const SizedBox(
           width: 7,
         ),

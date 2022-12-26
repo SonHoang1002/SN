@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
-import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
+import 'package:social_network_app_mobile/data/watch.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
-import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
-class Feed extends StatefulWidget {
+import 'watch_chip_menu.dart';
+import 'watch_drawer.dart';
+import 'watch_saved.dart';
+
+class Watch extends StatefulWidget {
   final Function(bool) isHideBottomNavBar;
-  const Feed({Key? key, required this.isHideBottomNavBar}) : super(key: key);
+  const Watch({Key? key, required this.isHideBottomNavBar}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _FeedState createState() => _FeedState();
+  _WatchState createState() => _WatchState();
 }
 
-class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
+class _WatchState extends State<Watch>
+    with AutomaticKeepAliveClientMixin<Watch> {
   bool _handleScrollNotification(ScrollNotification notification) {
     if (notification.depth == 0) {
       if (notification is UserScrollNotification) {
@@ -36,29 +40,15 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
     return false;
   }
 
+  String menuSelected = 'watch_home';
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final GlobalKey<ScaffoldState> _key = GlobalKey();
 
     List iconAction = [
-      {
-        "icon": 'assets/notification.svg',
-        'type': 'image',
-        "top": 6.0,
-        "left": 6.0,
-        "right": 6.0,
-        "bottom": 6.0,
-      },
       {"icon": Icons.search, 'type': 'icon'},
-      {
-        "icon": 'assets/chat.svg',
-        'type': 'image',
-        "top": 6.0,
-        "left": 5.5,
-        "right": 0.0,
-        "bottom": 0.0,
-      }
     ];
 
     return NotificationListener<ScrollNotification>(
@@ -67,7 +57,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
         key: _key,
         drawerEnableOpenDragGesture: false,
         drawer: const Drawer(
-          child: DrawerFeed(),
+          child: WatchDrawer(),
         ),
         appBar: AppBar(
           elevation: 0,
@@ -94,18 +84,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                     const SizedBox(
                       width: 7,
                     ),
-                    const Text(
-                      "Emso",
-                      style: TextStyle(
-                          color: Color(0xFFEd7F4D),
-                          fontWeight: FontWeight.w700),
-                    ),
-                    const Text(
-                      "Social",
-                      style: TextStyle(
-                          color: Color(0xFF7165E0),
-                          fontWeight: FontWeight.w700),
-                    )
+                    const AppbarTitle(title: 'Watch'),
                   ]),
               Row(
                 children: List.generate(
@@ -146,13 +125,31 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(
-                  height: 7,
+                  height: 5,
                 ),
-                const CreatePostButton(),
-                const CrossBar(),
-                Column(
-                    children: List.generate(
-                        posts.length, (index) => Post(post: posts[index])))
+                WatchChipMenu(
+                  menuSelected: menuSelected,
+                  handleUpdate: (key) {
+                    setState(() {
+                      menuSelected = key;
+                    });
+                  },
+                ),
+                menuSelected == 'watch_saved'
+                    ? Container(
+                        height: 5,
+                        margin: const EdgeInsets.only(top: 10),
+                        color: Colors.grey.withOpacity(0.5),
+                      )
+                    : const CrossBar(),
+                menuSelected == 'watch_home'
+                    ? Column(
+                        children: List.generate(watchs.length,
+                            (index) => Post(post: watchs[index])))
+                    : const SizedBox(),
+                menuSelected == 'watch_saved'
+                    ? const WatchSaved()
+                    : const SizedBox()
               ],
             ),
           ),
