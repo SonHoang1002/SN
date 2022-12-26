@@ -54,6 +54,14 @@ class _PostHeaderState extends State<PostHeader> {
       description = ' cùng với ';
     }
 
+    if (widget.post['shared_group'] != null) {
+      description = ' đã chia sẻ một nhóm ';
+    }
+
+    if (widget.post['shared_page'] != null) {
+      description = ' đã chia sẻ một trang ';
+    }
+
     if (widget.post['life_event'] != null) {
       description =
           ' đã thêm một ${widget.post['life_event']['name'].toLowerCase()}';

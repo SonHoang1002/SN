@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 
 import 'PostType/post_share_event.dart';
+import 'PostType/post_share_group.dart';
+import 'PostType/post_share_page.dart';
 import 'PostType/post_target.dart';
 import 'post_card.dart';
 import 'PostType/avatar_banner.dart';
@@ -42,6 +44,12 @@ class _PostCenterState extends State<PostCenter> {
                 : const SizedBox(),
             widget.post['life_event'] != null
                 ? PostLifeEvent(post: widget.post)
+                : const SizedBox(),
+            widget.post['shared_group'] != null
+                ? PostShareGroup(post: widget.post)
+                : const SizedBox(),
+            widget.post['shared_page'] != null
+                ? PostSharePage(post: widget.post)
                 : const SizedBox(),
             widget.post['reblog'] != null
                 ? PostShare(post: widget.post)

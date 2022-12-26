@@ -14,6 +14,9 @@ class PostShareEvent extends StatelessWidget {
 
     return Column(
       children: [
+        const SizedBox(
+          height: 5,
+        ),
         ImageCacheRender(path: event['banner']['preview_url']),
         Container(
           padding: const EdgeInsets.all(8),
