@@ -14,7 +14,7 @@ class WatchDrawer extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 170,
+          height: 180,
           child: DrawerHeader(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +37,7 @@ class WatchDrawer extends StatelessWidget {
           )),
         ),
         SizedBox(
-          height: size.height - 175,
+          height: size.height - 190,
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
