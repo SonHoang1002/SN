@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
+import 'package:social_network_app_mobile/screen/Menu/menu_user.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
+
+import 'menu_render.dart';
+import 'menu_shortcut.dart';
 
 class Menu extends StatefulWidget {
   final Function(bool) isHideBottomNavBar;
@@ -41,10 +45,12 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _key = GlobalKey();
+    final size = MediaQuery.of(context).size;
 
     return NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
         child: Scaffold(
+          backgroundColor: Theme.of(context).canvasColor,
           key: _key,
           drawer: const Drawer(
             child: DrawerFeed(),
@@ -52,7 +58,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           appBar: AppBar(
             elevation: 0,
             automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).canvasColor,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,6 +101,67 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               ],
             ),
           ),
+          body: Container(
+              height: size.height - 100,
+              padding: const EdgeInsets.all(15.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const MenuUser(),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 0.3,
+                      decoration: const BoxDecoration(color: greyColor),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const MenuShortcut(),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 0.3,
+                      decoration: const BoxDecoration(color: greyColor),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const MenuRender(),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      height: 0.3,
+                      decoration: const BoxDecoration(color: greyColor),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SizedBox(
+                      width: size.width - 40,
+                      height: 40, // <-- match_parent
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              backgroundColor: const Color(0xffdcdcdc)),
+                          onPressed: () {},
+                          child: const Text(
+                            "Đăng xuất",
+                            style: TextStyle(color: Colors.black),
+                          )),
+                    )
+                  ],
+                ),
+              )),
         ));
   }
 }

@@ -22,7 +22,7 @@ class TextAction extends StatelessWidget {
                 color: primaryColor, fontSize: 15, fontWeight: FontWeight.w500),
           ),
       onTap: () {
-        action();
+        action && action();
       },
     );
   }

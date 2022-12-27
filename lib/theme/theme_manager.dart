@@ -52,5 +52,5 @@ class MyThemes {
       // textTheme: const TextTheme(displayLarge: TextStyle(color: Colors.black)),
       colorScheme: const ColorScheme.light()
           .copyWith(background: const Color(0xfff1f2f5)),
-      canvasColor: const Color(0xffdcdcdc));
+      canvasColor: const Color(0xfff1f2f5));
 }

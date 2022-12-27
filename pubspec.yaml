@@ -50,6 +50,7 @@ dependencies:
   flutter_linkify: ^5.0.2
   flutter_hooks: ^0.18.5+1
   percent_indicator: ^4.2.2
+  badges: ^2.0.3
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +87,20 @@ flutter:
     - assets/home.svg
     - assets/HomeFC.svg
     - assets/notification.svg
+    - assets/blood.svg
+    - assets/Chat_1.svg
+    - assets/event.svg
+    - assets/friend.svg
+    - assets/Groups_1.svg
+    - assets/Grow.svg
+    - assets/job.svg
+    - assets/learnspace.svg
+    - assets/Maket.svg
+    - assets/moment_menu.svg
+    - assets/music.svg
+    - assets/Page.svg
+    - assets/saved.svg
+    - assets/story.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
