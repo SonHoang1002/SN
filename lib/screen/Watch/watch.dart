@@ -90,29 +90,17 @@ class _WatchState extends State<Watch>
                 children: List.generate(
                     iconAction.length,
                     (index) => Container(
-                          width: 30,
-                          height: 30,
-                          margin: const EdgeInsets.only(left: 5),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey.withOpacity(0.3)),
-                          child: iconAction[index]['type'] == 'icon'
-                              ? Icon(
-                                  iconAction[index]['icon'],
-                                  size: 20,
-                                  color: Colors.black,
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.only(
-                                      top: iconAction[index]['top'],
-                                      left: iconAction[index]['left'],
-                                      right: iconAction[index]['right'],
-                                      bottom: iconAction[index]['bottom']),
-                                  child: SvgPicture.asset(
-                                    iconAction[index]['icon'],
-                                  ),
-                                ),
-                        )),
+                        width: 30,
+                        height: 30,
+                        margin: const EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey.withOpacity(0.3)),
+                        child: Icon(
+                          iconAction[index]['icon'],
+                          size: 20,
+                          color: Colors.black,
+                        ))),
               )
             ],
           ),
