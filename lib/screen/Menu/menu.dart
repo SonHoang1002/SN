@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu_user.dart';
+import 'package:social_network_app_mobile/screen/Setting/setting.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
@@ -37,15 +39,29 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
     return false;
   }
 
-  List iconAction = [
-    {"icon": Icons.settings, 'type': 'icon'},
-    {"icon": Icons.search, 'type': 'icon'},
-  ];
-
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _key = GlobalKey();
     final size = MediaQuery.of(context).size;
+
+    List iconAction = [
+      {
+        "icon": Icons.settings,
+        'type': 'icon',
+        "action": () {
+          Navigator.push(context,
+              CupertinoPageRoute(builder: (context) => const Setting()));
+        }
+      },
+      {
+        "icon": Icons.search,
+        'type': 'icon',
+        "action": () {
+          Navigator.push(context,
+              CupertinoPageRoute(builder: (context) => const Setting()));
+        }
+      },
+    ];
 
     return NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
@@ -85,18 +101,23 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                 Row(
                   children: List.generate(
                       iconAction.length,
-                      (index) => Container(
-                          width: 30,
-                          height: 30,
-                          margin: const EdgeInsets.only(left: 5),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey.withOpacity(0.3)),
-                          child: Icon(
-                            iconAction[index]['icon'],
-                            size: 20,
-                            color: Colors.black,
-                          ))),
+                      (index) => GestureDetector(
+                            onTap: () {
+                              iconAction[index]['action']();
+                            },
+                            child: Container(
+                                width: 30,
+                                height: 30,
+                                margin: const EdgeInsets.only(left: 5),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey.withOpacity(0.3)),
+                                child: Icon(
+                                  iconAction[index]['icon'],
+                                  size: 20,
+                                  color: Colors.black,
+                                )),
+                          )),
                 )
               ],
             ),
