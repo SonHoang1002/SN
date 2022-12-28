@@ -9,3 +9,5 @@ String postStatusActivity = 'activity';
 
 String postReblog = 'reblog';
 String postShareEvent = 'event_shared';
+
+String postMoment = 'moment';

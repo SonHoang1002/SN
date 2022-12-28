@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 class UserItem extends StatelessWidget {
@@ -11,32 +10,23 @@ class UserItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AvatarSocial(
             width: 40,
             height: 40,
-            path: user['avatar_media']['preview_url'] ?? linkAvatarDefault),
+            path: user['avatar_media'] != null
+                ? user['avatar_media']['preview_url']
+                : linkAvatarDefault),
         const SizedBox(
           width: 7,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              user['display_name'],
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 17,
-              ),
-            ),
-            const SizedBox(
-              height: 3,
-            ),
-            Text(
-              subText ?? '',
-              style: const TextStyle(color: greyColor),
-            )
-          ],
+        Text(
+          user['display_name'],
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 13,
+          ),
         )
       ],
     );

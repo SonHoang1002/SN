@@ -26,7 +26,7 @@ class PageItem extends StatelessWidget {
             page['title'],
             style: const TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 15,
+                fontSize: 13,
                 overflow: TextOverflow.ellipsis),
           ),
         )

@@ -19,7 +19,7 @@ class TextAction extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-                color: primaryColor, fontSize: 15, fontWeight: FontWeight.w500),
+                color: primaryColor, fontSize: 13, fontWeight: FontWeight.w500),
           ),
       onTap: () {
         action && action();

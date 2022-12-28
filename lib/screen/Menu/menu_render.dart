@@ -13,7 +13,7 @@ class MenuRender extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Menu của bạn",
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
         const SizedBox(
           height: 8,
         ),
@@ -21,7 +21,7 @@ class MenuRender extends StatelessWidget {
           children: List.generate(listSocial.length, (index) {
             return Container(
               width: size.width - 40,
-              height: 80,
+              height: 75,
               padding: const EdgeInsets.all(8.0),
               margin: const EdgeInsets.only(
                 top: 4,
@@ -37,10 +37,10 @@ class MenuRender extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     listSocial[index]['icon'],
-                    width: 30,
+                    width: 26,
                   ),
                   const SizedBox(
-                    width: 8,
+                    width: 12,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,17 +49,17 @@ class MenuRender extends StatelessWidget {
                       Text(
                         listSocial[index]['label'],
                         style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w500),
+                            fontSize: 13, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(
-                        height: 8,
+                        height: 6,
                       ),
                       SizedBox(
                         width: size.width - 120,
                         child: Text(
                           listSocial[index]['subLabel'],
                           style:
-                              const TextStyle(fontSize: 14, color: greyColor),
+                              const TextStyle(fontSize: 12, color: greyColor),
                         ),
                       ),
                     ],

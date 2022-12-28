@@ -24,7 +24,7 @@ class DrawerFeed extends StatelessWidget {
             children: const [
               Text(
                 'Lối tắt',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               SizedBox(
                 height: 5,

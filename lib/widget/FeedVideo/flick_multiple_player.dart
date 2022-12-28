@@ -1,6 +1,7 @@
 import 'package:flick_video_player/flick_video_player.dart';
 
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:video_player/video_player.dart';
@@ -12,12 +13,14 @@ class FlickMultiPlayer extends StatefulWidget {
       {Key? key,
       required this.url,
       this.image,
-      required this.flickMultiManager})
+      required this.flickMultiManager,
+      this.type})
       : super(key: key);
 
   final String url;
   final String? image;
   final FlickMultiManager flickMultiManager;
+  final String? type;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -84,10 +87,12 @@ class _FlickMultiPlayerState extends State<FlickMultiPlayer> {
               ],
             ),
           ),
-          controls: FeedPlayerPortraitControls(
-            flickMultiManager: widget.flickMultiManager,
-            flickManager: flickManager,
-          ),
+          controls: widget.type == postMoment
+              ? const SizedBox()
+              : FeedPlayerPortraitControls(
+                  flickMultiManager: widget.flickMultiManager,
+                  flickManager: flickManager,
+                ),
         ),
         flickVideoWithControlsFullscreen: FlickVideoWithControls(
           playerLoadingFallback: Center(

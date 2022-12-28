@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/data/watch.dart';
-import 'package:social_network_app_mobile/widget/page_item.dart';
-import 'package:social_network_app_mobile/widget/text_description.dart';
-import 'package:social_network_app_mobile/widget/search_input.dart';
+import 'package:social_network_app_mobile/data/moment.dart';
 
-class WatchDrawer extends StatelessWidget {
-  const WatchDrawer({Key? key}) : super(key: key);
+import 'package:social_network_app_mobile/widget/search_input.dart';
+import 'package:social_network_app_mobile/widget/user_item.dart';
+
+class DrawerMoment extends StatelessWidget {
+  const DrawerMoment({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,21 +14,15 @@ class WatchDrawer extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 180,
+          height: 140,
           child: DrawerHeader(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               Text(
-                'Trang theo dõi',
+                'Tài khoản đang theo dõi',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
-              SizedBox(
-                height: 5,
-              ),
-              TextDescription(
-                  description:
-                      "Truy cập để xem video của các trang bạn đang theo dõi."),
               SizedBox(
                 height: 5,
               ),
@@ -37,16 +31,16 @@ class WatchDrawer extends StatelessWidget {
           )),
         ),
         SizedBox(
-          height: size.height - 190,
+          height: size.height - 235,
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
               children: List.generate(
-                  pagesLike.length,
+                  friendMoment.length,
                   (index) => Padding(
                         padding: const EdgeInsets.only(
                             top: 8, bottom: 8, right: 8, left: 10),
-                        child: PageItem(page: pagesLike[index]['page']),
+                        child: UserItem(user: friendMoment[index]),
                       )),
             ),
           ),

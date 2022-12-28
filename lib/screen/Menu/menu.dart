@@ -177,7 +177,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                           onPressed: () {},
                           child: const Text(
                             "Đăng xuất",
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: Colors.black, fontSize: 13),
                           )),
                     )
                   ],

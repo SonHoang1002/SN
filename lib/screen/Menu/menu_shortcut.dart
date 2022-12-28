@@ -14,7 +14,7 @@ class MenuShortcut extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text("Lối tắt của bạn",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
           const SizedBox(
             height: 8,
           ),
@@ -49,6 +49,7 @@ class MenuShortcut extends StatelessWidget {
                                 drawers[index]['title'],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
+                                    fontSize: 12,
                                     color: greyColor,
                                     fontWeight: FontWeight.w500,
                                     overflow: TextOverflow.ellipsis),

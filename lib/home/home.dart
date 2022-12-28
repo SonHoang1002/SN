@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu.dart';
+import 'package:social_network_app_mobile/screen/Moment/moment.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
@@ -48,7 +49,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     _pages = <Widget>[
       Feed(isHideBottomNavBar: functionHidden),
-      Container(),
+      const Moment(),
       Container(),
       Watch(isHideBottomNavBar: functionHidden),
       Menu(isHideBottomNavBar: functionHidden)
@@ -72,14 +73,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       bottomNavigationBar: SizeTransition(
         sizeFactor: animationController,
         axisAlignment: -3.0,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8),
+        child: SizedBox(
+          height: 65,
           child: BottomNavigationBar(
             selectedItemColor: primaryColor,
             unselectedItemColor: greyColor,
             showSelectedLabels: false,
             elevation: 0,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: _selectedIndex == 1
+                ? Colors.black
+                : Theme.of(context).scaffoldBackgroundColor,
             type: BottomNavigationBarType.fixed,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class SearchInput extends StatefulWidget {
   final Function? handleSearch;
@@ -32,7 +33,8 @@ class _SearchInputState extends State<SearchInput> {
         height: 40,
         padding: const EdgeInsets.only(top: 2, left: 5, bottom: 5),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).canvasColor,
+            border: Border.all(width: 0.2, color: greyColor),
             borderRadius: BorderRadius.circular(20)),
         child: TextFormField(
             controller: controller,
@@ -42,6 +44,7 @@ class _SearchInputState extends State<SearchInput> {
             cursorColor: Theme.of(context).textTheme.displayLarge?.color,
             decoration: InputDecoration(
                 hintText: "Tìm kiếm",
+                hintStyle: const TextStyle(fontSize: 13),
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
                 prefixIcon: Icon(

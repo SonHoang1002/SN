@@ -26,7 +26,7 @@ class _WatchChipMenuState extends State<WatchChipMenu> {
                     widget.handleUpdate(watchMenu[index]['key']);
                   },
                   child: Container(
-                    margin: const EdgeInsets.only(left: 12),
+                    margin: const EdgeInsets.only(left: 6, right: 6),
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(17),
@@ -36,6 +36,7 @@ class _WatchChipMenuState extends State<WatchChipMenu> {
                     child: Text(
                       watchMenu[index]['label'],
                       style: TextStyle(
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: widget.menuSelected == watchMenu[index]['key']
                               ? Colors.white

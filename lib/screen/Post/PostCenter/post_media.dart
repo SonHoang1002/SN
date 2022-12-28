@@ -71,11 +71,14 @@ class FeedVideo extends StatelessWidget {
   final String path;
   final dynamic flickMultiManager;
   final String image;
+  final String? type;
+
   const FeedVideo({
     super.key,
     required this.path,
     this.flickMultiManager,
     required this.image,
+    this.type,
   });
 
   @override
@@ -88,10 +91,10 @@ class FeedVideo extends StatelessWidget {
         }
       },
       child: FlickMultiPlayer(
-        url: path,
-        flickMultiManager: flickMultiManager,
-        image: image,
-      ),
+          url: path,
+          flickMultiManager: flickMultiManager,
+          image: image,
+          type: type),
     );
   }
 }

@@ -43,8 +43,8 @@ class TranferAccount extends StatelessWidget {
                           Row(
                             children: [
                               AvatarSocial(
-                                  width: 40,
-                                  height: 40,
+                                  width: 36,
+                                  height: 36,
                                   path:
                                       // tranferAccounts[index]['show_url'] ??
                                       linkAvatarDefault),
@@ -54,7 +54,7 @@ class TranferAccount extends StatelessWidget {
                               Text(
                                 tranferAccounts[index]['name'],
                                 style: const TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w500),
+                                    fontSize: 13, fontWeight: FontWeight.w500),
                               )
                             ],
                           ),

@@ -53,7 +53,8 @@ class ButtonLayout extends StatelessWidget {
         ),
         Text(
           button['label'],
-          style: const TextStyle(fontWeight: FontWeight.w500, color: greyColor),
+          style: const TextStyle(
+              fontWeight: FontWeight.w500, color: greyColor, fontSize: 13),
         )
       ],
     );
