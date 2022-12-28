@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 
 import 'flick_multiple_manager.dart';
 
 class FeedPlayerPortraitControls extends StatelessWidget {
   const FeedPlayerPortraitControls(
-      {Key? key, this.flickMultiManager, this.flickManager})
+      {Key? key, this.flickMultiManager, this.flickManager, this.type})
       : super(key: key);
 
   final FlickMultiManager? flickMultiManager;
   final FlickManager? flickManager;
+  final String? type;
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +24,24 @@ class FeedPlayerPortraitControls extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          FlickAutoHideChild(
-            autoHide: false,
-            showIfVideoNotInitialized: false,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                decoration: BoxDecoration(
-                  color: Colors.black38,
-                  borderRadius: BorderRadius.circular(20),
+          type == postMoment
+              ? const SizedBox()
+              : FlickAutoHideChild(
+                  autoHide: false,
+                  showIfVideoNotInitialized: false,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.black38,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const FlickLeftDuration(),
+                    ),
+                  ),
                 ),
-                child: const FlickLeftDuration(),
-              ),
-            ),
-          ),
           Expanded(
             child: FlickToggleSoundAction(
               toggleMute: () {
@@ -48,27 +53,29 @@ class FeedPlayerPortraitControls extends StatelessWidget {
               ),
             ),
           ),
-          FlickAutoHideChild(
-            autoHide: false,
-            showIfVideoNotInitialized: false,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: Colors.black38,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: FlickSoundToggle(
-                    toggleMute: () => flickMultiManager?.toggleMute(),
-                    color: Colors.white,
+          type == postMoment
+              ? const SizedBox()
+              : FlickAutoHideChild(
+                  autoHide: false,
+                  showIfVideoNotInitialized: false,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: FlickSoundToggle(
+                          toggleMute: () => flickMultiManager?.toggleMute(),
+                          color: Colors.white,
+                        ),
+                      ),
+                      // FlickFullScreenToggle(),
+                    ],
                   ),
                 ),
-                // FlickFullScreenToggle(),
-              ],
-            ),
-          ),
         ],
       ),
     );

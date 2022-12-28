@@ -86,7 +86,7 @@ class FeedVideo extends StatelessWidget {
     return VisibilityDetector(
       key: ObjectKey(flickMultiManager),
       onVisibilityChanged: (visibility) {
-        if (visibility.visibleFraction == 0) {
+        if (visibility.visibleFraction < 0.3) {
           flickMultiManager.pause();
         }
       },

@@ -87,12 +87,11 @@ class _FlickMultiPlayerState extends State<FlickMultiPlayer> {
               ],
             ),
           ),
-          controls: widget.type == postMoment
-              ? const SizedBox()
-              : FeedPlayerPortraitControls(
-                  flickMultiManager: widget.flickMultiManager,
-                  flickManager: flickManager,
-                ),
+          controls: FeedPlayerPortraitControls(
+            type: widget.type,
+            flickMultiManager: widget.flickMultiManager,
+            flickManager: flickManager,
+          ),
         ),
         flickVideoWithControlsFullscreen: FlickVideoWithControls(
           playerLoadingFallback: Center(
