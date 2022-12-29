@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch.dart';
@@ -50,7 +51,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _pages = <Widget>[
       Feed(isHideBottomNavBar: functionHidden),
       const Moment(),
-      Container(),
+      const CreatePost(),
       Watch(isHideBottomNavBar: functionHidden),
       Menu(isHideBottomNavBar: functionHidden)
     ];
