@@ -68,13 +68,14 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         child: Scaffold(
           backgroundColor: Theme.of(context).canvasColor,
           key: _key,
-          drawer: const Drawer(
-            child: DrawerFeed(),
+          drawer: Drawer(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            child: const DrawerFeed(),
           ),
           appBar: AppBar(
             elevation: 0,
             automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).canvasColor,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,11 +86,12 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                     children: [
                       InkWell(
                         onTap: () => _key.currentState!.openDrawer(),
-                        child: const Padding(
-                          padding: EdgeInsets.only(top: 0),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 0),
                           child: Icon(
                             Icons.menu,
-                            color: Colors.black,
+                            color:
+                                Theme.of(context).textTheme.displayLarge!.color,
                           ),
                         ),
                       ),
@@ -115,7 +117,10 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                                 child: Icon(
                                   iconAction[index]['icon'],
                                   size: 20,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge!
+                                      .color,
                                 )),
                           )),
                 )
@@ -123,6 +128,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
             ),
           ),
           body: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
               height: size.height - 100,
               padding: const EdgeInsets.all(15.0),
               child: SingleChildScrollView(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
 class Feed extends StatefulWidget {
@@ -41,9 +43,18 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
     super.build(context);
     final GlobalKey<ScaffoldState> _key = GlobalKey();
 
+    final theme = Provider.of<ThemeManager>(context);
+    String modeTheme = theme.themeMode == ThemeMode.dark
+        ? 'dark'
+        : theme.themeMode == ThemeMode.light
+            ? 'light'
+            : 'system';
+
     List iconAction = [
       {
-        "icon": 'assets/notification.svg',
+        "icon": modeTheme == 'dark'
+            ? 'assets/NotiDM.svg'
+            : 'assets/notification.svg',
         'type': 'image',
         "top": 6.0,
         "left": 6.0,
@@ -52,12 +63,12 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
       },
       {"icon": Icons.search, 'type': 'icon'},
       {
-        "icon": 'assets/chat.svg',
+        "icon": modeTheme == 'dark' ? 'assets/ChatDM.svg' : 'assets/chat.svg',
         'type': 'image',
-        "top": 6.0,
-        "left": 5.5,
-        "right": 0.0,
-        "bottom": 0.0,
+        "top": modeTheme == 'dark' ? 5.0 : 6.0,
+        "left": modeTheme == 'dark' ? 5.0 : 5.5,
+        "right": modeTheme == 'dark' ? 5.0 : 0.0,
+        "bottom": modeTheme == 'dark' ? 5.0 : 0.0,
       }
     ];
 
@@ -66,8 +77,9 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
       child: Scaffold(
         key: _key,
         drawerEnableOpenDragGesture: false,
-        drawer: const Drawer(
-          child: DrawerFeed(),
+        drawer: Drawer(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          child: const DrawerFeed(),
         ),
         appBar: AppBar(
           elevation: 0,
@@ -83,11 +95,12 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                   children: [
                     InkWell(
                       onTap: () => _key.currentState!.openDrawer(),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
                         child: Icon(
                           Icons.menu,
-                          color: Colors.black,
+                          color:
+                              Theme.of(context).textTheme.displayLarge!.color,
                         ),
                       ),
                     ),
@@ -121,7 +134,10 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                               ? Icon(
                                   iconAction[index]['icon'],
                                   size: 20,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge!
+                                      .color,
                                 )
                               : Padding(
                                   padding: EdgeInsets.only(

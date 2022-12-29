@@ -111,7 +111,7 @@ class _PostHeaderState extends State<PostHeader> {
                           page: page),
                     ),
                     const SizedBox(
-                      height: 3,
+                      height: 1,
                     ),
                     Row(
                       children: [
@@ -211,8 +211,10 @@ class BlockNamePost extends StatelessWidget {
             : page != null
                 ? page['title']
                 : account['display_name'],
-        style: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+        style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).textTheme.displayLarge!.color),
         children: [
           TextSpan(
               text: description,

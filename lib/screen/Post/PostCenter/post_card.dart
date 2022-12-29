@@ -17,15 +17,17 @@ class PostCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 8),
                 child: InkWell(
                   onTap: () async {
-                    if (await canLaunchUrl(Uri.parse(card['link']))) {
-                      await launchUrl(Uri.parse(card['link']));
+                    if (await canLaunchUrl(
+                        Uri.parse(card['link'] ?? card['url']))) {
+                      await launchUrl(Uri.parse(card['link'] ?? card['url']));
                     } else {
                       throw 'Không thể mở link!';
                     }
                   },
                   child: Column(
                     children: [
-                      ImageCacheRender(path: card['url'] ?? card['link']),
+                      ImageCacheRender(
+                          path: card['image'] ?? card['url'] ?? card['link']),
                       Container(
                         width: size.width,
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -38,13 +40,14 @@ class PostCard extends StatelessWidget {
                               Text(
                                 card['title'],
                                 style: const TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.w500,
                                     overflow: TextOverflow.ellipsis),
                               ),
                               Text(
                                 card['description'],
                                 style: const TextStyle(
+                                    fontSize: 12,
                                     color: greyColor,
                                     overflow: TextOverflow.ellipsis),
                               ),

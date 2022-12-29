@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/data/watch.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -56,8 +55,9 @@ class _WatchState extends State<Watch>
       child: Scaffold(
         key: _key,
         drawerEnableOpenDragGesture: false,
-        drawer: const Drawer(
-          child: WatchDrawer(),
+        drawer: Drawer(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          child: const WatchDrawer(),
         ),
         appBar: AppBar(
           elevation: 0,
@@ -73,11 +73,12 @@ class _WatchState extends State<Watch>
                   children: [
                     InkWell(
                       onTap: () => _key.currentState!.openDrawer(),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
                         child: Icon(
                           Icons.menu,
-                          color: Colors.black,
+                          color:
+                              Theme.of(context).textTheme.displayLarge!.color,
                         ),
                       ),
                     ),
@@ -99,7 +100,8 @@ class _WatchState extends State<Watch>
                         child: Icon(
                           iconAction[index]['icon'],
                           size: 20,
-                          color: Colors.black,
+                          color:
+                              Theme.of(context).textTheme.displayLarge!.color,
                         ))),
               )
             ],
