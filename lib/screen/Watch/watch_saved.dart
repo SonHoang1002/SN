@@ -95,8 +95,11 @@ class WatchSaved extends StatelessWidget {
                                   child: RichText(
                                       text: TextSpan(
                                           text: "được lưu từ bài viết của ",
-                                          style: const TextStyle(
-                                              color: Colors.black),
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .displayLarge!
+                                                  .color),
                                           children: <TextSpan>[
                                         TextSpan(
                                             text: watch['page']['title'],
@@ -122,7 +125,10 @@ class WatchSaved extends StatelessWidget {
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: primaryColor),
                                       onPressed: () {},
-                                      child: const Text("Bỏ lưu"))
+                                      child: const Text(
+                                        "Bỏ lưu",
+                                        style: TextStyle(color: white),
+                                      ))
                                 ],
                               ),
                             )

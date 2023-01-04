@@ -39,8 +39,7 @@ class DrawerFeed extends StatelessWidget {
             ],
           )),
         ),
-        SizedBox(
-          height: size.height - 290,
+        Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -57,38 +56,38 @@ class DrawerFeed extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              children: const [
-                Icon(
-                  FontAwesomeIcons.userGroup,
-                  size: 20,
-                  color: primaryColor,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                TextAction(title: "Tất cả"),
-              ],
-            ),
-            Column(
-              children: const [
-                Icon(
-                  FontAwesomeIcons.locationArrow,
-                  size: 20,
-                  color: primaryColor,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                TextAction(title: "Khám phá"),
-              ],
-            )
-          ],
-        )
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     Column(
+        //       children: const [
+        //         Icon(
+        //           FontAwesomeIcons.userGroup,
+        //           size: 20,
+        //           color: primaryColor,
+        //         ),
+        //         SizedBox(
+        //           height: 5,
+        //         ),
+        //         TextAction(title: "Tất cả"),
+        //       ],
+        //     ),
+        //     Column(
+        //       children: const [
+        //         Icon(
+        //           FontAwesomeIcons.locationArrow,
+        //           size: 20,
+        //           color: primaryColor,
+        //         ),
+        //         SizedBox(
+        //           height: 5,
+        //         ),
+        //         TextAction(title: "Khám phá"),
+        //       ],
+        //     )
+        //   ],
+        // )
       ],
     );
   }

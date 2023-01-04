@@ -12,54 +12,53 @@ class CreateFeedMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Container(
-      width: size.width,
-      height: size.height - 370,
-      decoration: const BoxDecoration(
-          border: Border(top: BorderSide(width: 0.1, color: greyColor))),
-      child: GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisSpacing: 4,
-          mainAxisSpacing: 4,
-          crossAxisCount: 4,
-        ),
-        itemCount: listMenuPost.length,
-        itemBuilder: (context, index) => InkWell(
-          onTap: () {
-            handleChooseMenu(listMenuPost[index]);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 8,
-                ),
-                listMenuPost[index]['image'] != null
-                    ? SvgPicture.asset(
-                        listMenuPost[index]['image'],
-                        width: 20,
-                      )
-                    : const SizedBox(),
-                listMenuPost[index]['icon'] != null
-                    ? Icon(
-                        listMenuPost[index]['icon'],
-                        color: Color(listMenuPost[index]['color']),
-                        size: 18,
-                      )
-                    : const SizedBox(),
-                const SizedBox(
-                  height: 8,
-                ),
-                Text(
-                  listMenuPost[index]['label'],
-                  style: const TextStyle(fontSize: 10),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+    return Expanded(
+      child: Container(
+        decoration: const BoxDecoration(
+            border: Border(top: BorderSide(width: 0.1, color: greyColor))),
+        child: GridView.builder(
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisSpacing: 4,
+            mainAxisSpacing: 4,
+            crossAxisCount: 4,
+          ),
+          itemCount: listMenuPost.length,
+          itemBuilder: (context, index) => InkWell(
+            onTap: () {
+              handleChooseMenu(listMenuPost[index]);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  listMenuPost[index]['image'] != null
+                      ? SvgPicture.asset(
+                          listMenuPost[index]['image'],
+                          width: 20,
+                        )
+                      : const SizedBox(),
+                  listMenuPost[index]['icon'] != null
+                      ? Icon(
+                          listMenuPost[index]['icon'],
+                          color: Color(listMenuPost[index]['color']),
+                          size: 18,
+                        )
+                      : const SizedBox(),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    listMenuPost[index]['label'],
+                    style: const TextStyle(fontSize: 10),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

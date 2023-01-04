@@ -36,8 +36,7 @@ class WatchDrawer extends StatelessWidget {
             ],
           )),
         ),
-        SizedBox(
-          height: size.height - 190,
+        Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(

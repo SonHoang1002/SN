@@ -30,8 +30,7 @@ class DrawerMoment extends StatelessWidget {
             ],
           )),
         ),
-        SizedBox(
-          height: size.height - 235,
+        Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
