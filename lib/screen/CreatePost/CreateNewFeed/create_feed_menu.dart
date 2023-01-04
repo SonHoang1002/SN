@@ -19,42 +19,48 @@ class CreateFeedMenu extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
           crossAxisCount: 4,
         ),
         itemCount: listMenuPost.length,
-        itemBuilder: (context, index) => Container(
-          width: size.width / 4,
-          height: size.width / 4,
-          padding: const EdgeInsets.all(8.0),
-          decoration:
-              BoxDecoration(border: Border.all(width: 0.1, color: greyColor)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              listMenuPost[index]['image'] != null
-                  ? SvgPicture.asset(
-                      listMenuPost[index]['image'],
-                      width: 26,
-                    )
-                  : const SizedBox(),
-              listMenuPost[index]['icon'] != null
-                  ? Icon(
-                      listMenuPost[index]['icon'],
-                      color: Color(listMenuPost[index]['color']),
-                      size: 24,
-                    )
-                  : const SizedBox(),
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                listMenuPost[index]['label'],
-                style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center,
-              ),
-            ],
+        itemBuilder: (context, index) => InkWell(
+          onTap: () {},
+          child: Container(
+            width: size.width / 4,
+            height: size.width / 4,
+            padding: const EdgeInsets.all(8.0),
+            // decoration:
+            //     BoxDecoration(border: Border.all(width: 0.1, color: greyColor)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 8,
+                ),
+                listMenuPost[index]['image'] != null
+                    ? SvgPicture.asset(
+                        listMenuPost[index]['image'],
+                        width: 20,
+                      )
+                    : const SizedBox(),
+                listMenuPost[index]['icon'] != null
+                    ? Icon(
+                        listMenuPost[index]['icon'],
+                        color: Color(listMenuPost[index]['color']),
+                        size: 18,
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  listMenuPost[index]['label'],
+                  style: const TextStyle(fontSize: 10),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),
