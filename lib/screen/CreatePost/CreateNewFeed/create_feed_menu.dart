@@ -4,8 +4,10 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class CreateFeedMenu extends StatelessWidget {
+  final Function handleChooseMenu;
   const CreateFeedMenu({
     super.key,
+    required this.handleChooseMenu,
   });
 
   @override
@@ -25,13 +27,13 @@ class CreateFeedMenu extends StatelessWidget {
         ),
         itemCount: listMenuPost.length,
         itemBuilder: (context, index) => InkWell(
-          onTap: () {},
+          onTap: () {
+            handleChooseMenu(listMenuPost[index]);
+          },
           child: Container(
             width: size.width / 4,
             height: size.width / 4,
             padding: const EdgeInsets.all(8.0),
-            // decoration:
-            //     BoxDecoration(border: Border.all(width: 0.1, color: greyColor)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

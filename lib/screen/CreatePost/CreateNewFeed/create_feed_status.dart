@@ -92,7 +92,10 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                   child: Stack(
                     children: [
                       backgroundSelected != null
-                          ? ImageCacheRender(path: backgroundSelected['url'])
+                          ? ImageCacheRender(
+                              path: backgroundSelected['url'],
+                              width: size.width,
+                            )
                           : const SizedBox(),
                       Container(
                         height: 250,
