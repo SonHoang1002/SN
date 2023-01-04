@@ -109,16 +109,19 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                             minLines: backgroundSelected != null ? 1 : 9,
                             enabled: true,
                             style: backgroundSelected != null
-                                ? const TextStyle(
-                                    color: white,
+                                ? TextStyle(
+                                    color: Color(int.parse(
+                                        '0xFF${backgroundSelected['style']['fontColor'].substring(1)}')),
                                     fontWeight: FontWeight.w700,
                                     fontSize: 22)
                                 : null,
                             decoration: InputDecoration(
                               hintText: "Bạn đang nghĩ gì?",
                               hintStyle: TextStyle(
-                                  color:
-                                      backgroundSelected != null ? white : null,
+                                  color: backgroundSelected != null
+                                      ? Color(int.parse(
+                                          '0xFF${backgroundSelected['style']['fontColor'].substring(1)}'))
+                                      : null,
                                   fontSize:
                                       backgroundSelected != null ? 22 : 15),
                               border: InputBorder.none,
