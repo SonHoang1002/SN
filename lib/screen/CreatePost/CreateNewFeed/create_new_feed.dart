@@ -4,6 +4,7 @@ import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activity.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/friend_tag.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -18,6 +19,13 @@ class CreateNewFeed extends StatefulWidget {
 
 class _CreateNewFeedState extends State<CreateNewFeed> {
   dynamic menuSelected;
+  List friendSelected = [];
+
+  handleUpdateSelectedFriend(newList) {
+    setState(() {
+      friendSelected = newList;
+    });
+  }
 
   handleChooseMenu(menu) {
     if (menu == null) return;
@@ -33,6 +41,10 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
         break;
       case 'checkin':
         body = const Checkin();
+        break;
+      case 'tag-people':
+        body =
+            FriendTag(handleUpdateSelectedFriend: handleUpdateSelectedFriend);
         break;
       default:
     }

@@ -31,8 +31,6 @@ class CreateFeedMenu extends StatelessWidget {
             handleChooseMenu(listMenuPost[index]);
           },
           child: Container(
-            width: size.width / 4,
-            height: size.width / 4,
             padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
