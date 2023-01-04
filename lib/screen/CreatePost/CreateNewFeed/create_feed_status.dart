@@ -17,15 +17,17 @@ class CreateFeedStatus extends StatefulWidget {
 }
 
 class _CreateFeedStatusState extends State<CreateFeedStatus> {
+  final TextEditingController controller = TextEditingController();
   bool isActiveBackground = false;
   dynamic backgroundSelected;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 0.2, color: greyColor),
+        border: const Border(top: BorderSide(width: 0.2, color: greyColor)),
         color: Theme.of(context).scaffoldBackgroundColor,
       ),
       height: 310,
@@ -85,12 +87,47 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                 ),
               ),
               SizedBox(
-                width: size.width,
-                height: 250,
-                child: backgroundSelected != null
-                    ? ImageCacheRender(path: backgroundSelected['url'])
-                    : const SizedBox(),
-              )
+                  width: size.width,
+                  height: 250,
+                  child: Stack(
+                    children: [
+                      backgroundSelected != null
+                          ? ImageCacheRender(path: backgroundSelected['url'])
+                          : const SizedBox(),
+                      Container(
+                        height: 250,
+                        width: size.width,
+                        margin: const EdgeInsets.only(
+                            left: 8.0, right: 8.0, bottom: 8.0),
+                        child: Center(
+                          child: TextFormField(
+                            textAlign: backgroundSelected != null
+                                ? TextAlign.center
+                                : TextAlign.left,
+                            controller: controller,
+                            maxLines: 9,
+                            minLines: backgroundSelected != null ? 1 : 9,
+                            enabled: true,
+                            style: backgroundSelected != null
+                                ? const TextStyle(
+                                    color: white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22)
+                                : null,
+                            decoration: InputDecoration(
+                              hintText: "Bạn đang nghĩ gì?",
+                              hintStyle: TextStyle(
+                                  color:
+                                      backgroundSelected != null ? white : null,
+                                  fontSize:
+                                      backgroundSelected != null ? 22 : 15),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ))
             ],
           ),
           Positioned(
@@ -201,6 +238,12 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
 

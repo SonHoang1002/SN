@@ -130,17 +130,14 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           body: Container(
               color: Theme.of(context).scaffoldBackgroundColor,
               height: size.height - 100,
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(12.0),
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 8,
-                    ),
                     const MenuUser(),
                     const SizedBox(
-                      height: 15,
+                      height: 8,
                     ),
                     Container(
                       height: 0.3,
