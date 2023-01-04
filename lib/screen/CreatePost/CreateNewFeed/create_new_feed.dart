@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_menu.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activity.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -29,6 +30,9 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
     switch (menu['key']) {
       case 'emoji-activity':
         body = const EmojiActivity();
+        break;
+      case 'checkin':
+        body = const Checkin();
         break;
       default:
     }
