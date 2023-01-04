@@ -1,4 +1,4 @@
-var meData = {
+dynamic meData = {
   "id": "107610124722780666",
   "username": "hoangthanhluu",
   "acct": "hoangthanhluu",

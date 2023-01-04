@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
@@ -9,9 +11,13 @@ class CreatePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List postTypeCreate = [
-      {"icon": "assets/story.svg", "title": "Post"},
-      {"icon": "assets/moment_menu.svg", "title": "Khoảnh khắc"},
-      {"icon": "assets/Live.svg", "title": "Phát trực tiếp"}
+      {"key": "post", "icon": "assets/story.svg", "title": "Post"},
+      {
+        "key": "moment",
+        "icon": "assets/moment_menu.svg",
+        "title": "Khoảnh khắc"
+      },
+      {"key": "live", "icon": "assets/Live.svg", "title": "Phát trực tiếp"}
     ];
 
     return Scaffold(
@@ -33,26 +39,39 @@ class CreatePost extends StatelessWidget {
               Column(
                   children: List.generate(
                       postTypeCreate.length,
-                      (index) => Container(
-                            margin: const EdgeInsets.all(8.0),
-                            padding: const EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border:
-                                    Border.all(width: 0.2, color: greyColor)),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(postTypeCreate[index]['icon']),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Text(
-                                  postTypeCreate[index]['title'],
-                                  style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500),
-                                )
-                              ],
+                      (index) => GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  CupertinoPageRoute(builder: ((context) {
+                                String key = postTypeCreate[index]['key'];
+                                return key == 'post'
+                                    ? const CreateNewFeed()
+                                    : const SizedBox();
+                              })));
+                            },
+                            child: Container(
+                              height: 60,
+                              margin: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(width: 0.2, color: greyColor)),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                      postTypeCreate[index]['icon']),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    postTypeCreate[index]['title'],
+                                    style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500),
+                                  )
+                                ],
+                              ),
                             ),
                           )))
             ],
