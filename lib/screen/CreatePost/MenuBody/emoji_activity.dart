@@ -48,8 +48,7 @@ class _EmojiActivityState extends State<EmojiActivity>
         ),
       ),
       Container(margin: const EdgeInsets.all(8.0), child: const SearchInput()),
-      SizedBox(
-        height: size.height - 200,
+      Expanded(
         child: TabBarView(
           controller: _tabController,
           children: [

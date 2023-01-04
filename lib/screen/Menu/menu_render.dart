@@ -8,7 +8,6 @@ class MenuRender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -17,58 +16,46 @@ class MenuRender extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        Wrap(
-          children: List.generate(listSocial.length, (index) {
-            return Container(
-              width: size.width - 40,
-              height: 75,
-              padding: const EdgeInsets.all(8.0),
-              margin: const EdgeInsets.only(
-                top: 4,
-                bottom: 4,
-              ),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  border: Border.all(width: 0.1, color: greyColor),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    listSocial[index]['icon'],
-                    width: 26,
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+        GridView.builder(
+            shrinkWrap: true,
+            primary: false,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                crossAxisCount: 2,
+                childAspectRatio: 4),
+            itemCount: listSocial.length,
+            itemBuilder: (context, index) => Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      border: Border.all(width: 0.1, color: greyColor),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        listSocial[index]['label'],
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w500),
+                      SvgPicture.asset(
+                        listSocial[index]['icon'],
+                        width: 20,
                       ),
                       const SizedBox(
-                        height: 6,
+                        width: 12,
                       ),
-                      SizedBox(
-                        width: size.width - 120,
-                        child: Text(
-                          listSocial[index]['subLabel'],
-                          style:
-                              const TextStyle(fontSize: 12, color: greyColor),
-                        ),
-                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            listSocial[index]['label'],
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
-            );
-          }),
-        ),
+                  ),
+                )),
       ],
     );
   }

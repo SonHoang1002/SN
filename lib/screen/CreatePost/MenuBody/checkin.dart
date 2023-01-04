@@ -19,8 +19,7 @@ class Checkin extends StatelessWidget {
         const SizedBox(
           height: 10.0,
         ),
-        SizedBox(
-          height: size.height - 120,
+        Expanded(
           child: ListView.builder(
               itemCount: locations.length,
               shrinkWrap: true,
