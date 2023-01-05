@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
@@ -110,14 +111,12 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                     const Text(
                       "Emso",
                       style: TextStyle(
-                          color: Color(0xFFEd7F4D),
-                          fontWeight: FontWeight.w700),
+                          color: primaryColor, fontWeight: FontWeight.w700),
                     ),
                     const Text(
                       "Social",
                       style: TextStyle(
-                          color: Color(0xFF7165E0),
-                          fontWeight: FontWeight.w700),
+                          color: secondaryColor, fontWeight: FontWeight.w700),
                     )
                   ]),
               Row(

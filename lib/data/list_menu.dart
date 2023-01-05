@@ -104,7 +104,7 @@ List listSocial = [
   },
   {
     "key": 'shoppingCart',
-    "label": 'Giỏ hàng của bạn',
+    "label": 'Giỏ hàng',
     "subLabel": 'Thông tin đặt hàng của bạn.',
     "icon": "assets/Maket.svg"
   }

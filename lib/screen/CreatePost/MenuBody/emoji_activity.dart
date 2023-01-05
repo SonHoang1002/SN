@@ -116,6 +116,7 @@ class Item extends StatelessWidget {
                         itemBuilder: (context, index) =>
                             Item(item: activityDetail[index], type: 'emoji')),
                   ),
+                  buttonAppbar: const SizedBox(),
                 ),
               ));
         }
