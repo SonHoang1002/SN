@@ -64,7 +64,7 @@ List listMenuPost = [
   {
     "key": 'life-event',
     "label": 'Sự kiện trong đời',
-    "icon": FontAwesomeIcons.flag,
+    "icon": FontAwesomeIcons.solidFlag,
     "color": 0xFF39afd5,
     "disabled": ['media', 'gif', 'answer', 'answer-learn']
   },

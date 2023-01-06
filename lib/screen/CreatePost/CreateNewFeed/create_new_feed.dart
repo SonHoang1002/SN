@@ -5,7 +5,9 @@ import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activity.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/friend_tag.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/gif.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/image_video.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_categories.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -53,6 +55,12 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
       case 'media':
         body = const ImageVideo();
         buttonAppbar = const ButtonPrimary(label: "Xong");
+        break;
+      case 'gif':
+        body = const Gif();
+        break;
+      case 'life-event':
+        body = const LifeEventCategories();
         break;
       default:
     }

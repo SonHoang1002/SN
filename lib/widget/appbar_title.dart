@@ -10,6 +10,7 @@ class AppbarTitle extends StatelessWidget {
       title,
       style: TextStyle(
           fontSize: 18,
+          overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w600,
           color: Theme.of(context).textTheme.displayLarge!.color),
     );

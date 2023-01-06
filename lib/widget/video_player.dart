@@ -5,9 +5,11 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerRender extends StatefulWidget {
   final String path;
+  final bool? autoPlay;
   const VideoPlayerRender({
     Key? key,
     required this.path,
+    this.autoPlay,
   }) : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class _VideoPlayerRenderState extends State<VideoPlayerRender> {
     super.initState();
     try {
       flickManager = FlickManager(
+        autoPlay: widget.autoPlay ?? false,
         videoPlayerController: VideoPlayerController.network(
           widget.path,
         ),

@@ -16,6 +16,7 @@ class CreateModalBaseMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
@@ -25,8 +26,15 @@ class CreateModalBaseMenu extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const BackIconAppbar(),
-              AppbarTitle(
-                title: title,
+              SizedBox(
+                width: buttonAppbar != const SizedBox()
+                    ? size.width - 125
+                    : size.width - 70,
+                child: Center(
+                  child: AppbarTitle(
+                    title: title,
+                  ),
+                ),
               ),
               buttonAppbar
             ],
