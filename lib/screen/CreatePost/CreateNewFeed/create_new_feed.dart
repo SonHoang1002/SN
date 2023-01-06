@@ -75,10 +75,19 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            BackIconAppbar(),
-            AppbarTitle(title: "Tạo bài post"),
-            ButtonPrimary(label: "Đăng")
+          children: [
+            const BackIconAppbar(),
+            const AppBarTitle(title: "Tạo bài post"),
+            ElevatedButton(
+              onPressed: null,
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                backgroundColor: primaryColor,
+                elevation: 0,
+              ),
+              child: const Text("Đăng"),
+            )
           ],
         ),
       ),

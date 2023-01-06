@@ -48,7 +48,7 @@ class _DarkModeSettingState extends State<DarkModeSetting> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
             BackIconAppbar(),
-            AppbarTitle(title: "Chế độ tối"),
+            AppBarTitle(title: "Chế độ tối"),
             SizedBox(),
           ],
         ),

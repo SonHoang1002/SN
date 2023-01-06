@@ -25,7 +25,7 @@ class CreateModalBaseMenu extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const BackIconAppbar(),
-              AppbarTitle(
+              AppBarTitle(
                 title: title,
               ),
               buttonAppbar
