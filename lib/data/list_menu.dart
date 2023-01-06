@@ -69,7 +69,7 @@ List listSocial = [
   {
     "key": 'music',
     "subLabel": 'Âm nhạc thiết yếu cho nhu cầu giải trí.',
-    "label": 'Watch',
+    "label": 'Âm nhạc',
     "icon": "assets/music.svg"
   },
   {

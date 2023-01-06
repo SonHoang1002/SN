@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Page/page_general.dart';
+import 'package:social_network_app_mobile/screen/Watch/watch_render.dart';
+// import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 
 class MenuSelected extends StatelessWidget {
   final dynamic menuSelected;
@@ -12,18 +15,20 @@ class MenuSelected extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(menuSelected);
-    return renderWidget(menuSelected, data);
-  }
+    Widget buttonAppbar = const SizedBox();
+    Widget body = const SizedBox();
 
-  renderWidget(menuSelected, data) {
     switch (menuSelected['key']) {
       case 'pageSocial':
-        return PageGeneral(
-          data: 'data',
-        );
+        body = const PageGeneral();
+        break;
+      case 'watch':
+        body = const WatchRender();
+        break;
       default:
-        return const SizedBox();
     }
+
+    return CreateModalBaseMenu(
+        title: menuSelected['label'], body: body, buttonAppbar: buttonAppbar);
   }
 }

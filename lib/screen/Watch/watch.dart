@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:social_network_app_mobile/data/watch.dart';
-import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
-import 'watch_chip_menu.dart';
 import 'watch_drawer.dart';
-import 'watch_saved.dart';
+import 'watch_render.dart';
 
 class Watch extends StatefulWidget {
   final Function(bool) isHideBottomNavBar;
@@ -39,8 +35,6 @@ class _WatchState extends State<Watch>
     return false;
   }
 
-  String menuSelected = 'watch_home';
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -53,98 +47,61 @@ class _WatchState extends State<Watch>
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,
       child: Scaffold(
-        key: _key,
-        drawerEnableOpenDragGesture: false,
-        drawer: Drawer(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          child: const WatchDrawer(),
-        ),
-        appBar: AppBar(
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () => _key.currentState!.openDrawer(),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 0),
-                        child: Icon(
-                          Icons.menu,
-                          color:
-                              Theme.of(context).textTheme.displayLarge!.color,
+          key: _key,
+          drawerEnableOpenDragGesture: false,
+          drawer: Drawer(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            child: const WatchDrawer(),
+          ),
+          appBar: AppBar(
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () => _key.currentState!.openDrawer(),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 0),
+                          child: Icon(
+                            Icons.menu,
+                            color:
+                                Theme.of(context).textTheme.displayLarge!.color,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 7,
-                    ),
-                    const AppBarTitle(title: 'Watch'),
-                  ]),
-              Row(
-                children: List.generate(
-                    iconAction.length,
-                    (index) => Container(
-                        width: 30,
-                        height: 30,
-                        margin: const EdgeInsets.only(left: 5),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey.withOpacity(0.3)),
-                        child: Icon(
-                          iconAction[index]['icon'],
-                          size: 20,
-                          color:
-                              Theme.of(context).textTheme.displayLarge!.color,
-                        ))),
-              )
-            ],
-          ),
-        ),
-        body: SizedBox(
-          width: double.infinity,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(
-                  height: 5,
-                ),
-                WatchChipMenu(
-                  menuSelected: menuSelected,
-                  handleUpdate: (key) {
-                    setState(() {
-                      menuSelected = key;
-                    });
-                  },
-                ),
-                menuSelected == 'watch_saved'
-                    ? Container(
-                        height: 5,
-                        margin: const EdgeInsets.only(top: 10),
-                        color: Colors.grey.withOpacity(0.5),
-                      )
-                    : const CrossBar(),
-                menuSelected == 'watch_home'
-                    ? Column(
-                        children: List.generate(watchs.length,
-                            (index) => Post(post: watchs[index])))
-                    : const SizedBox(),
-                menuSelected == 'watch_saved'
-                    ? const WatchSaved()
-                    : const SizedBox()
+                      const SizedBox(
+                        width: 7,
+                      ),
+                      const AppBarTitle(title: 'Watch'),
+                    ]),
+                Row(
+                  children: List.generate(
+                      iconAction.length,
+                      (index) => Container(
+                          width: 30,
+                          height: 30,
+                          margin: const EdgeInsets.only(left: 5),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey.withOpacity(0.3)),
+                          child: Icon(
+                            iconAction[index]['icon'],
+                            size: 20,
+                            color:
+                                Theme.of(context).textTheme.displayLarge!.color,
+                          ))),
+                )
               ],
             ),
           ),
-        ),
-      ),
+          body: const WatchRender()),
     );
   }
 

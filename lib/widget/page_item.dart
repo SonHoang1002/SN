@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
+import 'text_description.dart';
+
 class PageItem extends StatelessWidget {
   final dynamic page;
   const PageItem({Key? key, this.page}) : super(key: key);
@@ -20,15 +22,26 @@ class PageItem extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        SizedBox(
-          width: size.width - 180,
-          child: Text(
-            page['title'],
-            style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-                overflow: TextOverflow.ellipsis),
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: size.width - 180,
+              child: Text(
+                page['title'],
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    overflow: TextOverflow.ellipsis),
+              ),
+            ),
+            const SizedBox(
+              height: 4.0,
+            ),
+            TextDescription(
+              description: page['page_categories'][0]['text'],
+            )
+          ],
         )
       ],
     );

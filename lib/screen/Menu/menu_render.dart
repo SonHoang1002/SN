@@ -10,6 +10,15 @@ class MenuRender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    handlePress(menu) {
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => MenuSelected(
+                    menuSelected: menu,
+                  )));
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,12 +44,7 @@ class MenuRender extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) => MenuSelected(
-                                    menuSelected: listSocial[index],
-                                  )));
+                      handlePress(listSocial[index]);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
