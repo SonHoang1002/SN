@@ -297,7 +297,7 @@ class PostBackground extends StatelessWidget {
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Theme.of(context).canvasColor,
-          title: const Center(child: AppbarTitle(title: "Chọn phông nền")),
+          title: const Center(child: AppBarTitle(title: "Chọn phông nền")),
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,

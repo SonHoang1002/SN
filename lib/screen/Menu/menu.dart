@@ -98,7 +98,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                       const SizedBox(
                         width: 7,
                       ),
-                      const AppbarTitle(title: 'Menu'),
+                      const AppBarTitle(title: 'Menu'),
                     ]),
                 Row(
                   children: List.generate(

@@ -19,7 +19,7 @@ class PageMention extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
             BackIcon(),
-            AppbarTitle(
+            AppBarTitle(
               title: "Được gắn thẻ",
             ),
             SizedBox()

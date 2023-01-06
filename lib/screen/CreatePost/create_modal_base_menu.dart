@@ -31,7 +31,7 @@ class CreateModalBaseMenu extends StatelessWidget {
                     ? size.width - 125
                     : size.width - 70,
                 child: Center(
-                  child: AppbarTitle(
+                  child: AppBarTitle(
                     title: title,
                   ),
                 ),

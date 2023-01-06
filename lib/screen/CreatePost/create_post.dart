@@ -25,7 +25,7 @@ class CreatePost extends StatelessWidget {
           // backgroundColor: Theme.of(context).colorScheme.background,
           automaticallyImplyLeading: false,
           elevation: 0,
-          title: const AppbarTitle(title: "Tạo bài viết"),
+          title: const AppBarTitle(title: "Tạo bài viết"),
         ),
         body: Container(
           margin: const EdgeInsets.all(15.0),
