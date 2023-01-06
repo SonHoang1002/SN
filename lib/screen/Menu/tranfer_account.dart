@@ -19,7 +19,7 @@ class TranferAccount extends StatelessWidget {
             elevation: 0,
             title: Column(
               children: [
-                const AppbarTitle(title: "Chuyển tài khoản"),
+                const AppBarTitle(title: "Chuyển tài khoản"),
                 const SizedBox(
                   height: 10,
                 ),

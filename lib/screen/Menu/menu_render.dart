@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
+import 'package:social_network_app_mobile/screen/Menu/menu_selected.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class MenuRender extends StatelessWidget {
@@ -31,29 +33,39 @@ class MenuRender extends StatelessWidget {
                       color: Theme.of(context).cardColor,
                       border: Border.all(width: 0.1, color: greyColor),
                       borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        listSocial[index]['icon'],
-                        width: 20,
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            listSocial[index]['label'],
-                            style: const TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      )
-                    ],
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => MenuSelected(
+                                    menuSelected: listSocial[index],
+                                  )));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          listSocial[index]['icon'],
+                          width: 20,
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              listSocial[index]['label'],
+                              style: const TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 )),
       ],

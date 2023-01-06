@@ -85,7 +85,7 @@ class _WatchState extends State<Watch>
                     const SizedBox(
                       width: 7,
                     ),
-                    const AppbarTitle(title: 'Watch'),
+                    const AppBarTitle(title: 'Watch'),
                   ]),
               Row(
                 children: List.generate(

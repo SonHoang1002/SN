@@ -69,7 +69,7 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const BackIconAppbar(),
-            const AppbarTitle(title: "Tạo bài post"),
+            const AppBarTitle(title: "Tạo bài post"),
             ElevatedButton(
               onPressed: null,
               style: ElevatedButton.styleFrom(

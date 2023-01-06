@@ -75,7 +75,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         sizeFactor: animationController,
         axisAlignment: -3.0,
         child: SizedBox(
-          height: 65,
+          height: 75,
           child: BottomNavigationBar(
             selectedItemColor: primaryColor,
             unselectedItemColor: greyColor,

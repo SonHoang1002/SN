@@ -18,7 +18,7 @@ class Setting extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
             BackIconAppbar(),
-            AppbarTitle(title: "Cài đặt"),
+            AppBarTitle(title: "Cài đặt"),
             SizedBox(),
           ],
         ),
