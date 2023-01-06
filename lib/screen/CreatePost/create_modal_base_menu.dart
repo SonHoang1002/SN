@@ -5,7 +5,13 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 class CreateModalBaseMenu extends StatelessWidget {
   final String title;
   final Widget body;
-  const CreateModalBaseMenu({Key? key, required this.title, required this.body})
+  final Widget buttonAppbar;
+
+  const CreateModalBaseMenu(
+      {Key? key,
+      required this.title,
+      required this.body,
+      required this.buttonAppbar})
       : super(key: key);
 
   @override
@@ -22,7 +28,7 @@ class CreateModalBaseMenu extends StatelessWidget {
               AppBarTitle(
                 title: title,
               ),
-              const SizedBox()
+              buttonAppbar
             ],
           )),
       body: body,
