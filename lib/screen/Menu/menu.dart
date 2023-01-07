@@ -66,7 +66,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
     return NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
         child: Scaffold(
-          backgroundColor: Theme.of(context).canvasColor,
           key: _key,
           drawer: Drawer(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,

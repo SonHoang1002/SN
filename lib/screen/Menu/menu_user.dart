@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/screen/Menu/tranfer_account.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/user_item.dart';
 import 'package:badges/badges.dart' as ChipNoti;
 
@@ -10,10 +12,14 @@ class MenuUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeManager>(context);
+
     return Container(
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: theme.themeMode == ThemeMode.dark
+              ? Theme.of(context).cardColor
+              : const Color(0xfff1f2f5),
           borderRadius: BorderRadius.circular(10)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

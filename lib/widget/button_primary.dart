@@ -5,9 +5,14 @@ class ButtonPrimary extends StatelessWidget {
   final String label;
   final Icon? icon;
   final Function? handlePress;
+  final bool? isPrimary;
 
   const ButtonPrimary(
-      {Key? key, required this.label, this.handlePress, this.icon})
+      {Key? key,
+      required this.label,
+      this.handlePress,
+      this.icon,
+      this.isPrimary})
       : super(key: key);
 
   @override
@@ -20,7 +25,7 @@ class ButtonPrimary extends StatelessWidget {
           : null,
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        backgroundColor: primaryColor,
+        backgroundColor: isPrimary == null ? primaryColor : secondaryColor,
         elevation: 0,
       ),
       child: Row(
@@ -28,9 +33,12 @@ class ButtonPrimary extends StatelessWidget {
         children: [
           icon ?? const SizedBox(),
           SizedBox(
-            width: icon != null ? 8 : 0,
+            width: icon != null ? 6 : 0,
           ),
-          Text(label),
+          Text(
+            label,
+            style: TextStyle(color: handlePress != null ? white : null),
+          ),
         ],
       ),
     );

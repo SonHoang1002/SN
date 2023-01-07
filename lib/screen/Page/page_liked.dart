@@ -123,6 +123,7 @@ class PageLiked extends StatelessWidget {
                         Row(
                           children: [
                             ButtonPrimary(
+                              isPrimary: false,
                               label: "Nhắn tin",
                               handlePress: () {},
                             ),

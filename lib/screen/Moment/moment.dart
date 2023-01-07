@@ -8,7 +8,8 @@ import 'drawer_moment.dart';
 import 'video_description.dart';
 
 class Moment extends StatelessWidget {
-  const Moment({Key? key}) : super(key: key);
+  final bool? isBack;
+  const Moment({Key? key, this.isBack}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +57,18 @@ class Moment extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        InkWell(
-                          onTap: () => _key.currentState!.openDrawer(),
-                          child: const Padding(
-                            padding: EdgeInsets.only(top: 0),
-                            child: Icon(
-                              Icons.menu,
-                              color: white,
-                            ),
-                          ),
-                        ),
+                        isBack != null
+                            ? const BackButton()
+                            : InkWell(
+                                onTap: () => _key.currentState!.openDrawer(),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(top: 0),
+                                  child: Icon(
+                                    Icons.menu,
+                                    color: white,
+                                  ),
+                                ),
+                              ),
                         const SizedBox(
                           width: 7,
                         ),
