@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/screen/Post/PostCenter/post_media.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 
 class MomentVideo extends StatefulWidget {
