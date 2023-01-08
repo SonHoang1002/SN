@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -7,13 +8,15 @@ class GirdviewBuilderMedia extends StatelessWidget {
   final double aspectRatio;
   final int crossAxisCount;
   final dynamic flickMultiManager;
+  final int? imageRemain;
 
   const GirdviewBuilderMedia(
       {Key? key,
       required this.aspectRatio,
       required this.medias,
       required this.crossAxisCount,
-      this.flickMultiManager})
+      this.flickMultiManager,
+      this.imageRemain})
       : super(key: key);
 
   @override
@@ -32,12 +35,34 @@ class GirdviewBuilderMedia extends StatelessWidget {
             childAspectRatio: aspectRatio),
         itemCount: medias.length,
         itemBuilder: (context, indexBg) => checkIsImage(medias[indexBg])
-            ? FadeInImage.memoryNetwork(
-                placeholder: kTransparentImage,
-                image: medias[indexBg]['url'],
-                fit: BoxFit.cover,
-                imageErrorBuilder: (context, error, stackTrace) =>
-                    const SizedBox(),
+            ? Stack(
+                fit: StackFit.expand,
+                children: [
+                  FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: medias[indexBg]['url'],
+                    fit: BoxFit.cover,
+                    imageErrorBuilder: (context, error, stackTrace) =>
+                        const SizedBox(),
+                  ),
+                  imageRemain != null &&
+                          imageRemain! > 0 &&
+                          indexBg + 1 == medias.length
+                      ? Positioned.fill(
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.black54,
+                            child: Text(
+                              '+ $imageRemain',
+                              style: const TextStyle(
+                                  fontSize: 32,
+                                  color: white,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        )
+                      : const SizedBox()
+                ],
               )
             : FeedVideo(
                 path: medias[indexBg]['remote_url'] ?? medias[indexBg]['url'],

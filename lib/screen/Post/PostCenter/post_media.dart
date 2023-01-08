@@ -92,7 +92,7 @@ class _PostMediaState extends State<PostMedia> {
                         double.parse(getAspectMedia(medias[0]).toString()),
                     medias: medias.sublist(0, 1)),
                 const SizedBox(
-                  height: 2,
+                  height: 1,
                 ),
                 GirdviewBuilderMedia(
                     flickMultiManager: flickMultiManager,
@@ -103,35 +103,162 @@ class _PostMediaState extends State<PostMedia> {
             ),
           );
         } else {
-          return Expanded(
-              child: Row(
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: size.width * 0.6 - 1,
+                width: size.width * 0.65 - 1,
                 child: GirdviewBuilderMedia(
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: 0.749,
+                    aspectRatio: 0.692,
                     medias: medias.sublist(0, 1)),
               ),
               const SizedBox(
                 width: 1,
               ),
               SizedBox(
-                width: size.width * 0.4,
+                width: size.width * 0.35,
                 child: GirdviewBuilderMedia(
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: double.parse(
-                        getAspectMedia(medias.sublist(1, 3)[0]).toString()),
+                    aspectRatio: 0.75,
                     medias: medias.sublist(1, 3)),
               )
             ],
+          );
+        }
+
+      case 4:
+        if (getAspectMedia(medias[0]) == 1) {
+          return GirdviewBuilderMedia(
+              flickMultiManager: flickMultiManager,
+              crossAxisCount: 2,
+              aspectRatio: 1,
+              medias: medias);
+        } else if (getAspectMedia(medias[0]) < 0.67) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: size.width * 0.65 - 1,
+                child: GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio: 0.553,
+                    medias: medias.sublist(0, 1)),
+              ),
+              const SizedBox(
+                width: 1,
+              ),
+              SizedBox(
+                width: size.width * 0.35,
+                child: GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio: 0.9,
+                    medias: medias.sublist(1)),
+              )
+            ],
+          );
+        } else if (getAspectMedia(medias[0]) > 1) {
+          return Expanded(
+              child: Column(
+            children: [
+              GirdviewBuilderMedia(
+                  flickMultiManager: flickMultiManager,
+                  crossAxisCount: 1,
+                  aspectRatio:
+                      double.parse(getAspectMedia(medias[0]).toString()),
+                  medias: medias.sublist(0, 1)),
+              const SizedBox(
+                height: 2,
+              ),
+              GirdviewBuilderMedia(
+                  flickMultiManager: flickMultiManager,
+                  crossAxisCount: 3,
+                  aspectRatio: 1,
+                  medias: medias.sublist(1)),
+            ],
           ));
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(left: 2, right: 2),
+            child: GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 4,
+              crossAxisSpacing: 3,
+              childAspectRatio: 0.315,
+              children: List.generate(
+                  medias.length,
+                  (index) => Expanded(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: (index == 1 || index == 3) ? 25 : 0,
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: GirdviewBuilderMedia(
+                                  flickMultiManager: flickMultiManager,
+                                  crossAxisCount: 1,
+                                  aspectRatio: 0.35,
+                                  medias: [medias[index]]),
+                            ),
+                          ],
+                        ),
+                      )),
+            ),
+          );
         }
 
       default:
-        return const SizedBox();
+        if (getAspectMedia(medias[0]) < 1) {
+          return Expanded(
+            child: Column(
+              children: [
+                GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 2,
+                    aspectRatio: 1,
+                    medias: medias.sublist(0, 2)),
+                const SizedBox(
+                  height: 1,
+                ),
+                GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 3,
+                    aspectRatio: 1,
+                    imageRemain: medias.length - 5,
+                    medias: medias.sublist(2, 5)),
+              ],
+            ),
+          );
+        } else {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: size.width * 0.5 - 0.5,
+                child: GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio: 0.79835,
+                    medias: medias.sublist(0, 2)),
+              ),
+              SizedBox(
+                width: size.width * 0.5 - 0.5,
+                child: GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio: 1.2,
+                    imageRemain: medias.length - 5,
+                    medias: medias.sublist(2, 5)),
+              )
+            ],
+          );
+        }
     }
   }
 }
