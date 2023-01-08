@@ -44,6 +44,7 @@ class _PostMediaState extends State<PostMedia> {
   }
 
   renderLayoutMedia(medias) {
+    final size = MediaQuery.of(context).size;
     switch (medias.length) {
       case 1:
         if (checkIsImage(medias[0])) {
@@ -79,6 +80,56 @@ class _PostMediaState extends State<PostMedia> {
             crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
             aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
             medias: medias);
+      case 3:
+        if (getAspectMedia(medias[0]) > 1) {
+          return Expanded(
+            child: Column(
+              children: [
+                GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio:
+                        double.parse(getAspectMedia(medias[0]).toString()),
+                    medias: medias.sublist(0, 1)),
+                const SizedBox(
+                  height: 2,
+                ),
+                GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 2,
+                    aspectRatio: 1,
+                    medias: medias.sublist(1, 3)),
+              ],
+            ),
+          );
+        } else {
+          return Expanded(
+              child: Row(
+            children: [
+              SizedBox(
+                width: size.width * 0.6 - 1,
+                child: GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio: 0.749,
+                    medias: medias.sublist(0, 1)),
+              ),
+              const SizedBox(
+                width: 1,
+              ),
+              SizedBox(
+                width: size.width * 0.4,
+                child: GirdviewBuilderMedia(
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio: double.parse(
+                        getAspectMedia(medias.sublist(1, 3)[0]).toString()),
+                    medias: medias.sublist(1, 3)),
+              )
+            ],
+          ));
+        }
+
       default:
         return const SizedBox();
     }

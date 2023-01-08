@@ -35,6 +35,7 @@ class GirdviewBuilderMedia extends StatelessWidget {
             ? FadeInImage.memoryNetwork(
                 placeholder: kTransparentImage,
                 image: medias[indexBg]['url'],
+                fit: BoxFit.cover,
                 imageErrorBuilder: (context, error, stackTrace) =>
                     const SizedBox(),
               )
