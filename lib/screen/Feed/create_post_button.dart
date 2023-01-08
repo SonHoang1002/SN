@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,7 +15,7 @@ class CreatePostButton extends StatefulWidget {
 class _CreatePostButtonState extends State<CreatePostButton> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.push(context,
             CupertinoPageRoute(builder: ((context) => const CreateNewFeed())));
