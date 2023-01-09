@@ -1,7 +1,8 @@
 import 'package:flick_video_player/flick_video_player.dart';
 
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:video_player/video_player.dart';
@@ -60,6 +61,7 @@ class _FlickMultiPlayerState extends State<FlickMultiPlayer> {
       child: FlickVideoPlayer(
         flickManager: flickManager,
         flickVideoWithControls: FlickVideoWithControls(
+          videoFit: BoxFit.contain,
           playerLoadingFallback: Positioned.fill(
             child: Stack(
               children: <Widget>[
@@ -78,10 +80,7 @@ class _FlickMultiPlayerState extends State<FlickMultiPlayer> {
                   child: SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                      strokeWidth: 4,
-                    ),
+                    child: CupertinoActivityIndicator(),
                   ),
                 ),
               ],

@@ -9,6 +9,7 @@ class GirdviewBuilderMedia extends StatelessWidget {
   final int crossAxisCount;
   final dynamic flickMultiManager;
   final int? imageRemain;
+  final Function? handlePress;
 
   const GirdviewBuilderMedia(
       {Key? key,
@@ -16,7 +17,8 @@ class GirdviewBuilderMedia extends StatelessWidget {
       required this.medias,
       required this.crossAxisCount,
       this.flickMultiManager,
-      this.imageRemain})
+      this.imageRemain,
+      this.handlePress})
       : super(key: key);
 
   @override
@@ -34,40 +36,47 @@ class GirdviewBuilderMedia extends StatelessWidget {
             crossAxisCount: crossAxisCount,
             childAspectRatio: aspectRatio),
         itemCount: medias.length,
-        itemBuilder: (context, indexBg) => checkIsImage(medias[indexBg])
-            ? Stack(
-                fit: StackFit.expand,
-                children: [
-                  FadeInImage.memoryNetwork(
-                    placeholder: kTransparentImage,
-                    image: medias[indexBg]['url'],
-                    fit: BoxFit.cover,
-                    imageErrorBuilder: (context, error, stackTrace) =>
-                        const SizedBox(),
-                  ),
-                  imageRemain != null &&
-                          imageRemain! > 0 &&
-                          indexBg + 1 == medias.length
-                      ? Positioned.fill(
-                          child: Container(
-                            alignment: Alignment.center,
-                            color: Colors.black54,
-                            child: Text(
-                              '+ $imageRemain',
-                              style: const TextStyle(
-                                  fontSize: 32,
-                                  color: white,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        )
-                      : const SizedBox()
-                ],
-              )
-            : FeedVideo(
-                path: medias[indexBg]['remote_url'] ?? medias[indexBg]['url'],
-                flickMultiManager: flickMultiManager,
-                image: medias[indexBg]['preview_remote_url'] ??
-                    medias[indexBg]['preview_url']));
+        itemBuilder: (context, indexBg) => GestureDetector(
+            onTap: () {
+              if (handlePress != null) {
+                handlePress!(medias[indexBg]);
+              }
+            },
+            child: checkIsImage(medias[indexBg])
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: medias[indexBg]['url'],
+                        fit: BoxFit.cover,
+                        imageErrorBuilder: (context, error, stackTrace) =>
+                            const SizedBox(),
+                      ),
+                      imageRemain != null &&
+                              imageRemain! > 0 &&
+                              indexBg + 1 == medias.length
+                          ? Positioned.fill(
+                              child: Container(
+                                alignment: Alignment.center,
+                                color: Colors.black54,
+                                child: Text(
+                                  '+ $imageRemain',
+                                  style: const TextStyle(
+                                      fontSize: 32,
+                                      color: white,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ),
+                            )
+                          : const SizedBox()
+                    ],
+                  )
+                : FeedVideo(
+                    path:
+                        medias[indexBg]['remote_url'] ?? medias[indexBg]['url'],
+                    flickMultiManager: flickMultiManager,
+                    image: medias[indexBg]['preview_remote_url'] ??
+                        medias[indexBg]['preview_url'])));
   }
 }

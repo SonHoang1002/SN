@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screen/Post/post_mutiple_media_detail.dart';
+
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/girdview_builder_media.dart';
@@ -35,6 +38,20 @@ class _PostMediaState extends State<PostMedia> {
 
   checkIsImage(media) {
     return media['type'] == 'image' ? true : false;
+  }
+
+  handlePress(media) {
+    if (checkIsImage(media)) {
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => CreateModalBaseMenu(
+                  title: 'Bài viết',
+                  body: PostMutipleMediaDetail(post: widget.post),
+                  buttonAppbar: const SizedBox())));
+    } else {
+      return;
+    }
   }
 
   getAspectMedia(media) {
@@ -76,6 +93,7 @@ class _PostMediaState extends State<PostMedia> {
         }
       case 2:
         return GirdviewBuilderMedia(
+            handlePress: handlePress,
             flickMultiManager: flickMultiManager,
             crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
             aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
@@ -86,6 +104,7 @@ class _PostMediaState extends State<PostMedia> {
             child: Column(
               children: [
                 GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
                     aspectRatio:
@@ -95,6 +114,7 @@ class _PostMediaState extends State<PostMedia> {
                   height: 1,
                 ),
                 GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 2,
                     aspectRatio: 1,
@@ -109,6 +129,7 @@ class _PostMediaState extends State<PostMedia> {
               SizedBox(
                 width: size.width * 0.65 - 1,
                 child: GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
                     aspectRatio: 0.692,
@@ -120,6 +141,7 @@ class _PostMediaState extends State<PostMedia> {
               SizedBox(
                 width: size.width * 0.35,
                 child: GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
                     aspectRatio: 0.75,
@@ -132,6 +154,7 @@ class _PostMediaState extends State<PostMedia> {
       case 4:
         if (getAspectMedia(medias[0]) == 1) {
           return GirdviewBuilderMedia(
+              handlePress: handlePress,
               flickMultiManager: flickMultiManager,
               crossAxisCount: 2,
               aspectRatio: 1,
@@ -143,9 +166,10 @@ class _PostMediaState extends State<PostMedia> {
               SizedBox(
                 width: size.width * 0.65 - 1,
                 child: GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: 0.553,
+                    aspectRatio: 0.65,
                     medias: medias.sublist(0, 1)),
               ),
               const SizedBox(
@@ -154,9 +178,10 @@ class _PostMediaState extends State<PostMedia> {
               SizedBox(
                 width: size.width * 0.35,
                 child: GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: 0.9,
+                    aspectRatio: 1.06,
                     medias: medias.sublist(1)),
               )
             ],
@@ -166,6 +191,7 @@ class _PostMediaState extends State<PostMedia> {
               child: Column(
             children: [
               GirdviewBuilderMedia(
+                  handlePress: handlePress,
                   flickMultiManager: flickMultiManager,
                   crossAxisCount: 1,
                   aspectRatio:
@@ -175,6 +201,7 @@ class _PostMediaState extends State<PostMedia> {
                 height: 2,
               ),
               GirdviewBuilderMedia(
+                  handlePress: handlePress,
                   flickMultiManager: flickMultiManager,
                   crossAxisCount: 3,
                   aspectRatio: 1,
@@ -185,6 +212,7 @@ class _PostMediaState extends State<PostMedia> {
           return Padding(
             padding: const EdgeInsets.only(left: 2, right: 2),
             child: GridView.count(
+              primary: false,
               shrinkWrap: true,
               crossAxisCount: 4,
               crossAxisSpacing: 3,
@@ -200,6 +228,7 @@ class _PostMediaState extends State<PostMedia> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
                               child: GirdviewBuilderMedia(
+                                  handlePress: handlePress,
                                   flickMultiManager: flickMultiManager,
                                   crossAxisCount: 1,
                                   aspectRatio: 0.35,
@@ -218,6 +247,7 @@ class _PostMediaState extends State<PostMedia> {
             child: Column(
               children: [
                 GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 2,
                     aspectRatio: 1,
@@ -226,6 +256,7 @@ class _PostMediaState extends State<PostMedia> {
                   height: 1,
                 ),
                 GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 3,
                     aspectRatio: 1,
@@ -242,17 +273,19 @@ class _PostMediaState extends State<PostMedia> {
               SizedBox(
                 width: size.width * 0.5 - 0.5,
                 child: GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: 0.79835,
+                    aspectRatio: 1,
                     medias: medias.sublist(0, 2)),
               ),
               SizedBox(
                 width: size.width * 0.5 - 0.5,
                 child: GirdviewBuilderMedia(
+                    handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: 1.2,
+                    aspectRatio: 1.503,
                     imageRemain: medias.length - 5,
                     medias: medias.sublist(2, 5)),
               )
