@@ -21,7 +21,7 @@ class _PostState extends State<Post> {
       children: [
         PostHeader(post: widget.post),
         PostCenter(post: widget.post),
-        const PostFooter(),
+        PostFooter(post: widget.post),
         const CrossBar(),
       ],
     );

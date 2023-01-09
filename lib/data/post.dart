@@ -10,12 +10,12 @@ List posts = [
     "visibility": "public",
     "language": "vi",
     "post_type": null,
-    "replies_count": 0,
+    "replies_count": 10,
     "off_comment": false,
     "reblogs_count": 0,
-    "favourites_count": 0,
+    "favourites_count": 2,
     "reactions": [
-      {"type": "like", "likes_count": 0},
+      {"type": "like", "likes_count": 2},
       {"type": "haha", "hahas_count": 0},
       {"type": "angry", "angrys_count": 0},
       {"type": "love", "loves_count": 0},
@@ -23,13 +23,13 @@ List posts = [
       {"type": "wow", "wows_count": 0},
       {"type": "yay", "yays_count": 0}
     ],
-    "replies_total": 0,
+    "replies_total": 17,
     "score": "109653976470804706",
     "hidden": false,
     "notify": false,
     "processing": "done",
     "comment_moderation": "public",
-    "viewer_reaction": null,
+    "viewer_reaction": "like",
     "reblogged": false,
     "muted": false,
     "bookmarked": false,
@@ -52,8 +52,8 @@ List posts = [
       "note": "<p></p>",
       "followers_count": 34,
       "following_count": 32,
-      "statuses_count": 970,
-      "last_status_at": "2023-01-08",
+      "statuses_count": 973,
+      "last_status_at": "2023-01-09",
       "friends_count": 33,
       "theme": "dark",
       "avatar_static": "https://snapi.emso.asia/avatars/original/missing.png",
@@ -315,7 +315,169 @@ List posts = [
     "mentions": [],
     "tags": [],
     "replies": [],
-    "favourites": [],
+    "favourites": [
+      {
+        "id": 15285,
+        "custom_vote_type": "like",
+        "account": {
+          "id": "107610124722780666",
+          "username": "hoangthanhluu",
+          "acct": "hoangthanhluu",
+          "display_name": "Hoàng Thanh Lưu",
+          "locked": false,
+          "bot": false,
+          "discoverable": false,
+          "group": false,
+          "created_at": "2022-01-12T00:00:00.000+07:00",
+          "note": "<p></p>",
+          "followers_count": 34,
+          "following_count": 32,
+          "statuses_count": 973,
+          "last_status_at": "2023-01-09",
+          "friends_count": 33,
+          "theme": "dark",
+          "avatar_static":
+              "https://snapi.emso.asia/avatars/original/missing.png",
+          "emojis": [],
+          "banner": null,
+          "avatar_media": {
+            "id": "108853138654944677",
+            "type": "image",
+            "url":
+                "https://snapi.emso.asia/system/media_attachments/files/108/853/138/654/944/677/original/cc4c8fd4be1d7a96.jpg",
+            "preview_url":
+                "https://snapi.emso.asia/system/media_attachments/files/108/853/138/654/944/677/small/cc4c8fd4be1d7a96.jpg",
+            "remote_url": null,
+            "preview_remote_url": null,
+            "text_url": null,
+            "meta": {
+              "original": {
+                "width": 1440,
+                "height": 1440,
+                "size": "1440x1440",
+                "aspect": 1,
+                "average_color": "#7c8279"
+              },
+              "small": {
+                "width": 400,
+                "height": 400,
+                "size": "400x400",
+                "aspect": 1,
+                "average_color": "#7c8279"
+              }
+            },
+            "description":
+                "Người đẹp thì tên là Lưu còn ảnh thì đẹp vì view :D",
+            "blurhash": "UcGSMwtQoyWUtmt8WCoL~pt6afn%xatPocWB",
+            "status_id": "108853138657453488",
+            "show_url":
+                "https://snapi.emso.asia/system/media_attachments/files/108/867/638/054/982/769/original/2cf6b29fecd9dde5.jpeg",
+            "created_at": "2022-08-20T10:44:41.523+07:00",
+            "frame": null
+          },
+          "fields": []
+        }
+      },
+      {
+        "id": 15284,
+        "custom_vote_type": "like",
+        "account": {
+          "id": "108786718361607198",
+          "username": "bimy97",
+          "acct": "bimy97",
+          "display_name": "Nguyễn Đình Đạt",
+          "locked": false,
+          "bot": false,
+          "discoverable": null,
+          "group": false,
+          "created_at": "2022-08-08T00:00:00.000+07:00",
+          "note": "<p></p>",
+          "followers_count": 39,
+          "following_count": 44,
+          "statuses_count": 916,
+          "last_status_at": "2023-01-09",
+          "friends_count": 39,
+          "theme": "light",
+          "avatar_static":
+              "https://snapi.emso.asia/avatars/original/missing.png",
+          "emojis": [],
+          "banner": {
+            "id": "109037106203592189",
+            "type": "image",
+            "url":
+                "https://snapi.emso.asia/system/media_attachments/files/109/037/106/203/592/189/original/7fac11132ce5171c.jpg",
+            "preview_url":
+                "https://snapi.emso.asia/system/media_attachments/files/109/037/106/203/592/189/small/7fac11132ce5171c.jpg",
+            "remote_url": null,
+            "preview_remote_url": null,
+            "text_url": null,
+            "meta": {
+              "original": {
+                "width": 1246,
+                "height": 1663,
+                "size": "1246x1663",
+                "aspect": 0.7492483463619964,
+                "average_color": "#7d8996"
+              },
+              "small": {
+                "width": 346,
+                "height": 462,
+                "size": "346x462",
+                "aspect": 0.7489177489177489,
+                "average_color": "#7d8996"
+              }
+            },
+            "description": "",
+            "blurhash": "UpF?bUWBoJf6t:jYjYbHH;oLfPbHr:WVbHjY",
+            "status_id": "109037106423139303",
+            "show_url":
+                "https://snapi.emso.asia/system/media_attachments/files/109/037/106/537/750/966/original/e5b5d471c4ea46bc.jpeg",
+            "created_at": "2022-09-21T22:30:03.544+07:00",
+            "frame": null
+          },
+          "avatar_media": {
+            "id": "108797417754620247",
+            "type": "image",
+            "url":
+                "https://snapi.emso.asia/system/media_attachments/files/108/797/417/754/620/247/original/4e5cba93e78228c9.jpg",
+            "preview_url":
+                "https://snapi.emso.asia/system/media_attachments/files/108/797/417/754/620/247/small/4e5cba93e78228c9.jpg",
+            "remote_url": null,
+            "preview_remote_url": null,
+            "text_url": null,
+            "meta": {
+              "original": {
+                "width": 678,
+                "height": 678,
+                "size": "678x678",
+                "aspect": 1,
+                "average_color": "#6e7068"
+              },
+              "small": {
+                "width": 400,
+                "height": 400,
+                "size": "400x400",
+                "aspect": 1,
+                "average_color": "#6e7068"
+              }
+            },
+            "description": "",
+            "blurhash": "UsGleSI:x[tk_MX7baxux]WTWVofxuaxofof",
+            "status_id": "108797417757475654",
+            "show_url":
+                "https://snapi.emso.asia/system/media_attachments/files/108/997/077/478/086/356/original/94c909d79c75bb06.jpeg",
+            "created_at": "2022-08-10T14:34:08.059+07:00",
+            "frame": {
+              "id": 1,
+              "name": "Tuân thủ 5k",
+              "url":
+                  "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/11111.png"
+            }
+          },
+          "fields": []
+        }
+      }
+    ],
     "emojis": [],
     "status_tags": [],
     "poll": null,

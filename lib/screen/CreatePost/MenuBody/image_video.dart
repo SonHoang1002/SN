@@ -31,7 +31,7 @@ class _ImageVideoState extends State<ImageVideo> {
 
     if (_files.isNotEmpty) {
       setState(() {
-        selectedModel = _files[3];
+        selectedModel = _files[0];
       });
     }
   }

@@ -53,6 +53,7 @@ dependencies:
   badges: ^2.0.3
   preload_page_view: ^0.1.6
   flutter_storage_path: ^1.0.4
+  comment_tree: ^0.3.0
 
 dev_dependencies:
   flutter_test:

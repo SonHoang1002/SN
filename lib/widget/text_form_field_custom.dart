@@ -12,6 +12,8 @@ class TextFormFieldCustom extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
 
+  final Widget? suffixIcon;
+
   const TextFormFieldCustom(
       {Key? key,
       this.initialValue,
@@ -21,7 +23,8 @@ class TextFormFieldCustom extends StatelessWidget {
       this.maxLines,
       this.errorText,
       this.label,
-      this.hintText})
+      this.hintText,
+      this.suffixIcon})
       : super(key: key);
 
   @override
@@ -32,7 +35,11 @@ class TextFormFieldCustom extends StatelessWidget {
       initialValue: initialValue,
       autofocus: autofocus,
       decoration: InputDecoration(
+          suffixIcon: suffixIcon,
+          fillColor: Colors.red,
+          contentPadding: const EdgeInsets.all(4.0),
           hintText: hintText,
+          hintStyle: const TextStyle(fontSize: 13),
           labelText: label,
           focusColor: primaryColor,
           helperText: helperText,

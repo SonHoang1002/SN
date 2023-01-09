@@ -17,7 +17,9 @@ class ImageCacheRender extends StatelessWidget {
       width: width,
       height: height,
       fit: BoxFit.cover,
-      imageErrorBuilder: (context, error, stackTrace) => const SizedBox(),
+      imageErrorBuilder: (context, error, stackTrace) => const SizedBox(
+        child: Text('Lỗi'),
+      ),
     );
   }
 }
