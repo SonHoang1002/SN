@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
@@ -23,9 +24,16 @@ class PostFooterButton extends StatelessWidget {
     ];
 
     handlePress(key) {
-      if (key == 'comment' && type != postDetail) {
-        Navigator.push(context,
-            CupertinoPageRoute(builder: (context) => PostDetail(post: post)));
+      if (key == 'comment') {
+        if (![postDetail, postMultipleMedia].contains(type)) {
+          Navigator.push(context,
+              CupertinoPageRoute(builder: (context) => PostDetail(post: post)));
+        } else if (type == postMultipleMedia) {
+          Navigator.push(
+              context,
+              CupertinoModalPopupRoute(
+                  builder: ((context) => CommentPostModal(post: post))));
+        }
       }
     }
 

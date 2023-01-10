@@ -159,7 +159,7 @@ class _PostHeaderState extends State<PostHeader> {
               )
             ],
           ),
-          widget.type != postReblog
+          (![postReblog, postMultipleMedia].contains(widget.type))
               ? Row(
                   children: [
                     InkWell(

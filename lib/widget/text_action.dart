@@ -4,12 +4,14 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 class TextAction extends StatelessWidget {
   final dynamic icon;
   final dynamic title;
-  final dynamic action;
+  final Function? action;
+  final double? fontSize;
   const TextAction({
     super.key,
     this.icon,
     this.action,
     this.title,
+    this.fontSize,
   });
 
   @override
@@ -18,11 +20,15 @@ class TextAction extends StatelessWidget {
       child: icon ??
           Text(
             title,
-            style: const TextStyle(
-                color: primaryColor, fontSize: 13, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: primaryColor,
+                fontSize: fontSize ?? 13,
+                fontWeight: FontWeight.w500),
           ),
       onTap: () {
-        action && action();
+        if (action != null) {
+          action!();
+        }
       },
     );
   }

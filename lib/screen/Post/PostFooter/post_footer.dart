@@ -16,7 +16,7 @@ class PostFooter extends StatelessWidget {
       children: [
         InkWell(
             onTap: () {
-              if (type != postDetail) {
+              if (![postDetail, postMultipleMedia].contains(type)) {
                 Navigator.push(
                     context,
                     CupertinoPageRoute(
