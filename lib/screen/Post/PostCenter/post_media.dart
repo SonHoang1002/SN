@@ -111,7 +111,7 @@ class _PostMediaState extends State<PostMedia> {
                         double.parse(getAspectMedia(medias[0]).toString()),
                     medias: medias.sublist(0, 1)),
                 const SizedBox(
-                  height: 1,
+                  height: 3,
                 ),
                 GirdviewBuilderMedia(
                     handlePress: handlePress,
@@ -127,16 +127,16 @@ class _PostMediaState extends State<PostMedia> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: size.width * 0.65 - 1,
+                width: size.width * 0.65 - 3,
                 child: GirdviewBuilderMedia(
                     handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: 0.692,
+                    aspectRatio: 0.682,
                     medias: medias.sublist(0, 1)),
               ),
               const SizedBox(
-                width: 1,
+                width: 3,
               ),
               SizedBox(
                 width: size.width * 0.35,
@@ -164,16 +164,16 @@ class _PostMediaState extends State<PostMedia> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: size.width * 0.65 - 1,
+                width: size.width * 0.65 - 3,
                 child: GirdviewBuilderMedia(
                     handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: 0.65,
+                    aspectRatio: 0.639,
                     medias: medias.sublist(0, 1)),
               ),
               const SizedBox(
-                width: 1,
+                width: 3,
               ),
               SizedBox(
                 width: size.width * 0.35,
@@ -198,7 +198,7 @@ class _PostMediaState extends State<PostMedia> {
                       double.parse(getAspectMedia(medias[0]).toString()),
                   medias: medias.sublist(0, 1)),
               const SizedBox(
-                height: 2,
+                height: 3,
               ),
               GirdviewBuilderMedia(
                   handlePress: handlePress,
@@ -253,7 +253,7 @@ class _PostMediaState extends State<PostMedia> {
                     aspectRatio: 1,
                     medias: medias.sublist(0, 2)),
                 const SizedBox(
-                  height: 1,
+                  height: 3,
                 ),
                 GirdviewBuilderMedia(
                     handlePress: handlePress,
@@ -271,16 +271,16 @@ class _PostMediaState extends State<PostMedia> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: size.width * 0.5 - 0.5,
+                width: size.width * 0.5 - 1.5,
                 child: GirdviewBuilderMedia(
                     handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
-                    aspectRatio: 1,
+                    aspectRatio: 0.995,
                     medias: medias.sublist(0, 2)),
               ),
               SizedBox(
-                width: size.width * 0.5 - 0.5,
+                width: size.width * 0.5 - 1.5,
                 child: GirdviewBuilderMedia(
                     handlePress: handlePress,
                     flickMultiManager: flickMultiManager,
