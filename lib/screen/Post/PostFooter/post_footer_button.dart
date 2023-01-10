@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class PostFooterButton extends StatelessWidget {
   final dynamic post;
-  const PostFooterButton({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostFooterButton({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class PostFooterButton extends StatelessWidget {
     ];
 
     handlePress(key) {
-      if (key == 'comment') {
+      if (key == 'comment' && type != postDetail) {
         Navigator.push(context,
             CupertinoPageRoute(builder: (context) => PostDetail(post: post)));
       }

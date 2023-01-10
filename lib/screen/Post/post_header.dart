@@ -10,6 +10,8 @@ import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
+import 'post_detail.dart';
+
 class PostHeader extends StatefulWidget {
   final dynamic post;
   final dynamic type;
@@ -84,96 +86,107 @@ class _PostHeaderState extends State<PostHeader> {
           ' ${statusActivity['parent']['name'].toLowerCase()} ${statusActivity['name'].toLowerCase()}';
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AvatarPost(group: group, page: page, account: account),
-            const SizedBox(
-              width: 5,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: size.width * 0.6,
-                  child: BlockNamePost(
-                      account: account,
-                      description: description,
-                      mentions: mentions,
-                      group: group,
-                      page: page),
-                ),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        group != null
-                            ? Text(account['display_name'],
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ))
-                            : const SizedBox(),
-                        Row(
-                          children: [
-                            Text(
-                              GetTimeAgo.parse(
-                                  DateTime.parse(widget.post['created_at'])),
-                              style: const TextStyle(
-                                  color: greyColor, fontSize: 12),
-                            ),
-                            const Text(" · ",
-                                style: TextStyle(color: greyColor)),
-                            Icon(
-                                typeVisibility.firstWhere(
-                                    (element) =>
-                                        element['key'] ==
-                                        widget.post['visibility'],
-                                    orElse: () => {})['icon'],
-                                size: 13,
-                                color: greyColor)
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            )
-          ],
-        ),
-        widget.type != postReblog
-            ? Row(
+    return InkWell(
+      onTap: () {
+        if (widget.type != postDetail) {
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => PostDetail(post: widget.post)));
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12, right: 12),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AvatarPost(group: group, page: page, account: account),
+              const SizedBox(
+                width: 5,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Icon(
-                      FontAwesomeIcons.ellipsis,
-                      size: 22,
-                      color: Theme.of(context).textTheme.displayLarge!.color,
-                    ),
-                  ),
                   SizedBox(
-                    width: widget.type != postDetail ? 10 : 0,
+                    width: size.width * 0.6,
+                    child: BlockNamePost(
+                        account: account,
+                        description: description,
+                        mentions: mentions,
+                        group: group,
+                        page: page),
                   ),
-                  widget.type != postDetail
-                      ? InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            FontAwesomeIcons.xmark,
-                            size: 22,
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          group != null
+                              ? Text(account['display_name'],
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ))
+                              : const SizedBox(),
+                          Row(
+                            children: [
+                              Text(
+                                GetTimeAgo.parse(
+                                    DateTime.parse(widget.post['created_at'])),
+                                style: const TextStyle(
+                                    color: greyColor, fontSize: 12),
+                              ),
+                              const Text(" · ",
+                                  style: TextStyle(color: greyColor)),
+                              Icon(
+                                  typeVisibility.firstWhere(
+                                      (element) =>
+                                          element['key'] ==
+                                          widget.post['visibility'],
+                                      orElse: () => {})['icon'],
+                                  size: 13,
+                                  color: greyColor)
+                            ],
                           ),
-                        )
-                      : const SizedBox()
+                        ],
+                      ),
+                    ],
+                  )
                 ],
               )
-            : const SizedBox()
-      ]),
+            ],
+          ),
+          widget.type != postReblog
+              ? Row(
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: Icon(
+                        FontAwesomeIcons.ellipsis,
+                        size: 22,
+                        color: Theme.of(context).textTheme.displayLarge!.color,
+                      ),
+                    ),
+                    SizedBox(
+                      width: widget.type != postDetail ? 10 : 0,
+                    ),
+                    widget.type != postDetail
+                        ? InkWell(
+                            onTap: () {},
+                            child: const Icon(
+                              FontAwesomeIcons.xmark,
+                              size: 22,
+                            ),
+                          )
+                        : const SizedBox()
+                  ],
+                )
+              : const SizedBox()
+        ]),
+      ),
     );
   }
 

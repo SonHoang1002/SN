@@ -31,8 +31,8 @@ class GirdviewBuilderMedia extends StatelessWidget {
         shrinkWrap: true,
         primary: false,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisSpacing: 1,
-            mainAxisSpacing: 1,
+            crossAxisSpacing: 3,
+            mainAxisSpacing: 3,
             crossAxisCount: crossAxisCount,
             childAspectRatio: aspectRatio),
         itemCount: medias.length,

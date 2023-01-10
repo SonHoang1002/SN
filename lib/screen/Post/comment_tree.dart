@@ -2,6 +2,7 @@ import 'package:comment_tree/comment_tree.dart';
 import 'package:flutter/material.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/data/post.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_card.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
@@ -19,8 +20,13 @@ class CommentTree extends StatefulWidget {
 }
 
 class _CommentTreeState extends State<CommentTree> {
+  bool isShowCommentChild = false;
+  List<Comment> commentChild = [];
   @override
   void initState() {
+    commentChild = widget.commentParent['replies_total'] > 0
+        ? [Comment(avatar: 'icon', userName: 'null', content: '')]
+        : [];
     GetTimeAgo.setDefaultLocale('vi');
     super.initState();
   }
@@ -29,9 +35,21 @@ class _CommentTreeState extends State<CommentTree> {
   Widget build(BuildContext context) {
     dynamic avatarMedia = widget.commentParent['account']['avatar_media'];
     int replyCount = widget.commentParent['replies_total'];
-    List<Comment> commentChild = replyCount > 0
-        ? [Comment(avatar: 'icon', userName: 'null', content: '')]
-        : [];
+
+    fetchChildComment() {
+      List<Comment>? newListCommentChild = postChildComment
+          .map((e) => Comment(
+              avatar: e['account']['avatar_media'] != null
+                  ? e['account']['avatar_media']['preview_url']
+                  : linkAvatarDefault,
+              userName: e['account']['display_name'],
+              content: e['id']))
+          .toList();
+      setState(() {
+        isShowCommentChild = true;
+        commentChild = newListCommentChild;
+      });
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
@@ -44,7 +62,7 @@ class _CommentTreeState extends State<CommentTree> {
         commentChild,
         treeThemeData: TreeThemeData(
             lineColor: replyCount == 0 ? Colors.transparent : greyColor,
-            lineWidth: 0.2),
+            lineWidth: 0.5),
         avatarRoot: (context, data) => PreferredSize(
             preferredSize: const Size.fromRadius(18),
             child: AvatarSocial(width: 36, height: 36, path: data.avatar!)),
@@ -62,18 +80,27 @@ class _CommentTreeState extends State<CommentTree> {
               : AvatarSocial(width: 30, height: 30, path: data.avatar!),
         ),
         contentChild: (context, data) {
-          return replyCount > 0
-              ? Container(
-                  margin: const EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    "$replyCount phản hồi",
-                    style: const TextStyle(
-                        color: greyColor,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500),
+          return replyCount > 0 && !isShowCommentChild
+              ? GestureDetector(
+                  onTap: () {
+                    fetchChildComment();
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 5.0),
+                    child: Text(
+                      "$replyCount phản hồi",
+                      style: const TextStyle(
+                          color: greyColor,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ),
                 )
-              : BoxComment(widget: widget, data: data);
+              : BoxComment(
+                  widget: widget,
+                  data: data,
+                  post: postChildComment
+                      .firstWhere((element) => element['id'] == data.content));
         },
         contentRoot: (context, data) {
           return BoxComment(
@@ -116,14 +143,14 @@ class BoxComment extends StatelessWidget {
                     Text(
                       '${data.userName}',
                       style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w500),
+                          fontSize: 13, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(
                       height: 4,
                     ),
                     Text(
-                      '${data.content}',
-                      style: const TextStyle(fontSize: 12),
+                      '${post['content']}',
+                      style: const TextStyle(fontSize: 13),
                     ),
                   ],
                 ),
@@ -133,31 +160,44 @@ class BoxComment extends StatelessWidget {
                 child: Text(
                   '${data.userName}',
                   style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 13, fontWeight: FontWeight.w500),
                 )),
         PostMediaComment(post: post),
         DefaultTextStyle(
           style: const TextStyle(
-              color: greyColor, fontSize: 11, fontWeight: FontWeight.w500),
+              color: greyColor, fontSize: 12, fontWeight: FontWeight.w500),
           child: Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(
-                  width: 8,
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    const Text('Thích'),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    const Text('Trả lời'),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Text(
+                      GetTimeAgo.parse(
+                          DateTime.parse(widget.commentParent['created_at'])),
+                    ),
+                  ],
                 ),
-                const Text('Thích'),
-                const SizedBox(
-                  width: 16,
-                ),
-                const Text('Trả lời'),
-                const SizedBox(
-                  width: 16,
-                ),
-                Text(
-                  GetTimeAgo.parse(
-                      DateTime.parse(widget.commentParent['created_at'])),
-                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 20.0),
+                  child: Row(
+                    children: [
+                      Text('${post['favourites_count']} thích'),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

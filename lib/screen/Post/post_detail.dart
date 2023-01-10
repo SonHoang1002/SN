@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -48,9 +49,7 @@ class PostDetail extends StatelessWidget {
                       PostCenter(
                         post: post,
                       ),
-                      PostFooter(
-                        post: post,
-                      ),
+                      PostFooter(post: post, type: postDetail),
                       Container(
                         height: 1,
                         margin: const EdgeInsets.symmetric(
@@ -59,6 +58,7 @@ class PostDetail extends StatelessWidget {
                             BoxDecoration(color: Colors.grey.withOpacity(0.3)),
                       ),
                       ListView.builder(
+                          primary: false,
                           shrinkWrap: true,
                           itemCount: postComment.length,
                           itemBuilder: ((context, index) =>
