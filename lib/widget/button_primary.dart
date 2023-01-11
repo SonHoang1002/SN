@@ -24,11 +24,11 @@ class ButtonPrimary extends StatelessWidget {
             }
           : null,
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        backgroundColor: isPrimary == null ? primaryColor : secondaryColor,
-        elevation: 0,
-      ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          backgroundColor: isPrimary == null ? primaryColor : secondaryColor,
+          elevation: 0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           icon ?? const SizedBox(),

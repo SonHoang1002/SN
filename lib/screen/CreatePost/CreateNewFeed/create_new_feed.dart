@@ -6,10 +6,9 @@ import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dar
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activity.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/friend_tag.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/gif.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/image_video.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_categories.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
@@ -33,6 +32,14 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
 
   handleChooseMenu(menu) {
     if (menu == null) return;
+
+    if (menu['key'] == 'media') {
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => const Expanded(child: GalleryView())));
+      return;
+    }
     setState(() {
       menuSelected = menu;
     });
@@ -50,10 +57,6 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
       case 'tag-people':
         body =
             FriendTag(handleUpdateSelectedFriend: handleUpdateSelectedFriend);
-        buttonAppbar = const ButtonPrimary(label: "Xong");
-        break;
-      case 'media':
-        body = const ImageVideo();
         buttonAppbar = const ButtonPrimary(label: "Xong");
         break;
       case 'gif':
