@@ -1,16 +1,16 @@
-import 'package:drishya_picker/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/repo/gallery_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_repository.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 ///
 class GalleryAssetSelector extends StatefulWidget {
   ///
   const GalleryAssetSelector({
-    super.key,
+    Key? key,
     required this.controller,
     required this.albums,
-  });
+  }) : super(key: key);
 
   ///
   final GalleryController controller;
@@ -216,11 +216,12 @@ class GalleryAssetSelectorState extends State<GalleryAssetSelector>
 
 class _TextButton extends StatelessWidget {
   const _TextButton({
+    Key? key,
     this.label,
     this.background,
     this.labelColor,
     this.onPressed,
-  });
+  }) : super(key: key);
 
   final String? label;
   final Color? background;

@@ -1,8 +1,8 @@
-import 'package:drishya_picker/drishya_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/album_builder.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_repository.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/repo/gallery_repository.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/album_builder.dart';
+import 'package:flutter/material.dart';
 
 const _imageSize = 48;
 
@@ -10,11 +10,11 @@ const _imageSize = 48;
 class AlbumsPage extends StatelessWidget {
   ///
   const AlbumsPage({
-    super.key,
+    Key? key,
     required this.controller,
     required this.onAlbumChange,
     required this.albums,
-  });
+  }) : super(key: key);
 
   ///
   final GalleryController controller;
@@ -68,10 +68,11 @@ class AlbumsPage extends StatelessWidget {
 
 class _AlbumTile extends StatelessWidget {
   const _AlbumTile({
+    Key? key,
     required this.controller,
     required this.album,
     this.onPressed,
-  });
+  }) : super(key: key);
 
   final GalleryController controller;
   final Album album;

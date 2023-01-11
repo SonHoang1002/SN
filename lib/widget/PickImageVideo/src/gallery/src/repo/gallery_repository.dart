@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drishya_picker/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 import 'package:flutter/foundation.dart';
 
 /// State for the fetching process

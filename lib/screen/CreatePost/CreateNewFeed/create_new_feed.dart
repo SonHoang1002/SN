@@ -8,7 +8,7 @@ import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/friend_tag.
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/gif.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_categories.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_view.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';

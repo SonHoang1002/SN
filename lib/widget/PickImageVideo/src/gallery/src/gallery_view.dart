@@ -1,28 +1,28 @@
 import 'dart:async';
 
-import 'package:drishya_picker/drishya_picker.dart';
-import 'package:drishya_picker/src/animations/animations.dart';
-import 'package:drishya_picker/src/camera/src/widgets/ui_handler.dart';
-import 'package:drishya_picker/src/gallery/src/widgets/send_button.dart';
-import 'package:drishya_picker/src/gallery/src/widgets/widgets.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/animations/animations.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/ui_handler.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/repo/gallery_repository.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/albums_page.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_asset_selector.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_grid_view.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_header.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/send_button.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/albums_page.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_asset_selector.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_grid_view.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_header.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_repository.dart';
 
 ///
 ///
 class GalleryView extends StatefulWidget {
   ///
   const GalleryView({
-    super.key,
+    Key? key,
     this.controller,
     this.setting,
-  });
+  }) : super(key: key);
 
   /// Gallery controller
   final GalleryController? controller;
@@ -103,9 +103,10 @@ class _GalleryViewState extends State<GalleryView> {
 class _View extends StatefulWidget {
   ///
   const _View({
+    Key? key,
     required this.controller,
     required this.setting,
-  });
+  }) : super(key: key);
 
   final GalleryController controller;
   final GallerySetting setting;
@@ -258,10 +259,9 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
       child: WillPopScope(
         onWillPop: _onClosePressed,
         child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Colors.black,
           body: Stack(
             fit: StackFit.expand,
-            alignment: Alignment.center,
             children: [
               // Header
               Align(
@@ -275,54 +275,52 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
               ),
 
               // Body
-              Positioned.fill(
-                child: Column(
-                  children: [
-                    // Header space
-                    Builder(
-                      builder: (context) {
-                        // Header space for full screen mode
-                        if (_controller.fullScreenMode) {
-                          return SizedBox(height: panelSetting.headerMaxHeight);
-                        }
+              Column(
+                children: [
+                  // Header space
+                  Builder(
+                    builder: (context) {
+                      // Header space for full screen mode
+                      if (_controller.fullScreenMode) {
+                        return SizedBox(height: panelSetting.headerMaxHeight);
+                      }
 
-                        // Toogling size for header hiding animation
-                        return ValueListenableBuilder<PanelValue>(
-                          valueListenable: _panelController,
-                          builder: (context, value, child) {
-                            final height = (panelSetting.headerMaxHeight *
-                                    value.factor *
-                                    1.2)
-                                .clamp(
-                              panelSetting.thumbHandlerHeight,
-                              panelSetting.headerMaxHeight,
-                            );
-                            return SizedBox(height: height);
-                          },
-                        );
+                      // Toogling size for header hiding animation
+                      return ValueListenableBuilder<PanelValue>(
+                        valueListenable: _panelController,
+                        builder: (context, value, child) {
+                          final height = (panelSetting.headerMaxHeight *
+                                  value.factor *
+                                  1.2)
+                              .clamp(
+                            panelSetting.thumbHandlerHeight,
+                            panelSetting.headerMaxHeight,
+                          );
+                          return SizedBox(height: height);
+                        },
+                      );
 //
-                      },
-                    ),
+                    },
+                  ),
 
-                    // Divider
-                    const Divider(
-                      color: greyColor,
-                      thickness: 0.5,
-                      height: 0.5,
-                      indent: 0,
-                      endIndent: 0,
-                    ),
+                  // Divider
+                  Divider(
+                    color: Colors.lightBlue.shade300,
+                    thickness: 0.5,
+                    height: 0.5,
+                    indent: 0,
+                    endIndent: 0,
+                  ),
 
-                    // Gallery grid
-                    Expanded(
-                      child: GalleryGridView(
-                        controller: _controller,
-                        albums: _albums,
-                        onClosePressed: _onClosePressed,
-                      ),
+                  // Gallery grid
+                  Expanded(
+                    child: GalleryGridView(
+                      controller: _controller,
+                      albums: _albums,
+                      onClosePressed: _onClosePressed,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
 
               // Send and edit button

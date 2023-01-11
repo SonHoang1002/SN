@@ -1,19 +1,19 @@
-import 'package:drishya_picker/drishya_picker.dart';
-import 'package:drishya_picker/src/gallery/src/widgets/gallery_permission_view.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/repo/gallery_repository.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_permission_view.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_repository.dart';
 
 ///
 class AlbumBuilder extends StatelessWidget {
   ///
   const AlbumBuilder({
-    super.key,
+    Key? key,
     required this.controller,
     required this.albums,
     this.builder,
     this.child,
     this.hidePermissionView = false,
-  });
+  }) : super(key: key);
 
   ///
   final GalleryController controller;
@@ -84,11 +84,11 @@ class AlbumBuilder extends StatelessWidget {
 class CurrentAlbumBuilder extends StatelessWidget {
   ///
   const CurrentAlbumBuilder({
-    super.key,
+    Key? key,
     required this.albums,
     this.builder,
     this.child,
-  });
+  }) : super(key: key);
 
   ///
   final Albums albums;

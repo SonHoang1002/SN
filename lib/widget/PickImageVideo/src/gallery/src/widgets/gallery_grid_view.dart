@@ -1,24 +1,24 @@
 import 'dart:typed_data';
 
-import 'package:drishya_picker/drishya_picker.dart';
-import 'package:drishya_picker/src/gallery/src/widgets/gallery_builder.dart';
-import 'package:drishya_picker/src/gallery/src/widgets/gallery_permission_view.dart';
-import 'package:drishya_picker/src/gallery/src/widgets/lazy_load_scroll_view.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/repo/gallery_repository.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/album_builder.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_builder.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_permission_view.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/lazy_load_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/album_builder.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/gallery_repository.dart';
 
 ///
 class GalleryGridView extends StatelessWidget {
   ///
   const GalleryGridView({
-    super.key,
+    Key? key,
     required this.controller,
     required this.albums,
     required this.onClosePressed,
-  });
+  }) : super(key: key);
 
   ///
   final GalleryController controller;
@@ -145,9 +145,10 @@ class GalleryGridView extends StatelessWidget {
 class _MediaTile extends StatelessWidget {
   ///
   const _MediaTile({
+    Key? key,
     required this.entity,
     required this.controller,
-  });
+  }) : super(key: key);
 
   ///
   final GalleryController controller;
@@ -187,9 +188,10 @@ class _MediaTile extends StatelessWidget {
 
 class _SelectionCount extends StatelessWidget {
   const _SelectionCount({
+    Key? key,
     required this.controller,
     required this.entity,
-  });
+  }) : super(key: key);
 
   final GalleryController controller;
   final AssetEntity entity;
