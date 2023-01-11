@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/camera_builder.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,7 +41,7 @@ class _ShutterButton extends StatefulWidget {
   const _ShutterButton({
     Key? key,
     required this.controller,
-    this.size = 70.0,
+    this.size = 730.0,
   }) : super(key: key);
 
   final double size;
@@ -196,7 +197,7 @@ class _ShutterButtonState extends State<_ShutterButton>
                         case CameraType.selfi:
                           return const Icon(
                             CupertinoIcons.person_fill,
-                            color: Colors.blue,
+                            color: primaryColor,
                           );
                         case CameraType.video:
                           return _VideoIcon(radius: _videoIconRadius);
@@ -235,7 +236,7 @@ class _VideoIcon extends StatelessWidget {
       height: size,
       width: size,
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: primaryColor,
         borderRadius: BorderRadius.circular(radius),
       ),
     );
@@ -247,7 +248,7 @@ class _CustomPainter extends CustomPainter {
     this.progress = 0.0,
     this.strokeWidth = 7.0,
     this.strokeColor = Colors.white,
-    this.progressColor = Colors.blue,
+    this.progressColor = primaryColor,
   });
 
   final double progress;

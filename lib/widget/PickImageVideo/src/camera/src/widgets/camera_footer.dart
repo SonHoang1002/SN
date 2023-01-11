@@ -41,6 +41,7 @@ class CameraFooter extends StatelessWidget {
           ],
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Gallery preview
             CameraGalleryButton(controller: controller),

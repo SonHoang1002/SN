@@ -97,7 +97,7 @@ class ScrollListenerState extends State<ScrollListener> {
 
   void _finish(ScrollNotification notification, bool overScroll) {
     final controller = notification.context != null
-        ? Scrollable.of(notification.context!)?.widget.controller
+        ? Scrollable.of(notification.context!).widget.controller
         : null;
 
     // final scrollDirection =
