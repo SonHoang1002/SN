@@ -41,7 +41,7 @@ class _ShutterButton extends StatefulWidget {
   const _ShutterButton({
     Key? key,
     required this.controller,
-    this.size = 730.0,
+    this.size = 50.0,
   }) : super(key: key);
 
   final double size;
