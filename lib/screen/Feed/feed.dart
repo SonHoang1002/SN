@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
+import 'package:social_network_app_mobile/screen/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/data/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -53,6 +56,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
 
     List iconAction = [
       {
+        "key": "notification",
         "icon": modeTheme == 'dark'
             ? 'assets/NotiDM.svg'
             : 'assets/notification.svg',
@@ -62,8 +66,9 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
         "right": 6.0,
         "bottom": 6.0,
       },
-      {"icon": Icons.search, 'type': 'icon'},
+      {"key": "search", "icon": Icons.search, 'type': 'icon'},
       {
+        "key": "chat",
         "icon": modeTheme == 'dark' ? 'assets/ChatDM.svg' : 'assets/chat.svg',
         'type': 'image',
         "top": modeTheme == 'dark' ? 5.0 : 6.0,
@@ -72,6 +77,19 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
         "bottom": modeTheme == 'dark' ? 5.0 : 0.0,
       }
     ];
+
+    handleClick(key) {
+      if (key == 'notification') {
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => const CreateModalBaseMenu(
+                      title: 'Thông báo',
+                      body: NotificationPage(),
+                      buttonAppbar: SizedBox(),
+                    )));
+      }
+    }
 
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,
@@ -122,32 +140,37 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
               Row(
                 children: List.generate(
                     iconAction.length,
-                    (index) => Container(
-                          width: 30,
-                          height: 30,
-                          margin: const EdgeInsets.only(left: 5),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey.withOpacity(0.3)),
-                          child: iconAction[index]['type'] == 'icon'
-                              ? Icon(
-                                  iconAction[index]['icon'],
-                                  size: 20,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .color,
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.only(
-                                      top: iconAction[index]['top'],
-                                      left: iconAction[index]['left'],
-                                      right: iconAction[index]['right'],
-                                      bottom: iconAction[index]['bottom']),
-                                  child: SvgPicture.asset(
+                    (index) => GestureDetector(
+                          onTap: () {
+                            handleClick(iconAction[index]['key']);
+                          },
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            margin: const EdgeInsets.only(left: 5),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey.withOpacity(0.3)),
+                            child: iconAction[index]['type'] == 'icon'
+                                ? Icon(
                                     iconAction[index]['icon'],
+                                    size: 20,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displayLarge!
+                                        .color,
+                                  )
+                                : Padding(
+                                    padding: EdgeInsets.only(
+                                        top: iconAction[index]['top'],
+                                        left: iconAction[index]['left'],
+                                        right: iconAction[index]['right'],
+                                        bottom: iconAction[index]['bottom']),
+                                    child: SvgPicture.asset(
+                                      iconAction[index]['icon'],
+                                    ),
                                   ),
-                                ),
+                          ),
                         )),
               )
             ],

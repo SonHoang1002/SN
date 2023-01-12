@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/icons/custom_icons.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/animations/animations.dart';
@@ -86,40 +87,32 @@ class _AppDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final cancel = TextButton(
       onPressed: Navigator.of(context).pop,
-      child: Text(
-        'NO',
-        style: Theme.of(context).textTheme.button!.copyWith(
-              color: Colors.lightBlue,
-            ),
+      child: const Text(
+        'Giữ lại',
+        style: TextStyle(color: secondaryColor),
       ),
     );
     final unselectItems = TextButton(
       onPressed: () {
         Navigator.of(context).pop(true);
       },
-      child: Text(
-        'DISCARD',
-        style: Theme.of(context).textTheme.button!.copyWith(
-              color: Colors.blue,
-            ),
+      child: const Text(
+        'Hủy bỏ',
+        style: TextStyle(color: primaryColor),
       ),
     );
 
     return AlertDialog(
-      title: Text(
-        'Discard changes?',
-        style: Theme.of(context).textTheme.headline6!.copyWith(
-              color: Colors.white70,
-            ),
+      title: const Text(
+        'Hủy thay đổi?',
+        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
       ),
-      content: Text(
-        'Are you sure you want to discard your changes?',
-        style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Colors.grey.shade600,
-            ),
+      content: const Text(
+        'Bạn chắc chắn muốn hủy bỏ các thay đổi?',
+        style: TextStyle(fontSize: 13),
       ),
       actions: [cancel, unselectItems],
-      backgroundColor: Colors.grey.shade900,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       titlePadding: const EdgeInsets.all(16),
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16,
