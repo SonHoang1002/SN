@@ -61,12 +61,14 @@ class _SearchInputState extends State<SearchInput> {
                         child: Container(
                           width: 20,
                           height: 20,
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
+                          decoration: const BoxDecoration(
+                              color: Colors.transparent,
                               shape: BoxShape.circle),
-                          child: const Icon(
+                          child: Icon(
                             FontAwesomeIcons.xmark,
                             size: 15,
+                            color:
+                                Theme.of(context).textTheme.displayLarge!.color,
                           ),
                         ),
                       )

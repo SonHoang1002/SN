@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/screen/Search/search.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
@@ -88,6 +89,9 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                       body: NotificationPage(),
                       buttonAppbar: SizedBox(),
                     )));
+      } else if (key == 'search') {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Search()));
       }
     }
 
