@@ -38,9 +38,11 @@ class PageItem extends StatelessWidget {
             const SizedBox(
               height: 4.0,
             ),
-            TextDescription(
-              description: page['page_categories'][0]['text'],
-            )
+            page['page_categories'].isNotEmpty
+                ? TextDescription(
+                    description: page['page_categories'][0]['text'],
+                  )
+                : const SizedBox()
           ],
         )
       ],

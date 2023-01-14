@@ -25,7 +25,8 @@ class ButtonPrimary extends StatelessWidget {
           : null,
       style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          backgroundColor: isPrimary == null ? primaryColor : secondaryColor,
+          backgroundColor:
+              isPrimary == null || !isPrimary! ? primaryColor : secondaryColor,
           elevation: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
+import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class UserItem extends StatelessWidget {
   final dynamic user;
@@ -21,12 +22,23 @@ class UserItem extends StatelessWidget {
         const SizedBox(
           width: 7,
         ),
-        Text(
-          user['display_name'],
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 13,
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              user['display_name'],
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              ),
+            ),
+            !['', null].contains(subText)
+                ? Container(
+                    margin: const EdgeInsets.only(top: 4.0),
+                    child: TextDescription(description: subText ?? ''))
+                : const SizedBox()
+          ],
         )
       ],
     );
