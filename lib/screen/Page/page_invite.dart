@@ -93,6 +93,7 @@ class PageInvite extends StatelessWidget {
                                     width: 8.0,
                                   ),
                                   ButtonPrimary(
+                                    isPrimary: true,
                                     handlePress: () {},
                                     label: "Từ chối",
                                   )

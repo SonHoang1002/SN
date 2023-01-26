@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/screen/Moment/moment.dart';
+import 'package:social_network_app_mobile/screen/Group/group.dart';
 import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_render.dart';
 // import 'package:social_network_app_mobile/screen/Page/page_general.dart';
@@ -25,6 +26,24 @@ class MenuSelected extends StatelessWidget {
         break;
       case 'watch':
         body = const WatchRender();
+        break;
+      case 'groupSocial':
+        body = const Group();
+        buttonAppbar = Row(
+          children: const [
+            Icon(
+              FontAwesomeIcons.plus,
+              size: 20,
+            ),
+            SizedBox(
+              width: 12.0,
+            ),
+            Icon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: 18,
+            )
+          ],
+        );
         break;
       // case 'moment':
       //   body = const Moment();

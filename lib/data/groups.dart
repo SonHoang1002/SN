@@ -1749,7 +1749,7 @@ List groupOther = [
   }
 ];
 
-var groupInvitations = {
+dynamic groupInvitations = {
   "data": [
     {
       "created_at": "2022-10-29T10:15:31.450+07:00",
@@ -2187,7 +2187,7 @@ var groupInvitations = {
   "meta": {"total": 2}
 };
 
-var groupJoinRequests = {
+dynamic groupJoinRequests = {
   "data": [
     {
       "id": "108786420598866497",

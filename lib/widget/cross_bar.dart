@@ -6,7 +6,7 @@ class CrossBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 5,
+      height: 2,
       margin: const EdgeInsets.only(top: 10, bottom: 10),
       color: Colors.grey.withOpacity(0.5),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 class GroupItem extends StatelessWidget {
@@ -14,7 +15,7 @@ class GroupItem extends StatelessWidget {
             isGroup: true,
             width: 40,
             height: 40,
-            path: group['banner']['preview_url']),
+            path: group['banner']?['preview_url'] ?? linkAvatarDefault),
         const SizedBox(
           width: 10,
         ),
