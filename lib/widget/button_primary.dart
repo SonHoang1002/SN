@@ -24,7 +24,7 @@ class ButtonPrimary extends StatelessWidget {
             }
           : null,
       style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           backgroundColor: ![null, false].contains(isPrimary)
               ? primaryColor
               : secondaryColor,
@@ -39,7 +39,8 @@ class ButtonPrimary extends StatelessWidget {
           ),
           Text(
             label,
-            style: TextStyle(color: handlePress != null ? white : null),
+            style: TextStyle(
+                color: handlePress != null ? white : null, fontSize: 14),
           ),
         ],
       ),

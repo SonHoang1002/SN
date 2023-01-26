@@ -6,10 +6,8 @@ import 'package:social_network_app_mobile/data/post.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/comment_textfield.dart';
-import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
 import 'comment_tree.dart';
 
@@ -22,20 +20,6 @@ class PostDetail extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const BackIconAppbar(),
-            PostHeader(
-              post: post,
-              type: postDetail,
-            ),
-          ],
-        ),
-      ),
       body: SizedBox(
         height: size.height,
         width: size.width,
@@ -43,6 +27,25 @@ class PostDetail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
+              const SizedBox(
+                height: 4.0,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      width: 30,
+                      margin: const EdgeInsets.only(left: 4.0, top: 6.0),
+                      child: const BackIconAppbar()),
+                  SizedBox(
+                    width: size.width - 45,
+                    child: PostHeader(
+                      post: post,
+                      type: postDetail,
+                    ),
+                  ),
+                ],
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(

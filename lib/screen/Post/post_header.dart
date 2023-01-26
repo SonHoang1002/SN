@@ -87,6 +87,9 @@ class _PostHeaderState extends State<PostHeader> {
     }
 
     return InkWell(
+      hoverColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
       onTap: () {
         if (widget.type != postDetail) {
           Navigator.push(
@@ -97,95 +100,98 @@ class _PostHeaderState extends State<PostHeader> {
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 12, right: 12),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AvatarPost(group: group, page: page, account: account),
-              const SizedBox(
-                width: 5,
-              ),
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: size.width * 0.6,
-                    child: BlockNamePost(
-                        account: account,
-                        description: description,
-                        mentions: mentions,
-                        group: group,
-                        page: page),
+                  AvatarPost(group: group, page: page, account: account),
+                  const SizedBox(
+                    width: 5,
                   ),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      SizedBox(
+                        width: size.width * 0.6,
+                        child: BlockNamePost(
+                            account: account,
+                            description: description,
+                            mentions: mentions,
+                            group: group,
+                            page: page),
+                      ),
+                      Row(
                         children: [
-                          group != null
-                              ? Text(account['display_name'],
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ))
-                              : const SizedBox(),
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                GetTimeAgo.parse(
-                                    DateTime.parse(widget.post['created_at'])),
-                                style: const TextStyle(
-                                    color: greyColor, fontSize: 12),
+                              group != null
+                                  ? Text(account['display_name'],
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ))
+                                  : const SizedBox(),
+                              Row(
+                                children: [
+                                  Text(
+                                    GetTimeAgo.parse(DateTime.parse(
+                                        widget.post['created_at'])),
+                                    style: const TextStyle(
+                                        color: greyColor, fontSize: 12),
+                                  ),
+                                  const Text(" · ",
+                                      style: TextStyle(color: greyColor)),
+                                  Icon(
+                                      typeVisibility.firstWhere(
+                                          (element) =>
+                                              element['key'] ==
+                                              widget.post['visibility'],
+                                          orElse: () => {})['icon'],
+                                      size: 13,
+                                      color: greyColor)
+                                ],
                               ),
-                              const Text(" · ",
-                                  style: TextStyle(color: greyColor)),
-                              Icon(
-                                  typeVisibility.firstWhere(
-                                      (element) =>
-                                          element['key'] ==
-                                          widget.post['visibility'],
-                                      orElse: () => {})['icon'],
-                                  size: 13,
-                                  color: greyColor)
                             ],
                           ),
                         ],
-                      ),
+                      )
                     ],
                   )
                 ],
-              )
-            ],
-          ),
-          (![postReblog, postMultipleMedia].contains(widget.type))
-              ? Row(
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Icon(
-                        FontAwesomeIcons.ellipsis,
-                        size: 22,
-                        color: Theme.of(context).textTheme.displayLarge!.color,
-                      ),
-                    ),
-                    SizedBox(
-                      width: widget.type != postDetail ? 10 : 0,
-                    ),
-                    widget.type != postDetail
-                        ? InkWell(
-                            onTap: () {},
-                            child: const Icon(
-                              FontAwesomeIcons.xmark,
-                              size: 22,
-                            ),
-                          )
-                        : const SizedBox()
-                  ],
-                )
-              : const SizedBox()
-        ]),
+              ),
+              (![postReblog, postMultipleMedia].contains(widget.type))
+                  ? Row(
+                      children: [
+                        InkWell(
+                          onTap: () {},
+                          child: Icon(
+                            FontAwesomeIcons.ellipsis,
+                            size: 22,
+                            color:
+                                Theme.of(context).textTheme.displayLarge!.color,
+                          ),
+                        ),
+                        SizedBox(
+                          width: widget.type != postDetail ? 10 : 0,
+                        ),
+                        ![postDetail, postPageUser].contains(widget.type)
+                            ? InkWell(
+                                onTap: () {},
+                                child: const Icon(
+                                  FontAwesomeIcons.xmark,
+                                  size: 22,
+                                ),
+                              )
+                            : const SizedBox()
+                      ],
+                    )
+                  : const SizedBox()
+            ]),
       ),
     );
   }

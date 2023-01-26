@@ -6,7 +6,8 @@ import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
 class Post extends StatefulWidget {
   final dynamic post;
-  const Post({Key? key, this.post}) : super(key: key);
+  final String? type;
+  const Post({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -19,7 +20,10 @@ class _PostState extends State<Post> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PostHeader(post: widget.post),
+        PostHeader(
+          post: widget.post,
+          type: widget.type,
+        ),
         PostCenter(post: widget.post),
         PostFooter(post: widget.post),
         const CrossBar(),

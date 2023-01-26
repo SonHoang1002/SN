@@ -24,6 +24,9 @@ List typeVisibility = [
 String linkAvatarDefault =
     'https://snapi.emso.asia/avatars/original/missing.png';
 
+String linkBannerDefault =
+    "https://sn.emso.vn/static/media/group_cover.81acfb42.png";
+
 List listMenuPost = [
   {
     "key": 'media',

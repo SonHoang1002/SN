@@ -9,6 +9,8 @@ String postStatusActivity = 'activity';
 
 String postReblog = 'reblog';
 String postDetail = 'post_detail';
+String postPageUser = 'post_page_user';
+
 String postMultipleMedia = 'post_multiple_media';
 
 String postShareEvent = 'event_shared';
