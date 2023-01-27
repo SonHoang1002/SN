@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_friend_block.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_infomation_block.dart';
@@ -11,7 +13,9 @@ import 'package:social_network_app_mobile/widget/Banner/banner_base.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -55,13 +59,13 @@ class UserPage extends StatelessWidget {
           children: [
             BannerBase(object: meData, objectMore: userAbout),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+              margin: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
                       height: 35,
-                      width: size.width - 75,
+                      width: size.width - 80,
                       child: ButtonPrimary(
                         icon: const Icon(
                           FontAwesomeIcons.pen,
@@ -84,10 +88,40 @@ class UserPage extends StatelessWidget {
             const CrossBar(),
             UserPageInfomationBlock(user: meData, userAbout: userAbout),
             const CrossBar(),
-            const UserPageFriendBlock(),
+            UserPageFriendBlock(user: meData),
+            const SizedBox(
+              height: 12.0,
+            ),
+            const CrossBar(),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: const Text(
+                "Bài viết của bạn",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+              ),
+            ),
+            const SizedBox(
+              height: 12.0,
+            ),
+            const CreatePostButton(),
+            const CrossBar(),
+            Container(
+              width: 115,
+              margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+              child: ChipMenu(
+                isSelected: false,
+                label: "Ảnh/video",
+                icon: SvgPicture.asset(
+                  "assets/post_media.svg",
+                  width: 18,
+                  height: 18,
+                ),
+              ),
+            ),
+            const CrossBar(),
             ListView.builder(
                 shrinkWrap: true,
-                primary: true,
+                primary: false,
                 itemCount: postUser.length,
                 itemBuilder: (context, index) => Post(
                       type: postPageUser,

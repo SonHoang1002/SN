@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screen/Group/group_invited_request.dart';
 import 'package:social_network_app_mobile/screen/Group/group_list_all.dart';
 import 'package:social_network_app_mobile/screen/Group/group_list_discover.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
@@ -65,6 +66,9 @@ class _GroupState extends State<Group> {
                         icon: Icon(
                           menuGroup[index]['icon'],
                           size: 16,
+                          color: menuSelected == menuGroup[index]['key']
+                              ? white
+                              : null,
                         ),
                       ),
                     )),

@@ -47,7 +47,7 @@ class PostContent extends StatelessWidget {
                 if (await canLaunchUrl(Uri.parse(link.url))) {
                   await launchUrl(Uri.parse(link.url));
                 } else {
-                  throw 'Không thể mở link!';
+                  return;
                 }
               },
               style: const TextStyle(

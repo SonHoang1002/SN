@@ -217,7 +217,7 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20))),
+                                      top: Radius.circular(10))),
                               builder: (BuildContext context) {
                                 return PostBackground(
                                   backgroundSelected: backgroundSelected,

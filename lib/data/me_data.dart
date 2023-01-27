@@ -207,3 +207,621 @@ Object userAbout = {
     }
   ]
 };
+
+List featureContents = [
+  {
+    "id": 97,
+    "title": "Collection",
+    "media_count": 2,
+    "created_at": "2022-10-15T09:55:35.114+07:00",
+    "updated_at": "2022-10-15T09:55:35.114+07:00",
+    "banner": {
+      "id": "109036677933185445",
+      "type": "video",
+      "url":
+          "https://snapi.emso.asia/system/media_attachments/files/109/036/677/933/185/445/original/f5fcc64df708831a.mp4",
+      "preview_url":
+          "https://snapi.emso.asia/system/media_attachments/files/109/036/677/933/185/445/small/f5fcc64df708831a.png",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "text_url": null,
+      "meta": {
+        "original": {
+          "width": 576,
+          "height": 1024,
+          "frame_rate": "30/1",
+          "duration": 10.96,
+          "bitrate": 1463063
+        },
+        "small": {
+          "width": 225,
+          "height": 400,
+          "size": "225x400",
+          "aspect": 0.5625,
+          "average_color": "#6c534e"
+        }
+      },
+      "description": "?",
+      "blurhash": "UFK15pD*9uWB.8xaafxZ0eNGxut7xuNHR+t7",
+      "status_id": "109036677940548290",
+      "show_url":
+          "https://snapi.emso.asia/system/media_attachments/files/109/036/677/933/185/444/original/05ed66deef5b3c18.jpeg",
+      "created_at": "2022-09-21T20:41:08.670+07:00",
+      "post_type": "moment",
+      "frame": null
+    },
+    "medias": [
+      {
+        "id": "109036676598275126",
+        "type": "video",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/036/676/598/275/126/original/b4317b8ffacfb0fd.mp4",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/036/676/598/275/126/small/b4317b8ffacfb0fd.png",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 576,
+            "height": 1024,
+            "frame_rate": "30/1",
+            "duration": 18.691,
+            "bitrate": 1490785
+          },
+          "small": {
+            "width": 225,
+            "height": 400,
+            "size": "225x400",
+            "aspect": 0.5625,
+            "average_color": "#403635"
+          }
+        },
+        "description": "#dance",
+        "blurhash": "U99738W:RkR+0et7j]s:RjofxajsxvozxaR*",
+        "status_id": "109036676619422754",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/036/676/598/275/125/original/e9f8042e83ff1cc7.jpeg",
+        "created_at": "2022-09-21T20:40:48.347+07:00",
+        "post_type": "moment",
+        "frame": null
+      },
+      {
+        "id": "109036677933185445",
+        "type": "video",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/036/677/933/185/445/original/f5fcc64df708831a.mp4",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/036/677/933/185/445/small/f5fcc64df708831a.png",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 576,
+            "height": 1024,
+            "frame_rate": "30/1",
+            "duration": 10.96,
+            "bitrate": 1463063
+          },
+          "small": {
+            "width": 225,
+            "height": 400,
+            "size": "225x400",
+            "aspect": 0.5625,
+            "average_color": "#6c534e"
+          }
+        },
+        "description": "?",
+        "blurhash": "UFK15pD*9uWB.8xaafxZ0eNGxut7xuNHR+t7",
+        "status_id": "109036677940548290",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/036/677/933/185/444/original/05ed66deef5b3c18.jpeg",
+        "created_at": "2022-09-21T20:41:08.670+07:00",
+        "post_type": "moment",
+        "frame": null
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "title": "Love Myself",
+    "media_count": 3,
+    "created_at": "2022-10-11T16:15:48.083+07:00",
+    "updated_at": "2022-10-13T16:23:05.208+07:00",
+    "banner": {
+      "id": "108835834459775293",
+      "type": "image",
+      "url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/835/834/459/775/293/original/a45629314a2ee36a.jpg",
+      "preview_url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/835/834/459/775/293/small/a45629314a2ee36a.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "text_url": null,
+      "meta": {
+        "original": {
+          "width": 720,
+          "height": 720,
+          "size": "720x720",
+          "aspect": 1,
+          "average_color": "#826a75"
+        },
+        "small": {
+          "width": 400,
+          "height": 400,
+          "size": "400x400",
+          "aspect": 1,
+          "average_color": "#826a75"
+        }
+      },
+      "description": "",
+      "blurhash": "UMH^@q4nIWXS~8Nd4:t656ElNG%0-;E0%2%M",
+      "status_id": "108835834463844214",
+      "show_url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/835/834/589/329/475/original/b22daaa9bff843d9.jpeg",
+      "created_at": "2022-08-17T09:24:00.458+07:00",
+      "frame": null
+    },
+    "medias": [
+      {
+        "id": "108835834459775293",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/459/775/293/original/a45629314a2ee36a.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/459/775/293/small/a45629314a2ee36a.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 720,
+            "height": 720,
+            "size": "720x720",
+            "aspect": 1,
+            "average_color": "#826a75"
+          },
+          "small": {
+            "width": 400,
+            "height": 400,
+            "size": "400x400",
+            "aspect": 1,
+            "average_color": "#826a75"
+          }
+        },
+        "description": "",
+        "blurhash": "UMH^@q4nIWXS~8Nd4:t656ElNG%0-;E0%2%M",
+        "status_id": "108835834463844214",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/589/329/475/original/b22daaa9bff843d9.jpeg",
+        "created_at": "2022-08-17T09:24:00.458+07:00",
+        "frame": null
+      },
+      {
+        "id": "108871369379426777",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/871/369/379/426/777/original/22ebf0a027dd71bb.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/871/369/379/426/777/small/22ebf0a027dd71bb.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 1764,
+            "height": 1176,
+            "size": "1764x1176",
+            "aspect": 1.5,
+            "average_color": "#676a74"
+          },
+          "small": {
+            "width": 490,
+            "height": 327,
+            "size": "490x327",
+            "aspect": 1.4984709480122325,
+            "average_color": "#676a74"
+          }
+        },
+        "description": "",
+        "blurhash": "UOEW2mD%ogfP?wM{ofofRjoeMxt7o#ofV@a|",
+        "status_id": "108871369478984073",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/035/739/768/842/698/original/685de9a6f10c5812.jpeg",
+        "created_at": "2022-08-23T16:01:00.305+07:00",
+        "frame": null
+      },
+      {
+        "id": "109148963362436586",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/148/963/362/436/586/original/8ac8d29406338674.jpeg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/148/963/362/436/586/small/8ac8d29406338674.jpeg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 1764,
+            "height": 1176,
+            "size": "1764x1176",
+            "aspect": 1.5,
+            "average_color": "#808781"
+          },
+          "small": {
+            "width": 490,
+            "height": 327,
+            "size": "490x327",
+            "aspect": 1.4984709480122325,
+            "average_color": "#808781"
+          }
+        },
+        "description": null,
+        "blurhash": "UGH2i.Ae00nQ;X%zkXM_5MlS#Rj9Hls+SP",
+        "status_id": "",
+        "show_url": null,
+        "created_at": "2022-10-11T16:36:48.334+07:00",
+        "frame": null
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "title": "Ăn uống",
+    "media_count": 5,
+    "created_at": "2022-10-11T11:40:50.587+07:00",
+    "updated_at": "2022-10-13T16:23:05.225+07:00",
+    "banner": {
+      "id": "108797398106304646",
+      "type": "image",
+      "url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/797/398/106/304/646/original/b84efd8c929979db.jpg",
+      "preview_url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/797/398/106/304/646/small/b84efd8c929979db.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "text_url": null,
+      "meta": {
+        "original": {
+          "width": 1764,
+          "height": 1176,
+          "size": "1764x1176",
+          "aspect": 1.5,
+          "average_color": "#000099"
+        },
+        "small": {
+          "width": 490,
+          "height": 327,
+          "size": "490x327",
+          "aspect": 1.4984709480122325,
+          "average_color": "#000099"
+        }
+      },
+      "description": "",
+      "blurhash": "UQIrEL00?b?b_3IUoft7j[t7WBofxut7WBj[",
+      "status_id": "108797398111593437",
+      "show_url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/836/056/494/068/987/original/202eae18bb45d709.jpeg",
+      "created_at": "2022-08-10T14:29:08.249+07:00",
+      "frame": null
+    },
+    "medias": [
+      {
+        "id": "108797398106304646",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/797/398/106/304/646/original/b84efd8c929979db.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/797/398/106/304/646/small/b84efd8c929979db.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 1764,
+            "height": 1176,
+            "size": "1764x1176",
+            "aspect": 1.5,
+            "average_color": "#000099"
+          },
+          "small": {
+            "width": 490,
+            "height": 327,
+            "size": "490x327",
+            "aspect": 1.4984709480122325,
+            "average_color": "#000099"
+          }
+        },
+        "description": "",
+        "blurhash": "UQIrEL00?b?b_3IUoft7j[t7WBofxut7WBj[",
+        "status_id": "108797398111593437",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/836/056/494/068/987/original/202eae18bb45d709.jpeg",
+        "created_at": "2022-08-10T14:29:08.249+07:00",
+        "frame": null
+      },
+      {
+        "id": "108835834459775293",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/459/775/293/original/a45629314a2ee36a.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/459/775/293/small/a45629314a2ee36a.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 720,
+            "height": 720,
+            "size": "720x720",
+            "aspect": 1,
+            "average_color": "#826a75"
+          },
+          "small": {
+            "width": 400,
+            "height": 400,
+            "size": "400x400",
+            "aspect": 1,
+            "average_color": "#826a75"
+          }
+        },
+        "description": "",
+        "blurhash": "UMH^@q4nIWXS~8Nd4:t656ElNG%0-;E0%2%M",
+        "status_id": "108835834463844214",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/589/329/475/original/b22daaa9bff843d9.jpeg",
+        "created_at": "2022-08-17T09:24:00.458+07:00",
+        "frame": null
+      },
+      {
+        "id": "109014039427046979",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/014/039/427/046/979/original/d7ea1a86ae05f353.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/014/039/427/046/979/small/d7ea1a86ae05f353.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 1248,
+            "height": 1662,
+            "size": "1248x1662",
+            "aspect": 0.7509025270758123,
+            "average_color": "#79624d"
+          },
+          "small": {
+            "width": 347,
+            "height": 462,
+            "size": "347x462",
+            "aspect": 0.7510822510822511,
+            "average_color": "#79624d"
+          }
+        },
+        "description": null,
+        "blurhash": "UCF}.i56ERU]5j?Ga1Te+xZS2D%4UE2?axt",
+        "status_id": "109014039449635825",
+        "show_url": null,
+        "created_at": "2022-09-17T20:43:52.465+07:00",
+        "frame": null
+      },
+      {
+        "id": "109035728891088242",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/035/728/891/088/242/original/32d12b43d8664220.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/035/728/891/088/242/small/32d12b43d8664220.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 1100,
+            "height": 1885,
+            "size": "1100x1885",
+            "aspect": 0.583554376657825,
+            "average_color": "#655751"
+          },
+          "small": {
+            "width": 306,
+            "height": 524,
+            "size": "306x524",
+            "aspect": 0.583969465648855,
+            "average_color": "#655751"
+          }
+        },
+        "description": null,
+        "blurhash": "UBE2qU4T?a0K~qIA^+4oRjWA%MWX9Fs:og%M",
+        "status_id": "109035736882501812",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/035/728/891/088/241/original/44e8cc615a17509b.jpeg",
+        "created_at": "2022-09-21T16:39:47.654+07:00",
+        "frame": null
+      },
+      {
+        "id": "109067895954747913",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/067/895/954/747/913/original/e8404f1144057062.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/067/895/954/747/913/small/e8404f1144057062.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 600,
+            "height": 400,
+            "size": "600x400",
+            "aspect": 1.5,
+            "average_color": "#f4c259"
+          },
+          "small": {
+            "width": 490,
+            "height": 327,
+            "size": "490x327",
+            "aspect": 1.4984709480122325,
+            "average_color": "#f3c259"
+          }
+        },
+        "description": "",
+        "blurhash": "UBSgqIs,}*oLxaj?s,R,ngjtWFa|xrayM~oe",
+        "status_id": "109067896368710427",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/067/896/440/456/440/original/6e90b556f9132c4e.jpeg",
+        "created_at": "2022-09-27T09:00:17.863+07:00",
+        "frame": null
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "title": "Me <3",
+    "media_count": 3,
+    "created_at": "2022-10-11T11:28:06.886+07:00",
+    "updated_at": "2022-10-13T16:23:05.191+07:00",
+    "banner": {
+      "id": "108797398106304646",
+      "type": "image",
+      "url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/797/398/106/304/646/original/b84efd8c929979db.jpg",
+      "preview_url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/797/398/106/304/646/small/b84efd8c929979db.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "text_url": null,
+      "meta": {
+        "original": {
+          "width": 1764,
+          "height": 1176,
+          "size": "1764x1176",
+          "aspect": 1.5,
+          "average_color": "#000099"
+        },
+        "small": {
+          "width": 490,
+          "height": 327,
+          "size": "490x327",
+          "aspect": 1.4984709480122325,
+          "average_color": "#000099"
+        }
+      },
+      "description": "",
+      "blurhash": "UQIrEL00?b?b_3IUoft7j[t7WBofxut7WBj[",
+      "status_id": "108797398111593437",
+      "show_url":
+          "https://snapi.emso.asia/system/media_attachments/files/108/836/056/494/068/987/original/202eae18bb45d709.jpeg",
+      "created_at": "2022-08-10T14:29:08.249+07:00",
+      "frame": null
+    },
+    "medias": [
+      {
+        "id": "108797398106304646",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/797/398/106/304/646/original/b84efd8c929979db.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/797/398/106/304/646/small/b84efd8c929979db.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 1764,
+            "height": 1176,
+            "size": "1764x1176",
+            "aspect": 1.5,
+            "average_color": "#000099"
+          },
+          "small": {
+            "width": 490,
+            "height": 327,
+            "size": "490x327",
+            "aspect": 1.4984709480122325,
+            "average_color": "#000099"
+          }
+        },
+        "description": "",
+        "blurhash": "UQIrEL00?b?b_3IUoft7j[t7WBofxut7WBj[",
+        "status_id": "108797398111593437",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/836/056/494/068/987/original/202eae18bb45d709.jpeg",
+        "created_at": "2022-08-10T14:29:08.249+07:00",
+        "frame": null
+      },
+      {
+        "id": "108835834459775293",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/459/775/293/original/a45629314a2ee36a.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/459/775/293/small/a45629314a2ee36a.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 720,
+            "height": 720,
+            "size": "720x720",
+            "aspect": 1,
+            "average_color": "#826a75"
+          },
+          "small": {
+            "width": 400,
+            "height": 400,
+            "size": "400x400",
+            "aspect": 1,
+            "average_color": "#826a75"
+          }
+        },
+        "description": "",
+        "blurhash": "UMH^@q4nIWXS~8Nd4:t656ElNG%0-;E0%2%M",
+        "status_id": "108835834463844214",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/835/834/589/329/475/original/b22daaa9bff843d9.jpeg",
+        "created_at": "2022-08-17T09:24:00.458+07:00",
+        "frame": null
+      },
+      {
+        "id": "108871369379426777",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/871/369/379/426/777/original/22ebf0a027dd71bb.jpg",
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/871/369/379/426/777/small/22ebf0a027dd71bb.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 1764,
+            "height": 1176,
+            "size": "1764x1176",
+            "aspect": 1.5,
+            "average_color": "#676a74"
+          },
+          "small": {
+            "width": 490,
+            "height": 327,
+            "size": "490x327",
+            "aspect": 1.4984709480122325,
+            "average_color": "#676a74"
+          }
+        },
+        "description": "",
+        "blurhash": "UOEW2mD%ogfP?wM{ofofRjoeMxt7o#ofV@a|",
+        "status_id": "108871369478984073",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/035/739/768/842/698/original/685de9a6f10c5812.jpeg",
+        "created_at": "2022-08-23T16:01:00.305+07:00",
+        "frame": null
+      }
+    ]
+  }
+];

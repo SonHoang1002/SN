@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/data/groups.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
@@ -52,6 +53,7 @@ class GroupFeedAll extends StatelessWidget {
                                           groupMember[index]['title'],
                                           maxLines: 2,
                                           style: const TextStyle(
+                                              color: white,
                                               fontSize: 11,
                                               fontWeight: FontWeight.w700,
                                               overflow: TextOverflow.ellipsis),

@@ -22,10 +22,11 @@ class ChipMenu extends StatelessWidget {
               : Theme.of(context).colorScheme.background),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           icon ?? const SizedBox(),
           const SizedBox(
-            width: 8.0,
+            width: 6.0,
           ),
           Text(
             label,

@@ -21,7 +21,7 @@ class PostCard extends StatelessWidget {
                         Uri.parse(card['link'] ?? card['url']))) {
                       await launchUrl(Uri.parse(card['link'] ?? card['url']));
                     } else {
-                      throw 'Không thể mở link!';
+                      return;
                     }
                   },
                   child: Column(

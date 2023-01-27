@@ -31,7 +31,7 @@ class BannerBase extends StatelessWidget {
           ),
           Positioned(
               top: 100,
-              left: 10,
+              left: 15,
               child: Container(
                   width: 132.0,
                   height: 132.0,
@@ -78,7 +78,7 @@ class BannerBase extends StatelessWidget {
                 ),
               )),
           Positioned(
-            left: 10.0,
+            left: 15.0,
             top: 240,
             child: Text(
               '$title ${subTitle != '' ? '($subTitle)' : ''}',
