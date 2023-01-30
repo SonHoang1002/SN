@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_friend_block.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_infomation_block.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -15,7 +18,6 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -73,7 +75,16 @@ class UserPage extends StatelessWidget {
                           color: white,
                         ),
                         label: "Chỉnh sửa trang cá nhân",
-                        handlePress: () {},
+                        handlePress: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      const CreateModalBaseMenu(
+                                          title: "Chỉnh sửa trang cá nhân",
+                                          body: UserPageEditProfile(),
+                                          buttonAppbar: SizedBox())));
+                        },
                       )),
                   SizedBox(
                       height: 35,
