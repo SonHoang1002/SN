@@ -84,11 +84,15 @@ class _PostMediaState extends State<PostMedia> {
         } else {
           return Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: FeedVideo(
-                path: medias[0]['remote_url'] ?? medias[0]['url'],
-                flickMultiManager: flickMultiManager,
-                image: medias[0]['preview_remote_url'] ??
-                    medias[0]['preview_url']),
+            child: Container(
+              constraints: BoxConstraints(maxHeight: size.height * 0.6),
+              child: FeedVideo(
+                  path: medias[0]['remote_url'] ?? medias[0]['url'],
+                  flickMultiManager: flickMultiManager,
+                  image: medias[0]['preview_remote_url'] ??
+                      medias[0]['preview_url'] ??
+                      ''),
+            ),
           );
         }
       case 2:

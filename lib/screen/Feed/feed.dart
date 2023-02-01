@@ -3,27 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
-import 'package:social_network_app_mobile/data/post.dart';
 import 'package:social_network_app_mobile/screen/Search/search.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
+import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class Feed extends StatefulWidget {
   final Function(bool) isHideBottomNavBar;
   const Feed({Key? key, required this.isHideBottomNavBar}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _FeedState createState() => _FeedState();
+  State<Feed> createState() => _FeedState();
 }
 
-class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
+class _FeedState extends State<Feed> {
   bool _handleScrollNotification(ScrollNotification notification) {
     if (notification.depth == 0) {
       if (notification is UserScrollNotification) {
@@ -43,9 +43,49 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
     return false;
   }
 
+  String maxId = '';
+  List posts = [];
+  bool isMore = true;
+  bool isLoading = false;
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.position.pixels) {
+        getListPosts(maxId: posts.last['id']);
+      }
+    });
+    getListPosts();
+  }
+
+  Future getListPosts({String maxId = ''}) async {
+    if (!isMore) return;
+    setState(() {
+      isLoading = true;
+    });
+    List newList = await PostApi()
+        .getListPostApi({"max_id": maxId, "limit": 3, "exclude_replies": true});
+    setState(() {
+      isLoading = false;
+      posts = posts + newList;
+    });
+    if (newList.length < 3) {
+      setState(() {
+        isMore = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final GlobalKey<ScaffoldState> _key = GlobalKey();
 
     final theme = Provider.of<ThemeManager>(context);
@@ -180,29 +220,40 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
             ],
           ),
         ),
-        body: SizedBox(
-          width: double.infinity,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(
-                  height: 7,
-                ),
-                const CreatePostButton(),
-                const CrossBar(),
-                Column(
-                    children: List.generate(
-                        posts.length, (index) => Post(post: posts[index])))
-              ],
-            ),
+        body: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 7,
+              ),
+              const CreatePostButton(),
+              const CrossBar(),
+              ListView.builder(
+                  shrinkWrap: true,
+                  primary: false,
+                  itemCount: posts.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index < posts.length) {
+                      return Post(post: posts[index]);
+                    } else {
+                      return isLoading
+                          ? const Center(child: CupertinoActivityIndicator())
+                          : const SizedBox();
+                    }
+                  }),
+              isMore
+                  ? const SizedBox()
+                  : const Center(
+                      child: TextDescription(
+                          description: "Bạn đã xem hết các bài viết mới rồi"),
+                    )
+            ],
           ),
         ),
       ),
     );
   }
 
-  @override
   bool get wantKeepAlive => true;
 }

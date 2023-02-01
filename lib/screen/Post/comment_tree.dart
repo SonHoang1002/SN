@@ -1,8 +1,9 @@
 import 'package:comment_tree/comment_tree.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/post.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_card.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
@@ -21,7 +22,36 @@ class CommentTree extends StatefulWidget {
 
 class _CommentTreeState extends State<CommentTree> {
   bool isShowCommentChild = false;
+  bool isLoadCommentChild = false;
   List<Comment> commentChild = [];
+  List postChildComment = [];
+
+  Future getListCommentChild() async {
+    setState(() {
+      isLoadCommentChild = true;
+    });
+    List newList =
+        await PostApi().getListCommentPost(widget.commentParent['id'], null) ??
+            [];
+    setState(() {
+      postChildComment = newList;
+    });
+
+    List<Comment>? newListCommentChild = newList
+        .map((e) => Comment(
+            avatar: e['account']['avatar_media'] != null
+                ? e['account']['avatar_media']['preview_url']
+                : linkAvatarDefault,
+            userName: e['account']['display_name'],
+            content: e['id']))
+        .toList();
+    setState(() {
+      isLoadCommentChild = false;
+      isShowCommentChild = true;
+      commentChild = newListCommentChild;
+    });
+  }
+
   @override
   void initState() {
     commentChild = widget.commentParent['replies_total'] > 0
@@ -35,21 +65,6 @@ class _CommentTreeState extends State<CommentTree> {
   Widget build(BuildContext context) {
     dynamic avatarMedia = widget.commentParent['account']['avatar_media'];
     int replyCount = widget.commentParent['replies_total'];
-
-    fetchChildComment() {
-      List<Comment>? newListCommentChild = postChildComment
-          .map((e) => Comment(
-              avatar: e['account']['avatar_media'] != null
-                  ? e['account']['avatar_media']['preview_url']
-                  : linkAvatarDefault,
-              userName: e['account']['display_name'],
-              content: e['id']))
-          .toList();
-      setState(() {
-        isShowCommentChild = true;
-        commentChild = newListCommentChild;
-      });
-    }
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
@@ -82,17 +97,33 @@ class _CommentTreeState extends State<CommentTree> {
         contentChild: (context, data) {
           return replyCount > 0 && !isShowCommentChild
               ? GestureDetector(
-                  onTap: () {
-                    fetchChildComment();
-                  },
+                  onTap: isLoadCommentChild
+                      ? null
+                      : () {
+                          getListCommentChild();
+                        },
                   child: Container(
                     margin: const EdgeInsets.only(top: 5.0),
-                    child: Text(
-                      "$replyCount phản hồi",
-                      style: const TextStyle(
-                          color: greyColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500),
+                    child: Row(
+                      children: [
+                        Text(
+                          "$replyCount phản hồi",
+                          style: const TextStyle(
+                              color: greyColor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        isLoadCommentChild
+                            ? const SizedBox(
+                                width: 10,
+                                height: 10,
+                                child: CupertinoActivityIndicator(),
+                              )
+                            : const SizedBox()
+                      ],
                     ),
                   ),
                 )
@@ -174,7 +205,7 @@ class BoxComment extends StatelessWidget {
                 Row(
                   children: [
                     const SizedBox(
-                      width: 8,
+                      width: 2,
                     ),
                     const Text('Thích'),
                     const SizedBox(
