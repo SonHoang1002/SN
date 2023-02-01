@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
@@ -31,6 +32,89 @@ class _PostDetailState extends State<PostDetail> {
     setState(() {
       isLoadComment = false;
       postComment = postComment + newList;
+    });
+  }
+
+  Future handleComment(data) async {
+    var newCommentPreview = {
+      "in_reply_to_id": widget.post['id'],
+      "account": meData,
+      "content": data['status'],
+      "typeStatus": "previewComment",
+      "created_at": "2023-02-01T23:04:48.047+07:00",
+      "backdated_time": "2023-02-01T23:04:48.047+07:00",
+      "sensitive": false,
+      "spoiler_text": "",
+      "visibility": "public",
+      "language": "vi",
+      "post_type": null,
+      "replies_count": 0,
+      "off_comment": false,
+      "reblogs_count": 0,
+      "favourites_count": 0,
+      "reactions": [
+        {"type": "like", "likes_count": 0},
+        {"type": "haha", "hahas_count": 0},
+        {"type": "angry", "angrys_count": 0},
+        {"type": "love", "loves_count": 0},
+        {"type": "sad", "sads_count": 0},
+        {"type": "wow", "wows_count": 0},
+        {"type": "yay", "yays_count": 0}
+      ],
+      "replies_total": 0,
+      "score": "109790330095515423",
+      "hidden": false,
+      "notify": false,
+      "processing": "done",
+      "comment_moderation": "public",
+      "viewer_reaction": null,
+      "reblogged": false,
+      "muted": false,
+      "bookmarked": false,
+      "pinned": null,
+      "card": null,
+      "in_reply_to_parent_id": null,
+      "reblog": null,
+      "application": {"name": "Web", "website": null},
+      "status_background": null,
+      "status_activity": null,
+      "tagable_page": null,
+      "place": null,
+      "page_owner": null,
+      "album": null,
+      "event": null,
+      "project": null,
+      "course": null,
+      "series": null,
+      "shared_event": null,
+      "shared_project": null,
+      "shared_recruit": null,
+      "shared_course": null,
+      "shared_page": null,
+      "shared_group": null,
+      "target_account": null,
+      "media_attachments": [],
+      "mentions": [],
+      "tags": [],
+      "replies": [],
+      "favourites": [],
+      "emojis": [],
+      "status_tags": [],
+      "poll": null,
+      "life_event": null,
+      "status_question": null,
+      "status_target": null
+    };
+
+    setState(() {
+      postComment = [newCommentPreview, ...postComment];
+    });
+
+    dynamic newComment = await PostApi().createStatus(
+        {...data, "visibility": "public", "in_reply_to_id": widget.post['id']});
+
+    setState(() {
+      postComment = [newComment, ...postComment.sublist(1)];
     });
   }
 
@@ -138,9 +222,9 @@ class _PostDetailState extends State<PostDetail> {
                     ),
                   ),
                 ),
-                const Align(
+                Align(
                   alignment: Alignment.bottomCenter,
-                  child: CommentTextfield(),
+                  child: CommentTextfield(handleComment: handleComment),
                 )
               ]),
         ),

@@ -199,38 +199,40 @@ class BoxComment extends StatelessWidget {
               color: greyColor, fontSize: 12, fontWeight: FontWeight.w500),
           child: Padding(
             padding: const EdgeInsets.only(top: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 2,
-                    ),
-                    const Text('Thích'),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    const Text('Trả lời'),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Text(
-                      GetTimeAgo.parse(
-                          DateTime.parse(widget.commentParent['created_at'])),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: const EdgeInsets.only(right: 20.0),
-                  child: Row(
+            child: post['typeStatus'] == 'previewComment'
+                ? const Text("Đang viết ...")
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${post['favourites_count']} thích'),
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          const Text('Thích'),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          const Text('Trả lời'),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          Text(
+                            GetTimeAgo.parse(DateTime.parse(
+                                widget.commentParent['created_at'])),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(right: 20.0),
+                        child: Row(
+                          children: [
+                            Text('${post['favourites_count']} thích'),
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
           ),
         )
       ],

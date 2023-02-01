@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/emoji_modal_bottom.dart';
+import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
 class CommentTextfield extends StatefulWidget {
-  const CommentTextfield({Key? key}) : super(key: key);
+  final Function? handleComment;
+  const CommentTextfield({Key? key, this.handleComment}) : super(key: key);
 
   @override
   State<CommentTextfield> createState() => _CommentTextfieldState();
@@ -15,6 +17,7 @@ class CommentTextfield extends StatefulWidget {
 class _CommentTextfieldState extends State<CommentTextfield> {
   bool isShowEmoji = false;
   double heightModal = 250;
+  String content = '';
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +50,30 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                 maxLines: 5,
                 autofocus: false,
                 hintText: "Viết bình luận...",
+                handleGetValue: (value) => {
+                  setState(() {
+                    content = value;
+                  })
+                },
                 suffixIcon: InkWell(
                   onTap: () {
                     handleClickIcon();
                   },
-                  child: Icon(
-                    FontAwesomeIcons.solidFaceSmile,
-                    color: isShowEmoji ? primaryColor : greyColor,
-                  ),
+                  child: content.isEmpty
+                      ? Icon(
+                          FontAwesomeIcons.solidFaceSmile,
+                          color: isShowEmoji ? primaryColor : greyColor,
+                        )
+                      : Container(
+                          margin: const EdgeInsets.only(right: 4.0, top: 8.0),
+                          child: TextAction(
+                            action: () {
+                              widget.handleComment!({"status": content});
+                            },
+                            title: "Đăng",
+                            fontSize: 15,
+                          ),
+                        ),
                 ),
               ))
             ]),
