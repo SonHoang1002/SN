@@ -123,6 +123,7 @@ flutter:
     - assets/live_event.png
     - assets/camera.png
     - assets/LogoEmso.svg
+    - assets/loading.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

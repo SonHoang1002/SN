@@ -9,6 +9,8 @@ class TextFormFieldCustom extends StatefulWidget {
   final String? hintText;
 
   final Function? handleGetValue;
+  final TextEditingController? textController;
+  final FocusNode? focusNode;
 
   final bool autofocus;
   final int? minLines;
@@ -27,7 +29,9 @@ class TextFormFieldCustom extends StatefulWidget {
       this.label,
       this.hintText,
       this.suffixIcon,
-      this.handleGetValue})
+      this.handleGetValue,
+      this.textController,
+      this.focusNode})
       : super(key: key);
 
   @override
@@ -40,6 +44,8 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: widget.focusNode,
+      controller: widget.textController,
       minLines: widget.minLines,
       maxLines: widget.maxLines,
       initialValue: widget.initialValue,

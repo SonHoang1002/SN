@@ -63,8 +63,8 @@ class _CommentTreeState extends State<CommentTree> {
 
   @override
   Widget build(BuildContext context) {
-    dynamic avatarMedia = widget.commentParent['account']['avatar_media'];
-    int replyCount = widget.commentParent['replies_total'];
+    dynamic avatarMedia = widget.commentParent?['account']?['avatar_media'];
+    int replyCount = widget.commentParent?['replies_total'];
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
@@ -130,8 +130,9 @@ class _CommentTreeState extends State<CommentTree> {
               : BoxComment(
                   widget: widget,
                   data: data,
-                  post: postChildComment
-                      .firstWhere((element) => element['id'] == data.content));
+                  post: postChildComment.firstWhere(
+                      (element) => element['id'] == data.content,
+                      orElse: () => ''));
         },
         contentRoot: (context, data) {
           return BoxComment(
@@ -193,7 +194,9 @@ class BoxComment extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 13, fontWeight: FontWeight.w500),
                 )),
-        PostMediaComment(post: post),
+        post['media_attachments'].isNotEmpty || post['card'] != null
+            ? PostMediaComment(post: post)
+            : const SizedBox(),
         DefaultTextStyle(
           style: const TextStyle(
               color: greyColor, fontSize: 12, fontWeight: FontWeight.w500),
@@ -313,7 +316,7 @@ class _PostMediaCommentState extends State<PostMediaComment> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.only(top: 2.0),
       child: card != null
           ? renderCard()
           : medias.isNotEmpty

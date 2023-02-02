@@ -8,3 +8,5 @@ const userToken = '3cp6cSCoQqMK9HWCasDyyICcy52EfdVXVo_gx21I6ks';
 //zRo-Aka_TJvXPzLJdfbHTs6SnLPEU8cHalDViC2Aixs
 
 const urlWebEmso = 'https://sn.emso.vn';
+
+const gifKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh";
