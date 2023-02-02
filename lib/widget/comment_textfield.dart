@@ -96,7 +96,7 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                   child: TextFormFieldCustom(
                 minLines: 1,
                 maxLines: 5,
-                autofocus: false,
+                autofocus: true,
                 hintText: "Viết bình luận...",
                 textController: textController,
                 focusNode: commentNode,
