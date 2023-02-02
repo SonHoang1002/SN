@@ -24,6 +24,8 @@ class PostDetail extends StatefulWidget {
 class _PostDetailState extends State<PostDetail> {
   List postComment = [];
   bool isLoadComment = false;
+  FocusNode commentNode = FocusNode();
+  dynamic commentSelected;
 
   Future getListCommentPost(postId, params) async {
     setState(() {
@@ -119,6 +121,12 @@ class _PostDetailState extends State<PostDetail> {
     });
   }
 
+  getCommentSelected(comment) {
+    setState(() {
+      commentSelected = comment;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -134,6 +142,9 @@ class _PostDetailState extends State<PostDetail> {
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
+        setState(() {
+          commentSelected = null;
+        });
       },
       child: SafeArea(
         child: Scaffold(
@@ -185,7 +196,10 @@ class _PostDetailState extends State<PostDetail> {
                               shrinkWrap: true,
                               itemCount: postComment.length,
                               itemBuilder: ((context, index) => CommentTree(
-                                  commentParent: postComment[index]))),
+                                  commentNode: commentNode,
+                                  commentSelected: commentSelected,
+                                  commentParent: postComment[index],
+                                  getCommentSelected: getCommentSelected))),
                           commentCount - postComment.length > 0
                               ? InkWell(
                                   onTap: isLoadComment
@@ -230,7 +244,11 @@ class _PostDetailState extends State<PostDetail> {
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: CommentTextfield(handleComment: handleComment),
+                    child: CommentTextfield(
+                        commentSelected: commentSelected,
+                        getCommentSelected: getCommentSelected,
+                        commentNode: commentNode,
+                        handleComment: handleComment),
                   )
                 ]),
           ),

@@ -256,10 +256,4 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
             ),
           );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _tabController.dispose();
-  }
 }

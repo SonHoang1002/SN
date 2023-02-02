@@ -27,7 +27,7 @@ class UserItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              user['display_name'],
+              user?['display_name'] ?? 'Không xác định',
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 13,

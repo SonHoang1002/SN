@@ -50,7 +50,9 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
       maxLines: widget.maxLines,
       initialValue: widget.initialValue,
       autofocus: widget.autofocus,
-      onChanged: (value) => widget.handleGetValue!(value),
+      onChanged: (value) {
+        widget.handleGetValue!(value);
+      },
       decoration: InputDecoration(
           suffixIcon: widget.suffixIcon,
           fillColor: Colors.red,

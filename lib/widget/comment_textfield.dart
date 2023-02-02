@@ -1,8 +1,13 @@
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/friends_api.dart';
+import 'package:social_network_app_mobile/apis/search_api.dart';
+import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/box_mention.dart';
 import 'package:social_network_app_mobile/widget/emoji_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
@@ -10,7 +15,17 @@ import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
 class CommentTextfield extends StatefulWidget {
   final Function? handleComment;
-  const CommentTextfield({Key? key, this.handleComment}) : super(key: key);
+  final FocusNode? commentNode;
+  final dynamic commentSelected;
+  final Function? getCommentSelected;
+
+  const CommentTextfield(
+      {Key? key,
+      this.handleComment,
+      this.commentNode,
+      this.commentSelected,
+      this.getCommentSelected})
+      : super(key: key);
 
   @override
   State<CommentTextfield> createState() => _CommentTextfieldState();
@@ -22,7 +37,7 @@ class _CommentTextfieldState extends State<CommentTextfield> {
   String content = '';
   String linkEmojiSticky = '';
   TextEditingController textController = TextEditingController();
-  FocusNode commentNode = FocusNode();
+  List listMentions = [];
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +52,48 @@ class _CommentTextfieldState extends State<CommentTextfield> {
         isShowEmoji = false;
         linkEmojiSticky = link;
       });
-      commentNode.requestFocus();
+      widget.commentNode!.requestFocus();
+    }
+
+    handleGetComment(value) async {
+      setState(() {
+        content = value;
+      });
+
+      final tagRegex = RegExp(r"\B@", caseSensitive: false);
+      final sentences = value.split(' ');
+
+      for (var sentence in sentences) {
+        final words = sentence.split(' ');
+        String withat = words.last;
+
+        if (tagRegex.hasMatch(withat)) {
+          String withoutat = withat.substring(1);
+          if (withoutat.isEmpty) {
+            List newList = await FriendsApi()
+                .getListFriendApi(meData['id'], {"limit": 20});
+
+            setState(() {
+              listMentions =
+                  newList.length > 5 ? newList.sublist(0, 5) : newList;
+            });
+          } else {
+            var objectMentions = await SearchApi()
+                .getListSearchApi({"q": withoutat, "limit": 5});
+            if (objectMentions != null) {
+              setState(() {
+                listMentions = objectMentions['accounts'] +
+                    objectMentions['groups'] +
+                    objectMentions['pages'];
+              });
+            }
+          }
+        } else {
+          setState(() {
+            listMentions = [];
+          });
+        }
+      }
     }
 
     return Container(
@@ -50,6 +106,43 @@ class _CommentTextfieldState extends State<CommentTextfield> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            listMentions.isNotEmpty && content.isNotEmpty
+                ? BoxMention(
+                    listData: listMentions,
+                    getMention: () {},
+                  )
+                : const SizedBox(),
+            widget.commentSelected != null
+                ? Container(
+                    margin: const EdgeInsets.only(top: 4, bottom: 4, left: 30),
+                    child: RichText(
+                        text: TextSpan(
+                            text: 'Đang trả lời ',
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
+                                fontSize: 13),
+                            children: [
+                          TextSpan(
+                              text:
+                                  '${widget.commentSelected['account']['display_name']}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 13)),
+                          TextSpan(
+                              text: '  Hủy',
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  widget.getCommentSelected!(null);
+                                },
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                  color: primaryColor))
+                        ])),
+                  )
+                : const SizedBox(),
             linkEmojiSticky.isNotEmpty
                 ? Container(
                     margin: const EdgeInsets.only(top: 4, bottom: 4, left: 30),
@@ -99,17 +192,13 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                 autofocus: true,
                 hintText: "Viết bình luận...",
                 textController: textController,
-                focusNode: commentNode,
-                handleGetValue: (value) => {
-                  setState(() {
-                    content = value;
-                  })
-                },
+                focusNode: widget.commentNode,
+                handleGetValue: (value) => handleGetComment(value),
                 suffixIcon: InkWell(
                   onTap: () {
                     handleClickIcon();
                   },
-                  child: content.isEmpty && linkEmojiSticky.isEmpty
+                  child: content.trim().isEmpty && linkEmojiSticky.isEmpty
                       ? Icon(
                           FontAwesomeIcons.solidFaceSmile,
                           color: isShowEmoji ? primaryColor : greyColor,

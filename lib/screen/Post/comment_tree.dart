@@ -13,8 +13,19 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class CommentTree extends StatefulWidget {
-  const CommentTree({Key? key, this.commentParent}) : super(key: key);
+  const CommentTree(
+      {Key? key,
+      this.commentParent,
+      this.commentNode,
+      this.getCommentSelected,
+      this.commentSelected})
+      : super(key: key);
+
   final dynamic commentParent;
+  final dynamic commentSelected;
+
+  final FocusNode? commentNode;
+  final Function? getCommentSelected;
 
   @override
   State<CommentTree> createState() => _CommentTreeState();
@@ -64,15 +75,15 @@ class _CommentTreeState extends State<CommentTree> {
   @override
   Widget build(BuildContext context) {
     dynamic avatarMedia = widget.commentParent?['account']?['avatar_media'];
-    int replyCount = widget.commentParent?['replies_total'];
+    int replyCount = widget.commentParent?['replies_total'] ?? 0;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
       child: CommentTreeWidget<Comment, Comment>(
         Comment(
-          avatar: avatarMedia['preview_url'] ?? linkAvatarDefault,
-          userName: widget.commentParent['account']['display_name'],
-          content: widget.commentParent['content'],
+          avatar: avatarMedia?['preview_url'] ?? linkAvatarDefault,
+          userName: widget.commentParent?['account']?['display_name'],
+          content: widget.commentParent?['content'],
         ),
         commentChild,
         treeThemeData: TreeThemeData(
@@ -167,7 +178,10 @@ class BoxComment extends StatelessWidget {
             ? Container(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
+                    color: widget.commentSelected != null &&
+                            widget.commentSelected!['id'] == post['id']
+                        ? secondaryColorSelected
+                        : Theme.of(context).colorScheme.background,
                     borderRadius: BorderRadius.circular(15)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,7 +217,10 @@ class BoxComment extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 4),
             child: post['typeStatus'] == 'previewComment'
-                ? const Text("Đang viết ...")
+                ? const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Text("Đang viết ..."),
+                  )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -216,7 +233,12 @@ class BoxComment extends StatelessWidget {
                           const SizedBox(
                             width: 16,
                           ),
-                          const Text('Trả lời'),
+                          GestureDetector(
+                              onTap: () {
+                                widget.commentNode!.requestFocus();
+                                widget.getCommentSelected!(post);
+                              },
+                              child: const Text('Trả lời')),
                           const SizedBox(
                             width: 16,
                           ),
