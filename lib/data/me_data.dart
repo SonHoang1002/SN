@@ -90,7 +90,7 @@ dynamic meData = {
   "fields": []
 };
 
-Object userAbout = {
+dynamic userAbout = {
   "id": "107610124722780666",
   "username": "hoangthanhluu",
   "acct": "hoangthanhluu",
