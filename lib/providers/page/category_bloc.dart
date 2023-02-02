@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CategoryProvider with ChangeNotifier {
   CategoryModel model = CategoryModel([]);
@@ -15,7 +14,6 @@ class CategoryProvider with ChangeNotifier {
 
   get getCategoryProvider => model;
 }
-
 
 class CategoryModel {
   final List<String> listCate;

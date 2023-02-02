@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/page_constants.dart';
-import 'package:social_network_app_mobile/providers/current_number_page.dart';import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import 'package:social_network_app_mobile/providers/current_number_page.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -62,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Text(SettingsPageConstants.TITLE_SETTINGS[1],
                           style: const TextStyle(
                               // color: Colors.white,
-                               fontSize: 17)),
+                              fontSize: 17)),
                       const SizedBox(
                         height: 10,
                       ),
@@ -83,8 +84,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                             .TITLE_CONTENT[index],
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                            // color: Colors.white, 
-                                            fontSize: 17,fontWeight: FontWeight.bold),
+                                            // color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
@@ -96,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       SettingsPageConstants
                                           .SUBTITLE_CONTENT[index],
                                       style: TextStyle(
-                                          // color: Colors.grey, 
+                                          // color: Colors.grey,
                                           fontSize: 15)),
                                 ]),
                               ),
@@ -119,14 +121,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-buildBottomNavigatorWithButtonAndChipWidget(
+            buildBottomNavigatorWithButtonAndChipWidget(
                 context: context,
                 width: width,
                 // newScreen: SizedBox(),
                 isPassCondition: true,
                 title: "Xong",
                 currentPage: 7)
-             ]),
+          ]),
         ));
   }
 }

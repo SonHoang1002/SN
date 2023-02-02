@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/group_constants.dart';
@@ -354,7 +354,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                   minLines: null,
                   expands: true,
                   style: TextStyle(
-                      // color: Colors.white, 
+                      // color: Colors.white,
                       overflow: TextOverflow.visible),
                   decoration: InputDecoration(
                       hintText: CreatePostGroupConstants.PLACEHOLDER_LIST[0],

@@ -4,7 +4,7 @@ import 'package:social_network_app_mobile/constant/page_constants.dart';
 import 'package:social_network_app_mobile/providers/current_number_page.dart';
 import 'package:social_network_app_mobile/providers/page/category_bloc.dart';
 import 'package:social_network_app_mobile/providers/search_category_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/information_page_page.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
@@ -277,8 +277,7 @@ class _CategoryPageState extends State<CategoryPage> {
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(7)),
-                color: Colors.grey[700]
-                ),
+                color: Colors.grey[700]),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
