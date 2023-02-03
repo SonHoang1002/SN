@@ -47,21 +47,21 @@ class _FeedState extends State<Feed> {
   List posts = [];
   bool isMore = true;
   bool isLoading = false;
-  final ScrollController scrollController = ScrollController();
+  final scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    getListPosts();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.position.pixels) {
         getListPosts(maxId: posts.last['id']);
       }
     });
-    getListPosts();
   }
 
-  Future getListPosts({String maxId = ''}) async {
+  Future getListPosts({String maxId = '', String type = ''}) async {
     if (!isMore) return;
     setState(() {
       isLoading = true;
@@ -70,18 +70,13 @@ class _FeedState extends State<Feed> {
         .getListPostApi({"max_id": maxId, "limit": 3, "exclude_replies": true});
     setState(() {
       isLoading = false;
-      posts = posts + newList;
+      posts = type == 'refresh' ? newList : posts + newList;
     });
     if (newList.length < 3) {
       setState(() {
         isMore = false;
       });
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -220,35 +215,42 @@ class _FeedState extends State<Feed> {
             ],
           ),
         ),
-        body: SingleChildScrollView(
-          controller: scrollController,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 7,
-              ),
-              const CreatePostButton(),
-              const CrossBar(),
-              ListView.builder(
-                  shrinkWrap: true,
-                  primary: false,
-                  itemCount: posts.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index < posts.length) {
-                      return Post(post: posts[index]);
-                    } else {
-                      return isLoading
-                          ? const Center(child: CupertinoActivityIndicator())
-                          : const SizedBox();
-                    }
-                  }),
-              isMore
-                  ? const SizedBox()
-                  : const Center(
-                      child: TextDescription(
-                          description: "Bạn đã xem hết các bài viết mới rồi"),
-                    )
-            ],
+        body: RefreshIndicator(
+          onRefresh: () async {
+            getListPosts(maxId: '', type: 'refresh');
+          },
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 7,
+                ),
+                const CreatePostButton(),
+                const CrossBar(),
+                ListView.builder(
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: posts.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index < posts.length) {
+                        return Post(post: posts[index]);
+                      } else {
+                        return Container(
+                          color: Colors.red,
+                          height: 100,
+                          width: 100,
+                        );
+                      }
+                    }),
+                isMore
+                    ? const SizedBox()
+                    : const Center(
+                        child: TextDescription(
+                            description: "Bạn đã xem hết các bài viết mới rồi"),
+                      )
+              ],
+            ),
           ),
         ),
       ),

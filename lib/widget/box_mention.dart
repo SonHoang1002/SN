@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/screen/Group/group.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/group_item.dart';
 import 'package:social_network_app_mobile/widget/page_item.dart';
@@ -43,12 +42,17 @@ class BoxMention extends StatelessWidget {
               );
             }
 
-            return Container(
-              padding: const EdgeInsets.all(6.0),
-              decoration: const BoxDecoration(
-                  border:
-                      Border(bottom: BorderSide(width: 0.2, color: greyColor))),
-              child: itemWidget,
+            return InkWell(
+              onTap: () {
+                getMention(listData[index]);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(6.0),
+                decoration: const BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(width: 0.2, color: greyColor))),
+                child: itemWidget,
+              ),
             );
           }),
         ),

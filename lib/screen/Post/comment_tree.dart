@@ -195,7 +195,7 @@ class BoxComment extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      '${post['content']}',
+                      '${post?['content'] ?? ''}',
                       style: const TextStyle(fontSize: 13),
                     ),
                   ],

@@ -176,18 +176,18 @@ class _PostHeaderState extends State<PostHeader> {
                                 Theme.of(context).textTheme.displayLarge!.color,
                           ),
                         ),
-                        SizedBox(
-                          width: widget.type != postDetail ? 10 : 0,
-                        ),
-                        ![postDetail, postPageUser].contains(widget.type)
-                            ? InkWell(
-                                onTap: () {},
-                                child: const Icon(
-                                  FontAwesomeIcons.xmark,
-                                  size: 22,
-                                ),
-                              )
-                            : const SizedBox()
+                        // SizedBox(
+                        //   width: widget.type != postDetail ? 10 : 0,
+                        // ),
+                        // ![postDetail, postPageUser].contains(widget.type)
+                        //     ? InkWell(
+                        //         onTap: () {},
+                        //         child: const Icon(
+                        //           FontAwesomeIcons.xmark,
+                        //           size: 22,
+                        //         ),
+                        //       )
+                        //     : const SizedBox()
                       ],
                     )
                   : const SizedBox()

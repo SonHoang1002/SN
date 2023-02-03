@@ -36,8 +36,10 @@ class _CommentTextfieldState extends State<CommentTextfield> {
   double heightModal = 250;
   String content = '';
   String linkEmojiSticky = '';
+  String query = '';
   TextEditingController textController = TextEditingController();
   List listMentions = [];
+  List listMentionsSelected = [];
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +71,13 @@ class _CommentTextfieldState extends State<CommentTextfield> {
 
         if (tagRegex.hasMatch(withat)) {
           String withoutat = withat.substring(1);
+          setState(() {
+            query = withoutat;
+          });
           if (withoutat.isEmpty) {
             List newList = await FriendsApi()
-                .getListFriendApi(meData['id'], {"limit": 20});
+                    .getListFriendApi(meData['id'], {"limit": 20}) ??
+                [];
 
             setState(() {
               listMentions =
@@ -96,6 +102,24 @@ class _CommentTextfieldState extends State<CommentTextfield> {
       }
     }
 
+    handleClickMention(data) {
+      print('query, $query');
+      textController.text = textController.text
+          .replaceAll('@$query', '@${data['display_name'] ?? data['title']} ');
+      // String message =
+      //     textController.text.replaceAll('@$query', '@${data['id']}');
+      setState(() {
+        listMentions = [];
+        // content = message;
+      });
+      // textController.selection =
+      //     TextSelection.collapsed(offset: textController.text.length);
+
+      setState(() {
+        listMentionsSelected = [...listMentionsSelected, data];
+      });
+    }
+
     return Container(
         decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
@@ -109,7 +133,9 @@ class _CommentTextfieldState extends State<CommentTextfield> {
             listMentions.isNotEmpty && content.isNotEmpty
                 ? BoxMention(
                     listData: listMentions,
-                    getMention: () {},
+                    getMention: (mention) {
+                      handleClickMention(mention);
+                    },
                   )
                 : const SizedBox(),
             widget.commentSelected != null
@@ -219,7 +245,23 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                                                   : "sticky",
                                           "link": linkEmojiSticky,
                                           "title": ""
-                                        }
+                                        },
+                                  "tags": content.contains('@')
+                                      ? listMentionsSelected
+                                          .map((e) => {
+                                                "entity_id": e['id'],
+                                                "entity_type": e['username'] !=
+                                                        null
+                                                    ? 'Account'
+                                                    : e['page_relationship'] !=
+                                                            null
+                                                        ? 'Page'
+                                                        : 'Group',
+                                                "name": e['display_name'] ??
+                                                    e['title']
+                                              })
+                                          .toList()
+                                      : []
                                 });
                                 textController.clear();
                                 setState(() {
