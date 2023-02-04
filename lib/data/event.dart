@@ -322,7 +322,7 @@ List eventData = [
     "event_relationship": {
       "host_event": false,
       "invitation_host_event": false,
-      "status": ""
+      "status": "interested"
     },
     "account": {
       "id": "108786718361607198",

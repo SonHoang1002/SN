@@ -33,7 +33,7 @@ class _EventCartState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     var isCare = Provider.of<EventProvider>(context).getEventProvider;
-
+    print(isCare);
     List iconEventCare = [
       {
         "key": "event-care",
@@ -166,7 +166,8 @@ class _EventCartState extends State<EventCard> {
                                             onTap: () {
                                               context
                                                   .read<EventProvider>()
-                                                  .add(index);
+                                                  .setEVentProvider(
+                                                      index, 'interested');
                                               showModalBottomSheet(
                                                 shape:
                                                     const RoundedRectangleBorder(
@@ -220,11 +221,11 @@ class _EventCartState extends State<EventCard> {
                                                                         [
                                                                         'key'] ==
                                                                     'event-join') {
-                                                                  context
-                                                                      .read<
-                                                                          EventProvider>()
-                                                                      .remove(
-                                                                          index);
+                                                                  // context
+                                                                  //     .read<
+                                                                  //         EventProvider>()
+                                                                  //     .remove(
+                                                                  //         index);
                                                                 }
                                                               },
                                                               child: Container(
@@ -392,16 +393,16 @@ class _EventCartState extends State<EventCard> {
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: [
-                                                  const Icon(
+                                                children: const [
+                                                  Icon(
                                                       FontAwesomeIcons
                                                           .solidStar,
                                                       color: Colors.black,
                                                       size: 14),
-                                                  const SizedBox(
+                                                  SizedBox(
                                                     width: 3.0,
                                                   ),
-                                                  const Text(
+                                                  Text(
                                                     'Quan tâm',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
@@ -410,19 +411,19 @@ class _EventCartState extends State<EventCard> {
                                                           FontWeight.w700,
                                                     ),
                                                   ),
-                                                  const SizedBox(
+                                                  SizedBox(
                                                     width: 3.0,
                                                   ),
-                                                  Icon(
-                                                      (isCare.length > 0
-                                                          ? (isCare.contains(
-                                                                  index))
-                                                              ? FontAwesomeIcons
-                                                                  .solidStar
-                                                              : null
-                                                          : null),
-                                                      color: Colors.black,
-                                                      size: 14),
+                                                  // Icon(
+                                                  //     (isCare.length > 0
+                                                  //         ? (isCare.contains(
+                                                  //                 index))
+                                                  //             ? FontAwesomeIcons
+                                                  //                 .solidStar
+                                                  //             : null
+                                                  //         : null),
+                                                  //     color: Colors.black,
+                                                  //     size: 14),
                                                 ],
                                               ),
                                             )),

@@ -156,6 +156,9 @@ class _ShareModalBottomState extends State<ShareModalBottom> {
             ],
           ),
           TextFormField(
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            minLines: 1,
             decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Hãy nói gì đó về nội dung này...'),

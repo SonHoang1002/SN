@@ -1,20 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:social_network_app_mobile/data/event.dart';
 
 class EventProvider with ChangeNotifier {
-  final List _items = [];
-  void add(value) {
-    if (!_items.contains(value)) {
-      _items.add(value);
-    }
-    notifyListeners();
+  var isCare;
+  setEVentProvider(id, value) {
+    isCare = {
+      ...eventData[id],
+      'event_relationship': {
+        ...eventData[id]['event_relationship'],
+        'status': 'interested'
+      }
+    };
   }
 
-  void remove(value) {
-    if (_items.contains(value)) {
-      _items.remove(value);
-    }
-    notifyListeners();
-  }
-
-  get getEventProvider => _items;
+  get getEventProvider => isCare;
 }
