@@ -1,7 +1,9 @@
-import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/animations/animations.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/camera_builder.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../../../theme/colors.dart';
+import '../../../../drishya_picker.dart';
+import '../../../animations/animations.dart';
+import 'camera_builder.dart';
 
 ///
 class CameraGalleryButton extends StatelessWidget {
@@ -71,7 +73,7 @@ class _GalleyViewState extends State<_GalleyView> {
         decoration: BoxDecoration(
           color: Colors.black45,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.white, width: 2),
+          border: Border.all(color: white, width: 2),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(6),
@@ -86,7 +88,7 @@ class _GalleyViewState extends State<_GalleyView> {
               return const Icon(
                 Icons.image_outlined,
                 size: 28,
-                color: Colors.white,
+                color: white,
               );
             },
           ),

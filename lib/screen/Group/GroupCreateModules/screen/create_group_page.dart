@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/constant/group_constants.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/group/hide_group_provider.dart';
-import 'package:social_network_app_mobile/providers/select_private_rule_bloc.dart';
-import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/screen/request_friends_group_page.dart';
-import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/widgets/addtional_information_group_widget.dart';
-import 'package:social_network_app_mobile/screen/Page/page_create.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-import '../../../Setting/PERSONAL_PAGE/personal_page_commons.dart';
+import '../../../../constant/group_constants.dart';
+import '../../../../helper/push_to_new_screen.dart';
+import '../../../../providers/group/hide_group_provider.dart';
+import '../../../../providers/select_private_rule_bloc.dart';
+import '../../../../theme/colors.dart';
+import '../../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import '../../../../widget/GeneralWidget/information_component_widget.dart';
+import '../../../../widget/GeneralWidget/spacer_widget.dart';
+import '../../../../widget/GeneralWidget/text_content_widget.dart';
+import '../../../../widget/appbar_title.dart';
+import '../../../../widget/back_icon_appbar.dart';
+import '../widgets/addtional_information_group_widget.dart';
+import 'request_friends_group_page.dart';
 
 class CreateGroupPage extends StatefulWidget {
   @override
@@ -64,7 +62,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           Text(
                             CreateGroupConstants.TITLE_LIST[0],
                             style: const TextStyle(
-                                // color: Colors.white,
+                                // color:  white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -81,13 +79,13 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           controller: _nameController,
                           onChanged: ((value) {}),
                           style: const TextStyle(
-                              // color: Colors.white
+                              // color:  white
                               ),
                           decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     // color: Colors.grey,
-                                    width: 2),
+                                    width: 0.2),
                               ),
                               hintText:
                                   CreateGroupConstants.PLACEHOLDER_LIST[0],
@@ -95,7 +93,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                                   // color: Colors.grey
                                   ),
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10))),
+                                  borderRadius: BorderRadius.circular(5))),
                         ),
                       ),
                       // divider
@@ -113,7 +111,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           Text(
                             CreateGroupConstants.TITLE_LIST[1],
                             style: const TextStyle(
-                                // color: Colors.white,
+                                // color:  white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -211,7 +209,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                                     Text(
                                       CreateGroupConstants.TITLE_LIST[2],
                                       style: const TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -287,14 +285,11 @@ class CreateGroupPageState extends State<CreateGroupPage> {
       String groupValueForRadio,
       String valueForRadio) {
     return GestureDetector(
-      onTap: (() {
-        // popToPreviousScreen(context);
-      }),
+      onTap: (() {}),
       child: StatefulBuilder(builder: (context, setStateFull) {
         return GestureDetector(
           onTap: () {
             popToPreviousScreen(context);
-            // if (title == "Công khai" || title == "Riêng tư") {
             switch (title) {
               case "Công khai":
                 Provider.of<SelectionPrivateGroupProvider>(context,
@@ -316,16 +311,9 @@ class CreateGroupPageState extends State<CreateGroupPage> {
 
                 break;
             }
-            // Provider.of<SelectionPrivateGroupProvider>(context, listen: false)
-            //     .setSelectionPrivateGroupProvider(value as String);
             setStateFull(() {});
             setState(() {});
             return;
-            // Provider.of<HideGroupProvider>(context, listen: false)
-            //     .setHideGroupProvider();
-            // setStateFull(() {});
-            // setState(() {});
-            // return;
           },
           child: Container(
             // height: 60,
@@ -345,7 +333,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                         color: Colors.grey[700]),
                     child: Icon(
                       iconData,
-                      color: Colors.white,
+                      color: white,
                       size: 14,
                     ),
                   ),
@@ -365,15 +353,14 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                               margin: EdgeInsets.only(top: 5),
                               child: Text(title,
                                   style: TextStyle(
-                                      color: Colors.white,
+                                      color: white,
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
                             ),
                             Container(
                               margin: EdgeInsets.only(bottom: 5),
                               child: Text(content,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 13)),
+                                  style: TextStyle(color: white, fontSize: 13)),
                             ),
                           ],
                         ),
@@ -383,29 +370,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                         child: Radio(
                             value: valueForRadio,
                             groupValue: groupValueForRadio,
-                            onChanged: (value) {
-                              // if (title == "Công khai" || title == "Riêng tư") {
-                              //   Provider.of<SelectionPrivateGroupProvider>(
-                              //           context,
-                              //           listen: false)
-                              //       .setSelectionPrivateGroupProvider(
-                              //           value as String);
-                              //   setStateFull(
-                              //     () {},
-                              //   );
-                              //   setState(() {});
-                              //   return;
-                              // }
-                              // Provider.of<HideGroupProvider>(context,
-                              //         listen: false)
-                              //     .setHideGroupProvider(value as String);
-                              // setStateFull(
-                              //   () {},
-                              // );
-                              // setState(() {});
-
-                              // return;
-                            }),
+                            onChanged: (value) {}),
                       ),
                     ],
                   ),
@@ -424,7 +389,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
       required String title,
       String? content,
       Function? function}) {
-    return GestureDetector(
+    return InkWell(
       onTap: (() {
         function != null ? function() : null;
       }),
@@ -434,7 +399,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
             borderRadius: BorderRadius.all(
               Radius.circular(5),
             ),
-            border: Border.all(color: Colors.black)),
+            border: Border.all(color: Colors.purple, width: 0.2)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -463,13 +428,16 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           color: Colors.grey[800]),
                       child: Icon(
                         iconData,
-                        color: Colors.white,
+                        color: white,
                         size: 14,
                       ),
                     )
                   : null,
               changeBackground: Colors.transparent,
               borderRadiusValue: 5,
+              function: () {
+                function != null ? function() : null;
+              },
             ),
           ],
         ),
@@ -478,6 +446,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   bottomSheetPrivateRule(context) {
+    print("bottomSheetPrivateRule");
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
@@ -517,7 +486,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                         }),
                         child: Icon(
                           Icons.close,
-                          color: Colors.white,
+                          color: white,
                         ),
                       ),
                       flex: 2,
@@ -528,7 +497,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           child: Center(
                         child: Text(
                           "Chọn quyền riêng tư",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: TextStyle(color: white, fontSize: 18),
                         ),
                       )),
                     ),
@@ -538,7 +507,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
               // divider
               Divider(
                 height: 4,
-                color: Colors.white,
+                color: white,
               ),
               buildSpacer(
                 height: 10,
@@ -606,7 +575,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                         }),
                         child: Icon(
                           Icons.close,
-                          color: Colors.white,
+                          color: white,
                         ),
                       ),
                       flex: 2,
@@ -617,7 +586,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           child: Center(
                         child: Text(
                           "Ẩn nhóm",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: TextStyle(color: white, fontSize: 18),
                         ),
                       )),
                     ),
@@ -626,7 +595,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
               ),
               Divider(
                 height: 4,
-                color: Colors.white,
+                color: white,
               ),
               buildSpacer(
                 height: 10,

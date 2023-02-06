@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/constant/page_constants.dart';
-import 'package:social_network_app_mobile/providers/current_number_page.dart';
-import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/settting_page_page.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+import '../../../../constant/page_constants.dart';
+import '../../../../theme/colors.dart';
+import '../../../../widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import '../../../../widget/back_icon_appbar.dart';
+import 'settting_page_page.dart';
 
 class RequestFriends extends StatefulWidget {
   @override
@@ -74,7 +72,7 @@ class _RequestFriendsState extends State<RequestFriends> {
                         child: Text(
                           RequestFriendPageConstants.TITLE_REQUEST[0],
                           style: const TextStyle(
-                              // color: Colors.white,
+                              // color:  white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
@@ -86,7 +84,7 @@ class _RequestFriendsState extends State<RequestFriends> {
                         child: Text(RequestFriendPageConstants.TITLE_REQUEST[1],
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                                // color: Colors.white,
+                                // color:  white,
                                 fontSize: 16)),
                       ),
                       const SizedBox(
@@ -113,7 +111,7 @@ class _RequestFriendsState extends State<RequestFriends> {
                                         border: Border.all(
                                             color: Colors.black, width: 2),
                                         borderRadius: BorderRadius.circular(15),
-                                        // color: Colors.white,
+                                        // color:  white,
                                       ),
                                       child: Image.asset(
                                         RequestFriendPageConstants
@@ -134,7 +132,7 @@ class _RequestFriendsState extends State<RequestFriends> {
                           onPressed: () {},
                           child: Text(
                             RequestFriendPageConstants.TITLE_REQUEST[2],
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            style: TextStyle(color: white, fontSize: 15),
                           )),
                     ],
                   ),

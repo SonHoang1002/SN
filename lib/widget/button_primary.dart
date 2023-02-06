@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
+
+import '../theme/colors.dart';
 
 class ButtonPrimary extends StatelessWidget {
   final String label;
   final Icon? icon;
   final Function? handlePress;
   final bool? isPrimary;
+  final double? width;
+  double? radius;
 
-  const ButtonPrimary(
+  ButtonPrimary(
       {Key? key,
       required this.label,
       this.handlePress,
       this.icon,
-      this.isPrimary})
+      this.isPrimary,
+      this.width,
+      this.radius})
       : super(key: key);
 
   @override
@@ -24,7 +29,9 @@ class ButtonPrimary extends StatelessWidget {
             }
           : null,
       style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius ??6)),
+          fixedSize: width != null ? Size(width!,50) : null,
           backgroundColor: ![null, false].contains(isPrimary)
               ? primaryColor
               : secondaryColor,

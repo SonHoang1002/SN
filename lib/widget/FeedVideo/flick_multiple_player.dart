@@ -1,12 +1,10 @@
 import 'package:flick_video_player/flick_video_player.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
-import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
+import 'flick_multiple_manager.dart';
 import 'portrait_controls.dart';
 
 class FlickMultiPlayer extends StatefulWidget {

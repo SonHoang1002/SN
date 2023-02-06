@@ -1,16 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/constant/group_constants.dart';
-import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/screen/target_group_page.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+
+import '../../../../constant/group_constants.dart';
+import '../../../../theme/colors.dart';
+import '../../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import '../../../../widget/GeneralWidget/divider_widget.dart';
+import '../../../../widget/GeneralWidget/information_component_widget.dart';
+import '../../../../widget/back_icon_appbar.dart';
 
 class CreatePostGroupPage extends StatefulWidget {
   @override
@@ -57,7 +54,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                         Text(
                           CreatePostGroupConstants.TITLE[0],
                           style: const TextStyle(
-                              // color: Colors.white,
+                              // color:  white,
                               fontSize: 22,
                               fontWeight: FontWeight.bold),
                         ),
@@ -68,7 +65,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                     ),
                     Text(CreatePostGroupConstants.SUBTITLE[0],
                         style: const TextStyle(
-                            // color: Colors.white,
+                            // color:  white,
                             fontSize: 18)),
                     const SizedBox(
                       height: 20,
@@ -143,7 +140,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                                                     CreatePostGroupConstants
                                                         .CONTENT_LIST[index],
                                                     style: TextStyle(
-                                                        // color: Colors.white,
+                                                        // color:  white,
                                                         fontSize: 15,
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -212,14 +209,14 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                                 },
                                 icon: Icon(
                                   FontAwesomeIcons.close,
-                                  // color: Colors.white,
+                                  // color:  white,
                                 ))
                           ]),
                         ),
                         Text(
                           CreatePostGroupConstants.TITLE[1],
                           style: TextStyle(
-                              // color: Colors.white,
+                              // color:  white,
                               fontSize: 18),
                         ),
                         Container(
@@ -230,8 +227,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                             onPressed: () {},
                             child: Text(
                               "Đăng",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                              style: TextStyle(color: white, fontSize: 15),
                             ),
                           ),
                         )
@@ -263,7 +259,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                     Text(
                       CreatePostGroupConstants.USER_EXAMPLE[0],
                       style: TextStyle(
-                          // color: Colors.white,
+                          // color:  white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -284,7 +280,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                                     children: [
                                       Icon(
                                         FontAwesomeIcons.userGroup,
-                                        // color: Colors.white,
+                                        // color:  white,
                                         size: 10,
                                       ),
                                       SizedBox(
@@ -300,8 +296,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                                   ),
                                   Container(
                                       width: 150,
-                                      child: Divider(
-                                          height: 3, color: Colors.white))
+                                      child: Divider(height: 3, color: white))
                                 ]),
                           )
                         : Container(
@@ -310,14 +305,14 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                                 horizontal: 5, vertical: 2),
                             decoration: BoxDecoration(
                                 border: Border.all(
-                                    // color: Colors.white,
+                                    // color:  white,
                                     style: BorderStyle.solid),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child:
                                 Text(CreatePostGroupConstants.USER_EXAMPLE[1],
                                     style: TextStyle(
-                                      // color: Colors.white,
+                                      // color:  white,
                                       fontSize: 13,
                                     )),
                           ),
@@ -335,7 +330,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                         color: Colors.grey[800]),
                     child: Image.asset(
                       GroupConstants.PATH_IMG + "cat_1.png",
-                      // color: Colors.white,
+                      // color:  white,
                     ),
                   ),
                   changeBackground: Colors.transparent,
@@ -354,7 +349,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                   minLines: null,
                   expands: true,
                   style: TextStyle(
-                      // color: Colors.white,
+                      // color:  white,
                       overflow: TextOverflow.visible),
                   decoration: InputDecoration(
                       hintText: CreatePostGroupConstants.PLACEHOLDER_LIST[0],
@@ -369,7 +364,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
               // Container(
               //     // height: 400,
               //     width: width,
-              //     color: Colors.white,
+              //     color:  white,
               //     child: Image.asset(
               //       ConstantsGroup.PATH_IMG + "back_1.jpg",
               //       fit: BoxFit.fitWidth,

@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_menu.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activity.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/friend_tag.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/gif.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_categories.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
-import 'package:social_network_app_mobile/widget/button_primary.dart';
+
+import '../../../widget/PickImageVideo/src/gallery/src/gallery_view.dart';
+import '../../../widget/appbar_title.dart';
+import '../../../widget/back_icon_appbar.dart';
+import '../../../widget/button_primary.dart';
+import '../MenuBody/checkin.dart';
+import '../MenuBody/emoji_activity.dart';
+import '../MenuBody/friend_tag.dart';
+import '../MenuBody/gif.dart';
+import '../MenuBody/life_event_categories.dart';
+import '../create_modal_base_menu.dart';
+import 'create_feed_menu.dart';
+import 'create_feed_status.dart';
 
 class CreateNewFeed extends StatefulWidget {
   const CreateNewFeed({Key? key}) : super(key: key);
@@ -57,7 +58,7 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
       case 'tag-people':
         body =
             FriendTag(handleUpdateSelectedFriend: handleUpdateSelectedFriend);
-        buttonAppbar = const ButtonPrimary(label: "Xong");
+        buttonAppbar =  ButtonPrimary(label: "Xong");
         break;
       case 'gif':
         body = const Gif();
@@ -86,7 +87,7 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
+          children:  [
             BackIconAppbar(),
             AppBarTitle(title: "Tạo bài post"),
             ButtonPrimary(label: "Đăng")

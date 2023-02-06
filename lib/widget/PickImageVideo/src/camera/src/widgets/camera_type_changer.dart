@@ -2,8 +2,9 @@
 
 import 'dart:math';
 
-import 'package:social_network_app_mobile/widget/PickImageVideo/icons/custom_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/icons/custom_icons.dart';
 
 import '../controllers/cam_controller.dart';
 import '../entities/camera_type.dart';
@@ -48,7 +49,7 @@ class CameraTypeChanger extends StatelessWidget {
                   angle: -pi / 2,
                   child: const Icon(
                     CustomIcons.play,
-                    color: Colors.white,
+                    color: white,
                   ),
                 ),
               ),
@@ -160,8 +161,8 @@ class _CameraType extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 11,
-            color: Colors.white
-                .withAlpha((0xFF * activePercent.clamp(0.5, 1.0)).round()),
+            color:
+                white.withAlpha((0xFF * activePercent.clamp(0.5, 1.0)).round()),
           ),
         ),
       ),

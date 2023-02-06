@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/constant/group_constants.dart';
-import 'package:social_network_app_mobile/providers/group/hide_group_provider.dart';
-import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/screen/cover_image_group_page.dart';
-import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/widgets/addtional_information_group_widget.dart';
-// import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/widgets/information_user_group_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
+import '../../../../constant/group_constants.dart';
+import '../../../../providers/group/hide_group_provider.dart';
+import '../../../../theme/colors.dart';
+import '../../../../widget/GeneralWidget/information_component_widget.dart';
+import '../../../../widget/GeneralWidget/spacer_widget.dart';
+import '../../../../widget/appbar_title.dart';
 import '../widgets/additional_information_for_selection_of_request_friend.dart';
+import '../widgets/addtional_information_group_widget.dart';
+import 'cover_image_group_page.dart';
 
 class RequestFriendsGroupPage extends StatefulWidget {
   @override
@@ -76,7 +73,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     Text(
                                       "Chia sẻ",
                                       style: TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
                                     )
@@ -99,7 +96,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                           color: Colors.grey[300]),
                                       child: Icon(
                                         FontAwesomeIcons.share,
-                                        // color: Colors.white,
+                                        // color:  white,
                                         size: 14,
                                       ),
                                     ),
@@ -116,7 +113,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                       RequestFriendsGroupConstants
                                           .EMAIL_REQUEST_TITLE,
                                       style: TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -126,7 +123,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                           RequestFriendsGroupConstants
                                               .EMAIL_REQUEST_SUBTITLE,
                                           style: TextStyle(
-                                              // color: Colors.white,
+                                              // color:  white,
                                               fontSize: 13)),
                                     ),
                                   ],
@@ -149,7 +146,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                           color: Colors.grey[300]),
                                       child: Icon(
                                         FontAwesomeIcons.envelope,
-                                        // color: Colors.white,
+                                        // color:  white,
                                         size: 14,
                                       ),
                                     ),
@@ -236,8 +233,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                                             FontAwesomeIcons
                                                                 .caretDown,
                                                             size: 14,
-                                                            color:
-                                                                Colors.white)),
+                                                            color: white)),
                                                   ],
                                                 )),
                                           )
@@ -257,7 +253,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                       RequestFriendsGroupConstants
                                           .EMAIL_REQUEST_TITLE,
                                       style: TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -267,7 +263,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                           RequestFriendsGroupConstants
                                               .EMAIL_REQUEST_SUBTITLE,
                                           style: TextStyle(
-                                              // color: Colors.white,
+                                              // color:  white,
                                               fontSize: 13)),
                                     ),
                                   ],
@@ -282,7 +278,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     // padding: const EdgeInsets.all(10),
                                     child: Icon(
                                       FontAwesomeIcons.envelope,
-                                      color: Colors.white,
+                                      color: white,
                                       // size: 17,
                                     ),
                                   ),
@@ -298,7 +294,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                       RequestFriendsGroupConstants
                                           .PRIVATE_TITLE[0],
                                       style: const TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 22,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -312,7 +308,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     RequestFriendsGroupConstants
                                         .PRIVATE_SUB_TITLE[0],
                                     style: const TextStyle(
-                                        // color: Colors.white,
+                                        // color:  white,
                                         fontSize: 21)),
                                 buildSpacer(
                                   height: 20,
@@ -324,7 +320,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                       RequestFriendsGroupConstants
                                           .PRIVATE_TITLE[1],
                                       style: const TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -338,7 +334,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     RequestFriendsGroupConstants
                                         .PRIVATE_SUB_TITLE[1],
                                     style: const TextStyle(
-                                        // color: Colors.white,
+                                        // color:  white,
                                         fontSize: 16)),
                                 buildSpacer(
                                   height: 16,
@@ -387,7 +383,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                         children: [
                                           Icon(
                                             FontAwesomeIcons.link,
-                                            color: Colors.white,
+                                            color: white,
                                           ),
                                         ],
                                       ),
@@ -408,7 +404,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                           onChanged: ((value) {}),
                           textAlign: TextAlign.left,
                           style: const TextStyle(
-                              // color: Colors.white
+                              // color:  white
                               ),
                           decoration: InputDecoration(
                               prefixIcon: Icon(
@@ -437,7 +433,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                           Text(
                             RequestFriendsGroupConstants.PUBLIC_TITLE[3],
                             style: const TextStyle(
-                                // color: Colors.white,
+                                // color:  white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -448,14 +444,6 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                       ),
                       // friend listView
                       Container(
-                        // height: Provider.of<HideGroupProvider>(context,
-                        //                 listen: false)
-                        //             .selection !=
-                        //         "Đã ẩn"
-                        //     ? isGeneralGroupSelection
-                        //         ? 250
-                        //         : 355
-                        //     : 200,
                         child: isGeneralGroupSelection
                             ? Container(
                                 height: 300,
@@ -472,7 +460,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     child: Text(
                                       "Không tìm thấy kết quả nào",
                                       style: TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -513,7 +501,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                                   child: Text(
                                                     "People ${index}",
                                                     style: TextStyle(
-                                                        // color: Colors.white,
+                                                        // color:  white,
                                                         fontSize: 15,
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -535,7 +523,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                                     child: Text(
                                                       "Mời",
                                                       style: TextStyle(
-                                                          color: Colors.white,
+                                                          color: white,
                                                           fontSize: 15),
                                                     ),
                                                   ),
@@ -580,7 +568,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         fixedSize: Size(width * 0.9, 40),
-                        backgroundColor: Colors.blue),
+                        backgroundColor: Colors.orange),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => CoverImageGroupPage()));
@@ -632,7 +620,7 @@ _showBottomSheetForShareComponent(BuildContext context) {
                       }),
                       child: Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: white,
                       ),
                     ),
                     flex: 2,
@@ -643,7 +631,7 @@ _showBottomSheetForShareComponent(BuildContext context) {
                         child: Center(
                       child: Text(
                         "Chia sẻ",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: white, fontSize: 18),
                       ),
                     )),
                   ),
@@ -653,7 +641,7 @@ _showBottomSheetForShareComponent(BuildContext context) {
             // divider
             Divider(
               height: 4,
-              color: Colors.white,
+              color: white,
             ),
             SizedBox(
               height: 10,
@@ -671,7 +659,7 @@ _showBottomSheetForShareComponent(BuildContext context) {
                           RequestFriendsGroupConstants
                               .SHARE_BOTTOM_SHEET_CONTENT_LIST[index][1],
                           style: TextStyle(
-                              color: Colors.white,
+                              color: white,
                               fontSize: 15,
                               fontWeight: FontWeight.bold),
                         )
@@ -690,7 +678,7 @@ _showBottomSheetForShareComponent(BuildContext context) {
                         child: Icon(
                           RequestFriendsGroupConstants
                               .SHARE_BOTTOM_SHEET_CONTENT_LIST[index][0],
-                          color: Colors.white,
+                          color: white,
                           size: 14,
                         ),
                       ),
@@ -729,7 +717,7 @@ Widget _buildExampleComponent(String title, bool isSelected, {IconData? icon}) {
                             child: Icon(
                           icon,
                           size: 13,
-                          color: Colors.white,
+                          color: white,
                         )),
                       ),
                       SizedBox(
@@ -741,7 +729,7 @@ Widget _buildExampleComponent(String title, bool isSelected, {IconData? icon}) {
             Text(
               title,
               style: TextStyle(
-                color: Colors.white,
+                color: white,
                 fontSize: 13,
               ),
             )
@@ -787,7 +775,7 @@ _showBottomSheetSelectionGroupForRequestFriend(
                       child: Center(
                     child: Text(
                       "Nhóm của bạn",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      style: TextStyle(color: white, fontSize: 18),
                     ),
                   )),
                 ],
@@ -798,7 +786,7 @@ _showBottomSheetSelectionGroupForRequestFriend(
               margin: EdgeInsets.only(top: 5, bottom: 5),
               child: Divider(
                 height: 2,
-                color: Colors.white,
+                color: white,
               ),
             ),
             // content listView
@@ -814,7 +802,7 @@ _showBottomSheetSelectionGroupForRequestFriend(
                           RequestFriendsGroupConstants
                               .SELECTION_FOR_CHOOSE_GROUP_GROUP[index][1],
                           style: TextStyle(
-                              color: Colors.white,
+                              color: white,
                               fontSize: 15,
                               fontWeight: FontWeight.bold),
                         ),
@@ -850,7 +838,7 @@ _showBottomSheetSelectionGroupForRequestFriend(
                         child: Center(
                           child: Text(
                             "Thêm",
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            style: TextStyle(color: white, fontSize: 15),
                           ),
                         ),
                       ),
@@ -901,14 +889,14 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
                     }),
                     child: Icon(
                       Icons.close,
-                      color: Colors.white,
+                      color: white,
                     ),
                   ),
                   Container(
                       child: Center(
                     child: Text(
                       "Chia sẻ",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      style: TextStyle(color: white, fontSize: 18),
                     ),
                   )),
                   Container(
@@ -916,7 +904,7 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
                       child: Center(
                         child: Text(
                           "Gửi",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: TextStyle(color: white, fontSize: 18),
                         ),
                       )),
                 ],
@@ -925,7 +913,7 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
             // divider
             Divider(
               height: 4,
-              color: Colors.white,
+              color: white,
             ),
             SizedBox(
               height: 10,
@@ -948,7 +936,7 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
               height: 80,
               child: TextFormField(
                 onChanged: ((value) {}),
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: white),
                 decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey, width: 2),
@@ -967,7 +955,7 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
                 ),
                 Text(
                   "Xin chào! Mời bạn tham gia nhóm của tôi nhé. Bạn có thể tham gia qua liên kết trong email này!",
-                  style: TextStyle(color: Colors.white, fontSize: 17),
+                  style: TextStyle(color: white, fontSize: 17),
                 ),
               ],
               changeBackground: Colors.grey[800],

@@ -45,13 +45,11 @@
 //   }
 // }
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/personal_page_page.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/title_description_and_content_list.dart';
-import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
@@ -60,6 +58,8 @@ import 'setting_constants/general_settings_constants.dart';
 
 class Setting extends StatelessWidget {
   const Setting({Key? key}) : super(key: key);
+  
+  get white => null;
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +69,8 @@ class Setting extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            BackIconAppbar(),
+          children: [
+            const BackIconAppbar(),
             Expanded(
                 child: SearchInput(
               handleSearch: demoFunction,
@@ -86,15 +86,15 @@ class Setting extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: Column(
                 children: [
                   // personal page description
                   Wrap(
                     children: [
-                      Text(
+                      const Text(
                         SettingConstants.PERSONAL_PAGE_DESCRIPTION,
-                        style: const TextStyle(
+                        style: TextStyle(
                           // color: Colors.grey,
                           fontSize: 15,
                         ),
@@ -108,17 +108,17 @@ class Setting extends StatelessWidget {
                           builder: (_) => PersonalSettingsPage()));
                     },
                     child: Container(
-                      margin: EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: GeneralComponent(
                         [
                           Text(SettingConstants.USER_EXAMPLE[1],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 // color: Colors.grey[800]
                               )),
                           Text(SettingConstants.USER_EXAMPLE[2],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 15,
                                 // color: Colors.grey
                               )),
@@ -126,8 +126,8 @@ class Setting extends StatelessWidget {
                         prefixWidget: Container(
                             height: 40,
                             width: 40,
-                            margin: EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
+                            margin: const EdgeInsets.only(right: 10),
+                            decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             child: Image.asset(
@@ -143,7 +143,7 @@ class Setting extends StatelessWidget {
               ),
             ),
             // divider
-            CrossBar(),
+            const CrossBar(),
             // account
             TitleDescriptionAndContentListWidget(
               title: SettingConstants.ACCOUNT_TITLE,
@@ -162,15 +162,15 @@ class Setting extends StatelessWidget {
                             Text(
                                 SettingConstants.ACCOUNT_INFORMATION_LIST[index]
                                     ["data"]["title"],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
-                                  // color: Colors.white
+                                  // color:  white
                                 )),
                             Text(
                                 SettingConstants.ACCOUNT_INFORMATION_LIST[index]
                                     ["data"]["subTitle"],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   //  color: Colors.grey
                                 )),
@@ -178,9 +178,9 @@ class Setting extends StatelessWidget {
                           prefixWidget: Container(
                             height: 40,
                             width: 40,
-                            padding: EdgeInsets.all(7),
-                            margin: EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
+                            padding: const EdgeInsets.all(7),
+                            margin: const EdgeInsets.only(right: 10),
+                            decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             child: SvgPicture.asset(
@@ -190,7 +190,7 @@ class Setting extends StatelessWidget {
                             ),
                           ),
                           changeBackground: Colors.transparent,
-                          padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                         ),
                       );
                     })),
@@ -218,16 +218,16 @@ class Setting extends StatelessWidget {
                                 SettingConstants
                                         .SECURITY_INFORMATION_LIST[index]
                                     ["data"]["title"],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
-                                  // color: Colors.white
+                                  // color:  white
                                 )),
                             Text(
                                 SettingConstants
                                         .SECURITY_INFORMATION_LIST[index]
                                     ["data"]["subTitle"],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   //  color: Colors.grey
                                 )),
@@ -235,9 +235,9 @@ class Setting extends StatelessWidget {
                           prefixWidget: Container(
                               height: 40,
                               width: 40,
-                              padding: EdgeInsets.all(7),
-                              margin: EdgeInsets.only(right: 10),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(7),
+                              margin: const EdgeInsets.only(right: 10),
+                              decoration: const BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20))),
                               child: SvgPicture.asset(
@@ -247,7 +247,7 @@ class Setting extends StatelessWidget {
                                 // color: Colors.grey[900],
                               )),
                           changeBackground: Colors.transparent,
-                          padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                         ),
                       );
                     })),
@@ -275,16 +275,16 @@ class Setting extends StatelessWidget {
                                 SettingConstants
                                         .ADVERTISEMENT_INFORMATION_LIST[index]
                                     ["data"]["title"],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
-                                  // color: Colors.white
+                                  // color:  white
                                 )),
                             Text(
                                 SettingConstants
                                         .ADVERTISEMENT_INFORMATION_LIST[index]
                                     ["data"]["subTitle"],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   //  color: Colors.grey
                                 )),
@@ -292,9 +292,9 @@ class Setting extends StatelessWidget {
                           prefixWidget: Container(
                             height: 40,
                             width: 40,
-                            padding: EdgeInsets.all(7),
-                            margin: EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
+                            padding: const EdgeInsets.all(7),
+                            margin: const EdgeInsets.only(right: 10),
+                            decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20))),
                             child: SvgPicture.asset(
@@ -303,7 +303,7 @@ class Setting extends StatelessWidget {
                             ),
                           ),
                           changeBackground: Colors.transparent,
-                          padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                         ),
                       );
                     })),
@@ -317,16 +317,16 @@ class Setting extends StatelessWidget {
                   // meta title
                   Row(
                     children: [
-                      Text(
+                      const Text(
                         "Meta",
-                        style: const TextStyle(
-                            // color: Colors.white,
+                        style: TextStyle(
+                            // color:  white,
                             fontSize: 19,
                             fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   // meta description
@@ -355,7 +355,7 @@ class Setting extends StatelessWidget {
                 ],
               ),
             ),
-            CrossBar(),
+            const CrossBar(),
 
             // privacy title
             TitleDescriptionAndContentListWidget(
@@ -368,16 +368,16 @@ class Setting extends StatelessWidget {
                     itemCount: SettingConstants.POLICY_SUBTITLE.length,
                     itemBuilder: ((context, index) {
                       return Container(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                        padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
                           SettingConstants.POLICY_SUBTITLE[index]["data"]!,
-                          style: TextStyle(color: Colors.white, fontSize: 15),
+                          style:  TextStyle(color: white, fontSize: 15),
                         ),
                       );
                     })),
               ),
             ),
-            SizedBox(height: 40)
+            const SizedBox(height: 40)
           ],
         ),
       ),

@@ -1,6 +1,6 @@
-import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/repo/gallery_repository.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_permission_view.dart';
+import '../../../../drishya_picker.dart';
+import '../repo/gallery_repository.dart';
+import 'gallery_permission_view.dart';
 import 'package:flutter/material.dart';
 
 ///

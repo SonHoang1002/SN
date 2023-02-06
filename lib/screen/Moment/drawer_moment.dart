@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/data/moment.dart';
 
-import 'package:social_network_app_mobile/widget/search_input.dart';
-import 'package:social_network_app_mobile/widget/user_item.dart';
+import '../../data/moment.dart';
+import '../../widget/search_input.dart';
+import '../../widget/user_item.dart';
 
 class DrawerMoment extends StatelessWidget {
   const DrawerMoment({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class DrawerMoment extends StatelessWidget {
           child: DrawerHeader(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children:  [
               Text(
                 'Tài khoản đang theo dõi',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),

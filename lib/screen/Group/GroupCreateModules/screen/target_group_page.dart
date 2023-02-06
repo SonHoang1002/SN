@@ -56,7 +56,7 @@ class _TargetGroupPageState extends State<TargetGroupPage> {
                         Text(
                           TargetGroupConstants.TITLE[0],
                           style: const TextStyle(
-                              // color: Colors.white,
+                              // color:  white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
@@ -67,7 +67,7 @@ class _TargetGroupPageState extends State<TargetGroupPage> {
                     ),
                     Text(TargetGroupConstants.SUBTITLE[0],
                         style: const TextStyle(
-                            // color: Colors.white,
+                            // color:  white,
                             fontSize: 15)),
                     const SizedBox(
                       height: 20,
@@ -158,7 +158,7 @@ Widget _buildFlexibleComponent(BuildContext context, Widget prefixWidget,
                     margin: EdgeInsets.only(),
                     child: Text(listContent[0],
                         style: TextStyle(
-                            // color: Colors.white,
+                            // color:  white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold)),
                   ),

@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
-import 'package:social_network_app_mobile/screen/Menu/menu_user.dart';
-import 'package:social_network_app_mobile/screen/Setting/darkmode_setting.dart';
-import 'package:social_network_app_mobile/screen/Setting/setting.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
+import '../../helper/push_to_new_screen.dart';
+import '../../theme/colors.dart';
+import '../../widget/appbar_title.dart';
+import '../Feed/drawer.dart';
+import '../Login/LoginCreateModules/onboarding_login_page.dart';
+import '../Setting/darkmode_setting.dart';
+import '../Setting/setting.dart';
 import 'menu_render.dart';
 import 'menu_shortcut.dart';
+import 'menu_user.dart';
 
 class Menu extends StatefulWidget {
   final Function(bool) isHideBottomNavBar;
@@ -58,8 +60,10 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         "icon": Icons.dark_mode,
         'type': 'icon',
         "action": () {
-          Navigator.push(context,
-              CupertinoPageRoute(builder: (context) => const DarkModeSetting()));
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => const DarkModeSetting()));
         }
       },
       {
@@ -185,7 +189,9 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
                                 backgroundColor: const Color(0xffdcdcdc)),
-                            onPressed: () {},
+                            onPressed: () {
+                              pushAndReplaceToNextScreen(context, OnboardingLoginPage());
+                            },
                             child: const Text(
                               "Đăng xuất",
                               style:

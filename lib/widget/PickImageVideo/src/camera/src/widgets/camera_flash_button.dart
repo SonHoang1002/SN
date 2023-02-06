@@ -1,9 +1,10 @@
 // ignore_for_file: always_use_package_imports
 
 import 'package:camera/camera.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/icons/custom_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/icons/custom_icons.dart';
 
+import '../../../../../../theme/colors.dart';
 import '../controllers/cam_controller.dart';
 import 'camera_builder.dart';
 
@@ -40,7 +41,7 @@ class CameraFlashButton extends StatelessWidget {
               padding: EdgeInsets.only(left: isOn ? 8.0 : 0.0),
               child: Icon(
                 isOn ? CustomIcons.flashon : CustomIcons.flashoff,
-                color: Colors.white,
+                color: white,
               ),
             ),
           ),

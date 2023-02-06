@@ -1,8 +1,9 @@
-import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/icons/custom_icons.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/animations/animations.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_builder.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../drishya_picker.dart';
+import '../../../../icons/custom_icons.dart';
+import '../../../animations/animations.dart';
+import 'gallery_builder.dart';
 
 ///
 class SendButton extends StatelessWidget {

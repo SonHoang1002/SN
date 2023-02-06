@@ -70,7 +70,7 @@ class EditorCloseButton extends StatelessWidget {
             ),
             child: const Icon(
               CustomIcons.close,
-              color: Colors.white,
+              color: white,
               size: 16,
             ),
           ),

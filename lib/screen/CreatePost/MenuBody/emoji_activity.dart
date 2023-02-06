@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/data/emoji_activity.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:social_network_app_mobile/widget/search_input.dart';
+
+import '../../../data/emoji_activity.dart';
+import '../../../theme/colors.dart';
+import '../../../widget/image_cache.dart';
+import '../../../widget/search_input.dart';
+import '../create_modal_base_menu.dart';
 
 class EmojiActivity extends StatefulWidget {
   const EmojiActivity({Key? key}) : super(key: key);
@@ -47,7 +48,7 @@ class _EmojiActivityState extends State<EmojiActivity>
           ],
         ),
       ),
-      Container(margin: const EdgeInsets.all(8.0), child: const SearchInput()),
+      Container(margin: const EdgeInsets.all(8.0), child:  SearchInput()),
       Expanded(
         child: TabBarView(
           controller: _tabController,
