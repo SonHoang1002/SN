@@ -169,8 +169,6 @@ class _CommentTextfieldState extends State<CommentTextfield> {
 
       if (file[0].pickedThumbData == null) {
         Uint8List bytes = await file[0].thumbnailData;
-        // final drishya = file[0].toDrishya;
-
         file[0] = file[0].copyWith(pickedThumbData: bytes);
       }
       setState(() {

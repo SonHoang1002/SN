@@ -5,6 +5,7 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_card.dart';
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
@@ -376,10 +377,21 @@ class _PostMediaCommentState extends State<PostMediaComment> {
       child: card != null
           ? renderCard()
           : medias.isNotEmpty
-              ? Container(
-                  constraints: BoxConstraints(
-                      maxHeight: size.width * 0.7, maxWidth: size.width * 0.7),
-                  child: renderMedia())
+              ? GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PostOneMediaDetail(
+                                  postMedia: widget.post,
+                                )));
+                  },
+                  child: Container(
+                      constraints: BoxConstraints(
+                          maxHeight: size.width * 0.7,
+                          maxWidth: size.width * 0.7),
+                      child: renderMedia()),
+                )
               : const SizedBox(),
     );
   }
