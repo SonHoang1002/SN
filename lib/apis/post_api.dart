@@ -1,9 +1,4 @@
 import 'api_root.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final postApiProvider = Provider((ref) {
-  return PostApi();
-});
 
 class PostApi {
   Future getListPostApi(params) async {

@@ -172,6 +172,7 @@ class BoxComment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     handleGetComment() {
+      if (post == null) return const [TextSpan(text: '')];
       List tags = post['status_tags'];
       String str = post['content'] ?? '';
 
@@ -363,8 +364,9 @@ class _PostMediaCommentState extends State<PostMediaComment> {
           child: FeedVideo(
               path: medias[0]['remote_url'] ?? medias[0]['url'],
               flickMultiManager: flickMultiManager,
-              image:
-                  medias[0]['preview_remote_url'] ?? medias[0]['preview_url']),
+              image: medias[0]['preview_remote_url'] ??
+                  medias[0]['preview_url'] ??
+                  ''),
         );
       }
     }

@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
+import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
@@ -42,6 +44,7 @@ class CommentTextfield extends StatefulWidget {
 
 class _CommentTextfieldState extends State<CommentTextfield> {
   bool isShowEmoji = false;
+  bool isComment = false;
   double heightModal = 250;
 
   String content = '';
@@ -177,6 +180,55 @@ class _CommentTextfieldState extends State<CommentTextfield> {
       });
     }
 
+    handleActionComment() async {
+      dynamic dataUploadFile;
+      if (files.isNotEmpty) {
+        File? fileData = await files[0].file;
+        String fileName = fileData!.path.split('/').last;
+        FormData formData = FormData.fromMap({
+          "file":
+              await MultipartFile.fromFile(fileData.path, filename: fileName),
+        });
+
+        dataUploadFile = await MediaApi().uploadMediaEmso(formData);
+      }
+
+      widget.handleComment!({
+        "status": content,
+        "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : null,
+        "extra_body": linkEmojiSticky.isEmpty
+            ? null
+            : {
+                "description":
+                    linkEmojiSticky.contains('giphy') ? 'gif' : "sticky",
+                "link": linkEmojiSticky,
+                "title": ""
+              },
+        "tags": listMentionsSelected
+            .where((element) => flagContent.contains(element['id']))
+            .map((e) => {
+                  "entity_id": e['id'],
+                  "entity_type": e['username'] != null
+                      ? 'Account'
+                      : e['page_relationship'] != null
+                          ? 'Page'
+                          : 'Group',
+                  "name": e['display_name'] ?? e['title']
+                })
+            .toList(),
+      });
+      textController.clear();
+      setState(() {
+        files = [];
+        content = '';
+        isComment = false;
+        linkEmojiSticky = '';
+        listMentionsSelected = [];
+      });
+      // ignore: use_build_context_synchronously
+      hiddenKeyboard(context);
+    }
+
     return Container(
         decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
@@ -301,60 +353,33 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                 focusNode: widget.commentNode,
                 handleGetValue: (value) => handleGetComment(value),
                 suffixIcon: InkWell(
-                  onTap: () {
-                    handleClickIcon();
-                  },
-                  child: content.trim().isEmpty && linkEmojiSticky.isEmpty
-                      ? Icon(
-                          FontAwesomeIcons.solidFaceSmile,
-                          color: isShowEmoji ? primaryColor : greyColor,
-                        )
-                      : SizedBox(
-                          width: 60,
-                          child: Center(
-                            child: TextAction(
-                              action: () {
-                                widget.handleComment!({
-                                  "status": flagContent,
-                                  "extra_body": linkEmojiSticky.isEmpty
-                                      ? null
-                                      : {
-                                          "description":
-                                              linkEmojiSticky.contains('giphy')
-                                                  ? 'gif'
-                                                  : "sticky",
-                                          "link": linkEmojiSticky,
-                                          "title": ""
-                                        },
-                                  "tags": listMentionsSelected
-                                      .where((element) =>
-                                          flagContent.contains(element['id']))
-                                      .map((e) => {
-                                            "entity_id": e['id'],
-                                            "entity_type": e['username'] != null
-                                                ? 'Account'
-                                                : e['page_relationship'] != null
-                                                    ? 'Page'
-                                                    : 'Group',
-                                            "name":
-                                                e['display_name'] ?? e['title']
-                                          })
-                                      .toList()
-                                });
-                                textController.clear();
-                                setState(() {
-                                  content = '';
-                                  linkEmojiSticky = '';
-                                  listMentionsSelected = [];
-                                });
-                                hiddenKeyboard(context);
-                              },
-                              title: "Đăng",
-                              fontSize: 15,
+                    onTap: () {
+                      handleClickIcon();
+                    },
+                    child: content.trim().isNotEmpty ||
+                            linkEmojiSticky.isNotEmpty ||
+                            files.isNotEmpty
+                        ? SizedBox(
+                            width: 60,
+                            child: Center(
+                              child: TextAction(
+                                action: !isComment
+                                    ? () {
+                                        setState(() {
+                                          isComment = true;
+                                        });
+                                        handleActionComment();
+                                      }
+                                    : null,
+                                title: "Đăng",
+                                fontSize: 15,
+                              ),
                             ),
-                          ),
-                        ),
-                ),
+                          )
+                        : Icon(
+                            FontAwesomeIcons.solidFaceSmile,
+                            color: isShowEmoji ? primaryColor : greyColor,
+                          )),
               ))
             ]),
             isShowEmoji

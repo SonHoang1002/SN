@@ -52,10 +52,12 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
     });
     var response = await EmojiStickyApi().fetchDataGifApi(params);
     if (response != null) {
-      setState(() {
-        isLoadingGif = false;
-        listGif = response["data"];
-      });
+      if (mounted) {
+        setState(() {
+          isLoadingGif = false;
+          listGif = response["data"];
+        });
+      }
     }
   }
 

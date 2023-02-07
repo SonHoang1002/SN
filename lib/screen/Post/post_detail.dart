@@ -32,13 +32,16 @@ class _PostDetailState extends State<PostDetail> {
       isLoadComment = true;
     });
     List newList = await PostApi().getListCommentPost(postId, params) ?? [];
-    setState(() {
-      isLoadComment = false;
-      postComment = postComment + newList;
-    });
+    if (mounted) {
+      setState(() {
+        isLoadComment = false;
+        postComment = postComment + newList;
+      });
+    }
   }
 
   Future handleComment(data) async {
+    if (!mounted) return;
     var newCommentPreview = {
       "in_reply_to_id": widget.post['id'],
       "account": meData,
@@ -113,8 +116,12 @@ class _PostDetailState extends State<PostDetail> {
       postComment = [newCommentPreview, ...postComment];
     });
 
-    dynamic newComment = await PostApi().createStatus(
-        {...data, "visibility": "public", "in_reply_to_id": widget.post['id']});
+    dynamic newComment = await PostApi().createStatus({
+          ...data,
+          "visibility": "public",
+          "in_reply_to_id": widget.post['id']
+        }) ??
+        newCommentPreview;
 
     setState(() {
       postComment = [newComment, ...postComment.sublist(1)];
