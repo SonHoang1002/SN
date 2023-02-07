@@ -21,7 +21,7 @@ class PostController extends StateNotifier<PostState> {
   PostController() : super(const PostState());
 
   getListPost(params) async {
-    List response = await PostApi().getListPostApi(params);
+    List response = await PostApi().getListPostApi(params) ?? [];
 
     if (response.isNotEmpty) {
       state = state.copyWith(

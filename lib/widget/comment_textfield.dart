@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,6 +12,7 @@ import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/box_mention.dart';
 import 'package:social_network_app_mobile/widget/emoji_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -49,6 +53,7 @@ class _CommentTextfieldState extends State<CommentTextfield> {
   late SocialTextEditingController textController;
   List listMentions = [];
   List listMentionsSelected = [];
+  List files = [];
 
   late StreamSubscription<SocialContentDetection> _streamSubscription;
 
@@ -116,6 +121,7 @@ class _CommentTextfieldState extends State<CommentTextfield> {
     functionGetEmoji(link) {
       setState(() {
         isShowEmoji = false;
+        files = [];
         linkEmojiSticky = link;
       });
       widget.commentNode!.requestFocus();
@@ -152,6 +158,22 @@ class _CommentTextfieldState extends State<CommentTextfield> {
 
       setState(() {
         listMentionsSelected = [...listMentionsSelected, data];
+      });
+    }
+
+    handleGetFiles(file) async {
+      if (file.isEmpty) return;
+
+      if (file[0].pickedThumbData == null) {
+        Uint8List bytes = await file[0].thumbnailData;
+        // final drishya = file[0].toDrishya;
+
+        file[0] = file[0].copyWith(pickedThumbData: bytes);
+      }
+      setState(() {
+        files = file;
+        isShowEmoji = false;
+        linkEmojiSticky = '';
       });
     }
 
@@ -204,27 +226,39 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                         ])),
                   )
                 : const SizedBox(),
-            linkEmojiSticky.isNotEmpty
+            (linkEmojiSticky.isNotEmpty || files.isNotEmpty)
                 ? Container(
                     margin: const EdgeInsets.only(top: 4, bottom: 4, left: 30),
                     child: Stack(
                       children: [
                         ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
-                            child: ImageCacheRender(
-                                height: 70.0, path: linkEmojiSticky)),
+                            child: files.isNotEmpty
+                                ? Image.memory(
+                                    files[0].pickedThumbData,
+                                    fit: BoxFit.cover,
+                                    height: 80,
+                                    width: 70,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Text(
+                                                'Hình ảnh không được hiển thị'),
+                                  )
+                                : ImageCacheRender(
+                                    height: 70.0, path: linkEmojiSticky)),
                         Positioned(
                           top: 0,
                           right: 0,
                           child: GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  files = [];
                                   linkEmojiSticky = '';
                                 });
                               },
                               child: Container(
-                                  width: 14,
-                                  height: 14,
+                                  width: 20,
+                                  height: 20,
                                   decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.5),
                                       shape: BoxShape.circle),
@@ -239,9 +273,20 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                   )
                 : const SizedBox(),
             Row(children: [
-              const Icon(
-                FontAwesomeIcons.camera,
-                color: greyColor,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => Expanded(
+                              child: GalleryView(
+                                  filesSelected: files,
+                                  handleGetFiles: handleGetFiles))));
+                },
+                child: const Icon(
+                  FontAwesomeIcons.camera,
+                  color: greyColor,
+                ),
               ),
               const SizedBox(
                 width: 8.0,

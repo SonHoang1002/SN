@@ -69,10 +69,12 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
               "sticky": el["thumbnails"].elementAt(0)["url"],
               "id": el["id"],
             })));
-        setState(() {
-          isLoadingMenuSticky = false;
-          listMenuSticky = [...listMenuSticky, ...listMenuFree];
-        });
+        if (mounted) {
+          setState(() {
+            isLoadingMenuSticky = false;
+            listMenuSticky = [...listMenuSticky, ...listMenuFree];
+          });
+        }
       }
     } else if (type == 'trending') {
       setState(() {
@@ -82,11 +84,12 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
       if (response != null) {
         var listTrending = List.from(response["data"].map((el) =>
             ({"id": el['id'], "url": el["images"].elementAt(0)["url"]})));
-
-        setState(() {
-          isLoadingSticky = false;
-          listSticky = listTrending;
-        });
+        if (mounted) {
+          setState(() {
+            isLoadingSticky = false;
+            listSticky = listTrending;
+          });
+        }
       }
     } else {
       setState(() {
@@ -98,10 +101,12 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
             (el) =>
                 ({"id": el['id'], "url": el["images"].elementAt(0)["url"]})));
 
-        setState(() {
-          isLoadingSticky = false;
-          listSticky = listStickyData;
-        });
+        if (mounted) {
+          setState(() {
+            isLoadingSticky = false;
+            listSticky = listStickyData;
+          });
+        }
       }
     }
   }
