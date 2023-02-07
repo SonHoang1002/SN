@@ -171,6 +171,34 @@ class BoxComment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    handleGetComment() {
+      List tags = post['status_tags'];
+      String str = post['content'] ?? '';
+
+      // return comment;
+      List<TextSpan> listRender = [];
+
+      List matches = str.split(RegExp(r'\[|\]'));
+
+      List listIdTags = tags.map((e) => e['entity_id']).toList();
+
+      for (final subStr in matches) {
+        listRender.add(
+          TextSpan(
+              text: listIdTags.contains(subStr)
+                  ? tags.firstWhere((element) => element['entity_id'] == subStr,
+                      orElse: () => {})['name']
+                  : subStr,
+              style: listIdTags.contains(subStr)
+                  ? const TextStyle(
+                      color: secondaryColor, fontWeight: FontWeight.w500)
+                  : null),
+        );
+      }
+
+      return listRender;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -194,10 +222,14 @@ class BoxComment extends StatelessWidget {
                     const SizedBox(
                       height: 4,
                     ),
-                    Text(
-                      '${post?['content'] ?? ''}',
-                      style: const TextStyle(fontSize: 13),
-                    ),
+                    RichText(
+                        text: TextSpan(
+                      text: '',
+                      children: handleGetComment(),
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Theme.of(context).textTheme.bodyLarge!.color),
+                    ))
                   ],
                 ),
               )

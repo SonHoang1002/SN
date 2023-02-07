@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,9 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/box_mention.dart';
 import 'package:social_network_app_mobile/widget/emoji_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/mentions/controller/social_text_editing_controller.dart';
+import 'package:social_network_app_mobile/widget/mentions/model/detected_type_enum.dart';
+import 'package:social_network_app_mobile/widget/mentions/model/social_content_detection_model.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
@@ -34,12 +39,71 @@ class CommentTextfield extends StatefulWidget {
 class _CommentTextfieldState extends State<CommentTextfield> {
   bool isShowEmoji = false;
   double heightModal = 250;
+
   String content = '';
+  String flagContent = '';
+  String preMessage = '';
+
   String linkEmojiSticky = '';
-  String query = '';
-  TextEditingController textController = TextEditingController();
+  dynamic query;
+  late SocialTextEditingController textController;
   List listMentions = [];
   List listMentionsSelected = [];
+
+  late StreamSubscription<SocialContentDetection> _streamSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    textController = SocialTextEditingController()
+      ..text = content
+      ..setTextStyle(
+          DetectedType.mention,
+          TextStyle(
+              color: secondaryColor, backgroundColor: secondaryColorSelected));
+
+    _streamSubscription = textController.subscribeToDetection(onDetectContent);
+  }
+
+  void onDetectContent(SocialContentDetection detection) async {
+    if (!detection.text.contains('@')) {
+      if (listMentions.isNotEmpty) {
+        setState(() {
+          listMentions = [];
+        });
+      }
+      return;
+    }
+    setState(() {
+      query = detection;
+    });
+
+    if (detection.text.substring(1).isEmpty) {
+      List newList =
+          await FriendsApi().getListFriendApi(meData['id'], {"limit": 20}) ??
+              [];
+
+      setState(() {
+        listMentions = newList.length > 5 ? newList.sublist(0, 5) : newList;
+      });
+    } else {
+      var objectMentions = await SearchApi()
+          .getListSearchApi({"q": detection.text.substring(1), "limit": 5});
+      if (objectMentions != null) {
+        setState(() {
+          listMentions = objectMentions['accounts'] +
+              objectMentions['groups'] +
+              objectMentions['pages'];
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,58 +126,29 @@ class _CommentTextfieldState extends State<CommentTextfield> {
         content = value;
       });
 
-      final tagRegex = RegExp(r"\B@", caseSensitive: false);
-      final sentences = value.split(' ');
-
-      for (var sentence in sentences) {
-        final words = sentence.split(' ');
-        String withat = words.last;
-
-        if (tagRegex.hasMatch(withat)) {
-          String withoutat = withat.substring(1);
-          setState(() {
-            query = withoutat;
-          });
-          if (withoutat.isEmpty) {
-            List newList = await FriendsApi()
-                    .getListFriendApi(meData['id'], {"limit": 20}) ??
-                [];
-
-            setState(() {
-              listMentions =
-                  newList.length > 5 ? newList.sublist(0, 5) : newList;
-            });
-          } else {
-            var objectMentions = await SearchApi()
-                .getListSearchApi({"q": withoutat, "limit": 5});
-            if (objectMentions != null) {
-              setState(() {
-                listMentions = objectMentions['accounts'] +
-                    objectMentions['groups'] +
-                    objectMentions['pages'];
-              });
-            }
-          }
-        } else {
-          setState(() {
-            listMentions = [];
-          });
-        }
+      for (var mention in listMentionsSelected) {
+        preMessage = textController.text.replaceAll(
+            mention['display_name'] ?? mention['title'], '[${mention['id']}]');
       }
+
+      setState(() {
+        flagContent = preMessage;
+      });
     }
 
     handleClickMention(data) {
-      print('query, $query');
-      textController.text = textController.text
-          .replaceAll('@$query', '@${data['display_name'] ?? data['title']} ');
-      // String message =
-      //     textController.text.replaceAll('@$query', '@${data['id']}');
+      //Should show notification
+      if (listMentionsSelected.length > 50) return;
+
+      String message =
+          '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
+
+      textController.text = message;
+
       setState(() {
         listMentions = [];
-        // content = message;
+        content = message;
       });
-      // textController.selection =
-      //     TextSelection.collapsed(offset: textController.text.length);
 
       setState(() {
         listMentionsSelected = [...listMentionsSelected, data];
@@ -235,7 +270,7 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                             child: TextAction(
                               action: () {
                                 widget.handleComment!({
-                                  "status": content,
+                                  "status": flagContent,
                                   "extra_body": linkEmojiSticky.isEmpty
                                       ? null
                                       : {
@@ -246,27 +281,26 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                                           "link": linkEmojiSticky,
                                           "title": ""
                                         },
-                                  "tags": content.contains('@')
-                                      ? listMentionsSelected
-                                          .map((e) => {
-                                                "entity_id": e['id'],
-                                                "entity_type": e['username'] !=
-                                                        null
-                                                    ? 'Account'
-                                                    : e['page_relationship'] !=
-                                                            null
-                                                        ? 'Page'
-                                                        : 'Group',
-                                                "name": e['display_name'] ??
-                                                    e['title']
-                                              })
-                                          .toList()
-                                      : []
+                                  "tags": listMentionsSelected
+                                      .where((element) =>
+                                          flagContent.contains(element['id']))
+                                      .map((e) => {
+                                            "entity_id": e['id'],
+                                            "entity_type": e['username'] != null
+                                                ? 'Account'
+                                                : e['page_relationship'] != null
+                                                    ? 'Page'
+                                                    : 'Group',
+                                            "name":
+                                                e['display_name'] ?? e['title']
+                                          })
+                                      .toList()
                                 });
                                 textController.clear();
                                 setState(() {
                                   content = '';
                                   linkEmojiSticky = '';
+                                  listMentionsSelected = [];
                                 });
                                 hiddenKeyboard(context);
                               },

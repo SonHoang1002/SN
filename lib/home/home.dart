@@ -21,8 +21,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  late AnimationController animationController;
-  late List<Widget> _pages;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -31,109 +29,79 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   @override
-  void initState() {
-    super.initState();
-    // if (!Platform.isWindows) {
-    //   FirebaseMessaging.instance
-    //       .getToken()
-    //       .then((value) => print('token $value'));
-    // }
-
-    animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
-
-    functionHidden(isHideBottomNavBar) {
-      isHideBottomNavBar
-          ? animationController.forward()
-          : animationController.reverse();
-    }
-
-    _pages = <Widget>[
-      Feed(isHideBottomNavBar: functionHidden),
-      const Moment(),
-      const CreatePost(),
-      Watch(isHideBottomNavBar: functionHidden),
-      Menu(isHideBottomNavBar: functionHidden)
-    ];
-  }
-
-  @override
-  void dispose() {
-    // ...
-    animationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    List<Widget> pages = const [
+      Feed(),
+      Moment(),
+      CreatePost(),
+      Watch(),
+      Menu()
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
-        children: _pages,
+        children: pages,
       ),
-      bottomNavigationBar: SizeTransition(
-        sizeFactor: animationController,
-        axisAlignment: -3.0,
-        child: SizedBox(
-          height: 65,
-          child: BottomNavigationBar(
-            selectedItemColor: primaryColor,
-            unselectedItemColor: greyColor,
-            showSelectedLabels: false,
-            elevation: 0,
-            backgroundColor: _selectedIndex == 1
-                ? Colors.black
-                : Theme.of(context).scaffoldBackgroundColor,
-            type: BottomNavigationBarType.fixed,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
+      bottomNavigationBar: SizedBox(
+        height: 65,
+        child: BottomNavigationBar(
+          selectedItemColor: primaryColor,
+          unselectedItemColor: greyColor,
+          showSelectedLabels: false,
+          elevation: 0,
+          backgroundColor: _selectedIndex == 1
+              ? Colors.black
+              : Theme.of(context).scaffoldBackgroundColor,
+          type: BottomNavigationBarType.fixed,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                _selectedIndex == 0 ? "assets/HomeFC.svg" : "assets/home.svg",
+                width: 20,
+                height: 20,
+              ),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+                icon: Padding(
+                  padding: const EdgeInsets.only(top: 7.0),
+                  child: SvgPicture.asset(
+                    _selectedIndex == 1
+                        ? "assets/MomentFc.svg"
+                        : "assets/Moment.svg",
+                    width: 38,
+                    height: 38,
+                  ),
+                ),
+                label: ''),
+            BottomNavigationBarItem(
                 icon: SvgPicture.asset(
-                  _selectedIndex == 0 ? "assets/HomeFC.svg" : "assets/home.svg",
+                  "assets/Plus.svg",
+                  width: 20,
+                  height: 20,
+                  color: _selectedIndex == 2 ? primaryColor : greyColor,
+                ),
+                label: ''),
+            BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  _selectedIndex == 3
+                      ? "assets/WatchFC.svg"
+                      : "assets/Watch.svg",
                   width: 20,
                   height: 20,
                 ),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
-                    child: SvgPicture.asset(
-                      _selectedIndex == 1
-                          ? "assets/MomentFc.svg"
-                          : "assets/Moment.svg",
-                      width: 38,
-                      height: 38,
-                    ),
-                  ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    "assets/Plus.svg",
-                    width: 20,
-                    height: 20,
-                    color: _selectedIndex == 2 ? primaryColor : greyColor,
-                  ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    _selectedIndex == 3
-                        ? "assets/WatchFC.svg"
-                        : "assets/Watch.svg",
-                    width: 20,
-                    height: 20,
-                  ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.menu,
-                    color: _selectedIndex == 4 ? primaryColor : greyColor,
-                    size: 30,
-                  ),
-                  label: ''),
-            ],
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-          ),
+                label: ''),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.menu,
+                  color: _selectedIndex == 4 ? primaryColor : greyColor,
+                  size: 30,
+                ),
+                label: ''),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
         ),
       ),
     );
