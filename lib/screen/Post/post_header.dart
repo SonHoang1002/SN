@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
+import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
@@ -168,7 +169,18 @@ class _PostHeaderState extends State<PostHeader> {
                   ? Row(
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                // isScrollControlled: true,
+                                // clipBehavior: Clip.antiAliasWithSaveLayer,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20))),
+                                builder: (BuildContext context) {
+                                  return PostHeaderAction(post: widget.post);
+                                });
+                          },
                           child: Icon(
                             FontAwesomeIcons.ellipsis,
                             size: 22,
