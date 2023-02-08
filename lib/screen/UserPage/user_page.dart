@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_friend_block.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_infomation_block.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page_pin_post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Banner/banner_base.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -130,6 +131,7 @@ class UserPage extends StatelessWidget {
               ),
             ),
             const CrossBar(),
+            const UserPagePinPost(),
             ListView.builder(
                 shrinkWrap: true,
                 primary: false,
