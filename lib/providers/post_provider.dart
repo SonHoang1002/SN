@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/apis/user_page_api.dart';
 
 @immutable
 class PostState {
@@ -8,12 +9,28 @@ class PostState {
   final List postsPin;
   final bool isMore;
 
+  final List postUserPage;
+  final bool isMoreUserPage;
+
   const PostState(
-      {this.posts = const [], this.postsPin = const [], this.isMore = true});
+      {this.posts = const [],
+      this.postUserPage = const [],
+      this.postsPin = const [],
+      this.isMore = true,
+      this.isMoreUserPage = true});
 
   PostState copyWith(
-      {List posts = const [], List postsPin = const [], bool isMore = true}) {
-    return PostState(posts: posts, postsPin: postsPin, isMore: isMore);
+      {List posts = const [],
+      List postUserPage = const [],
+      List postsPin = const [],
+      bool isMore = true,
+      bool isMoreUserPage = true}) {
+    return PostState(
+        posts: posts,
+        postUserPage: postUserPage,
+        postsPin: postsPin,
+        isMore: isMore,
+        isMoreUserPage: isMoreUserPage);
   }
 }
 
@@ -25,20 +42,34 @@ class PostController extends StateNotifier<PostState> {
 
   getListPost(params) async {
     List response = await PostApi().getListPostApi(params) ?? [];
+    state = state.copyWith(
+        posts: state.posts + response,
+        postsPin: state.postsPin,
+        postUserPage: state.postUserPage,
+        isMore: response.length < params['limit'] ? false : true,
+        isMoreUserPage: state.isMoreUserPage);
+  }
 
-    if (response.isNotEmpty) {
-      state = state.copyWith(
-          posts: state.posts + response,
-          isMore: response.length < params['limit'] ? false : true);
-    } else {
-      state = state.copyWith(isMore: false);
-    }
+  getListPostUserPage(accountId, params) async {
+    List response = await UserPageApi().getListPostApi(accountId, params) ?? [];
+
+    state = state.copyWith(
+        posts: state.posts,
+        postsPin: state.postsPin,
+        postUserPage: state.postUserPage + response,
+        isMore: state.isMore,
+        isMoreUserPage: response.length < params['limit'] ? false : true);
   }
 
   getListPostPin(accountId) async {
     List response = await PostApi().getListPostPinApi(accountId) ?? [];
 
-    state = state.copyWith(postsPin: response);
+    state = state.copyWith(
+        postsPin: response,
+        posts: state.posts,
+        isMore: state.isMore,
+        postUserPage: state.postUserPage,
+        isMoreUserPage: state.isMoreUserPage);
   }
 
   actionPinPost(type, postId) async {
@@ -49,9 +80,12 @@ class PostController extends StateNotifier<PostState> {
 
       state = state.copyWith(
           postsPin: state.postsPin + [response],
-          posts: state.posts
+          isMore: state.isMore,
+          posts: state.posts,
+          postUserPage: state.postUserPage
               .where((element) => element['id'] != response['id'])
-              .toList());
+              .toList(),
+          isMoreUserPage: state.isMoreUserPage);
     } else if (type == 'unpin') {
       response = await PostApi().unPinPostApi(postId);
       if (response == null) return;
@@ -59,7 +93,10 @@ class PostController extends StateNotifier<PostState> {
           postsPin: state.postsPin
               .where((element) => element['id'] != response['id'])
               .toList(),
-          posts: [response] + state.posts);
+          postUserPage: [response] + state.postUserPage,
+          isMore: state.isMore,
+          isMoreUserPage: state.isMoreUserPage,
+          posts: state.posts);
     }
   }
 
@@ -68,9 +105,17 @@ class PostController extends StateNotifier<PostState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
           posts: response,
+          postsPin: state.postsPin,
+          postUserPage: state.postUserPage,
+          isMoreUserPage: state.isMoreUserPage,
           isMore: response.length < params['limit'] ? false : true);
     } else {
-      state = state.copyWith(isMore: false);
+      state = state.copyWith(
+          isMore: false,
+          posts: response,
+          postsPin: state.postsPin,
+          postUserPage: state.postUserPage,
+          isMoreUserPage: state.isMoreUserPage);
     }
   }
 }

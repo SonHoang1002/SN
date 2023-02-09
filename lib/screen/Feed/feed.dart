@@ -101,86 +101,61 @@ class _FeedState extends ConsumerState<Feed> {
     }
 
     return Scaffold(
-      key: _key,
-      drawerEnableOpenDragGesture: false,
       drawer: Drawer(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         child: const DrawerFeed(),
       ),
       appBar: AppBar(
         elevation: 0,
-        automaticallyImplyLeading: false,
+        iconTheme: const IconThemeData(color: primaryColor),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        actions: List.generate(
+            iconAction.length,
+            (index) => GestureDetector(
+                  onTap: () {
+                    handleClick(iconAction[index]['key']);
+                  },
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    margin: const EdgeInsets.only(left: 5, right: 8),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey.withOpacity(0.3)),
+                    child: iconAction[index]['type'] == 'icon'
+                        ? Icon(
+                            iconAction[index]['icon'],
+                            size: 20,
+                            color:
+                                Theme.of(context).textTheme.displayLarge!.color,
+                          )
+                        : Padding(
+                            padding: EdgeInsets.only(
+                                top: iconAction[index]['top'],
+                                left: iconAction[index]['left'],
+                                right: iconAction[index]['right'],
+                                bottom: iconAction[index]['bottom']),
+                            child: SvgPicture.asset(
+                              iconAction[index]['icon'],
+                            ),
+                          ),
+                  ),
+                )),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () => _key.currentState!.openDrawer(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Theme.of(context).textTheme.displayLarge!.color,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 7,
-                  ),
-                  const Text(
-                    "Emso",
-                    style: TextStyle(
-                        color: primaryColor, fontWeight: FontWeight.w700),
-                  ),
-                  const Text(
-                    "Social",
-                    style: TextStyle(
-                        color: secondaryColor, fontWeight: FontWeight.w700),
-                  )
-                ]),
-            Row(
-              children: List.generate(
-                  iconAction.length,
-                  (index) => GestureDetector(
-                        onTap: () {
-                          handleClick(iconAction[index]['key']);
-                        },
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          margin: const EdgeInsets.only(left: 5),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey.withOpacity(0.3)),
-                          child: iconAction[index]['type'] == 'icon'
-                              ? Icon(
-                                  iconAction[index]['icon'],
-                                  size: 20,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .color,
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.only(
-                                      top: iconAction[index]['top'],
-                                      left: iconAction[index]['left'],
-                                      right: iconAction[index]['right'],
-                                      bottom: iconAction[index]['bottom']),
-                                  child: SvgPicture.asset(
-                                    iconAction[index]['icon'],
-                                  ),
-                                ),
-                        ),
-                      )),
-            )
-          ],
-        ),
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              Text(
+                "Emso",
+                style:
+                    TextStyle(color: primaryColor, fontWeight: FontWeight.w700),
+              ),
+              Text(
+                "Social",
+                style: TextStyle(
+                    color: secondaryColor, fontWeight: FontWeight.w700),
+              )
+            ]),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -202,15 +177,15 @@ class _FeedState extends ConsumerState<Feed> {
                   primary: false,
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
-                    // if (index < posts.length) {
-                    return Post(post: posts[index]);
-                    // } else {
-                    //   return isMore == true
-                    //       ? const Center(
-                    //           child: CupertinoActivityIndicator(),
-                    //         )
-                    //       : const SizedBox();
-                    // }
+                    if (index < posts.length) {
+                      return Post(post: posts[index]);
+                    } else {
+                      return isMore == true
+                          ? const Center(
+                              child: CupertinoActivityIndicator(),
+                            )
+                          : const SizedBox();
+                    }
                   }),
               isMore
                   ? const SizedBox()

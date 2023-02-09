@@ -3,24 +3,42 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/widget/page_permission_comment.dart';
+import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
-class PostHeaderAction extends ConsumerWidget {
+class PostHeaderAction extends ConsumerStatefulWidget {
   final dynamic post;
   const PostHeaderAction({Key? key, this.post}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PostHeaderAction> createState() => _PostHeaderActionState();
+}
+
+class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
+  String commentModeration = 'public';
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      commentModeration = widget.post['comment_moderation'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     List actionsPost = [
       {
-        "key": post['pinned'] != null && post['pinned'] == true
+        "key": widget.post['pinned'] != null && widget.post['pinned'] == true
             ? "unpin_post"
             : "pin_post",
-        "label": post['pinned'] != null && post['pinned'] == true
+        "label": widget.post['pinned'] != null && widget.post['pinned'] == true
             ? "Bỏ ghim bài viết"
             : "Ghim bài viết",
         "icon": FontAwesomeIcons.thumbtack,
-        "isShow": meData['id'] == post['account']['id'],
+        "isShow": meData['id'] == widget.post['account']['id'],
       },
       {
         "key": "save_post",
@@ -33,20 +51,20 @@ class PostHeaderAction extends ConsumerWidget {
         "key": "edit_post",
         "label": "Chỉnh sửa bài viết",
         "icon": FontAwesomeIcons.solidEdit,
-        "isShow": true
+        "isShow": meData['id'] == widget.post['account']['id']
       },
       {
         "key": "comment_permission_post",
         "label": "Ai có thể bình luận về bài viết này?",
         "icon": FontAwesomeIcons.solidComment,
-        "isShow": true
+        "isShow": meData['id'] == widget.post['account']['id']
       },
       {
         "key": "object_post",
         "label": "Chỉnh sửa đối tượng",
         "icon": FontAwesomeIcons.globe,
         "description": "Chỉnh sửa đối tượng theo dõi bài viết của bạn",
-        "isShow": true
+        "isShow": meData['id'] == widget.post['account']['id']
       },
       {
         "key": "open_notification_post",
@@ -60,24 +78,61 @@ class PostHeaderAction extends ConsumerWidget {
         "label": "Báo cáo",
         "icon": FontAwesomeIcons.solidFlag,
         "description": "Báo cáo bài viết này cho chúng tôi",
-        "isShow": true
+        "isShow": meData['id'] != widget.post['account']['id']
       },
       {
         "key": "delete_post",
         "label": "Xoá bài viết",
         "icon": FontAwesomeIcons.trash,
-        "isShow": true
+        "isShow": meData['id'] == widget.post['account']['id']
       },
     ];
 
     handleAction(key) {
       if (["unpin_post", "pin_post"].contains(key)) {
         ref.read(postControllerProvider.notifier).actionPinPost(
-            post['pinned'] != null && post['pinned'] == true ? 'unpin' : 'pin',
-            post['id']);
+            widget.post['pinned'] != null && widget.post['pinned'] == true
+                ? 'unpin'
+                : 'pin',
+            widget.post['id']);
+        Navigator.pop(context);
+      } else if (['save_post'].contains(key)) {
+        Navigator.pop(context);
+      } else if (key == "comment_permission_post") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CreateModalBaseMenu(
+                    title: "Bình luận về bài viết này",
+                    body: PagePermissionComment(
+                        commentModeration: commentModeration,
+                        handleUpdate: (newValue) {
+                          setState(() {
+                            commentModeration = newValue;
+                          });
+                        }),
+                    buttonAppbar: TextAction(
+                      title: "Xong",
+                      fontSize: 17,
+                      action: () {
+                        Navigator.of(context)
+                          ..pop()
+                          ..pop();
+                      },
+                    ),
+                  )),
+        );
       }
-      Navigator.pop(context);
     }
+
+    // ref.listen<dynamic>(
+    //     postControllerProvider.select((value) => value.postsPin),
+    //     (previous, next) {
+    //   print('abc $previous');
+    //   print('abc $next');
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(const SnackBar(content: Text('Thành công')));
+    // });
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
@@ -86,8 +141,7 @@ class PostHeaderAction extends ConsumerWidget {
           children: [
             actionsPost
                     .sublist(0, 2)
-                    .where((element) =>
-                        element['isShow'] != null && element['isShow'] == true)
+                    .where((element) => element['isShow'] == true)
                     .toList()
                     .isNotEmpty
                 ? Container(
@@ -98,8 +152,7 @@ class PostHeaderAction extends ConsumerWidget {
                     child: Column(
                       children: List.generate(
                           2,
-                          (index) => actionsPost[index]['isShow'] != null &&
-                                  actionsPost[index]['isShow']
+                          (index) => actionsPost[index]['isShow']
                               ? BlockAction(
                                   item: actionsPost[index],
                                   handleAction: handleAction,
@@ -118,8 +171,7 @@ class PostHeaderAction extends ConsumerWidget {
                 child: Column(
                   children: List.generate(
                       5,
-                      (index) => actionsPost[index]['isShow'] != null &&
-                              actionsPost[index]['isShow']
+                      (index) => actionsPost.sublist(2, 7)[index]['isShow']
                           ? BlockAction(
                               item: actionsPost.sublist(2, 7)[index],
                               handleAction: handleAction,
@@ -134,13 +186,9 @@ class PostHeaderAction extends ConsumerWidget {
                 decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(8)),
-                child: Column(
-                  children: List.generate(
-                      1,
-                      (index) => BlockAction(
-                            item: actionsPost.sublist(7)[index],
-                            handleAction: handleAction,
-                          )),
+                child: BlockAction(
+                  item: actionsPost.last,
+                  handleAction: handleAction,
                 )),
           ],
         ),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
-import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
@@ -20,12 +21,42 @@ import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
-class UserPage extends StatelessWidget {
+class UserPage extends ConsumerStatefulWidget {
   const UserPage({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<UserPage> createState() => _UserPageState();
+}
+
+class _UserPageState extends ConsumerState<UserPage> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      ref.read(postControllerProvider.notifier).getListPostUserPage(
+          meData['id'], {"limit": 3, "exclude_replies": true});
+    });
+
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
+        String maxId = ref.read(postControllerProvider).postUserPage.last['id'];
+        ref.read(postControllerProvider.notifier).getListPostUserPage(
+            meData['id'],
+            {"max_id": maxId, "limit": 3, "exclude_replies": true});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final postUser = ref.watch(postControllerProvider).postUserPage;
+    final isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -57,6 +88,7 @@ class UserPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -139,7 +171,12 @@ class UserPage extends StatelessWidget {
                 itemBuilder: (context, index) => Post(
                       type: postPageUser,
                       post: postUser[index],
-                    ))
+                    )),
+            isMorePageUser
+                ? const Center(
+                    child: CupertinoActivityIndicator(),
+                  )
+                : const SizedBox()
           ],
         ),
       ),
