@@ -197,6 +197,7 @@ class GalleryAssetSelectorState extends State<GalleryAssetSelector>
                           label: 'Chọn',
                           handlePress: () {
                             widget.controller.completeTask;
+                            Navigator.pop(context);
                           },
                         ),
                       ),

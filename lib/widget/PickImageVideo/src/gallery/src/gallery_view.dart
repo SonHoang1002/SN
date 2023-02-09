@@ -81,6 +81,7 @@ class _GalleryViewState extends State<GalleryView> {
         final entities = _controller.value.selectedEntities;
 
         if (widget.isMutipleFile != null && widget.isMutipleFile == true) {
+          widget.handleGetFiles!(entities);
         } else {
           widget.handleGetFiles!(entities);
           Navigator.pop(context);

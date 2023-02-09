@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
@@ -10,6 +12,7 @@ import 'package:social_network_app_mobile/screen/Watch/watch.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import 'package:social_network_app_mobile/screen/Feed/feed.dart';
+import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -93,10 +96,40 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
                 label: ''),
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.menu,
-                  color: _selectedIndex == 4 ? primaryColor : greyColor,
-                  size: 30,
+                icon: Container(
+                  decoration: BoxDecoration(
+                    color: _selectedIndex == 4 ? primaryColor : greyColor,
+                    shape: BoxShape.circle,
+                  ),
+                  width: 27,
+                  height: 27,
+                  child: Center(
+                    child: Stack(
+                      children: [
+                        AvatarSocial(
+                            width: 23.0,
+                            height: 23.0,
+                            path: meData['avatar_media']['preview_url']),
+                        Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                  color: _selectedIndex == 4
+                                      ? primaryColor
+                                      : greyColor,
+                                  shape: BoxShape.circle),
+                              child: const Icon(
+                                Icons.menu,
+                                size: 6,
+                                color: Colors.white,
+                              ),
+                            ))
+                      ],
+                    ),
+                  ),
                 ),
                 label: ''),
           ],

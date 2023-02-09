@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_menu.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dart';
@@ -12,23 +16,60 @@ import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 
-class CreateNewFeed extends StatefulWidget {
+class CreateNewFeed extends ConsumerStatefulWidget {
   const CreateNewFeed({Key? key}) : super(key: key);
 
   @override
-  State<CreateNewFeed> createState() => _CreateNewFeedState();
+  ConsumerState<CreateNewFeed> createState() => _CreateNewFeedState();
 }
 
-class _CreateNewFeedState extends State<CreateNewFeed> {
+class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   dynamic menuSelected;
   List friendSelected = [];
+  List files = [];
 
   handleUpdateSelectedFriend(newList) {
     setState(() {
       friendSelected = newList;
     });
   }
+
+  functionConvertFile(file) async {
+    if (file == null) return;
+    Uint8List? bytes;
+    if (file.pickedThumbData == null) {
+      bytes = await file.thumbnailData;
+    } else {
+      bytes = file.pickedThumbData;
+    }
+
+    file = file.copyWith(
+      pickedThumbData: bytes,
+    );
+
+    return await file;
+  }
+
+  handleGetFiles(file) async {
+    if (file.isEmpty) {
+      setState(() {
+        files = [];
+      });
+    }
+
+    List newFiles =
+        file.map((element) => functionConvertFile(element)).toList();
+
+    print('newFiles $newFiles');
+
+    setState(() {
+      files = newFiles;
+    });
+  }
+
+  handlePress() {}
 
   handleChooseMenu(menu) {
     if (menu == null) return;
@@ -37,7 +78,12 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
       Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) => const Expanded(child: GalleryView())));
+              builder: (context) => Expanded(
+                      child: GalleryView(
+                    isMutipleFile: true,
+                    handleGetFiles: handleGetFiles,
+                    filesSelected: const [],
+                  ))));
       return;
     }
     setState(() {
@@ -96,6 +142,23 @@ class _CreateNewFeedState extends State<CreateNewFeed> {
       body: Column(
         children: [
           const CreateFeedStatus(),
+          files.isNotEmpty
+              ? ClipRect(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    heightFactor:
+                        files[0].width / files[0].height < 0.4 ? 0.6 : 1,
+                    child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Image.memory(
+                          files[0].pickedThumbData,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Text('Hình ảnh không được hiển thị'),
+                        )),
+                  ),
+                )
+              : const SizedBox(),
           CreateFeedMenu(
             handleChooseMenu: handleChooseMenu,
           )
