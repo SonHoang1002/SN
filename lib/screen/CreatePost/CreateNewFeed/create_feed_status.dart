@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
@@ -17,6 +20,7 @@ class CreateFeedStatus extends StatefulWidget {
   final dynamic statusActivity;
   final dynamic backgroundSelected;
   final Function handleUpdateData;
+  final List friendSelected;
 
   const CreateFeedStatus(
       {Key? key,
@@ -24,7 +28,8 @@ class CreateFeedStatus extends StatefulWidget {
       this.backgroundSelected,
       required this.handleUpdateData,
       required this.isShowBackground,
-      this.statusActivity})
+      this.statusActivity,
+      required this.friendSelected})
       : super(key: key);
 
   @override
@@ -53,6 +58,10 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
     } else {
       description =
           ' ${widget.statusActivity['parent']['name'].toLowerCase()} ${widget.statusActivity['name'].toLowerCase()}';
+    }
+
+    if (widget.friendSelected.isNotEmpty) {
+      description = 'cùng với ';
     }
 
     return Container(
@@ -111,6 +120,41 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                                       text: description,
                                       style: const TextStyle(
                                           fontWeight: FontWeight.normal)),
+                                  widget.friendSelected.isNotEmpty
+                                      ? TextSpan(
+                                          text: widget.friendSelected[0]
+                                              ['display_name'])
+                                      : const TextSpan(),
+                                  widget.friendSelected.isNotEmpty &&
+                                          widget.friendSelected.length >= 2
+                                      ? const TextSpan(
+                                          text: ' và ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.normal))
+                                      : const TextSpan(),
+                                  widget.friendSelected.isNotEmpty &&
+                                          widget.friendSelected.length == 2
+                                      ? TextSpan(
+                                          text: widget.friendSelected[1]
+                                              ['display_name'],
+                                        )
+                                      : const TextSpan(),
+                                  widget.friendSelected.isNotEmpty &&
+                                          widget.friendSelected.length > 2
+                                      ? TextSpan(
+                                          text:
+                                              '${widget.friendSelected.length - 1} người khác',
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          PageMention(
+                                                              mentions: widget
+                                                                  .friendSelected)));
+                                            })
+                                      : const TextSpan(),
                                 ]),
                           ),
                         ),

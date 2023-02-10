@@ -1,13 +1,18 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/friends.dart';
+import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
 class FriendTag extends StatefulWidget {
   final Function handleUpdateData;
-  const FriendTag({Key? key, required this.handleUpdateData}) : super(key: key);
+  final List friendsPrePage;
+  const FriendTag(
+      {Key? key, required this.handleUpdateData, required this.friendsPrePage})
+      : super(key: key);
 
   @override
   State<FriendTag> createState() => _FriendTagState();
@@ -15,6 +20,41 @@ class FriendTag extends StatefulWidget {
 
 class _FriendTagState extends State<FriendTag> {
   List friendSelected = [];
+  List friends = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (mounted) {
+      fetchFriends({"limit": 20});
+
+      if (widget.friendsPrePage.isNotEmpty) {
+        setState(() {
+          friendSelected = widget.friendsPrePage;
+        });
+      }
+    }
+  }
+
+  fetchFriends(params) async {
+    var response = await FriendsApi().getListFriendApi(meData['id'], params);
+    if (response != null) {
+      setState(() {
+        friends = response;
+      });
+    }
+  }
+
+  handleSearch(value) {
+    if (value.isEmpty) {
+      fetchFriends({"limit": 20});
+    }
+    EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 500),
+        () {
+      fetchFriends({"keyword": value});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List friendSelectedId = friendSelected.map((e) => e['id']).toList();
@@ -39,7 +79,9 @@ class _FriendTagState extends State<FriendTag> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SearchInput(),
+          SearchInput(
+            handleSearch: handleSearch,
+          ),
           const SizedBox(
             height: 8.0,
           ),

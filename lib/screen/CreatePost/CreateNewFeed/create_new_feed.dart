@@ -143,6 +143,13 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       data = {...data, 'status_activity_id': statusActivity['id']};
     }
 
+    if (friendSelected.isNotEmpty) {
+      data = {
+        ...data,
+        'mention_ids': friendSelected.map((e) => e['id']).toList()
+      };
+    }
+
     var response = await PostApi().createStatus(data);
 
     if (response != null) {
@@ -203,6 +210,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
               child: Column(
                 children: [
                   CreateFeedStatus(
+                      friendSelected: friendSelected,
                       statusActivity: statusActivity,
                       isShowBackground: checkisShowBackground(),
                       visibility: visibility,
@@ -312,8 +320,16 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         body = const Checkin();
         break;
       case 'tag-people':
-        body = FriendTag(handleUpdateData: handleUpdateData);
-        buttonAppbar = const ButtonPrimary(label: "Xong");
+        body = FriendTag(
+            friendsPrePage: friendSelected, handleUpdateData: handleUpdateData);
+        buttonAppbar = ButtonPrimary(
+          label: "Xong",
+          handlePress: () {
+            Navigator.of(context)
+              ..pop()
+              ..pop();
+          },
+        );
         break;
       case 'gif':
         body = Gif(handleUpdateData: handleUpdateData);
