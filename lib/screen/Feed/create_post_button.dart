@@ -16,12 +16,13 @@ class _CreatePostButtonState extends State<CreatePostButton> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(10.0),
       onTap: () {
         Navigator.push(context,
             CupertinoPageRoute(builder: ((context) => const CreateNewFeed())));
       },
       child: Container(
-        padding: const EdgeInsets.only(left: 15, right: 15),
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 6, bottom: 6),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

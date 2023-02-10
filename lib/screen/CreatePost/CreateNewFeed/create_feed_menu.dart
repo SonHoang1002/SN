@@ -54,7 +54,7 @@ class CreateFeedMenu extends StatelessWidget {
                   ),
                   Text(
                     listMenuPost[index]['label'],
-                    style: const TextStyle(fontSize: 10),
+                    style: const TextStyle(fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
                 ],

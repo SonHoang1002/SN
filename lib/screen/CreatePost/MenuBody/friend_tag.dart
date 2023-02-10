@@ -6,9 +6,8 @@ import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
 class FriendTag extends StatefulWidget {
-  final Function handleUpdateSelectedFriend;
-  const FriendTag({Key? key, required this.handleUpdateSelectedFriend})
-      : super(key: key);
+  final Function handleUpdateData;
+  const FriendTag({Key? key, required this.handleUpdateData}) : super(key: key);
 
   @override
   State<FriendTag> createState() => _FriendTagState();
@@ -32,7 +31,7 @@ class _FriendTagState extends State<FriendTag> {
       setState(() {
         friendSelected = newList;
       });
-      widget.handleUpdateSelectedFriend(newList);
+      widget.handleUpdateData('update_friend', newList);
     }
 
     return Container(

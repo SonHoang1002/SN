@@ -66,22 +66,24 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
           } else {
             return Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Container(
-                constraints: BoxConstraints(maxHeight: size.height * 0.6),
-                child: medias[0]['pathType'] == 'local'
-                    ? Image.memory(
-                        medias[0].pickedThumbData,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Text('Hình ảnh không được hiển thị'),
-                      )
-                    : FeedVideo(
-                        path: medias[0]['remote_url'] ?? medias[0]['url'],
-                        flickMultiManager: flickMultiManager,
-                        image: medias[0]['preview_remote_url'] ??
-                            medias[0]['preview_url'] ??
-                            ''),
-              ),
+              child: medias[0]['pathType'] == 'local'
+                  ? Image.memory(
+                      medias[0].pickedThumbData,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Text('Hình ảnh không được hiển thị'),
+                    )
+                  : SizedBox(
+                      height: medias[0]['meta']['original']['aspect'] < 1
+                          ? size.width
+                          : null,
+                      child: FeedVideo(
+                          path: medias[0]['remote_url'] ?? medias[0]['url'],
+                          flickMultiManager: flickMultiManager,
+                          image: medias[0]['preview_remote_url'] ??
+                              medias[0]['preview_url'] ??
+                              ''),
+                    ),
             );
           }
         case 2:

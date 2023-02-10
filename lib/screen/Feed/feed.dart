@@ -167,9 +167,6 @@ class _FeedState extends ConsumerState<Feed> {
           controller: scrollController,
           child: Column(
             children: [
-              const SizedBox(
-                height: 7,
-              ),
               const CreatePostButton(),
               const CrossBar(),
               ListView.builder(

@@ -16,3 +16,6 @@ String postMultipleMedia = 'post_multiple_media';
 String postShareEvent = 'event_shared';
 
 String postMoment = 'moment';
+
+//Type create update post
+String feedPost = 'feed_post_upload';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 
 @immutable
 class PostState {
@@ -67,6 +68,15 @@ class PostController extends StateNotifier<PostState> {
     state = state.copyWith(
         postsPin: response,
         posts: state.posts,
+        isMore: state.isMore,
+        postUserPage: state.postUserPage,
+        isMoreUserPage: state.isMoreUserPage);
+  }
+
+  createUpdatePost(type, newPost) {
+    state = state.copyWith(
+        postsPin: state.postsPin,
+        posts: type == feedPost ? [newPost] + state.posts : state.posts,
         isMore: state.isMore,
         postUserPage: state.postUserPage,
         isMoreUserPage: state.isMoreUserPage);
