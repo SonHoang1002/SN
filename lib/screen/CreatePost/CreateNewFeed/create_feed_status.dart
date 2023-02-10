@@ -14,6 +14,7 @@ import 'package:social_network_app_mobile/widget/page_visibility.dart';
 class CreateFeedStatus extends StatefulWidget {
   final bool isShowBackground;
   final dynamic visibility;
+  final dynamic statusActivity;
   final dynamic backgroundSelected;
   final Function handleUpdateData;
 
@@ -22,7 +23,8 @@ class CreateFeedStatus extends StatefulWidget {
       required this.visibility,
       this.backgroundSelected,
       required this.handleUpdateData,
-      required this.isShowBackground})
+      required this.isShowBackground,
+      this.statusActivity})
       : super(key: key);
 
   @override
@@ -42,6 +44,16 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    String description = '';
+
+    if (widget.statusActivity == null) {
+      description = '';
+    } else if (widget.statusActivity['parent'] == null) {
+      description = ' đang cảm thấy ${widget.statusActivity['name']}';
+    } else {
+      description =
+          ' ${widget.statusActivity['parent']['name'].toLowerCase()} ${widget.statusActivity['name'].toLowerCase()}';
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -58,10 +70,11 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AvatarSocial(
-                        width: 36,
-                        height: 36,
+                        width: 38,
+                        height: 38,
                         path: meData['avatar_media']['preview_url'] ??
                             linkAvatarDefault),
                     const SizedBox(
@@ -70,10 +83,36 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          meData['display_name'],
-                          style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
+                        SizedBox(
+                          width: size.width - 80,
+                          child: RichText(
+                            text: TextSpan(
+                                text: meData['display_name'],
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    // overflow: TextOverflow.ellipsis,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color),
+                                children: [
+                                  const TextSpan(text: ' '),
+                                  widget.statusActivity != null
+                                      ? WidgetSpan(
+                                          child: ImageCacheRender(
+                                            path: widget.statusActivity['url'],
+                                            width: 18.0,
+                                            height: 18.0,
+                                          ),
+                                        )
+                                      : const TextSpan(text: ''),
+                                  TextSpan(
+                                      text: description,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.normal)),
+                                ]),
+                          ),
                         ),
                         const SizedBox(
                           height: 4.0,

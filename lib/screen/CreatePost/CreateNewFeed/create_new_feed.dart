@@ -9,7 +9,6 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_menu.dart';
@@ -36,13 +35,16 @@ class CreateNewFeed extends ConsumerStatefulWidget {
 }
 
 class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
-  dynamic menuSelected;
   List friendSelected = [];
   List files = [];
+
   String content = '';
+  String gifLink = '';
+
+  dynamic menuSelected;
   dynamic visibility;
   dynamic backgroundSelected;
-  String gifLink = '';
+  dynamic statusActivity;
 
   @override
   void initState() {
@@ -112,6 +114,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           gifLink = data;
         });
         break;
+      case 'update_status_activity':
+        setState(() {
+          statusActivity = data;
+        });
+        break;
     }
   }
 
@@ -130,6 +137,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         ...data,
         "extra_body": {"description": "", "link": gifLink, "title": ""}
       };
+    }
+
+    if (statusActivity != null) {
+      data = {...data, 'status_activity_id': statusActivity['id']};
     }
 
     var response = await PostApi().createStatus(data);
@@ -192,6 +203,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
               child: Column(
                 children: [
                   CreateFeedStatus(
+                      statusActivity: statusActivity,
                       isShowBackground: checkisShowBackground(),
                       visibility: visibility,
                       backgroundSelected: backgroundSelected,
@@ -293,7 +305,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
     switch (menu['key']) {
       case 'emoji-activity':
-        body = const EmojiActivity();
+        body = EmojiActivity(
+            statusActivity: statusActivity, handleUpdateData: handleUpdateData);
         break;
       case 'checkin':
         body = const Checkin();
@@ -322,7 +335,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     return Container(
         height: 60,
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.8),
+            spreadRadius: 2,
+            blurRadius: 10,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ], color: Theme.of(context).scaffoldBackgroundColor),
         child: GridView.builder(
             shrinkWrap: true,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

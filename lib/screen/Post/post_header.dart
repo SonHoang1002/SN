@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention
 import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import 'post_detail.dart';
 
@@ -122,6 +123,7 @@ class _PostHeaderState extends State<PostHeader> {
                             account: account,
                             description: description,
                             mentions: mentions,
+                            statusActivity: statusActivity,
                             group: group,
                             page: page),
                       ),
@@ -222,6 +224,7 @@ class BlockNamePost extends StatelessWidget {
     required this.mentions,
     this.group,
     this.page,
+    this.statusActivity,
   });
 
   final dynamic account;
@@ -229,6 +232,7 @@ class BlockNamePost extends StatelessWidget {
   final dynamic mentions;
   final dynamic group;
   final dynamic page;
+  final dynamic statusActivity;
 
   @override
   Widget build(BuildContext context) {
@@ -244,6 +248,16 @@ class BlockNamePost extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: Theme.of(context).textTheme.displayLarge!.color),
         children: [
+          const TextSpan(text: ' '),
+          statusActivity.isNotEmpty
+              ? WidgetSpan(
+                  child: ImageCacheRender(
+                    path: statusActivity['url'],
+                    width: 18.0,
+                    height: 18.0,
+                  ),
+                )
+              : const TextSpan(text: ''),
           TextSpan(
               text: description,
               style: const TextStyle(fontWeight: FontWeight.normal)),
