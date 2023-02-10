@@ -68,8 +68,12 @@ class _PostCenterState extends State<PostCenter> {
   renderPostType(postType) {
     if ([postAvatarAccount, postBannerAccount].contains(postType)) {
       return AvatarBanner(postType: postType, post: widget.post);
-    } else if (postType == postTarget) {
-      return PostTarget(post: widget.post);
+    } else if ([postTarget, postVisibleQuestion].contains(postType)) {
+      return PostTarget(
+        post: widget.post,
+        type: postType == postVisibleQuestion ? postQuestionAnwer : postTarget,
+        statusQuestion: widget.post['status_question'],
+      );
     } else if (postType == postShareEvent) {
       return PostShareEvent(post: widget.post);
     } else {

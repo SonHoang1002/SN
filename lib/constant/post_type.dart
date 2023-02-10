@@ -2,7 +2,10 @@ String postAvatarAccount = 'account_avatar';
 String postBannerAccount = 'account_banner';
 
 String postTarget = 'target';
+String postVisibleQuestion = 'question';
 String postTargetStatus = 'completed';
+String postQuestionAnwer = 'post_question_anwer';
+String postCreateQuestionAnwer = 'post_create_question_anwer';
 
 String postStatusEmoji = 'emoji';
 String postStatusActivity = 'activity';

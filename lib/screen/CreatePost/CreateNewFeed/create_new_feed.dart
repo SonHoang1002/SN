@@ -18,7 +18,9 @@ import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activ
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/friend_tag.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/gif.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_categories.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/question_anwer.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_target.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -45,6 +47,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   dynamic visibility;
   dynamic backgroundSelected;
   dynamic statusActivity;
+  dynamic statusQuestion;
 
   @override
   void initState() {
@@ -119,6 +122,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           statusActivity = data;
         });
         break;
+      case 'update_status_question':
+        setState(() {
+          statusQuestion = data;
+        });
+        break;
     }
   }
 
@@ -147,6 +155,17 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       data = {
         ...data,
         'mention_ids': friendSelected.map((e) => e['id']).toList()
+      };
+    }
+
+    if (statusQuestion != null) {
+      data = {
+        ...data,
+        "post_type": 'question',
+        'status_question': {
+          "color": statusQuestion['color'],
+          "content": statusQuestion['content'],
+        }
       };
     }
 
@@ -245,18 +264,24 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                               width: size.width,
                             )
                           : const SizedBox(),
-                      const SizedBox(
-                        height: 60,
-                      ),
-                      if (gifLink.isNotEmpty || files.isNotEmpty)
+                      statusQuestion != null
+                          ? PostTarget(
+                              type: postCreateQuestionAnwer,
+                              statusQuestion: statusQuestion,
+                            )
+                          : const SizedBox(),
+                      if (gifLink.isNotEmpty ||
+                          files.isNotEmpty ||
+                          statusQuestion != null)
                         Positioned(
-                            top: 10,
-                            right: 10,
+                            top: statusQuestion != null ? 20 : 10,
+                            right: statusQuestion != null ? 20 : 10,
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
                                   files = [];
                                   gifLink = '';
+                                  statusQuestion = null;
                                 });
                               },
                               child: Container(
@@ -336,6 +361,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         break;
       case 'life-event':
         body = const LifeEventCategories();
+        break;
+      case 'answer':
+        body = QuestionAnwer(handleUpdateData: handleUpdateData);
         break;
       default:
     }
