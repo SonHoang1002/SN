@@ -161,8 +161,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     if (statusQuestion != null) {
       data = {
         ...data,
-        "post_type": 'question',
-        'status_question': {
+        "post_type": statusQuestion['postType'],
+        statusQuestion['postType'] == 'target'
+            ? 'status_target'
+            : 'status_question': {
           "color": statusQuestion['color'],
           "content": statusQuestion['content'],
         }
@@ -266,7 +268,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                           : const SizedBox(),
                       statusQuestion != null
                           ? PostTarget(
-                              type: postCreateQuestionAnwer,
+                              type: statusQuestion['postType'] == 'target'
+                                  ? 'target_create'
+                                  : postCreateQuestionAnwer,
                               statusQuestion: statusQuestion,
                             )
                           : const SizedBox(),
@@ -363,7 +367,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         body = const LifeEventCategories();
         break;
       case 'answer':
-        body = QuestionAnwer(handleUpdateData: handleUpdateData);
+        body =
+            QuestionAnwer(handleUpdateData: handleUpdateData, type: 'question');
+        break;
+      case 'target':
+        body =
+            QuestionAnwer(handleUpdateData: handleUpdateData, type: 'target');
         break;
       default:
     }

@@ -25,17 +25,24 @@ class PostTarget extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           gradient: getGradientColor('${([
             postCreateQuestionAnwer,
-            postQuestionAnwer
+            postQuestionAnwer,
+            'target_create'
           ].contains(type) ? statusQuestion['color'] : post['status_target']['color']).replaceAll('-', '').replaceAll(' ', '')}')),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          [postCreateQuestionAnwer, postQuestionAnwer].contains(type)
-              ? AvatarSocial(
-                  width: size.width * 0.35,
-                  height: size.width * 0.35,
-                  path: (post?['account'] ?? meData)['avatar_media']
-                      ['preview_url'])
+          [postCreateQuestionAnwer, postQuestionAnwer, 'target_create']
+                  .contains(type)
+              ? type == 'target_create'
+                  ? SvgPicture.asset(
+                      "assets/target.svg",
+                      width: size.width * 0.5,
+                    )
+                  : AvatarSocial(
+                      width: size.width * 0.35,
+                      height: size.width * 0.35,
+                      path: (post?['account'] ?? meData)['avatar_media']
+                          ['preview_url'])
               : post['status_target']['target_status'] == postTargetStatus
                   ? SvgPicture.asset(
                       "assets/win.svg",
@@ -51,7 +58,8 @@ class PostTarget extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
-              [postCreateQuestionAnwer, postQuestionAnwer].contains(type)
+              [postCreateQuestionAnwer, postQuestionAnwer, 'target_create']
+                      .contains(type)
                   ? statusQuestion['content']
                   : post['status_target']['content'],
               textAlign: TextAlign.center,
