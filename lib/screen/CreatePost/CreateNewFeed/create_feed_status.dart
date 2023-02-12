@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/widget/page_visibility.dart';
 
 class CreateFeedStatus extends StatefulWidget {
   final bool isShowBackground;
+  final dynamic checkin;
   final dynamic visibility;
   final dynamic statusActivity;
   final dynamic backgroundSelected;
@@ -29,7 +30,8 @@ class CreateFeedStatus extends StatefulWidget {
       required this.handleUpdateData,
       required this.isShowBackground,
       this.statusActivity,
-      required this.friendSelected})
+      required this.friendSelected,
+      this.checkin})
       : super(key: key);
 
   @override
@@ -61,7 +63,11 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
     }
 
     if (widget.friendSelected.isNotEmpty) {
-      description = 'cùng với ';
+      description = '$description cùng với ';
+    }
+
+    if (widget.checkin != null) {
+      description = '$description đang ở ${widget.checkin['title']}';
     }
 
     return Container(

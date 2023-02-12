@@ -39,6 +39,7 @@ class _PostHeaderState extends State<PostHeader> {
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
     String description = '';
+    var place = widget.post['place'];
 
     var postType = widget.post['post_type'];
 
@@ -56,6 +57,10 @@ class _PostHeaderState extends State<PostHeader> {
       description = ' đã đặt một câu hỏi';
     } else if (widget.post['post_type'] == postShareEvent) {
       description = ' đã chia sẻ một sự kiện';
+    }
+
+    if (place != null) {
+      description = ' đang ở ${place['title']}';
     }
 
     if (mentions.isNotEmpty) {

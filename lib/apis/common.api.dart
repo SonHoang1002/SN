@@ -12,4 +12,8 @@ class CommonApi {
         '/api/v1/status_activity/$idParent/list?page=1&per_page=200&keyword=',
         null);
   }
+
+  Future fetchDataLocation(params) async {
+    return await Api().getRequestBase('/api/v1/places', params);
+  }
 }

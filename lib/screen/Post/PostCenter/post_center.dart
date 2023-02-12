@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/widget/map_widget_item.dart';
 
 import 'PostType/post_share_event.dart';
 import 'PostType/post_share_group.dart';
@@ -59,6 +60,9 @@ class _PostCenterState extends State<PostCenter> {
                 : const SizedBox(),
             widget.post['reblog'] != null
                 ? PostShare(post: widget.post)
+                : const SizedBox(),
+            widget.post['place'] != null
+                ? MapWidgetItem(checkin: widget.post['place'])
                 : const SizedBox(),
             postType != '' ? renderPostType(postType) : const SizedBox(),
           ],

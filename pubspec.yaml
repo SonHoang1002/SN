@@ -69,6 +69,8 @@ dependencies:
   gallery_saver: ^2.3.2
   loader_overlay: ^2.1.0
   easy_debounce: ^2.0.3
+  flutter_map: ^3.1.0
+  latlong2: ^0.8.1
 
 dev_dependencies:
   flutter_test:

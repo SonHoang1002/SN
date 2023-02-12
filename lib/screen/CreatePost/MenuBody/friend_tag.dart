@@ -48,6 +48,7 @@ class _FriendTagState extends State<FriendTag> {
   handleSearch(value) {
     if (value.isEmpty) {
       fetchFriends({"limit": 20});
+      return;
     }
     EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 500),
         () {

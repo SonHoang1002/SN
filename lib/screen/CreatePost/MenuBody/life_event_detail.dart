@@ -154,13 +154,13 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
                     child: ButtonPrimary(
                       label: "Chọn địa điểm",
                       handlePress: () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => const CreateModalBaseMenu(
-                                    title: 'Chọn địa điểm',
-                                    body: Checkin(),
-                                    buttonAppbar: SizedBox())));
+                        // Navigator.push(
+                        //     context,
+                        //     CupertinoPageRoute(
+                        //         builder: (context) => const CreateModalBaseMenu(
+                        //             title: 'Chọn địa điểm',
+                        //             body: Checkin(),
+                        //             buttonAppbar: SizedBox())));
                       },
                     ),
                   ),

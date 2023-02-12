@@ -28,6 +28,7 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/map_widget_item.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   const CreateNewFeed({Key? key}) : super(key: key);
@@ -48,6 +49,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   dynamic backgroundSelected;
   dynamic statusActivity;
   dynamic statusQuestion;
+  dynamic checkin;
 
   @override
   void initState() {
@@ -127,6 +129,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           statusQuestion = data;
         });
         break;
+      case 'update_checkin':
+        setState(() {
+          checkin = data;
+        });
+        break;
     }
   }
 
@@ -169,6 +176,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           "content": statusQuestion['content'],
         }
       };
+    }
+
+    if (checkin != null) {
+      data = {...data, 'place_id': checkin['id']};
     }
 
     var response = await PostApi().createStatus(data);
@@ -231,6 +242,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
               child: Column(
                 children: [
                   CreateFeedStatus(
+                      checkin: checkin,
                       friendSelected: friendSelected,
                       statusActivity: statusActivity,
                       isShowBackground: checkisShowBackground(),
@@ -274,9 +286,13 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                               statusQuestion: statusQuestion,
                             )
                           : const SizedBox(),
+                      checkin != null
+                          ? MapWidgetItem(checkin: checkin)
+                          : const SizedBox(),
                       if (gifLink.isNotEmpty ||
                           files.isNotEmpty ||
-                          statusQuestion != null)
+                          statusQuestion != null ||
+                          checkin != null)
                         Positioned(
                             top: statusQuestion != null ? 20 : 10,
                             right: statusQuestion != null ? 20 : 10,
@@ -286,6 +302,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                   files = [];
                                   gifLink = '';
                                   statusQuestion = null;
+                                  checkin = null;
                                 });
                               },
                               child: Container(
@@ -346,7 +363,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             statusActivity: statusActivity, handleUpdateData: handleUpdateData);
         break;
       case 'checkin':
-        body = const Checkin();
+        body = Checkin(checkin: checkin, handleUpdateData: handleUpdateData);
         break;
       case 'tag-people':
         body = FriendTag(
