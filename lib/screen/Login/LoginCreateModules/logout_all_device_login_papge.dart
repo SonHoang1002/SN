@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
+import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
@@ -139,8 +140,7 @@ class _LogoutAllDeviceLoginPageState extends State<LogoutAllDeviceLoginPage> {
                                                   value: _selectionList[index],
                                                   groupValue: _selectionValue,
                                                 )),
-                                            changeBackground:
-                                                Colors.transparent,
+                                            changeBackground: transparent,
                                             padding: EdgeInsets.all(5),
                                           ),
                                           Divider(

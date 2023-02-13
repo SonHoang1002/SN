@@ -1,0 +1,734 @@
+import 'dart:io';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/create_product_sub_module/sale_information_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widget/appbar_title.dart';
+
+import '../../../../theme/colors.dart';
+import '../../../../widget/GeneralWidget/information_component_widget.dart';
+import '../../../../widget/back_icon_appbar.dart';
+
+class CreateProductMarketPage extends StatefulWidget {
+  @override
+  State<CreateProductMarketPage> createState() =>
+      _CreateProductMarketPageState();
+}
+
+class _CreateProductMarketPageState extends State<CreateProductMarketPage> {
+  late double width = 0;
+  late double height = 0;
+  String _category = "";
+  String _branch = "";
+  String _private = "";
+  List<File> _imgFiles = [];
+  Map<String, bool> _validatorSelectionList = {
+    "category": true,
+    "branch": true,
+    "private_rule": true,
+    "image": true
+  };
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _nameController = TextEditingController(text: "");
+  TextEditingController _descriptionController =
+      TextEditingController(text: "");
+  TextEditingController _branchController = TextEditingController(text: "");
+  TextEditingController _priceController = TextEditingController(text: "");
+  TextEditingController _repositoryController = TextEditingController(text: "");
+  TextEditingController _skuController = TextEditingController(text: "");
+
+  //
+  List<TextEditingController> _categoryControllers = [
+    TextEditingController(text: "")
+  ];
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    width = size.width;
+    height = size.height;
+    return Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Thêm sản phẩm"),
+              const Icon(
+                FontAwesomeIcons.bell,
+                size: 18,
+                color: Colors.black,
+              )
+            ],
+          ),
+        ),
+        body: GestureDetector(
+          onTap: (() {
+            FocusManager.instance.primaryFocus!.unfocus();
+          }),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: ListView(children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(children: [
+                        // ten san pham
+                        buildDivider(
+                          color: red,
+                        ),
+                        _buildInput(
+                          _nameController,
+                          width,
+                          CreateProductMarketConstants
+                              .CREATE_PRODUCT_MARKET_PRODUCT_NAME_PLACEHOLDER,
+                        ),
+                        // danh muc
+                        _buildSelectionsForMarketComponents(
+                            context,
+                            CreateProductMarketConstants
+                                .CREATE_PRODUCT_MARKET_CATEGORY_TITLE,
+                            "Chọn hạng mục"),
+                        // nganh hang (option)
+                        _category != ""
+                            ? _buildSelectionsForMarketComponents(
+                                context,
+                                CreateProductMarketConstants
+                                    .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE,
+                                "Chọn ngành hàng")
+                            : const SizedBox(),
+                        // mo ta san pham
+                        _buildInput(
+                            _descriptionController,
+                            width,
+                            CreateProductMarketConstants
+                                .CREATE_PRODUCT_MARKET_DESCRIPTION_PLACEHOLDER),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: buildTextContent("Không bắt buộc", false,
+                              fontSize: 12, colorWord: greyColor),
+                        ),
+                        // nhan hieu
+                        _buildInput(
+                            _branchController,
+                            width,
+                            CreateProductMarketConstants
+                                .CREATE_PRODUCT_MARKET_BRAND_PLACEHOLDER),
+                        // quyen rieng tu
+                        _buildSelectionsForMarketComponents(
+                            context,
+                            CreateProductMarketConstants
+                                .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE,
+                            "Chọn quyền riêng tư")
+                      ]),
+                    ),
+                    // image
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 100,
+                          width: width * 0.9,
+                          // color: red,
+                          margin: const EdgeInsets.only(top: 10),
+                          decoration: _imgFiles.length == 0
+                              ? BoxDecoration(
+                                  border:
+                                      Border.all(color: greyColor, width: 0.4),
+                                  borderRadius: BorderRadius.circular(7))
+                              : null,
+                          child: _imgFiles.length == 0
+                              ? _buildIconAndAddImageText()
+                              : SingleChildScrollView(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                      children: List.generate(
+                                          _imgFiles.length + 1, (index) {
+                                    if (index < _imgFiles.length) {
+                                      return Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        height: 100,
+                                        width: 80,
+                                        // decoration: BoxDecoration(
+                                        //     border: Border.all(
+                                        //         color: greyColor, width: 0.4),
+                                        //     borderRadius:
+                                        //         BorderRadius.circular(7)),
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              height: 100,
+                                              width: 80,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(7),
+                                                child: Image.file(
+                                                  _imgFiles[index],
+                                                  fit: BoxFit.fitHeight,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.only(top: 5),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  _buildDeleteOrFixIconForImageWidget(
+                                                      Icons.close,
+                                                      function: () {
+                                                    _imgFiles.remove(
+                                                        _imgFiles[index]);
+                                                    setState(() {});
+                                                  }),
+                                                  _buildDeleteOrFixIconForImageWidget(
+                                                      Icons
+                                                          .wifi_protected_setup,
+                                                      function: () {
+                                                    // fix image
+                                                  })
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      if (index != 9) {
+                                        return Container(
+                                          height: 100,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: greyColor, width: 0.4),
+                                              borderRadius:
+                                                  BorderRadius.circular(7)),
+                                          child: _buildIconAndAddImageText(),
+                                        );
+                                      } else {
+                                        return SizedBox();
+                                      }
+                                    }
+                                  })),
+                                ),
+                        ),
+                      ],
+                    ),
+                    // description image
+                    _validatorSelectionList["image"] == true
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 20.0, top: 10),
+                            child: buildTextContent(
+                                _imgFiles.length == 9
+                                    ? ""
+                                    : "Chọn ${_imgFiles.length}/9. Hãy nhập ảnh chính của bài niêm yết.",
+                                false,
+                                colorWord: greyColor,
+                                fontSize: 13),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(
+                              left: 20.0,
+                            ),
+                            child: _buildWarningForSelections(
+                                "Chọn ảnh để tiếp tục"),
+                          ),
+                    // sales information
+                    buildDivider(color: red),
+                    buildSpacer(height: 10),
+                    buildTextContent("Thông tin bán hàng", true,
+                        isCenterLeft: false),
+                    // classify category
+                    buildSpacer(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        buildTextContent("Phân loại hàng", true, fontSize: 16),
+                        buildTextContent(Random().nextInt(1)==0?"Xem chi tiết":"Thêm nhóm phân loại", false,
+                            fontSize: 16,
+                            iconData: FontAwesomeIcons.add, function: () {
+                          pushToNextScreen(
+                              context, SaleInformationMarketPage());
+                        })
+                      ],
+                    ),
+                    // buildSpacer(height: 10),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                    //   child: Column(
+                    //     children: [
+                    //       _buildInput(
+                    //           _priceController, width, "Nhập giá sản phẩm",
+                    //           keyboardType: TextInputType.number),
+                    //       _buildInput(_repositoryController, width,
+                    //           "Nhập tên kho hàng"),
+                    //       _buildInput(
+                    //           _skuController, width, "Nhập mã sản phẩm"),
+                    //     ],
+                    //   ),
+                    // ),
+                  ]),
+                ),
+                // add to cart and buy now
+                Container(
+                  // height: 40,
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        child: buildElevateButtonWidget(
+                            width: width * 0.45,
+                            bgColor: Colors.orange[300],
+                            title: "Lưu",
+                            function: () {
+                              validateForCreateProduct();
+                            }),
+                      ),
+                      Container(
+                        // margin: EdgeInsets.only(right: 10),
+                        child: buildElevateButtonWidget(
+                            width: width * 0.45,
+                            bgColor: Colors.red,
+                            title: "Hiển thị",
+                            function: () {
+                              pushToNextScreen(
+                                  context, const PaymentMarketPage());
+                            }),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  // _buildContentForClassifyCategoryBottomSheet() {
+  //   return StatefulBuilder(builder: (context, setStatefull) {
+  //     return Column(
+  //       children: [
+  //         // classify category
+  //         buildSpacer(height: 10),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Padding(
+  //               padding: const EdgeInsets.only(left: 10.0),
+  //               child: buildTextContent("Phân loại hàng", true, fontSize: 16),
+  //             ),
+  //             SizedBox()
+  //           ],
+  //         ),
+  //         buildSpacer(height: 10),
+  //         _buildInput(_categoryControllers[0], width, "Nhập tên phân loại 1"),
+  //         Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 10),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               _buildInput(
+  //                   _priceController, width * 0.48, "Màu sắc hoặc kích cỡ"),
+  //               buildSpacer(width: 10),
+  //               _buildInput(
+  //                   _priceController, width * 0.48, "Màu sắc hoặc kích cỡ"),
+  //             ],
+  //           ),
+  //         ),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //           children: [
+  //             buildTextContent("Phân loại hàng", true, fontSize: 16),
+  //             buildTextContent(
+  //               "Thêm nhóm phân loại",
+  //               false,
+  //               fontSize: 16,
+  //               iconData: FontAwesomeIcons.add,
+  //             )
+  //           ],
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.only(left: 10.0),
+  //           child: buildTextContent("Danh sách phân loại", true,
+  //               fontSize: 16, isCenterLeft: false),
+  //         ),
+  //         SizedBox(),
+  //         SingleChildScrollView(
+  //           scrollDirection: Axis.horizontal,
+  //           child: DataTable(columns: [
+  //             DataColumn(
+  //                 label: Text(
+  //                     _categoryControllers[0].text.trim().length<0
+  //                         ? 'Nhóm phân loại 1'
+  //                         : _categoryControllers[0].text.trim(),
+  //                     style: TextStyle(
+  //                         fontSize: 18, fontWeight: FontWeight.bold))),
+  //             DataColumn(
+  //                 label: Text('Giá',
+  //                     style: TextStyle(
+  //                         fontSize: 18, fontWeight: FontWeight.bold))),
+  //             DataColumn(
+  //                 label: Text('Kho hàng',
+  //                     style: TextStyle(
+  //                         fontSize: 18, fontWeight: FontWeight.bold))),
+  //             DataColumn(
+  //                 label: Text('Sku phân loại',
+  //                     style: TextStyle(
+  //                         fontSize: 18, fontWeight: FontWeight.bold))),
+  //           ], rows: [
+  //             DataRow(cells: [
+  //               DataCell(Text("")),
+  //               DataCell(Text("20000")),
+  //               DataCell(Text("100")),
+  //               DataCell(Text("120000")),
+  //             ]),
+  //             DataRow(cells: [
+  //               DataCell(Text("")),
+  //               DataCell(Text("20000")),
+  //               DataCell(Text("100")),
+  //               DataCell(Text("120000")),
+  //             ]),
+  //           ]),
+  //         ),
+  //       ],
+  //     );
+  //   });
+  // }
+
+  validateForCreateProduct() {
+    if (_category == "") {
+      _validatorSelectionList["category"] = false;
+    }
+    if (_branch == "") {
+      _validatorSelectionList["branch"] = false;
+    }
+    if (_private == "") {
+      _validatorSelectionList["private"] = false;
+    }
+    if (_imgFiles.length == 0) {
+      _validatorSelectionList["image"] = false;
+    }
+    if (_formKey.currentState!.validate() &&
+        _validatorSelectionList["private"] == true &&
+        _validatorSelectionList["branch"] == true &&
+        _validatorSelectionList["category"] == true &&
+        _validatorSelectionList["image"] == true) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+        "Lưu thành công",
+        style: TextStyle(color: Colors.green),
+      )));
+    }
+    setState(() {});
+  }
+
+  Widget _buildInput(
+    TextEditingController controller,
+    double width,
+    String hintText, {
+    IconData? iconData,
+    TextInputType? keyboardType,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        vertical: 5,
+      ),
+      width: width * 0.9,
+      child: TextFormField(
+        controller: controller,
+        maxLines: null,
+        keyboardType: keyboardType != null ? keyboardType : TextInputType.text,
+        validator: (value) {
+          switch (hintText) {
+            case CreateProductMarketConstants
+                .CREATE_PRODUCT_MARKET_PRODUCT_NAME_PLACEHOLDER:
+              if (value!.length <= 0) {
+                return CreateProductMarketConstants
+                    .CREATE_PRODUCT_MARKET_PRODUCT_NAME_WARING;
+              }
+              break;
+            case CreateProductMarketConstants
+                .CREATE_PRODUCT_MARKET_BRAND_PLACEHOLDER:
+              if (value!.length <= 0) {
+                return CreateProductMarketConstants
+                    .CREATE_PRODUCT_MARKET_BRAND_WARING;
+              }
+              break;
+            default:
+              break;
+          }
+          setState(() {});
+        },
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+            enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                )),
+            errorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: red),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                )),
+            focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                )),
+            hintText: hintText,
+            labelText: hintText,
+            hintStyle: const TextStyle(color: Colors.grey, fontSize: 17),
+            prefixIcon: iconData != null
+                ? Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Icon(
+                      iconData,
+                      size: 15,
+                    ),
+                  )
+                : null),
+      ),
+    );
+  }
+
+  _buildSelectionsForMarketComponents(
+      BuildContext context,
+      String title,
+      // String _category,
+      String titleForBottomSheet,
+      {List<String>? dataList = CreateProductMarketConstants
+          .CREATE_PRODUCT_MARKET_CATEGORY_SELECTIONS}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: Column(
+        children: [
+          GeneralComponent(
+            [
+              buildTextContent(title, false,
+                  colorWord: greyColor, fontSize: 15),
+              const SizedBox(height: 5),
+              _category != "" &&
+                      title ==
+                          CreateProductMarketConstants
+                              .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
+                  ? buildTextContent(_category, false, fontSize: 17)
+                  : const SizedBox(),
+              _category != "" &&
+                      _branch != "" &&
+                      title ==
+                          CreateProductMarketConstants
+                              .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE
+                  ? buildTextContent(_branch, false, fontSize: 17)
+                  : const SizedBox(),
+              _private != "" &&
+                      title ==
+                          CreateProductMarketConstants
+                              .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE
+                  ? buildTextContent(_private, false, fontSize: 17)
+                  : const SizedBox(),
+            ],
+            suffixWidget: Container(
+              height: 40,
+              width: 40,
+              child: const Icon(
+                FontAwesomeIcons.caretDown,
+                size: 18,
+              ),
+            ),
+            changeBackground: transparent,
+            padding: const EdgeInsets.all(5),
+            isHaveBorder: true,
+            function: () {
+              showBottomSheetCheckImportantSettings(
+                  context, 500, titleForBottomSheet,
+                  bgColor: Colors.grey[300],
+                  widget: Container(
+                    height: 400,
+                    child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: dataList!.length,
+                        itemBuilder: (context, index) {
+                          final data = dataList;
+                          return Container(
+                            child: Column(
+                              children: [
+                                GeneralComponent(
+                                  [buildTextContent(data[index], false)],
+                                  changeBackground: transparent,
+                                  function: () {
+                                    popToPreviousScreen(context);
+                                    if (title ==
+                                        CreateProductMarketConstants
+                                            .CREATE_PRODUCT_MARKET_CATEGORY_TITLE) {
+                                      _category = data[index];
+                                      _validatorSelectionList["category"] =
+                                          true;
+                                    }
+                                    if (title ==
+                                        CreateProductMarketConstants
+                                            .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE) {
+                                      _branch = data[index];
+                                      _validatorSelectionList["branch"] = true;
+                                    }
+                                    if (title ==
+                                        CreateProductMarketConstants
+                                            .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE) {
+                                      _private = data[index];
+                                      _validatorSelectionList["private"] = true;
+                                    }
+
+                                    setState(() {});
+                                  },
+                                ),
+                                buildDivider(color: red)
+                              ],
+                            ),
+                          );
+                        }),
+                  ));
+            },
+          ),
+          _validatorSelectionList["category"] == false &&
+                  title ==
+                      CreateProductMarketConstants
+                          .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
+              ? _buildWarningForSelections("Vui lòng chọn danh mục.")
+              : const SizedBox(),
+          _validatorSelectionList["branch"] == false &&
+                  title ==
+                      CreateProductMarketConstants
+                          .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE
+              ? _buildWarningForSelections("Vui lòng chọn ngành hàng.")
+              : const SizedBox(),
+          _validatorSelectionList["private"] == false &&
+                  title ==
+                      CreateProductMarketConstants
+                          .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE
+              ? _buildWarningForSelections("Vui lòng chọn quyền riêng tư.")
+              : const SizedBox(),
+        ],
+      ),
+    );
+  }
+
+  Future getImage(ImageSource src) async {
+    XFile getImage = XFile("");
+    getImage = (await ImagePicker().pickImage(source: src))!;
+    setState(() {
+      _imgFiles.add(File(getImage.path != null ? getImage.path : ""));
+    });
+  }
+
+  dialogImgSource() {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.camera),
+                    title: const Text("Pick From Camera"),
+                    onTap: () {
+                      getImage(ImageSource.camera);
+                      popToPreviousScreen(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.camera),
+                    title: const Text("Pick From Galery"),
+                    onTap: () {
+                      popToPreviousScreen(context);
+                      getImage(ImageSource.gallery);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget _buildIconAndAddImageText() {
+    return InkWell(
+      onTap: () {
+        dialogImgSource();
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            MarketPlaceConstants.PATH_ICON + "add_img_file_icon.svg",
+            height: 20,
+          ),
+          buildSpacer(width: 5),
+          buildTextContent(
+              CreateProductMarketConstants
+                  .CREATE_PRODUCT_MARKET_ADD_IMG_PLACEHOLDER,
+              false,
+              isCenterLeft: false,
+              fontSize: 15),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeleteOrFixIconForImageWidget(IconData iconData,
+      {Function? function}) {
+    return InkWell(
+      onTap: () {
+        function != null ? function() : null;
+      },
+      child: Container(
+        height: 20,
+        width: 20,
+        decoration: BoxDecoration(
+            color: red.withOpacity(0.5),
+            border: Border.all(color: greyColor, width: 0.4),
+            borderRadius: BorderRadius.circular(10)),
+        child: Icon(
+          iconData,
+          size: 18,
+        ),
+      ),
+    );
+  }
+}
+
+Widget _buildWarningForSelections(String warning) {
+  return Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+      child: buildTextContent(warning, false,
+          fontSize: 12, colorWord: Colors.red[800]));
+}

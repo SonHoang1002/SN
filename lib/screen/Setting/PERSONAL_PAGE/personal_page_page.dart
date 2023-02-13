@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/bottom_navigator_bar_widget.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../widget/GeneralWidget/title_description_and_content_list.dart';
@@ -154,7 +155,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           // color:  white,
                                         ),
                                       ),
-                                      changeBackground: Colors.transparent,
+                                      changeBackground: transparent,
                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
                                     ),
                                   );
@@ -211,7 +212,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                         // color:  white,
                                       ),
                                     ),
-                                    changeBackground: Colors.transparent,
+                                    changeBackground: transparent,
                                     padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
@@ -271,7 +272,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                         // color:  white,
                                       ),
                                     ),
-                                    changeBackground: Colors.transparent,
+                                    changeBackground: transparent,
                                     padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
@@ -329,7 +330,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                         // color:  white,
                                       ),
                                     ),
-                                    changeBackground: Colors.transparent,
+                                    changeBackground: transparent,
                                     padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
@@ -386,7 +387,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                         // color:  white,
                                       ),
                                     ),
-                                    changeBackground: Colors.transparent,
+                                    changeBackground: transparent,
                                     padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
@@ -443,7 +444,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                         // color:  white,
                                       ),
                                     ),
-                                    changeBackground: Colors.transparent,
+                                    changeBackground: transparent,
                                     padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );

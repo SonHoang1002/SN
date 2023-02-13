@@ -122,7 +122,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                                 });
                                               }),
                                         ),
-                                        changeBackground: Colors.transparent,
+                                        changeBackground: transparent,
                                         padding: const EdgeInsets.all(5),
                                         function: () {},
                                       ),

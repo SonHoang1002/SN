@@ -150,7 +150,7 @@ class BlockPage extends StatelessWidget {
                             colorWord: white, fontSize: 15),
                       ),
                       suffixFlexValue: 10,
-                      changeBackground: Colors.transparent,
+                      changeBackground: transparent,
                     ),
                   ),
                 ],

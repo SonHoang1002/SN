@@ -213,7 +213,7 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                           showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
-                              barrierColor: Colors.transparent,
+                              barrierColor: transparent,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(

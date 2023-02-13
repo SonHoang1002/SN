@@ -54,11 +54,12 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
+import '../../theme/colors.dart';
 import 'setting_constants/general_settings_constants.dart';
 
 class Setting extends StatelessWidget {
   const Setting({Key? key}) : super(key: key);
-  
+
   get white => null;
 
   @override
@@ -134,7 +135,7 @@ class Setting extends StatelessWidget {
                               SettingConstants.USER_EXAMPLE[0],
                               // color: Colors.grey[900],
                             )),
-                        changeBackground: Colors.transparent,
+                        changeBackground: transparent,
                         padding: EdgeInsets.zero,
                       ),
                     ),
@@ -189,7 +190,7 @@ class Setting extends StatelessWidget {
                               // color: Colors.grey[900],
                             ),
                           ),
-                          changeBackground: Colors.transparent,
+                          changeBackground: transparent,
                           padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                         ),
                       );
@@ -246,7 +247,7 @@ class Setting extends StatelessWidget {
                                     ["data"]["icon"],
                                 // color: Colors.grey[900],
                               )),
-                          changeBackground: Colors.transparent,
+                          changeBackground: transparent,
                           padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                         ),
                       );
@@ -302,7 +303,7 @@ class Setting extends StatelessWidget {
                                   ["data"]["icon"],
                             ),
                           ),
-                          changeBackground: Colors.transparent,
+                          changeBackground: transparent,
                           padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                         ),
                       );
@@ -371,7 +372,7 @@ class Setting extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
                           SettingConstants.POLICY_SUBTITLE[index]["data"]!,
-                          style:  TextStyle(color: white, fontSize: 15),
+                          style: TextStyle(color: white, fontSize: 15),
                         ),
                       );
                     })),

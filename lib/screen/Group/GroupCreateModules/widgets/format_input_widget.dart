@@ -222,7 +222,7 @@
 
 // bottomSheetPrivateRule(context) {
 //   showModalBottomSheet(
-//       backgroundColor: Colors.transparent,
+//       backgroundColor: transparent,
 //       context: context,
 //       builder: (context) {
 //         return BlocBuilder<SelectionPrivateGroupBloc,
@@ -316,7 +316,7 @@
 
 // bottomSheetHideGroup(context) {
 //   showModalBottomSheet(
-//       backgroundColor: Colors.transparent,
+//       backgroundColor: transparent,
 //       context: context,
 //       builder: (context) {
 //         return BlocBuilder<HideGroupBloc, HideGroupState>(

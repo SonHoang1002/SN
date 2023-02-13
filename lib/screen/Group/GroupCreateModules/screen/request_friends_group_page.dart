@@ -101,7 +101,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                       ),
                                     ),
                                   ),
-                                  changeBackground: Colors.transparent,
+                                  changeBackground: transparent,
                                 ),
                                 buildSpacer(
                                   height: 5,
@@ -151,7 +151,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                       ),
                                     ),
                                   ),
-                                  changeBackground: Colors.transparent,
+                                  changeBackground: transparent,
                                 ),
                                 buildSpacer(
                                   height: 10,
@@ -282,7 +282,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                       // size: 17,
                                     ),
                                   ),
-                                  changeBackground: Colors.transparent,
+                                  changeBackground: transparent,
                                 ),
                                 buildSpacer(
                                   height: 10,
@@ -548,7 +548,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                                   RequestFriendsGroupConstants
                                                       .IMG_PATH_LIST[index])),
                                           padding: EdgeInsets.zero,
-                                          changeBackground: Colors.transparent,
+                                          changeBackground: transparent,
                                         ),
                                       ));
                                     }),
@@ -583,7 +583,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
 
 _showBottomSheetForShareComponent(BuildContext context) {
   showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+      backgroundColor: transparent,
       context: context,
       builder: (context) {
         return Container(
@@ -683,7 +683,7 @@ _showBottomSheetForShareComponent(BuildContext context) {
                         ),
                       ),
                       padding: EdgeInsets.symmetric(vertical: 5),
-                      // changeBackground: Colors.transparent,
+                      // changeBackground: transparent,
                     );
                   })),
             )
@@ -743,7 +743,7 @@ Widget _buildExampleComponent(String title, bool isSelected, {IconData? icon}) {
 _showBottomSheetSelectionGroupForRequestFriend(
     BuildContext context, double width) {
   showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+      backgroundColor: transparent,
       context: context,
       builder: (context) {
         return Container(
@@ -853,7 +853,7 @@ _showBottomSheetSelectionGroupForRequestFriend(
 
 _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
   showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+      backgroundColor: transparent,
       context: context,
       builder: (context) {
         return Container(

@@ -206,7 +206,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                             size: 15,
                           ),
                         ),
-                        changeBackground: Colors.transparent,
+                        changeBackground: transparent,
                       ),
                     ),
                   ),
@@ -298,7 +298,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                                           color: white,
                                           size: 15,
                                         )),
-                              changeBackground: Colors.transparent,
+                              changeBackground: transparent,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 5),
                               suffixWidget: Container(

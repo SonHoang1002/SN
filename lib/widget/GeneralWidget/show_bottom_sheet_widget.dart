@@ -6,10 +6,17 @@ import '../../theme/colors.dart';
 
 showBottomSheetCheckImportantSettings(
     BuildContext context, double height, String title,
-    {Widget? widget, Color? bgColor}) {
+    {Widget? widget, Color? bgColor, IconData? iconData}) {
   showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+      enableDrag: true,
       context: context,
+      isScrollControlled: true,
+      barrierColor: transparent,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
+      backgroundColor: transparent,
+      // context: context,
       builder: (context) {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -44,15 +51,16 @@ showBottomSheetCheckImportantSettings(
                       Navigator.pop(context);
                     },
                     child: Icon(
-                      FontAwesomeIcons.close,
-                      color: white,
+                      iconData ?? FontAwesomeIcons.close,
+                      // color: white,
                       // size: 15,
                     ),
                   ),
                   Text(
                     title,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: white,
+                        // color: white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),

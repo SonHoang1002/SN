@@ -124,7 +124,7 @@ Widget setDivider(
 //                         color:  white,
 //                       ),
 //                     ),
-//                     changeBackground: Colors.transparent,
+//                     changeBackground: transparent,
 //                     padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
 //                   ),
 //                 );

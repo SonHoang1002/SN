@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../helper/push_to_new_screen.dart';
+import '../../theme/colors.dart';
 
 Widget buildBottomNavigatorDotWidget(BuildContext context, int allNumberDot,
-    int currentDot, String buttonTitle,Widget destinationWidget) {
+    int currentDot, String buttonTitle, Widget destinationWidget) {
   return Container(
     height: 80,
-    color: Colors.transparent,
+    color: transparent,
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Container(
         height: 20,

@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modul
 import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/who_can_see_your_share_modules/information_on_personal_page_page.dart';
 import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/who_can_see_your_share_modules/who_see_share_constants.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import '../../../../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../../../../widget/GeneralWidget/text_content_widget.dart';
@@ -61,7 +62,7 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
           ),
           Container(
             height: 90,
-            color: Colors.transparent,
+            color: transparent,
             child: Column(children: [
               Padding(
                 padding: EdgeInsets.only(bottom: 10),
@@ -190,7 +191,7 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
                     // color:  white,
                   ),
                 ),
-                changeBackground: Colors.transparent,
+                changeBackground: transparent,
                 padding: EdgeInsets.fromLTRB(0, 10, 5, 5),
               );
             })),

@@ -145,8 +145,7 @@ class _PasswordPageState extends State<PasswordPage> {
                                                           BorderRadius.all(
                                                               Radius.circular(
                                                                   3.5)))),
-                                              changeBackground:
-                                                  Colors.transparent,
+                                              changeBackground: transparent,
                                               padding: EdgeInsets.zero,
                                             );
                                           })))

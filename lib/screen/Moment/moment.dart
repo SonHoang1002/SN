@@ -92,7 +92,7 @@ class Moment extends StatelessWidget {
                   )
                 ],
               ),
-              backgroundColor: Colors.transparent, //No more green
+              backgroundColor: transparent, //No more green
               elevation: 0.0, //Shadow gone
             ),
           )

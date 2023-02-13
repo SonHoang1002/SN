@@ -99,7 +99,7 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                           },
                           value: _isCheck,
                         ),
-                        changeBackground: Colors.transparent,
+                        changeBackground: transparent,
                         padding: const EdgeInsets.all(5),
                       )),
                   const SizedBox(
@@ -126,7 +126,7 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                                         data[index]["subTitle"], false,
                                         fontSize: 13, colorWord: white)
                                   ],
-                                  changeBackground: Colors.transparent,
+                                  changeBackground: transparent,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 5, vertical: 10),
                                   function: () {
@@ -148,7 +148,7 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                                   fontSize: 16,
                                   colorWord: Colors.red),
                             ],
-                            changeBackground: Colors.transparent,
+                            changeBackground: transparent,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 10),
                             function: () {

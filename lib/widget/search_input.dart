@@ -26,7 +26,6 @@ class _SearchInputState extends State<SearchInput> {
   @override
   void initState() {
     if (!mounted) return;
-
     super.initState();
   }
 
@@ -73,8 +72,7 @@ class _SearchInputState extends State<SearchInput> {
                           width: 20,
                           height: 20,
                           decoration: const BoxDecoration(
-                              color: Colors.transparent,
-                              shape: BoxShape.circle),
+                              color: transparent, shape: BoxShape.circle),
                           child: Icon(
                             FontAwesomeIcons.xmark,
                             size: 15,

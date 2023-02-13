@@ -77,7 +77,7 @@ class _SettingEventPageState extends State<SettingEventPage> {
                 // color: Colors.grey,
                 size: 20,
               ),
-              changeBackground: Colors.transparent,
+              changeBackground: transparent,
               padding: EdgeInsets.only(top: 15, bottom: 15),
             ),
           ),
@@ -108,7 +108,7 @@ class _SettingEventPageState extends State<SettingEventPage> {
                 value: switchValue,
               ),
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 2.5),
-              changeBackground: Colors.transparent,
+              changeBackground: transparent,
             ),
           ),
 

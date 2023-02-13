@@ -185,7 +185,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                 : Container(
                                     // width: 130,
                                     height: 200,
-                                    color: Colors.transparent,
+                                    color: transparent,
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       crossAxisAlignment:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class GeneralComponent extends StatelessWidget {
   final Widget? prefixWidget;
@@ -8,7 +9,10 @@ class GeneralComponent extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? borderRadiusValue;
   final int? suffixFlexValue;
+  final int? preffixFlexValue;
+
   final Function? function;
+  final bool? isHaveBorder;
 
   const GeneralComponent(this.contentWidget,
       {this.prefixWidget,
@@ -17,11 +21,13 @@ class GeneralComponent extends StatelessWidget {
       this.padding,
       this.borderRadiusValue,
       this.suffixFlexValue,
-      this.function});
+      this.preffixFlexValue,
+      this.function,
+      this.isHaveBorder});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         function != null ? function!() : null;
       },
@@ -34,56 +40,50 @@ class GeneralComponent extends StatelessWidget {
               padding: padding ?? EdgeInsets.fromLTRB(10, 10, 10, 10),
               decoration: BoxDecoration(
                   color: changeBackground ?? Colors.grey[900],
+                  border: isHaveBorder == true
+                      ? Border.all(color: greyColor, width: 0.4)
+                      : null,
                   borderRadius: BorderRadius.all(
                       Radius.circular(borderRadiusValue ?? 7))),
               child: Row(
                 children: [
-                  // prefixWidget != null
-                  //     ? Container(
-                  //         width: 50,
-                  //         alignment: Alignment.topCenter,
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.start,
-                  //           children: [prefixWidget!],
-                  //         ),
-                  //       )
-                  //     : Container(),
                   prefixWidget != null &&
                           prefixWidget != Container() &&
                           prefixWidget != const SizedBox()
                       ? Flexible(
-                          flex: 2,
+                          flex: preffixFlexValue ?? 2,
                           child: prefixWidget ?? Container(),
                         )
                       : Container(),
                   Flexible(
                     flex: 10,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 20,
-                          child: Container(
-                            child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: contentWidget.map((itemWidget) {
-                                  // if (itemWidget != SizedBox() &&
-                                  //     itemWidget != Container()) {
-                                  return itemWidget;
-                                  // }
-                                  // return SizedBox();
-                                }).toList()),
+                    child: InkWell(
+                      onTap: () {
+                        function != null ? function!() : null;
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            flex: 20,
+                            child: Container(
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: contentWidget.map((itemWidget) {
+                                    return itemWidget;
+                                  }).toList()),
+                            ),
                           ),
-                        ),
-                        suffixWidget != null
-                            ? Flexible(
-                                flex: suffixFlexValue ?? 4,
-                                child: suffixWidget ?? Container())
-                            : Container(),
-                      ],
+                          suffixWidget != null
+                              ? Flexible(
+                                  flex: suffixFlexValue ?? 4,
+                                  child: suffixWidget ?? Container())
+                              : Container(),
+                        ],
+                      ),
                     ),
                   ),
                 ],

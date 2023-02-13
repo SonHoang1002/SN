@@ -85,7 +85,7 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
                                     LoginConstants.DOWN_ICON_DATA,
                                     color: greyColor,
                                   ),
-                                  changeBackground: Colors.transparent,
+                                  changeBackground: transparent,
                                   function: () {
                                     _showPickerModalBottomSheet(context);
                                   },

@@ -127,7 +127,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                                 BorderRadius.all(Radius.circular(20))),
                         child:
                             Image.asset(DetailEventConstants.USER_EXAMPLE[0])),
-                    changeBackground: Colors.transparent,
+                    changeBackground: transparent,
                     padding: EdgeInsets.zero,
                   ),
                   buildSpacer(height: 20),
@@ -311,7 +311,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                             color: white,
                             size: 15,
                           )),
-                      changeBackground: Colors.transparent,
+                      changeBackground: transparent,
                       padding: EdgeInsets.zero,
                       suffixWidget: Container(
                         alignment: Alignment.centerRight,
@@ -357,7 +357,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
   _showBottomSheetPrivateRuleOfEvent(BuildContext context) {
     bool isCustomerCanRequestFriend = false;
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setStateFull) {
@@ -490,7 +490,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                               }),
                               value: listRadio[index],
                             ),
-                            changeBackground: Colors.transparent,
+                            changeBackground: transparent,
                             padding: EdgeInsets.zero,
                           ),
                         );
@@ -530,7 +530,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                               value: isCustomerCanRequestFriend,
                             ),
                           ),
-                          changeBackground: Colors.transparent,
+                          changeBackground: transparent,
                           padding: EdgeInsets.only(right: 10),
                         ),
                         buildSpacer(height: 10),
@@ -558,7 +558,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
   // bottom sheet show group selection after user choose "Ban be" value
   _showBottomSheetSelectionGroup(BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         context: context,
         builder: (context) {
           return Container(
@@ -649,7 +649,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                           onChanged: ((value) {}),
                           value: listSelectionGroup[index],
                         ),
-                        changeBackground: Colors.transparent,
+                        changeBackground: transparent,
                         padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                       );
                     })),
@@ -675,7 +675,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        barrierColor: Colors.transparent,
+        barrierColor: transparent,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(10))),

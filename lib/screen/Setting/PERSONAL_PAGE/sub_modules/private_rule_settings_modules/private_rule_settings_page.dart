@@ -117,7 +117,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                               size: 19,
                                             ),
                                           ),
-                                          changeBackground: Colors.transparent,
+                                          changeBackground: transparent,
                                           padding:
                                               EdgeInsets.symmetric(vertical: 5),
                                         ),
@@ -194,7 +194,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                             size: 19,
                                           ),
                                         ),
-                                        changeBackground: Colors.transparent,
+                                        changeBackground: transparent,
                                         padding:
                                             EdgeInsets.symmetric(vertical: 5),
                                       ),
@@ -281,7 +281,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                             size: 19,
                                           ),
                                         ),
-                                        changeBackground: Colors.transparent,
+                                        changeBackground: transparent,
                                         padding:
                                             EdgeInsets.symmetric(vertical: 5),
                                       ),

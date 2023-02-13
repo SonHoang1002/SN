@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/create_product_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_market_page.dart';
 
 import '../../helper/push_to_new_screen.dart';
 import '../CreatePost/create_modal_base_menu.dart';
 import '../EventScreen/screen/create_event_page.dart';
 import '../Group/GroupCreateModules/screen/create_group_page.dart';
 import '../Group/group.dart';
-import '../MarketPlace/screen/MarketPlaceBody/main_market_body.dart';
+import '../MarketPlace/screen/main_market_body.dart';
+import '../MarketPlace/screen/personal_market_page.dart';
 import '../Page/page_general.dart';
 import '../Watch/watch_render.dart';
 // import 'package:social_network_app_mobile/screen/Page/page_general.dart';
@@ -43,7 +47,7 @@ class MenuSelected extends StatelessWidget {
               child: const Icon(
                 FontAwesomeIcons.plus,
                 size: 20,
-                color: Colors.black,
+                // color: Colors.black,
               ),
             ),
             const SizedBox(
@@ -52,7 +56,7 @@ class MenuSelected extends StatelessWidget {
             const Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
-              color: Colors.black,
+              // color: Colors.black,
             )
           ],
         );
@@ -68,7 +72,7 @@ class MenuSelected extends StatelessWidget {
               child: const Icon(
                 FontAwesomeIcons.cartArrowDown,
                 size: 20,
-                color: Colors.black,
+                // color: Colors.black,
               ),
             ),
             const SizedBox(
@@ -77,7 +81,7 @@ class MenuSelected extends StatelessWidget {
             const Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
-              color: Colors.black,
+              // color: Colors.black,
             )
           ],
         );
@@ -88,19 +92,38 @@ class MenuSelected extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                pushToNextScreen(context, SearchMarketPage());
+              },
               child: const Icon(
-                FontAwesomeIcons.user,
-                size: 20,
+                FontAwesomeIcons.magnifyingGlass,
+                size: 16,
                 color: Colors.black,
               ),
             ),
-            SizedBox(width: 5,),
+            SizedBox(
+              width: 10,
+            ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                pushToNextScreen(context, CartMarketPage());
+              },
               child: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
-                size: 20,
+                FontAwesomeIcons.cartArrowDown,
+                size: 16,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            GestureDetector(
+              onTap: () {
+                pushToNextScreen(context, PersonalMarketPlacePage());
+              },
+              child: const Icon(
+                FontAwesomeIcons.user,
+                size: 16,
                 color: Colors.black,
               ),
             ),

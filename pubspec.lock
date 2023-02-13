@@ -45,10 +45,10 @@ packages:
     dependency: transitive
     description:
       name: camera_android
-      sha256: "4cef01e8e78fe27c809a429bf74352ab94ab76b0c980e3ec708f1414614e3d9f"
+      sha256: e491c836147f60dd8a54cf3895fd2960e13b21b78a9d15b563a1b6c70894f142
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.3"
+    version: "0.10.4"
   camera_avfoundation:
     dependency: transitive
     description:
@@ -125,10 +125,10 @@ packages:
     dependency: transitive
     description:
       name: cross_file
-      sha256: f71079978789bc2fe78d79227f1f8cfe195b31bbd8db2399b0d15a4b96fb843b
+      sha256: "0b0036e8cccbfbe0555fd83c1d31a6f30b77a96b598b35a5d36dd41f718695e9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.3+2"
+    version: "0.3.3+4"
   crypto:
     dependency: transitive
     description:
@@ -326,6 +326,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      sha256: "6c68e1fad129b4b807b2218ef4cf7f7f6f61c5ec8861c990dc2278d9d03cb09f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -464,6 +472,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  loader_skeleton:
+    dependency: "direct main"
+    description:
+      name: loader_skeleton
+      sha256: fc98ead27e7f924b9920207820b4a6ad47591053836d2bdc8bc8d92eb77f5d5c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   matcher:
     dependency: transitive
     description:
@@ -664,6 +680,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      sha256: "1f1009b5845a1f88f1c5630212279540486f97409e9fc3f63883e71070d107bf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   simple_gesture_detector:
     dependency: transitive
     description:

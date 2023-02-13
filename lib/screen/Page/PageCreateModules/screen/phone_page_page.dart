@@ -202,7 +202,7 @@ class _PhonePageState extends State<PhonePage> {
 
   _showBottomSheetForCountryCodeNumberPhone(BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         context: context,
         builder: ((context) {
           return Container(

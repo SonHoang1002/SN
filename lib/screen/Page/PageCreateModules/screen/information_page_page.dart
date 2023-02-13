@@ -361,7 +361,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
 
   _showBottomSheetForSelectProvince(BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setStateFull) {

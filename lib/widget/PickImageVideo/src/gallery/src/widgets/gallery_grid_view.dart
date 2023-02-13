@@ -238,7 +238,7 @@ class _SelectionCount extends StatelessWidget {
         }
 
         return Container(
-          color: isSelected ? Colors.white38 : Colors.transparent,
+          color: isSelected ? Colors.white38 : transparent,
           padding: const EdgeInsets.all(6),
           child: Align(
             alignment: actionBased ? Alignment.topRight : Alignment.center,

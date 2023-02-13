@@ -23,8 +23,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   TextEditingController _emailController = TextEditingController(text: "");
   List<String> _countryNumberCode = ["VN", "+84"];
 /////////////////////////////////////////////////////////////
-///         validate email ??
-///
+  ///         validate email ??
+  ///
 ////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                               buildSpacer(height: 10),
                               // change status button
                               buildElevateButtonWidget(
-                                  bgColor: Colors.transparent,
+                                  bgColor: transparent,
                                   colorText: blackColor,
                                   width: width,
                                   isHaveBoder: true,
@@ -170,8 +170,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                       child: Wrap(
                         children: [
                           Text(_countryNumberCode[0],
-                              style:
-                                  TextStyle(fontSize: 16, color: greyColor)),
+                              style: TextStyle(fontSize: 16, color: greyColor)),
                           Icon(
                             LoginConstants.DOWN_ICON_DATA,
                             color: greyColor,
@@ -181,8 +180,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                             width: 5,
                           ),
                           Text(_countryNumberCode[1],
-                              style:
-                                  TextStyle(fontSize: 16, color: greyColor)),
+                              style: TextStyle(fontSize: 16, color: greyColor)),
                         ],
                       ),
                     ),
@@ -197,7 +195,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
 
   _showBottomSheetForCountryCodeNumberPhone(BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         context: context,
         builder: ((context) {
           return Container(

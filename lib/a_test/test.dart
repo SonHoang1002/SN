@@ -364,3 +364,38 @@ demoFunction() {}
 //                               _buildTextMarketPlace("Bans", color: Colors.green)
 //                             ]),
 //                           );
+
+
+// Container(
+//                         height: 40,
+//                         width: width,
+//                         padding: EdgeInsets.symmetric(horizontal: 10),
+//                         child: Row(
+//                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                             children: [
+//                               ButtonPrimary(
+//                                 width: width / 2 - 30,
+//                                 label: "Bán",
+//                                 icon: Icon(
+//                                   Icons.usb_rounded,
+//                                   color: Colors.white,
+//                                   size: 20,
+//                                 ),
+//                                 radius: 25,
+//                               ),
+//                               ButtonPrimary(
+//                                 width: width / 2 - 30,
+//                                 label: "Hạng mục",
+//                                 icon: Icon(
+//                                   Icons.usb_rounded,
+//                                   color: Colors.white,
+//                                   size: 20,
+//                                 ),
+//                                 radius: 25,
+//                               ),
+//                             ])),
+//                     buildDivider(color: Colors.black),
+//                     buildSpacer(height: 10),
+
+
+

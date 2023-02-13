@@ -433,7 +433,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                       ),
                     )
                   : null,
-              changeBackground: Colors.transparent,
+              changeBackground: transparent,
               borderRadiusValue: 5,
               function: () {
                 function != null ? function() : null;
@@ -448,7 +448,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
   bottomSheetPrivateRule(context) {
     print("bottomSheetPrivateRule");
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         context: context,
         builder: (context) {
           return Container(
@@ -539,7 +539,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
 
   bottomSheetHideGroup(context) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         context: context,
         builder: (context) {
           return Container(

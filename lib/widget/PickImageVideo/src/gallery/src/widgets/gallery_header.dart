@@ -211,7 +211,7 @@ class _IconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: transparent,
       clipBehavior: Clip.hardEdge,
       borderRadius: BorderRadius.circular(40),
       child: IconButton(

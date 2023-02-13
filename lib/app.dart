@@ -12,11 +12,13 @@ import 'package:social_network_app_mobile/providers/search_category_bloc.dart';
 import 'package:social_network_app_mobile/providers/select_private_rule_bloc.dart';
 import 'package:social_network_app_mobile/providers/select_province_page_bloc.dart';
 
+import 'a_test/sale_save_page.dart';
 import 'home/home.dart';
 import 'theme/theme_manager.dart';
 
 var routes = <String, WidgetBuilder>{
-  "/": (BuildContext context) => const Home(),
+  "/": (BuildContext context) =>   const Home(),
+  // DemoSaleInformationMarketPage
   // '/login': (BuildContext context) => const Auth()
 };
 

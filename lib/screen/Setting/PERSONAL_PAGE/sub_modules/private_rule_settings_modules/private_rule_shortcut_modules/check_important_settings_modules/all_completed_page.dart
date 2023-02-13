@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/information_compo
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
+import '../../../../../../../theme/colors.dart';
 import 'how_protect_account_modules/protect_your_account_constants.dart';
 
 class AllCompletedPage extends StatelessWidget {
@@ -56,7 +57,7 @@ class AllCompletedPage extends StatelessWidget {
           ),
           Container(
             height: name == "how_to_protect_your_account" ? 130 : 80,
-            color: Colors.transparent,
+            color: transparent,
             child: Column(children: [
               Padding(
                 padding: EdgeInsets.only(bottom: 0),
@@ -155,7 +156,7 @@ class AllCompletedPage extends StatelessWidget {
                     // color:  white,
                   ),
                 ),
-                changeBackground: Colors.transparent,
+                changeBackground: transparent,
                 padding: EdgeInsets.fromLTRB(0, 10, 5, 5),
               );
             })),

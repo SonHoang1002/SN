@@ -169,7 +169,7 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
 
 // showBottomSheetCheckImportantSettings(BuildContext context) {
 //   showMaterialModalBottomSheet(
-//       backgroundColor: Colors.transparent,
+//       backgroundColor: transparent,
 //       context: context,
 //       builder: (context) {
 //         return StatefulBuilder(builder: (context, setStateFull) {
@@ -261,7 +261,7 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
 //                                 ),
 //                                 padding: EdgeInsets.symmetric(
 //                                     horizontal: 5, vertical: 5),
-//                                 changeBackground: Colors.transparent,
+//                                 changeBackground: transparent,
 //                               ),
 //                             ),
 //                           ],

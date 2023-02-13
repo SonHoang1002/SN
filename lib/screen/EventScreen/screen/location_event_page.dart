@@ -159,7 +159,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
                         border: Border.all(
                             color: isLiveMeetingRoomSelection
                                 ? Colors.blue
-                                : Colors.transparent)),
+                                : transparent)),
                     child: GeneralComponent(
                       [
                         Container(
@@ -238,7 +238,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
                         border: Border.all(
                             color: isFacebookLiveSelection
                                 ? Colors.blue
-                                : Colors.transparent)),
+                                : transparent)),
                     child: GeneralComponent(
                       [
                         Container(
@@ -571,7 +571,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
 
   // _showBottomSheetSelectLocation(BuildContext context) {
   //   showModalBottomSheet(
-  //       backgroundColor: Colors.transparent,
+  //       backgroundColor: transparent,
   //       context: context,
   //       builder: (context) {
   //         return StatefulBuilder(builder: (context, setStateFull) {

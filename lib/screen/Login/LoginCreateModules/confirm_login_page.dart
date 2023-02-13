@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
+import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
@@ -129,7 +130,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                               fit: BoxFit.fitHeight,
                                             ),
                                           ),
-                                          changeBackground: Colors.transparent,
+                                          changeBackground: transparent,
                                         ),
                                         buildDivider(color: Colors.black),
                                         ListView.builder(
@@ -179,8 +180,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                                         groupValue:
                                                             _selectionValue,
                                                       )),
-                                                  changeBackground:
-                                                      Colors.transparent,
+                                                  changeBackground: transparent,
                                                   padding: EdgeInsets.all(5),
                                                 ),
                                                 Divider(
@@ -217,7 +217,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                         buildSpacer(height: 10),
                                         buildElevateButtonWidget(
                                             width: width,
-                                            bgColor: Colors.transparent,
+                                            bgColor: transparent,
                                             title: ConfirmLoginConstants
                                                 .CONFIRM_LOGIN_ENTER_PASSWORD_TO_LOGIN,
                                             colorText: Colors.orange,

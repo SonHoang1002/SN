@@ -4,6 +4,7 @@ import '../../theme/colors.dart';
 
 buildDivider(
     {double? left,
+    double? height=10,
     double? top,
     double? right,
     double? bottom,
@@ -11,7 +12,7 @@ buildDivider(
   return Padding(
     padding: EdgeInsets.fromLTRB(left ?? 0, top ?? 0, right ?? 0, bottom ?? 0),
     child: Divider(
-      height: 10,
+      height: height,
       color: color!,
     ),
   );

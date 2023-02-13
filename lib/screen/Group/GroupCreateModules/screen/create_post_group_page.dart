@@ -76,7 +76,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                             enableDrag: true,
                             context: context,
                             isScrollControlled: true,
-                            barrierColor: Colors.transparent,
+                            barrierColor: transparent,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.vertical(
@@ -91,11 +91,11 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                             }));
                         // icon, .....
                         showModalBottomSheet(
-                            backgroundColor: Colors.transparent,
+                            backgroundColor: transparent,
                             enableDrag: true,
                             context: context,
                             isScrollControlled: true,
-                            barrierColor: Colors.transparent,
+                            barrierColor: transparent,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.vertical(
@@ -160,8 +160,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                                                     fit: BoxFit.fitWidth,
                                                   ),
                                                 ),
-                                                changeBackground:
-                                                    Colors.transparent,
+                                                changeBackground: transparent,
                                               ),
                                             );
                                           })),
@@ -244,7 +243,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
           decoration: inSheet
               ? null
               : BoxDecoration(
-                  color: Colors.transparent,
+                  color: transparent,
                   border: Border.all(
                     color: Colors.grey,
                   ),
@@ -333,7 +332,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                       // color:  white,
                     ),
                   ),
-                  changeBackground: Colors.transparent,
+                  changeBackground: transparent,
                 ),
               ),
               Container(
@@ -355,7 +354,7 @@ class _CreatePostGroupPageState extends State<CreatePostGroupPage> {
                       hintText: CreatePostGroupConstants.PLACEHOLDER_LIST[0],
                       hintStyle: TextStyle(color: Colors.grey, fontSize: 20),
                       border: InputBorder.none,
-                      fillColor: Colors.transparent,
+                      fillColor: transparent,
                       filled: true),
                 ),
               ),
