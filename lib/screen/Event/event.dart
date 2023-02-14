@@ -11,23 +11,13 @@ class Event extends StatefulWidget {
 
 class _EventState extends State<Event>
     with AutomaticKeepAliveClientMixin<Event> {
-  bool _handleScrollNotification(ScrollNotification notification) {
-    if (notification.depth == 0) {
-      if (notification is UserScrollNotification) {
-        final UserScrollNotification userScroll = notification;
-      }
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final GlobalKey<ScaffoldState> key = GlobalKey();
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: _handleScrollNotification,
-      child: const Scaffold(body: EventRender()),
+    return const NotificationListener<ScrollNotification>(
+      child: Scaffold(body: EventRender()),
     );
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/screen/Event/event_provider.dart';
 
 import 'home/home.dart';
 import 'theme/theme_manager.dart';
@@ -24,7 +23,6 @@ class _AppState extends State<App> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeManager()),
-        ChangeNotifierProvider(create: (_) => EventProvider()),
       ],
       child: const MaterialAppWithTheme(),
     );

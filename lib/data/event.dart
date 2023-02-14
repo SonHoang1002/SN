@@ -1,3 +1,5 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 List eventData = [
   {
     "id": "108905306020119212",
@@ -322,7 +324,7 @@ List eventData = [
     "event_relationship": {
       "host_event": false,
       "invitation_host_event": false,
-      "status": "interested"
+      "status": ""
     },
     "account": {
       "id": "108786718361607198",
@@ -604,4 +606,32 @@ List eventData = [
     "group": null,
     "page_owner": null
   }
+];
+List iconEventCare = [
+  {
+    "key": "interested",
+    "label": "Quan tâm",
+    "icon": FontAwesomeIcons.solidStar
+  },
+  {
+    "key": "going",
+    "label": "Sẽ tham gia",
+    "icon": FontAwesomeIcons.circleCheck
+  },
+  {"key": "", "label": "Không tham gia", "icon": FontAwesomeIcons.circleXmark},
+];
+List iconActionEllipsis = [
+  {"key": "share", "label": "Chia sẻ", "icon": FontAwesomeIcons.share},
+  {"key": "save", "label": "Lưu", "icon": FontAwesomeIcons.bookmark},
+  {"key": "copy", "label": "Sao chép liên kết", "icon": FontAwesomeIcons.link},
+  {
+    "key": "report",
+    "label": "Tìm sự hỗ trợ hoặc báo cáo sự kiện",
+    "icon": FontAwesomeIcons.circleXmark
+  },
+  {
+    "key": "setting",
+    "label": "Cài đặt thông báo",
+    "icon": FontAwesomeIcons.circleXmark
+  },
 ];
