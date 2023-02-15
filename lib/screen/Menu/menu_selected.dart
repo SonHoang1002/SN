@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screen/EventScreen/screen/create_event_page.dart';
+import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/screen/create_group_page.dart';
 import 'package:social_network_app_mobile/screen/Group/group.dart';
 import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_render.dart';
@@ -30,10 +33,16 @@ class MenuSelected extends StatelessWidget {
       case 'groupSocial':
         body = const Group();
         buttonAppbar = Row(
-          children: const [
-            Icon(
-              FontAwesomeIcons.plus,
-              size: 20,
+          children: [
+            GestureDetector(
+              onTap: () {
+                pushToNextScreen(context, CreateGroupPage());
+              },
+              child: Icon(
+                FontAwesomeIcons.plus,
+                size: 20,
+                color: Colors.black,
+              ),
             ),
             SizedBox(
               width: 12.0,
@@ -41,6 +50,32 @@ class MenuSelected extends StatelessWidget {
             Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
+              color: Colors.black,
+            )
+          ],
+        );
+        break;
+      case 'eventSocial':
+        // body = CreateEventBody();
+        buttonAppbar = Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                pushToNextScreen(context, CreateEventPage());
+              },
+              child: Icon(
+                FontAwesomeIcons.plus,
+                size: 20,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(
+              width: 12.0,
+            ),
+            Icon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: 18,
+              color: Colors.black,
             )
           ],
         );
