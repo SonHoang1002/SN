@@ -2,12 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 
-class ApiConfig {
+class ApiMediaPetube {
   BaseOptions options = BaseOptions(
-    baseUrl: baseRoot,
+    baseUrl: baseRootPtube,
     connectTimeout: 30 * 1000,
     receiveTimeout: 30 * 1000,
-    headers: {'authorization': 'Bearer $tokenVideoUpload'},
+    headers: {
+      "Content-Type": "multipart/form-data",
+      'authorization': 'Bearer $tokenVideoUpload'
+    },
   );
 
   Dio getDio() {

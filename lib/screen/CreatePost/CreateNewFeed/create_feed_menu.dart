@@ -28,7 +28,7 @@ class CreateFeedMenu extends StatelessWidget {
           itemCount: listMenuPost.length,
           itemBuilder: (context, index) => InkWell(
             onTap: () {
-              handleChooseMenu(listMenuPost[index]);
+              handleChooseMenu(listMenuPost[index], 'menu_in');
             },
             child: Container(
               padding: const EdgeInsets.all(8.0),

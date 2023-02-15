@@ -2,6 +2,7 @@
     package="com.example.social_network_app_mobile">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
+        android:usesCleartextTraffic="true"
         android:label="social_network_app_mobile"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
