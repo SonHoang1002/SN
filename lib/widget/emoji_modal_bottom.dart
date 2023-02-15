@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/config.dart';
 
+import '../apis/emoji_sticky_api.dart';
 import '../data/gif.dart';
 import '../theme/colors.dart';
 import 'image_cache.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/common.api.dart';
 import 'package:social_network_app_mobile/data/emoji_activity.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -70,7 +71,7 @@ class _EmojiActivityState extends State<EmojiActivity>
           ],
         ),
       ),
-      Container(margin: const EdgeInsets.all(8.0), child: const SearchInput()),
+      Container(margin: const EdgeInsets.all(8.0), child:  SearchInput()),
       Expanded(
         child: TabBarView(
           controller: _tabController,

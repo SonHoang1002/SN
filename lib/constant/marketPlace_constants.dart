@@ -118,7 +118,7 @@ class MainMarketBodyConstants {
     "key": " suggest_for_you_contents",
     "data": [
       {
-        "id": 1,
+        "id": "1",
         "img":
             "https://lzd-img-global.slatic.net/g/p/246824975c6773676b820f19a2d6be40.jpg_720x720q80.jpg",
         "title":
@@ -159,7 +159,7 @@ class MainMarketBodyConstants {
         ]
       },
       {
-        "id": 2,
+        "id": "2",
         "img":
             "https://www.sporter.vn/wp-content/uploads/2017/06/Ao-bong-da-anh-san-nha-hang-viet-nam-1.jpg",
         "title":
@@ -199,7 +199,7 @@ class MainMarketBodyConstants {
         ]
       },
       {
-        "id": 3,
+        "id": "3",
         "img":
             "https://cdn.tgdd.vn/Files/2019/11/17/1219762/tim-hieu-ve-tai-nghe-in-ear-tai-nghe-earbuds-chung.jpg",
         "title":
@@ -244,7 +244,7 @@ class MainMarketBodyConstants {
         ]
       },
       {
-        "id": 4,
+        "id": "4",
         "img":
             "https://soundpeatsvietnam.com/wp-content/uploads/2022/03/cach-khac-phuc-loi-nghe-mot-ben-tren-tai-nghe-bluetooth.jpg",
         "title":
@@ -290,7 +290,7 @@ class MainMarketBodyConstants {
         ]
       },
       {
-        "id": 5,
+        "id": "5",
         "img":
             "https://lzd-img-global.slatic.net/g/p/246824975c6773676b820f19a2d6be40.jpg_720x720q80.jpg",
         "title":
@@ -331,7 +331,7 @@ class MainMarketBodyConstants {
         ]
       },
       {
-        "id": 6,
+        "id": "6",
         "img":
             "https://www.sporter.vn/wp-content/uploads/2017/06/Ao-bong-da-anh-san-nha-hang-viet-nam-1.jpg",
         "title":
@@ -372,7 +372,7 @@ class MainMarketBodyConstants {
         ]
       },
       {
-        "id": 7,
+        "id": "7",
         "img":
             "https://cdn.tgdd.vn/Files/2019/11/17/1219762/tim-hieu-ve-tai-nghe-in-ear-tai-nghe-earbuds-chung.jpg",
         "title":
@@ -417,7 +417,7 @@ class MainMarketBodyConstants {
         ]
       },
       {
-        "id": 8,
+        "id": "8",
         "img":
             "https://soundpeatsvietnam.com/wp-content/uploads/2022/03/cach-khac-phuc-loi-nghe-mot-ben-tren-tai-nghe-bluetooth.jpg",
         "title":

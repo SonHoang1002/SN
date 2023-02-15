@@ -2,6 +2,15 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_menu.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dart';
@@ -9,11 +18,17 @@ import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activ
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/friend_tag.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/gif.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_categories.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/question_anwer.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_target.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/map_widget_item.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   const CreateNewFeed({Key? key}) : super(key: key);
@@ -351,9 +366,16 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         body = Checkin(checkin: checkin, handleUpdateData: handleUpdateData);
         break;
       case 'tag-people':
-        body =
-            FriendTag(handleUpdateSelectedFriend: handleUpdateSelectedFriend);
-        buttonAppbar = const ButtonPrimary(label: "Xong");
+        body = FriendTag(
+            friendsPrePage: friendSelected, handleUpdateData: handleUpdateData);
+        buttonAppbar = ButtonPrimary(
+          label: "Xong",
+          handlePress: () {
+            Navigator.of(context)
+              ..pop()
+              ..pop();
+          },
+        );
         break;
       case 'gif':
         body = Gif(handleUpdateData: handleUpdateData);
@@ -379,32 +401,74 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 title: menu['label'], body: body, buttonAppbar: buttonAppbar)));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            BackIconAppbar(),
-            AppBarTitle(title: "Tạo bài post"),
-            ButtonPrimary(label: "Đăng")
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          const CreateFeedStatus(),
-          CreateFeedMenu(
-            handleChooseMenu: handleChooseMenu,
-          )
-        ],
-      ),
-    );
+  getBottomSheet() {
+    return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.8),
+            spreadRadius: 2,
+            blurRadius: 10,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ], color: Theme.of(context).scaffoldBackgroundColor),
+        child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 5,
+            ),
+            itemCount: 5,
+            itemBuilder: (context, index) => Container(
+                  margin: const EdgeInsets.only(bottom: 17),
+                  child: InkWell(
+                      onTap: () {
+                        if (index == 4) {
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(15))),
+                              builder: (BuildContext context) {
+                                return CreateFeedMenu(
+                                    handleChooseMenu: handleChooseMenu);
+                              });
+                        }
+                      },
+                      child: index != 4
+                          ? listMenuPost[index]['image'] != null
+                              ? IconButton(
+                                  onPressed: null,
+                                  icon: SvgPicture.asset(
+                                    listMenuPost[index]['image'],
+                                    height: 28,
+                                    width: 28,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                )
+                              : Icon(
+                                  listMenuPost[index]['icon'],
+                                  color: Color(listMenuPost[index]['color']),
+                                  size: 24,
+                                )
+                          : IconButton(
+                              onPressed: null,
+                              icon: Container(
+                                width: 26,
+                                height: 26,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: greyColor,
+                                ),
+                                child: const Icon(
+                                  FontAwesomeIcons.ellipsis,
+                                  color: white,
+                                  size: 18,
+                                ),
+                              ),
+                            )),
+                )));
   }
 }

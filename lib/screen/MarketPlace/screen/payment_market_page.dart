@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
 import '../../../helper/push_to_new_screen.dart';

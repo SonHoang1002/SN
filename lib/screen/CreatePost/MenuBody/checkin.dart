@@ -1,6 +1,7 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/common.api.dart';
 import 'package:social_network_app_mobile/data/checkin.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
@@ -59,7 +60,7 @@ class _CheckinState extends State<Checkin> {
       children: [
         Container(
             margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-            child: const SearchInput()),
+            child:  SearchInput()),
         const SizedBox(
           height: 10.0,
         ),

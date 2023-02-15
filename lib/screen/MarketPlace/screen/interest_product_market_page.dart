@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
@@ -14,8 +12,8 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
-import '../../../constant/group_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
+import 'detail_product_market_page_old.dart';
 
 class InterestProductMarketPage extends StatefulWidget {
   @override
@@ -79,7 +77,7 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
   _buildInterestComponent() {
     return InkWell(
       onTap: () {
-        pushToNextScreen(context, DetailProductMarketPage(id: 1));
+        pushToNextScreen(context, OldDetailProductMarketPage(id: "1"));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
@@ -121,7 +119,7 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
               ),
               changeBackground: transparent,
               function: () {
-                pushToNextScreen(context, DetailProductMarketPage(id: 1));
+                pushToNextScreen(context, OldDetailProductMarketPage(id: "1"));
               },
             ),
             Row(

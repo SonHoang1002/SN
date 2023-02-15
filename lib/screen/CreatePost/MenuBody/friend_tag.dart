@@ -80,7 +80,7 @@ class _FriendTagState extends State<FriendTag> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SearchInput(),
+           SearchInput(),
           const SizedBox(
             height: 8.0,
           ),

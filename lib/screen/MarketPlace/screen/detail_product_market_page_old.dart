@@ -16,18 +16,18 @@ import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import '../../Login/widgets/build_elevateButton_widget.dart';
 
-class DetailProductMarketPage extends StatefulWidget {
-  final dynamic data;
-  DetailProductMarketPage({required this.data});
+class OldDetailProductMarketPage extends StatefulWidget {
+  final String id;
+  OldDetailProductMarketPage({required this.id});
   @override
-  State<DetailProductMarketPage> createState() =>
-      _DetailProductMarketPageState();
+  State<OldDetailProductMarketPage> createState() =>
+      _OldDetailProductMarketPageState();
 }
 
-class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
+class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage> {
   late double width = 0;
   late double height = 0;
-  // Map<String, dynamic>? _product;
+  Map<String, dynamic>? _product;
   int product_number = 20;
   int _onMorePart = 0;
   bool _isConcern = false;
@@ -35,6 +35,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
   @override
   void initState() {
     super.initState();
+    _findData(widget.id);
   }
 
   @override
@@ -50,9 +51,9 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BackIconAppbar(),
-              AppBarTitle(title: "Chi tiết sản phẩm"),
-              Icon(
+              const BackIconAppbar(),
+              AppBarTitle(title: widget.id.toString()),
+              const Icon(
                 FontAwesomeIcons.bell,
                 size: 18,
                 color: Colors.black,
@@ -72,52 +73,32 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                       height: 350,
                       width: width,
                       child: ImageCacheRender(
-                          path: widget.data?["product_image_attachments"][0]
-                                  ["attachment"]["url"] ??
+                          path: _product?["img"] ??
                               "https://i.stack.imgur.com/hu3Fv.png"),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // color or size, ...
                           buildSpacer(height: 10),
-                          widget.data?["product_variants"] != null
-                              ? buildTextContent(
-                                  "Có ${(widget.data?["product_variants"].length)} lựa chọn khác",
-                                  false,
-                                  fontSize: 15)
-                              : SizedBox(),
+                          buildTextContent("Có 3 lựa chọn khác", false,
+                              fontSize: 15),
                           buildSpacer(height: 10),
                           // example color or size product
-
                           SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             child: Row(
-                              children: List.generate(
-                                  widget.data?["product_variants"].length,
-                                  (index) {
-                                final childProducts =
-                                    widget.data?["product_variants"];
-                                if (childProducts?[index]["image"] != null &&
-                                    childProducts?[index]["image"] != {}) {
-                                  return Container(
-                                      margin: EdgeInsets.only(right: 10),
-                                      child: ImageCacheRender(
-                                        path: childProducts?[index]["image"]
-                                            ["url"],
-                                        height: 80.0,
-                                        width: 80.0,
-                                      ));
-                                } else {
-                                  return Container(
+                              children: List.generate(10, (index) {
+                                final data = PersonalMarketPlaceConstants
+                                        .PERSONAL_MARKET_PLACE_PRODUCT_OF_YOU_CONTENTS[
+                                    "data"];
+                                return Container(
+                                    margin: const EdgeInsets.only(right: 10),
                                     height: 80,
                                     width: 80,
-                                    color: greyColor,
-                                  );
-                                }
+                                    color: Colors.red);
                               }).toList(),
                             ),
                           ),
@@ -128,12 +109,12 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                           ),
                           // title
                           buildSpacer(height: 10),
-                          buildTextContent(widget.data?["title"], true,
+                          buildTextContent(_product?["title"], true,
                               fontSize: 17),
                           // price
                           buildSpacer(height: 10),
                           buildTextContent(
-                            "₫${widget.data?["product_variants"][0]["price"].toString()} ",
+                            "₫${_product?["min_price"].toString()} ${_product?["max_price"] != null ? "- ₫${_product?["max_price"].toString()}" : ""}",
                             true,
                             fontSize: 18,
                             colorWord: Colors.red,
@@ -143,18 +124,17 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                           Container(
                             margin: const EdgeInsets.only(bottom: 10),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
                                   children: [
-                                    buildRatingStarWidget(
-                                        widget.data?["rating"].round()),
+                                    buildRatingStarWidget(_product?["rate"]),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           left: 10, right: 5),
                                       child: buildTextContent(
-                                          "${widget.data?["rating"].round().toString()}",
-                                          false,
+                                          "${_product?["rate"]}", false,
                                           fontSize: 18),
                                     ),
                                     Container(
@@ -165,7 +145,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                     Container(
                                       padding: const EdgeInsets.only(left: 5),
                                       child: buildTextContent(
-                                          "đã bán ${widget.data?["sold"].round()}",
+                                          "đã bán ${_product?["selled"]}",
                                           false,
                                           fontSize: 15),
                                     ),
@@ -194,7 +174,8 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                           width: 20,
                                           child: Icon(
                                             !_isConcern
-                                                ? Icons.star_purple500_outlined
+                                                ? Icons
+                                                    .star_purple500_outlined
                                                 : Icons.star_border,
                                             size: 20,
                                           ),
@@ -205,7 +186,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                         // color: Colors.green,
                                         height: 20,
                                         width: 20,
-                                        child: Icon(
+                                        child: const Icon(
                                           FontAwesomeIcons.envelope,
                                           size: 20,
                                         ),
@@ -215,7 +196,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                         // color: Colors.red,
                                         height: 20,
                                         width: 20,
-                                        child: Icon(
+                                        child: const Icon(
                                           FontAwesomeIcons.share,
                                           size: 20,
                                         ),
@@ -232,7 +213,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(right: 10),
+                                    margin: const EdgeInsets.only(right: 10),
                                     child: buildTextContent(
                                       "Số lượng:",
                                       true,
@@ -240,7 +221,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(right: 10),
+                                    margin: const EdgeInsets.only(right: 10),
                                     decoration: BoxDecoration(
                                         border: Border.all(
                                             color: Colors.grey, width: 0.4)),
@@ -258,7 +239,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                             height: 40,
                                             width: 40,
                                             color: primaryColor,
-                                            child: Center(
+                                            child: const Center(
                                                 child: Icon(
                                                     FontAwesomeIcons.minus)),
                                           ),
@@ -280,9 +261,9 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                             height: 40,
                                             width: 40,
                                             color: primaryColor,
-                                            child: Center(
-                                                child:
-                                                    Icon(FontAwesomeIcons.add)),
+                                            child: const Center(
+                                                child: Icon(
+                                                    FontAwesomeIcons.add)),
                                           ),
                                         ),
                                       ],
@@ -290,9 +271,9 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      " ${widget.data?["product_variants"][0]["inventory_quantity"].round()} sản phẩm có sẵn",
+                                      " ${_product?["selled"]} sản phẩm có sẵn",
                                       maxLines: 2,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                       ),
                                     ),
@@ -310,7 +291,8 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                               Row(
                                 children: List.generate(
                                     DetailProductMarketConstants
-                                        .DETAIL_PRODUCT_MARKET_CONTENTS.length,
+                                        .DETAIL_PRODUCT_MARKET_CONTENTS
+                                        .length,
                                     (index) => GestureDetector(
                                         onTap: () {
                                           setState(() {
@@ -340,45 +322,46 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                         ))),
                               ),
                               buildDivider(height: 10, color: Colors.red),
-                              // _onMorePart == 0
-                              //     ? Column(
-                              //         children: [
-                              //           buildSpacer(height: 10),
-                              //           buildTextContent(
-                              //               "Mô tả sản phẩm", true),
-                              //           buildSpacer(height: 10),
-                              //           Column(
-                              //             children: List.generate(
-                              //                 _product?["description"].length,
-                              //                 (index) {
-                              //               return Container(
-                              //                 margin:
-                              //                     EdgeInsets.only(bottom: 5),
-                              //                 child: buildTextContent(
-                              //                     "${_product?["description"][index]}",
-                              //                     false),
-                              //               );
-                              //             }),
-                              //           )
-                              //         ],
-                              //       )
-                              //     : SizedBox(),
-                              // _onMorePart == 1
-                              //     ? Column(
-                              //         children: List.generate(
-                              //             _product?["reviews"].length, (index) {
-                              //           return _buildReviewAndComment(
-                              //               _product?["reviews"][index]
-                              //                   ["username"],
-                              //               _product?["reviews"][index]
-                              //                   ["username"],
-                              //               _product?["reviews"][index]
-                              //                   ["rating"],
-                              //               _product?["reviews"][index]
-                              //                   ["comment"]);
-                              //         }).toList(),
-                              //       )
-                              //     : SizedBox()
+                              _onMorePart == 0
+                                  ? Column(
+                                      children: [
+                                        buildSpacer(height: 10),
+                                        buildTextContent(
+                                            "Mô tả sản phẩm", true),
+                                        buildSpacer(height: 10),
+                                        Column(
+                                          children: List.generate(
+                                              _product?["description"].length,
+                                              (index) {
+                                            return Container(
+                                              margin:
+                                                  const EdgeInsets.only(bottom: 5),
+                                              child: buildTextContent(
+                                                  "${_product?["description"][index]}",
+                                                  false),
+                                            );
+                                          }),
+                                        )
+                                      ],
+                                    )
+                                  : const SizedBox(),
+                              _onMorePart == 1
+                                  ? Column(
+                                      children: List.generate(
+                                          _product?["reviews"].length,
+                                          (index) {
+                                        return _buildReviewAndComment(
+                                            _product?["reviews"][index]
+                                                ["username"],
+                                            _product?["reviews"][index]
+                                                ["username"],
+                                            _product?["reviews"][index]
+                                                ["rating"],
+                                            _product?["reviews"][index]
+                                                ["comment"]);
+                                      }).toList(),
+                                    )
+                                  : const SizedBox()
                             ],
                           ),
                         ],
@@ -391,21 +374,21 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
             // add to cart and buy now
             Container(
               // height: 40,
-              margin: EdgeInsets.only(bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               width: width,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 10),
+                    margin: const EdgeInsets.only(right: 10),
                     child: buildElevateButtonWidget(
                         width: width * 0.6,
                         bgColor: Colors.orange[300],
                         title: "Thêm vào giỏ hàng",
                         iconData: FontAwesomeIcons.cartArrowDown,
                         function: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                               content: Text(
                             "Thêm vào giỏ hàng thành công",
                             style: TextStyle(color: Colors.green),
@@ -420,7 +403,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                         bgColor: Colors.red,
                         title: "Mua ngay",
                         function: () {
-                          pushToNextScreen(context, PaymentMarketPage());
+                          pushToNextScreen(context, const PaymentMarketPage());
                         }),
                   ),
                 ],
@@ -430,18 +413,18 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
         ));
   }
 
-  // _findData(String id) {
-  //   final datas = MainMarketBodyConstants
-  //       .MAIN_MARKETPLACE_BODY_SUGGEST_FOR_YOU_CONTENTS["data"];
-  //   for (int i = 0; i < datas.length; i++) {
-  //     if (datas[i]["id"] == id) {
-  //       setState(() {
-  //         _product = datas[i];
-  //       });
-  //       return;
-  //     }
-  //   }
-  // }
+  _findData(String id) {
+    final datas = MainMarketBodyConstants
+        .MAIN_MARKETPLACE_BODY_SUGGEST_FOR_YOU_CONTENTS["data"];
+    for (int i = 0; i < datas.length; i++) {
+      if (datas[i]["id"] == id) {
+        setState(() {
+          _product = datas[i];
+        });
+        return;
+      }
+    }
+  }
 }
 
 Widget _buildReviewAndComment(
@@ -458,7 +441,7 @@ Widget _buildReviewAndComment(
         prefixWidget: Container(
           height: 40,
           // width: 60,
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -470,13 +453,13 @@ Widget _buildReviewAndComment(
                     child: Image.asset(
                         MarketPlaceConstants.PATH_IMG + "cat_1.png")),
               ),
-              SizedBox()
+              const SizedBox()
             ],
           ),
         ),
         suffixFlexValue: 2,
         suffixWidget: Row(children: [
-          Icon(
+          const Icon(
             FontAwesomeIcons.ellipsis,
             color: blackColor,
             size: 15,

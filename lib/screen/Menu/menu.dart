@@ -59,130 +59,128 @@ class _MenuState extends State<Menu> {
       },
     ];
 
-    return NotificationListener<ScrollNotification>(
-        onNotification: _handleScrollNotification,
-        child: Scaffold(
-          key: _key,
-          drawer: Drawer(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            child: const DrawerFeed(),
-          ),
-          appBar: AppBar(
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () => _key.currentState!.openDrawer(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 0),
-                          child: Icon(
-                            Icons.menu,
-                            color:
-                                Theme.of(context).textTheme.displayLarge!.color,
-                          ),
-                        ),
+    return Scaffold(
+      key: _key,
+      drawer: Drawer(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        child: const DrawerFeed(),
+      ),
+      appBar: AppBar(
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () => _key.currentState!.openDrawer(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 0),
+                      child: Icon(
+                        Icons.menu,
+                        color:
+                            Theme.of(context).textTheme.displayLarge!.color,
                       ),
-                      const SizedBox(
-                        width: 7,
-                      ),
-                      const AppBarTitle(title: 'Menu'),
-                    ]),
-                Row(
-                  children: List.generate(
-                      iconAction.length,
-                      (index) => GestureDetector(
-                            onTap: () {
-                              iconAction[index]['action']();
-                            },
-                            child: Container(
-                                width: 30,
-                                height: 30,
-                                margin: const EdgeInsets.only(left: 5),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey.withOpacity(0.3)),
-                                child: Icon(
-                                  iconAction[index]['icon'],
-                                  size: 20,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .color,
-                                )),
-                          )),
-                )
-              ],
-            ),
-          ),
-          body: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              padding: const EdgeInsets.all(12.0),
-              child: Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
-                      const MenuUser(),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Container(
-                        height: 0.3,
-                        decoration: const BoxDecoration(color: greyColor),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const MenuShortcut(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        height: 0.3,
-                        decoration: const BoxDecoration(color: greyColor),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const MenuRender(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        height: 0.3,
-                        decoration: const BoxDecoration(color: greyColor),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        width: size.width - 40,
-                        height: 40, // <-- match_parent
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                backgroundColor: const Color(0xffdcdcdc)),
-                            onPressed: () {},
-                            child: const Text(
-                              "Đăng xuất",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 13),
-                            )),
-                      )
-                    ],
+                    ),
                   ),
-                ),
-              )),
-        ));
+                  const SizedBox(
+                    width: 7,
+                  ),
+                  const AppBarTitle(title: 'Menu'),
+                ]),
+            Row(
+              children: List.generate(
+                  iconAction.length,
+                  (index) => GestureDetector(
+                        onTap: () {
+                          iconAction[index]['action']();
+                        },
+                        child: Container(
+                            width: 30,
+                            height: 30,
+                            margin: const EdgeInsets.only(left: 5),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey.withOpacity(0.3)),
+                            child: Icon(
+                              iconAction[index]['icon'],
+                              size: 20,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .color,
+                            )),
+                      )),
+            )
+          ],
+        ),
+      ),
+      body: Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          padding: const EdgeInsets.all(12.0),
+          child: Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  const MenuUser(),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    height: 0.3,
+                    decoration: const BoxDecoration(color: greyColor),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  const MenuShortcut(),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    height: 0.3,
+                    decoration: const BoxDecoration(color: greyColor),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  const MenuRender(),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    height: 0.3,
+                    decoration: const BoxDecoration(color: greyColor),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(
+                    width: size.width - 40,
+                    height: 40, // <-- match_parent
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            backgroundColor: const Color(0xffdcdcdc)),
+                        onPressed: () {},
+                        child: const Text(
+                          "Đăng xuất",
+                          style:
+                              TextStyle(color: Colors.black, fontSize: 13),
+                        )),
+                  )
+                ],
+              ),
+            ),
+          )),
+    );
   }
 }

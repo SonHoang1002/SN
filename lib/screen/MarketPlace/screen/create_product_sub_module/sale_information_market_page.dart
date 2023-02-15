@@ -1,9 +1,13 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
 import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
@@ -14,13 +18,14 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import '../../../../helper/push_to_new_screen.dart';
 import '../../../../theme/colors.dart';
 
-class SaleInformationMarketPage extends StatefulWidget {
+class SaleInformationMarketPage extends ConsumerStatefulWidget {
   @override
-  State<SaleInformationMarketPage> createState() =>
+  ConsumerState<SaleInformationMarketPage> createState() =>
       _SaleInformationMarketPageState();
 }
 
-class _SaleInformationMarketPageState extends State<SaleInformationMarketPage> {
+class _SaleInformationMarketPageState
+    extends ConsumerState<SaleInformationMarketPage> {
   late double width = 0;
   late double height = 0;
 
@@ -32,31 +37,35 @@ class _SaleInformationMarketPageState extends State<SaleInformationMarketPage> {
 
   Map<String, dynamic> _categoryData = {
     "loai_1": {
-      "name": TextEditingController(text: ""),
+      "name": TextEditingController(text: "loai_1"),
       "values": [
-        TextEditingController(text: ""),
+        TextEditingController(text: "xanh"),
       ],
       "images": [""],
       "contents": {
         "price": [
-          TextEditingController(text: ""),
+          TextEditingController(text: "1"),
         ],
         "repository": [
-          TextEditingController(text: ""),
+          TextEditingController(text: "1"),
         ],
         "sku": [
-          TextEditingController(text: ""),
+          TextEditingController(text: "s"),
         ],
       },
     },
   };
+  @override
+  void dispose() {
+    super.dispose();
+
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    print("_categoryData: ${_categoryData["loai_1"]["images"]}");
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -68,6 +77,7 @@ class _SaleInformationMarketPageState extends State<SaleInformationMarketPage> {
               InkWell(
                 onTap: () {
                   if (validateInputs()) {
+                    _setData();
                     Navigator.pop(context);
                   }
                 },
@@ -659,6 +669,119 @@ class _SaleInformationMarketPageState extends State<SaleInformationMarketPage> {
     return _formKey.currentState!.validate();
   }
 
+  _setData() async {
+    Map<String, dynamic> oldData = ref.watch(newProductDataProvider).data;
+
+    // set product_options_attributes
+    // reset list
+    oldData["product_options_attributes"] = [];
+    oldData["product_variants_attributes"] = [];
+    // add loai_1
+    Map<String, dynamic> loai_1 = {
+      "name": _categoryData["loai_1"]["name"].text.trim(),
+      "position": 1,
+      "values":
+          _categoryData["loai_1"]["values"].map((e) => e.text.trim()).toList()
+    };
+    oldData["product_options_attributes"].add(loai_1);
+
+    // add loai_2 (neu co)
+    if (_categoryData["loai_2"] != null) {
+      Map<String, dynamic> loai_2 = {
+        "name": _categoryData["loai_2"]["name"].text.trim(),
+        "position": 2,
+        "values": _categoryData["loai_2"]["values"]
+            .map((e) => e["category_2_name"].text.trim())
+            .toList()
+      };
+      oldData["product_options_attributes"].add(loai_2);
+    }
+
+    // set product_variants_attributes
+    if (_categoryData["loai_2"] == null) {
+      List<String> imgList = _categoryData["loai_1"]["images"].toList();
+
+      List<String> imageIdList = await Future.wait(imgList.map((element) async {
+        String fileName = element.split('/').last;
+        FormData formData = FormData.fromMap({
+          "file": await MultipartFile.fromFile(element, filename: fileName),
+        });
+        final response = await MediaApi().uploadMediaEmso(formData);
+        return response["id"].toString();
+      }).toList());
+      print("state: ${imageIdList}");
+      for (int i = 0;
+          i < oldData["product_options_attributes"][0]["values"].length;
+          i++) {
+        oldData["product_variants_attributes"].add({
+          "title":
+              "${oldData["product"]["title"]} - ${oldData["product_options_attributes"][0]["values"][i]}",
+          "price": _categoryData["loai_1"]["contents"]["price"][i]
+              .text
+              .trim()
+              .toString(),
+          "sku": _categoryData["loai_1"]["contents"]["sku"][i]
+              .text
+              .trim()
+              .toString(),
+          "position": 1,
+          "compare_at_price": null,
+          "option1": oldData["product_options_attributes"][0]["values"][i],
+          "option2": null,
+          //////////////////
+          "image_id": imageIdList[i],
+          //////////////////
+          // chu y anh ben tren
+          "weight": 0.25,
+          "weight_unit": "Kg",
+          "inventory_quantity": 100,
+          "old_inventory_quantity": 100,
+          "requires_shipping": true
+        });
+      }
+    } else {
+      for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+        for (int z = 0; z < _categoryData["loai_2"]["values"].length; z++) {
+          oldData["product_variants_attributes"].add({
+            "title":
+                "${oldData["product"]["title"]} -${_categoryData["loai_1"]["values"][i].text.trim()} - ${_categoryData["loai_2"]["values"][z]["category_2_name"].text.trim()}",
+            "price": _categoryData["loai_2"]["values"][z]["price"][i]
+                .text
+                .trim()
+                .toString(),
+            "sku": _categoryData["loai_2"]["values"][z]["sku"][i]
+                .text
+                .trim()
+                .toString(),
+            "position": 2,
+            "compare_at_price": null,
+            "option1": _categoryData["loai_1"]["values"][i].text.trim(),
+            "option2": _categoryData["loai_2"]["values"][z]["category_2_name"]
+                .text
+                .trim(),
+            "image_id": _categoryData["loai_1"]["images"][i] ?? "",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 100,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+          });
+        }
+      }
+    }
+
+    ref.read(newProductDataProvider.notifier).updateNewProductData(oldData);
+  }
+
+  // Future<String> _convertImgFileToIdValue(String path) async {
+  //   String fileName = path.split('/').last;
+  //   FormData formData = FormData.fromMap({
+  //     "file": await MultipartFile.fromFile(path, filename: fileName),
+  //   });
+  //   final response = await MediaApi().uploadMediaEmso(formData);
+  //   return response["id"].toString();
+  // }
+
   Future getImage(ImageSource src, int index) async {
     XFile getImage = XFile("");
     getImage = (await ImagePicker().pickImage(source: src))!;
@@ -703,6 +826,7 @@ class _SaleInformationMarketPageState extends State<SaleInformationMarketPage> {
 // Map<String, dynamic> _categoryData = {
 //     "loai_1": {
 //       "name": TextEditingController(text: "loai 1"),
+//       "images": [""],
 //       "values": [
 //         TextEditingController(text: "xanh"),
 //         TextEditingController(text: "do"),

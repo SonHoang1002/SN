@@ -69,20 +69,20 @@ class SeeMoreMarketPage extends StatelessWidget {
                           final data = MainMarketBodyConstants
                                   .MAIN_MARKETPLACE_BODY_SUGGEST_FOR_YOU_CONTENTS[
                               "data"];
-                          return buildProductItem(
-                              context,
-                              data[index]["id"],
-                              data[index]["img"],
-                              width,
-                              data[index]["title"],
-                              [
-                                data[index]["min_price"],
-                                data[index]["max_price"] != null
-                                    ? data[index]["max_price"]
-                                    : null
-                              ],
-                              data[index]["rate"],
-                              data[index]["selled"]);
+                          return buildOldProductItem(
+                                context: context,
+                                id: data[index]["id"].toString(),
+                                imgPath: data[index]["img"],
+                                width: width,
+                                title: data[index]["title"],
+                                price: [
+                                  data[index]["min_price"],
+                                  data[index]["max_price"] != null
+                                      ? data[index]["max_price"]
+                                      : null
+                                ],
+                                rate: data[index]["rate"],
+                                selled: data[index]["selled"]);
                         }),
                   ),
                 ],

@@ -48,7 +48,7 @@ class _GifState extends State<Gif> {
     return Column(
       children: [
         Container(
-            margin: const EdgeInsets.all(8.0), child: const SearchInput()),
+            margin: const EdgeInsets.all(8.0), child:  SearchInput()),
         Expanded(
             child: GridView.builder(
                 shrinkWrap: true,

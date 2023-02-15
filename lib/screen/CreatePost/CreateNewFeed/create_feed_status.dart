@@ -268,111 +268,114 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                   ))
             ],
           ),
-          Positioned(
-            bottom: 8,
-            left: 8,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isActiveBackground = !isActiveBackground;
-                    });
-                  },
-                  child: isActiveBackground
-                      ? const WrapBackground(
-                          widgetChild: Icon(FontAwesomeIcons.chevronLeft,
-                              color: greyColor, size: 20),
-                        )
-                      : Image.asset(
-                          "assets/post_background.png",
-                          width: 28,
-                        ),
-                ),
-                isActiveBackground
-                    ? SizedBox(
-                        width: size.width - 70,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    backgroundSelected = null;
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 5),
-                                  width: 26,
-                                  height: 26,
-                                  decoration: BoxDecoration(
-                                      color: white,
-                                      border: Border.all(
-                                          width: 0.1, color: greyColor),
-                                      borderRadius: BorderRadius.circular(5)),
-                                ),
-                              ),
-                              Row(
-                                children: List.generate(
-                                    backgroundPost.sublist(0, 15).length,
-                                    (index) => BackgroundItem(
-                                          updateBackgroundSelected:
-                                              (background) {
-                                            setState(() {
-                                              backgroundSelected = background;
-                                            });
-                                          },
-                                          backgroundSelected:
-                                              backgroundSelected,
-                                          background: backgroundPost[index],
-                                        )),
-                              ),
-                            ],
-                          ),
-                        ))
-                    : const SizedBox(),
-                isActiveBackground
-                    ? GestureDetector(
+          !widget.isShowBackground
+              ? const SizedBox()
+              : Positioned(
+                  bottom: 8,
+                  left: 8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
                         onTap: () {
                           setState(() {
-                            isActiveBackground = false;
+                            isActiveBackground = !isActiveBackground;
                           });
-                          showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              barrierColor: Colors.transparent,
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(10))),
-                              builder: (BuildContext context) {
-                                return PostBackground(
-                                  backgroundSelected: backgroundSelected,
-                                  updateBackgroundSelected: (background) {
-                                    setState(() {
-                                      backgroundSelected = background;
-                                    });
-                                  },
-                                );
-                              });
                         },
-                        child: const WrapBackground(
-                          widgetChild: Icon(
-                            FontAwesomeIcons.box,
-                            size: 20,
-                            color: greyColor,
-                          ),
-                        ),
-                      )
-                    : const SizedBox()
-              ],
-            ),
-          ),
+                        child: isActiveBackground
+                            ? const WrapBackground(
+                                widgetChild: Icon(FontAwesomeIcons.chevronLeft,
+                                    color: greyColor, size: 20),
+                              )
+                            : Image.asset(
+                                "assets/post_background.png",
+                                width: 28,
+                              ),
+                      ),
+                      isActiveBackground
+                          ? SizedBox(
+                              width: size.width - 70,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        widget.handleUpdateData(
+                                            'update_background', null);
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.only(right: 5),
+                                        width: 26,
+                                        height: 26,
+                                        decoration: BoxDecoration(
+                                            color: white,
+                                            border: Border.all(
+                                                width: 0.1, color: greyColor),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: List.generate(
+                                          backgroundPost.sublist(0, 15).length,
+                                          (index) => BackgroundItem(
+                                                updateBackgroundSelected:
+                                                    (background) {
+                                                  widget.handleUpdateData(
+                                                      'update_background',
+                                                      background);
+                                                },
+                                                backgroundSelected:
+                                                    widget.backgroundSelected,
+                                                background:
+                                                    backgroundPost[index],
+                                              )),
+                                    ),
+                                  ],
+                                ),
+                              ))
+                          : const SizedBox(),
+                      isActiveBackground
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isActiveBackground = false;
+                                });
+                                showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    barrierColor: Colors.transparent,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(10))),
+                                    builder: (BuildContext context) {
+                                      return PostBackground(
+                                        backgroundSelected:
+                                            widget.backgroundSelected,
+                                        updateBackgroundSelected: (background) {
+                                          widget.handleUpdateData(
+                                              'update_background', background);
+                                        },
+                                      );
+                                    });
+                              },
+                              child: const WrapBackground(
+                                widgetChild: Icon(
+                                  FontAwesomeIcons.box,
+                                  size: 20,
+                                  color: greyColor,
+                                ),
+                              ),
+                            )
+                          : const SizedBox()
+                    ],
+                  ),
+                ),
         ],
       ),
     );

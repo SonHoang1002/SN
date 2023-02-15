@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../../constant/group_constants.dart';
 import '../../../../helper/push_to_new_screen.dart';
 import '../../../../providers/group/hide_group_provider.dart';
-import '../../../../providers/select_private_rule_bloc.dart';
+import '../../../../providers/select_private_rule_provider.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
