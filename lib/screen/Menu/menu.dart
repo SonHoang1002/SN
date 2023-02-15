@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu_user.dart';
-import 'package:social_network_app_mobile/screen/Setting/darkmode_setting.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -52,14 +51,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         "action": () {
           Navigator.push(context,
               CupertinoPageRoute(builder: (context) => const Setting()));
-        }
-      },
-      {
-        "icon": Icons.dark_mode,
-        'type': 'icon',
-        "action": () {
-          Navigator.push(context,
-              CupertinoPageRoute(builder: (context) => const DarkModeSetting()));
         }
       },
       {

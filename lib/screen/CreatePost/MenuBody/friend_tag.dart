@@ -56,7 +56,6 @@ class _FriendTagState extends State<FriendTag> {
                       width: double.infinity,
                       height: 60,
                       child: ListView.builder(
-                        shrinkWrap: true,
                           itemCount: friendSelected.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) => Container(
