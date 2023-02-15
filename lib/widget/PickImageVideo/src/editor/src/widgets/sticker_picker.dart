@@ -1,7 +1,8 @@
 import 'dart:math' as math;
 
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/editor/editor.dart';
 import 'package:flutter/material.dart';
+
+import '../../editor.dart';
 
 ///
 class StickerPicker extends StatelessWidget {

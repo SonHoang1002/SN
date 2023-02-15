@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/friends.dart';
-import 'package:social_network_app_mobile/widget/avatar_social.dart';
-import 'package:social_network_app_mobile/widget/search_input.dart';
+
+import '../../../constant/common.dart';
+import '../../../data/friends.dart';
+import '../../../widget/avatar_social.dart';
+import '../../../widget/search_input.dart';
 
 class FriendTag extends StatefulWidget {
   final Function handleUpdateSelectedFriend;
@@ -40,7 +41,7 @@ class _FriendTagState extends State<FriendTag> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SearchInput(),
+           SearchInput(),
           const SizedBox(
             height: 8.0,
           ),

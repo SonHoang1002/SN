@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class TitleDescriptionAndContentListWidget extends StatelessWidget {
   final String title;
@@ -32,29 +28,31 @@ class TitleDescriptionAndContentListWidget extends StatelessWidget {
                   Text(
                     title,
                     style: const TextStyle(
-                        // color: Colors.white,
+                        // color:  white,
                         fontSize: 19,
                         fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               // account  description
-              subTitle==null ? Container(): Container(
-                alignment: Alignment.centerLeft,
-                child: Wrap(
-                  textDirection: TextDirection.ltr,
-                  children: [
-                    Text(
-                      subTitle!,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                        // color: Colors.grey,
-                        fontSize: 15,
+              subTitle == null
+                  ? Container()
+                  : Container(
+                      alignment: Alignment.centerLeft,
+                      child: Wrap(
+                        textDirection: TextDirection.ltr,
+                        children: [
+                          Text(
+                            subTitle!,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              // color: Colors.grey,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
               const SizedBox(
                 height: 10,
               ),
@@ -69,8 +67,6 @@ class TitleDescriptionAndContentListWidget extends StatelessWidget {
     );
   }
 }
-
-
 
 Widget setDivider(
     {double? left = 0,
@@ -112,7 +108,7 @@ Widget setDivider(
 //                           style: TextStyle(
 //                               fontSize: 15,
 //                               fontWeight: FontWeight.bold,
-//                               color: Colors.white)),
+//                               color:  white)),
 //                       Text(contentList[index][2],
 //                           style: TextStyle(fontSize: 15, color: Colors.grey)),
 //                     ],
@@ -125,7 +121,7 @@ Widget setDivider(
 //                           borderRadius: BorderRadius.all(Radius.circular(20))),
 //                       child: SvgPicture.asset(
 //                         contentList[index][0],
-//                         color: Colors.white,
+//                         color:  white,
 //                       ),
 //                     ),
 //                     changeBackground: Colors.transparent,

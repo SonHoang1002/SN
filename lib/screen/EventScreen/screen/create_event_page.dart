@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
-import 'package:social_network_app_mobile/constant/event_constants.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/EventScreen/screen/detail_event_page.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+
+import '../../../constant/event_constants.dart';
+import '../../../helper/push_to_new_screen.dart';
+import '../../../theme/colors.dart';
+import '../../../widget/GeneralWidget/information_component_widget.dart';
+import '../../../widget/appbar_title.dart';
+import 'detail_event_page.dart';
 
 class CreateEventPage extends StatelessWidget {
   const CreateEventPage({super.key});
@@ -41,7 +42,7 @@ class CreateEventPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
-                    // color: Colors.white
+                    // color:  white
                   ),
                 ),
               ],
@@ -80,7 +81,7 @@ class CreateEventPage extends StatelessWidget {
           //             child: Icon(
           //           CreateEventConstants.LIVE_MEETING_COMPONENT[0],
           //           size: 15,
-          //           color: Colors.white,
+          //           color:  white,
           //         )),
           //         decoration: BoxDecoration(
           //             color: Colors.grey[700],
@@ -94,7 +95,7 @@ class CreateEventPage extends StatelessWidget {
           //                 style: TextStyle(
           //                   fontSize: 23,
           //                   fontWeight: FontWeight.bold,
-          //                   // color: Colors.white
+          //                   // color:  white
           //                 ))
           //           ],
           //         ),
@@ -117,7 +118,7 @@ class CreateEventPage extends StatelessWidget {
           //       margin: EdgeInsets.only(right: 10),
           //       child: Icon(
           //         EventConstants.ICON_DATA_NEXT,
-          //         // color: Colors.white,
+          //         // color:  white,
           //       ),
           //     ),
           //     changeBackground: Colors.grey[500],
@@ -150,7 +151,7 @@ _buildCreateEventComponent(
               child: Icon(
             iconData,
             size: 15,
-            color: Colors.white,
+            color: white,
           )),
           decoration: BoxDecoration(
               color: Colors.grey[700],
@@ -164,7 +165,7 @@ _buildCreateEventComponent(
                   style: TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
-                    // color: Colors.white
+                    // color:  white
                   ))
             ],
           ),
@@ -187,7 +188,7 @@ _buildCreateEventComponent(
         margin: EdgeInsets.only(right: 10),
         child: Icon(
           EventConstants.ICON_DATA_NEXT,
-          // color: Colors.white,
+          // color:  white,
         ),
       ),
       changeBackground: Colors.grey[500],

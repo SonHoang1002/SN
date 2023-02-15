@@ -1,16 +1,18 @@
 import 'dart:async';
 
-import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/animations/animations.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/camera_builder.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/camera_overlay.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/raw_camera_view.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/ui_handler.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_builder.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_permission_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../../../../../theme/colors.dart';
+import '../../../drishya_picker.dart';
+import '../../animations/animations.dart';
+import '../../gallery/src/widgets/gallery_builder.dart';
+import '../../gallery/src/widgets/gallery_permission_view.dart';
+import 'widgets/camera_builder.dart';
+import 'widgets/camera_overlay.dart';
+import 'widgets/raw_camera_view.dart';
+import 'widgets/ui_handler.dart';
 
 const Duration _kRouteDuration = Duration(milliseconds: 300);
 
@@ -277,7 +279,7 @@ class _GalleryView extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 child: Icon(
                   CupertinoIcons.camera_circle_fill,
-                  color: Colors.white,
+                  color: white,
                   size: 40,
                 ),
               ),

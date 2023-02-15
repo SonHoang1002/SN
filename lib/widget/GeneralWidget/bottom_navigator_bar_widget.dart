@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/providers/route_provider.dart';
-import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
+
+import '../../providers/route_provider.dart';
+import '../../screen/Setting/setting_constants/general_settings_constants.dart';
+import '../../theme/colors.dart';
 
 // Widget BottomNavigatorBarWidget(BuildContext context) {
 //   List<bool> routeList = Provider.of<RouteProvider>(
@@ -44,7 +46,7 @@ import 'package:social_network_app_mobile/screen/Setting/setting_constants/gener
 //                                   color: Provider.of<RouteProvider>(context)
 //                                           .getRouteList[index]
 //                                       ? Colors.blue
-//                                       : Colors.white,
+//                                       :  white,
 //                                   size: 22,
 //                                 ),
 //                               )
@@ -69,7 +71,7 @@ import 'package:social_network_app_mobile/screen/Setting/setting_constants/gener
 //                                   color: Provider.of<RouteProvider>(context)
 //                                           .getRouteList[index]
 //                                       ? Colors.blue
-//                                       : Colors.white,
+//                                       :  white,
 //                                   fontSize: Provider.of<RouteProvider>(context)
 //                                           .getRouteList[index]
 //                                       ? 12
@@ -128,7 +130,7 @@ Widget buildBottomNavigatorBarWidget(BuildContext context) {
                                   context,
                                 ).getRouteList[index]
                                     ? Colors.blue
-                                    : Colors.white,
+                                    : white,
                                 size: 22,
                               ),
                             )
@@ -160,7 +162,7 @@ Widget buildBottomNavigatorBarWidget(BuildContext context) {
                                   context,
                                 ).getRouteList[index]
                                     ? Colors.blue
-                                    : Colors.white,
+                                    : white,
                                 fontSize: Provider.of<RouteProvider>(
                                   context,
                                 ).getRouteList[index]

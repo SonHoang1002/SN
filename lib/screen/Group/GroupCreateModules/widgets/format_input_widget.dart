@@ -14,7 +14,7 @@
 //             borderRadius: BorderRadius.all(
 //               Radius.circular(5),
 //             ),
-//             border: Border.all(color: Colors.white)),
+//             border: Border.all(color:  white)),
 //         child: Row(
 //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //           children: [
@@ -73,7 +73,7 @@
 //                     color: Colors.grey[700]),
 //                 child: Icon(
 //                   iconData,
-//                   color: Colors.white,
+//                   color:  white,
 //                 ),
 //               ),
 //             ),
@@ -92,7 +92,7 @@
 //                           margin: EdgeInsets.only(top: 5),
 //                           child: Text(title,
 //                               style: TextStyle(
-//                                   color: Colors.white,
+//                                   color:  white,
 //                                   fontSize: 15,
 //                                   fontWeight: FontWeight.bold)),
 //                         ),
@@ -100,7 +100,7 @@
 //                           margin: EdgeInsets.only(bottom: 5),
 //                           child: Text(content,
 //                               style:
-//                                   TextStyle(color: Colors.white, fontSize: 13)),
+//                                   TextStyle(color:  white, fontSize: 13)),
 //                         ),
 //                       ],
 //                     ),
@@ -156,7 +156,7 @@
 //           borderRadius: BorderRadius.all(
 //             Radius.circular(5),
 //           ),
-//           border: Border.all(color: Colors.white)),
+//           border: Border.all(color:  white)),
 //       child: Row(
 //         children: [
 //           Flexible(
@@ -172,7 +172,7 @@
 //                   color: Colors.grey[800]),
 //               child: Icon(
 //                 iconData,
-//                 color: Colors.white,
+//                 color:  white,
 //               ),
 //             ),
 //           ),
@@ -194,7 +194,7 @@
 //                       margin: EdgeInsets.only(bottom: 5),
 //                       child: Text(content,
 //                           style: TextStyle(
-//                               color: Colors.white,
+//                               color:  white,
 //                               fontSize: 15,
 //                               fontWeight: FontWeight.bold)),
 //                     ),
@@ -261,7 +261,7 @@
 //                         }),
 //                         child: Icon(
 //                           Icons.close,
-//                           color: Colors.white,
+//                           color:  white,
 //                         ),
 //                       ),
 //                       flex: 2,
@@ -272,7 +272,7 @@
 //                           child: Center(
 //                         child: Text(
 //                           "Chọn quyền riêng tư",
-//                           style: TextStyle(color: Colors.white, fontSize: 18),
+//                           style: TextStyle(color:  white, fontSize: 18),
 //                         ),
 //                       )),
 //                     ),
@@ -282,7 +282,7 @@
 //               // divider
 //               Divider(
 //                 height: 4,
-//                 color: Colors.white,
+//                 color:  white,
 //               ),
 //               SizedBox(
 //                 height: 10,
@@ -353,7 +353,7 @@
 //                         }),
 //                         child: Icon(
 //                           Icons.close,
-//                           color: Colors.white,
+//                           color:  white,
 //                         ),
 //                       ),
 //                       flex: 2,
@@ -364,7 +364,7 @@
 //                           child: Center(
 //                         child: Text(
 //                           "Ẩn nhóm",
-//                           style: TextStyle(color: Colors.white, fontSize: 18),
+//                           style: TextStyle(color:  white, fontSize: 18),
 //                         ),
 //                       )),
 //                     ),
@@ -373,7 +373,7 @@
 //               ),
 //               Divider(
 //                 height: 4,
-//                 color: Colors.white,
+//                 color:  white,
 //               ),
 //               SizedBox(
 //                 height: 10,

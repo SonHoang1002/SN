@@ -6,7 +6,6 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navig
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-
 class DescriptionEventPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
@@ -55,7 +54,7 @@ class DescriptionEventPage extends StatelessWidget {
                         Text(
                           DescriptionEventConstants.DESCRIPTION_EVENT_TITLE,
                           style: const TextStyle(
-                              // color: Colors.white,
+                              // color:  white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
@@ -78,7 +77,7 @@ class DescriptionEventPage extends StatelessWidget {
                         onChanged: ((value) {}),
                         maxLines: 10,
                         style: const TextStyle(
-                            // color: Colors.white
+                            // color:  white
                             ),
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(

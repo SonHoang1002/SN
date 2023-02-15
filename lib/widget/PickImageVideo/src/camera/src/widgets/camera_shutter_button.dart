@@ -2,11 +2,11 @@
 
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/camera_builder.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 ///
 class CameraShutterButton extends StatelessWidget {
@@ -247,7 +247,7 @@ class _CustomPainter extends CustomPainter {
   _CustomPainter({
     this.progress = 0.0,
     this.strokeWidth = 7.0,
-    this.strokeColor = Colors.white,
+    this.strokeColor = white,
     this.progressColor = primaryColor,
   });
 
@@ -333,7 +333,7 @@ class _PulseState extends State<_Pulse> {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.9),
+                    color: white.withOpacity(0.9),
                   ),
                 ),
               ),

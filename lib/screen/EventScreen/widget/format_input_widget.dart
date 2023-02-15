@@ -13,7 +13,7 @@ class FormatInputEventWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 5, 0, 5),
       decoration: BoxDecoration(
-          // border: Border.all(color: Colors.white, width: 1),
+          // border: Border.all(color:  white, width: 1),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(children: listWidget.map((e) => e).toList()),
     );

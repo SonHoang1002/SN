@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/group_constants.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
@@ -62,7 +63,7 @@ class _DetailGroupPageState extends State<DetailGroupPage> {
                         Text(
                           DescriptionGroupConstants.TITLE[0],
                           style: const TextStyle(
-                              // color: Colors.white,
+                              // color:  white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
@@ -73,7 +74,7 @@ class _DetailGroupPageState extends State<DetailGroupPage> {
                     ),
                     Text(DescriptionGroupConstants.SUBTITLE[0],
                         style: const TextStyle(
-                            // color: Colors.white,
+                            // color:  white,
                             fontSize: 15)),
                     const SizedBox(
                       height: 20,
@@ -85,7 +86,7 @@ class _DetailGroupPageState extends State<DetailGroupPage> {
                         onChanged: ((value) {}),
                         maxLines: 10,
                         style: const TextStyle(
-                            // color: Colors.white
+                            // color:  white
                             ),
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(

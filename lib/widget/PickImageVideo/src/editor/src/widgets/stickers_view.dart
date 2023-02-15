@@ -1,6 +1,7 @@
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/editor/editor.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/editor/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+
+import '../../editor.dart';
+import 'widgets.dart';
 
 const _minStickerScale = 1.0;
 

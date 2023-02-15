@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/constant/page_constants.dart';
-import 'package:social_network_app_mobile/providers/current_number_page.dart';
-import 'package:social_network_app_mobile/providers/page/category_bloc.dart';
-import 'package:social_network_app_mobile/providers/search_category_bloc.dart';
+import '../../../../constant/page_constants.dart';
+import '../../../../providers/current_number_page.dart';
+import '../../../../providers/page/category_bloc.dart';
+import '../../../../providers/search_category_bloc.dart';
 
-import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/information_page_page.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+import 'information_page_page.dart';
+import '../../../../theme/colors.dart';
+import '../../../../widget/appbar_title.dart';
+import '../../../../widget/back_icon_appbar.dart';
 
 import '../../../../widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
-import '../../../Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/how_people_can_find_you_on_facebook_modules/how_people_can_find_you_on_facebook_commons.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -64,7 +64,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                     Text(
                                       CategoryPageConstants.QUESTION_NAME[0],
                                       style: const TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 22,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -76,7 +76,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                 // description for question
                                 Text(CategoryPageConstants.QUESTION_NAME[1],
                                     style: const TextStyle(
-                                        // color: Colors.white,
+                                        // color:  white,
                                         fontSize: 20)),
                                 const SizedBox(
                                   height: 10,
@@ -114,7 +114,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                                 ? Container()
                                                 : TextFormField(
                                                     style: TextStyle(
-                                                        // color: Colors.white
+                                                        // color:  white
                                                         ),
                                                     controller:
                                                         _categoryController,
@@ -145,7 +145,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                       Flexible(
                                           child: Icon(
                                         Icons.search,
-                                        // color: Colors.white,
+                                        // color:  white,
                                       )),
                                     ],
                                   ),
@@ -177,7 +177,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                       Text(
                                         CategoryPageConstants.TITLE,
                                         style: TextStyle(
-                                            // color: Colors.white,
+                                            // color:  white,
                                             fontSize: 15),
                                       ),
                                     ],
@@ -302,7 +302,7 @@ class _CategoryPageState extends State<CategoryPage> {
                               decoration: BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15)),
-                                  color: Colors.white),
+                                  color: white),
                             ),
                           ),
                           SizedBox(
@@ -314,9 +314,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 Text(
                   value,
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                      color: white, fontSize: 20, fontWeight: FontWeight.bold),
                 )
               ],
             ),
@@ -368,7 +366,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 Text(
                   value,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: white,
                     fontSize: 20,
                   ),
                 )
@@ -376,7 +374,7 @@ class _CategoryPageState extends State<CategoryPage> {
             )),
             Divider(
               height: 2,
-              color: Colors.white,
+              color: white,
             )
           ],
         ),

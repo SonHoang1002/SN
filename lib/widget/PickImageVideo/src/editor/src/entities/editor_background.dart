@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../drishya_picker.dart';
 
 ///
 /// Fully customizable background for editor.

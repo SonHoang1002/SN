@@ -2,13 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/constant/page_constants.dart';
-import 'package:social_network_app_mobile/providers/select_province_page_bloc.dart';
-import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/avatar_page_page.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/avatar_page_page.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+
+import '../../../../constant/page_constants.dart';
+import '../../../../providers/select_province_page_bloc.dart';
+import '../../../../theme/colors.dart';
+import 'avatar_page_page.dart';
 
 class InformationPagePage extends StatefulWidget {
   @override
@@ -61,7 +63,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                                 Text(
                                   InformationPageConstants.TITLE_INFO[0],
                                   style: const TextStyle(
-                                      // color: Colors.white,
+                                      // color:  white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -73,7 +75,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                             // congratulation subtitle
                             Text(InformationPageConstants.TITLE_INFO[1],
                                 style: const TextStyle(
-                                    // color: Colors.white,
+                                    // color:  white,
                                     fontSize: 18)),
                             buildSpacer(
                               height: 10,
@@ -90,7 +92,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                                 children: [
                                   Text("Mô tả về Trang của bạn",
                                       style: const TextStyle(
-                                          // color: Colors.white,
+                                          // color:  white,
                                           fontSize: 14)),
                                 ],
                               ),
@@ -252,7 +254,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
           }
         }
       },
-      // style: const TextStyle(color: Colors.white),
+      // style: const TextStyle(color:  white),
       keyboardType: placeHolder == InformationPageConstants.PLACEHOLDER_INFO[3]
           ? TextInputType.number
           : null,
@@ -261,7 +263,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
               ? Icon(
                   // Icons.next_plan,
                   CupertinoIcons.greaterthan,
-                  color: Colors.white,
+                  color: white,
                 )
               : null,
           counterText: "",
@@ -285,7 +287,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
       title: Text(
         InformationPageConstants.CONTENT_OF_WORK_TIME[indexOfRadio][0],
         style: TextStyle(
-            // color: Colors.white,
+            // color:  white,
             fontSize: 17),
       ),
       subtitle: Text(
@@ -317,7 +319,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
               child: Center(
                 child: Icon(
                   icon,
-                  color: Colors.white,
+                  color: white,
                 ),
               ),
               decoration: BoxDecoration(
@@ -345,7 +347,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                       children: [
                         Text(value,
                             style: const TextStyle(
-                                // color: Colors.white,
+                                // color:  white,
                                 fontSize: 18)),
                       ],
                     );
@@ -397,7 +399,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                           .read<SelectProvinceProvider>()
                           .setSelectProvinceProvider(value);
                     }),
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: white),
                     decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -440,7 +442,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                                                 context)
                                             .selectList[index],
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: white,
                                           fontSize: 20,
                                         ),
                                       )
@@ -448,7 +450,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                                   )),
                                   Divider(
                                     height: 2,
-                                    color: Colors.white,
+                                    color: white,
                                   )
                                 ],
                               ),
@@ -456,7 +458,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                           }
                           return Center(
                               child: Text(" Không có dữ liệu",
-                                  style: TextStyle(color: Colors.white)));
+                                  style: TextStyle(color: white)));
                         }))),
               ]),
             );

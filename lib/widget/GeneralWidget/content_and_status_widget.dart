@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../screen/Setting/setting_constants/general_settings_constants.dart';
+import '../../theme/colors.dart';
+import 'text_content_widget.dart';
 
 buildContentAndStatusWidget(String title,
     {List<Map<String, dynamic>>? contents, Function? function}) {
@@ -29,10 +31,10 @@ buildContentAndStatusWidget(String title,
                   children: [
                     Expanded(
                       child: buildTextContent(
-                          contents[index]["content"]!.toString(), false,
-                          fontSize: 15,
-                          //  colorWord: Colors.grey
-                           ),
+                        contents[index]["content"]!.toString(), false,
+                        fontSize: 15,
+                        //  colorWord: Colors.grey
+                      ),
                     ),
                     contents[index]["status"] != null
                         ? GestureDetector(
@@ -54,11 +56,11 @@ buildContentAndStatusWidget(String title,
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
-                                            SettingConstants.PATH_ICON +
-                                                "bell_icon.svg",
-                                            height: 15,
-                                            // color: Colors.white
-                                            ),
+                                          SettingConstants.PATH_ICON +
+                                              "bell_icon.svg",
+                                          height: 15,
+                                          // color:  white
+                                        ),
                                         Container(
                                           margin: EdgeInsets.only(
                                               left: 5, right: 5),
@@ -71,7 +73,7 @@ buildContentAndStatusWidget(String title,
                                         Icon(
                                           SettingConstants.DOWN_ICON_DATA,
                                           size: 15,
-                                          // color: Colors.white,
+                                          // color:  white,
                                         )
                                       ],
                                     ),
@@ -94,7 +96,7 @@ _buildDivider() {
   return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: Divider(
-        color: Colors.white,
+        color: white,
         height: 10,
       ));
 }

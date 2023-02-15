@@ -1,12 +1,13 @@
 import 'dart:ui' as ui;
 
-import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/ui_handler.dart';
-import 'package:social_network_app_mobile/widget/PickImageVideo/src/editor/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../../../drishya_picker.dart';
+import '../../../camera/src/widgets/ui_handler.dart';
+import '../widgets/widgets.dart';
 
 /// Drishya editing controller
 class DrishyaEditingController extends ValueNotifier<EditorValue> {

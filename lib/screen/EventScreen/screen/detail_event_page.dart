@@ -15,6 +15,7 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../providers/event/selection_private_event_provider.dart';
+import '../../../theme/colors.dart';
 
 class DetailEventPage extends StatefulWidget {
   @override
@@ -97,7 +98,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                           style: TextStyle(
                             fontSize: 27,
                             fontWeight: FontWeight.bold,
-                            // color: Colors.white
+                            // color:  white
                           ),
                         ),
                       ],
@@ -111,7 +112,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            // color: Colors.white
+                            // color:  white
                           )),
                       buildSpacer(height: 5),
                       Text(DetailEventConstants.USER_EXAMPLE[2],
@@ -137,7 +138,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                     child: TextFormField(
                       controller: _nameEventController,
                       style: TextStyle(
-                          // color: Colors.white
+                          // color:  white
                           ),
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -154,10 +155,10 @@ class _DetailEventPageState extends State<DetailEventPage> {
                           labelText:
                               DetailEventConstants.EVENT_NAME_PLACEHOLDER,
                           labelStyle: TextStyle(
-                              // color: Colors.white
+                              // color:  white
                               ),
                           hintStyle: TextStyle(
-                              // color: Colors.white
+                              // color:  white
                               )),
                     ),
                   ),
@@ -176,7 +177,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                         _showBottomSheetDayAndTimePicker(context);
                       }),
                       style: TextStyle(
-                          // color: Colors.white
+                          // color:  white
                           ),
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -194,10 +195,10 @@ class _DetailEventPageState extends State<DetailEventPage> {
                           labelText:
                               DetailEventConstants.DAY_AND_TIME_BEGIN_TITLE,
                           labelStyle: TextStyle(
-                              // color: Colors.white
+                              // color:  white
                               ),
                           hintStyle: TextStyle(
-                              // color: Colors.white
+                              // color:  white
                               )),
                     ),
                   ),
@@ -214,7 +215,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                               _showBottomSheetDayAndTimePicker(context);
                             }),
                             style: TextStyle(
-                                // color: Colors.white
+                                // color:  white
                                 ),
                             decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
@@ -233,10 +234,10 @@ class _DetailEventPageState extends State<DetailEventPage> {
                                 labelText:
                                     DetailEventConstants.DAY_AND_TIME_END_TITLE,
                                 labelStyle: TextStyle(
-                                    // color: Colors.white
+                                    // color:  white
                                     ),
                                 hintStyle: TextStyle(
-                                    // color: Colors.white
+                                    // color:  white
                                     )),
                           ),
                         )
@@ -283,7 +284,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              // color: Colors.white
+                              // color:  white
                             )),
                         buildSpacer(height: 5),
                         Text(
@@ -307,7 +308,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                                   BorderRadius.all(Radius.circular(20))),
                           child: Icon(
                             DetailEventConstants.PRIVATE_RULE_COMPONENT[0],
-                            color: Colors.white,
+                            color: white,
                             size: 15,
                           )),
                       changeBackground: Colors.transparent,
@@ -317,7 +318,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                         margin: EdgeInsets.only(right: 10),
                         child: Icon(
                           EventConstants.ICON_DATA_NEXT,
-                          // color: Colors.white,
+                          // color:  white,
                           size: 13,
                         ),
                       ),
@@ -394,7 +395,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                           child: Center(
                         child: Text(
                           DetailEventConstants.PRIVATE_OF_EVENT,
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: TextStyle(color: white, fontSize: 18),
                         ),
                       )),
                     ],
@@ -402,7 +403,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                 ),
                 Divider(
                   height: 4,
-                  color: Colors.white,
+                  color: white,
                 ),
                 buildSpacer(height: 15),
                 Container(
@@ -444,7 +445,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                                 DetailEventConstants
                                     .SELECTION_FOR_PRIVATE_OF_EVENT[index][1],
                                 style: TextStyle(
-                                    color: Colors.white,
+                                    color: white,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -468,7 +469,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                               child: Icon(
                                 DetailEventConstants
                                     .SELECTION_FOR_PRIVATE_OF_EVENT[index][0],
-                                color: Colors.white,
+                                color: white,
                                 size: 14,
                               ),
                             ),
@@ -501,7 +502,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                     ? Column(children: [
                         Divider(
                           height: 2,
-                          color: Colors.white,
+                          color: white,
                         ),
                         buildSpacer(height: 5),
                         GeneralComponent(
@@ -510,7 +511,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                                    color: white)),
                             buildSpacer(height: 5),
                             Text(
                                 "Nếu cài đặt này bật, khách mời có thể mời bạn bè của họ tham gia sự kiện",
@@ -545,7 +546,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                           ElevatedButton.styleFrom(fixedSize: Size(width, 30)),
                       child: Text(
                         "Xong",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: white),
                       )),
                 )
               ]),
@@ -590,7 +591,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                         child: Center(
                       child: Text(
                         DetailEventConstants.SELECTION_GROUP,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: white, fontSize: 18),
                       ),
                     )),
                   ],
@@ -600,7 +601,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                 margin: EdgeInsets.only(top: 5, bottom: 5),
                 child: Divider(
                   height: 2,
-                  color: Colors.white,
+                  color: white,
                 ),
               ),
               Container(
@@ -615,7 +616,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                             DetailEventConstants
                                 .SELECTION_FOR_CHOOSE_GROUP_EVENT[index][1],
                             style: TextStyle(
-                                color: Colors.white,
+                                color: white,
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -643,7 +644,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                         ),
                         suffixWidget: Radio(
                           fillColor: MaterialStateProperty.resolveWith(
-                              (states) => Colors.white),
+                              (states) => white),
                           groupValue: listSelectionGroup,
                           onChanged: ((value) {}),
                           value: listSelectionGroup[index],
@@ -661,7 +662,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                     style: ElevatedButton.styleFrom(fixedSize: Size(width, 30)),
                     child: Text(
                       "Lưu",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: white),
                     )),
               )
             ]),
@@ -713,7 +714,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                               child: Text(
                                 "Ngày và giờ",
                                 style: TextStyle(
-                                    color: Colors.white,
+                                    color: white,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -812,7 +813,7 @@ class _DetailEventPageState extends State<DetailEventPage> {
                                         child: Container(
                                             child: Icon(
                                           FontAwesomeIcons.close,
-                                          color: Colors.white,
+                                          color: white,
                                           size: 18,
                                         )),
                                       ),

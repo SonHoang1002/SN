@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/data/watch.dart';
-import 'package:social_network_app_mobile/widget/page_item.dart';
-import 'package:social_network_app_mobile/widget/text_description.dart';
-import 'package:social_network_app_mobile/widget/search_input.dart';
+
+import '../../data/watch.dart';
+import '../../widget/page_item.dart';
+import '../../widget/search_input.dart';
+import '../../widget/text_description.dart';
 
 class WatchDrawer extends StatelessWidget {
   const WatchDrawer({Key? key}) : super(key: key);
@@ -18,18 +19,18 @@ class WatchDrawer extends StatelessWidget {
           child: DrawerHeader(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
+            children:  [
+              const Text(
                 'Trang theo dõi',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
-              TextDescription(
+              const TextDescription(
                   description:
                       "Truy cập để xem video của các trang bạn đang theo dõi."),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               SearchInput()
