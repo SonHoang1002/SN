@@ -1,10 +1,10 @@
 // ignore_for_file: unused_element
 
-import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/animations/animations.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/ui_handler.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/editor/editor.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/editor/src/widgets/widgets.dart';
+import 'package:flutter/material.dart';
 
 final PageStorageBucket _bucket = PageStorageBucket();
 var _initialIndex = 0;

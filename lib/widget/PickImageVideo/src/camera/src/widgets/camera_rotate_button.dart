@@ -1,8 +1,7 @@
 // ignore_for_file: always_use_package_imports
 
-import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/icons/custom_icons.dart';
+import 'package:flutter/material.dart';
 
 import '../controllers/cam_controller.dart';
 import 'camera_builder.dart';
@@ -37,7 +36,7 @@ class CameraRotateButton extends StatelessWidget {
                 ? const SizedBox()
                 : const Icon(
                     CustomIcons.cameraRotate,
-                    color: white,
+                    color: Colors.white,
                   ),
           ),
         );

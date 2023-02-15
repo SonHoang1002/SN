@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../helper/push_to_new_screen.dart';
-import '../../../../../theme/colors.dart';
-import '../../../../../widget/GeneralWidget/bottom_navigator_bar_widget.dart';
-import '../../../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../../../widget/GeneralWidget/text_content_widget.dart';
-import '../../../../../widget/appbar_title.dart';
-import '../../../../../widget/back_icon_appbar.dart';
-import '../../personal_page_constants.dart';
-import 'private_rule_settings_constants.dart';
-import 'private_rule_shortcut_modules/check_important_settings_modules/check_important_settings_page.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/personal_page_commons.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_settings_commons.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/check_important_settings_page.dart';
+import 'package:social_network_app_mobile/screen/Setting/setting.dart';
+import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_bar_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widget/search_input.dart';
 
 class PrivateRulesSettingPage extends StatefulWidget {
   @override
@@ -36,7 +37,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
             BackIconAppbar(),
-            AppBarTitle(title: PersonalPageConstants.PRIVATE_APPBAR_TITLE),
+            AppBarTitle(title: PersonalPageCommons.PRIVATE_APPBAR_TITLE),
             SizedBox(),
           ],
         ),
@@ -113,7 +114,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                               PrivateRuleSettingsCommons
                                                       .PRIVATE_RULE_SHORTCUT[
                                                   "data"][index]["icon"],
-                                              // color:  white,
+                                              // color: Colors.white,
                                               size: 19,
                                             ),
                                           ),
@@ -124,7 +125,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                       ),
                                       Divider(
                                         height: 10,
-                                        color: white,
+                                        color: Colors.white,
                                       )
                                     ],
                                   );
@@ -190,7 +191,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                             PrivateRuleSettingsCommons
                                                     .ACTIVITY_OF_YOU["data"]
                                                 [index]["icon"],
-                                            // color:  white,
+                                            // color: Colors.white,
                                             size: 19,
                                           ),
                                         ),
@@ -200,7 +201,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                       ),
                                       Divider(
                                         height: 10,
-                                        color: white,
+                                        color: Colors.white,
                                       )
                                     ],
                                   );
@@ -248,7 +249,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                                   PrivateRuleSettingsCommons
                                                       .ADDTIONAL_FOR_WHO_CAN_SEE_FRIEND_LIST_OF_YOU,
                                                   false,
-                                                  // colorWord:  white,
+                                                  // colorWord: Colors.white,
                                                   fontSize: 16)
                                               : SizedBox(),
                                           PrivateRuleSettingsCommons
@@ -277,7 +278,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                             PrivateRuleSettingsCommons
                                                     .WAY_TO_FIND_AND_CONTACT_WITH_YOU[
                                                 "data"][index]["icon"],
-                                            // color:  white,
+                                            // color: Colors.white,
                                             size: 19,
                                           ),
                                         ),
@@ -287,7 +288,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                       ),
                                       Divider(
                                         height: 10,
-                                        color: white,
+                                        color: Colors.white,
                                       )
                                     ],
                                   );

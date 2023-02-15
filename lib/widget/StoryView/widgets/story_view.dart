@@ -49,7 +49,7 @@ class StoryItem {
   /// Short hand to create text-only page.
   ///
   /// [title] is the text to be displayed on [backgroundColor]. The text color
-  /// alternates between [Colors.black] and [ white] depending on the
+  /// alternates between [Colors.black] and [Colors.white] depending on the
   /// calculated contrast. This is to ensure readability of text.
   ///
   /// Works for inline and full-page stories. See [StoryView.inline] for more on
@@ -92,10 +92,10 @@ class StoryItem {
           child: Text(
             title,
             style: textStyle?.copyWith(
-                  color: contrast > 1.8 ? white : Colors.black,
+                  color: contrast > 1.8 ? Colors.white : Colors.black,
                 ) ??
                 TextStyle(
-                  color: contrast > 1.8 ? white : Colors.black,
+                  color: contrast > 1.8 ? Colors.white : Colors.black,
                   fontSize: 18,
                 ),
             textAlign: TextAlign.center,
@@ -150,7 +150,7 @@ class StoryItem {
                           caption,
                           style: const TextStyle(
                             fontSize: 15,
-                            color: white,
+                            color: Colors.white,
                           ),
                           textAlign: TextAlign.center,
                         )
@@ -257,7 +257,8 @@ class StoryItem {
                     child: caption != null
                         ? Text(
                             caption,
-                            style: const TextStyle(fontSize: 15, color: white),
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.white),
                             textAlign: TextAlign.center,
                           )
                         : const SizedBox(),
@@ -315,7 +316,7 @@ class StoryItem {
                             caption,
                             style: const TextStyle(
                               fontSize: 15,
-                              color: white,
+                              color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
                           )
@@ -426,7 +427,7 @@ class StoryView extends StatefulWidget {
     this.repeat = false,
     this.inline = false,
     this.onVerticalSwipeComplete,
-    this.indicatorColor = white,
+    this.indicatorColor = Colors.white,
     required this.medias,
   });
 
@@ -639,7 +640,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
-            color: white,
+            color: Colors.white,
           ),
           child: Stack(
             children: <Widget>[
@@ -814,7 +815,7 @@ class PageBar extends StatefulWidget {
     this.pages,
     this.animation, {
     this.indicatorHeight = IndicatorHeight.large,
-    this.indicatorColor = white,
+    this.indicatorColor = Colors.white,
     Key? key,
   }) : super(key: key);
 
@@ -883,7 +884,7 @@ class StoryProgressIndicator extends StatelessWidget {
     this.value, {
     super.key,
     this.indicatorHeight = 5,
-    this.indicatorColor = white,
+    this.indicatorColor = Colors.white,
   });
 
   @override

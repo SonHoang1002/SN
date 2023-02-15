@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../../data/gif.dart';
-import '../../../widget/image_cache.dart';
-import '../../../widget/search_input.dart';
+import 'package:social_network_app_mobile/data/gif.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/search_input.dart';
 
 class Gif extends StatelessWidget {
   const Gif({Key? key}) : super(key: key);
@@ -12,7 +11,7 @@ class Gif extends StatelessWidget {
     return Column(
       children: [
         Container(
-            margin: const EdgeInsets.all(8.0), child:  SearchInput()),
+            margin: const EdgeInsets.all(8.0), child: const SearchInput()),
         Expanded(
             child: GridView.builder(
                 shrinkWrap: true,

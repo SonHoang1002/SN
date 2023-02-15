@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../../data/checkin.dart';
-import '../../../theme/colors.dart';
-import '../../../widget/search_input.dart';
-import '../../../widget/text_description.dart';
+import 'package:social_network_app_mobile/data/checkin.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/search_input.dart';
+import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class Checkin extends StatelessWidget {
   const Checkin({Key? key}) : super(key: key);
@@ -16,7 +15,7 @@ class Checkin extends StatelessWidget {
       children: [
         Container(
             margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-            child:  SearchInput()),
+            child: const SearchInput()),
         const SizedBox(
           height: 10.0,
         ),

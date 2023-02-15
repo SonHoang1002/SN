@@ -5,13 +5,9 @@ pushToNextScreen(BuildContext context, Widget newScreen) {
 }
 
 pushAndReplaceToNextScreen(BuildContext context, Widget newScreen) {
-  Navigator.of(context)
-      .pushReplacement(MaterialPageRoute(builder: (_) => newScreen));
+  Navigator.of(context).push(MaterialPageRoute(builder: (_) => newScreen));
 }
-pushAndReplaceNamedToNextScreen(BuildContext context, String newRouteLink) {
-  Navigator.of(context)
-      .pushReplacementNamed(newRouteLink);
-}
+
 popToPreviousScreen(BuildContext context) {
   Navigator.of(context).pop();
 }

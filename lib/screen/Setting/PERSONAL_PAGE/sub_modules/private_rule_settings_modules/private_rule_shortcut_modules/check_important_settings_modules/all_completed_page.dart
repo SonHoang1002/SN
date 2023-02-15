@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/check_important_settings_page.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/how_find_you_modules/how_find_you_constants.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/set_your_data_modules/set_your_data_constants.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/who_can_see_your_share_modules/who_see_share_constants.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/set_your_data_on_facebook_modules/set_your_data_on_facebook_commons.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/who_can_see_what_you_share_modules/who_can_see_what_you_share_commons.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-import 'how_protect_account_modules/protect_your_account_constants.dart';
+import 'how_people_can_find_you_on_facebook_modules/how_people_can_find_you_on_facebook_commons.dart';
+import 'how_to_protect_your_account_modules/how_to_protect_your_account_commons.dart';
 
 class AllCompletedPage extends StatelessWidget {
   late double width = 0;
@@ -62,7 +62,7 @@ class AllCompletedPage extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 0),
                 child: Divider(
                   height: 10,
-                  // color:  white,
+                  // color: Colors.white,
                 ),
               ),
               Expanded(
@@ -103,7 +103,7 @@ class AllCompletedPage extends StatelessWidget {
   }
 
   Widget _buildContent(String title, String subTitle, dynamic contents) {
-    // final contents = AllComplete4Constants.ALL_COMPLETED_CONTENTS;
+    // final contents = AllComplete4Commons.ALL_COMPLETED_CONTENTS;
     return Column(
       children: [
         // img
@@ -120,18 +120,18 @@ class AllCompletedPage extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                    // color:  white,
+                    // color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
-        buildTextContent(
-          subTitle, false,
-          fontSize: 17,
-          //  colorWord: Colors.grey[300]
-        ),
+        buildTextContent(subTitle, false,
+            fontSize: 17,
+            //  colorWord: Colors.grey[300]
+            
+            ),
         SizedBox(
           height: 10,
         ),
@@ -142,17 +142,16 @@ class AllCompletedPage extends StatelessWidget {
             itemBuilder: ((context, index) {
               return GeneralComponent(
                 [
-                  buildTextContent(
-                    contents["data"][index]["content"], false,
-                    // colorWord: Colors.grey[300]
-                  )
+                  buildTextContent(contents["data"][index]["content"], false,
+                      // colorWord: Colors.grey[300]
+                      )
                 ],
                 prefixWidget: Container(
                   padding: EdgeInsets.only(right: 15),
                   child: SvgPicture.asset(
                     contents["data"][index]["icon"],
                     height: 20,
-                    // color:  white,
+                    // color: Colors.white,
                   ),
                 ),
                 changeBackground: Colors.transparent,
@@ -167,29 +166,29 @@ class AllCompletedPage extends StatelessWidget {
     switch (name) {
       case "who_can_see_what_you_share":
         return _buildContent(
-            WhoCanSeeYourShareConstants.ALL_COMPLETED_TITLE,
-            WhoCanSeeYourShareConstants.ALL_COMPLETED_SUBTITLE,
-            WhoCanSeeYourShareConstants.ALL_COMPLETED_CONTENTS);
+            WhoCanSeeWhatYouShareCommons.ALL_COMPLETED_TITLE,
+            WhoCanSeeWhatYouShareCommons.ALL_COMPLETED_SUBTITLE,
+            WhoCanSeeWhatYouShareCommons.ALL_COMPLETED_CONTENTS);
       case "how_to_protect_your_account":
         return _buildContent(
-            HowToProtectYourAccountConstants.ALL_COMPLETED_TITLE,
-            HowToProtectYourAccountConstants.ALL_COMPLETED_SUBTITLE,
-            HowToProtectYourAccountConstants.ALL_COMPLETED_CONTENTS);
+            HowToProtectYourAccountCommons.ALL_COMPLETED_TITLE,
+            HowToProtectYourAccountCommons.ALL_COMPLETED_SUBTITLE,
+            HowToProtectYourAccountCommons.ALL_COMPLETED_CONTENTS);
       case "how_people_can_find_you_on_facebook":
         return _buildContent(
-            HowPeopleCanFindYouOnFacebookConstants.ALL_COMPLETED_TITLE,
-            HowPeopleCanFindYouOnFacebookConstants.ALL_COMPLETED_SUBTITLE,
-            HowPeopleCanFindYouOnFacebookConstants.ALL_COMPLETED_CONTENTS);
+            HowPeopleCanFindYouOnFacebookCommons.ALL_COMPLETED_TITLE,
+            HowPeopleCanFindYouOnFacebookCommons.ALL_COMPLETED_SUBTITLE,
+            HowPeopleCanFindYouOnFacebookCommons.ALL_COMPLETED_CONTENTS);
       case "set_your_data_on_facebook":
         return _buildContent(
-            AllComplete4Constants.ALL_COMPLETED_TITLE,
-            AllComplete4Constants.ALL_COMPLETED_SUBTITLE,
-            AllComplete4Constants.ALL_COMPLETED_CONTENTS);
+            AllComplete4Commons.ALL_COMPLETED_TITLE,
+            AllComplete4Commons.ALL_COMPLETED_SUBTITLE,
+            AllComplete4Commons.ALL_COMPLETED_CONTENTS);
       default:
         return _buildContent(
-            AllComplete4Constants.ALL_COMPLETED_TITLE,
-            AllComplete4Constants.ALL_COMPLETED_SUBTITLE,
-            AllComplete4Constants.ALL_COMPLETED_CONTENTS);
+            AllComplete4Commons.ALL_COMPLETED_TITLE,
+            AllComplete4Commons.ALL_COMPLETED_SUBTITLE,
+            AllComplete4Commons.ALL_COMPLETED_CONTENTS);
     }
   }
 }

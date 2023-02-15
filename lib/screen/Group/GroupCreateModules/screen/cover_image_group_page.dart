@@ -12,8 +12,6 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navig
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-import '../../../../theme/colors.dart';
-
 class CoverImageGroupPage extends StatefulWidget {
   @override
   State<CoverImageGroupPage> createState() => _CoverImageGroupPageState();
@@ -74,7 +72,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                 Text(
                                   CoverImageGroupConstants.TITLE[0],
                                   style: const TextStyle(
-                                      // color:  white,
+                                      // color: Colors.white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -87,7 +85,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                               children: [
                                 Text(CoverImageGroupConstants.SUBTITLE[0],
                                     style: const TextStyle(
-                                        // color:  white,
+                                        // color: Colors.white,
                                         fontSize: 18)),
                               ],
                             ),
@@ -99,7 +97,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                 Text(
                                   CoverImageGroupConstants.TITLE[1],
                                   style: const TextStyle(
-                                      // color:  white,
+                                      // color: Colors.white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -123,7 +121,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                             decoration: BoxDecoration(
                                 color: Colors.grey[800]!.withOpacity(0.8),
                                 border: Border.all(
-                                    // color:  white,
+                                    // color: Colors.white,
                                     ),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
@@ -166,7 +164,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                                 child: SvgPicture.asset(
                                                   GroupConstants.PATH_ICON +
                                                       "add_img_file_icon.svg",
-                                                  color: white,
+                                                  color: Colors.white,
                                                 )),
                                             SizedBox(
                                               width: 10,
@@ -175,7 +173,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                               CoverImageGroupConstants
                                                   .PLACEHOLDER_LIST[0],
                                               style: TextStyle(
-                                                color: white,
+                                                color: Colors.white,
                                                 fontSize: 13,
                                               ),
                                             )
@@ -210,7 +208,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                                     EdgeInsets.only(right: 10),
                                                 child: Icon(
                                                   FontAwesomeIcons.pen,
-                                                  color: white,
+                                                  color: Colors.white,
                                                   size: 14,
                                                 ),
                                               ),

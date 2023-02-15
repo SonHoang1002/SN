@@ -99,7 +99,7 @@ class VideoDescription extends StatelessWidget {
                                   Icon(
                                     iconsAction[index]['icon'],
                                     size: 30,
-                                    color: white.withOpacity(0.8),
+                                    color: Colors.white.withOpacity(0.8),
                                   ),
                                   const SizedBox(
                                     height: 5,

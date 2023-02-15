@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../../constant/event_constants.dart';
-import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/information_component_widget.dart';
-
+import 'package:social_network_app_mobile/constant/event_constants.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
   showModalBottomSheet(
@@ -42,7 +39,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                       child: Center(
                     child: Text(
                       LocationEventConstants.EVENT_WITH_FACEBOOK_LIVE_TITLE,
-                      style: TextStyle(color: white, fontSize: 18),
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   )),
                 ],
@@ -53,7 +50,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
               margin: EdgeInsets.only(top: 5, bottom: 5),
               child: Divider(
                 height: 2,
-                color: white,
+                color: Colors.white,
               ),
             ),
             // content
@@ -69,20 +66,18 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                           margin: EdgeInsets.only(left: 10),
                           child: Text(
                             LocationEventConstants
-                                    .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[
-                                index][1],
+                                .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[index][1],
                             style: TextStyle(
-                                color: white,
+                                color: Colors.white,
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 10),
+                            margin: EdgeInsets.only(left: 10),
                           child: Text(
                             LocationEventConstants
-                                    .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[
-                                index][2],
+                                .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[index][2],
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 15,
@@ -95,12 +90,14 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                         height: 20,
                         width: 20,
                         child: SvgPicture.asset(
-                            LocationEventConstants
-                                    .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[
-                                index][0],
-                            color: white,
-                            fit: BoxFit.scaleDown),
+                          LocationEventConstants
+                              .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[index][0],
+                          color: Colors.white,
+                          
+                          fit: BoxFit.scaleDown
+                        ),
                       ),
+
                       padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     );
                   })),
@@ -114,7 +111,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                   style: ElevatedButton.styleFrom(fixedSize: Size(width, 30)),
                   child: Text(
                     "Đã hiểu",
-                    style: TextStyle(color: white),
+                    style: TextStyle(color: Colors.white),
                   )),
             )
           ]),

@@ -1,8 +1,8 @@
-import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 
-import '../../constant/post_type.dart';
 import 'flick_multiple_manager.dart';
 
 class FeedPlayerPortraitControls extends StatelessWidget {

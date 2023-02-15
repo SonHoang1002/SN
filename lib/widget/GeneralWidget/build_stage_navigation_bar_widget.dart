@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 
 buildStageNavigatorBar(
     {required bool isPassCondition,
@@ -18,7 +17,7 @@ buildStageNavigatorBar(
                 children: [
                   // Divider(
                   //   height: 4,
-                  //   color:  white,
+                  //   color: Colors.white,
                   // ),
                   buildSpacer(height: 10),
                   Center(
@@ -36,8 +35,8 @@ buildStageNavigatorBar(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(3),
                               color: index <= currentPage! - 1
-                                  ? Colors.purple
-                                  : Colors.grey,
+                                  ? Colors.blue
+                                  : Colors.grey[800],
                             ),
                           );
                         })),
@@ -54,7 +53,7 @@ buildStageNavigatorBar(
                   style: ElevatedButton.styleFrom(
                       fixedSize: Size(width * 0.9, 40),
                       backgroundColor:
-                          isPassCondition ? Colors.orange : Colors.orange[300]),
+                          isPassCondition ? Colors.blue : Colors.grey[800]),
                   onPressed: () {
                     function != null ? function() : null;
                   },

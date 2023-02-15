@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/event_constants.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-import '../../../constant/event_constants.dart';
-import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../widget/back_icon_appbar.dart';
 
 class SettingEventPage extends StatefulWidget {
   @override
@@ -40,7 +40,7 @@ class _SettingEventPageState extends State<SettingEventPage> {
                 Text(
                   SettingEventConstants.SETTING_TITLE,
                   style: const TextStyle(
-                      // color:  white,
+                      // color: Colors.white,
                       fontSize: 23,
                       fontWeight: FontWeight.bold),
                 ),
@@ -56,8 +56,8 @@ class _SettingEventPageState extends State<SettingEventPage> {
                 Text(
                   SettingEventConstants.CO_ORGANIZER[1],
                   style: TextStyle(
-                      // color:  white,
-                      fontSize: 15),
+                    // color: Colors.white,
+                     fontSize: 15),
                 ),
               ],
               prefixWidget: Container(
@@ -69,7 +69,7 @@ class _SettingEventPageState extends State<SettingEventPage> {
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Icon(
                     SettingEventConstants.CO_ORGANIZER[0],
-                    color: white,
+                    color: Colors.white,
                     size: 15,
                   )),
               suffixWidget: Icon(
@@ -92,8 +92,8 @@ class _SettingEventPageState extends State<SettingEventPage> {
                   child: Text(
                     SettingEventConstants.SHARE_LINK_CONTENT,
                     style: TextStyle(
-                        // color:  white,
-                        fontSize: 17),
+                      // color: Colors.white, 
+                      fontSize: 17),
                   ),
                 ),
               ],
@@ -119,7 +119,7 @@ class _SettingEventPageState extends State<SettingEventPage> {
               children: [
                 Text(
                   SettingEventConstants.DESCRIPTION_FOR_SHARE_LINK_CONTENT,
-                  style: TextStyle(
+                  style:  TextStyle(
                     color: Colors.grey,
                     fontSize: 13,
                   ),

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../theme/colors.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 showBottomSheetCheckImportantSettings(
     BuildContext context, double height, String title,
-    {Widget? widget, Color? bgColor}) {
-  showModalBottomSheet(
+    {Widget? widget}) {
+  showBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
@@ -15,7 +12,7 @@ showBottomSheetCheckImportantSettings(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           height: height,
           decoration: BoxDecoration(
-              color: bgColor != null ? bgColor : Colors.grey[800],
+              color: Colors.grey[900],
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(15), topLeft: Radius.circular(15))),
           child: Column(children: [
@@ -34,41 +31,79 @@ showBottomSheetCheckImportantSettings(
               ),
             ),
             //  title
-            Container(
-              padding: EdgeInsets.only(left: 5, right: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      FontAwesomeIcons.close,
-                      color: white,
-                      // size: 15,
-                    ),
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                        color: white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox()
-                ],
-              ),
+            Text(
+              title,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             //content
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Divider(
                 height: 10,
-                color: white,
+                color: Colors.white,
               ),
             ),
             widget != null ? widget : Container()
+            // Container(
+            //   child: ListView.builder(
+            //       padding: EdgeInsets.zero,
+            //       shrinkWrap: true,
+            //       itemCount: CheckImportantSettingsCommon
+            //           .CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS["data"]
+            //           .length,
+            //       itemBuilder: ((context, index) {
+            //         return Container(
+            //           margin: EdgeInsets.symmetric(vertical: 5),
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             mainAxisAlignment: MainAxisAlignment.start,
+            //             children: [
+            //               GestureDetector(
+            //                 onTap: (() {}),
+            //                 child: GeneralComponent(
+            //                   [
+            //                     buildTextContent(
+            //                         CheckImportantSettingsCommon
+            //                                 .CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS[
+            //                             "data"][index]["title"],
+            //                         true,
+            //                         fontSize: 18),
+            //                     SizedBox(
+            //                       height: 5,
+            //                     ),
+            //                     buildTextContent(
+            //                         CheckImportantSettingsCommon
+            //                                 .CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS[
+            //                             "data"][index]["subTitle"],
+            //                         true,
+            //                         fontSize: 16,
+            //                         colorWord: Colors.grey),
+            //                   ],
+            //                   prefixWidget: Container(
+            //                     padding: EdgeInsets.only(
+            //                       right: 15,
+            //                     ),
+            //                     child: SvgPicture.asset(
+            //                       CheckImportantSettingsCommon
+            //                               .CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS[
+            //                           "data"][index]["icon"],
+            //                       height: 20,
+            //                       color: Colors.white,
+            //                     ),
+            //                   ),
+            //                   padding: EdgeInsets.symmetric(
+            //                       horizontal: 5, vertical: 5),
+            //                   changeBackground: Colors.transparent,
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         );
+            //       })),
+            // )
           ]),
         );
       });

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../helper/push_to_new_screen.dart';
-import '../CreatePost/create_modal_base_menu.dart';
-import '../EventScreen/screen/create_event_page.dart';
-import '../Group/GroupCreateModules/screen/create_group_page.dart';
-import '../Group/group.dart';
-import '../MarketPlace/screen/MarketPlaceBody/main_market_body.dart';
-import '../Page/page_general.dart';
-import '../Watch/watch_render.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screen/EventScreen/screen/create_event_page.dart';
+import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/screen/create_group_page.dart';
+import 'package:social_network_app_mobile/screen/Group/group.dart';
+import 'package:social_network_app_mobile/screen/Page/page_general.dart';
+import 'package:social_network_app_mobile/screen/Watch/watch_render.dart';
 // import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 
 class MenuSelected extends StatelessWidget {
@@ -40,16 +38,16 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 pushToNextScreen(context, CreateGroupPage());
               },
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.plus,
                 size: 20,
                 color: Colors.black,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 12.0,
             ),
-            const Icon(
+            Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
               color: Colors.black,
@@ -63,18 +61,18 @@ class MenuSelected extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                pushToNextScreen(context, const CreateEventPage());
+                pushToNextScreen(context, CreateEventPage());
               },
-              child: const Icon(
-                FontAwesomeIcons.cartArrowDown,
+              child: Icon(
+                FontAwesomeIcons.plus,
                 size: 20,
                 color: Colors.black,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 12.0,
             ),
-            const Icon(
+            Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
               color: Colors.black,
@@ -82,36 +80,6 @@ class MenuSelected extends StatelessWidget {
           ],
         );
         break;
-      case 'marketPlace':
-        body = MainMarketBody();
-        buttonAppbar = Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                FontAwesomeIcons.user,
-                size: 20,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(width: 5,),
-            GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
-                size: 20,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        );
-        break;
-      // return CreateSearchBaseMenu(
-      //     placeHolder: "nhập sản phẩm",
-      //     body: body,
-      //     suffixWidget: buttonAppbar);
-
       // case 'moment':
       //   body = const Moment();
       //   break;

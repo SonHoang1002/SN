@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/check_important_settings_constants.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/check_important_settings_commons.dart';
 import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/check_private_rule_component_page.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -10,7 +10,6 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import '../../../../../../../widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import '../../../../../../../widget/GeneralWidget/text_content_widget.dart';
 import '../../../../../setting_constants/general_settings_constants.dart';
-import 'check_important_settings_constants.dart';
 
 class CheckImportantSettingsPage extends StatelessWidget {
   late double width = 0;
@@ -55,28 +54,28 @@ class CheckImportantSettingsPage extends StatelessWidget {
                   ),
                   // title
                   buildTextContent(
-                      CheckImportantSettingsConstants
+                      CheckImportantSettingsCommons
                           .CHECK_IMPORTANT_SETTINGS_TITLE,
                       true,
                       fontSize: 20),
                   //subTitle
                   buildTextContent(
-                    CheckImportantSettingsConstants
-                        .CHECK_IMPORTANT_SETTINGS_SUBTITLE,
-                    true,
-                    fontSize: 17,
-                    // colorWord: Colors.grey
-                  ),
+                      CheckImportantSettingsCommons
+                          .CHECK_IMPORTANT_SETTINGS_SUBTITLE,
+                      true,
+                      fontSize: 17,
+                      // colorWord: Colors.grey
+                      ),
                   SizedBox(
                     height: 10,
                   ),
                   buildTextContent(
-                    CheckImportantSettingsConstants
-                        .CHECK_IMPORTANT_SETTINGS_QUESTION,
-                    true,
-                    fontSize: 17,
-                    // colorWord: Colors.grey
-                  ),
+                      CheckImportantSettingsCommons
+                          .CHECK_IMPORTANT_SETTINGS_QUESTION,
+                      true,
+                      fontSize: 17,
+                      // colorWord: Colors.grey
+                      ),
                   Padding(
                     padding: EdgeInsets.only(top: 15),
                     child: GridView.builder(
@@ -88,7 +87,7 @@ class CheckImportantSettingsPage extends StatelessWidget {
                           crossAxisSpacing: 10,
                           mainAxisExtent: 200,
                           mainAxisSpacing: 10),
-                      itemCount: CheckImportantSettingsConstants
+                      itemCount: CheckImportantSettingsCommons
                           .CHECK_IMPORTANT_SETTINGS_CONTENTS["data"].length,
                       itemBuilder: ((context, index) {
                         return GestureDetector(
@@ -96,19 +95,19 @@ class CheckImportantSettingsPage extends StatelessWidget {
                             pushToNextScreen(
                               context,
                               CheckPrivateRuleComponentPage(
-                                  path: CheckImportantSettingsConstants
+                                  path: CheckImportantSettingsCommons
                                           .CHECK_IMPORTANT_SETTINGS_CONTENTS[
                                       "data"][index]["img"],
-                                  name: CheckImportantSettingsConstants
+                                  name: CheckImportantSettingsCommons
                                           .CHECK_IMPORTANT_SETTINGS_CONTENTS[
                                       "data"][index]["key"]),
                             );
                           }),
                           child: _buildCheckImportantSettingContentItem(
-                              CheckImportantSettingsConstants
+                              CheckImportantSettingsCommons
                                       .CHECK_IMPORTANT_SETTINGS_CONTENTS["data"]
                                   [index]["img"],
-                              CheckImportantSettingsConstants
+                              CheckImportantSettingsCommons
                                       .CHECK_IMPORTANT_SETTINGS_CONTENTS["data"]
                                   [index]["content"]),
                         );
@@ -119,12 +118,12 @@ class CheckImportantSettingsPage extends StatelessWidget {
                     height: 10,
                   ),
                   buildTextContent(
-                    CheckImportantSettingsConstants
-                        .CHECK_IMPORTANT_SETTINGS_ADDITINAL_INFORMATION,
-                    true,
-                    fontSize: 17,
-                    // colorWord: Colors.grey
-                  ),
+                      CheckImportantSettingsCommons
+                          .CHECK_IMPORTANT_SETTINGS_ADDITINAL_INFORMATION,
+                      true,
+                      fontSize: 17,
+                      // colorWord: Colors.grey
+                      ),
                   SizedBox(
                     height: 37,
                   )
@@ -145,7 +144,8 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
     width: width ?? 0,
     decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Colors.grey[200]),
+        color: Colors.grey[200]
+        ),
     child: ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -200,7 +200,7 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
 //               Text(
 //                 "Bạn có thể làm gì ?",
 //                 style: TextStyle(
-//                     color:  white,
+//                     color: Colors.white,
 //                     fontSize: 20,
 //                     fontWeight: FontWeight.bold),
 //               ),
@@ -209,14 +209,14 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
 //                 padding: EdgeInsets.symmetric(horizontal: 10),
 //                 child: Divider(
 //                   height: 10,
-//                   color:  white,
+//                   color: Colors.white,
 //                 ),
 //               ),
 //               Container(
 //                 child: ListView.builder(
 //                     padding: EdgeInsets.zero,
 //                     shrinkWrap: true,
-//                     itemCount: CheckImportantSettingsConstants
+//                     itemCount: CheckImportantSettingsCommons
 //                         .CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS["data"]
 //                         .length,
 //                     itemBuilder: ((context, index) {
@@ -231,7 +231,7 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
 //                               child: GeneralComponent(
 //                                 [
 //                                   buildTextContent(
-//                                       CheckImportantSettingsConstants
+//                                       CheckImportantSettingsCommons
 //                                               .CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS[
 //                                           "data"][index]["title"],
 //                                       true,
@@ -240,7 +240,7 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
 //                                     height: 5,
 //                                   ),
 //                                   buildTextContent(
-//                                       CheckImportantSettingsConstants
+//                                       CheckImportantSettingsCommons
 //                                               .CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS[
 //                                           "data"][index]["subTitle"],
 //                                       true,
@@ -252,11 +252,11 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
 //                                     right: 15,
 //                                   ),
 //                                   child: SvgPicture.asset(
-//                                     CheckImportantSettingsConstants
+//                                     CheckImportantSettingsCommons
 //                                             .CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS[
 //                                         "data"][index]["icon"],
 //                                     height: 20,
-//                                     color:  white,
+//                                     color: Colors.white,
 //                                   ),
 //                                 ),
 //                                 padding: EdgeInsets.symmetric(

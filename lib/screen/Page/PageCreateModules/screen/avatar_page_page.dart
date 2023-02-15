@@ -1,13 +1,13 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/constant/page_constants.dart';
+import 'package:social_network_app_mobile/providers/current_number_page.dart';
+import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/phone_page_page.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import 'dart:io';
 
-import '../../../../constant/page_constants.dart';
-import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
-import '../../../../widget/back_icon_appbar.dart';
-import 'phone_page_page.dart';
+import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class AvatarPage extends StatefulWidget {
   @override
@@ -66,7 +66,7 @@ class _AvatarPageState extends State<AvatarPage> {
                               Text(
                                 AvatarPageConstants.TITLE_AVATAR[0],
                                 style: const TextStyle(
-                                    // color:  white,
+                                    // color: Colors.white,
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -77,7 +77,7 @@ class _AvatarPageState extends State<AvatarPage> {
                           ),
                           Text(AvatarPageConstants.TITLE_AVATAR[1],
                               style: const TextStyle(
-                                  // color:  white,
+                                  // color: Colors.white,
                                   fontSize: 18)),
                           const SizedBox(
                             height: 10,
@@ -206,8 +206,8 @@ class _AvatarPageState extends State<AvatarPage> {
                   Center(
                     child: Text(
                       "NAME OF PAGE",
-                      style:
-                          TextStyle(color: white, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Center(
