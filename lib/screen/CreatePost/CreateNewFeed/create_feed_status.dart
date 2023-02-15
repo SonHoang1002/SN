@@ -1,16 +1,38 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import "package:collection/collection.dart";
+import 'package:social_network_app_mobile/widget/page_visibility.dart';
 
 class CreateFeedStatus extends StatefulWidget {
-  const CreateFeedStatus({Key? key}) : super(key: key);
+  final bool isShowBackground;
+  final dynamic checkin;
+  final dynamic visibility;
+  final dynamic statusActivity;
+  final dynamic backgroundSelected;
+  final Function handleUpdateData;
+  final List friendSelected;
+
+  const CreateFeedStatus(
+      {Key? key,
+      required this.visibility,
+      this.backgroundSelected,
+      required this.handleUpdateData,
+      required this.isShowBackground,
+      this.statusActivity,
+      required this.friendSelected,
+      this.checkin})
+      : super(key: key);
 
   @override
   State<CreateFeedStatus> createState() => _CreateFeedStatusState();
@@ -19,18 +41,41 @@ class CreateFeedStatus extends StatefulWidget {
 class _CreateFeedStatusState extends State<CreateFeedStatus> {
   final TextEditingController controller = TextEditingController();
   bool isActiveBackground = false;
-  dynamic backgroundSelected;
+
+  @override
+  void initState() {
+    if (!mounted) return;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    String description = '';
+
+    if (widget.statusActivity == null) {
+      description = '';
+    } else if (widget.statusActivity['parent'] == null) {
+      description = ' đang cảm thấy ${widget.statusActivity['name']}';
+    } else {
+      description =
+          ' ${widget.statusActivity['parent']['name'].toLowerCase()} ${widget.statusActivity['name'].toLowerCase()}';
+    }
+
+    if (widget.friendSelected.isNotEmpty) {
+      description = '$description cùng với ';
+    }
+
+    if (widget.checkin != null) {
+      description = '$description đang ở ${widget.checkin['title']}';
+    }
 
     return Container(
       decoration: BoxDecoration(
         border: const Border(top: BorderSide(width: 0.2, color: greyColor)),
         color: Theme.of(context).scaffoldBackgroundColor,
       ),
-      height: 310,
+      // height: 310,
       width: size.width,
       child: Stack(
         children: [
@@ -40,10 +85,11 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AvatarSocial(
-                        width: 36,
-                        height: 36,
+                        width: 38,
+                        height: 38,
                         path: meData['avatar_media']['preview_url'] ??
                             linkAvatarDefault),
                     const SizedBox(
@@ -52,33 +98,114 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          meData['display_name'],
-                          style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
+                        SizedBox(
+                          width: size.width - 80,
+                          child: RichText(
+                            text: TextSpan(
+                                text: meData['display_name'],
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    // overflow: TextOverflow.ellipsis,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color),
+                                children: [
+                                  const TextSpan(text: ' '),
+                                  widget.statusActivity != null
+                                      ? WidgetSpan(
+                                          child: ImageCacheRender(
+                                            path: widget.statusActivity['url'],
+                                            width: 18.0,
+                                            height: 18.0,
+                                          ),
+                                        )
+                                      : const TextSpan(text: ''),
+                                  TextSpan(
+                                      text: description,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.normal)),
+                                  widget.friendSelected.isNotEmpty
+                                      ? TextSpan(
+                                          text: widget.friendSelected[0]
+                                              ['display_name'])
+                                      : const TextSpan(),
+                                  widget.friendSelected.isNotEmpty &&
+                                          widget.friendSelected.length >= 2
+                                      ? const TextSpan(
+                                          text: ' và ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.normal))
+                                      : const TextSpan(),
+                                  widget.friendSelected.isNotEmpty &&
+                                          widget.friendSelected.length == 2
+                                      ? TextSpan(
+                                          text: widget.friendSelected[1]
+                                              ['display_name'],
+                                        )
+                                      : const TextSpan(),
+                                  widget.friendSelected.isNotEmpty &&
+                                          widget.friendSelected.length > 2
+                                      ? TextSpan(
+                                          text:
+                                              '${widget.friendSelected.length - 1} người khác',
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          PageMention(
+                                                              mentions: widget
+                                                                  .friendSelected)));
+                                            })
+                                      : const TextSpan(),
+                                ]),
+                          ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 0.2, color: greyColor),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(
-                                typeVisibility[0]['icon'],
-                                size: 14,
-                                color: greyColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                typeVisibility[0]['label'],
-                                style: const TextStyle(
-                                    fontSize: 12, color: greyColor),
-                              )
-                            ],
+                        const SizedBox(
+                          height: 4.0,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateModalBaseMenu(
+                                        title: "Quyền riêng tư",
+                                        body: PageVisibility(
+                                            visibility: widget.visibility,
+                                            handleUpdate: (data) {
+                                              widget.handleUpdateData(
+                                                  'update_visibility', data);
+                                            }),
+                                        buttonAppbar: const SizedBox())));
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(4.0),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: greyColor),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  widget.visibility['icon'],
+                                  size: 14,
+                                  color: greyColor,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  widget.visibility['label'],
+                                  style: const TextStyle(
+                                      fontSize: 12, color: greyColor),
+                                )
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -91,9 +218,9 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                   height: 250,
                   child: Stack(
                     children: [
-                      backgroundSelected != null
+                      widget.backgroundSelected != null
                           ? ImageCacheRender(
-                              path: backgroundSelected['url'],
+                              path: widget.backgroundSelected['url'],
                               width: size.width,
                             )
                           : const SizedBox(),
@@ -104,29 +231,34 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                             left: 8.0, right: 8.0, bottom: 8.0),
                         child: Center(
                           child: TextFormField(
-                            textAlign: backgroundSelected != null
+                            autofocus: true,
+                            onChanged: (value) {
+                              widget.handleUpdateData('update_content', value);
+                            },
+                            textAlign: widget.backgroundSelected != null
                                 ? TextAlign.center
                                 : TextAlign.left,
                             controller: controller,
                             maxLines: 9,
-                            minLines: backgroundSelected != null ? 1 : 9,
+                            minLines: widget.backgroundSelected != null ? 1 : 9,
                             enabled: true,
-                            style: backgroundSelected != null
+                            style: widget.backgroundSelected != null
                                 ? TextStyle(
                                     color: Color(int.parse(
-                                        '0xFF${backgroundSelected['style']['fontColor'].substring(1)}')),
+                                        '0xFF${widget.backgroundSelected['style']['fontColor'].substring(1)}')),
                                     fontWeight: FontWeight.w700,
                                     fontSize: 22)
                                 : null,
                             decoration: InputDecoration(
                               hintText: "Bạn đang nghĩ gì?",
                               hintStyle: TextStyle(
-                                  color: backgroundSelected != null
+                                  color: widget.backgroundSelected != null
                                       ? Color(int.parse(
-                                          '0xFF${backgroundSelected['style']['fontColor'].substring(1)}'))
+                                          '0xFF${widget.backgroundSelected['style']['fontColor'].substring(1)}'))
                                       : null,
-                                  fontSize:
-                                      backgroundSelected != null ? 22 : 15),
+                                  fontSize: widget.backgroundSelected != null
+                                      ? 22
+                                      : 15),
                               border: InputBorder.none,
                             ),
                           ),
@@ -213,7 +345,7 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                           showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
-                              barrierColor: transparent,
+                              barrierColor: Colors.transparent,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(

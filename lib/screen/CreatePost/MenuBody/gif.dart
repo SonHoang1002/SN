@@ -1,18 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-import '../../../data/gif.dart';
+
+import '../../../apis/config.dart';
+import 'package:social_network_app_mobile/apis/emoji_sticky_api.dart';
 import '../../../widget/image_cache.dart';
 import '../../../widget/search_input.dart';
 
-class Gif extends StatelessWidget {
-  const Gif({Key? key}) : super(key: key);
+class Gif extends StatefulWidget {
+  final Function handleUpdateData;
+
+  const Gif({Key? key, required this.handleUpdateData}) : super(key: key);
+
+  @override
+  State<Gif> createState() => _GifState();
+}
+
+class _GifState extends State<Gif> {
+  List gifs = [];
+  bool isLoadingGif = true;
+
+  @override
+  void initState() {
+    if (!mounted) return;
+
+    super.initState();
+    fetchDataGif({"offset": 0, "api_key": gifKey, "limit": 20});
+  }
+
+  fetchDataGif(params) async {
+    setState(() {
+      isLoadingGif = true;
+    });
+    var response = await EmojiStickyApi().fetchDataGifApi(params);
+    if (response != null) {
+      if (mounted) {
+        setState(() {
+          isLoadingGif = false;
+          gifs = response["data"];
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
-            margin: const EdgeInsets.all(8.0), child:  SearchInput()),
+            margin: const EdgeInsets.all(8.0), child: const SearchInput()),
         Expanded(
             child: GridView.builder(
                 shrinkWrap: true,

@@ -787,7 +787,7 @@ List emojis = [
     "id": 314,
     "name": "OK",
     "url":
-        "https://trial103.easyedu.vn/sites/default/files/styles/large/public/easyschool/upload/2022/04/OK.png",
+        "https://trial103.easyedu.vn/sites/default/files/styles/large/public/easyschool/upload/2022/04/quyet_doan.png",
     "data_type": "emoji",
     "parent": null
   },

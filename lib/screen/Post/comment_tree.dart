@@ -1,9 +1,11 @@
 import 'package:comment_tree/comment_tree.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/post.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_card.dart';
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
@@ -12,8 +14,19 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class CommentTree extends StatefulWidget {
-  const CommentTree({Key? key, this.commentParent}) : super(key: key);
+  const CommentTree(
+      {Key? key,
+      this.commentParent,
+      this.commentNode,
+      this.getCommentSelected,
+      this.commentSelected})
+      : super(key: key);
+
   final dynamic commentParent;
+  final dynamic commentSelected;
+
+  final FocusNode? commentNode;
+  final Function? getCommentSelected;
 
   @override
   State<CommentTree> createState() => _CommentTreeState();
@@ -21,7 +34,36 @@ class CommentTree extends StatefulWidget {
 
 class _CommentTreeState extends State<CommentTree> {
   bool isShowCommentChild = false;
+  bool isLoadCommentChild = false;
   List<Comment> commentChild = [];
+  List postChildComment = [];
+
+  Future getListCommentChild() async {
+    setState(() {
+      isLoadCommentChild = true;
+    });
+    List newList =
+        await PostApi().getListCommentPost(widget.commentParent['id'], null) ??
+            [];
+    setState(() {
+      postChildComment = newList;
+    });
+
+    List<Comment>? newListCommentChild = newList
+        .map((e) => Comment(
+            avatar: e['account']['avatar_media'] != null
+                ? e['account']['avatar_media']['preview_url']
+                : linkAvatarDefault,
+            userName: e['account']['display_name'],
+            content: e['id']))
+        .toList();
+    setState(() {
+      isLoadCommentChild = false;
+      isShowCommentChild = true;
+      commentChild = newListCommentChild;
+    });
+  }
+
   @override
   void initState() {
     commentChild = widget.commentParent['replies_total'] > 0
@@ -33,31 +75,16 @@ class _CommentTreeState extends State<CommentTree> {
 
   @override
   Widget build(BuildContext context) {
-    dynamic avatarMedia = widget.commentParent['account']['avatar_media'];
-    int replyCount = widget.commentParent['replies_total'];
-
-    fetchChildComment() {
-      List<Comment>? newListCommentChild = postChildComment
-          .map((e) => Comment(
-              avatar: e['account']['avatar_media'] != null
-                  ? e['account']['avatar_media']['preview_url']
-                  : linkAvatarDefault,
-              userName: e['account']['display_name'],
-              content: e['id']))
-          .toList();
-      setState(() {
-        isShowCommentChild = true;
-        commentChild = newListCommentChild;
-      });
-    }
+    dynamic avatarMedia = widget.commentParent?['account']?['avatar_media'];
+    int replyCount = widget.commentParent?['replies_total'] ?? 0;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
       child: CommentTreeWidget<Comment, Comment>(
         Comment(
-          avatar: avatarMedia['preview_url'] ?? linkAvatarDefault,
-          userName: widget.commentParent['account']['display_name'],
-          content: widget.commentParent['content'],
+          avatar: avatarMedia?['preview_url'] ?? linkAvatarDefault,
+          userName: widget.commentParent?['account']?['display_name'],
+          content: widget.commentParent?['content'],
         ),
         commentChild,
         treeThemeData: TreeThemeData(
@@ -82,25 +109,42 @@ class _CommentTreeState extends State<CommentTree> {
         contentChild: (context, data) {
           return replyCount > 0 && !isShowCommentChild
               ? GestureDetector(
-                  onTap: () {
-                    fetchChildComment();
-                  },
+                  onTap: isLoadCommentChild
+                      ? null
+                      : () {
+                          getListCommentChild();
+                        },
                   child: Container(
                     margin: const EdgeInsets.only(top: 5.0),
-                    child: Text(
-                      "$replyCount phản hồi",
-                      style: const TextStyle(
-                          color: greyColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500),
+                    child: Row(
+                      children: [
+                        Text(
+                          "$replyCount phản hồi",
+                          style: const TextStyle(
+                              color: greyColor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        isLoadCommentChild
+                            ? const SizedBox(
+                                width: 10,
+                                height: 10,
+                                child: CupertinoActivityIndicator(),
+                              )
+                            : const SizedBox()
+                      ],
                     ),
                   ),
                 )
               : BoxComment(
                   widget: widget,
                   data: data,
-                  post: postChildComment
-                      .firstWhere((element) => element['id'] == data.content));
+                  post: postChildComment.firstWhere(
+                      (element) => element['id'] == data.content,
+                      orElse: () => ''));
         },
         contentRoot: (context, data) {
           return BoxComment(
@@ -128,6 +172,35 @@ class BoxComment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    handleGetComment() {
+      if (post == null) return const [TextSpan(text: '')];
+      List tags = post['status_tags'];
+      String str = post['content'] ?? '';
+
+      // return comment;
+      List<TextSpan> listRender = [];
+
+      List matches = str.split(RegExp(r'\[|\]'));
+
+      List listIdTags = tags.map((e) => e['entity_id']).toList();
+
+      for (final subStr in matches) {
+        listRender.add(
+          TextSpan(
+              text: listIdTags.contains(subStr)
+                  ? tags.firstWhere((element) => element['entity_id'] == subStr,
+                      orElse: () => {})['name']
+                  : subStr,
+              style: listIdTags.contains(subStr)
+                  ? const TextStyle(
+                      color: secondaryColor, fontWeight: FontWeight.w500)
+                  : null),
+        );
+      }
+
+      return listRender;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -135,7 +208,10 @@ class BoxComment extends StatelessWidget {
             ? Container(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
+                    color: widget.commentSelected != null &&
+                            widget.commentSelected!['id'] == post['id']
+                        ? secondaryColorSelected
+                        : Theme.of(context).colorScheme.background,
                     borderRadius: BorderRadius.circular(15)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,10 +224,14 @@ class BoxComment extends StatelessWidget {
                     const SizedBox(
                       height: 4,
                     ),
-                    Text(
-                      '${post['content']}',
-                      style: const TextStyle(fontSize: 13),
-                    ),
+                    RichText(
+                        text: TextSpan(
+                      text: '',
+                      children: handleGetComment(),
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Theme.of(context).textTheme.bodyLarge!.color),
+                    ))
                   ],
                 ),
               )
@@ -162,44 +242,56 @@ class BoxComment extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 13, fontWeight: FontWeight.w500),
                 )),
-        PostMediaComment(post: post),
+        post['media_attachments'].isNotEmpty || post['card'] != null
+            ? PostMediaComment(post: post)
+            : const SizedBox(),
         DefaultTextStyle(
           style: const TextStyle(
               color: greyColor, fontSize: 12, fontWeight: FontWeight.w500),
           child: Padding(
             padding: const EdgeInsets.only(top: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    const Text('Thích'),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    const Text('Trả lời'),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Text(
-                      GetTimeAgo.parse(
-                          DateTime.parse(widget.commentParent['created_at'])),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: const EdgeInsets.only(right: 20.0),
-                  child: Row(
+            child: post['typeStatus'] == 'previewComment'
+                ? const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Text("Đang viết ..."),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${post['favourites_count']} thích'),
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          const Text('Thích'),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                widget.commentNode!.requestFocus();
+                                widget.getCommentSelected!(post);
+                              },
+                              child: const Text('Trả lời')),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          Text(
+                            GetTimeAgo.parse(DateTime.parse(
+                                widget.commentParent['created_at'])),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(right: 20.0),
+                        child: Row(
+                          children: [
+                            Text('${post['favourites_count']} thích'),
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
           ),
         )
       ],
@@ -273,21 +365,33 @@ class _PostMediaCommentState extends State<PostMediaComment> {
           child: FeedVideo(
               path: medias[0]['remote_url'] ?? medias[0]['url'],
               flickMultiManager: flickMultiManager,
-              image:
-                  medias[0]['preview_remote_url'] ?? medias[0]['preview_url']),
+              image: medias[0]['preview_remote_url'] ??
+                  medias[0]['preview_url'] ??
+                  ''),
         );
       }
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.only(top: 2.0),
       child: card != null
           ? renderCard()
           : medias.isNotEmpty
-              ? Container(
-                  constraints: BoxConstraints(
-                      maxHeight: size.width * 0.7, maxWidth: size.width * 0.7),
-                  child: renderMedia())
+              ? GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PostOneMediaDetail(
+                                  postMedia: widget.post,
+                                )));
+                  },
+                  child: Container(
+                      constraints: BoxConstraints(
+                          maxHeight: size.width * 0.7,
+                          maxWidth: size.width * 0.7),
+                      child: renderMedia()),
+                )
               : const SizedBox(),
     );
   }

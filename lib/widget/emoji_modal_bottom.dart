@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -8,7 +9,10 @@ import 'search_input.dart';
 
 class EmojiModalBottom extends StatefulWidget {
   final double height;
-  const EmojiModalBottom({Key? key, required this.height}) : super(key: key);
+  final Function functionGetEmoji;
+  const EmojiModalBottom(
+      {Key? key, required this.height, required this.functionGetEmoji})
+      : super(key: key);
 
   @override
   State<EmojiModalBottom> createState() => _EmojiModalBottomState();
@@ -17,19 +21,102 @@ class EmojiModalBottom extends StatefulWidget {
 class _EmojiModalBottomState extends State<EmojiModalBottom>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  List listGif = [];
+  List listSticky = [];
+  List listMenuSticky = [
+    {"icon": FontAwesomeIcons.fireFlameCurved, "id": 'trending'},
+    // {"icon": FontAwesomeIcons.magnifyingGlass, "id": 'search'},
+    // {"icon": FontAwesomeIcons.clock, "id": 'history'}
+  ];
+  bool isLoadingGif = true;
+  bool isLoadingSticky = true;
+  bool isLoadingMenuSticky = true;
+  String tabStickySelected = 'trending';
 
   @override
   void initState() {
     if (!mounted) return;
 
     super.initState();
+    fetchDataGif({"offset": 0, "api_key": gifKey, "limit": 10});
+    fetchGetSticky('free');
+    fetchGetSticky('trending');
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  fetchDataGif(params) async {
+    setState(() {
+      isLoadingGif = true;
+    });
+    var response = await EmojiStickyApi().fetchDataGifApi(params);
+    if (response != null) {
+      if (mounted) {
+        setState(() {
+          isLoadingGif = false;
+          listGif = response["data"];
+        });
+      }
+    }
+  }
+
+  fetchGetSticky(type) async {
+    // ignore: prefer_typing_uninitialized_variables
+    var response;
+    if (type == 'free') {
+      response = await EmojiStickyApi().getPackFreeApi();
+      if (response != null && listMenuSticky.length == 1) {
+        var listMenuFree = List.from(response['data'].map((el) => ({
+              "sticky": el["thumbnails"].elementAt(0)["url"],
+              "id": el["id"],
+            })));
+        if (mounted) {
+          setState(() {
+            isLoadingMenuSticky = false;
+            listMenuSticky = [...listMenuSticky, ...listMenuFree];
+          });
+        }
+      }
+    } else if (type == 'trending') {
+      setState(() {
+        isLoadingSticky = true;
+      });
+      response = await EmojiStickyApi().getTrendingApi();
+      if (response != null) {
+        var listTrending = List.from(response["data"].map((el) =>
+            ({"id": el['id'], "url": el["images"].elementAt(0)["url"]})));
+        if (mounted) {
+          setState(() {
+            isLoadingSticky = false;
+            listSticky = listTrending;
+          });
+        }
+      }
+    } else {
+      setState(() {
+        isLoadingSticky = true;
+      });
+      response = await EmojiStickyApi().getPackDetailApi(type);
+      if (response != null) {
+        List listStickyData = List.from(response['data']["stickers"]?.map(
+            (el) =>
+                ({"id": el['id'], "url": el["images"].elementAt(0)["url"]})));
+
+        if (mounted) {
+          setState(() {
+            isLoadingSticky = false;
+            listSticky = listStickyData;
+          });
+        }
+      }
+    }
+  }
+
+  handleSearch(value) {
+    fetchDataGif({"offset": 0, "api_key": gifKey, "limit": 10, "q": value});
   }
 
   @override
   Widget build(BuildContext context) {
-    TabController _tabControllerSticky = TabController(length: 2, vsync: this);
-
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
@@ -42,7 +129,6 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
             height: 45,
             child: TabBar(
               controller: _tabController,
-              onTap: (index) {},
               indicatorColor: Colors.grey.withOpacity(0.5),
               tabs: const [
                 Tab(
@@ -60,21 +146,27 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
                 SizedBox(
                   height: widget.height - 93,
                   child: TabBarView(controller: _tabController, children: [
-                    const Center(child: Text("Chưa có dữ liệu")),
-                    MasonryGridView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: gifs.length,
-                        gridDelegate:
-                            const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2),
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {},
-                            child: ImageCacheRender(
-                                path: gifs[index]['images']['original']['url']),
-                          );
-                        })
+                    renderSticker(),
+                    isLoadingGif
+                        ? const Center(child: CupertinoActivityIndicator())
+                        : MasonryGridView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: listGif.length,
+                            gridDelegate:
+                                const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  widget.functionGetEmoji(
+                                      gifs[index]['images']['original']['url']);
+                                },
+                                child: ImageCacheRender(
+                                    path: gifs[index]['images']['original']
+                                        ['url']),
+                              );
+                            })
                   ]),
                 ),
               ],
@@ -83,5 +175,90 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
         ],
       ),
     );
+  }
+
+  Widget renderSticker() {
+    final size = MediaQuery.of(context).size;
+    return isLoadingMenuSticky
+        ? const Center(child: CupertinoActivityIndicator())
+        : SizedBox(
+            width: size.width,
+            height: widget.height - 93,
+            child: Column(
+              children: [
+                SizedBox(
+                    height: widget.height - 145,
+                    child: isLoadingSticky
+                        ? const Center(
+                            child: CupertinoActivityIndicator(),
+                          )
+                        : SingleChildScrollView(
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              primary: false,
+                              padding: const EdgeInsets.all(4),
+                              crossAxisSpacing: 3,
+                              mainAxisSpacing: 2,
+                              crossAxisCount: 4,
+                              children: List.generate(
+                                  listSticky.length,
+                                  (index) => InkWell(
+                                        onTap: () {
+                                          widget.functionGetEmoji(
+                                              listSticky[index]['url']);
+                                        },
+                                        child: Image.network(
+                                            listSticky[index]['url']),
+                                      )),
+                            ),
+                          )),
+                SizedBox(
+                  height: 50,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                        children: List.generate(
+                            listMenuSticky.length,
+                            (index) => Container(
+                                  padding: const EdgeInsets.all(6),
+                                  margin:
+                                      const EdgeInsets.only(left: 2, right: 2),
+                                  decoration: BoxDecoration(
+                                      color: tabStickySelected ==
+                                              listMenuSticky[index]['id']
+                                          ? Colors.grey.withOpacity(0.3)
+                                          : null,
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          fetchGetSticky(
+                                              listMenuSticky[index]['id']);
+                                          tabStickySelected =
+                                              listMenuSticky[index]['id'];
+                                        });
+                                      },
+                                      child: listMenuSticky[index]['sticky'] !=
+                                              null
+                                          ? Image.network(
+                                              listMenuSticky[index]['sticky'],
+                                              height: 28,
+                                              width: 28,
+                                              fit: BoxFit.contain,
+                                            )
+                                          : Icon(listMenuSticky[index]['icon'],
+                                              size: 24,
+                                              color: Theme.of(context)
+                                                  .primaryColorDark),
+                                    ),
+                                  ),
+                                ))),
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }

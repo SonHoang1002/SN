@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
-class TextFormFieldCustom extends StatelessWidget {
+class TextFormFieldCustom extends StatefulWidget {
   final String? initialValue;
   final String? helperText;
   final String? errorText;
   final String? label;
   final String? hintText;
+
+  final Function? handleGetValue;
+  final TextEditingController? textController;
+  final FocusNode? focusNode;
 
   final bool autofocus;
   final int? minLines;
@@ -24,26 +28,41 @@ class TextFormFieldCustom extends StatelessWidget {
       this.errorText,
       this.label,
       this.hintText,
-      this.suffixIcon})
+      this.suffixIcon,
+      this.handleGetValue,
+      this.textController,
+      this.focusNode})
       : super(key: key);
+
+  @override
+  State<TextFormFieldCustom> createState() => _TextFormFieldCustomState();
+}
+
+class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
+  String content = '';
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      minLines: minLines,
-      maxLines: maxLines,
-      initialValue: initialValue,
-      autofocus: autofocus,
+      focusNode: widget.focusNode,
+      controller: widget.textController,
+      minLines: widget.minLines,
+      maxLines: widget.maxLines,
+      initialValue: widget.initialValue,
+      autofocus: widget.autofocus,
+      onChanged: (value) {
+        widget.handleGetValue!(value);
+      },
       decoration: InputDecoration(
-          suffixIcon: suffixIcon,
+          suffixIcon: widget.suffixIcon,
           fillColor: Colors.red,
           contentPadding: const EdgeInsets.all(4.0),
-          hintText: hintText,
+          hintText: widget.hintText,
           hintStyle: const TextStyle(fontSize: 13),
-          labelText: label,
+          labelText: widget.label,
           focusColor: primaryColor,
-          helperText: helperText,
-          errorText: errorText,
+          helperText: widget.helperText,
+          errorText: widget.errorText,
           focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(width: 1, color: secondaryColor),
               borderRadius: BorderRadius.circular(15.0)),

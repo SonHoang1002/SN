@@ -22,6 +22,9 @@ class GalleryView extends StatefulWidget {
     Key? key,
     this.controller,
     this.setting,
+    this.isMutipleFile,
+    this.handleGetFiles,
+    this.filesSelected,
   }) : super(key: key);
 
   /// Gallery controller
@@ -29,6 +32,10 @@ class GalleryView extends StatefulWidget {
 
   /// Gallery setting
   final GallerySetting? setting;
+
+  final bool? isMutipleFile;
+  final Function? handleGetFiles;
+  final List? filesSelected;
 
   ///
   static const String name = 'GalleryView';
@@ -68,6 +75,19 @@ class _GalleryViewState extends State<GalleryView> {
   void initState() {
     super.initState();
     _controller = widget.controller ?? GalleryController();
+
+    _controller.addListener(() {
+      if (mounted) {
+        final entities = _controller.value.selectedEntities;
+
+        if (widget.isMutipleFile != null && widget.isMutipleFile == true) {
+          widget.handleGetFiles!(entities);
+        } else {
+          widget.handleGetFiles!(entities);
+          Navigator.pop(context);
+        }
+      }
+    });
   }
 
   @override
@@ -90,6 +110,8 @@ class _GalleryViewState extends State<GalleryView> {
       setting: widget.setting?.panelSetting,
       builder: (panelSetting) => _View(
         controller: _controller,
+        isMutipleFile: widget.isMutipleFile,
+        filesSelected: widget.filesSelected,
         setting: (widget.setting ?? _controller.setting)
             .copyWith(panelSetting: panelSetting),
       ),
@@ -106,10 +128,14 @@ class _View extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.setting,
+    this.isMutipleFile,
+    this.filesSelected,
   }) : super(key: key);
 
   final GalleryController controller;
   final GallerySetting setting;
+  final bool? isMutipleFile;
+  final List? filesSelected;
 
   @override
   State<_View> createState() => _ViewState();
@@ -324,7 +350,9 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
               ),
 
               // Send and edit button
-              if (!actionMode)
+              if (!actionMode &&
+                  widget.isMutipleFile != null &&
+                  widget.isMutipleFile == true)
                 GalleryAssetSelector(
                   controller: _controller,
                   albums: _albums,

@@ -76,6 +76,12 @@ dependencies:
   flutter_slidable: ^2.0.0
   # skeleton_loader: ^2.0.0+4
   # modal_bottom_sheet: ^2.1.2
+  photo_view: ^0.14.0
+  gallery_saver: ^2.3.2
+  loader_overlay: ^2.1.0
+  easy_debounce: ^2.0.3
+  flutter_map: ^3.1.0
+  latlong2: ^0.8.1
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +94,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   very_good_analysis: ^3.0.1
+  build_runner: ^2.3.3
+  freezed: ^2.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -137,6 +145,7 @@ flutter:
     - assets/live_event.png
     - assets/camera.png
     - assets/LogoEmso.svg
+    - assets/loading.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
