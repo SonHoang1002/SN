@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-
-import '../../constant/page_constants.dart';
-import '../../theme/colors.dart';
-import 'PageCreateModules/screen/name_page_page.dart';
-
+import 'package:social_network_app_mobile/constant/page_constants.dart';
+import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/name_page_page.dart';
+import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 
+
+final TextStyle textStyle = TextStyle(color: Colors.white);
+final whiteColor = Colors.white;
 final List<String> questionPolicy = [
   "Bằng việc tạo Trang, bạn đồng ý với ",
   "Chính sách về Trang, Nhóm và Sự kiện"
 ];
+final String page = "Trang";
 
-
+late int inPage = 1;
+final String begin = "Bắt đầu";
+late double width = 0;
+late double height = 0;
 var content = RichText(
   textAlign: TextAlign.justify,
   text: TextSpan(
@@ -29,10 +34,6 @@ class PageCreate extends StatefulWidget {
   State<PageCreate> createState() => _PageCreateState();
 }
 
-late int inPage = 1;
-final String begin = "Bắt đầu";
-late double width = 0;
-late double height = 0;
 class _PageCreateState extends State<PageCreate> {
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,7 @@ Widget _buildBottomWidget(BuildContext context) {
                         width: 10,
                         margin: EdgeInsets.symmetric(horizontal: 2.5),
                         decoration: BoxDecoration(
-                            color: white,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(5)),
                       );
                     }
@@ -118,7 +119,7 @@ Widget _buildBottomWidget(BuildContext context) {
               child: Center(
                 child: Text(
                   begin,
-                  style: TextStyle(color: white, fontSize: 20),
+                  style: TextStyle(color: whiteColor, fontSize: 20),
                 ),
               )),
           SizedBox(

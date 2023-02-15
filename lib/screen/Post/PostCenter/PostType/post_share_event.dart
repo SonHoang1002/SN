@@ -38,7 +38,7 @@ class PostShareEvent extends StatelessWidget {
                   height: 45,
                   width: 60,
                   decoration: const BoxDecoration(
-                      color: white,
+                      color: Colors.white,
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(8),
                           bottomRight: Radius.circular(8))),

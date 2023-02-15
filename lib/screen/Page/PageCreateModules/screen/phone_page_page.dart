@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../constant/page_constants.dart';
-import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
-import '../../../../widget/back_icon_appbar.dart';
-import 'request_friends_page_page.dart';
+import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/constant/page_constants.dart';
+import 'package:social_network_app_mobile/providers/current_number_page.dart';
+import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/request_friends_page_page.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class PhonePage extends StatefulWidget {
@@ -55,7 +56,7 @@ class _PhonePageState extends State<PhonePage> {
                           Text(
                             PhonePageConstants.TITLE_PHONE[0],
                             style: const TextStyle(
-                                // color:  white,
+                                // color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -67,7 +68,7 @@ class _PhonePageState extends State<PhonePage> {
                       // after network account ....
                       Text(PhonePageConstants.TITLE_PHONE[1],
                           style: const TextStyle(
-                              // color:  white,
+                              // color: Colors.white,
                               fontSize: 15)),
                       const SizedBox(
                         height: 10,
@@ -86,7 +87,7 @@ class _PhonePageState extends State<PhonePage> {
                       // to begin, we will send ....
                       Text(PhonePageConstants.TITLE_PHONE[2],
                           style: const TextStyle(
-                              // color:  white,
+                              // color: Colors.white,
                               fontSize: 15)),
                       const SizedBox(
                         height: 10,
@@ -110,7 +111,7 @@ class _PhonePageState extends State<PhonePage> {
                                           context);
                                     },
                                     style: const TextStyle(
-                                        // color:  white
+                                        // color: Colors.white
                                         ),
                                     decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
@@ -132,10 +133,10 @@ class _PhonePageState extends State<PhonePage> {
                                     // alignment: Alignment.centerRight,
                                     height: 20,
                                     width: 20,
-                                    // color:  white,
+                                    // color: Colors.white,
                                     child: Icon(
                                       Icons.arrow_drop_down,
-                                      // color:  white,
+                                      // color: Colors.white,
                                     ),
                                   ),
                                 )
@@ -154,7 +155,7 @@ class _PhonePageState extends State<PhonePage> {
                                 ],
                                 keyboardType: TextInputType.number,
                                 onChanged: ((value) {}),
-                                style: const TextStyle(color: white),
+                                style: const TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
                                     counterText: "",
                                     enabledBorder: OutlineInputBorder(
@@ -182,7 +183,7 @@ class _PhonePageState extends State<PhonePage> {
                           onPressed: () {},
                           child: Text(
                             PhonePageConstants.TITLE_PHONE[3],
-                            style: TextStyle(color: white),
+                            style: TextStyle(color: Colors.white),
                           )),
                     ],
                   ),
@@ -255,7 +256,7 @@ class _PhonePageState extends State<PhonePage> {
                                     Text(
                                       PhonePageConstants.LIST_PHONE[index],
                                       style: TextStyle(
-                                        // color:  white,
+                                        // color: Colors.white,
                                         fontSize: 20,
                                       ),
                                     )
@@ -263,7 +264,7 @@ class _PhonePageState extends State<PhonePage> {
                                 )),
                                 Divider(
                                   height: 2,
-                                  color: white,
+                                  color: Colors.white,
                                 )
                               ],
                             ),

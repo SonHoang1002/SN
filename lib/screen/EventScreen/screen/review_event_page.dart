@@ -1,22 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../../constant/event_constants.dart';
-import '../../../helper/push_to_new_screen.dart';
-import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
-import '../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../widget/GeneralWidget/spacer_widget.dart';
-import '../../../widget/appbar_title.dart';
-import '../../../widget/back_icon_appbar.dart';
-import 'description_event_page.dart';
-import 'detail_event_page.dart';
-import 'location_event_page.dart';
-import 'setting_event_page.dart';
+import 'package:social_network_app_mobile/constant/event_constants.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/EventScreen/screen/description_event_page.dart';
+import 'package:social_network_app_mobile/screen/EventScreen/screen/detail_event_page.dart';
+import 'package:social_network_app_mobile/screen/EventScreen/screen/location_event_page.dart';
+import 'package:social_network_app_mobile/screen/EventScreen/screen/setting_event_page.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class ReviewEventPage extends StatefulWidget {
   @override
@@ -105,7 +104,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                                         ),
                                         const Icon(
                                           FontAwesomeIcons.layerGroup,
-                                          color: white,
+                                          color: Colors.white,
                                           size: 13,
                                         ),
                                         buildSpacer(
@@ -114,7 +113,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                                         const Text(
                                           "Thêm ảnh bìa",
                                           style: TextStyle(
-                                            color: white,
+                                            color: Colors.white,
                                             fontSize: 13,
                                           ),
                                         )
@@ -160,7 +159,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                                 const Text(
                                   ReviewEventConstants.NAME_EVENT,
                                   style: TextStyle(
-                                      // color:  white,
+                                      // color: Colors.white,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 )
@@ -176,7 +175,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                                 child: const Center(
                                   child: Icon(
                                     FontAwesomeIcons.lock,
-                                    // color:  white,
+                                    // color: Colors.white,
                                     size: 14,
                                   ),
                                 ),
@@ -189,7 +188,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                                   )),
                               const Text(ReviewEventConstants.ORGANIZE_PERSON,
                                   style: TextStyle(
-                                    // color:  white,
+                                    // color: Colors.white,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   )),
@@ -202,7 +201,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                           margin: const EdgeInsets.only(right: 10),
                           child: const Icon(
                             EventConstants.ICON_DATA_NEXT,
-                            // color:  white,
+                            // color: Colors.white,
                             size: 15,
                           ),
                         ),
@@ -247,7 +246,7 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                                     style: const TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.bold,
-                                      // color:  white
+                                      // color: Colors.white
                                     )),
                                 ReviewEventConstants.REVIEW_EVENT_CONTENT_LIST[
                                                 index][2] ==
@@ -289,13 +288,13 @@ class _ReviewEventPageState extends State<ReviewEventPage> {
                                           ReviewEventConstants
                                                   .REVIEW_EVENT_CONTENT_LIST[
                                               index][0],
-                                          color: white,
+                                          color: Colors.white,
                                         )
                                       : Icon(
                                           ReviewEventConstants
                                                   .REVIEW_EVENT_CONTENT_LIST[
                                               index][0],
-                                          color: white,
+                                          color: Colors.white,
                                           size: 15,
                                         )),
                               changeBackground: Colors.transparent,

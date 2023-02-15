@@ -20,7 +20,7 @@ class AdditionalInformationForSelectionOfRequestFriendWidget
               Text(
                 title,
                 style: TextStyle(
-                    // color:  white,
+                    // color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold),
               )

@@ -4,6 +4,8 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
+import '../../../Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/how_people_can_find_you_on_facebook_modules/how_people_can_find_you_on_facebook_commons.dart';
+
 const List<String> QUESTION_NAME = [
   "Tên Trang của bạn là gì ?",
   "Hãy dùng tên doanh nghiệp/thương hiệu/tổ chức của bạn hoặc tên góp phần giải thích về Trang"
@@ -54,7 +56,7 @@ class _NamePagePageState extends State<NamePagePage> {
                           Text(
                             QUESTION_NAME[0],
                             style: const TextStyle(
-                                // color:  white,
+                                // color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -65,7 +67,7 @@ class _NamePagePageState extends State<NamePagePage> {
                       ),
                       Text(QUESTION_NAME[1],
                           style: const TextStyle(
-                              // color:  white ,
+                              // color: Colors.white ,
                               fontSize: 15)),
                       const SizedBox(
                         height: 10,
@@ -90,7 +92,7 @@ class _NamePagePageState extends State<NamePagePage> {
                             controller: nameController,
                             onChanged: ((value) {}),
                             style: const TextStyle(
-                                // color:  white
+                                // color: Colors.white
                                 ),
                             decoration: const InputDecoration(
                                 enabledBorder: OutlineInputBorder(

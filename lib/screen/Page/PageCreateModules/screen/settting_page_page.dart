@@ -50,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           Text(
                             SettingsPageConstants.TITLE_SETTINGS[0],
                             style: const TextStyle(
-                                // color:  white,
+                                // color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -62,7 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       //description
                       Text(SettingsPageConstants.TITLE_SETTINGS[1],
                           style: const TextStyle(
-                              // color:  white,
+                              // color: Colors.white,
                               fontSize: 17)),
                       const SizedBox(
                         height: 10,
@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                             .TITLE_CONTENT[index],
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                            // color:  white,
+                                            // color: Colors.white,
                                             fontSize: 17,
                                             fontWeight: FontWeight.bold),
                                       ),

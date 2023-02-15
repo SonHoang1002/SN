@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/emso_advertising_options_modules/emso_advertising_options_constants.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/how_find_you_modules/how_find_you_constants.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/how_protect_account_modules/login_warning_page.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/set_your_data_modules/application_and_website_page.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/set_your_data_modules/set_your_data_constants.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/who_can_see_your_share_modules/information_on_personal_page_page.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/who_can_see_your_share_modules/who_see_share_constants.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/how_people_can_find_you_on_facebook_modules/add_friend_request_page.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/set_your_data_on_facebook_modules/set_your_data_on_facebook_commons.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/who_can_see_what_you_share_modules/information_on_personal_page_page.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_shortcut_modules/check_important_settings_modules/who_can_see_what_you_share_modules/who_can_see_what_you_share_commons.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import '../../../../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../../../../widget/GeneralWidget/text_content_widget.dart';
-import 'emso_advertising_options_modules/recommend_advertisement_page.dart';
-import 'how_find_you_modules/add_friend_request_page.dart';
-import 'how_protect_account_modules/protect_your_account_constants.dart';
+import 'facebook_advertising_options_modules/facebook_advertising_options_commons.dart';
+import 'facebook_advertising_options_modules/recommend_advertisement_on_facebook_page.dart';
+import 'how_people_can_find_you_on_facebook_modules/how_people_can_find_you_on_facebook_commons.dart';
+import 'how_to_protect_your_account_modules/how_to_protect_your_account_commons.dart';
+import 'how_to_protect_your_account_modules/login_warning_page.dart';
+import 'set_your_data_on_facebook_modules/application_and_website_page.dart';
 
 class CheckPrivateRuleComponentPage extends StatelessWidget {
   CheckPrivateRuleComponentPage({required this.path, required this.name});
@@ -67,7 +67,7 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10),
                 child: Divider(
                   height: 10,
-                  // color:  white,
+                  // color: Colors.white,
                 ),
               ),
               Expanded(
@@ -113,45 +113,45 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
 
     switch (name) {
       case "who_can_see_what_you_share":
-        title = WhoCanSeeYourShareConstants
+        title = WhoCanSeeWhatYouShareCommons
             .WHO_CAN_SEE_WHAT_YOU_SHARE_COMPONENT_TITLE;
-        subTitle = WhoCanSeeYourShareConstants
+        subTitle = WhoCanSeeWhatYouShareCommons
             .WHO_CAN_SEE_WHAT_YOU_SHARE_COMPONENT_SUBTITLE;
-        contents = WhoCanSeeYourShareConstants
+        contents = WhoCanSeeWhatYouShareCommons
             .WHO_CAN_SEE_WHAT_YOU_SHARE_COMPONENT_CONTENTS;
         break;
 
       case "how_to_protect_your_account":
         title =
-            HowToProtectYourAccountConstants.HOW_TO_PROTECT_YOUR_ACCOUNT_TITLE;
-        subTitle = HowToProtectYourAccountConstants
-            .HOW_TO_PROTECT_YOUR_ACCOUNT_SUBTITLE;
-        contents = HowToProtectYourAccountConstants
-            .HOW_TO_PROTECT_YOUR_ACCOUNT_CONTENTS;
+            HowToProtectYourAccountCommons.HOW_TO_PROTECT_YOUR_ACCOUNT_TITLE;
+        subTitle =
+            HowToProtectYourAccountCommons.HOW_TO_PROTECT_YOUR_ACCOUNT_SUBTITLE;
+        contents =
+            HowToProtectYourAccountCommons.HOW_TO_PROTECT_YOUR_ACCOUNT_CONTENTS;
         break;
 
       case "how_people_can_find_you_on_facebook":
-        title = HowPeopleCanFindYouOnFacebookConstants
+        title = HowPeopleCanFindYouOnFacebookCommons
             .HOW_PEOPLE_CAN_FIND_YOU_ON_FACEBOOK_TITLE;
-        subTitle = HowPeopleCanFindYouOnFacebookConstants
+        subTitle = HowPeopleCanFindYouOnFacebookCommons
             .HOW_PEOPLE_CAN_FIND_YOU_ON_FACEBOOK_SUBTITLE;
-        contents = HowPeopleCanFindYouOnFacebookConstants
+        contents = HowPeopleCanFindYouOnFacebookCommons
             .HOW_PEOPLE_CAN_FIND_YOU_ON_FACEBOOK_CONTENTS;
         break;
 
       case "set_your_data_on_facebook":
-        title = SetYourDataOnFacebookConstants.SET_YOUR_DATA_ON_FACEBOOK_TITLE;
+        title = SetYourDataOnFacebookCommons.SET_YOUR_DATA_ON_FACEBOOK_TITLE;
         subTitle =
-            SetYourDataOnFacebookConstants.SET_YOUR_DATA_ON_FACEBOOK_SUBTITLE;
+            SetYourDataOnFacebookCommons.SET_YOUR_DATA_ON_FACEBOOK_SUBTITLE;
         contents =
-            SetYourDataOnFacebookConstants.SET_YOUR_DATA_ON_FACEBOOK_CONTENTS;
+            SetYourDataOnFacebookCommons.SET_YOUR_DATA_ON_FACEBOOK_CONTENTS;
         break;
       default:
-        title = FacebookAdvertisementOptionsConstants
+        title = FacebookAdvertisementOptionsCommons
             .FACEBOOK_ADVERTISEMENT_OPTIONS_TITLE;
-        subTitle = FacebookAdvertisementOptionsConstants
+        subTitle = FacebookAdvertisementOptionsCommons
             .FACEBOOK_ADVERTISEMENT_OPTIONS_SUBTITLE;
-        contents = FacebookAdvertisementOptionsConstants
+        contents = FacebookAdvertisementOptionsCommons
             .FACEBOOK_ADVERTISEMENT_OPTIONS_CONTENTS;
         break;
     }
@@ -177,17 +177,16 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
             itemBuilder: ((context, index) {
               return GeneralComponent(
                 [
-                  buildTextContent(
-                    contents["data"][index]["content"], false,
-                    // colorWord: Colors.grey
-                  )
+                  buildTextContent(contents["data"][index]["content"], false,
+                      // colorWord: Colors.grey
+                      )
                 ],
                 prefixWidget: Container(
                   padding: EdgeInsets.only(right: 15),
                   child: SvgPicture.asset(
                     contents["data"][index]["icon"],
                     height: 20,
-                    // color:  white,
+                    // color: Colors.white,
                   ),
                 ),
                 changeBackground: Colors.transparent,

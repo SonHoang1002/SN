@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../theme/colors.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class SearchInput extends StatefulWidget {
   final Function? handleSearch;
   final Function? handleUpdateFocus;
-  final Function? handleSearchClick;
-  String? title = "Tìm kiếm";
 
-  SearchInput(
-      {super.key,
-      this.handleSearch,
-      this.handleUpdateFocus,
-      this.title,
-      this.handleSearchClick});
+  const SearchInput({
+    super.key,
+    this.handleSearch,
+    this.handleUpdateFocus,
+  });
 
   @override
   State<SearchInput> createState() => _SearchInputState();
@@ -47,21 +43,14 @@ class _SearchInputState extends State<SearchInput> {
             },
             cursorColor: Theme.of(context).textTheme.displayLarge?.color,
             decoration: InputDecoration(
-                hintText: widget.title,
+                hintText: "Tìm kiếm",
                 hintStyle: const TextStyle(fontSize: 13),
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
-                prefixIcon: InkWell(
-                  onTap: () {
-                    widget.handleSearchClick != null
-                        ? widget.handleSearchClick!()
-                        : null;
-                  },
-                  child: Icon(
-                    FontAwesomeIcons.magnifyingGlass,
-                    color: Theme.of(context).textTheme.displayLarge?.color,
-                    size: 17,
-                  ),
+                prefixIcon: Icon(
+                  FontAwesomeIcons.magnifyingGlass,
+                  color: Theme.of(context).textTheme.displayLarge?.color,
+                  size: 17,
                 ),
                 suffixIcon: controller.text.isNotEmpty
                     ? InkWell(

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
-import '../data/gif.dart';
-import '../theme/colors.dart';
-import 'image_cache.dart';
-import 'search_input.dart';
+import 'package:social_network_app_mobile/data/gif.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/search_input.dart';
 
 class EmojiModalBottom extends StatefulWidget {
   final double height;
@@ -37,7 +36,7 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
           const SizedBox(
             height: 8.0,
           ),
-           SearchInput(),
+          const SearchInput(),
           SizedBox(
             height: 45,
             child: TabBar(

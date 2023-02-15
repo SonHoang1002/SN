@@ -1,13 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/personal_page_commons.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/private_rule_settings_page.dart';
+import 'package:social_network_app_mobile/screen/Setting/setting.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_bar_widget.dart';
+import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-import '../../../widget/GeneralWidget/bottom_navigator_bar_widget.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../widget/GeneralWidget/title_description_and_content_list.dart';
-import '../../../widget/back_icon_appbar.dart';
 import '../../../widget/search_input.dart';
-import 'personal_page_constants.dart';
-import 'sub_modules/private_rule_settings_modules/private_rule_settings_page.dart';
+import '../setting_constants/general_settings_constants.dart';
 
 class PersonalSettingsPage extends StatelessWidget {
   late double width = 0;
@@ -27,7 +31,7 @@ class PersonalSettingsPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: const [
             BackIconAppbar(),
             Expanded(
                 child: SearchInput(
@@ -54,21 +58,21 @@ class PersonalSettingsPage extends StatelessWidget {
                     children: [
                       // private rules
                       TitleDescriptionAndContentListWidget(
-                          title: PersonalPageConstants.PRIVATE_TITLE,
-                          subTitle: PersonalPageConstants.PRIVATE_DESCRIPTION,
+                          title: PersonalPageCommons.PRIVATE_TITLE,
+                          subTitle: PersonalPageCommons.PRIVATE_DESCRIPTION,
                           listView: Container(
                             height: 305,
                             child: ListView.builder(
                                 padding: EdgeInsets.zero,
-                                itemCount: PersonalPageConstants
+                                itemCount: PersonalPageCommons
                                     .PRIVATE_INFORMATION_LIST.length,
                                 itemBuilder: ((context, index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      // final list = PersonalPageConstants
+                                      // final list = PersonalPageCommons
                                       //     .PRIVATE_INFORMATION_LIST;
                                       //////////////////////////h/////////////////////////////////////////////////////////////////////
-                                      switch (PersonalPageConstants
+                                      switch (PersonalPageCommons
                                               .PRIVATE_INFORMATION_LIST[index]
                                           ["key"]) {
                                         case "private_rule":
@@ -122,16 +126,16 @@ class PersonalSettingsPage extends StatelessWidget {
                                     child: GeneralComponent(
                                       [
                                         Text(
-                                            PersonalPageConstants
+                                            PersonalPageCommons
                                                     .PRIVATE_INFORMATION_LIST[
                                                 index]["data"]["title"],
                                             style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
-                                              // color:  white
+                                              // color: Colors.white
                                             )),
                                         Text(
-                                            PersonalPageConstants
+                                            PersonalPageCommons
                                                     .PRIVATE_INFORMATION_LIST[
                                                 index]["data"]["subTitle"],
                                             style: TextStyle(
@@ -148,10 +152,10 @@ class PersonalSettingsPage extends StatelessWidget {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(20))),
                                         child: SvgPicture.asset(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .PRIVATE_INFORMATION_LIST[
                                               index]["data"]["icon"],
-                                          // color:  white,
+                                          // color: Colors.white,
                                         ),
                                       ),
                                       changeBackground: Colors.transparent,
@@ -162,14 +166,13 @@ class PersonalSettingsPage extends StatelessWidget {
                           )),
                       // notification
                       TitleDescriptionAndContentListWidget(
-                        title: PersonalPageConstants.NOTIFICATION_TITLE,
-                        subTitle:
-                            PersonalPageConstants.NOTIFICATION_DESCRIPTION,
+                        title: PersonalPageCommons.NOTIFICATION_TITLE,
+                        subTitle: PersonalPageCommons.NOTIFICATION_DESCRIPTION,
                         listView: Container(
                           height: 340,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
-                              itemCount: PersonalPageConstants
+                              itemCount: PersonalPageCommons
                                   .NOTIFICATION_INFORMATION_LIST.length,
                               itemBuilder: ((context, index) {
                                 return GestureDetector(
@@ -179,16 +182,16 @@ class PersonalSettingsPage extends StatelessWidget {
                                   child: GeneralComponent(
                                     [
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .NOTIFICATION_INFORMATION_LIST[
                                               index]["data"]["title"],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
-                                            // color:  white
+                                            // color: Colors.white
                                           )),
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .NOTIFICATION_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
                                           style: TextStyle(
@@ -205,10 +208,10 @@ class PersonalSettingsPage extends StatelessWidget {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
-                                        PersonalPageConstants
+                                        PersonalPageCommons
                                                 .NOTIFICATION_INFORMATION_LIST[
                                             index]["data"]["icon"],
-                                        // color:  white,
+                                        // color: Colors.white,
                                       ),
                                     ),
                                     changeBackground: Colors.transparent,
@@ -220,15 +223,15 @@ class PersonalSettingsPage extends StatelessWidget {
                       ),
                       // your information in facebook
                       TitleDescriptionAndContentListWidget(
-                        title: PersonalPageConstants
+                        title: PersonalPageCommons
                             .YOUR_INFORMATION_IN_FACEBOOK_TITLE,
-                        subTitle: PersonalPageConstants
+                        subTitle: PersonalPageCommons
                             .YOUR_INFORMATION_IN_FACEBOOK_DESCRIPTION,
                         listView: Container(
                           height: 290,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
-                              itemCount: PersonalPageConstants
+                              itemCount: PersonalPageCommons
                                   .YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST
                                   .length,
                               itemBuilder: ((context, index) {
@@ -239,16 +242,16 @@ class PersonalSettingsPage extends StatelessWidget {
                                   child: GeneralComponent(
                                     [
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST[
                                               index]["data"]["title"],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
-                                            // color:  white
+                                            // color: Colors.white
                                           )),
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
                                           style: TextStyle(
@@ -265,10 +268,10 @@ class PersonalSettingsPage extends StatelessWidget {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
-                                        PersonalPageConstants
+                                        PersonalPageCommons
                                                 .YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST[
                                             index]["data"]["icon"],
-                                        // color:  white,
+                                        // color: Colors.white,
                                       ),
                                     ),
                                     changeBackground: Colors.transparent,
@@ -280,14 +283,13 @@ class PersonalSettingsPage extends StatelessWidget {
                       ),
                       //  file and contact
                       TitleDescriptionAndContentListWidget(
-                        title: PersonalPageConstants.FEED_SETTINGS_TITLE,
-                        subTitle:
-                            PersonalPageConstants.FEED_SETTINGS_DESCRIPTION,
+                        title: PersonalPageCommons.FEED_SETTINGS_TITLE,
+                        subTitle: PersonalPageCommons.FEED_SETTINGS_DESCRIPTION,
                         listView: Container(
                           height: 120,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
-                              itemCount: PersonalPageConstants
+                              itemCount: PersonalPageCommons
                                   .FEED_SETTINGS_INFORMATION_LIST.length,
                               itemBuilder: ((context, index) {
                                 return GestureDetector(
@@ -297,16 +299,16 @@ class PersonalSettingsPage extends StatelessWidget {
                                   child: GeneralComponent(
                                     [
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .FEED_SETTINGS_INFORMATION_LIST[
                                               index]["data"]["title"],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
-                                            // color:  white
+                                            // color: Colors.white
                                           )),
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .FEED_SETTINGS_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
                                           style: TextStyle(
@@ -323,10 +325,10 @@ class PersonalSettingsPage extends StatelessWidget {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
-                                        PersonalPageConstants
+                                        PersonalPageCommons
                                                 .FEED_SETTINGS_INFORMATION_LIST[
                                             index]["data"]["icon"],
-                                        // color:  white,
+                                        // color: Colors.white,
                                       ),
                                     ),
                                     changeBackground: Colors.transparent,
@@ -338,13 +340,13 @@ class PersonalSettingsPage extends StatelessWidget {
                       ),
                       //  file and contact
                       TitleDescriptionAndContentListWidget(
-                        title: PersonalPageConstants.STORY_TITLE,
-                        subTitle: PersonalPageConstants.STORY_DESCRIPTION,
+                        title: PersonalPageCommons.STORY_TITLE,
+                        subTitle: PersonalPageCommons.STORY_DESCRIPTION,
                         listView: Container(
                           height: 70,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
-                              itemCount: PersonalPageConstants
+                              itemCount: PersonalPageCommons
                                   .STORY_INFORMATION_LIST.length,
                               itemBuilder: ((context, index) {
                                 return GestureDetector(
@@ -354,16 +356,16 @@ class PersonalSettingsPage extends StatelessWidget {
                                   child: GeneralComponent(
                                     [
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .STORY_INFORMATION_LIST[index]
                                               ["data"]["title"],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
-                                            // color:  white
+                                            // color: Colors.white
                                           )),
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .STORY_INFORMATION_LIST[index]
                                               ["data"]["subTitle"],
                                           style: TextStyle(
@@ -380,10 +382,10 @@ class PersonalSettingsPage extends StatelessWidget {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
-                                        PersonalPageConstants
+                                        PersonalPageCommons
                                                 .STORY_INFORMATION_LIST[index]
                                             ["data"]["icon"],
-                                        // color:  white,
+                                        // color: Colors.white,
                                       ),
                                     ),
                                     changeBackground: Colors.transparent,
@@ -395,13 +397,13 @@ class PersonalSettingsPage extends StatelessWidget {
                       ),
                       // SHORT CUT
                       TitleDescriptionAndContentListWidget(
-                        title: PersonalPageConstants.SHORTCUT_TITLE,
-                        subTitle: PersonalPageConstants.SHORTCUT_DESCRIPTION,
+                        title: PersonalPageCommons.SHORTCUT_TITLE,
+                        subTitle: PersonalPageCommons.SHORTCUT_DESCRIPTION,
                         listView: Container(
                           height: 70,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
-                              itemCount: PersonalPageConstants
+                              itemCount: PersonalPageCommons
                                   .SHORTCUT_INFORMATION_LIST.length,
                               itemBuilder: ((context, index) {
                                 return GestureDetector(
@@ -411,16 +413,16 @@ class PersonalSettingsPage extends StatelessWidget {
                                   child: GeneralComponent(
                                     [
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .SHORTCUT_INFORMATION_LIST[
                                               index]["data"]["title"],
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
-                                            // color:  white
+                                            // color: Colors.white
                                           )),
                                       Text(
-                                          PersonalPageConstants
+                                          PersonalPageCommons
                                                   .SHORTCUT_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
                                           style: TextStyle(
@@ -437,10 +439,10 @@ class PersonalSettingsPage extends StatelessWidget {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
-                                        PersonalPageConstants
+                                        PersonalPageCommons
                                                 .SHORTCUT_INFORMATION_LIST[
                                             index]["data"]["icon"],
-                                        // color:  white,
+                                        // color: Colors.white,
                                       ),
                                     ),
                                     changeBackground: Colors.transparent,
