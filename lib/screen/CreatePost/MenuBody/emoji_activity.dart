@@ -9,10 +9,15 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
 class EmojiActivity extends StatefulWidget {
+  final String type;
   final dynamic statusActivity;
   final Function handleUpdateData;
+
   const EmojiActivity(
-      {Key? key, this.statusActivity, required this.handleUpdateData})
+      {Key? key,
+      this.statusActivity,
+      required this.handleUpdateData,
+      required this.type})
       : super(key: key);
 
   @override
@@ -84,6 +89,7 @@ class _EmojiActivityState extends State<EmojiActivity>
                     childAspectRatio: 4),
                 itemCount: listEmojis.length,
                 itemBuilder: (context, index) => Item(
+                    typePage: widget.type,
                     subType: 'emoji',
                     item: listEmojis[index],
                     type: 'emoji',
@@ -96,6 +102,7 @@ class _EmojiActivityState extends State<EmojiActivity>
                     childAspectRatio: 4),
                 itemCount: listActivities.length,
                 itemBuilder: (context, index) => Item(
+                      typePage: widget.type,
                       subType: 'emoji',
                       item: listActivities[index],
                       type: 'activity',
@@ -118,6 +125,7 @@ class Item extends StatefulWidget {
   final dynamic item;
   final String type;
   final String subType;
+  final String typePage;
   final Function handleUpdateData;
   const Item({
     super.key,
@@ -125,6 +133,7 @@ class Item extends StatefulWidget {
     required this.type,
     required this.handleUpdateData,
     required this.subType,
+    required this.typePage,
   });
 
   @override
@@ -154,6 +163,7 @@ class _ItemState extends State<Item> {
                                   childAspectRatio: 4),
                           itemCount: response['data'].length,
                           itemBuilder: (context, index) => Item(
+                              typePage: widget.typePage,
                               item: response['data'][index],
                               type: 'emoji',
                               subType: 'child',
@@ -176,14 +186,24 @@ class _ItemState extends State<Item> {
         } else {
           widget.handleUpdateData('update_status_activity', widget.item);
           if (widget.subType == 'child') {
-            Navigator.of(context)
-              ..pop()
-              ..pop()
-              ..pop();
+            if (widget.typePage == 'menu_out') {
+              Navigator.of(context)
+                ..pop()
+                ..pop();
+            } else {
+              Navigator.of(context)
+                ..pop()
+                ..pop()
+                ..pop();
+            }
           } else {
-            Navigator.of(context)
-              ..pop()
-              ..pop();
+            if (widget.typePage == 'menu_out') {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context)
+                ..pop()
+                ..pop();
+            }
           }
         }
       },

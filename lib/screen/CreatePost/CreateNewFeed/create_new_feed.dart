@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:social_network_app_mobile/apis/config.dart';
+import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -20,6 +23,7 @@ import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/gif.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_categories.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/question_anwer.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/page_edit_media_upload.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_target.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
@@ -51,6 +55,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   dynamic statusQuestion;
   dynamic checkin;
 
+  bool isUploadVideo = false;
+
   @override
   void initState() {
     super.initState();
@@ -73,23 +79,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     );
 
     return await file;
-  }
-
-  handleGetFiles(file) async {
-    if (file.isEmpty) {
-      setState(() {
-        files = [];
-      });
-    }
-
-    List newFiles =
-        file.map((element) => functionConvertFile(element)).toList();
-
-    print('newFiles $newFiles');
-
-    setState(() {
-      files = newFiles;
-    });
   }
 
   handleUpdateData(type, data) {
@@ -134,10 +123,68 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           checkin = data;
         });
         break;
+      case 'update_file':
+        List listPath = [];
+        List newFiles = [];
+
+        for (var item in [...files, ...data]) {
+          if (!listPath.contains(item['file'].path)) {
+            newFiles.add(item);
+            listPath.add(item['file'].path);
+          }
+        }
+
+        setState(() {
+          files = newFiles;
+        });
+        break;
+      case 'update_file_description':
+        setState(() {
+          files = data;
+        });
+        break;
     }
   }
 
-  handlePress() {}
+  handlePress() {
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+            builder: ((context) => PageEditMediaUpload(
+                files: files, handleUpdateData: handleUpdateData))));
+  }
+
+  handleUploadMedia(index, file) async {
+    var fileData = file['file'];
+    String fileName = fileData!.path.split('/').last;
+    FormData formData;
+
+    dynamic response;
+    if (file['type'] == 'image') {
+      formData = FormData.fromMap({
+        "description": file['description'] ?? '',
+        "position": index + 1,
+        "file": await MultipartFile.fromFile(fileData.path, filename: fileName),
+      });
+      response = await MediaApi().uploadMediaEmso(formData);
+    } else {
+      setState(() {
+        isUploadVideo = true;
+      });
+      formData = FormData.fromMap({
+        "token": userToken,
+        "channelId": '2',
+        "privacy": '1',
+        "name": fileName,
+        "mimeType": "video/mp4",
+        "position": index + 1,
+        "videofile":
+            await MultipartFile.fromFile(fileData.path, filename: fileName),
+      });
+      response = await ApiMediaPetube().uploadMediaPetube(formData);
+    }
+    return response;
+  }
 
   handleCreateUpdatePost() async {
     context.loaderOverlay.show();
@@ -182,17 +229,40 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       data = {...data, 'place_id': checkin['id']};
     }
 
+    if (files.isNotEmpty) {
+      List<Future> listUpload = [];
+      for (var i = 0; i < files.length; i++) {
+        listUpload.add(handleUploadMedia(i, files[i]));
+      }
+      var results = await Future.wait(listUpload);
+      List mediasId = [];
+      if (results.isNotEmpty) {
+        mediasId = results.map((e) => e['id']).toList();
+      }
+
+      data = {...data, "media_ids": mediasId};
+    }
+
     var response = await PostApi().createStatus(data);
 
     if (response != null) {
-      ref
-          .read(postControllerProvider.notifier)
-          .createUpdatePost(feedPost, response);
       if (context.mounted) {
         context.loaderOverlay.hide();
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Tạo bài viết thành công")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(isUploadVideo
+                ? "Video trong bài viết đang được xử lý"
+                : "Tạo bài viết thành công")));
+      }
+
+      if (isUploadVideo) {
+        setState(() {
+          isUploadVideo = false;
+        });
+      } else {
+        ref
+            .read(postControllerProvider.notifier)
+            .createUpdatePost(feedPost, response);
       }
     }
   }
@@ -252,25 +322,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                   Stack(
                     children: [
                       files.isNotEmpty
-                          ? ClipRect(
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                heightFactor:
-                                    files[0].width / files[0].height < 0.4
-                                        ? 0.6
-                                        : 1,
-                                child: Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: Image.memory(
-                                      files[0].pickedThumbData,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error,
-                                              stackTrace) =>
-                                          const Text(
-                                              'Hình ảnh không được hiển thị'),
-                                    )),
-                              ),
-                            )
+                          ? GridLayoutImage(
+                              medias: files, handlePress: (media) {})
                           : const SizedBox(),
                       gifLink.isNotEmpty
                           ? ImageCacheRender(
@@ -317,6 +370,18 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                   size: 20,
                                 ),
                               ),
+                            )),
+                      if (files.isNotEmpty)
+                        Positioned(
+                            top: 2,
+                            left: 10,
+                            child: SizedBox(
+                              width: 100,
+                              child: ButtonPrimary(
+                                isPrimary: true,
+                                label: "Chỉnh sửa",
+                                handlePress: handlePress,
+                              ),
                             ))
                     ],
                   )
@@ -335,7 +400,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
   }
 
-  handleChooseMenu(menu) {
+  handleChooseMenu(menu, subType) {
     if (menu == null) return;
 
     if (menu['key'] == 'media') {
@@ -343,11 +408,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           context,
           CupertinoPageRoute(
               builder: (context) => Expanded(
-                      child: GalleryView(
-                    isMutipleFile: true,
-                    handleGetFiles: handleGetFiles,
-                    filesSelected: const [],
-                  ))));
+                  child: GalleryView(
+                      isMutipleFile: true,
+                      handleGetFiles: handleUpdateData,
+                      filesSelected: files))));
       return;
     }
     setState(() {
@@ -360,10 +424,15 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     switch (menu['key']) {
       case 'emoji-activity':
         body = EmojiActivity(
-            statusActivity: statusActivity, handleUpdateData: handleUpdateData);
+            type: subType,
+            statusActivity: statusActivity,
+            handleUpdateData: handleUpdateData);
         break;
       case 'checkin':
-        body = Checkin(checkin: checkin, handleUpdateData: handleUpdateData);
+        body = Checkin(
+            type: subType,
+            checkin: checkin,
+            handleUpdateData: handleUpdateData);
         break;
       case 'tag-people':
         body = FriendTag(
@@ -371,9 +440,13 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         buttonAppbar = ButtonPrimary(
           label: "Xong",
           handlePress: () {
-            Navigator.of(context)
-              ..pop()
-              ..pop();
+            if (subType == 'menu_out') {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context)
+                ..pop()
+                ..pop();
+            }
           },
         );
         break;
@@ -440,7 +513,19 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       child: index != 4
                           ? listMenuPost[index]['image'] != null
                               ? IconButton(
-                                  onPressed: null,
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => Expanded(
+                                                    child: GalleryView(
+                                                  typePage: 'page_edit',
+                                                  isMutipleFile: true,
+                                                  handleGetFiles:
+                                                      handleUpdateData,
+                                                  filesSelected: files,
+                                                ))));
+                                  },
                                   icon: SvgPicture.asset(
                                     listMenuPost[index]['image'],
                                     height: 28,
@@ -448,10 +533,16 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                     fit: BoxFit.scaleDown,
                                   ),
                                 )
-                              : Icon(
-                                  listMenuPost[index]['icon'],
-                                  color: Color(listMenuPost[index]['color']),
-                                  size: 24,
+                              : GestureDetector(
+                                  onTap: () {
+                                    handleChooseMenu(
+                                        listMenuPost[index], 'menu_out');
+                                  },
+                                  child: Icon(
+                                    listMenuPost[index]['icon'],
+                                    color: Color(listMenuPost[index]['color']),
+                                    size: 24,
+                                  ),
                                 )
                           : IconButton(
                               onPressed: null,

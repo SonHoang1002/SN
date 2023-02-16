@@ -10,7 +10,12 @@ import 'package:social_network_app_mobile/widget/text_description.dart';
 class Checkin extends StatefulWidget {
   final Function handleUpdateData;
   final dynamic checkin;
-  const Checkin({Key? key, required this.handleUpdateData, this.checkin})
+  final String type;
+  const Checkin(
+      {Key? key,
+      required this.handleUpdateData,
+      this.checkin,
+      required this.type})
       : super(key: key);
 
   @override
@@ -75,9 +80,13 @@ class _CheckinState extends State<Checkin> {
                         locationSelected = listRenders[index];
                         widget.handleUpdateData(
                             'update_checkin', listRenders[index]);
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop();
+                        if (widget.type == 'menu_out') {
+                          Navigator.of(context).pop();
+                        } else {
+                          Navigator.of(context)
+                            ..pop()
+                            ..pop();
+                        }
                       });
                     },
                     child: Container(

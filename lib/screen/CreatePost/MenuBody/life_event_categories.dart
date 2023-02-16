@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../constant/common.dart';
@@ -9,6 +10,11 @@ import '../../../widget/button_primary.dart';
 import '../../../widget/image_cache.dart';
 import '../create_modal_base_menu.dart';
 import 'life_event_detail.dart';
+import 'package:social_network_app_mobile/data/life_event_categories.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_detail.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 class LifeEventCategories extends StatelessWidget {
   final List? listLifeEvent;
@@ -147,9 +153,10 @@ class LifeEventCategories extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           listData[index]['url'] != null
-                              ? ImageCacheRender(
-                                  path: linkAvatarDefault,
-                                  width: 30.0,
+                              ? SvgPicture.network(
+                                  listData[index]['url'],
+                                  width: 24.0,
+                                  color: secondaryColor,
                                 )
                               : const SizedBox(),
                           Container(

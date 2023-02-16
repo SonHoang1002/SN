@@ -7,6 +7,7 @@ class TextFormFieldCustom extends StatefulWidget {
   final String? errorText;
   final String? label;
   final String? hintText;
+  final String? value;
 
   final Function? handleGetValue;
   final TextEditingController? textController;
@@ -31,7 +32,8 @@ class TextFormFieldCustom extends StatefulWidget {
       this.suffixIcon,
       this.handleGetValue,
       this.textController,
-      this.focusNode})
+      this.focusNode,
+      this.value})
       : super(key: key);
 
   @override

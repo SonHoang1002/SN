@@ -10,6 +10,7 @@ class GalleryAssetSelector extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.albums,
+    this.typePage,
   }) : super(key: key);
 
   ///
@@ -17,6 +18,7 @@ class GalleryAssetSelector extends StatefulWidget {
 
   ///
   final Albums albums;
+  final String? typePage;
 
   @override
   GalleryAssetSelectorState createState() => GalleryAssetSelectorState();
@@ -197,7 +199,13 @@ class GalleryAssetSelectorState extends State<GalleryAssetSelector>
                           label: 'Chọn',
                           handlePress: () {
                             widget.controller.completeTask;
-                            Navigator.pop(context);
+                            if (widget.typePage == 'page_edit') {
+                              Navigator.of(context).pop();
+                            } else {
+                              Navigator.of(context)
+                                ..pop()
+                                ..pop();
+                            }
                           },
                         ),
                       ),

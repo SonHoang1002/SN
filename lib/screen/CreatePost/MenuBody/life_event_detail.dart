@@ -4,10 +4,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/date_time_custom.dart';
 import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 import 'package:social_network_app_mobile/widget/video_player.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class LifeEventDetail extends StatefulWidget {
   final dynamic event;
@@ -19,6 +21,7 @@ class LifeEventDetail extends StatefulWidget {
 
 class _LifeEventDetailState extends State<LifeEventDetail> {
   String path = '';
+  late FlickMultiManager flickMultiManager;
 
   @override
   void initState() {
@@ -27,6 +30,8 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
     if (widget.event != null && widget.event['video_url'] != null) {
       path = widget.event['video_url'][0];
     }
+
+    flickMultiManager = FlickMultiManager();
 
     super.initState();
   }
@@ -42,7 +47,12 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
               height: 230,
               color: Theme.of(context).canvasColor,
               child: path != ''
-                  ? VideoPlayerRender(autoPlay: true, path: path)
+                  ? FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: path,
+                      imageErrorBuilder: (context, error, stackTrace) =>
+                          const SizedBox(),
+                    )
                   : const Center(
                       child: Text(
                         "Chưa có video",

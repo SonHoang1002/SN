@@ -30,9 +30,13 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
     }
 
     getAspectMedia(media) {
-      return media['aspect'] ?? checkIsImage(media)
-          ? media['meta']['original']['aspect']
-          : 1 / media['meta']['original']['aspect'];
+      if (media['aspect'] != null) {
+        return media['aspect'];
+      } else {
+        return checkIsImage(media)
+            ? media['meta']['original']['aspect']
+            : 1 / media['meta']['original']['aspect'];
+      }
     }
 
     renderLayoutMedia(medias) {
@@ -43,47 +47,56 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
             return ClipRect(
               child: Align(
                 alignment: Alignment.topCenter,
-                heightFactor:
-                    medias[0]['meta']['original']['aspect'] < 0.4 ? 0.6 : 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: medias[0]['pathType'] == 'local'
-                      ? Image.memory(
-                          medias[0].pickedThumbData,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Text('Hình ảnh không được hiển thị'),
-                        )
-                      : FadeInImage.memoryNetwork(
-                          placeholder: kTransparentImage,
-                          image: medias[0]['url'],
-                          imageErrorBuilder: (context, error, stackTrace) =>
-                              const SizedBox(),
-                        ),
+                heightFactor: (medias[0]['aspect'] ??
+                            medias[0]['meta']['original']['aspect']) <
+                        0.4
+                    ? 0.6
+                    : 1,
+                child: GestureDetector(
+                  onTap: () {
+                    widget.handlePress(medias[0]);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: medias[0]['subType'] == 'local'
+                        ? Image.file(
+                            medias[0]['file'],
+                            fit: BoxFit.cover,
+                          )
+                        : FadeInImage.memoryNetwork(
+                            placeholder: kTransparentImage,
+                            image: medias[0]['url'],
+                            imageErrorBuilder: (context, error, stackTrace) =>
+                                const SizedBox(),
+                          ),
+                  ),
                 ),
               ),
             );
           } else {
             return Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: medias[0]['pathType'] == 'local'
-                  ? Image.memory(
-                      medias[0].pickedThumbData,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Text('Hình ảnh không được hiển thị'),
-                    )
-                  : SizedBox(
-                      height: medias[0]['meta']['original']['aspect'] < 1
-                          ? size.width
-                          : null,
-                      child: FeedVideo(
-                          path: medias[0]['remote_url'] ?? medias[0]['url'],
-                          flickMultiManager: flickMultiManager,
-                          image: medias[0]['preview_remote_url'] ??
-                              medias[0]['preview_url'] ??
-                              ''),
-                    ),
+              child: SizedBox(
+                height: (medias[0]['aspect'] ??
+                            medias[0]['meta']['original']['aspect'] ??
+                            1) <
+                        1
+                    ? size.width
+                    : null,
+                child: GestureDetector(
+                  onTap: () {
+                    widget.handlePress(medias[0]);
+                  },
+                  child: FeedVideo(
+                      path: medias[0]['file']?.path ??
+                          medias[0]['remote_url'] ??
+                          medias[0]['url'],
+                      flickMultiManager: flickMultiManager,
+                      image: medias[0]['preview_remote_url'] ??
+                          medias[0]['preview_url'] ??
+                          ''),
+                ),
+              ),
             );
           }
         case 2:
