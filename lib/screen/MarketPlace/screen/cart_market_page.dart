@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -56,13 +57,13 @@ class _CartMarketPageState extends State<CartMarketPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BackIconAppbar(),
-              AppBarTitle(title: CartMarketConstants.CART_MARKET_CART_TITLE),
+              const BackIconAppbar(),
+              const AppBarTitle(title: CartMarketConstants.CART_MARKET_CART_TITLE),
               GestureDetector(
                 onTap: () {
                   pushToNextScreen(context, NotificationMarketPage());
                 },
-                child: Icon(
+                child: const Icon(
                   FontAwesomeIcons.bell,
                   size: 18,
                   color: Colors.black,
@@ -113,7 +114,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                 children: [
                   // checkbox
                   Container(
-                      margin: EdgeInsets.only(right: 5),
+                      margin: const EdgeInsets.only(right: 5),
                       height: 30,
                       width: 30,
                       child: Checkbox(
@@ -126,8 +127,8 @@ class _CartMarketPageState extends State<CartMarketPage> {
                   Container(
                     height: 40,
                     width: 40,
-                    padding: EdgeInsets.all(10),
-                    child: Icon(
+                    padding: const EdgeInsets.all(10),
+                    child: const Icon(
                       FontAwesomeIcons.store,
                       size: 19,
                     ),
@@ -136,7 +137,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                   Container(
                     height: 40,
                     width: 40,
-                    child: Icon(
+                    child: const Icon(
                       FontAwesomeIcons.angleRight,
                       size: 19,
                     ),
@@ -155,11 +156,11 @@ class _CartMarketPageState extends State<CartMarketPage> {
         buildSpacer(height: 10),
         Slidable(
           endActionPane: ActionPane(
-            motion: ScrollMotion(),
+            motion: const ScrollMotion(),
             children: [
               SlidableAction(
                 onPressed: (context) {},
-                backgroundColor: Color(0xFFFE4A49),
+                backgroundColor: const Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
                 icon: Icons.delete,
                 label: 'Delete',
@@ -175,7 +176,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
               child: Row(
                 children: [
                   Container(
-                      margin: EdgeInsets.only(right: 5),
+                      margin: const EdgeInsets.only(right: 5),
                       height: 30,
                       width: 30,
                       child: Checkbox(
@@ -185,7 +186,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                             setState(() {});
                           })),
                   Container(
-                    margin: EdgeInsets.only(right: 10),
+                    margin: const EdgeInsets.only(right: 10),
                     child: ImageCacheRender(
                       height: 80.0,
                       width: 80.0,
@@ -203,7 +204,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                           title,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -218,7 +219,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                             height: 25,
                             width: 25,
                             // padding: EdgeInsets.all(10),
-                            child: Icon(
+                            child: const Icon(
                               FontAwesomeIcons.minus,
                               size: 16,
                             ),
@@ -238,7 +239,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                             height: 25,
                             width: 25,
                             // padding: EdgeInsets.all(10),
-                            child: Icon(FontAwesomeIcons.plus, size: 16),
+                            child: const Icon(FontAwesomeIcons.plus, size: 16),
                           )
                         ],
                       ),
@@ -252,7 +253,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
         Container(
           height: 5,
           color: greyColor,
-          margin: EdgeInsets.symmetric(vertical: 10),
+          margin: const EdgeInsets.symmetric(vertical: 10),
         )
       ],
     );
@@ -275,11 +276,11 @@ class _CartMarketPageState extends State<CartMarketPage> {
                   children: [
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           FontAwesomeIcons.virusCovid,
                           size: 17,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         buildTextContent(
@@ -296,10 +297,10 @@ class _CartMarketPageState extends State<CartMarketPage> {
                           false,
                           fontSize: 16,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Icon(
+                        const Icon(
                           FontAwesomeIcons.arrowRight,
                           size: 17,
                         )
@@ -319,11 +320,11 @@ class _CartMarketPageState extends State<CartMarketPage> {
                   children: [
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           FontAwesomeIcons.virusCovid,
                           size: 17,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         buildTextContent(
@@ -350,7 +351,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                 Row(
                   children: [
                     Container(
-                        margin: EdgeInsets.only(right: 5),
+                        margin: const EdgeInsets.only(right: 5),
                         height: 30,
                         width: 30,
                         child: Checkbox(
@@ -376,7 +377,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                     children: [
                       buildTextContent("Tổng thanh toán: ", false,
                           colorWord: greyColor, fontSize: 12),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       buildTextContent("₫${_allMoney}", true,
@@ -385,7 +386,7 @@ class _CartMarketPageState extends State<CartMarketPage> {
                   ),
                 ),
                 Container(
-                  child: buildElevateButtonWidget(
+                  child: buildButtonForMarketWidget(
                       marginTop: 0,
                       width: width * 0.3,
                       bgColor: Colors.red,

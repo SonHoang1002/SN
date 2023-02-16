@@ -8,7 +8,7 @@ import '../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import '../widgets/have_account_widget.dart';
 import 'main_login_page.dart';
 import 'phone_login_page.dart';
@@ -110,7 +110,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                                 )
                                               : const SizedBox()
                                         ],
-                                        suffixWidget: Container(
+                                        suffixWidget: SizedBox(
                                           height: 30,
                                           width: 30,
                                           child: Radio(
@@ -138,7 +138,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                   ? Column(
                                       children: [
                                         // chọn danh xưng
-                                        buildElevateButtonWidget(
+                                        buildButtonForLoginWidget(
                                             bgColor: white,
                                             colorText: blackColor,
                                             width: width,
@@ -256,7 +256,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                       ],
                                     )
                                   : const SizedBox(),
-                              buildElevateButtonWidget(
+                              buildButtonForLoginWidget(
                                   width: width,
                                   function: () {
                                     pushToNextScreen(context, PhoneLoginPage());
@@ -283,7 +283,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
 Widget _buildTextFormField(
     // TextEditingController controller,
     String placeHolder) {
-  return Container(
+  return SizedBox(
     height: 40,
     child: TextFormField(
       // controller: controller,

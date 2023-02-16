@@ -41,13 +41,13 @@ class _ManageOrderMarketPageState extends State<ManageOrderMarketPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children:  [
-              BackIconAppbar(),
-              AppBarTitle(title: "Quản lý đơn hàng"),
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Quản lý đơn hàng"),
                GestureDetector(
                 onTap: () {
                   pushToNextScreen(context, NotificationMarketPage());
                 },
-                child: Icon(
+                child: const Icon(
                   FontAwesomeIcons.bell,
                   size: 18,
                   color: Colors.black,

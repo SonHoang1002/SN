@@ -4,6 +4,7 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/rating_star_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
@@ -14,7 +15,6 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
-import '../../Login/widgets/build_elevateButton_widget.dart';
 
 class OldDetailProductMarketPage extends StatefulWidget {
   final String id;
@@ -24,7 +24,8 @@ class OldDetailProductMarketPage extends StatefulWidget {
       _OldDetailProductMarketPageState();
 }
 
-class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage> {
+class _OldDetailProductMarketPageState
+    extends State<OldDetailProductMarketPage> {
   late double width = 0;
   late double height = 0;
   Map<String, dynamic>? _product;
@@ -124,8 +125,7 @@ class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage>
                           Container(
                             margin: const EdgeInsets.only(bottom: 10),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
                                   children: [
@@ -174,8 +174,7 @@ class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage>
                                           width: 20,
                                           child: Icon(
                                             !_isConcern
-                                                ? Icons
-                                                    .star_purple500_outlined
+                                                ? Icons.star_purple500_outlined
                                                 : Icons.star_border,
                                             size: 20,
                                           ),
@@ -262,8 +261,8 @@ class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage>
                                             width: 40,
                                             color: primaryColor,
                                             child: const Center(
-                                                child: Icon(
-                                                    FontAwesomeIcons.add)),
+                                                child:
+                                                    Icon(FontAwesomeIcons.add)),
                                           ),
                                         ),
                                       ],
@@ -291,8 +290,7 @@ class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage>
                               Row(
                                 children: List.generate(
                                     DetailProductMarketConstants
-                                        .DETAIL_PRODUCT_MARKET_CONTENTS
-                                        .length,
+                                        .DETAIL_PRODUCT_MARKET_CONTENTS.length,
                                     (index) => GestureDetector(
                                         onTap: () {
                                           setState(() {
@@ -334,8 +332,8 @@ class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage>
                                               _product?["description"].length,
                                               (index) {
                                             return Container(
-                                              margin:
-                                                  const EdgeInsets.only(bottom: 5),
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 5),
                                               child: buildTextContent(
                                                   "${_product?["description"][index]}",
                                                   false),
@@ -348,8 +346,7 @@ class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage>
                               _onMorePart == 1
                                   ? Column(
                                       children: List.generate(
-                                          _product?["reviews"].length,
-                                          (index) {
+                                          _product?["reviews"].length, (index) {
                                         return _buildReviewAndComment(
                                             _product?["reviews"][index]
                                                 ["username"],
@@ -382,14 +379,15 @@ class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage>
                 children: [
                   Container(
                     margin: const EdgeInsets.only(right: 10),
-                    child: buildElevateButtonWidget(
+                    child: buildButtonForMarketWidget(
                         width: width * 0.6,
                         bgColor: Colors.orange[300],
                         title: "Thêm vào giỏ hàng",
                         iconData: FontAwesomeIcons.cartArrowDown,
                         function: () {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                              content: Text(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  content: Text(
                             "Thêm vào giỏ hàng thành công",
                             style: TextStyle(color: Colors.green),
                           )));
@@ -398,7 +396,7 @@ class _OldDetailProductMarketPageState extends State<OldDetailProductMarketPage>
                   ),
                   Container(
                     // margin: EdgeInsets.only(right: 10),
-                    child: buildElevateButtonWidget(
+                    child: buildButtonForMarketWidget(
                         width: width * 0.3,
                         bgColor: Colors.red,
                         title: "Mua ngay",

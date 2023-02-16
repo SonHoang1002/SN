@@ -5,7 +5,7 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import '../widgets/build_elevate_button_widget.dart';
 import '../widgets/have_account_widget.dart';
 import 'main_login_page.dart';
 import 'name_login_page.dart';
@@ -62,7 +62,7 @@ class BeginJoinEmsoLoginPage extends StatelessWidget {
                                 isCenterLeft: false,
                               ),
                               buildSpacer(height: 25),
-                              buildElevateButtonWidget(
+                              buildButtonForLoginWidget(
                                   title: BeginJoinEmsoLoginConstants
                                       .BEGIN_JOIN_EMSO_LOGIN_BEGIN_TEXT_BUTTON,
                                   bgColor: secondaryColor,

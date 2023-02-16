@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
 
 import '../../../../constant/marketPlace_constants.dart';
-import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/divider_widget.dart';
-import '../../../../widget/GeneralWidget/spacer_widget.dart';
-import '../../../../widget/GeneralWidget/text_content_widget.dart';
-import '../../../../widget/button_primary.dart';
-import '../../../../widget/image_cache.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
 import '../widgets/product_item_widget.dart';

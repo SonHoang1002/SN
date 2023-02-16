@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
@@ -146,7 +146,9 @@ Widget categoryBodyWidget() {
                             width: 40,
                             margin: EdgeInsets.only(right: 5),
                             // padding: const EdgeInsets.all(5),
-                            child: ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.asset(data[index]["icon"]))),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(data[index]["icon"]))),
                         padding: const EdgeInsets.symmetric(vertical: 10),
                       );
                     },
@@ -174,7 +176,7 @@ Widget searchBodyWidget(double width) {
           false,
           fontSize: 16,
           isCenterLeft: false),
-      buildElevateButtonWidget(
+      buildButtonForMarketWidget(
           width: width * 0.8,
           iconData: FontAwesomeIcons.search,
           title: "Tìm kiếm trên Marketplace")

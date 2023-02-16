@@ -29,8 +29,8 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
   late double width = 0;
 
   late double height = 0;
-  List<String> product_categories = [];
-  late List<ProductCategoriesItem> all_data;
+  List<dynamic> product_categories = [];
+  late List<dynamic> all_data;
   List<dynamic>? suggestProduct;
   @override
   void initState() {
@@ -266,11 +266,13 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
   }
 
   getProductCategoriesName() {
-    List<String> primary_product_categories = [];
+    List<dynamic> primaryProductCategories = all_data.map((e) {
+      return e["text"];
+    }).toList();
     for (int i = 0; i < all_data.length; i++) {
-      primary_product_categories.add(all_data[i].text);
+      primaryProductCategories.add(all_data[i]["text"]);
     }
-    product_categories = primary_product_categories;
+    product_categories = primaryProductCategories;
 
     setState(() {});
   }

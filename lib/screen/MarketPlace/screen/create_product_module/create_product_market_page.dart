@@ -12,9 +12,9 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/create_product_sub_module/sale_information_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/create_product_module/sale_information_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
@@ -24,6 +24,7 @@ import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
+import '../update_product_module/update_information_market_page.dart';
 
 class CreateProductMarketPage extends ConsumerStatefulWidget {
   @override
@@ -39,31 +40,33 @@ class _CreateProductMarketPageState
   String _branch = "";
   String _private = "";
   List<File> _imgFiles = [];
-  Map<String, bool> _validatorSelectionList = {
+  final Map<String, bool> _validatorSelectionList = {
     "category": true,
     "branch": true,
-    "private_rule": true,
+    "private": true,
     "image": true
   };
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _nameController = TextEditingController(text: "jgh");
-  TextEditingController _descriptionController =
+  final TextEditingController _descriptionController =
       TextEditingController(text: "jhjh");
-  TextEditingController _branchController =
+  final TextEditingController _branchController =
       TextEditingController(text: "jhggjh");
-  TextEditingController _priceController = TextEditingController(text: "");
-  TextEditingController _repositoryController = TextEditingController(text: "");
-  TextEditingController _skuController = TextEditingController(text: "");
+  final TextEditingController _priceController =
+      TextEditingController(text: "");
+  final TextEditingController _repositoryController =
+      TextEditingController(text: "");
+  final TextEditingController _skuController = TextEditingController(text: "");
 
   //
-  List<TextEditingController> _categoryControllers = [
+  final List<TextEditingController> _categoryControllers = [
     TextEditingController(text: "")
   ];
   late Map<String, dynamic> newData;
   bool _isLoading = false;
-  List<ProductCategoriesItem>? _parentCategoriesList;
-  List<ProductCategoriesItem>? _childCategoriesList;
-  List<ProductCategoriesItem> productcategoriesData = [];
+  List<dynamic>? _parentCategoriesList;
+  List<dynamic>? _childCategoriesList;
+  List<dynamic> productcategoriesData = [];
   @override
   void initState() {
     if (!mounted) {
@@ -103,10 +106,10 @@ class _CreateProductMarketPageState
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const BackIconAppbar(),
-              const AppBarTitle(title: "Thêm sản phẩm"),
-              const Icon(
+            children: const [
+              BackIconAppbar(),
+              AppBarTitle(title: "Thêm sản phẩm"),
+              Icon(
                 FontAwesomeIcons.bell,
                 size: 18,
                 color: Colors.black,
@@ -202,14 +205,15 @@ class _CreateProductMarketPageState
                               child: _imgFiles.length == 0
                                   ? _buildIconAndAddImageText()
                                   : SingleChildScrollView(
-                                      physics: BouncingScrollPhysics(),
+                                      physics: const BouncingScrollPhysics(),
                                       scrollDirection: Axis.horizontal,
                                       child: Row(
                                           children: List.generate(
                                               _imgFiles.length + 1, (index) {
                                         if (index < _imgFiles.length) {
                                           return Container(
-                                            margin: EdgeInsets.only(right: 10),
+                                            margin: const EdgeInsets.only(
+                                                right: 10),
                                             height: 100,
                                             width: 80,
                                             // decoration: BoxDecoration(
@@ -234,7 +238,8 @@ class _CreateProductMarketPageState
                                                 ),
                                                 Container(
                                                   padding:
-                                                      EdgeInsets.only(top: 5),
+                                                      const EdgeInsets.only(
+                                                          top: 5),
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -277,7 +282,7 @@ class _CreateProductMarketPageState
                                                   _buildIconAndAddImageText(),
                                             );
                                           } else {
-                                            return SizedBox();
+                                            return const SizedBox();
                                           }
                                         }
                                       })),
@@ -353,7 +358,7 @@ class _CreateProductMarketPageState
                                   ],
                                 ),
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                         // CircularProgressIndicator()
                       ]),
                     ),
@@ -370,21 +375,19 @@ class _CreateProductMarketPageState
                             onTap: () {},
                             child: Container(
                               margin: const EdgeInsets.only(right: 10),
-                              child: buildElevateButtonWidget(
+                              child: buildButtonForMarketWidget(
                                   width: width * 0.45,
                                   bgColor: Colors.orange[300],
                                   title: "Lưu",
                                   function: () {
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
+                                    
                                     validateForCreateProduct();
                                   }),
                             ),
                           ),
                           Container(
                             // margin: EdgeInsets.only(right: 10),
-                            child: buildElevateButtonWidget(
+                            child: buildButtonForMarketWidget(
                                 width: width * 0.45,
                                 bgColor: Colors.red,
                                 title: "Hiển thị",
@@ -404,20 +407,19 @@ class _CreateProductMarketPageState
                       child: Container(
                         width: 70,
                         height: 70,
-                        child: CircularProgressIndicator(
+                        child: const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                           strokeWidth: 3,
                         ),
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
         ));
   }
 
   validateForCreateProduct() async {
-    bool isDone = false;
     if (_category == "") {
       _validatorSelectionList["category"] = false;
     }
@@ -435,6 +437,9 @@ class _CreateProductMarketPageState
         _validatorSelectionList["branch"] == true &&
         _validatorSelectionList["category"] == true &&
         _validatorSelectionList["image"] == true) {
+      setState(() {
+        _isLoading = true;
+      });
       List<String> product_images =
           await Future.wait(_imgFiles.map((element) async {
         String fileName = element.path.split('/').last;
@@ -443,7 +448,7 @@ class _CreateProductMarketPageState
               await MultipartFile.fromFile(element.path, filename: fileName),
         });
         final response = await MediaApi().uploadMediaEmso(formData);
-        return response["id"].toString() ?? "";
+        return response["id"].toString();
       }));
 
       // Future.delayed(Duration(seconds: 10), () {
@@ -621,17 +626,17 @@ class _CreateProductMarketPageState
                                     if (title ==
                                         CreateProductMarketConstants
                                             .CREATE_PRODUCT_MARKET_CATEGORY_TITLE) {
-                                      _category = data[index].text;
+                                      _category = data[index]["text"];
                                       _validatorSelectionList["category"] =
                                           true;
                                       _childCategoriesList =
-                                          data[index].subcategories;
+                                          data[index]["subcategories"];
                                       _branch = "";
                                     }
                                     if (title ==
                                         CreateProductMarketConstants
                                             .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE) {
-                                      _branch = data[index].text;
+                                      _branch = data[index]["text"];
                                       _validatorSelectionList["branch"] = true;
                                     }
                                     setState(() {});
@@ -683,7 +688,7 @@ class _CreateProductMarketPageState
                 ? Container(
                     height: 40,
                     width: 40,
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: greyColor[400]),
@@ -702,8 +707,8 @@ class _CreateProductMarketPageState
               height: 40,
               width: 40,
               margin: _private != ""
-                  ? EdgeInsets.only(right: 5)
-                  : EdgeInsets.only(right: 15),
+                  ? const EdgeInsets.only(right: 5)
+                  : const EdgeInsets.only(right: 15),
               child: const Icon(
                 FontAwesomeIcons.caretDown,
                 size: 18,
@@ -737,7 +742,7 @@ class _CreateProductMarketPageState
                                   child: Icon(privateDatas[index]["icon"]),
                                 ),
                                 changeBackground: transparent,
-                                padding: EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(5),
                                 function: () {
                                   popToPreviousScreen(context);
                                   if (title ==
@@ -854,7 +859,7 @@ Widget _buildDeleteOrFixIconForImageWidget(IconData iconData,
 
 Widget _buildWarningForSelections(String warning) {
   return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
       child: buildTextContent(warning, false,
           fontSize: 12, colorWord: Colors.red[800]));
 }

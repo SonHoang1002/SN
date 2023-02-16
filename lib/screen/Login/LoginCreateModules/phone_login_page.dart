@@ -5,7 +5,7 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'password_login_page.dart';
 
 class PhoneLoginPage extends StatefulWidget {
@@ -19,8 +19,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   late double height = 0;
   bool _onPhoneScreen = true;
 
-  TextEditingController _phoneController = TextEditingController(text: "");
-  TextEditingController _emailController = TextEditingController(text: "");
+  final TextEditingController _phoneController = TextEditingController(text: "");
+  final TextEditingController _emailController = TextEditingController(text: "");
   List<String> _countryNumberCode = ["VN", "+84"];
 /////////////////////////////////////////////////////////////
   ///         validate email ??
@@ -86,7 +86,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                               // description or navigator button
                               _phoneController.text.trim().length > 0 ||
                                       _emailController.text.trim().length > 0
-                                  ? buildElevateButtonWidget(
+                                  ? buildButtonForLoginWidget(
                                       width: width,
                                       function: () {
                                         pushToNextScreen(
@@ -106,7 +106,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                                     ),
                               buildSpacer(height: 10),
                               // change status button
-                              buildElevateButtonWidget(
+                              buildButtonForLoginWidget(
                                   bgColor: transparent,
                                   colorText: blackColor,
                                   width: width,

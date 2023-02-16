@@ -6,7 +6,7 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'complete_login_page.dart';
 
 class PasswordLoginPage extends StatefulWidget {
@@ -19,7 +19,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
 
   late double height = 0;
   bool _iShowPassword = false;
-  TextEditingController _passwordController = TextEditingController(text: "");
+  final TextEditingController _passwordController = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                               buildSpacer(height: 10),
                               // description
                               _passwordController.text.trim().length > 0
-                                  ? buildElevateButtonWidget(
+                                  ? buildButtonForLoginWidget(
                                       width: width,
                                       function: () {
                                         pushToNextScreen(

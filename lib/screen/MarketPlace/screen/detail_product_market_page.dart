@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/comment_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/rating_star_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
@@ -14,17 +17,17 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
-import '../../Login/widgets/build_elevateButton_widget.dart';
 
-class DetailProductMarketPage extends StatefulWidget {
+class DetailProductMarketPage extends ConsumerStatefulWidget {
   final dynamic data;
   DetailProductMarketPage({required this.data});
   @override
-  State<DetailProductMarketPage> createState() =>
-      _DetailProductMarketPageState();
+  ConsumerState<DetailProductMarketPage> createState() =>
+      _DetailProductMarketPageComsumerState();
 }
 
-class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
+class _DetailProductMarketPageComsumerState
+    extends ConsumerState<DetailProductMarketPage> {
   late double width = 0;
   late double height = 0;
   // Map<String, dynamic>? _product;
@@ -35,6 +38,11 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () {
+      final comment = ref
+          .read(commentProductProvider.notifier)
+          .getCommentProduct(widget.data["id"]);
+    });
   }
 
   @override
@@ -42,6 +50,8 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+    final comment = ref.watch(commentProductProvider).commentList;
+    print("data comments: ${comment}");
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -49,7 +59,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: const [
               BackIconAppbar(),
               AppBarTitle(title: "Chi tiết sản phẩm"),
               Icon(
@@ -69,13 +79,17 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                   child: Column(children: [
                     // img
                     Container(
-                      height: 350,
-                      width: width,
-                      child: ImageCacheRender(
-                          path: widget.data?["product_image_attachments"][0]
-                                  ["attachment"]["url"] ??
-                              "https://i.stack.imgur.com/hu3Fv.png"),
-                    ),
+                        height: 350,
+                        width: width,
+                        child: ImageCacheRender(
+                          path: !widget
+                                  .data["product_image_attachments"].isEmpty
+                              ? widget.data["product_image_attachments"][0]
+                                  ["attachment"]["url"]
+                              : "https://cdn.pixabay.com/photo/2015/11/16/14/43/cat-1045782__340.jpg",
+                          height: 120.0,
+                          width: width,
+                        )),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
@@ -88,12 +102,12 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                   "Có ${(widget.data?["product_variants"].length)} lựa chọn khác",
                                   false,
                                   fontSize: 15)
-                              : SizedBox(),
+                              : const SizedBox(),
                           buildSpacer(height: 10),
                           // example color or size product
 
                           SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: List.generate(
@@ -104,7 +118,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                 if (childProducts?[index]["image"] != null &&
                                     childProducts?[index]["image"] != {}) {
                                   return Container(
-                                      margin: EdgeInsets.only(right: 10),
+                                      margin: const EdgeInsets.only(right: 10),
                                       child: ImageCacheRender(
                                         path: childProducts?[index]["image"]
                                             ["url"],
@@ -205,7 +219,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                         // color: Colors.green,
                                         height: 20,
                                         width: 20,
-                                        child: Icon(
+                                        child: const Icon(
                                           FontAwesomeIcons.envelope,
                                           size: 20,
                                         ),
@@ -215,7 +229,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                         // color: Colors.red,
                                         height: 20,
                                         width: 20,
-                                        child: Icon(
+                                        child: const Icon(
                                           FontAwesomeIcons.share,
                                           size: 20,
                                         ),
@@ -232,7 +246,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(right: 10),
+                                    margin: const EdgeInsets.only(right: 10),
                                     child: buildTextContent(
                                       "Số lượng:",
                                       true,
@@ -240,7 +254,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(right: 10),
+                                    margin: const EdgeInsets.only(right: 10),
                                     decoration: BoxDecoration(
                                         border: Border.all(
                                             color: Colors.grey, width: 0.4)),
@@ -258,7 +272,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                             height: 40,
                                             width: 40,
                                             color: primaryColor,
-                                            child: Center(
+                                            child: const Center(
                                                 child: Icon(
                                                     FontAwesomeIcons.minus)),
                                           ),
@@ -280,7 +294,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                             height: 40,
                                             width: 40,
                                             color: primaryColor,
-                                            child: Center(
+                                            child: const Center(
                                                 child:
                                                     Icon(FontAwesomeIcons.add)),
                                           ),
@@ -292,7 +306,7 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                                     child: Text(
                                       " ${widget.data?["product_variants"][0]["inventory_quantity"].round()} sản phẩm có sẵn",
                                       maxLines: 2,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                       ),
                                     ),
@@ -391,22 +405,23 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
             // add to cart and buy now
             Container(
               // height: 40,
-              margin: EdgeInsets.only(bottom: 10),
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               width: width,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 10),
-                    child: buildElevateButtonWidget(
+                    margin: const EdgeInsets.only(right: 10),
+                    child: buildButtonForMarketWidget(
                         width: width * 0.6,
                         bgColor: Colors.orange[300],
                         title: "Thêm vào giỏ hàng",
                         iconData: FontAwesomeIcons.cartArrowDown,
                         function: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  content: Text(
                             "Thêm vào giỏ hàng thành công",
                             style: TextStyle(color: Colors.green),
                           )));
@@ -415,12 +430,12 @@ class _DetailProductMarketPageState extends State<DetailProductMarketPage> {
                   ),
                   Container(
                     // margin: EdgeInsets.only(right: 10),
-                    child: buildElevateButtonWidget(
+                    child: buildButtonForMarketWidget(
                         width: width * 0.3,
                         bgColor: Colors.red,
                         title: "Mua ngay",
                         function: () {
-                          pushToNextScreen(context, PaymentMarketPage());
+                          pushToNextScreen(context, const PaymentMarketPage());
                         }),
                   ),
                 ],
@@ -458,7 +473,7 @@ Widget _buildReviewAndComment(
         prefixWidget: Container(
           height: 40,
           // width: 60,
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -470,12 +485,12 @@ Widget _buildReviewAndComment(
                     child: Image.asset(
                         MarketPlaceConstants.PATH_IMG + "cat_1.png")),
               ),
-              SizedBox()
+              const SizedBox()
             ],
           ),
         ),
         suffixFlexValue: 2,
-        suffixWidget: Row(children: [
+        suffixWidget: Row(children: const [
           Icon(
             FontAwesomeIcons.ellipsis,
             color: blackColor,

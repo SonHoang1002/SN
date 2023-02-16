@@ -52,7 +52,7 @@ class _RequestProductMarketPageState extends State<RequestProductMarketPage> {
                 child: ListView(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 30),
+                      margin: const EdgeInsets.only(top: 30),
                       child: buildTextContent("Không có lời mời nào", true,
                           fontSize: 19, isCenterLeft: false),
                     )

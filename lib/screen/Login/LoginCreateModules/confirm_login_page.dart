@@ -9,7 +9,7 @@ import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'logout_all_device_login_papge.dart';
 import 'main_login_page.dart';
 
@@ -26,7 +26,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
   String _selectionValue = "sms";
   bool _isOnEnterCodePart = false;
 
-  TextEditingController _codeController = TextEditingController(text: "");
+  final TextEditingController _codeController = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
@@ -197,14 +197,14 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                       _codeController, "Nhập mã"),
                               // tiep tuc button
                               !_isOnEnterCodePart
-                                  ? buildElevateButtonWidget(
+                                  ? buildButtonForLoginWidget(
                                       width: width,
                                       function: () {
                                         setState(() {
                                           _isOnEnterCodePart = true;
                                         });
                                       })
-                                  : buildElevateButtonWidget(
+                                  : buildButtonForLoginWidget(
                                       width: width,
                                       function: () {
                                         pushToNextScreen(context,
@@ -215,7 +215,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                   ? Column(
                                       children: [
                                         buildSpacer(height: 10),
-                                        buildElevateButtonWidget(
+                                        buildButtonForLoginWidget(
                                             width: width,
                                             bgColor: transparent,
                                             title: ConfirmLoginConstants

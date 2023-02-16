@@ -142,13 +142,16 @@ buildProductItem(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //img
+
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(8),
                         topRight: Radius.circular(8)),
                     child: ImageCacheRender(
-                      path: data?["product_image_attachments"][0]["attachment"]
-                          ["url"],
+                      path: !data["product_image_attachments"].isEmpty
+                          ? data["product_image_attachments"][0]["attachment"]
+                              ["url"]
+                          : "https://i.pinimg.com/474x/14/c6/d3/14c6d321c7f16a73be476cd9dcb475af.jpg",
                       height: 120.0,
                       width: width,
                     ),

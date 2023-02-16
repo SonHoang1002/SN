@@ -5,7 +5,7 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import '../widgets/have_account_widget.dart';
 import 'birthday_login_page.dart';
 import 'main_login_page.dart';
@@ -18,9 +18,9 @@ class NameLoginPage extends StatefulWidget {
 class _NameLoginPageState extends State<NameLoginPage> {
   late double width = 0;
   late double height = 0;
-  TextEditingController _firstNameController =
+  final TextEditingController _firstNameController =
       TextEditingController(text: "df");
-  TextEditingController _lastNameController =
+  final TextEditingController _lastNameController =
       TextEditingController(text: "tutuy");
   bool isFillAll = false;
 
@@ -44,71 +44,69 @@ class _NameLoginPageState extends State<NameLoginPage> {
         child: Column(children: [
           // main content
           Expanded(
-            child: Container(
-              child: Column(
-                // padding: EdgeInsets.symmetric(vertical: 5),
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // img
-                  Center(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                          child: Column(
-                            children: [
-                              buildTextContent(
-                                  NameLoginConstants.NAME_LOGIN_TITLE, true,
-                                  fontSize: 16,
-                                  colorWord: blackColor,
-                                  isCenterLeft: false),
-                              buildSpacer(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: width * 0.45,
-                                    child: _buildTextFormField(
-                                        _firstNameController,
-                                        NameLoginConstants
-                                            .NAME_LOGIN_NAME_PLACEHOLODER[0],
-                                        borderRadius: 3),
-                                  ),
-                                  Container(
-                                    width: width * 0.45,
-                                    child: _buildTextFormField(
-                                        _lastNameController,
-                                        NameLoginConstants
-                                            .NAME_LOGIN_NAME_PLACEHOLODER[1],
-                                        borderRadius: 3),
-                                  ),
-                                ],
-                              ),
-                              buildSpacer(height: 10),
-                              isFillAll
-                                  ? buildElevateButtonWidget(
-                                      title: "Tiếp",
-                                      width: width,
-                                      function: () {
-                                        pushToNextScreen(
-                                            context, BirthdayLoginPage());
-                                      })
-                                  : buildTextContent(
-                                      NameLoginConstants.NAME_LOGIN_SUBTITLE,
-                                      true,
-                                      fontSize: 16,
-                                      colorWord: Colors.grey,
-                                      isCenterLeft: false,
-                                    )
-                            ],
-                          ),
+            child: Column(
+              // padding: EdgeInsets.symmetric(vertical: 5),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // img
+                Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        child: Column(
+                          children: [
+                            buildTextContent(
+                                NameLoginConstants.NAME_LOGIN_TITLE, true,
+                                fontSize: 16,
+                                colorWord: blackColor,
+                                isCenterLeft: false),
+                            buildSpacer(height: 10),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: width * 0.45,
+                                  child: _buildTextFormField(
+                                      _firstNameController,
+                                      NameLoginConstants
+                                          .NAME_LOGIN_NAME_PLACEHOLODER[0],
+                                      borderRadius: 3),
+                                ),
+                                SizedBox(
+                                  width: width * 0.45,
+                                  child: _buildTextFormField(
+                                      _lastNameController,
+                                      NameLoginConstants
+                                          .NAME_LOGIN_NAME_PLACEHOLODER[1],
+                                      borderRadius: 3),
+                                ),
+                              ],
+                            ),
+                            buildSpacer(height: 10),
+                            isFillAll
+                                ? buildButtonForLoginWidget(
+                                    title: "Tiếp",
+                                    width: width,
+                                    function: () {
+                                      pushToNextScreen(
+                                          context, BirthdayLoginPage());
+                                    })
+                                : buildTextContent(
+                                    NameLoginConstants.NAME_LOGIN_SUBTITLE,
+                                    true,
+                                    fontSize: 16,
+                                    colorWord: Colors.grey,
+                                    isCenterLeft: false,
+                                  )
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           buildHaveAccountWidget(function: () {
@@ -135,7 +133,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
   Widget _buildTextFormField(
       TextEditingController controller, String placeHolder,
       {double? borderRadius = 5}) {
-    return Container(
+    return SizedBox(
       height: 50,
       child: TextFormField(
         controller: controller,

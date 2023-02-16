@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/request_product_market_page.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
@@ -11,7 +11,7 @@ import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import '../../../helper/push_to_new_screen.dart';
 import 'cart_market_page.dart';
-import 'create_product_market_page.dart';
+import 'create_product_module/create_product_market_page.dart';
 import 'interest_product_market_page.dart';
 import 'manage_order_market_page.dart';
 import 'manage_product_market_page.dart';
@@ -41,13 +41,13 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BackIconAppbar(),
-              AppBarTitle(title: "Cá nhân"),
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Cá nhân"),
               GestureDetector(
                 onTap: () {
                   pushToNextScreen(context, NotificationMarketPage());
                 },
-                child: Icon(
+                child: const Icon(
                   FontAwesomeIcons.bell,
                   size: 18,
                   color: Colors.black,
@@ -64,7 +64,7 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                 child: Column(children: [
                   //button
                   //  san pham cua ban
-                  buildElevateButtonWidget(
+                  buildButtonForMarketWidget(
                       width: width,
                       bgColor: secondaryColor,
                       title: "Tạo bài niêm yết mới",
@@ -73,7 +73,7 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                         pushToNextScreen(context, CreateProductMarketPage());
                       }),
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: GeneralComponent(
                       [
                         buildTextContent("Trang hoạt động của bạn", false,
@@ -82,7 +82,7 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                       prefixWidget: Container(
                         height: 40,
                         width: 40,
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         child: Image.asset(
                           MarketPlaceConstants.PATH_IMG + "cat_1.png",
                           height: 20,
@@ -93,7 +93,7 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                       function: () {
                         showDialog(
                             context: context,
-                            builder: (context) => Dialog(
+                            builder: (context) => const Dialog(
                                   child: Text(
                                       "Chuyen sang trang trung bay san pham cua ban"),
                                 ));
@@ -107,7 +107,7 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                     suffixWidget: Container(
                       height: 40,
                       width: 40,
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       child: Icon(
                         _isOpenProductOfYou
                             ? FontAwesomeIcons.caretUp
@@ -115,7 +115,7 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                       ),
                     ),
                     changeBackground: transparent,
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     function: () {
                       setState(() {
                         _isOpenProductOfYou = !_isOpenProductOfYou;
@@ -142,18 +142,18 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                               prefixWidget: Container(
                                 height: 40,
                                 width: 40,
-                                margin: EdgeInsets.only(right: 10),
-                                padding: EdgeInsets.all(5),
+                                margin: const EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(5),
                                 child: Icon(
                                   data[index]["icon"],
                                 ),
                               ),
                               changeBackground: transparent,
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                             );
                           }).toList(),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   GeneralComponent(
                     [
                       buildTextContent("Thông báo(có hoặc không)", true),
@@ -161,10 +161,10 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                     suffixWidget: Container(
                       height: 40,
                       width: 40,
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                     ),
                     changeBackground: transparent,
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                   ),
                 ]),
               ),

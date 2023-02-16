@@ -370,7 +370,7 @@ List suggestData = [
       "fields": []
     },
     "page": null,
-    "product_variants": [
+    "product_options_attributes": [
       {
         "id": "22",
         "product_id": 6,
@@ -580,8 +580,7 @@ List suggestData = [
         }
       }
     ],
-    
-    "product_options": [
+    "product_variants_attributes": [
       {
         "id": "10",
         "product_id": "6",

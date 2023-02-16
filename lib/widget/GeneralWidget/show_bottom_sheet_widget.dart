@@ -11,7 +11,8 @@ showBottomSheetCheckImportantSettings(
       enableDrag: true,
       context: context,
       isScrollControlled: true,
-      barrierColor: transparent,
+      // barrierColor: transparent,
+      
       clipBehavior: Clip.antiAliasWithSaveLayer,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(10))),

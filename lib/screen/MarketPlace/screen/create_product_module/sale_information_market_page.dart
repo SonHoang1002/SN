@@ -8,12 +8,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import '../../../../helper/push_to_new_screen.dart';
 import '../../../../theme/colors.dart';
@@ -29,13 +28,15 @@ class _SaleInformationMarketPageState
   late double width = 0;
   late double height = 0;
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController _priceController = TextEditingController(text: "");
-  TextEditingController _repositoryController = TextEditingController(text: "");
-  TextEditingController _skuController = TextEditingController(text: "");
+  final TextEditingController _priceController =
+      TextEditingController(text: "");
+  final TextEditingController _repositoryController =
+      TextEditingController(text: "");
+  final TextEditingController _skuController = TextEditingController(text: "");
 
-  Map<String, dynamic> _categoryData = {
+  final Map<String, dynamic> _categoryData = {
     "loai_1": {
       "name": TextEditingController(text: "loai_1"),
       "values": [
@@ -55,10 +56,10 @@ class _SaleInformationMarketPageState
       },
     },
   };
+  bool _isLoading = false;
   @override
   void dispose() {
     super.dispose();
-
   }
 
   @override
@@ -66,6 +67,7 @@ class _SaleInformationMarketPageState
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+    // print("state: ${_isLoading}");
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -75,10 +77,14 @@ class _SaleInformationMarketPageState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
-                onTap: () {
+                onTap: () async {
                   if (validateInputs()) {
-                    _setData();
-                    Navigator.pop(context);
+                    List list = await Future.wait(
+                      [_setData()],
+                    );
+                    if (list.isNotEmpty && mounted) {
+                      popToPreviousScreen(context);
+                    }
                   }
                 },
                 child: Icon(
@@ -99,14 +105,29 @@ class _SaleInformationMarketPageState
           onTap: (() {
             FocusManager.instance.primaryFocus!.unfocus();
           }),
-          child: Form(
-            key: _formKey,
-            child: Expanded(
-              child: ListView(children: [
-                // sales information
-                _buildContentForClassifyCategoryContents()
-              ]),
-            ),
+          child: Stack(
+            children: [
+              Form(
+                key: _formKey,
+                child: Expanded(
+                  child: ListView(children: [
+                    // sales information
+                    _buildContentForClassifyCategoryContents()
+                  ]),
+                ),
+              ),
+              _isLoading
+                  ? Center(
+                      child: const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: red,
+                      ),
+                    ))
+                  : SizedBox(),
+            ],
           ),
         ));
   }
@@ -251,12 +272,12 @@ class _SaleInformationMarketPageState
                             _repositoryController, width, "Nhập tên kho hàng",
                             keyboardType: TextInputType.number),
                         _buildInput(_skuController, width, "Nhập mã sản phẩm"),
-                        buildElevateButtonWidget(
+                        buildButtonForMarketWidget(
                             title: "Áp dụng cho tất cả ",
                             function: () {
-                              if (_priceController.text.length > 0 &&
-                                  _repositoryController.text.length > 0 &&
-                                  _skuController.text.length > 0) {
+                              if (_priceController.text.isNotEmpty &&
+                                  _repositoryController.text.isNotEmpty &&
+                                  _skuController.text.isNotEmpty) {
                                 _applyPriceRepositorySkuForAll();
                               }
                             })
@@ -614,7 +635,7 @@ class _SaleInformationMarketPageState
           if (hintText != "Nhập giá sản phẩm" &&
               hintText != "Nhập tên kho hàng" &&
               hintText != "Nhập mã sản phẩm" &&
-              controller.text.trim().length <= 0) {
+              controller.text.trim().isEmpty) {
             return "Không hợp lệ";
           }
         },
@@ -669,7 +690,10 @@ class _SaleInformationMarketPageState
     return _formKey.currentState!.validate();
   }
 
-  _setData() async {
+  Future<int> _setData() async {
+    setState(() {
+      _isLoading = true;
+    });
     Map<String, dynamic> oldData = ref.watch(newProductDataProvider).data;
 
     // set product_options_attributes
@@ -700,7 +724,7 @@ class _SaleInformationMarketPageState
     // set product_variants_attributes
     if (_categoryData["loai_2"] == null) {
       List<String> imgList = _categoryData["loai_1"]["images"].toList();
-
+      print("state: ${imgList}");
       List<String> imageIdList = await Future.wait(imgList.map((element) async {
         String fileName = element.split('/').last;
         FormData formData = FormData.fromMap({
@@ -759,7 +783,7 @@ class _SaleInformationMarketPageState
             "option2": _categoryData["loai_2"]["values"][z]["category_2_name"]
                 .text
                 .trim(),
-            "image_id": _categoryData["loai_1"]["images"][i] ?? "",
+            // "image_id": imageIdList[i],
             "weight": 0.25,
             "weight_unit": "Kg",
             "inventory_quantity": 100,
@@ -771,9 +795,11 @@ class _SaleInformationMarketPageState
     }
 
     ref.read(newProductDataProvider.notifier).updateNewProductData(oldData);
+    setState(() {
+      _isLoading = false;
+    });
+    return 0;
   }
-
-
 
   Future getImage(ImageSource src, int index) async {
     XFile getImage = XFile("");

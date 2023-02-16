@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
@@ -129,7 +129,7 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                   padding: const EdgeInsets.only(
                     left: 10.0,
                   ),
-                  child: buildElevateButtonWidget(
+                  child: buildButtonForMarketWidget(
                     title: "Quan tâm",
                     iconData: FontAwesomeIcons.star,
                     width: width * 0.6,
@@ -137,7 +137,7 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                 )),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10),
-                  child: buildElevateButtonWidget(
+                  child: buildButtonForMarketWidget(
                       iconData: FontAwesomeIcons.ellipsisVertical,
                       title: "",
                       width: 30,
@@ -165,7 +165,8 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                                         prefixWidget: Container(
                                           height: 25,
                                           width: 25,
-                                          margin: const EdgeInsets.only(right: 10),
+                                          margin:
+                                              const EdgeInsets.only(right: 10),
                                           child: data[index]["icon"],
                                         ),
                                         suffixFlexValue: 1,
@@ -174,8 +175,9 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                                                 ? Container(
                                                     height: 25,
                                                     // width: 25,
-                                                    child: const Icon(FontAwesomeIcons
-                                                        .chevronRight),
+                                                    child: const Icon(
+                                                        FontAwesomeIcons
+                                                            .chevronRight),
                                                   )
                                                 : null,
                                         changeBackground: transparent,
@@ -218,8 +220,9 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                                                                   Container(
                                                                 height: 25,
                                                                 width: 25,
-                                                                margin: const EdgeInsets
-                                                                    .only(
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                            .only(
                                                                         right:
                                                                             10),
                                                                 child: data[

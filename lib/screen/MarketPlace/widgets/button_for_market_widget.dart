@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
 
-Widget buildElevateButtonWidget(
+Widget  buildButtonForMarketWidget(
     {String? title = 'Tiếp tục',
     Function? function,
     Color? bgColor = secondaryColor,

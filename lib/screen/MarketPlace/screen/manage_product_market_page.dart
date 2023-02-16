@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/create_product_market_page.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/update_product_module/update_product_market_page.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
@@ -12,22 +14,29 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
+import 'create_product_module/create_product_market_page.dart';
 import 'detail_product_market_page_old.dart';
 import 'notification_market_page.dart';
 
-class ManageProductMarketPage extends StatefulWidget {
+class ManageProductMarketPage extends ConsumerStatefulWidget {
   @override
-  State<ManageProductMarketPage> createState() =>
+  ConsumerState<ManageProductMarketPage> createState() =>
       _ManageProductMarketPageState();
 }
 
-class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
+class _ManageProductMarketPageState
+    extends ConsumerState<ManageProductMarketPage> {
   late double width = 0;
   late double height = 0;
+  List<dynamic>? _productList;
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () {
+      final getProduct =
+          ref.read(suggestProductsProvider.notifier).getSuggestProducts();
+    });
   }
 
   @override
@@ -35,7 +44,7 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-
+    _productList = ref.watch(suggestProductsProvider).listSuggest;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -44,13 +53,13 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BackIconAppbar(),
-              AppBarTitle(title: "Quản lý sản phẩm"),
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Quản lý sản phẩm"),
               GestureDetector(
                 onTap: () {
                   pushToNextScreen(context, NotificationMarketPage());
                 },
-                child: Icon(
+                child: const Icon(
                   FontAwesomeIcons.bell,
                   size: 18,
                   color: Colors.black,
@@ -67,23 +76,18 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
                 child: ListView(
                   children: [
                     buildTextContent(
-                        "chỉ người bán mới thấy được cái này", true,
+                        "Chỉ người bán mới thấy được cái này", true,
                         fontSize: 20, colorWord: red, isCenterLeft: false),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                        children: [
-                          _buildManageComponent(
-                              MaangeProductMarketConstants
-                                  .MANAGE_PRODUCT_BOTTOM_SELECTIONS["name"],
-                              MaangeProductMarketConstants
-                                  .MANAGE_PRODUCT_BOTTOM_SELECTIONS["data"]),
-                          _buildManageComponent(
-                              MaangeProductMarketConstants
-                                  .MANAGE_PRODUCT_BOTTOM_SELECTIONS["name"],
-                              MaangeProductMarketConstants
-                                  .MANAGE_PRODUCT_BOTTOM_SELECTIONS["data"]),
-                        ],
+                      child: SingleChildScrollView(
+                        child: Column(
+                            children: List.generate(
+                          _productList!.length,
+                          (index) {
+                            return _buildManageComponent(_productList![index]);
+                          },
+                        ).toList()),
                       ),
                     )
                   ],
@@ -95,20 +99,23 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
         ));
   }
 
-  _buildManageComponent(String nameOfProduct, dynamic data) {
+  Widget _buildManageComponent(dynamic data) {
     List<DataRow> dataRowList = [];
-    for (int i = 0; i < data.length; i++) {
+    for (int i = 0; i < data["product_variants"].length; i++) {
       dataRowList.add(
         DataRow(cells: [
-          DataCell(Text(data[i]["classify_category"])),
-          DataCell(Text(data[i]["sku"])),
-          DataCell(Text(data[i]["price"].toString())),
-          DataCell(Text(data[i]["repository"].toString())),
+          DataCell(Text(data["product_variants"][i]["option1"] == null ||
+                  data["product_variants"][i]["option2"] == null
+              ? "Không có mô tả"
+              : "${data["product_variants"][i]["option1"]} ${data["product_variants"][i]["option2"] != null ? " - ${data["product_variants"][i]["option2"]}" : ""}")),
+          DataCell(Text(data["product_variants"][i]["sku"])),
+          DataCell(Text(data["product_variants"][i]["price"].toString())),
+          DataCell(Text(data["brand"].toString())),
         ]),
       );
     }
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       // padding: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
           color: greyColor[300], borderRadius: BorderRadius.circular(7)),
@@ -116,17 +123,22 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
         children: [
           GeneralComponent(
             [
-              buildTextContent(nameOfProduct, true,
-                  fontSize: 13, colorWord: red, isCenterLeft: false)
+              buildTextContent(data["title"].toString(), true,
+                  fontSize: 13, colorWord: primaryColor, isCenterLeft: false)
             ],
             preffixFlexValue: 4,
             prefixWidget: Container(
+              width: 100,
+              margin: EdgeInsets.only(right: 10),
               child: ClipRRect(
                 borderRadius: BorderRadius.horizontal(left: Radius.circular(7)),
                 child: ImageCacheRender(
                   height: 100.0,
-                  path:
-                      "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
+                  path: data["product_image_attachments"].isNotEmpty &&
+                          data["product_image_attachments"] != null
+                      ? data["product_image_attachments"][0]["attachment"]
+                          ["url"]
+                      : "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
                 ),
               ),
             ),
@@ -146,7 +158,7 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
                                 onTap: () {
                                   popToPreviousScreen(context);
                                   pushToNextScreen(
-                                      context, CreateProductMarketPage());
+                                      context, UpdateProductMarketPage(data:data));
                                 },
                               ),
                               ListTile(
@@ -155,7 +167,7 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
                                 onTap: () {
                                   popToPreviousScreen(context);
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                           content:
                                               Text("sao chép thành công")));
                                 },
@@ -165,8 +177,8 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
                                 title: const Text("Xem trước"),
                                 onTap: () {
                                   popToPreviousScreen(context);
-                                  pushToNextScreen(
-                                      context, OldDetailProductMarketPage(id: "2"));
+                                  pushToNextScreen(context,
+                                      OldDetailProductMarketPage(id: "2"));
                                 },
                               ),
                               ListTile(
@@ -182,15 +194,18 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
                       );
                     });
               },
-              child: Container(child: Icon(FontAwesomeIcons.ellipsis)),
+              child: Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: const Icon(FontAwesomeIcons.ellipsis)),
             ),
             padding: EdgeInsets.zero,
             changeBackground: transparent,
             function: () {
               showBottomSheetCheckImportantSettings(
-                  context, 470, "Chi tiết sản phẩm",
+                  context, 500, "Chi tiết sản phẩm",
                   bgColor: greyColor[300],
                   widget: Container(
+                    // margin: EdgeInsets.symmetric(vertical: 10),
                     child: Column(children: [
                       Row(
                         children: [
@@ -201,41 +216,39 @@ class _ManageProductMarketPageState extends State<ManageProductMarketPage> {
                           ),
                           Flexible(
                             flex: 10,
-                            child: buildTextContent(nameOfProduct, true,
-                                fontSize: 18, colorWord: red),
+                            child: buildTextContent(data["title"], true,
+                                fontSize: 18, colorWord: secondaryColor),
                           ),
                         ],
                       ),
-                      buildDivider(color: red),
+                      buildDivider(color: primaryColor),
                       Container(
-                        height: 320,
-                        child: ListView(children: [
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: DataTable(columns: [
-                              DataColumn(
-                                  label: Text('Phân loại hàng',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold))),
-                              DataColumn(
-                                  label: Text('SKU phân loại',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold))),
-                              DataColumn(
-                                  label: Text('Giá',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold))),
-                              DataColumn(
-                                  label: Text('Kho hàng',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold))),
-                            ], rows: dataRowList),
-                          ),
-                        ]),
+                        height: 290,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(columns: const [
+                            DataColumn(
+                                label: Text('Phân loại hàng',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('SKU phân loại',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Giá',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Kho hàng',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold))),
+                          ], rows: dataRowList),
+                        ),
                       ),
                     ]),
                   ));

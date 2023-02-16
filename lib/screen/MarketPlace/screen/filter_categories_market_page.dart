@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:loader_skeleton/loader_skeleton.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/see_more_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 import '../../../../constant/marketPlace_constants.dart';
-import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../../widget/GeneralWidget/text_content_widget.dart';
-import '../widgets/product_item_widget.dart';
 
 class FilterCategoriesPage extends ConsumerStatefulWidget {
   @override
@@ -30,9 +20,9 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
   late double width = 0;
 
   late double height = 0;
-  List<String>? parentCategoriesList;
-  List<ProductCategoriesItem>? data;
-  List<String>? childCategoriesList;
+  List<dynamic>? parentCategoriesList;
+  List<dynamic>? data;
+  List<dynamic>? childCategoriesList;
   @override
   void initState() {
     if (!mounted) {
@@ -41,7 +31,7 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
     super.initState();
 
     Future.delayed(Duration.zero, () {
-      final data = ref
+      final primaryData = ref
           .read(productCategoriesProvider.notifier)
           .getListProductCategories();
     });
@@ -90,7 +80,7 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                       return InkWell(
                         onTap: () {
                           _getChildCategoriesFromParentCategoriesList(
-                              data![index].subcategories);
+                              data![index]["subcategories"]);
                         },
                         child: buildCategoryProductItemWidget(
                             parentCategoriesList![index],
@@ -111,8 +101,8 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                         // color: red,
                         child: childCategoriesList != null
                             ? Container(
-                              alignment: Alignment.topCenter,
-                              child: SingleChildScrollView(
+                                alignment: Alignment.topCenter,
+                                child: SingleChildScrollView(
                                   padding: EdgeInsets.zero,
                                   child: GridView.builder(
                                       padding: EdgeInsets.zero,
@@ -130,13 +120,13 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                                       // shrinkWrap: true,
                                       itemBuilder: (context, index) {
                                         return buildCategoryProductItemWidget(
-                                            childCategoriesList?[index] as String,
-                                            MarketPlaceConstants.PATH_IMG +
-                                                "Bách hóa Online.png",
-                                            );
+                                          childCategoriesList?[index] as String,
+                                          MarketPlaceConstants.PATH_IMG +
+                                              "Bách hóa Online.png",
+                                        );
                                       }),
                                 ),
-                            )
+                              )
                             : buildTextContent(
                                 "Mời bạn chọn một hạng mục", true,
                                 isCenterLeft: false)))
@@ -149,25 +139,24 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
   }
 
   _getParentCategoriesList() {
-    List<String> primary_product_categories = [];
-    for (int i = 0; i < data!.length; i++) {
-      primary_product_categories.add(data![i].text);
-    }
+    List<dynamic> primary_product_categories = data!.map((e) {
+      return e["text"];
+    }).toList();
+    // for (int i = 0; i < data!.length; i++) {
+    //   primary_product_categories.add(data![i]["text"]);
+    // }
 
     parentCategoriesList = primary_product_categories;
     setState(() {});
   }
 
-  _getChildCategoriesFromParentCategoriesList(
-      List<ProductCategoriesItem> subcategories) {
+  _getChildCategoriesFromParentCategoriesList(List<dynamic> subcategories) {
     List<String> primaryList = [];
 
     for (int i = 0; i < subcategories.length; i++) {
-      primaryList.add(subcategories[i].text);
+      primaryList.add(subcategories[i]["text"]);
     }
     childCategoriesList = primaryList;
     setState(() {});
   }
-
-  
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
@@ -279,7 +279,7 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
         Column(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            buildElevateButtonWidget(
+            buildButtonForMarketWidget(
                 width: width,
                 title: "Xem chi tiết",
                 function: () {
@@ -374,11 +374,11 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
                         ]),
                       ));
                 }),
-            buildElevateButtonWidget(
+            buildButtonForMarketWidget(
                 width: width,
                 title: "Liên hệ với người bán",
                 bgColor: blueColor),
-            buildElevateButtonWidget(
+            buildButtonForMarketWidget(
                 width: width, title: "Hủy đơn hàng", bgColor: red)
           ],
         ),

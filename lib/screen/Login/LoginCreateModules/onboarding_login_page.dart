@@ -46,8 +46,8 @@ class OnboardingLoginPage extends StatelessWidget {
                       width: 60,
                       decoration: BoxDecoration(
                           color: Colors.grey[900],
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      child: Image.asset(LoginConstants.PATH_IMG + "cat_1.png"),
+                          borderRadius: const BorderRadius.all(Radius.circular(30))),
+                      child: Image.asset("${LoginConstants.PATH_IMG}cat_1.png"),
                     ),
                   ),
                   Center(
@@ -56,13 +56,13 @@ class OnboardingLoginPage extends StatelessWidget {
                         Container(
                           height: 100,
                           width: 100,
-                          margin: EdgeInsets.only(bottom: 5),
-                          decoration: BoxDecoration(
+                          margin: const EdgeInsets.only(bottom: 5),
+                          decoration: const BoxDecoration(
                             color: Colors.red,
                             // borderRadius: BorderRadius.all(Radius.circular(20))
                           ),
                           child: Image.asset(
-                              LoginConstants.PATH_IMG + "avatar_img.png"),
+                              "${LoginConstants.PATH_IMG}avatar_img.png"),
                         ),
                         buildTextContent(
                             OnboardingLoginConstants.ONBOARDING_LOGIN_USERNAME,
@@ -83,11 +83,11 @@ class OnboardingLoginPage extends StatelessWidget {
                           child: Container(
                             height: 30,
                             width: 30,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 // color: Colors.grey[900],
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15))),
-                            child: Icon(
+                            child: const Icon(
                               FontAwesomeIcons.gear,
                               color: blackColor,
                             ),

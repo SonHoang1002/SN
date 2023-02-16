@@ -20,7 +20,7 @@ class SuggestProductsController extends StateNotifier<SuggestProductsState> {
   getSuggestProducts() async {
     final response = await SuggestProductsApi().getListSuggestProductsApi();
     final data = List.from(response);
-    print("data[0]['product_variants']: ${data[0]["product_variants"]}");
+    print("data[0]['product_variants']: ${data}");
     state = state.copyWith(response);
   }
 }

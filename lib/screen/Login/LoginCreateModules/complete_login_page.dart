@@ -6,7 +6,7 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'main_login_page.dart';
 
 class CompleteLoginPage extends StatefulWidget {
@@ -57,7 +57,7 @@ class _CompleteLoginPageState extends State<CompleteLoginPage> {
                               _buildDescription(),
                               buildSpacer(height: 10),
                               // button
-                              buildElevateButtonWidget(
+                              buildButtonForLoginWidget(
                                   title: CompleteLoginConstants
                                       .COMPLETE_LOGIN_NAME_PLACEHOLODER,
                                   width: width,
@@ -85,7 +85,7 @@ class _CompleteLoginPageState extends State<CompleteLoginPage> {
       {double? borderRadius = 5,
       bool? isHavePrefix = false,
       bool? numberType = false}) {
-    return Container(
+    return SizedBox(
       height: 40,
       child: TextFormField(
         controller: controller,
@@ -116,11 +116,11 @@ class _CompleteLoginPageState extends State<CompleteLoginPage> {
       textAlign: TextAlign.center,
       text: TextSpan(
         text: subTitle[0],
-        style: TextStyle(color: greyColor),
+        style: const TextStyle(color: greyColor),
         children: <TextSpan>[
           TextSpan(
             text: subTitle[1],
-            style: TextStyle(color: primaryColor),
+            style: const TextStyle(color: primaryColor),
             recognizer: new TapGestureRecognizer()
               ..onTap = () {
                 ////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ class _CompleteLoginPageState extends State<CompleteLoginPage> {
           TextSpan(text: subTitle[2]),
           TextSpan(
             text: subTitle[3],
-            style: TextStyle(color: primaryColor),
+            style: const TextStyle(color: primaryColor),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 // chuyen den trang chinh sach du lieu cho nguoi dung nghien cuu
@@ -144,8 +144,8 @@ class _CompleteLoginPageState extends State<CompleteLoginPage> {
           ),
           TextSpan(
             text: subTitle[5],
-            style: TextStyle(color: primaryColor),
-            recognizer: new TapGestureRecognizer()
+            style: const TextStyle(color: primaryColor),
+            recognizer:  TapGestureRecognizer()
               ..onTap = () {
                 // chuyen den trang chinh sach cookie cho nguoi dung nghien cuu
                 print("trang chinh sach cookie");

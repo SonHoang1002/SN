@@ -14,7 +14,7 @@ class PaymentMarketPage extends StatefulWidget {
 class _PaymentMarketPageState extends State<PaymentMarketPage> {
   late double width = 0;
   late double height = 0;
-  bool _isOpenProductOfYou = false;
+  final bool _isOpenProductOfYou = false;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -27,22 +27,20 @@ class _PaymentMarketPageState extends State<PaymentMarketPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BackIconAppbar(),
+            const BackIconAppbar(),
             GestureDetector(
                 onTap: () {
                   popToPreviousScreen(context);
                 },
-                child: AppBarTitle(title: "Thanh toán")),
-            SizedBox()
+                child: const AppBarTitle(title: "Thanh toán")),
+            const SizedBox()
           ],
         ),
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Container(
+      body: SizedBox(
         height: height * 0.89,
-        child: ListView(children: [
-          
-        ]),
+        child: ListView(children: const []),
       ),
     );
   }

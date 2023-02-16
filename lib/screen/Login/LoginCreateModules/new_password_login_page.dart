@@ -7,7 +7,7 @@ import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 
 class NewPasswordLoginPage extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _NewPasswordLoginPageState extends State<NewPasswordLoginPage> {
 
   late double height = 0;
   bool isValid = true;
-  TextEditingController _newPasswordController =
+  final TextEditingController _newPasswordController =
       TextEditingController(text: "");
 
   @override
@@ -39,12 +39,12 @@ class _NewPasswordLoginPageState extends State<NewPasswordLoginPage> {
                 Navigator.pop(context);
               },
               child: Row(
-                children: [
+                children: const [
                   BackIconAppbar(),
                   SizedBox(
                     width: 5,
                   ),
-                  const AppBarTitle(title: "Quay lại"),
+                  AppBarTitle(title: "Quay lại"),
                 ],
               ),
             ),
@@ -70,7 +70,7 @@ class _NewPasswordLoginPageState extends State<NewPasswordLoginPage> {
           // main content
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
               ),
               child: Column(
@@ -100,12 +100,12 @@ class _NewPasswordLoginPageState extends State<NewPasswordLoginPage> {
                                 NewPasswordLoginConstants
                                     .NEW_PASWORD_LOGIN_DESCRIPTION,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.purple,
                                 ),
                               ),
-                              buildElevateButtonWidget(
+                              buildButtonForLoginWidget(
                                   width: width,
                                   function: () {
                                     pushAndReplaceToNextScreen(

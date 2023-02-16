@@ -9,7 +9,7 @@ import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
-import '../widgets/build_elevateButton_widget.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'new_password_login_page.dart';
 
 class LogoutAllDeviceLoginPage extends StatefulWidget {
@@ -45,12 +45,12 @@ class _LogoutAllDeviceLoginPageState extends State<LogoutAllDeviceLoginPage> {
                 Navigator.pop(context);
               },
               child: Row(
-                children: [
+                children: const [
                   BackIconAppbar(),
                   SizedBox(
                     width: 5,
                   ),
-                  const AppBarTitle(title: "Quay lại"),
+                  AppBarTitle(title: "Quay lại"),
                 ],
               ),
             ),
@@ -76,7 +76,7 @@ class _LogoutAllDeviceLoginPageState extends State<LogoutAllDeviceLoginPage> {
           // main content
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
               ),
               child: Column(
@@ -125,12 +125,12 @@ class _LogoutAllDeviceLoginPageState extends State<LogoutAllDeviceLoginPage> {
                                                       true,
                                                       fontSize: 14,
                                                       colorWord: Colors.purple)
-                                                  : SizedBox()
+                                                  : const SizedBox()
                                             ],
                                             suffixWidget: Container(
                                                 height: 40,
                                                 width: 40,
-                                                padding: EdgeInsets.all(5),
+                                                padding: const EdgeInsets.all(5),
                                                 child: Radio(
                                                   onChanged: (value) {
                                                     _selectionValue =
@@ -141,9 +141,9 @@ class _LogoutAllDeviceLoginPageState extends State<LogoutAllDeviceLoginPage> {
                                                   groupValue: _selectionValue,
                                                 )),
                                             changeBackground: transparent,
-                                            padding: EdgeInsets.all(5),
+                                            padding: const EdgeInsets.all(5),
                                           ),
-                                          Divider(
+                                          const Divider(
                                             height: 10,
                                             color: Colors.black,
                                           )
@@ -153,7 +153,7 @@ class _LogoutAllDeviceLoginPageState extends State<LogoutAllDeviceLoginPage> {
                                   ),
                                 ],
                               ),
-                              buildElevateButtonWidget(
+                              buildButtonForLoginWidget(
                                   width: width,
                                   function: () {
                                     pushToNextScreen(

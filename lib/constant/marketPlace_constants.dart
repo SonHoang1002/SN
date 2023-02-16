@@ -695,9 +695,21 @@ class CreateProductMarketConstants {
   static String CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE = "Quyền riêng tư";
   static const List<Map<String, dynamic>>
       CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS = [
-    {"icon":FontAwesomeIcons.earthAfrica,"title": "Công khai", "subTitle": "Tất cả mọi người"},
-    {"icon":FontAwesomeIcons.user,"title": "Bạn bè", "subTitle": "Bạn bè của bạn"},
-    {"icon":FontAwesomeIcons.lock,"title": "Riêng tư", "subTitle": "Chỉ bạn bè được mời"},
+    {
+      "icon": FontAwesomeIcons.earthAfrica,
+      "title": "Công khai",
+      "subTitle": "Tất cả mọi người"
+    },
+    {
+      "icon": FontAwesomeIcons.user,
+      "title": "Bạn bè",
+      "subTitle": "Bạn bè của bạn"
+    },
+    {
+      "icon": FontAwesomeIcons.lock,
+      "title": "Riêng tư",
+      "subTitle": "Chỉ bạn bè được mời"
+    },
   ];
   static String CREATE_PRODUCT_MARKET_PRIVATE_RULE_WARING =
       "Vui lòng chọn Ngành hàng";
@@ -1107,4 +1119,105 @@ class MaangeProductMarketConstants {
       },
     ]
   };
+}
+
+class UpdateProductMarketConstants {
+  static String UPDATE_PRODUCT_MARKET_ADD_IMG_TITLE = "Hình ảnh sản phẩm";
+  static String UPDATE_PRODUCT_MARKET_ADD_IMG_PLACEHOLDER = "Thêm ảnh";
+  static String UPDATE_PRODUCT_MARKET_ADD_IMG_WARING =
+      "Vui lòng đăng tải tối thiểu 1 hình ảnh về sản phẩm này.";
+
+  static String UPDATE_PRODUCT_MARKET_PRODUCT_VIDEO_TITLE = "Video sản phẩm";
+  static String UPDATE_PRODUCT_MARKET_PRODUCT_VIDEO_PLACEHOLDER =
+      "Tải lên Video Sản phẩm";
+  static String UPDATE_PRODUCT_MARKET_PRODUCT_VIDEO_WARING =
+      "Vui lòng đăng tải tối thiểu 1 hình ảnh về sản phẩm này.";
+
+  static const String UPDATE_PRODUCT_MARKET_PRODUCT_NAME_TITLE = "Tên sản phẩm";
+  static const String UPDATE_PRODUCT_MARKET_PRODUCT_NAME_PLACEHOLDER =
+      "Nhập tên sản phẩm";
+  static String UPDATE_PRODUCT_MARKET_PRODUCT_NAME_WARING =
+      "Vui lòng nhập tên sản phẩm";
+
+  static String UPDATE_PRODUCT_MARKET_CATEGORY_TITLE = "Danh mục";
+  static const List<String> UPDATE_PRODUCT_MARKET_CATEGORY_SELECTIONS = [
+    "Thời Trang và Phụ Kiện",
+    "Du Lịch & Hành Lý",
+    "Thời Trang và Phụ Kiện",
+    "Thiết Bị Điện Gia Dụng",
+    "Giày Dép",
+    "Điện Thoại & Phụ kiện",
+    "Thiết Bị Âm Thanh",
+    "Thực Phẩm Và Đồ Uống",
+    "Chăm Sóc Thú Cưng",
+    "Thời Trang Trẻ Em & Trẻ Sơ Sinh",
+    "Cameras & FlyCam",
+    "Nhà Cửa & Đời Sống",
+    "Thể Thao & Dã Ngoại",
+    "Văn Phòng Phẩm",
+    "Sở Thích & Thực Phẩm",
+    "Sách & Tạp Chí",
+    "Máy Tính & Laptop",
+    "Moto & Xe Máy"
+  ];
+  static String UPDATE_PRODUCT_MARKET_CATEGORY_WARING =
+      "Vui lòng chọn Danh mục ";
+
+  static String UPDATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE = "Ngành hàng";
+
+  static String UPDATE_PRODUCT_MARKET_BRANCH_PRODUCT_WARING =
+      "Vui lòng chọn Ngành hàng";
+
+  static String UPDATE_PRODUCT_MARKET_DESCRIPTION_TITLE = "Mô tả sản phẩm";
+  static const String UPDATE_PRODUCT_MARKET_DESCRIPTION_PLACEHOLDER =
+      "Nhập mô tả sản phẩm";
+
+  static String UPDATE_PRODUCT_MARKET_BRAND_TITLE = "Nhãn hiệu";
+  static const String UPDATE_PRODUCT_MARKET_BRAND_PLACEHOLDER =
+      "Nhập nhãn hiệu";
+  static String UPDATE_PRODUCT_MARKET_BRAND_WARING =
+      "Vui lòng điền vào Nhãn hiệu";
+
+  static String UPDATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE = "Quyền riêng tư";
+  static const List<Map<String, dynamic>>
+      UPDATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS = [
+    {
+      "key": "public",
+      "icon": FontAwesomeIcons.earthAfrica,
+      "title": "Công khai",
+      "subTitle": "Tất cả mọi người"
+    },
+    {
+      "key": "friend",
+      "icon": FontAwesomeIcons.user,
+      "title": "Bạn bè",
+      "subTitle": "Bạn bè của bạn"
+    },
+    {
+      "key": "private",
+      "icon": FontAwesomeIcons.lock,
+      "title": "Riêng tư",
+      "subTitle": "Chỉ bạn bè được mời"
+    },
+  ];
+  static String UPDATE_PRODUCT_MARKET_PRIVATE_RULE_WARING =
+      "Vui lòng chọn Ngành hàng";
+
+  static String UPDATE_PRODUCT_MARKET_CLASSIFY_CATEGORY_PRODUCT_TITLE =
+      "Phân loại hàng";
+  static String UPDATE_PRODUCT_MARKET_ADD_CLASSIFY_GROUP =
+      "Thêm nhóm phân loại";
+
+  static String UPDATE_PRODUCT_MARKET_PRICE_TITLE = "Giá";
+  static String UPDATE_PRODUCT_MARKET_PRICE_PLACEHOLDER =
+      "Nhập giá của sản phẩm";
+
+  static String UPDATE_PRODUCT_MARKET_REPOSITORY_TITLE = "Kho hàng";
+  static String UPDATE_PRODUCT_MARKET_REPOSITORY_PLACEHOLDER =
+      "Nhập tên kho hàng";
+  static String UPDATE_PRODUCT_MARKET_REPOSITORY_WARING =
+      "Tên kho hàng không được để trống";
+
+  static String UPDATE_PRODUCT_MARKET_SKU_TITLE = "SKU";
+  static String UPDATE_PRODUCT_MARKET_SKU_PLACEHOLDER = "Nhập SKU";
 }
