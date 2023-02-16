@@ -41,11 +41,12 @@ class GeneralComponent extends StatelessWidget {
               decoration: BoxDecoration(
                   color: changeBackground ?? Colors.grey[900],
                   border: isHaveBorder == true
-                      ? Border.all(color: greyColor, width: 0.4)
+                      ? Border.all(color: greyColor, width: 0.6)
                       : null,
                   borderRadius: BorderRadius.all(
                       Radius.circular(borderRadiusValue ?? 7))),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   prefixWidget != null &&
                           prefixWidget != Container() &&

@@ -646,55 +646,6 @@ class CreateProductMarketConstants {
       "Tải lên Video Sản phẩm";
   static String CREATE_PRODUCT_MARKET_PRODUCT_VIDEO_WARING =
       "Vui lòng đăng tải tối thiểu 1 hình ảnh về sản phẩm này.";
-  // static String CREATE_PRODUCT_MARKET_PRODUCT_DESCRIPTION_TITLE =
-  //     "Mô tả sản phẩm";
-  // static String CREATE_PRODUCT_MARKET_PRODUCT_DESCRIPTION_PLACEHOLDER =
-  //     "Nhập mô tả sản phẩm";
-  // static String CREATE_PRODUCT_MARKET_PRODUCT_DESCRIPTION_WARING =
-  //     "Vui lòng nhập Mô tả sản phẩm";
-  // static String CREATE_PRODUCT_MARKET_GENDER_TITLE = "Giói tính";
-  // static List<String> CREATE_PRODUCT_MARKET_GENDER_CONTENTS = [
-  //   "Unisex",
-  //   "Nam",
-  //   "Nữ"
-  // ];
-  // static String CREATE_PRODUCT_MARKET_ORIGIN_TITLE = "Xuất xứ";
-  // static List<String> CREATE_PRODUCT_MARKET_ORIGIN_CONTENTS = [
-  //   "Việt Nam",
-  //   "Trung Quốc",
-  //   "Mĩ",
-  //   "Đài Loan",
-  //   "Hàn Quốc"
-  // ];
-  // static String CREATE_PRODUCT_MARKET_LOCATION_TITLE =
-  //     "Địa chỉ tổ chức chịu trách nhiệm";
-  // static String CREATE_PRODUCT_MARKET_GROUP_NAME_TITLE =
-  //     "Tên tổ chức chịu trách nhiệm";
-  // static String CREATE_PRODUCT_MARKET_MATERIAL_TITLE = "Chất liệu";
-  // static List<String> CREATE_PRODUCT_MARKET_MATERIAL_CONTENTS = [
-  //   "Bạc",
-  //   "Vàng",
-  //   "Đồng",
-  //   "Nhôm",
-  //   "Vải"
-  // ];
-  // static String CREATE_PRODUCT_MARKET_CLASSIFY_TITLE = "Phân loại";
-  // static Map<String, dynamic> CREATE_PRODUCT_MARKET_CLASSIFY_CONTENTS = {
-  //   "data": {
-  //     "colors": ["Đen", "Trắng", "Vàng"],
-  //     "sizes": ["S", "M", "L"]
-  //   }
-  // };
-  // static String CREATE_PRODUCT_MARKET_BUY_ANY_DECREASE_PRICE_TITLE =
-  //     "Mua nhiều giảm giá";
-  // static String CREATE_PRODUCT_MARKET_BUY_ANY_DECREASE_PRICE_DESCRIPTION =
-  //     "Giá bán sỉ sẽ bị ẩn khi sản phẩm tham gia chương trình khuyến mãi";
-  // static List<String> CREATE_PRODUCT_MARKET_BUY_ANY_DECREASE_PRICE_TITLES = [
-  //   "Đơn tối thiểu",
-  //   "Đơn tối đa",
-  //   "Giá sản phẩm"
-  // ];
-/////////////////////////////////////////////////////////////////////////////////
 
   static const String CREATE_PRODUCT_MARKET_PRODUCT_NAME_TITLE = "Tên sản phẩm";
   static const String CREATE_PRODUCT_MARKET_PRODUCT_NAME_PLACEHOLDER =
@@ -727,18 +678,7 @@ class CreateProductMarketConstants {
       "Vui lòng chọn Danh mục ";
 
   static String CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE = "Ngành hàng";
-  static List<String> CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_SELECTIONS = [
-    "Thực phẩm chức năng",
-    "Thực phẩm bổ sung dinh dưỡng",
-    "Sản phẩm chăm sóc sức khỏe",
-    "Thiết bị y tế",
-    "Sản phẩm chăm sóc da",
-    "Sản phẩm dành cho người già",
-    "Sản phẩm cho mẹ và bé",
-    "Sản phẩm dành cho nam giới",
-    "Sản phẩm cho sport thể thao",
-    "Sản phẩm chữa bệnh",
-  ];
+
   static String CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_WARING =
       "Vui lòng chọn Ngành hàng";
 
@@ -753,10 +693,11 @@ class CreateProductMarketConstants {
       "Vui lòng điền vào Nhãn hiệu";
 
   static String CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE = "Quyền riêng tư";
-  static List<String> CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS = [
-    "Bạn bè",
-    "Công khai",
-    "Riêng tư"
+  static const List<Map<String, dynamic>>
+      CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS = [
+    {"icon":FontAwesomeIcons.earthAfrica,"title": "Công khai", "subTitle": "Tất cả mọi người"},
+    {"icon":FontAwesomeIcons.user,"title": "Bạn bè", "subTitle": "Bạn bè của bạn"},
+    {"icon":FontAwesomeIcons.lock,"title": "Riêng tư", "subTitle": "Chỉ bạn bè được mời"},
   ];
   static String CREATE_PRODUCT_MARKET_PRIVATE_RULE_WARING =
       "Vui lòng chọn Ngành hàng";

@@ -773,14 +773,7 @@ class _SaleInformationMarketPageState
     ref.read(newProductDataProvider.notifier).updateNewProductData(oldData);
   }
 
-  // Future<String> _convertImgFileToIdValue(String path) async {
-  //   String fileName = path.split('/').last;
-  //   FormData formData = FormData.fromMap({
-  //     "file": await MultipartFile.fromFile(path, filename: fileName),
-  //   });
-  //   final response = await MediaApi().uploadMediaEmso(formData);
-  //   return response["id"].toString();
-  // }
+
 
   Future getImage(ImageSource src, int index) async {
     XFile getImage = XFile("");

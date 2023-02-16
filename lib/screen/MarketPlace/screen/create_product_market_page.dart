@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 import 'package:social_network_app_mobile/screen/Login/widgets/build_elevateButton_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/create_product_sub_module/sale_information_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
@@ -60,6 +61,9 @@ class _CreateProductMarketPageState
   ];
   late Map<String, dynamic> newData;
   bool _isLoading = false;
+  List<ProductCategoriesItem>? _parentCategoriesList;
+  List<ProductCategoriesItem>? _childCategoriesList;
+  List<ProductCategoriesItem> productcategoriesData = [];
   @override
   void initState() {
     if (!mounted) {
@@ -79,6 +83,9 @@ class _CreateProductMarketPageState
       final data = ref
           .read(newProductDataProvider.notifier)
           .updateNewProductData(newData);
+      final categories = ref
+          .read(productCategoriesProvider.notifier)
+          .getListProductCategories();
     });
   }
 
@@ -87,7 +94,8 @@ class _CreateProductMarketPageState
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    // initData();
+    // _buildParentCategoriesList();
+    productcategoriesData = ref.watch(productCategoriesProvider).list;
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -133,18 +141,20 @@ class _CreateProductMarketPageState
                                   .CREATE_PRODUCT_MARKET_PRODUCT_NAME_PLACEHOLDER,
                             ),
                             // danh muc
-                            _buildSelectionsForMarketComponents(
-                                context,
-                                CreateProductMarketConstants
-                                    .CREATE_PRODUCT_MARKET_CATEGORY_TITLE,
-                                "Chọn hạng mục"),
+                            _buildSelectionsCategoryAndUnitComponents(
+                              context,
+                              CreateProductMarketConstants
+                                  .CREATE_PRODUCT_MARKET_CATEGORY_TITLE,
+                              "Chọn hạng mục",
+                            ),
                             // nganh hang (option)
                             _category != ""
-                                ? _buildSelectionsForMarketComponents(
+                                ? _buildSelectionsCategoryAndUnitComponents(
                                     context,
                                     CreateProductMarketConstants
                                         .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE,
-                                    "Chọn ngành hàng")
+                                    "Chọn ngành hàng",
+                                  )
                                 : const SizedBox(),
                             // mo ta san pham
                             _buildInput(
@@ -164,11 +174,14 @@ class _CreateProductMarketPageState
                                 CreateProductMarketConstants
                                     .CREATE_PRODUCT_MARKET_BRAND_PLACEHOLDER),
                             // quyen rieng tu
-                            _buildSelectionsForMarketComponents(
-                                context,
-                                CreateProductMarketConstants
-                                    .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE,
-                                "Chọn quyền riêng tư")
+                            _buildSelectionsPrivateRuleComponent(
+                              context,
+                              CreateProductMarketConstants
+                                  .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE,
+                              "Chọn quyền riêng tư",
+                              // dataList: CreateProductMarketConstants
+                              //     .CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS
+                            )
                           ]),
                         ),
                         // anh
@@ -403,97 +416,6 @@ class _CreateProductMarketPageState
         ));
   }
 
-  // _buildContentForClassifyCategoryBottomSheet() {
-  //   return StatefulBuilder(builder: (context, setStatefull) {
-  //     return Column(
-  //       children: [
-  //         // classify category
-  //         buildSpacer(height: 10),
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Padding(
-  //               padding: const EdgeInsets.only(left: 10.0),
-  //               child: buildTextContent("Phân loại hàng", true, fontSize: 16),
-  //             ),
-  //             SizedBox()
-  //           ],
-  //         ),
-  //         buildSpacer(height: 10),
-  //         _buildInput(_categoryControllers[0], width, "Nhập tên phân loại 1"),
-  //         Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 10),
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               _buildInput(
-  //                   _priceController, width * 0.48, "Màu sắc hoặc kích cỡ"),
-  //               buildSpacer(width: 10),
-  //               _buildInput(
-  //                   _priceController, width * 0.48, "Màu sắc hoặc kích cỡ"),
-  //             ],
-  //           ),
-  //         ),
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //           children: [
-  //             buildTextContent("Phân loại hàng", true, fontSize: 16),
-  //             buildTextContent(
-  //               "Thêm nhóm phân loại",
-  //               false,
-  //               fontSize: 16,
-  //               iconData: FontAwesomeIcons.add,
-  //             )
-  //           ],
-  //         ),
-  //         Padding(
-  //           padding: const EdgeInsets.only(left: 10.0),
-  //           child: buildTextContent("Danh sách phân loại", true,
-  //               fontSize: 16, isCenterLeft: false),
-  //         ),
-  //         SizedBox(),
-  //         SingleChildScrollView(
-  //           scrollDirection: Axis.horizontal,
-  //           child: DataTable(columns: [
-  //             DataColumn(
-  //                 label: Text(
-  //                     _categoryControllers[0].text.trim().length<0
-  //                         ? 'Nhóm phân loại 1'
-  //                         : _categoryControllers[0].text.trim(),
-  //                     style: TextStyle(
-  //                         fontSize: 18, fontWeight: FontWeight.bold))),
-  //             DataColumn(
-  //                 label: Text('Giá',
-  //                     style: TextStyle(
-  //                         fontSize: 18, fontWeight: FontWeight.bold))),
-  //             DataColumn(
-  //                 label: Text('Kho hàng',
-  //                     style: TextStyle(
-  //                         fontSize: 18, fontWeight: FontWeight.bold))),
-  //             DataColumn(
-  //                 label: Text('Sku phân loại',
-  //                     style: TextStyle(
-  //                         fontSize: 18, fontWeight: FontWeight.bold))),
-  //           ], rows: [
-  //             DataRow(cells: [
-  //               DataCell(Text("")),
-  //               DataCell(Text("20000")),
-  //               DataCell(Text("100")),
-  //               DataCell(Text("120000")),
-  //             ]),
-  //             DataRow(cells: [
-  //               DataCell(Text("")),
-  //               DataCell(Text("20000")),
-  //               DataCell(Text("100")),
-  //               DataCell(Text("120000")),
-  //             ]),
-  //           ]),
-  //         ),
-  //       ],
-  //     );
-  //   });
-  // }
-
   validateForCreateProduct() async {
     bool isDone = false;
     if (_category == "") {
@@ -559,39 +481,6 @@ class _CreateProductMarketPageState
       // });
     }
   }
-
-  // Future<List<String>> _handleConvertImageFileToIdNumber(
-  //     List<File> fileList) async {
-  //   List<String> imgIdList = [];
-  //   Future.wait(fileList.map((element) async {
-  //     String fileName = element.path.split('/').last;
-  //     // print("state: ${fileName}");
-  //     FormData formData = FormData.fromMap({
-  //       "file": await MultipartFile.fromFile(element.path, filename: fileName),
-  //     });
-  //     final response = await MediaApi().uploadMediaEmso(formData);
-  //     print("state: id ${imgIdList.length}: ${response != null ? [
-  //         response['id']
-  //       ] : null}");
-  //     imgIdList.add(response["id"].toString());
-  //     // print("state: ${imgIdList.length}");
-  //   }));
-  //   // print("state: ${imgIdList}");
-  //   // fileList.forEach((element) async {
-  //   //   String fileName = element.path.split('/').last;
-  //   //   print("state: ${fileName}");
-  //   //   FormData formData = FormData.fromMap({
-  //   //     "file": await MultipartFile.fromFile(element.path, filename: fileName),
-  //   //   });
-  //   //   final response = await MediaApi().uploadMediaEmso(formData);
-  //   //   print("state: id: ${response != null ? [response['id']] : null}");
-  //   //   imgIdList.add(response.toString());
-  //   // });
-
-  //   // print("state: upload ok");
-  //   // print("state: ${imgIdList}");
-  //   return imgIdList;
-  // }
 
   Widget _buildInput(
     TextEditingController controller,
@@ -663,13 +552,11 @@ class _CreateProductMarketPageState
     );
   }
 
-  _buildSelectionsForMarketComponents(
-      BuildContext context,
-      String title,
-      // String _category,
-      String titleForBottomSheet,
-      {List<String>? dataList = CreateProductMarketConstants
-          .CREATE_PRODUCT_MARKET_CATEGORY_SELECTIONS}) {
+  _buildSelectionsCategoryAndUnitComponents(
+    BuildContext context,
+    String title,
+    String titleForBottomSheet,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Column(
@@ -692,12 +579,6 @@ class _CreateProductMarketPageState
                               .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE
                   ? buildTextContent(_branch, false, fontSize: 17)
                   : const SizedBox(),
-              _private != "" &&
-                      title ==
-                          CreateProductMarketConstants
-                              .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE
-                  ? buildTextContent(_private, false, fontSize: 17)
-                  : const SizedBox(),
             ],
             suffixWidget: Container(
               height: 40,
@@ -718,37 +599,41 @@ class _CreateProductMarketPageState
                     height: 400,
                     child: ListView.builder(
                         padding: EdgeInsets.zero,
-                        itemCount: dataList!.length,
+                        itemCount: title ==
+                                CreateProductMarketConstants
+                                    .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
+                            ? productcategoriesData.length
+                            : _childCategoriesList!.length,
                         itemBuilder: (context, index) {
-                          final data = dataList;
+                          final data = title ==
+                                  CreateProductMarketConstants
+                                      .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
+                              ? productcategoriesData
+                              : _childCategoriesList!;
                           return Container(
                             child: Column(
                               children: [
                                 GeneralComponent(
-                                  [buildTextContent(data[index], false)],
+                                  [buildTextContent(data[index].text, false)],
                                   changeBackground: transparent,
                                   function: () {
                                     popToPreviousScreen(context);
                                     if (title ==
                                         CreateProductMarketConstants
                                             .CREATE_PRODUCT_MARKET_CATEGORY_TITLE) {
-                                      _category = data[index];
+                                      _category = data[index].text;
                                       _validatorSelectionList["category"] =
                                           true;
+                                      _childCategoriesList =
+                                          data[index].subcategories;
+                                      _branch = "";
                                     }
                                     if (title ==
                                         CreateProductMarketConstants
                                             .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE) {
-                                      _branch = data[index];
+                                      _branch = data[index].text;
                                       _validatorSelectionList["branch"] = true;
                                     }
-                                    if (title ==
-                                        CreateProductMarketConstants
-                                            .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE) {
-                                      _private = data[index];
-                                      _validatorSelectionList["private"] = true;
-                                    }
-
                                     setState(() {});
                                   },
                                 ),
@@ -772,6 +657,105 @@ class _CreateProductMarketPageState
                           .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE
               ? _buildWarningForSelections("Vui lòng chọn ngành hàng.")
               : const SizedBox(),
+        ],
+      ),
+    );
+  }
+
+  _buildSelectionsPrivateRuleComponent(
+      BuildContext context, String title, String titleForBottomSheet,
+      {List<Map<String, dynamic>> privateDatas = CreateProductMarketConstants
+          .CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: Column(
+        children: [
+          GeneralComponent(
+            [
+              buildTextContent(title, false,
+                  colorWord: greyColor, fontSize: 15),
+              const SizedBox(height: 5),
+              _private != ""
+                  ? buildTextContent(_private, false, fontSize: 17)
+                  : const SizedBox(),
+            ],
+            prefixWidget: _private != ""
+                ? Container(
+                    height: 40,
+                    width: 40,
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: greyColor[400]),
+                    child: Icon(
+                      _private == privateDatas[0]["title"]
+                          ? FontAwesomeIcons.earthAfrica
+                          : _private == privateDatas[1]["title"]
+                              ? FontAwesomeIcons.user
+                              : FontAwesomeIcons.lock,
+                      size: 18,
+                    ),
+                  )
+                : null,
+            suffixWidget: Container(
+              alignment: Alignment.centerRight,
+              height: 40,
+              width: 40,
+              margin: _private != ""
+                  ? EdgeInsets.only(right: 5)
+                  : EdgeInsets.only(right: 15),
+              child: const Icon(
+                FontAwesomeIcons.caretDown,
+                size: 18,
+              ),
+            ),
+            changeBackground: transparent,
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            isHaveBorder: true,
+            function: () {
+              showBottomSheetCheckImportantSettings(
+                  context, 500, titleForBottomSheet,
+                  bgColor: Colors.grey[300],
+                  widget: Container(
+                    height: 400,
+                    child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: privateDatas.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              GeneralComponent(
+                                [
+                                  buildTextContent(
+                                      privateDatas[index]["title"], true),
+                                  buildTextContent(
+                                      privateDatas[index]["subTitle"], false),
+                                ],
+                                prefixWidget: Container(
+                                  height: 30,
+                                  width: 30,
+                                  child: Icon(privateDatas[index]["icon"]),
+                                ),
+                                changeBackground: transparent,
+                                padding: EdgeInsets.all(5),
+                                function: () {
+                                  popToPreviousScreen(context);
+                                  if (title ==
+                                      CreateProductMarketConstants
+                                          .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE) {
+                                    _private = privateDatas[index]["title"];
+                                    _validatorSelectionList["private"] = true;
+                                  }
+                                  setState(() {});
+                                },
+                              ),
+                              buildDivider(color: red)
+                            ],
+                          );
+                        }),
+                  ));
+            },
+          ),
           _validatorSelectionList["private"] == false &&
                   title ==
                       CreateProductMarketConstants
