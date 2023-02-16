@@ -33,4 +33,8 @@ class EventApi {
   Future statusEventApi(id, data) async {
     return await Api().postRequestBase('/api/v1/events/$id/accounts', data);
   }
+
+  Future sendInvitationFriendEventApi(id, data) async {
+    return await Api().postRequestBase('/api/v1/events/$id/invitations', data);
+  }
 }

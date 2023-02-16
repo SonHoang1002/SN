@@ -61,6 +61,20 @@ class EventController extends StateNotifier<EventState> {
     }
   }
 
+  sendInviteEvents(id, data) async {
+    List response = await EventApi().sendInvitationFriendEventApi(id, data);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          events: state.events,
+          hosts: state.hosts,
+          friendExcludes: state.friendExcludes,
+          friendIncludes: state.friendIncludes,
+          eventsSuggested: state.eventsSuggested);
+    } else {
+      state = state.copyWith(isMore: false);
+    }
+  }
+
   getListFriendExcludes(params) async {
     var response = await EventApi().getListFriendExcludesApi(params);
     if (response['data'].isNotEmpty) {

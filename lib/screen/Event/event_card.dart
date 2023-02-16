@@ -59,6 +59,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                     itemCount: events.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
+
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 6),

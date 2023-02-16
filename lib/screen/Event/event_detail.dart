@@ -345,6 +345,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                     height:
                                                                         height *
                                                                             0.9,
+                                                                    width:
+                                                                        width,
                                                                     child: ActionEllipsis(
                                                                         menuSelected:
                                                                             iconActionEllipsis[index]),
