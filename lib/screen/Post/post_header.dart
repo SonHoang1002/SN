@@ -76,8 +76,7 @@ class _PostHeaderState extends State<PostHeader> {
     }
 
     if (widget.post['life_event'] != null) {
-      description =
-          ' đã thêm một ${widget.post['life_event']['name'].toLowerCase()}';
+      description = ' đã thêm một sự kiện trong đời';
     }
 
     if (widget.post['reblog'] != null) {

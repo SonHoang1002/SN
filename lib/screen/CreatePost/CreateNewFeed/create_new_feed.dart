@@ -25,6 +25,7 @@ import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/question_an
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/page_edit_media_upload.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_target.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/post_life_event.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -54,6 +55,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   dynamic statusActivity;
   dynamic statusQuestion;
   dynamic checkin;
+  dynamic lifeEvent;
 
   bool isUploadVideo = false;
 
@@ -143,6 +145,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           files = data;
         });
         break;
+      case 'updateLifeEvent':
+        setState(() {
+          setState(() {
+            lifeEvent = data;
+          });
+        });
     }
   }
 
@@ -243,6 +251,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       data = {...data, "media_ids": mediasId};
     }
 
+    if (lifeEvent != null) {
+      data = {...data, "life_event": lifeEvent};
+    }
+
     var response = await PostApi().createStatus(data);
 
     if (response != null) {
@@ -264,7 +276,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             .read(postControllerProvider.notifier)
             .createUpdatePost(feedPost, response);
       }
-    }
+    } else {}
   }
 
   checkVisiblePress() {
@@ -342,6 +354,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       checkin != null
                           ? MapWidgetItem(checkin: checkin)
                           : const SizedBox(),
+                      lifeEvent != null
+                          ? PostLifeEvent(
+                              post: {'life_event': lifeEvent},
+                            )
+                          : const SizedBox(),
                       if (gifLink.isNotEmpty ||
                           files.isNotEmpty ||
                           statusQuestion != null ||
@@ -356,6 +373,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                   gifLink = '';
                                   statusQuestion = null;
                                   checkin = null;
+                                  lifeEvent = null;
                                 });
                               },
                               child: Container(
@@ -454,7 +472,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         body = Gif(handleUpdateData: handleUpdateData);
         break;
       case 'life-event':
-        body = const LifeEventCategories();
+        body = LifeEventCategories(handleUpdateData: handleUpdateData);
         break;
       case 'answer':
         body =

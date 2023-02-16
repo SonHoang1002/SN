@@ -8,17 +8,37 @@ import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_me
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 
-class LifeEventCategories extends StatelessWidget {
+class LifeEventCategories extends StatefulWidget {
   final List? listLifeEvent;
   final dynamic eventSelected;
-  const LifeEventCategories({Key? key, this.listLifeEvent, this.eventSelected})
+  final Function handleUpdateData;
+  final String? type;
+  const LifeEventCategories(
+      {Key? key,
+      this.listLifeEvent,
+      this.eventSelected,
+      required this.handleUpdateData,
+      this.type})
       : super(key: key);
+
+  @override
+  State<LifeEventCategories> createState() => _LifeEventCategoriesState();
+}
+
+class _LifeEventCategoriesState extends State<LifeEventCategories> {
+  dynamic lifeEvent = {
+    // "default_media_url": '',
+    // "life_event_category_id": '',
+    // "name": "",
+    // "place_id": "",
+    // "start_date": ""
+  };
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    List listData = listLifeEvent ?? lifeEventCategories;
+    List listData = widget.listLifeEvent ?? lifeEventCategories;
 
     handlePress(event) {
       if (event['children'] != null && event['children'].isNotEmpty) {
@@ -28,8 +48,10 @@ class LifeEventCategories extends StatelessWidget {
                 builder: (context) => CreateModalBaseMenu(
                     title: event['name'],
                     body: LifeEventCategories(
+                      type: 'children',
                       eventSelected: event,
                       listLifeEvent: event['children'],
+                      handleUpdateData: widget.handleUpdateData,
                     ),
                     buttonAppbar: const SizedBox())));
       } else {
@@ -38,14 +60,39 @@ class LifeEventCategories extends StatelessWidget {
             CupertinoPageRoute(
                 builder: (context) => CreateModalBaseMenu(
                     title: event['name'] ?? '',
-                    body: LifeEventDetail(event: event),
-                    buttonAppbar: const ButtonPrimary(label: "Xong"))));
+                    body: LifeEventDetail(
+                        event: event,
+                        updateLifeEvent: (type, value) {
+                          if (mounted) {
+                            setState(() {
+                              lifeEvent = {...lifeEvent, type: value};
+                            });
+                          }
+                        }),
+                    buttonAppbar: ButtonPrimary(
+                      label: "Xong",
+                      handlePress: () {
+                        widget.handleUpdateData('updateLifeEvent', lifeEvent);
+                        if (widget.type != null && widget.type == 'children') {
+                          Navigator.of(context)
+                            ..pop()
+                            ..pop()
+                            ..pop()
+                            ..pop();
+                        } else {
+                          Navigator.of(context)
+                            ..pop()
+                            ..pop()
+                            ..pop();
+                        }
+                      },
+                    ))));
       }
     }
 
     return Column(
       children: [
-        listLifeEvent != null
+        widget.listLifeEvent != null
             ? InkWell(
                 onTap: () {
                   handlePress({});
@@ -60,7 +107,7 @@ class LifeEventCategories extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        eventSelected['name'],
+                        widget.eventSelected['name'],
                         style: const TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w600),
                       ),
@@ -133,8 +180,8 @@ class LifeEventCategories extends StatelessWidget {
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisSpacing: 4,
                     mainAxisSpacing: 4,
-                    crossAxisCount: listLifeEvent != null ? 1 : 3,
-                    childAspectRatio: listLifeEvent != null ? 5 : 1),
+                    crossAxisCount: widget.listLifeEvent != null ? 1 : 3,
+                    childAspectRatio: widget.listLifeEvent != null ? 5 : 1),
                 itemCount: listData.length,
                 itemBuilder: (context, index) => InkWell(
                       onTap: () {
