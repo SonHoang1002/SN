@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
@@ -175,7 +176,7 @@ class _FeedState extends ConsumerState<Feed> {
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
                     if (index < posts.length) {
-                      return Post(post: posts[index]);
+                      return Post(type: feedPost, post: posts[index]);
                     } else {
                       return isMore == true
                           ? const Center(

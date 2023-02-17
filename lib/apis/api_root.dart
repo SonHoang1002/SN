@@ -6,7 +6,10 @@ class Api {
     baseUrl: baseRoot,
     connectTimeout: 30 * 1000,
     receiveTimeout: 30 * 1000,
-    headers: {'authorization': 'Bearer $userToken'},
+    headers: {
+      'authorization': 'Bearer $userToken',
+      "Content-Type": "application/json",
+    },
   );
 
   Dio getDio() {
@@ -46,7 +49,7 @@ class Api {
   Future deleteRequestBase(String path, data) async {
     try {
       Dio dio = getDio();
-      var response = await dio.delete(path);
+      var response = await dio.delete(path, data: data);
       return response.data;
     } catch (e) {
       print(e.toString());

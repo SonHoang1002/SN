@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/bookmark_api.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/widget/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widget/page_permission_comment.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class PostHeaderAction extends ConsumerStatefulWidget {
   final dynamic post;
-  const PostHeaderAction({Key? key, this.post}) : super(key: key);
+  final String type;
+  const PostHeaderAction({Key? key, this.post, required this.type})
+      : super(key: key);
 
   @override
   ConsumerState<PostHeaderAction> createState() => _PostHeaderActionState();
@@ -22,9 +27,11 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      commentModeration = widget.post['comment_moderation'];
-    });
+    if (mounted) {
+      setState(() {
+        commentModeration = widget.post['comment_moderation'];
+      });
+    }
   }
 
   @override
@@ -41,10 +48,12 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "isShow": meData['id'] == widget.post['account']['id'],
       },
       {
-        "key": "save_post",
-        "label": "Lưu bài viết",
+        "key": widget.post['bookmarked'] ? 'unsave_post' : "save_post",
+        "label": widget.post['bookmarked'] ? "Bỏ lưu bài viết" : "Lưu bài viết",
         "icon": FontAwesomeIcons.solidBookmark,
-        "description": "Thêm vào danh sách mục đã lưu",
+        "description": widget.post['bookmarked']
+            ? "Loại khỏi danh sách mục đã lưu"
+            : "Thêm vào danh sách mục đã lưu",
         "isShow": true
       },
       {
@@ -88,16 +97,58 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       },
     ];
 
+    handleUnBookmark() async {
+      var response =
+          await BookmarkApi().unBookmarkApi({"bookmark_id": widget.post['id']});
+      if (response != null && mounted) {
+        ref
+            .read(postControllerProvider.notifier)
+            .actionUpdateDetailInPost(widget.type, response);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Bỏ lưu thành công")));
+      }
+    }
+
+    handleActionPinPost(type) async {
+      dynamic response;
+      if (type == 'pin_post') {
+        response = await PostApi().pinPostApi(widget.post['id']);
+        if (response == null) return;
+      } else {
+        response = await PostApi().unPinPostApi(widget.post['id']);
+        if (response == null) return;
+      }
+
+      ref.read(postControllerProvider.notifier).actionPinPost(type, response);
+
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text("${type == 'pin_post' ? "Ghim" : "Bỏ ghim"} thành công")));
+      }
+
+      setState(() {});
+    }
+
     handleAction(key) {
       if (["unpin_post", "pin_post"].contains(key)) {
-        ref.read(postControllerProvider.notifier).actionPinPost(
-            widget.post['pinned'] != null && widget.post['pinned'] == true
-                ? 'unpin'
-                : 'pin',
-            widget.post['id']);
-        Navigator.pop(context);
+        handleActionPinPost(key);
       } else if (['save_post'].contains(key)) {
         Navigator.pop(context);
+        showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+            builder: (context) => BookmarkPage(
+                type: widget.type,
+                entitySave: widget.post,
+                entityType: 'Status'));
+      } else if (['unsave_post'].contains(key)) {
+        handleUnBookmark();
       } else if (key == "comment_permission_post") {
         Navigator.push(
           context,
@@ -124,15 +175,6 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         );
       }
     }
-
-    // ref.listen<dynamic>(
-    //     postControllerProvider.select((value) => value.postsPin),
-    //     (previous, next) {
-    //   print('abc $previous');
-    //   print('abc $next');
-    //   ScaffoldMessenger.of(context)
-    //       .showSnackBar(const SnackBar(content: Text('Thành công')));
-    // });
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),

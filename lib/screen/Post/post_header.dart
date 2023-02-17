@@ -180,13 +180,12 @@ class _PostHeaderState extends State<PostHeader> {
                           onTap: () {
                             showModalBottomSheet(
                                 context: context,
-                                // isScrollControlled: true,
-                                // clipBehavior: Clip.antiAliasWithSaveLayer,
                                 shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
                                         top: Radius.circular(20))),
                                 builder: (BuildContext context) {
-                                  return PostHeaderAction(post: widget.post);
+                                  return PostHeaderAction(
+                                      post: widget.post, type: widget.type);
                                 });
                           },
                           child: Icon(
