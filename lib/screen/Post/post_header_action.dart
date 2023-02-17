@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -90,8 +91,14 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "isShow": meData['id'] != widget.post['account']['id']
       },
       {
-        "key": "delete_post",
-        "label": "Xoá bài viết",
+        "key": ["account_avatar", "account_banner"]
+                .contains(widget.post['post_type'])
+            ? "hidden_post"
+            : "delete_post",
+        "label": ["account_avatar", "account_banner"]
+                .contains(widget.post['post_type'])
+            ? "Ẩn bài viết"
+            : "Xoá bài viết",
         "icon": FontAwesomeIcons.trash,
         "isShow": meData['id'] == widget.post['account']['id']
       },
@@ -130,6 +137,30 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       }
 
       setState(() {});
+    }
+
+    handleHiddenPost(type) async {
+      dynamic response =
+          await PostApi().updatePost(widget.post['id'], {"hidden": true});
+
+      ref
+          .read(postControllerProvider.notifier)
+          .actionHiddenDeletePost(widget.type, widget.post);
+
+      if (response != null && mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Ẩn bài viết thành công")));
+      }
+    }
+
+    void showAlertDialog(BuildContext context) {
+      showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => AlertDialogDelete(
+                post: widget.post,
+                type: widget.type,
+              ));
     }
 
     handleAction(key) {
@@ -173,6 +204,13 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
                     ),
                   )),
         );
+      } else if (["hidden_post", "delete_post"].contains(key)) {
+        if (key == "hidden_post") {
+          handleHiddenPost(key);
+        } else {
+          Navigator.pop(context);
+          showAlertDialog(context);
+        }
       }
     }
 
@@ -235,6 +273,53 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AlertDialogDelete extends ConsumerWidget {
+  final dynamic post;
+  final String type;
+  const AlertDialogDelete({super.key, this.post, required this.type});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    handleDeletePost(key) async {
+      var response = await PostApi().deletePostApi(post!['id']);
+
+      ref
+          .read(postControllerProvider.notifier)
+          .actionHiddenDeletePost(type, post);
+
+      if (response != null) {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Xóa bài viết thành công")));
+      }
+    }
+
+    return CupertinoAlertDialog(
+      title: const Text('Xóa bài viết'),
+      content: const Text(
+          'Bạn chắc chắn muốn xóa bài viết? Hành động này không thể hoàn tác'),
+      actions: <CupertinoDialogAction>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Hủy'),
+        ),
+        CupertinoDialogAction(
+          isDestructiveAction: true,
+          onPressed: () {
+            handleDeletePost('delete_post');
+          },
+          child: const Text('Xóa'),
+        ),
+      ],
     );
   }
 }

@@ -131,6 +131,36 @@ class PostController extends StateNotifier<PostState> {
         isMoreUserPage: state.isMoreUserPage);
   }
 
+  actionHiddenDeletePost(type, data) {
+    int index = -1;
+
+    if (type == feedPost) {
+      index = state.posts.indexWhere((element) => element['id'] == data['id']);
+    } else if (type == postPageUser) {
+      index = state.postUserPage
+          .indexWhere((element) => element['id'] == data['id']);
+    }
+
+    if (index < 0) return;
+
+    state = state.copyWith(
+        postsPin: state.postsPin,
+        posts: type == feedPost
+            ? [
+                ...state.posts.sublist(0, index),
+                ...state.posts.sublist(index + 1)
+              ]
+            : state.posts,
+        isMore: state.isMore,
+        postUserPage: type == postPageUser
+            ? [
+                ...state.postUserPage.sublist(0, index),
+                ...state.postUserPage.sublist(index + 1)
+              ]
+            : state.posts,
+        isMoreUserPage: state.isMoreUserPage);
+  }
+
   refreshListPost(params) async {
     List response = await PostApi().getListPostApi(params);
     if (response.isNotEmpty) {
