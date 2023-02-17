@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -6,25 +7,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
-import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
+import 'package:social_network_app_mobile/data/market_place_datas/suggest_products_data.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
-import '../../../../helper/push_to_new_screen.dart';
-import '../../../../theme/colors.dart';
+import '../constant/marketPlace_constants.dart';
+import '../providers/market_place_providers/create_product_provider.dart';
 
-class SaleInformationMarketPage extends ConsumerStatefulWidget {
+class TestMarketPlace extends ConsumerStatefulWidget {
+  const TestMarketPlace({super.key});
+
   @override
-  ConsumerState<SaleInformationMarketPage> createState() =>
-      _SaleInformationMarketPageState();
+  ConsumerState<TestMarketPlace> createState() => _TestMarketPlaceState();
 }
 
-class _SaleInformationMarketPageState
-    extends ConsumerState<SaleInformationMarketPage> {
+class _TestMarketPlaceState extends ConsumerState<TestMarketPlace> {
   late double width = 0;
   late double height = 0;
 
@@ -36,38 +39,15 @@ class _SaleInformationMarketPageState
       TextEditingController(text: "");
   final TextEditingController _skuController = TextEditingController(text: "");
 
-  final Map<String, dynamic> _categoryData = {
-    "loai_1": {
-      "name": TextEditingController(text: "loai_1"),
-      "values": [
-        TextEditingController(text: "xanh"),
-      ],
-      "images": [""],
-      "contents": {
-        "price": [
-          TextEditingController(text: "1"),
-        ],
-        "repository": [
-          TextEditingController(text: "1"),
-        ],
-        "sku": [
-          TextEditingController(text: "s"),
-        ],
-      },
-    },
-  };
+  Map<String, dynamic>? _categoryData;
   bool _isLoading = false;
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    // print("state: ${_isLoading}");
+    _initData();
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -78,14 +58,14 @@ class _SaleInformationMarketPageState
             children: [
               InkWell(
                 onTap: () async {
-                  if (validateInputs()) {
-                    List list = await Future.wait(
-                      [_setData()],
-                    );
-                    if (list.isNotEmpty && mounted) {
-                      popToPreviousScreen(context);
-                    }
-                  }
+                  // if (validateInputs()) {
+                  //   List list = await Future.wait(
+                  //     [_setData()],
+                  //   );
+                  //   if (list.isNotEmpty && mounted) {
+                  popToPreviousScreen(context);
+                  //   }
+                  // }
                 },
                 child: Icon(
                   FontAwesomeIcons.chevronLeft,
@@ -109,39 +89,11 @@ class _SaleInformationMarketPageState
             children: [
               Form(
                 key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: ListView(children: [
-                        // sales information
-                        _buildContentForClassifyCategoryContents()
-                      ]),
-                    ),
-                    Container(
-                      // height: 40,
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      width: width,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: buildButtonForMarketWidget(
-                            width: width,
-                            bgColor: Colors.orange[300],
-                            title: "Lưu",
-                            function: () async {
-                              if (validateInputs()) {
-                                List list = await Future.wait(
-                                  [_setData()],
-                                );
-                                if (list.isNotEmpty && mounted) {
-                                  popToPreviousScreen(context);
-                                }
-                              }
-                            }),
-                      ),
-                    ),
-                  ],
+                child: Expanded(
+                  child: ListView(children: [
+                    // sales information
+                    _buildContentForClassifyCategoryContents()
+                  ]),
                 ),
               ),
               _isLoading
@@ -184,7 +136,7 @@ class _SaleInformationMarketPageState
               Column(
                 children: [
                   buildSpacer(height: 10),
-                  _buildInput(_categoryData["loai_1"]["name"], width,
+                  _buildInput(_categoryData?["loai_1"]["name"], width,
                       "Nhập tên phân loại 1"),
 
                   // phan loai 1
@@ -192,13 +144,13 @@ class _SaleInformationMarketPageState
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Wrap(
                       children: List.generate(
-                          _categoryData["loai_1"]["values"].length,
+                          _categoryData?["loai_1"]["values"].length,
                           (indexDescription) => Padding(
                                 padding: EdgeInsets.only(
                                     right: indexDescription.isOdd ? 0 : 5,
                                     left: indexDescription.isEven ? 0 : 5),
                                 child: _buildInput(
-                                    _categoryData["loai_1"]["values"]
+                                    _categoryData?["loai_1"]["values"]
                                         [indexDescription],
                                     width * 0.48,
                                     "Màu sắc ${indexDescription + 1}",
@@ -209,19 +161,19 @@ class _SaleInformationMarketPageState
                               )),
                     ),
                   ),
-                  _categoryData["loai_1"]["values"].length != 10
+                  _categoryData?["loai_1"]["values"].length != 10
                       ? Padding(
                           padding: const EdgeInsets.only(left: 10, top: 5),
                           child: buildTextContent(
-                              "Thêm mô tả cho phân loại 1: ${_categoryData["loai_1"]["values"].length}/10",
+                              "Thêm mô tả cho phân loại 1: ${_categoryData?["loai_1"]["values"].length}/10",
                               false,
                               fontSize: 13, function: () {
                             _addClassifyCategoryOne();
                           }),
                         )
                       : SizedBox(),
-                  _categoryData["loai_2"] == null ||
-                          _categoryData["loai_2"] == {}
+                  _categoryData?["loai_2"] == null ||
+                          _categoryData?["loai_2"] == {}
                       ? Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: buildTextContent("Thêm nhóm phân loại", true,
@@ -234,12 +186,12 @@ class _SaleInformationMarketPageState
                       : SizedBox(),
 
                   //loai 2
-                  _categoryData["loai_2"] != null &&
-                          _categoryData["loai_2"] != {}
+                  _categoryData?["loai_2"] != null &&
+                          _categoryData?["loai_2"] != {}
                       ? Column(
                           children: [
                             buildSpacer(height: 10),
-                            _buildInput(_categoryData["loai_2"]["name"], width,
+                            _buildInput(_categoryData?["loai_2"]["name"], width,
                                 "Nhập tên phân loại 2"),
 
                             ///
@@ -248,7 +200,7 @@ class _SaleInformationMarketPageState
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: Wrap(
                                 children: List.generate(
-                                    _categoryData["loai_2"]["values"].length,
+                                    _categoryData?["loai_2"]["values"].length,
                                     (indexDescription) => Padding(
                                           padding: EdgeInsets.only(
                                               right: indexDescription.isOdd
@@ -258,7 +210,7 @@ class _SaleInformationMarketPageState
                                                   ? 0
                                                   : 5),
                                           child: _buildInput(
-                                              _categoryData["loai_2"]["values"]
+                                              _categoryData?["loai_2"]["values"]
                                                       [indexDescription]
                                                   ["category_2_name"],
                                               width * 0.48,
@@ -271,12 +223,12 @@ class _SaleInformationMarketPageState
                                         )),
                               ),
                             ),
-                            _categoryData["loai_2"]["values"].length != 10
+                            _categoryData?["loai_2"]["values"].length != 10
                                 ? Padding(
                                     padding:
                                         const EdgeInsets.only(left: 10, top: 5),
                                     child: buildTextContent(
-                                        "Thêm mô tả cho phân loại 2: ${_categoryData["loai_2"]["values"].length}/10",
+                                        "Thêm mô tả cho phân loại 2: ${_categoryData?["loai_2"]["values"].length}/10",
                                         false,
                                         fontSize: 13, function: () {
                                       _addClassifyCategoryTwo();
@@ -316,8 +268,8 @@ class _SaleInformationMarketPageState
                   SingleChildScrollView(
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      child: _categoryData["loai_2"] == {} ||
-                              _categoryData["loai_2"] == null
+                      child: _categoryData?["loai_2"] == {} ||
+                              _categoryData?["loai_2"] == null
                           ? _buildDataTableWithOneComponent()
                           : _buildDataTableForTwoComponents()),
                 ],
@@ -331,23 +283,23 @@ class _SaleInformationMarketPageState
 
   _addClassifyCategoryOne() {
     // them cac the input vao loai 1
-    _categoryData["loai_1"]["values"].add(TextEditingController(text: ""));
-    _categoryData["loai_1"]["images"].add("");
-    _categoryData["loai_1"]["contents"]["price"]
+    _categoryData?["loai_1"]["values"].add(TextEditingController(text: ""));
+    _categoryData?["loai_1"]["images"].add("");
+    _categoryData?["loai_1"]["contents"]["price"]
         .add(TextEditingController(text: ""));
-    _categoryData["loai_1"]["contents"]["repository"]
+    _categoryData?["loai_1"]["contents"]["repository"]
         .add(TextEditingController(text: ""));
-    _categoryData["loai_1"]["contents"]["sku"]
+    _categoryData?["loai_1"]["contents"]["sku"]
         .add(TextEditingController(text: ""));
     // them cac the input vao loai 2 (neu co)
 
-    if (_categoryData["loai_2"] != {} && _categoryData["loai_2"] != null) {
-      for (int i = 0; i < _categoryData["loai_2"]?["values"]?.length; i++) {
-        _categoryData["loai_2"]?["values"]?[i]["price"]
+    if (_categoryData?["loai_2"] != {} && _categoryData?["loai_2"] != null) {
+      for (int i = 0; i < _categoryData?["loai_2"]?["values"]?.length; i++) {
+        _categoryData?["loai_2"]?["values"]?[i]["price"]
             .add(TextEditingController(text: ""));
-        _categoryData["loai_2"]?["values"]?[i]["classify"]
+        _categoryData?["loai_2"]?["values"]?[i]["classify"]
             .add(TextEditingController(text: ""));
-        _categoryData["loai_2"]?["values"]?[i]["sku"]
+        _categoryData?["loai_2"]?["values"]?[i]["sku"]
             .add(TextEditingController(text: ""));
       }
     }
@@ -356,18 +308,18 @@ class _SaleInformationMarketPageState
 
   _deleteClassifyCategoryOne(int index) {
     // xoa trong loai_1
-    if (_categoryData["loai_1"]["values"].length != 1) {
-      _categoryData["loai_1"]["values"].removeAt(index);
-      _categoryData["loai_1"]["contents"]["price"].removeAt(index);
-      _categoryData["loai_1"]["contents"]["repository"].removeAt(index);
-      _categoryData["loai_1"]["contents"]["sku"].removeAt(index);
+    if (_categoryData?["loai_1"]["values"].length != 1) {
+      _categoryData?["loai_1"]["values"].removeAt(index);
+      _categoryData?["loai_1"]["contents"]["price"].removeAt(index);
+      _categoryData?["loai_1"]["contents"]["repository"].removeAt(index);
+      _categoryData?["loai_1"]["contents"]["sku"].removeAt(index);
 
       // xoa trong loai_2 (neu co)
-      if (_categoryData["loai_2"] != null && _categoryData["loai_2"] != {}) {
-        for (int i = 0; i < _categoryData["loai_2"]["values"].length; i++) {
-          _categoryData["loai_2"]["values"][i]["price"].removeAt(index);
-          _categoryData["loai_2"]["values"][i]["classify"].removeAt(index);
-          _categoryData["loai_2"]["values"][i]["sku"].removeAt(index);
+      if (_categoryData?["loai_2"] != null && _categoryData?["loai_2"] != {}) {
+        for (int i = 0; i < _categoryData?["loai_2"]["values"].length; i++) {
+          _categoryData?["loai_2"]["values"][i]["price"].removeAt(index);
+          _categoryData?["loai_2"]["values"][i]["repository"].removeAt(index);
+          _categoryData?["loai_2"]["values"][i]["sku"].removeAt(index);
         }
       }
     }
@@ -387,19 +339,19 @@ class _SaleInformationMarketPageState
         },
       ]
     };
-    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+    for (int i = 0; i < _categoryData?["loai_1"]["values"].length; i++) {
       primaryData["values"][0]["price"].add(TextEditingController(text: ""));
       primaryData["values"][0]["classify"].add(TextEditingController(text: ""));
       primaryData["values"][0]["sku"].add(TextEditingController(text: ""));
     }
 
-    _categoryData["loai_2"] = primaryData;
+    _categoryData?["loai_2"] = primaryData;
     setState(() {});
   }
 
   _addClassifyCategoryTwo() {
     // them cac the input vao loai 2
-    List<dynamic> valuesCategory2 = _categoryData["loai_2"]["values"];
+    List<dynamic> valuesCategory2 = _categoryData?["loai_2"]["values"];
     Map<String, dynamic> primaryData = {
       "category_2_name": TextEditingController(text: ""),
       "price": [],
@@ -407,43 +359,43 @@ class _SaleInformationMarketPageState
       "sku": []
     };
 
-    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+    for (int i = 0; i < _categoryData?["loai_1"]["values"].length; i++) {
       primaryData["price"].add(TextEditingController(text: ""));
       primaryData["classify"].add(TextEditingController(text: ""));
       primaryData["sku"].add(TextEditingController(text: ""));
     }
     valuesCategory2.add(primaryData.cast<String, Object>());
-    _categoryData["loai_2"]["values"] = valuesCategory2;
+    _categoryData?["loai_2"]["values"] = valuesCategory2;
     setState(() {});
   }
 
   _deleteClassifyCategoryTwo(int index) {
     // xoa phan tu trong phan loai 2
-    if (_categoryData["loai_2"]["values"].length > 1) {
-      _categoryData["loai_2"]["values"].removeAt(index);
+    if (_categoryData?["loai_2"]["values"].length > 1) {
+      _categoryData?["loai_2"]["values"].removeAt(index);
       setState(() {});
     }
   }
 
   _applyPriceRepositorySkuForAll() {
     // ap dung cho cac phan loai 1
-    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
-      _categoryData["loai_1"]["contents"]["price"][i].text =
+    for (int i = 0; i < _categoryData?["loai_1"]["values"].length; i++) {
+      _categoryData?["loai_1"]["contents"]["price"][i].text =
           _priceController.text.trim();
-      _categoryData["loai_1"]["contents"]["repository"][i].text =
+      _categoryData?["loai_1"]["contents"]["repository"][i].text =
           _repositoryController.text.trim();
-      _categoryData["loai_1"]["contents"]["sku"][i].text =
+      _categoryData?["loai_1"]["contents"]["sku"][i].text =
           _skuController.text.trim();
     }
     // ap dung cho cac phan loai 2
-    if (_categoryData["loai_2"] != null && _categoryData["loai_2"] != {}) {
-      for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
-        for (int z = 0; z < _categoryData["loai_2"]["values"].length; z++) {
-          _categoryData["loai_2"]["values"][z]["price"][i].text =
+    if (_categoryData?["loai_2"] != null && _categoryData?["loai_2"] != {}) {
+      for (int i = 0; i < _categoryData?["loai_1"]["values"].length; i++) {
+        for (int z = 0; z < _categoryData?["loai_2"]["values"].length; z++) {
+          _categoryData?["loai_2"]["values"][z]["price"][i].text =
               _priceController.text.trim();
-          _categoryData["loai_2"]["values"][z]["classify"][i].text =
+          _categoryData?["loai_2"]["values"][z]["classify"][i].text =
               _repositoryController.text.trim();
-          _categoryData["loai_2"]["values"][z]["sku"][i].text =
+          _categoryData?["loai_2"]["values"][z]["sku"][i].text =
               _skuController.text.trim();
         }
       }
@@ -459,8 +411,8 @@ class _SaleInformationMarketPageState
     // phân loại hàng
     dataColumns.add(DataColumn(
         label: Text(
-            _categoryData["loai_1"]["name"].text.length > 0
-                ? _categoryData["loai_1"]["name"].text.trim()
+            _categoryData?["loai_1"]["name"].text.length > 0
+                ? _categoryData!["loai_1"]["name"].text.trim()
                 : "Phân loại hàng 1",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
     dataColumns.add(
@@ -479,14 +431,14 @@ class _SaleInformationMarketPageState
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
 
-    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+    for (int i = 0; i < _categoryData?["loai_1"]["values"].length; i++) {
       dataRows.add(DataRow(cells: [
         DataCell(
           Column(
             children: [
               buildSpacer(height: 10),
               buildTextContent(
-                  _categoryData["loai_1"]["values"][i].text.trim(), true,
+                  _categoryData?["loai_1"]["values"][i].text.trim(), true,
                   isCenterLeft: false, fontSize: 17),
               buildSpacer(height: 10),
               InkWell(
@@ -499,28 +451,32 @@ class _SaleInformationMarketPageState
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(7),
                       border: Border.all(color: greyColor, width: 0.4)),
-                  child: _categoryData["loai_1"]["images"][i] != "" &&
-                          _categoryData["loai_1"]["images"][i] != null
-                      ? Image.file(
-                          File(_categoryData["loai_1"]["images"][i]),
-                          fit: BoxFit.fitHeight,
-                        )
-                      : Image.asset(
-                          MarketPlaceConstants.PATH_IMG + "cat_1.png"),
+                  child: _categoryData?["loai_1"]["images"][i] != "" &&
+                          _categoryData?["loai_1"]["images"][i] != null
+                     ? _categoryData!["loai_1"]["images"][i] is File
+                                  ? Image.file(
+                                      File(_categoryData?["loai_1"]["images"]
+                                          [i]),
+                                      fit: BoxFit.fitHeight,
+                                    )
+                                  : Image.asset(MarketPlaceConstants.PATH_IMG +
+                                      "cat_1.png")
+                      :Image.asset(MarketPlaceConstants.PATH_IMG +
+                                      "cat_1.png")
                 ),
               )
             ],
           ),
         ),
-        DataCell(_buildInput(
-            _categoryData["loai_1"]["contents"]["price"][i], width * 0.5, "Gia",
+        DataCell(_buildInput(_categoryData?["loai_1"]["contents"]["price"][i],
+            width * 0.5, "Gia",
             keyboardType: TextInputType.number)),
         DataCell(_buildInput(
-            _categoryData["loai_1"]["contents"]["repository"][i],
+            _categoryData?["loai_1"]["contents"]["repository"][i],
             width * 0.5,
             "Kho hang",
             keyboardType: TextInputType.number)),
-        DataCell(_buildInput(_categoryData["loai_1"]["contents"]["sku"][i],
+        DataCell(_buildInput(_categoryData?["loai_1"]["contents"]["sku"][i],
             width * 0.5, "Ma phan loai")),
       ]));
     }
@@ -541,15 +497,15 @@ class _SaleInformationMarketPageState
 
     dataColumns.add(DataColumn(
         label: Text(
-            _categoryData["loai_1"]["name"].text.length > 0
-                ? _categoryData["loai_1"]["name"].text.trim()
+            _categoryData?["loai_1"]["name"].text.length > 0
+                ? _categoryData!["loai_1"]["name"].text.trim()
                 : "Phân loại hàng 1",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
 
     dataColumns.add(DataColumn(
         label: Text(
-            _categoryData["loai_2"]?["name"]?.text.length > 0
-                ? _categoryData["loai_2"]["name"].text.trim()
+            _categoryData?["loai_2"]?["name"]?.text.length > 0
+                ? _categoryData!["loai_2"]["name"].text.trim()
                 : "Phân loại hàng 2",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
 
@@ -570,8 +526,8 @@ class _SaleInformationMarketPageState
     );
 
     // thêm dòng
-    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
-      for (int z = 0; z < _categoryData["loai_2"]?["values"]?.length; z++) {
+    for (int i = 0; i < _categoryData?["loai_1"]["values"].length; i++) {
+      for (int z = 0; z < _categoryData?["loai_2"]?["values"]?.length; z++) {
         dataRows.add(DataRow(cells: [
           z == 0
               ? DataCell(
@@ -579,7 +535,7 @@ class _SaleInformationMarketPageState
                     children: [
                       buildSpacer(height: 10),
                       buildTextContent(
-                          _categoryData["loai_1"]["values"][i].text.trim(),
+                          _categoryData?["loai_1"]["values"][i].text.trim(),
                           true,
                           isCenterLeft: false,
                           fontSize: 17),
@@ -594,12 +550,23 @@ class _SaleInformationMarketPageState
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(7),
                               border: Border.all(color: greyColor, width: 0.4)),
-                          child: _categoryData["loai_1"]["images"][i] != "" &&
-                                  _categoryData["loai_1"]["images"][i] != null
-                              ? Image.file(
-                                  File(_categoryData["loai_1"]["images"][i]),
-                                  fit: BoxFit.fitHeight,
-                                )
+                          child: _categoryData?["loai_1"]["images"][i] != "" &&
+                                  _categoryData?["loai_1"]["images"][i] != null
+                              ? _categoryData!["loai_1"]["images"][i] is File
+                                  ? Image.file(
+                                      File(_categoryData?["loai_1"]["images"]
+                                          [i]),
+                                      fit: BoxFit.fitHeight,
+                                    )
+                                  : Image.asset(MarketPlaceConstants.PATH_IMG +
+                                      "cat_1.png")
+
+                              // ImageCacheRender(
+                              //     path: _categoryData!["loai_1"]["images"]
+                              //         [i],
+                              //     height: 50.0,
+                              //     width: 50.0,
+                              //   )
                               : Image.asset(
                                   MarketPlaceConstants.PATH_IMG + "cat_1.png"),
                         ),
@@ -610,7 +577,7 @@ class _SaleInformationMarketPageState
               : DataCell(SizedBox()),
           DataCell(
             buildTextContent(
-                _categoryData["loai_2"]?["values"][z]["category_2_name"]
+                _categoryData?["loai_2"]?["values"][z]["category_2_name"]
                     .text
                     .trim(),
                 true,
@@ -618,16 +585,16 @@ class _SaleInformationMarketPageState
                 fontSize: 17),
           ),
           DataCell(_buildInput(
-              _categoryData["loai_2"]?["values"][z]["price"][i],
+              _categoryData?["loai_2"]?["values"][z]["price"][i],
               width * 0.5,
               "Giá",
               keyboardType: TextInputType.number)),
           DataCell(_buildInput(
-              _categoryData["loai_2"]?["values"][z]["classify"][i],
+              _categoryData?["loai_2"]?["values"][z]["classify"][i],
               width * 0.5,
               "Kho hàng",
               keyboardType: TextInputType.number)),
-          DataCell(_buildInput(_categoryData["loai_2"]?["values"][z]["sku"][i],
+          DataCell(_buildInput(_categoryData?["loai_2"]?["values"][z]["sku"][i],
               width * 0.5, "Mã phân loại")),
         ]));
       }
@@ -730,19 +697,19 @@ class _SaleInformationMarketPageState
     oldData["product_variants_attributes"] = [];
     // add loai_1
     Map<String, dynamic> loai_1 = {
-      "name": _categoryData["loai_1"]["name"].text.trim(),
+      "name": _categoryData?["loai_1"]["name"].text.trim(),
       "position": 1,
       "values":
-          _categoryData["loai_1"]["values"].map((e) => e.text.trim()).toList()
+          _categoryData?["loai_1"]["values"].map((e) => e.text.trim()).toList()
     };
     oldData["product_options_attributes"].add(loai_1);
 
     // add loai_2 (neu co)
-    if (_categoryData["loai_2"] != null) {
+    if (_categoryData?["loai_2"] != null) {
       Map<String, dynamic> loai_2 = {
-        "name": _categoryData["loai_2"]["name"].text.trim(),
+        "name": _categoryData?["loai_2"]["name"].text.trim(),
         "position": 2,
-        "values": _categoryData["loai_2"]["values"]
+        "values": _categoryData?["loai_2"]["values"]
             .map((e) => e["category_2_name"].text.trim())
             .toList()
       };
@@ -750,8 +717,8 @@ class _SaleInformationMarketPageState
     }
 
     // set product_variants_attributes
-    if (_categoryData["loai_2"] == null) {
-      List<String> imgList = _categoryData["loai_1"]["images"].toList();
+    if (_categoryData?["loai_2"] == null) {
+      List<String> imgList = _categoryData?["loai_1"]["images"].toList();
       print("state: ${imgList}");
       List<String> imageIdList = await Future.wait(imgList.map((element) async {
         String fileName = element.split('/').last;
@@ -768,11 +735,11 @@ class _SaleInformationMarketPageState
         oldData["product_variants_attributes"].add({
           "title":
               "${oldData["product"]["title"]} - ${oldData["product_options_attributes"][0]["values"][i]}",
-          "price": _categoryData["loai_1"]["contents"]["price"][i]
+          "price": _categoryData?["loai_1"]["contents"]["price"][i]
               .text
               .trim()
               .toString(),
-          "sku": _categoryData["loai_1"]["contents"]["sku"][i]
+          "sku": _categoryData?["loai_1"]["contents"]["sku"][i]
               .text
               .trim()
               .toString(),
@@ -792,23 +759,23 @@ class _SaleInformationMarketPageState
         });
       }
     } else {
-      for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
-        for (int z = 0; z < _categoryData["loai_2"]["values"].length; z++) {
+      for (int i = 0; i < _categoryData?["loai_1"]["values"].length; i++) {
+        for (int z = 0; z < _categoryData?["loai_2"]["values"].length; z++) {
           oldData["product_variants_attributes"].add({
             "title":
-                "${oldData["product"]["title"]} -${_categoryData["loai_1"]["values"][i].text.trim()} - ${_categoryData["loai_2"]["values"][z]["category_2_name"].text.trim()}",
-            "price": _categoryData["loai_2"]["values"][z]["price"][i]
+                "${oldData["product"]["title"]} -${_categoryData?["loai_1"]["values"][i].text.trim()} - ${_categoryData?["loai_2"]["values"][z]["category_2_name"].text.trim()}",
+            "price": _categoryData?["loai_2"]["values"][z]["price"][i]
                 .text
                 .trim()
                 .toString(),
-            "sku": _categoryData["loai_2"]["values"][z]["sku"][i]
+            "sku": _categoryData?["loai_2"]["values"][z]["sku"][i]
                 .text
                 .trim()
                 .toString(),
             "position": 2,
             "compare_at_price": null,
-            "option1": _categoryData["loai_1"]["values"][i].text.trim(),
-            "option2": _categoryData["loai_2"]["values"][z]["category_2_name"]
+            "option1": _categoryData?["loai_1"]["values"][i].text.trim(),
+            "option2": _categoryData?["loai_2"]["values"][z]["category_2_name"]
                 .text
                 .trim(),
             // "image_id": imageIdList[i],
@@ -832,7 +799,7 @@ class _SaleInformationMarketPageState
   Future getImage(ImageSource src, int index) async {
     XFile getImage = XFile("");
     getImage = (await ImagePicker().pickImage(source: src))!;
-    _categoryData["loai_1"]["images"][index] =
+    _categoryData?["loai_1"]["images"][index] =
         getImage.path != null && getImage.path != "" ? getImage.path : null;
     setState(() {});
   }
@@ -867,83 +834,87 @@ class _SaleInformationMarketPageState
           );
         });
   }
-}
 
-//  CHU Y:
-// Map<String, dynamic> _categoryData = {
-//     "loai_1": {
-//       "name": TextEditingController(text: "loai 1"),
-//       "images": [""],
-//       "values": [
-//         TextEditingController(text: "xanh"),
-//         TextEditingController(text: "do"),
-//         TextEditingController(text: "tim")
-//       ],
-//       "contents": {
-//         "price": [
-//           TextEditingController(text: "01"),
-//           TextEditingController(text: "02"),
-//           TextEditingController(text: "03")
-//         ],
-//         "repository": [
-//           TextEditingController(text: "11"),
-//           TextEditingController(text: "12"),
-//           TextEditingController(text: "13")
-//         ],
-//         "sku": [
-//           TextEditingController(text: "s1"),
-//           TextEditingController(text: "s2"),
-//           TextEditingController(text: "s3")
-//         ],
-//       },
-//     },
-// "loai_2": {
-// "name": TextEditingController(text: ""),
-// "values": [
-// {
-//   "category_2_name": TextEditingController(text: "x"),
-//   "price": [
-//     TextEditingController(text: ""),
-//     TextEditingController(text: ""),
-//     TextEditingController(text: ""),
-//   ],
-//   "classify": [
-//     TextEditingController(text: ""),
-//     TextEditingController(text: ""),
-//     TextEditingController(text: ""),
-//   ],
-//   "sku": [
-//     TextEditingController(text: ""),
-//     TextEditingController(text: ""),
-//     TextEditingController(text: ""),
-//   ]
-// },
-//   {
-//     "category_2_name": TextEditingController(text: "l"),
-//     "price": [
-//       TextEditingController(text: ""),
-//       TextEditingController(text: ""),
-//       TextEditingController(text: ""),
-//     ],
-//     "classify": [
-//       TextEditingController(text: ""),
-//       TextEditingController(text: ""),
-//       TextEditingController(text: ""),
-//     ],
-//     "sku": [
-//       TextEditingController(text: ""),
-//       TextEditingController(text: ""),
-//       TextEditingController(text: ""),
-//     ]
-//   },
-// ]
-// }
-// };
-//     //   dong 1 : xanh      - x                             - 12000                             - 123                               - s1
-//     //   dong 1 : colors[0] - description_category[0][main] - description_category[0][price][0] - description_category[0][class][0] - description_category[0][sku][0]
-//     //   dong 2 : xanh      - l - 4000 - 848 - s11
-//     //   dong 2 : colors[0] - description_category[1][main] - description_category[1][price][0] - description_category[1][class][0]  - description_category[1][sku][0]
-//     //  dong 3  : do-x-20000-213-s2
-//     //  dong 3 : colors[1] - description_category[0][main] - description_category[0][price][1] - description_category[0][class][1] - description_category[0][sku][1]
-//     //  dong 3  : do-l-30000-423-s21
-//     //  dong 3 : colors[1] - description_category[1][main] - description_category[1][price][1] - description_category[1][class][1] - description_category[1][sku][1]
+  _initData() {
+    // if (widget.data != null &&
+    //     widget.data["product_options_attributes"].isNotEmpty &&
+    //     widget.data["product_variants_attributes"].isNotEmpty) {
+    //khoi tao voi noi dung co ban
+    final Map<String, dynamic> data = suggestData[0];
+    _categoryData = {
+      "loai_1": {
+        "name": TextEditingController(
+          text: data["product_variants_attributes"][0]["name"],
+        ),
+        "values":
+            data["product_variants_attributes"][0]["values"].map((element) {
+          return TextEditingController(text: element.toString());
+        }).toList(),
+        "images": data["product_options_attributes"].map((element) {
+          return element["image"]["url"].toString();
+        }).toList()
+      },
+    };
+    // co loai 2
+    if (data["product_variants_attributes"].length > 1) {
+      _categoryData!["loai_2"] = {
+        "name": TextEditingController(
+          text: data["product_variants_attributes"][1]["name"],
+        ),
+        "values": []
+      };
+      List<Map<String, dynamic>> valuesOfLoai2 = [];
+      for (int i = 0;
+          i < data["product_variants_attributes"][1]["values"].length;
+          i++) {
+        valuesOfLoai2.add({
+          "category_2_name": TextEditingController(
+            text: data["product_variants_attributes"][1]["values"][i],
+          ),
+          "price": [],
+          "classify": [],
+          "sku": []
+        });
+      }
+      // print("test market: ${valuesOfLoai2}");
+
+      List<Map<String, dynamic>> price_classify_sku_list = [];
+      data["product_variants_attributes"][0]["values"].forEach((nameOfOne) {
+        for (int indexOfTwo = 0;
+            indexOfTwo <
+                data["product_variants_attributes"][1]["values"].length;
+            indexOfTwo++) {
+          for (int i = 0; i < data["product_options_attributes"].length; i++) {
+            if (data["product_options_attributes"][i]["option1"] == nameOfOne) {
+              if (data["product_options_attributes"][i]["option2"] ==
+                  data["product_variants_attributes"][1]["values"]
+                      [indexOfTwo]) {
+                price_classify_sku_list.add({
+                  "name_1": data["product_options_attributes"][i]["option1"],
+                  "name_2": data["product_options_attributes"][i]["option2"],
+                  "price": data["product_options_attributes"][i]["price"],
+                  "classify": 123,
+                  "sku": data["product_options_attributes"][i]["sku"]
+                });
+
+                valuesOfLoai2[indexOfTwo]["price"].add(TextEditingController(
+                    text: data["product_options_attributes"][i]["price"]
+                        .toString()));
+                valuesOfLoai2[indexOfTwo]["classify"].add(TextEditingController(
+                    text:
+                        "${data["product_options_attributes"][i]["option1"]} - ${data["product_options_attributes"][i]["option2"]}"));
+                valuesOfLoai2[indexOfTwo]["sku"].add(TextEditingController(
+                    text: data["product_options_attributes"][i]["sku"]));
+              }
+            }
+          }
+        }
+      });
+
+      print("test market valuesOfLoai2: ${valuesOfLoai2}");
+
+      _categoryData!["loai_2"]["values"] = valuesOfLoai2;
+      // print("test market _categoryData: ${json.encode(_categoryData)}");
+    }
+  }
+}

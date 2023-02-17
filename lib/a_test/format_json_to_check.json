@@ -1,0 +1,59 @@
+{
+    "loai_1": {
+        "name": "Color",
+        "values": [
+            "White",
+            "Black",
+            "Green"
+        ],
+        "images": [
+            "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
+            "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
+            "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
+            "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
+            "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
+            "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg"
+        ]
+    },
+    "loai_2": {
+        "name": "Size",
+        "values": [
+            {
+                "category_2_name": "M",
+                "price": [
+                    400,
+                    200,
+                    600
+                ],
+                "classify": [
+                    "White - M",
+                    "Black - M",
+                    "Green - M"
+                ],
+                "sku": [
+                    "Coolmax White M",
+                    "Coolmax Black M",
+                    "Coolmax Green M"
+                ]
+            },
+            {
+                "category_2_name": "L",
+                "price": [
+                    300,
+                    100,
+                    500
+                ],
+                "classify": [
+                    "White - L",
+                    "Black - L",
+                    "Green - L"
+                ],
+                "sku": [
+                    "Coolmax White L",
+                    "Coolmax Black L",
+                    "Coolmax Green L"
+                ]
+            }
+        ]
+    }
+}

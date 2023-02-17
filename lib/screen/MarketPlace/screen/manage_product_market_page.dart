@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/update_product_module/combine_update_market_place.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/update_product_module/update_product_market_page.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
@@ -158,7 +159,9 @@ class _ManageProductMarketPageState
                                 onTap: () {
                                   popToPreviousScreen(context);
                                   pushToNextScreen(
-                                      context, UpdateProductMarketPage(data:data));
+                                      context, CombineUpdateMarketPage(
+                                        // data:data
+                                        ));
                                 },
                               ),
                               ListTile(

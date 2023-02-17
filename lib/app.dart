@@ -12,7 +12,6 @@ import 'package:social_network_app_mobile/providers/route_provider.dart';
 import 'package:social_network_app_mobile/providers/search_category_provider.dart';
 import 'package:social_network_app_mobile/providers/select_province_page_provider.dart';
 
-import 'a_test/sale_save_page.dart';
 import 'home/home.dart';
 import 'theme/theme_manager.dart';
 

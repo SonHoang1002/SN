@@ -373,29 +373,15 @@ class _CreateProductMarketPageState
                         children: [
                           GestureDetector(
                             onTap: () {},
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              child: buildButtonForMarketWidget(
-                                  width: width * 0.45,
-                                  bgColor: Colors.orange[300],
-                                  title: "Lưu",
-                                  function: () {
-                                    
-                                    validateForCreateProduct();
-                                  }),
-                            ),
-                          ),
-                          Container(
-                            // margin: EdgeInsets.only(right: 10),
                             child: buildButtonForMarketWidget(
-                                width: width * 0.45,
-                                bgColor: Colors.red,
-                                title: "Hiển thị",
+                                width: width,
+                                bgColor: Colors.orange[300],
+                                title: "Tạo sản phẩm",
                                 function: () {
-                                  pushToNextScreen(
-                                      context, const PaymentMarketPage());
+                                  validateForCreateProduct();
                                 }),
                           ),
+                          
                         ],
                       ),
                     ),

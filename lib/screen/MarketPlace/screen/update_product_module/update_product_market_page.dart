@@ -99,7 +99,8 @@ class _UpdateProductMarketPageState
     width = size.width;
     height = size.height;
     productcategoriesData = ref.watch(productCategoriesProvider).list;
-
+    print(
+        "update updateProductProvider :${ref.watch(updateProductProvider).data}");
     print("updateProduct data: ${widget.data}");
     return Scaffold(
         resizeToAvoidBottomInset: true,
@@ -339,10 +340,22 @@ class _UpdateProductMarketPageState
                                 false,
                                 fontSize: 16,
                                 iconData: FontAwesomeIcons.add, function: () {
-                              print(
-                                  "update data: ${widget.data["product_options_attributes"]}");
-                              print(
-                                  "update data: ${widget.data["product_variants_attributes"]}");
+                              final updateProviderData =
+                                  ref.watch(updateProductProvider).data;
+                              if (updateProviderData[
+                                          "product_options_attributes"]
+                                      .isNotEmpty &&
+                                  updateProviderData[
+                                          "product_variants_attributes"]
+                                      .isNotEmpty) {
+                                pushToNextScreen(
+                                    context,
+                                    UpdateInformationMarketPage(
+                                        data: updateProviderData));
+                                print(
+                                    "update updateProductProvider --------------------------------------------------------");
+                                return;
+                              }
                               pushToNextScreen(
                                   context,
                                   (widget.data["product_options_attributes"] !=
@@ -384,7 +397,6 @@ class _UpdateProductMarketPageState
                                 ),
                               )
                             : const SizedBox(),
-                        // CircularProgressIndicator()
                       ]),
                     ),
                     // add to cart and buy now
@@ -393,34 +405,15 @@ class _UpdateProductMarketPageState
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       width: width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              child: buildButtonForMarketWidget(
-                                  width: width * 0.45,
-                                  bgColor: Colors.orange[300],
-                                  title: "Lưu",
-                                  function: () {
-                                    validateForUpdateProduct();
-                                  }),
-                            ),
-                          ),
-                          Container(
-                            // margin: EdgeInsets.only(right: 10),
-                            child: buildButtonForMarketWidget(
-                                width: width * 0.45,
-                                bgColor: Colors.red,
-                                title: "Hiển thị",
-                                function: () {
-                                  pushToNextScreen(
-                                      context, const PaymentMarketPage());
-                                }),
-                          ),
-                        ],
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: buildButtonForMarketWidget(
+                            width: width,
+                            bgColor: Colors.orange[300],
+                            title: "Cập nhật",
+                            function: () {
+                              validateForUpdateProduct();
+                            }),
                       ),
                     ),
                   ],

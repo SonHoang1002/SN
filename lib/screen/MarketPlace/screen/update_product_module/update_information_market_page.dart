@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -9,11 +10,13 @@ import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/data/market_place_datas/suggest_products_data.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/update_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import '../../../../helper/push_to_new_screen.dart';
 import '../../../../theme/colors.dart';
@@ -43,11 +46,19 @@ class _UpdateInformationMarketPageState
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    _initData();
+
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -57,15 +68,8 @@ class _UpdateInformationMarketPageState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
-                onTap: () async {
-                  // if (validateInputs()) {
-                  //   List list = await Future.wait(
-                  //     [_setData()],
-                  //   );
-                  //   if (list.isNotEmpty && mounted) {
+                onTap: () {
                   popToPreviousScreen(context);
-                  //   }
-                  // }
                 },
                 child: Icon(
                   FontAwesomeIcons.chevronLeft,
@@ -89,16 +93,40 @@ class _UpdateInformationMarketPageState
             children: [
               Form(
                 key: _formKey,
-                child: Expanded(
-                  child: ListView(children: [
-                    // sales information
-                    // _buildContentForClassifyCategoryContents()
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: ListView(children: [
+                        // sales information
+                        _buildContentForClassifyCategoryContents()
+                        // Container(color: red,)
+                      ]),
+                    ),
                     Container(
-                      height: 40,
-                      color: red,
-                      width: 40,
-                    )
-                  ]),
+                      // height: 40,
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: width,
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: buildButtonForMarketWidget(
+                            width: width,
+                            bgColor: Colors.orange[300],
+                            title: "Lưu",
+                            function: () async {
+                              if (validateInformationInputs()) {
+                                List list = await Future.wait(
+                                  [_setInformationData()],
+                                );
+                                if (list.isNotEmpty && mounted) {
+                                  popToPreviousScreen(context);
+                                }
+                              }
+                            }),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               _isLoading
@@ -141,7 +169,7 @@ class _UpdateInformationMarketPageState
               Column(
                 children: [
                   buildSpacer(height: 10),
-                  _buildInput(_categoryData?["loai_1"]["name"], width,
+                  _buildInformationInput(_categoryData?["loai_1"]["name"], width,
                       "Nhập tên phân loại 1"),
 
                   // phan loai 1
@@ -154,7 +182,7 @@ class _UpdateInformationMarketPageState
                                 padding: EdgeInsets.only(
                                     right: indexDescription.isOdd ? 0 : 5,
                                     left: indexDescription.isEven ? 0 : 5),
-                                child: _buildInput(
+                                child: _buildInformationInput(
                                     _categoryData?["loai_1"]["values"]
                                         [indexDescription],
                                     width * 0.48,
@@ -196,7 +224,7 @@ class _UpdateInformationMarketPageState
                       ? Column(
                           children: [
                             buildSpacer(height: 10),
-                            _buildInput(_categoryData?["loai_2"]["name"], width,
+                            _buildInformationInput(_categoryData?["loai_2"]["name"], width,
                                 "Nhập tên phân loại 2"),
 
                             ///
@@ -214,7 +242,7 @@ class _UpdateInformationMarketPageState
                                               left: indexDescription.isEven
                                                   ? 0
                                                   : 5),
-                                          child: _buildInput(
+                                          child: _buildInformationInput(
                                               _categoryData?["loai_2"]["values"]
                                                       [indexDescription]
                                                   ["category_2_name"],
@@ -250,13 +278,13 @@ class _UpdateInformationMarketPageState
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
-                        _buildInput(
+                        _buildInformationInput(
                             _priceController, width, "Nhập giá sản phẩm",
                             keyboardType: TextInputType.number),
-                        _buildInput(
+                        _buildInformationInput(
                             _repositoryController, width, "Nhập tên kho hàng",
                             keyboardType: TextInputType.number),
-                        _buildInput(_skuController, width, "Nhập mã sản phẩm"),
+                        _buildInformationInput(_skuController, width, "Nhập mã sản phẩm"),
                         buildButtonForMarketWidget(
                             title: "Áp dụng cho tất cả ",
                             function: () {
@@ -323,7 +351,7 @@ class _UpdateInformationMarketPageState
       if (_categoryData?["loai_2"] != null && _categoryData?["loai_2"] != {}) {
         for (int i = 0; i < _categoryData?["loai_2"]["values"].length; i++) {
           _categoryData?["loai_2"]["values"][i]["price"].removeAt(index);
-          _categoryData?["loai_2"]["values"][i]["repository"].removeAt(index);
+          _categoryData?["loai_2"]["values"][i]["classify"].removeAt(index);
           _categoryData?["loai_2"]["values"][i]["sku"].removeAt(index);
         }
       }
@@ -448,7 +476,7 @@ class _UpdateInformationMarketPageState
               buildSpacer(height: 10),
               InkWell(
                 onTap: () {
-                  dialogImgSource(i);
+                  dialogInformationImgSource(i);
                 },
                 child: Container(
                   height: 50,
@@ -458,10 +486,16 @@ class _UpdateInformationMarketPageState
                       border: Border.all(color: greyColor, width: 0.4)),
                   child: _categoryData?["loai_1"]["images"][i] != "" &&
                           _categoryData?["loai_1"]["images"][i] != null
-                      ? Image.file(
-                          File(_categoryData?["loai_1"]["images"][i]),
-                          fit: BoxFit.fitHeight,
-                        )
+                      ? _categoryData!["loai_1"]["images"][i] is File
+                          ? Image.file(
+                              _categoryData?["loai_1"]["images"][i],
+                              fit: BoxFit.fitHeight,
+                            )
+                          : ImageCacheRender(
+                              path: _categoryData?["loai_1"]["images"][i],
+                              height: 50.0,
+                              width: 50.0,
+                            )
                       : Image.asset(
                           MarketPlaceConstants.PATH_IMG + "cat_1.png"),
                 ),
@@ -469,15 +503,15 @@ class _UpdateInformationMarketPageState
             ],
           ),
         ),
-        DataCell(_buildInput(_categoryData?["loai_1"]["contents"]["price"][i],
+        DataCell(_buildInformationInput(_categoryData?["loai_1"]["contents"]["price"][i],
             width * 0.5, "Gia",
             keyboardType: TextInputType.number)),
-        DataCell(_buildInput(
+        DataCell(_buildInformationInput(
             _categoryData?["loai_1"]["contents"]["repository"][i],
             width * 0.5,
             "Kho hang",
             keyboardType: TextInputType.number)),
-        DataCell(_buildInput(_categoryData?["loai_1"]["contents"]["sku"][i],
+        DataCell(_buildInformationInput(_categoryData?["loai_1"]["contents"]["sku"][i],
             width * 0.5, "Ma phan loai")),
       ]));
     }
@@ -543,7 +577,7 @@ class _UpdateInformationMarketPageState
                       buildSpacer(height: 10),
                       InkWell(
                         onTap: () {
-                          dialogImgSource(i);
+                          dialogInformationImgSource(i);
                         },
                         child: Container(
                           height: 50,
@@ -553,10 +587,17 @@ class _UpdateInformationMarketPageState
                               border: Border.all(color: greyColor, width: 0.4)),
                           child: _categoryData?["loai_1"]["images"][i] != "" &&
                                   _categoryData?["loai_1"]["images"][i] != null
-                              ? Image.file(
-                                  File(_categoryData?["loai_1"]["images"][i]),
-                                  fit: BoxFit.fitHeight,
-                                )
+                              ? _categoryData!["loai_1"]["images"][i] is File
+                                  ? Image.file(
+                                      _categoryData?["loai_1"]["images"][i],
+                                      fit: BoxFit.fitHeight,
+                                    )
+                                  : ImageCacheRender(
+                                      path: _categoryData?["loai_1"]["images"]
+                                          [i],
+                                      height: 50.0,
+                                      width: 50.0,
+                                    )
                               : Image.asset(
                                   MarketPlaceConstants.PATH_IMG + "cat_1.png"),
                         ),
@@ -574,17 +615,17 @@ class _UpdateInformationMarketPageState
                 isCenterLeft: false,
                 fontSize: 17),
           ),
-          DataCell(_buildInput(
+          DataCell(_buildInformationInput(
               _categoryData?["loai_2"]?["values"][z]["price"][i],
               width * 0.5,
               "Giá",
               keyboardType: TextInputType.number)),
-          DataCell(_buildInput(
+          DataCell(_buildInformationInput(
               _categoryData?["loai_2"]?["values"][z]["classify"][i],
               width * 0.5,
               "Kho hàng",
               keyboardType: TextInputType.number)),
-          DataCell(_buildInput(_categoryData?["loai_2"]?["values"][z]["sku"][i],
+          DataCell(_buildInformationInput(_categoryData?["loai_2"]?["values"][z]["sku"][i],
               width * 0.5, "Mã phân loại")),
         ]));
       }
@@ -599,7 +640,7 @@ class _UpdateInformationMarketPageState
     );
   }
 
-  Widget _buildInput(
+  Widget _buildInformationInput(
       TextEditingController controller, double width, String hintText,
       {IconData? prefixIconData,
       IconData? suffixIconData,
@@ -671,20 +712,20 @@ class _UpdateInformationMarketPageState
     );
   }
 
-  bool validateInputs() {
+  bool validateInformationInputs() {
     return _formKey.currentState!.validate();
   }
 
-  Future<int> _setData() async {
+  Future<int> _setInformationData() async {
     setState(() {
       _isLoading = true;
     });
-    Map<String, dynamic> oldData = ref.watch(newProductDataProvider).data;
+    Map<String, dynamic> newUpdateData = ref.watch(updateProductProvider).data;
 
     // set product_options_attributes
     // reset list
-    oldData["product_options_attributes"] = [];
-    oldData["product_variants_attributes"] = [];
+    newUpdateData["product_options_attributes"] = [];
+    newUpdateData["product_variants_attributes"] = [];
     // add loai_1
     Map<String, dynamic> loai_1 = {
       "name": _categoryData?["loai_1"]["name"].text.trim(),
@@ -692,7 +733,7 @@ class _UpdateInformationMarketPageState
       "values":
           _categoryData?["loai_1"]["values"].map((e) => e.text.trim()).toList()
     };
-    oldData["product_options_attributes"].add(loai_1);
+    newUpdateData["product_options_attributes"].add(loai_1);
 
     // add loai_2 (neu co)
     if (_categoryData?["loai_2"] != null) {
@@ -703,13 +744,12 @@ class _UpdateInformationMarketPageState
             .map((e) => e["category_2_name"].text.trim())
             .toList()
       };
-      oldData["product_options_attributes"].add(loai_2);
+      newUpdateData["product_options_attributes"].add(loai_2);
     }
 
     // set product_variants_attributes
     if (_categoryData?["loai_2"] == null) {
       List<String> imgList = _categoryData?["loai_1"]["images"].toList();
-      print("state: ${imgList}");
       List<String> imageIdList = await Future.wait(imgList.map((element) async {
         String fileName = element.split('/').last;
         FormData formData = FormData.fromMap({
@@ -718,13 +758,12 @@ class _UpdateInformationMarketPageState
         final response = await MediaApi().uploadMediaEmso(formData);
         return response["id"].toString();
       }).toList());
-      print("state: ${imageIdList}");
       for (int i = 0;
-          i < oldData["product_options_attributes"][0]["values"].length;
+          i < newUpdateData["product_options_attributes"][0]["values"].length;
           i++) {
-        oldData["product_variants_attributes"].add({
+        newUpdateData["product_variants_attributes"].add({
           "title":
-              "${oldData["product"]["title"]} - ${oldData["product_options_attributes"][0]["values"][i]}",
+              "${newUpdateData["product"]["title"]} - ${newUpdateData["product_options_attributes"][0]["values"][i]}",
           "price": _categoryData?["loai_1"]["contents"]["price"][i]
               .text
               .trim()
@@ -735,25 +774,22 @@ class _UpdateInformationMarketPageState
               .toString(),
           "position": 1,
           "compare_at_price": null,
-          "option1": oldData["product_options_attributes"][0]["values"][i],
+          "option1": newUpdateData["product_options_attributes"][0]["values"]
+              [i],
           "option2": null,
-          //////////////////
           "image_id": imageIdList[i],
-          //////////////////
-          // chu y anh ben tren
           "weight": 0.25,
           "weight_unit": "Kg",
           "inventory_quantity": 100,
           "old_inventory_quantity": 100,
-          "requires_shipping": true
         });
       }
     } else {
       for (int i = 0; i < _categoryData?["loai_1"]["values"].length; i++) {
         for (int z = 0; z < _categoryData?["loai_2"]["values"].length; z++) {
-          oldData["product_variants_attributes"].add({
+          newUpdateData["product_variants_attributes"].add({
             "title":
-                "${oldData["product"]["title"]} -${_categoryData?["loai_1"]["values"][i].text.trim()} - ${_categoryData?["loai_2"]["values"][z]["category_2_name"].text.trim()}",
+                "${newUpdateData["product"]["title"]} -${_categoryData?["loai_1"]["values"][i].text.trim()} - ${_categoryData?["loai_2"]["values"][z]["category_2_name"].text.trim()}",
             "price": _categoryData?["loai_2"]["values"][z]["price"][i]
                 .text
                 .trim()
@@ -779,14 +815,16 @@ class _UpdateInformationMarketPageState
       }
     }
 
-    ref.read(newProductDataProvider.notifier).updateNewProductData(oldData);
+    ref.read(updateProductProvider.notifier).updateProductData(newUpdateData);
+    print(
+        "update updateProductProvider :  ${ref.watch(updateProductProvider).data}");
     setState(() {
       _isLoading = false;
     });
     return 0;
   }
 
-  Future getImage(ImageSource src, int index) async {
+  Future getInformationImage(ImageSource src, int index) async {
     XFile getImage = XFile("");
     getImage = (await ImagePicker().pickImage(source: src))!;
     _categoryData?["loai_1"]["images"][index] =
@@ -794,7 +832,7 @@ class _UpdateInformationMarketPageState
     setState(() {});
   }
 
-  dialogImgSource(int index) {
+  dialogInformationImgSource(int index) {
     showDialog(
         context: context,
         builder: (_) {
@@ -806,7 +844,7 @@ class _UpdateInformationMarketPageState
                     leading: const Icon(Icons.camera),
                     title: const Text("Pick From Camera"),
                     onTap: () {
-                      getImage(ImageSource.camera, index);
+                      getInformationImage(ImageSource.camera, index);
                       popToPreviousScreen(context);
                     },
                   ),
@@ -815,7 +853,7 @@ class _UpdateInformationMarketPageState
                     title: const Text("Pick From Galery"),
                     onTap: () {
                       popToPreviousScreen(context);
-                      getImage(ImageSource.gallery, index);
+                      getInformationImage(ImageSource.gallery, index);
                     },
                   ),
                 ],
@@ -830,28 +868,53 @@ class _UpdateInformationMarketPageState
     //     widget.data["product_options_attributes"].isNotEmpty &&
     //     widget.data["product_variants_attributes"].isNotEmpty) {
     //khoi tao voi noi dung co ban
-    final Map<String, dynamic> data = suggestData[0];
+    final Map<String, dynamic> data;
+    // final updateDataFromProvider = ref.watch(updateProductProvider).data;
+    // final abc = Provider
+    // if (updateDataFromProvider["product_variants_attributes"] != null &&
+    //     updateDataFromProvider["product_variants_attributes"].isNotEmpty &&
+    //     updateDataFromProvider["product_options_attributes"] != null &&
+    //     updateDataFromProvider["product_options_attributes"].isNotEmpty) {
+    if (widget.data != null) {
+      data = widget.data;
+    }
+    else{
+      data = suggestData[0];
+    }
+    // } else {
+    //   data = updateDataFromProvider;
+    // }
+
     _categoryData = {
       "loai_1": {
         "name": TextEditingController(
-            text: data["product_variants_attributes"][0]["name"]),
+          text: data["product_variants_attributes"][0]["name"],
+        ),
         "values":
             data["product_variants_attributes"][0]["values"].map((element) {
           return TextEditingController(text: element.toString());
         }).toList(),
         "images": data["product_options_attributes"].map((element) {
           return element["image"]["url"].toString();
-        }).toList()
+        }).toList(),
+        "contents": {"price": [], "repository": [], "sku": []}
       },
     };
-    // co loai 2
+    // khoi tao content loai 1 voi cac the input rong
+    data["product_variants_attributes"][0]["values"].forEach((elementOfOne) {
+      _categoryData!["loai_1"]["contents"]["price"]
+          .add(TextEditingController(text: ""));
+      _categoryData!["loai_1"]["contents"]["repository"]
+          .add(TextEditingController(text: ""));
+      _categoryData!["loai_1"]["contents"]["sku"]
+          .add(TextEditingController(text: ""));
+    });
+    // khoi tao cac the input neu co loai 2
     if (data["product_variants_attributes"].length > 1) {
       _categoryData!["loai_2"] = {
-        "name":
-            // TextEditingController(
-            // text:
-            data["product_variants_attributes"][1]["name"],
-        // ),
+        "name": TextEditingController(
+          text: data["product_variants_attributes"][1]["name"],
+        ),
         "values": []
       };
       List<Map<String, dynamic>> valuesOfLoai2 = [];
@@ -859,59 +922,74 @@ class _UpdateInformationMarketPageState
           i < data["product_variants_attributes"][1]["values"].length;
           i++) {
         valuesOfLoai2.add({
-          "name":
-              //  TextEditingController(
-              //     text:
-              data["product_variants_attributes"][1]["values"][i],
-          //  ),
+          "category_2_name": TextEditingController(
+            text: data["product_variants_attributes"][1]["values"][i],
+          ),
           "price": [],
           "classify": [],
           "sku": []
         });
       }
-      print("loai 2: ${valuesOfLoai2}");
-
       List<Map<String, dynamic>> price_classify_sku_list = [];
-      for (int i = 0; i < data["product_options_attributes"].length; i++) {
-        data["product_variants_attributes"][0]["values"].forEach((nameOfOne) {
-          if (data["product_options_attributes"][i]["option1"] == nameOfOne) {
-            data["product_variants_attributes"][1]["values"]
-                .forEach((nameOfTwo) {
+      data["product_variants_attributes"][0]["values"].forEach((nameOfOne) {
+        for (int indexOfTwo = 0;
+            indexOfTwo <
+                data["product_variants_attributes"][1]["values"].length;
+            indexOfTwo++) {
+          for (int i = 0; i < data["product_options_attributes"].length; i++) {
+            if (data["product_options_attributes"][i]["option1"] == nameOfOne) {
               if (data["product_options_attributes"][i]["option2"] ==
-                  nameOfTwo) {
+                  data["product_variants_attributes"][1]["values"]
+                      [indexOfTwo]) {
                 price_classify_sku_list.add({
-                  "name_1":data["product_options_attributes"][i]["option1"],
-                  "name_2":data["product_options_attributes"][i]["option2"],
+                  "name_1": data["product_options_attributes"][i]["option1"],
+                  "name_2": data["product_options_attributes"][i]["option2"],
                   "price": data["product_options_attributes"][i]["price"],
                   "classify": 123,
                   "sku": data["product_options_attributes"][i]["sku"]
                 });
+
+                valuesOfLoai2[indexOfTwo]["price"].add(TextEditingController(
+                    text: data["product_options_attributes"][i]["price"]
+                        .toString()));
+                valuesOfLoai2[indexOfTwo]["classify"].add(TextEditingController(
+                    text:
+                        // "${data["product_options_attributes"][i]["option1"]} - ${data["product_options_attributes"][i]["option2"]}"));
+                        data["product_options_attributes"][i]
+                                ["inventory_quantity"]
+                            .toString()));
+                valuesOfLoai2[indexOfTwo]["sku"].add(TextEditingController(
+                    text: data["product_options_attributes"][i]["sku"]));
               }
-            });
+            }
+          }
+        }
+      });
+
+      print("test market valuesOfLoai2: ${_categoryData!["loai_1"]["images"]}");
+      _categoryData!["loai_2"]["values"] = valuesOfLoai2;
+    } else {
+      // gan gia tri cac the input cua loai neu khong co loai 2
+      data["product_variants_attributes"][0]["values"].forEach((elementOfOne) {
+        data["product_options_attributes"].forEach((valueOfOption1) {
+          if (valueOfOption1["option1"] == elementOfOne) {
+            _categoryData!["loai_1"]["contents"]["price"].add(
+                TextEditingController(
+                    text: valueOfOption1["price"].toString()));
+            _categoryData!["loai_1"]["contents"]["repository"].add(
+                TextEditingController(
+                    text: valueOfOption1["inventory_quantity"].toString()));
+            _categoryData!["loai_1"]["contents"]["sku"].add(
+                TextEditingController(text: valueOfOption1["sku"].toString()));
           }
         });
-      }
-      print("loai 2: price_classify_sku_list ${price_classify_sku_list} ");
+      });
     }
   }
+
   // }
 }
-// for (int a = 0;
-//               a < widget.data["product_variants_attributes"][0]["values"];
-//               a++) {
-//             for (int b = 0;
-//                 b < widget.data["product_variants_attributes"][1]["values"];
-//                 b++) {
-//               if (widget.data["product_options_attributes"][i]["option1"] ==
-//                       widget.data["product_variants_attributes"][0]["values"]
-//                           [a] &&
-//                   widget.data["product_options_attributes"][i]["option2"] ==
-//                       widget.data["product_variants_attributes"][1]["values"]
-//                           [b]) {
 
-//                           }
-//             }
-//           }
 //  CHU Y:
 // Map<String, dynamic> _categoryData = {
 //     "loai_1": {
