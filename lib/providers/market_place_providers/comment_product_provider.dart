@@ -19,7 +19,7 @@ class CommentProductController extends StateNotifier<CommentProductState> {
   getCommentProduct(String id) async {
     final response = await CommentProductApi().getCommentProductApi(id);
     final data = List.from(response);
-    print("data comments: ${data}");
-    // state = state.copyWith(response);
+    print("data comments: ${data}- ${id}");
+    state = state.copyWith(response);
   }
 }

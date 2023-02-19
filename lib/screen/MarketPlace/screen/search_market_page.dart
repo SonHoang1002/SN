@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
@@ -13,15 +15,26 @@ import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import '../../../helper/push_to_new_screen.dart';
 
-class SearchMarketPage extends StatefulWidget {
+class SearchMarketPage extends ConsumerStatefulWidget {
   @override
-  State<SearchMarketPage> createState() => _SearchMarketPageState();
+  ConsumerState<SearchMarketPage> createState() => _SearchMarketPageState();
 }
 
-class _SearchMarketPageState extends State<SearchMarketPage> {
+class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
   late double width = 0;
   late double height = 0;
-  bool _isOpenProductOfYou = false;
+  // bool _isOpenProductOfYou = false;
+  List<dynamic>? _searchList;
+  List<dynamic>? _allProductList;
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      final searchList =
+          ref.read(suggestProductsProvider.notifier).getSuggestProducts();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -77,6 +90,11 @@ class _SearchMarketPageState extends State<SearchMarketPage> {
             ],
           ),
         ));
+  }
+
+  _initData() {
+    _allProductList = ref.watch(suggestProductsProvider).listSuggest;
+    setState(() {});
   }
 }
 

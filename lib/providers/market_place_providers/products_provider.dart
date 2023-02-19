@@ -17,10 +17,15 @@ final suggestProductsProvider =
 class SuggestProductsController extends StateNotifier<SuggestProductsState> {
   SuggestProductsController() : super(SuggestProductsState());
 
-  getSuggestProducts() async {
-    final response = await SuggestProductsApi().getListSuggestProductsApi();
-    final data = List.from(response);
-    print("data[0]['product_variants']: ${data}");
+  getSuggestProducts(
+    // {int? count}
+    ) async {
+    List<dynamic> response =
+        await SuggestProductsApi().getListSuggestProductsApi();
+
+    // List<dynamic> data =
+    //     count != null ? response.take(count).toList() : response;
+
     state = state.copyWith(response);
   }
 }

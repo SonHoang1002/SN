@@ -28,7 +28,7 @@ Widget buildCategoryProductItemWidget(String title, String imgPath,
         ),
         Expanded(
           child:
-              buildTextContent(title, true, fontSize: 13, isCenterLeft: false),
+              Container(child: buildTextContent(title, true, fontSize: 13, isCenterLeft: false)),
         )
       ],
     ),

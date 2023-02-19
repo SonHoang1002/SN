@@ -547,7 +547,7 @@ class MainMarketBodyConstants {
       },
     ]
   };
-  static Map<String, dynamic> MAIN_MARKETPLACE_BODY_SORT_SELECTIONS = {
+  static const Map<String, dynamic> MAIN_MARKETPLACE_BODY_SORT_SELECTIONS = {
     "key": "",
     "data": [
       {
@@ -1070,7 +1070,7 @@ class InterestProductMarketConstants {
       "Tìm kiếm bạn của bạn";
 }
 
-class MaangeProductMarketConstants {
+class ManageProductMarketConstants {
   static Map<String, dynamic> MANAGE_PRODUCT_BOTTOM_SELECTIONS = {
     "key": "manage_product_bottom_selections",
     "name": "Đồng Hồ Chế Tác Kim Cương Rolex Yacht Master Black Dial, 42mm",

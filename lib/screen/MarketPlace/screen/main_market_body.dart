@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
+import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/discover_product_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/see_more_market_page.dart';
@@ -31,7 +34,8 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
   late double height = 0;
   List<dynamic> product_categories = [];
   late List<dynamic> all_data;
-  List<dynamic>? suggestProduct;
+  List<dynamic>? _suggestProductList;
+  List<dynamic>? _discoverProduct;
   @override
   void initState() {
     if (!mounted) {
@@ -45,7 +49,10 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
           .getListProductCategories();
       final suggestProduct =
           ref.read(suggestProductsProvider.notifier).getSuggestProducts();
-      // getDetailProduct();
+      final discoverProduct =
+          ref.read(discoverProductsProvider.notifier).getDiscoverProducts();
+      final interestList =
+          ref.read(interestProductsProvider.notifier).addInterestProductItem({});
     });
   }
 
@@ -67,8 +74,14 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // buy and category
                     // tim lai o test.dart
+
+                    buildTextContent("thêm icon vào hạng mục", true,
+                        fontSize: 16),
+                    buildTextContent(
+                        "chưa làm sort theo Mới nhất, Bán chạy,", true,
+                        fontSize: 16),
+                    buildTextContent("custom cardSkeleton", true, fontSize: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: _buildCategoriesComponent(),
@@ -111,24 +124,34 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
           iconData: FontAwesomeIcons.angleRight,
         ),
         Container(
-          margin: const EdgeInsets.only(top: 10, bottom: 10),
-          child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(product_categories.length, (index) {
-                  final data = product_categories;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: buildCategoryProductItemWidget(
-                        product_categories[index],
-                        MarketPlaceConstants.PATH_IMG + "Bách hóa Online.png",
-                        height: 120,
-                        width: 100),
-                  );
-                }),
-              )),
-        ),
+            margin: const EdgeInsets.only(top: 10, bottom: 10),
+            height: 230,
+            child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                child: GridView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisSpacing: 2,
+                            mainAxisSpacing: 2,
+                            crossAxisCount: 2,
+                            // childAspectRatio: 0.79),
+                            childAspectRatio: 1.1),
+                    itemCount: product_categories.length,
+                    // shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: buildCategoryProductItemWidget(
+                            product_categories[index],
+                            "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png",
+                            height: 120,
+                            width: 100),
+                      );
+                    }))),
       ],
     );
   }
@@ -145,31 +168,37 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
           iconData: FontAwesomeIcons.angleRight,
         ),
         FutureBuilder(
-            future: getSuggestProduct(),
-            builder: (context, buider) {
+            future: getSuggestProductList(),
+            builder: (context, builder) {
               return SingleChildScrollView(
-                child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisSpacing: 4,
-                            mainAxisSpacing: 4,
-                            crossAxisCount: 2,
-                            // childAspectRatio: 0.79),
-                            childAspectRatio: 0.8),
-                    itemCount: suggestProduct?.length,
-                    // shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      if (buider.connectionState == ConnectionState.done) {
-                        return buildProductItem(
-                            context: context,
-                            width: width,
-                            data: suggestProduct?[index]);
-                      } else {
-                        return CardSkeleton();
-                      }
-                    }),
+                child: _suggestProductList != null &&
+                        _suggestProductList!.isNotEmpty
+                    ? GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisSpacing: 4,
+                                mainAxisSpacing: 4,
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.8),
+                        itemCount: _suggestProductList?.length,
+                        itemBuilder: (context, index) {
+                          return buildProductItem(
+                              context: context,
+                              width: width,
+                              data: _suggestProductList?[index]);
+                        })
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 4,
+                        itemBuilder: (context, index) {
+                          return Container(
+                              width: width * 0.4,
+                              height: 200,
+                              child: CardSkeleton());
+                        }),
               );
             }),
       ],
@@ -183,7 +212,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
             suffixWidget: buildTextContent("Lọc", false, function: () {
               showBottomSheetCheckImportantSettings(
                   context, 400, "Sắp xếp theo",
-                  bgColor: greyColor[400],
+                  // bgColor: greyColor[400],
                   widget: ListView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.zero,
@@ -201,6 +230,10 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                               ],
                               changeBackground: transparent,
                               padding: const EdgeInsets.all(5),
+                              function: () {
+                                _filterDiscoverProduct(data[index]["title"]);
+                                popToPreviousScreen(context);
+                              },
                             ),
                             buildDivider(color: red),
                             data[index]["sub_selections"] != null
@@ -212,10 +245,18 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                                               data[index]["sub_selections"][0],
                                               true,
                                               fontSize: 17),
+                                          SizedBox(
+                                            height: 10,
+                                          )
                                         ],
                                         changeBackground: transparent,
                                         padding:
                                             const EdgeInsets.only(left: 10),
+                                        function: () {
+                                          _filterDiscoverProduct(
+                                              data[index]["sub_selections"][0]);
+                                          popToPreviousScreen(context);
+                                        },
                                       ),
                                       buildDivider(color: red),
                                       GeneralComponent(
@@ -224,10 +265,18 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                                               data[index]["sub_selections"][1],
                                               true,
                                               fontSize: 17),
+                                          SizedBox(
+                                            height: 10,
+                                          )
                                         ],
                                         changeBackground: transparent,
                                         padding:
                                             const EdgeInsets.only(left: 10),
+                                        function: () {
+                                          _filterDiscoverProduct(
+                                              data[index]["sub_selections"][1]);
+                                          popToPreviousScreen(context);
+                                        },
                                       ),
                                       buildDivider(color: red),
                                     ],
@@ -239,7 +288,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
             }),
             iconData: FontAwesomeIcons.filter),
         FutureBuilder(
-            future: getSuggestProduct(),
+            future: getDiscoverProductList(),
             builder: (context, builder) {
               return SingleChildScrollView(
                 child: GridView.builder(
@@ -251,18 +300,74 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                             mainAxisSpacing: 4,
                             crossAxisCount: 2,
                             childAspectRatio: 0.8),
-                    itemCount: suggestProduct?.length,
+                    itemCount: _discoverProduct?.length,
                     // shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return buildProductItem(
                           context: context,
                           width: width,
-                          data: suggestProduct?[index]);
+                          data: _discoverProduct?[index]);
                     }),
               );
             }),
       ],
     );
+  }
+
+  Future getSuggestProductList() async {
+    _suggestProductList = ref.watch(suggestProductsProvider).listSuggest;
+    setState(() {});
+  }
+
+  Future getDiscoverProductList() async {
+    _discoverProduct = ref.watch(discoverProductsProvider).listDiscover;
+    setState(() {});
+  }
+
+  Future _filterDiscoverProduct(String sortedTitle) async {
+    List<dynamic> filterDiscoverList = _discoverProduct!;
+    const String newTitle = "Mới nhất";
+    const String soldRun = "Bán chạy";
+    const String maxToMin = "Giá: Cao đến thấp";
+    const String minToMax = "Giá: Thấp đến cao";
+
+    switch (sortedTitle) {
+      case newTitle:
+        break;
+      case soldRun:
+        break;
+      case maxToMin:
+        for (int i = 0; i < filterDiscoverList.length - 1; i++) {
+          for (int j = 0; j < filterDiscoverList.length - i - 1; j++) {
+            if (getMinAndMaxPrice(
+                    filterDiscoverList[j]["product_variants"])[0] <
+                getMinAndMaxPrice(
+                    filterDiscoverList[j + 1]["product_variants"])[0]) {
+              dynamic temp = filterDiscoverList[j];
+              filterDiscoverList[j] = filterDiscoverList[j + 1];
+              filterDiscoverList[j + 1] = temp;
+            }
+          }
+        }
+        break;
+      case minToMax:
+        for (int i = 0; i < filterDiscoverList.length - 1; i++) {
+          for (int j = 0; j < filterDiscoverList.length - i - 1; j++) {
+            if (getMinAndMaxPrice(
+                    filterDiscoverList[j]["product_variants"])[1] >
+                getMinAndMaxPrice(
+                    filterDiscoverList[j + 1]["product_variants"])[1]) {
+              dynamic temp = filterDiscoverList[j];
+              filterDiscoverList[j] = filterDiscoverList[j + 1];
+              filterDiscoverList[j + 1] = temp;
+            }
+          }
+        }
+        break;
+      default:
+    }
+    _discoverProduct = filterDiscoverList;
+    setState(() {});
   }
 
   getProductCategoriesName() {
@@ -274,18 +379,6 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
     }
     product_categories = primaryProductCategories;
 
-    setState(() {});
-  }
-
-  // getDetailProduct() {
-  //   ref.read(detailProductProvider.notifier).getDetailProduct("1");
-
-  //   setState(() {});
-  // }
-
-  Future getSuggestProduct() async {
-    suggestProduct = ref.watch(suggestProductsProvider).listSuggest;
-    print("data: ${suggestProduct}");
     setState(() {});
   }
 }

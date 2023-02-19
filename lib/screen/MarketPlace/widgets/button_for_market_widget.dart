@@ -4,7 +4,7 @@ import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
 
 Widget  buildButtonForMarketWidget(
-    {String? title = 'Tiếp tục',
+    {String? title ,
     Function? function,
     Color? bgColor = secondaryColor,
     Color? colorText = white,
@@ -52,10 +52,10 @@ Widget  buildButtonForMarketWidget(
                       color: Colors.white,
                     )
                   : const SizedBox(),
-              title != null || title != "Tiếp tục"
+              title != null 
                   ? Padding(
                       padding: const EdgeInsets.only(left: 5.0),
-                      child: buildTextContent(title!, true,
+                      child: buildTextContent(title, true,
                           fontSize: 17,
                           colorWord: colorText,
                           isCenterLeft: false),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
@@ -13,21 +17,29 @@ import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import '../../../helper/push_to_new_screen.dart';
-import 'detail_product_market_page_old.dart';
 
-class InterestProductMarketPage extends StatefulWidget {
+class InterestProductMarketPage extends ConsumerStatefulWidget {
   @override
-  State<InterestProductMarketPage> createState() =>
+  ConsumerState<InterestProductMarketPage> createState() =>
       _InterestProductMarketPageState();
 }
 
-class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
+class _InterestProductMarketPageState
+    extends ConsumerState<InterestProductMarketPage> {
   late double width = 0;
   late double height = 0;
-  final bgColor = greyColor;
+  final bgColor = greyColor[300];
+  List<dynamic>? _interestProductList;
+  List<bool>? _concernList;
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () {
+      final interestProductList =
+          ref.read(suggestProductsProvider.notifier).getSuggestProducts();
+      // final interestList =
+      //     ref.read(interestProductsProvider.notifier).addInterestProducts({});
+    });
   }
 
   @override
@@ -35,7 +47,8 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-
+    _initData();
+    _initConcernList();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -59,14 +72,19 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: List.generate(10, (index) {
-                      return _buildInterestComponent();
-                    }),
-                  ),
-                ),
+                child: _interestProductList!.isEmpty
+                    ? buildTextContent("Bạn chưa quan tâm sản phẩm nào", true,
+                        isCenterLeft: false, fontSize: 22)
+                    : SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          children: List.generate(_interestProductList!.length,
+                              (index) {
+                            return _buildInterestComponent(
+                                _interestProductList![index], index);
+                          }),
+                        ),
+                      ),
               ),
             ),
             //
@@ -74,10 +92,30 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
         ));
   }
 
-  _buildInterestComponent() {
+  _initData() {
+    _interestProductList = ref.watch(interestProductsProvider).listInterest;
+    setState(() {});
+  }
+
+  _initConcernList() {
+    if (_interestProductList!.isNotEmpty) {
+      if (_concernList == null) {
+        _concernList = _interestProductList!.map(
+          (e) {
+            return false;
+          },
+        ).toList();
+        setState(() {});
+      }
+    } else {
+      return;
+    }
+  }
+
+  _buildInterestComponent(Map<String, dynamic> data, int index) {
     return InkWell(
       onTap: () {
-        pushToNextScreen(context, OldDetailProductMarketPage(id: "1"));
+        pushToNextScreen(context, DetailProductMarketPage(id: data["id"]));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
@@ -90,11 +128,12 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
           children: [
             GeneralComponent(
               [
-                const Text(
-                  "ÁO ĐẤU SÂN NHÀ REAL MADRID 21/22 - trắng hgfh hgfh hjhjh jhjh jh",
+                Text(
+                  data["title"],
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 buildSpacer(height: 7),
                 buildTextContent("Chi Phat - nguoi quan tam", false,
@@ -103,23 +142,29 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                 Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                        color: red, borderRadius: BorderRadius.circular(20)),
-                    child: const Text("120000 VND"))
+                        color: Colors.orange[300],
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Text(
+                        "₫ ${_getMinximumPriceOfProduct(data["product_variants"]).toString()}"))
               ],
               preffixFlexValue: 5,
               prefixWidget: Container(
                 // width: 150,
                 margin: const EdgeInsets.only(right: 10),
-                child: const ImageCacheRender(
+                child: ImageCacheRender(
                   height: 100.0,
                   width: 150.0,
-                  path:
-                      "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
+                  path: data["product_image_attachments"] != null &&
+                          data["product_image_attachments"].isNotEmpty
+                      ? data["product_image_attachments"][0]["attachment"]
+                          ["url"]
+                      : "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
                 ),
               ),
               changeBackground: transparent,
               function: () {
-                pushToNextScreen(context, OldDetailProductMarketPage(id: "1"));
+                pushToNextScreen(
+                    context, DetailProductMarketPage(id: data["id"]));
               },
             ),
             Row(
@@ -130,16 +175,20 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                     left: 10.0,
                   ),
                   child: buildButtonForMarketWidget(
-                    title: "Quan tâm",
-                    iconData: FontAwesomeIcons.star,
-                    width: width * 0.6,
-                  ),
+                      bgColor:
+                          _concernList![index] ? blueColor : secondaryColor,
+                      title: "Quan tâm",
+                      iconData: FontAwesomeIcons.star,
+                      width: width * 0.6,
+                      function: () {
+                        _concernList![index] = !_concernList![index];
+                        setState(() {});
+                      }),
                 )),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10),
                   child: buildButtonForMarketWidget(
                       iconData: FontAwesomeIcons.ellipsisVertical,
-                      title: "",
                       width: 30,
                       function: () {
                         showBottomSheetCheckImportantSettings(
@@ -191,6 +240,7 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                                                   iconData: FontAwesomeIcons
                                                       .chevronLeft,
                                                   bgColor: bgColor,
+                                                  isBarrierTransparent: true,
                                                   widget: ListView.builder(
                                                       shrinkWrap: true,
                                                       itemCount:
@@ -294,6 +344,8 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                                                                     bgColor:
                                                                         greyColor[
                                                                             400],
+                                                                    isBarrierTransparent:
+                                                                        true,
                                                                     widget:
                                                                         body);
                                                               },
@@ -431,5 +483,15 @@ class _InterestProductMarketPageState extends State<InterestProductMarketPage> {
                     ))),
       ],
     );
+  }
+
+  _getMinximumPriceOfProduct(List<dynamic> product_variants) {
+    double min = product_variants[0]["price"];
+    product_variants.forEach((element) {
+      if (element["price"] < min) {
+        min = element["price"];
+      }
+    });
+    return min;
   }
 }

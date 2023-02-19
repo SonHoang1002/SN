@@ -6,13 +6,15 @@ import '../../theme/colors.dart';
 
 showBottomSheetCheckImportantSettings(
     BuildContext context, double height, String title,
-    {Widget? widget, Color? bgColor, IconData? iconData}) {
+    {Widget? widget,
+    Color? bgColor,
+    bool? isBarrierTransparent = false,
+    IconData? iconData}) {
   showModalBottomSheet(
       enableDrag: true,
       context: context,
       isScrollControlled: true,
-      // barrierColor: transparent,
-      
+      barrierColor: isBarrierTransparent! ? transparent : null,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
@@ -20,21 +22,21 @@ showBottomSheetCheckImportantSettings(
       // context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           height: height,
           decoration: BoxDecoration(
-              color: bgColor != null ? bgColor : Colors.grey[800],
-              borderRadius: BorderRadius.only(
+              color: bgColor ?? Colors.grey[300],
+              borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(15), topLeft: Radius.circular(15))),
           child: Column(children: [
             // drag and drop navbar
             Container(
-              padding: EdgeInsets.only(top: 5),
-              margin: EdgeInsets.only(bottom: 15),
+              padding: const EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.only(bottom: 15),
               child: Container(
                 height: 4,
                 width: 40,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(15),
@@ -43,7 +45,7 @@ showBottomSheetCheckImportantSettings(
             ),
             //  title
             Container(
-              padding: EdgeInsets.only(left: 5, right: 5),
+              padding: const EdgeInsets.only(left: 5, right: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,24 +62,24 @@ showBottomSheetCheckImportantSettings(
                   Text(
                     title,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                         // color: white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
-                  SizedBox()
+                  const SizedBox()
                 ],
               ),
             ),
             //content
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Divider(
                 height: 10,
                 color: white,
               ),
             ),
-            widget != null ? widget : Container()
+            widget ?? Container()
           ]),
         );
       });
