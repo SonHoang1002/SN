@@ -78,7 +78,9 @@ class PostController extends StateNotifier<PostState> {
         postsPin: state.postsPin,
         posts: type == feedPost ? [newPost] + state.posts : state.posts,
         isMore: state.isMore,
-        postUserPage: state.postUserPage,
+        postUserPage: [feedPost, postPageUser].contains(type)
+            ? [newPost] + state.postUserPage
+            : state.postUserPage,
         isMoreUserPage: state.isMoreUserPage);
   }
 

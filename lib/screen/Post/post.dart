@@ -22,7 +22,10 @@ class Post extends StatelessWidget {
                 type: type,
               ),
               PostCenter(post: post),
-              PostFooter(post: post),
+              PostFooter(
+                post: post,
+                type: type,
+              ),
               isHiddenCrossbar != null && isHiddenCrossbar == true
                   ? const SizedBox()
                   : const CrossBar(),
