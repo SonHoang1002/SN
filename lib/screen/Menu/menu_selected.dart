@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Event/event_render.dart';
 import 'package:social_network_app_mobile/screen/Group/group.dart';
+import 'package:social_network_app_mobile/screen/Grows/grow_render.dart';
 import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_render.dart';
 // import 'package:social_network_app_mobile/screen/Page/page_general.dart';
@@ -20,12 +21,49 @@ class MenuSelected extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget buttonAppbar = const SizedBox();
     Widget body = const SizedBox();
+    print(menuSelected['key']);
     switch (menuSelected['key']) {
       case 'pageSocial':
         body = const PageGeneral();
         break;
       case 'watch':
         body = const WatchRender();
+        break;
+      case 'grow':
+        body = const GrowRender();
+        buttonAppbar = Row(
+          children: [
+            GestureDetector(
+              onTap: () {},
+              child: const Icon(
+                FontAwesomeIcons.calendarDay,
+                size: 18,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(
+              width: 7.0,
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: const Icon(
+                FontAwesomeIcons.plus,
+                size: 18,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(
+              width: 7.0,
+            ),
+            GestureDetector(
+                onTap: () {},
+                child: const Icon(
+                  FontAwesomeIcons.magnifyingGlass,
+                  size: 18,
+                  color: Colors.black,
+                ))
+          ],
+        );
         break;
       case 'eventSocial':
         body = const EventRender();
