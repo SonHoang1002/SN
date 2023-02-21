@@ -5,11 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/widget/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widget/page_permission_comment.dart';
+import 'package:social_network_app_mobile/widget/page_visibility.dart';
 import 'package:social_network_app_mobile/widget/report_category.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
@@ -169,7 +171,7 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       setState(() {});
     }
 
-    handleHiddenPost(type) async {
+    handleHiddenPost() async {
       dynamic response =
           await PostApi().updatePost(widget.post['id'], {"hidden": true});
 
@@ -181,6 +183,20 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Ẩn bài viết thành công")));
+      }
+    }
+
+    handleVisibilityPost(data) async {
+      dynamic response = await PostApi().updatePost(widget.post['id'], data);
+
+      ref
+          .read(postControllerProvider.notifier)
+          .actionHiddenDeletePost(widget.type, widget.post);
+
+      if (response != null && mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Cập nhật quyền riêng tư thành công")));
       }
     }
 
@@ -236,7 +252,7 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         );
       } else if (["hidden_post", "delete_post"].contains(key)) {
         if (key == "hidden_post") {
-          handleHiddenPost(key);
+          handleHiddenPost();
         } else {
           Navigator.pop(context);
           showAlertDialog(context);
@@ -251,6 +267,22 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       } else if (["unopen_notification_post", "open_notification_post"]
           .contains(key)) {
         handleNotifyPost(key);
+      } else if (key == "object_post") {
+        var visibility = typeVisibility.firstWhere(
+            (element) => element['key'] == widget.post['visibility']);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreateModalBaseMenu(
+                    title: "Chỉnh sửa quyền riêng tư",
+                    body: PageVisibility(
+                      visibility: visibility,
+                      handleUpdate: (newVisibility) {
+                        handleVisibilityPost(
+                            {'visibility': newVisibility["key"]});
+                      },
+                    ),
+                    buttonAppbar: const SizedBox())));
       }
     }
 
