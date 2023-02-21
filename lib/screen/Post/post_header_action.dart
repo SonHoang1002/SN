@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
@@ -9,6 +10,7 @@ import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/widget/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widget/page_permission_comment.dart';
+import 'package:social_network_app_mobile/widget/report_category.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
@@ -211,6 +213,13 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
           Navigator.pop(context);
           showAlertDialog(context);
         }
+      } else if (key == "report_post") {
+        Navigator.pop(context);
+        showBarModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            builder: (context) =>
+                ReportCategory(entityReport: widget.post, entityType: "post"));
       }
     }
 
