@@ -14,9 +14,9 @@ class PostShare extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     var postReblogRender = post['reblog'];
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      // margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
       padding: const EdgeInsets.only(top: 8),
-      width: size.width - 30,
+      // width: size.width - 30,
       decoration:
           BoxDecoration(border: Border.all(width: 0.2, color: greyColor)),
       child: Column(
