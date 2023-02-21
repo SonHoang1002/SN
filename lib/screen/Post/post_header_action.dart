@@ -79,10 +79,18 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "isShow": meData['id'] == widget.post['account']['id']
       },
       {
-        "key": "open_notification_post",
-        "label": "Bật thông báo bài viết này",
-        "icon": FontAwesomeIcons.solidBell,
-        "description": "Thêm vào danh sách mục đã lưu",
+        "key": widget.post['notify']
+            ? "unopen_notification_post"
+            : "open_notification_post",
+        "label": widget.post['notify']
+            ? "Tắt thông báo bài viết này"
+            : "Bật thông báo bài viết này",
+        "icon": widget.post['notify']
+            ? FontAwesomeIcons.solidBellSlash
+            : FontAwesomeIcons.solidBell,
+        "description": widget.post['notify']
+            ? "Không nhận thông báo từ bài viết này"
+            : "Bạn sẽ nhận được thông báo của bài viết này",
         "isShow": true
       },
       {
@@ -116,6 +124,26 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Bỏ lưu thành công")));
+      }
+    }
+
+    handleNotifyPost(key) async {
+      var response = key == "unopen_notification_post"
+          ? await PostApi().turnOffNotification(widget.post['id'])
+          : await PostApi().turnOnNotification(widget.post['id']);
+      if (response != null && mounted) {
+        var newData = {
+          ...widget.post,
+          "notify": key == "unopen_notification_post" ? false : true
+        };
+        ref
+            .read(postControllerProvider.notifier)
+            .actionUpdateDetailInPost(widget.type, newData);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(key == "unopen_notification_post"
+                ? "Tắt thông báo thành công"
+                : "Bật thông báo thành công")));
       }
     }
 
@@ -220,6 +248,9 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
             backgroundColor: Colors.transparent,
             builder: (context) =>
                 ReportCategory(entityReport: widget.post, entityType: "post"));
+      } else if (["unopen_notification_post", "open_notification_post"]
+          .contains(key)) {
+        handleNotifyPost(key);
       }
     }
 
