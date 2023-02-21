@@ -9,7 +9,7 @@ import '../../../../../widget/appbar_title.dart';
 import '../../../../../widget/back_icon_appbar.dart';
 import '../../personal_page_constants.dart';
 import 'private_rule_settings_constants.dart';
-import 'private_rule_shortcut_modules/check_important_settings_modules/check_important_settings_page.dart';
+import 'check_important_settings_modules/check_important_settings_page.dart';
 
 class PrivateRulesSettingPage extends StatefulWidget {
   @override

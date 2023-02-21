@@ -1,10 +1,8 @@
-import 'dart:io';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
@@ -14,7 +12,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/screen/Feed/feed.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
-class Home extends StatefulWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
@@ -22,13 +20,25 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends ConsumerState<Home>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    if (!mounted) return;
+    Future.delayed(Duration.zero, () {
+      if (ref.read(meControllerProvider).isEmpty) {
+        ref.read(meControllerProvider.notifier).getMeData();
+      }
+    });
+    super.initState();
   }
 
   @override

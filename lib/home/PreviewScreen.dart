@@ -32,17 +32,29 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-      Text(
-        "Emso",
-        style: TextStyle(
-            fontSize: 26, color: primaryColor, fontWeight: FontWeight.w700),
+    return Scaffold(
+      body: Center(
+        child: Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+            Text(
+              "Emso",
+              style: TextStyle(
+                  fontSize: 26,
+                  color: primaryColor,
+                  fontWeight: FontWeight.w700),
+            ),
+            Text(
+              "Social",
+              style: TextStyle(
+                  fontSize: 26,
+                  color: secondaryColor,
+                  fontWeight: FontWeight.w700),
+            )
+          ]),
+        ),
       ),
-      Text(
-        "Social",
-        style: TextStyle(
-            fontSize: 26, color: secondaryColor, fontWeight: FontWeight.w700),
-      )
-    ]);
+    );
   }
 }

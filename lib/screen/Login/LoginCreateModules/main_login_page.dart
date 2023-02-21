@@ -1,19 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-class MainLoginPage extends StatefulWidget {
+class MainLoginPage extends ConsumerStatefulWidget {
   const MainLoginPage({Key? key}) : super(key: key);
 
   @override
-  State<MainLoginPage> createState() => _MainLoginPageState();
+  ConsumerState<MainLoginPage> createState() => _MainLoginPageState();
 }
 
-class _MainLoginPageState extends State<MainLoginPage> {
+class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   String username = '';
   String password = '';
   bool showPassword = false;
@@ -44,13 +47,13 @@ class _MainLoginPageState extends State<MainLoginPage> {
     );
   }
 
-  void _completeLogin() {
-    // Navigator.pushReplacement<void, void>(
-    //   context,
-    //   MaterialPageRoute<void>(
-    //     builder: (BuildContext context) => const Home(),
-    //   ),
-    // );
+  void completeLogin() {
+    Navigator.pushReplacement<void, void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => const Home(),
+      ),
+    );
   }
 
   handleLogin() async {
@@ -67,7 +70,9 @@ class _MainLoginPageState extends State<MainLoginPage> {
     };
 
     var response = await AuthenApi().fetchDataToken(data);
-    if (response != null && response['token']) {
+    if (response != null && response['access_token'] != null) {
+      await SecureStorage().saveKeyStorage(response['access_token'], 'token');
+      completeLogin();
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
