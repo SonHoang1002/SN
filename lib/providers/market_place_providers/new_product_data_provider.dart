@@ -1,0 +1,1 @@
+// final newProductDataProvider = State

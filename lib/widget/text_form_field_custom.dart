@@ -55,6 +55,9 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
       onChanged: (value) {
         widget.handleGetValue!(value);
       },
+      obscureText: true,
+      enableSuggestions: false,
+      autocorrect: false,
       decoration: InputDecoration(
           suffixIcon: widget.suffixIcon,
           fillColor: Colors.red,

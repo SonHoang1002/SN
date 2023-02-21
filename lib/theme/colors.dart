@@ -9,7 +9,10 @@ const secondaryColor = Color(0xFF7165E0);
 final secondaryColorSelected = const Color(0xFF7165E0).withOpacity(0.1);
 
 const greyColor = Colors.grey;
+const red = Colors.red;
 const blueColor = Colors.blue;
+const blackColor = Colors.black;
+const transparent = Colors.transparent;
 
 List colorsGradient = [
   {

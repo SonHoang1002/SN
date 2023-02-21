@@ -126,7 +126,7 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
           const SizedBox(
             height: 8.0,
           ),
-          const SearchInput(),
+          SearchInput(),
           SizedBox(
             height: 45,
             child: TabBar(

@@ -46,8 +46,7 @@ class _GifState extends State<Gif> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-            margin: const EdgeInsets.all(8.0), child: const SearchInput()),
+        Container(margin: const EdgeInsets.all(8.0), child: SearchInput()),
         isLoadingGif
             ? Container(
                 margin: const EdgeInsets.only(top: 20),

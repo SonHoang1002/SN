@@ -21,18 +21,18 @@ class DrawerFeed extends StatelessWidget {
           child: DrawerHeader(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Lối tắt',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
-              TextDescription(
+              const TextDescription(
                   description:
                       "Với lối tắt, bạn có thể nhanh chóng truy cập vào những việc mình hay làm nhất trên Emso Social, giúp cho bạn có được trải nghiệm tốt nhất, nhanh nhất khi sử dụng."),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               SearchInput()
