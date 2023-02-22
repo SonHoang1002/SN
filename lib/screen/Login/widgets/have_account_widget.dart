@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/widget/cross_bar.dart';
+import 'package:social_network_app_mobile/widget/text_action.dart';
 
-import '../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
-import '../../../widget/GeneralWidget/text_content_widget.dart';
 
 buildHaveAccountWidget({Function? function}) {
   return Column(
     children: [
-      buildDivider(color: Colors.grey[800]),
-      buildSpacer(height: 10),
-      buildTextContent("Bạn đã có tài khoản", false,
-          fontSize: 15,
-          colorWord: Colors.blue,
-          isCenterLeft: false, function: () {
-        function != null ? function() : null;
-      }),
+      const CrossBar(height: 0.5),
+      TextAction(
+        fontSize: 15,
+        title: "Bạn đã có tài khoản",
+        action: () {
+          function != null ? function() : null;
+        },
+      ),
       buildSpacer(height: 10),
     ],
   );

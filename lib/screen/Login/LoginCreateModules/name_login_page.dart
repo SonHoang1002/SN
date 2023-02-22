@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -20,10 +23,7 @@ class NameLoginPage extends StatefulWidget {
 class _NameLoginPageState extends State<NameLoginPage> {
   late double width = 0;
   late double height = 0;
-  final TextEditingController _firstNameController =
-      TextEditingController(text: "df");
-  final TextEditingController _lastNameController =
-      TextEditingController(text: "tutuy");
+  String name = '';
   bool isFillAll = false;
 
   @override
@@ -41,7 +41,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: GestureDetector(
         onTap: (() {
-          FocusManager.instance.primaryFocus!.unfocus();
+          hiddenKeyboard(context);
         }),
         child: Column(children: [
           // main content
@@ -60,46 +60,44 @@ class _NameLoginPageState extends State<NameLoginPage> {
                           children: [
                             buildTextContent(
                                 NameLoginConstants.NAME_LOGIN_TITLE, true,
-                                fontSize: 16,
+                                fontSize: 17,
                                 colorWord: blackColor,
                                 isCenterLeft: false),
-                            buildSpacer(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: width * 0.45,
-                                  child: _buildTextFormField(
-                                      _firstNameController,
-                                      NameLoginConstants
-                                          .NAME_LOGIN_NAME_PLACEHOLODER[0],
-                                      borderRadius: 3),
-                                ),
-                                SizedBox(
-                                  width: width * 0.45,
-                                  child: _buildTextFormField(
-                                      _lastNameController,
-                                      NameLoginConstants
-                                          .NAME_LOGIN_NAME_PLACEHOLODER[1],
-                                      borderRadius: 3),
-                                ),
-                              ],
+                            buildSpacer(height: 25),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width - 20,
+                              child: TextFormFieldCustom(
+                                autofocus: true,
+                                hintText: "Họ và tên",
+                                handleGetValue: (value) {
+                                  setState(() {
+                                    name = value;
+                                  });
+                                },
+                              ),
                             ),
-                            buildSpacer(height: 10),
+                            buildSpacer(height: 15),
                             isFillAll
-                                ? buildButtonForLoginWidget(
-                                    title: "Tiếp",
-                                    width: width,
-                                    function: () {
-                                      pushToNextScreen(
-                                          context, BirthdayLoginPage());
-                                    })
-                                : buildTextContent(
-                                    NameLoginConstants.NAME_LOGIN_SUBTITLE,
-                                    true,
-                                    fontSize: 16,
-                                    colorWord: Colors.grey,
-                                    isCenterLeft: false,
+                                ? SizedBox(
+                                    height: 36,
+                                    child: ButtonPrimary(
+                                      label: "Tiếp tục",
+                                      handlePress: () {
+                                        pushAndReplaceToNextScreen(
+                                            context, const BirthdayLoginPage());
+                                      },
+                                    ),
+                                  )
+                                : SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width - 50,
+                                    child: buildTextContent(
+                                      NameLoginConstants.NAME_LOGIN_SUBTITLE,
+                                      true,
+                                      fontSize: 16,
+                                      colorWord: Colors.grey,
+                                      isCenterLeft: false,
+                                    ),
                                   )
                           ],
                         ),
@@ -111,7 +109,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
             ),
           ),
           buildHaveAccountWidget(function: () {
-            pushToNextScreen(context, MainLoginPage());
+            pushToNextScreen(context, const MainLoginPage());
           })
         ]),
       ),
@@ -119,8 +117,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
   }
 
   checkFillAllInput() {
-    if (_firstNameController.text.trim().length > 0 &&
-        _lastNameController.text.trim().length > 0) {
+    if (name.trim().isNotEmpty) {
       setState(() {
         isFillAll = true;
       });
@@ -129,42 +126,5 @@ class _NameLoginPageState extends State<NameLoginPage> {
         isFillAll = false;
       });
     }
-  }
-
-  Widget _buildTextFormField(
-      TextEditingController controller, String placeHolder,
-      {double? borderRadius = 5}) {
-    return SizedBox(
-      height: 50,
-      child: TextFormField(
-        controller: controller,
-        onChanged: ((value) {
-          checkFillAllInput();
-        }),
-        validator: (value) {},
-        decoration: InputDecoration(
-            counterText: "",
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
-              borderSide: const BorderSide(color: Colors.grey, width: 2),
-            ),
-            hintText: placeHolder,
-            hintStyle: const TextStyle(
-              color: Colors.grey,
-            ),
-            // suffix: Container(
-            //   padding: EdgeInsets.only(
-            //     top: 25.0,
-            //   ),
-            //   child: Icon(
-            //     Icons.close,
-            //     color: Colors.grey,
-            //   ),
-            // ),
-            contentPadding: const EdgeInsets.fromLTRB(10, 5, 0, 30),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)))),
-      ),
-    );
   }
 }

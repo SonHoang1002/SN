@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -23,7 +25,6 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
 
   late double height = 0;
   bool _isValid = true;
-  // TextEditingController _birthdayController = TextEditingController(text: "");
   late List<int> _timeComponent = [];
   bool isFillAll = false;
 
@@ -42,13 +43,12 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: GestureDetector(
         onTap: (() {
-          FocusManager.instance.primaryFocus!.unfocus();
+          hiddenKeyboard(context);
         }),
         child: Column(children: [
           // main content
           Expanded(
             child: Column(
-              // padding: EdgeInsets.symmetric(vertical: 5),
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // img
@@ -62,8 +62,7 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
                             buildTextContent(
                                 BirthDayLoginConstants.BIRTHDAY_LOGIN_TITLE,
                                 true,
-                                fontSize: 16,
-                                colorWord: blackColor,
+                                fontSize: 17,
                                 isCenterLeft: false),
                             buildSpacer(height: 10),
                             Container(
@@ -74,10 +73,10 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
                               child: GeneralComponent(
                                 [
                                   buildTextContent(
-                                      _timeComponent.length == 0
+                                      _timeComponent.isEmpty
                                           ? BirthDayLoginConstants
                                               .BIRTHDAY_LOGIN_NAME_PLACEHOLODER
-                                          : "ngày ${_timeComponent[0]} tháng ${_timeComponent[1]}, ${_timeComponent[2]}",
+                                          : "${_timeComponent[0]} tháng ${_timeComponent[1]}, ${_timeComponent[2]}",
                                       false,
                                       fontSize: 16,
                                       colorWord: greyColor)
@@ -111,13 +110,21 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
                                 color: greyColor,
                               ),
                             ),
-                            buildTextContent(
-                              BirthDayLoginConstants.BIRTHDAY_LOGIN_QUESTION,
-                              true,
-                              fontSize: 16,
-                              colorWord: blackColor,
-                              isCenterLeft: false,
-                            ),
+                            buildSpacer(height: 10),
+                            _isValid && _timeComponent.isNotEmpty
+                                ? SizedBox(
+                                    height: 36,
+                                    child: ButtonPrimary(
+                                      label: "Tiếp tục",
+                                      handlePress: () {
+                                        popToPreviousScreen(context);
+                                        pushAndReplaceToNextScreen(
+                                            context, const GenderLoginPage());
+                                        return;
+                                      },
+                                    ),
+                                  )
+                                : const SizedBox()
                           ],
                         ),
                       ),
@@ -128,7 +135,7 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
             ),
           ),
           buildHaveAccountWidget(function: () {
-            pushToNextScreen(context, MainLoginPage());
+            pushToNextScreen(context, const MainLoginPage());
           })
         ]),
       ),
@@ -138,7 +145,7 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
   checkValidTime() {
     final currentTime = DateTime.now();
 
-    if (_timeComponent.length > 0) {
+    if (_timeComponent.isNotEmpty) {
       if (_timeComponent[2] < currentTime.year) {
         setState(() {
           _isValid = true;
@@ -171,40 +178,6 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
     }
   }
 
-  Widget _buildTextFormField(
-    TextEditingController controller,
-    String placeHolder, {
-    double? borderRadius = 5,
-  }) {
-    return Container(
-      height: 50,
-      child: TextFormField(
-        controller: controller,
-        onChanged: ((value) {}),
-        validator: (value) {},
-        readOnly: true,
-        decoration: InputDecoration(
-            counterText: "",
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
-              borderSide: const BorderSide(color: greyColor, width: 2),
-            ),
-            hintText: placeHolder,
-            hintStyle: const TextStyle(
-              color: greyColor,
-            ),
-            suffix: const Icon(
-              LoginConstants.DOWN_ICON_DATA,
-              color: greyColor,
-              size: 10,
-            ),
-            contentPadding: const EdgeInsets.fromLTRB(10, 5, 0, 30),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)))),
-      ),
-    );
-  }
-
   _showPickerModalBottomSheet(
     BuildContext context,
   ) {
@@ -214,30 +187,10 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
         builder: (context) {
-          return Container(
+          return SizedBox(
             height: 220,
             child: StatefulBuilder(builder: (context, setStateFull) {
               return Column(children: [
-                Container(
-                  height: 40,
-                  child:
-                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, right: 10),
-                      child: buildTextContent("Tiếp tục", true,
-                          colorWord: _isValid
-                              ? blackColor
-                              : blackColor.withOpacity(0.4), function: () {
-                        if (_isValid) {
-                          popToPreviousScreen(context);
-                          pushToNextScreen(context, GenderLoginPage());
-                          return;
-                        }
-                        popToPreviousScreen(context);
-                      }),
-                    ),
-                  ]),
-                ),
                 Expanded(
                   child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.date,

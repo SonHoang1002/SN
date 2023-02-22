@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -21,8 +22,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
 
   late double height = 0;
   bool _iShowPassword = false;
-  final TextEditingController _passwordController =
-      TextEditingController(text: "");
+  String _passwordController = '';
 
   @override
   Widget build(BuildContext context) {
@@ -44,56 +44,68 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
         child: Column(children: [
           // main content
           Expanded(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                          child: Column(
-                            children: [
-                              buildTextContent(
-                                  EmailLoginConstants.EMAIL_LOGIN_TITLE, true,
-                                  fontSize: 16,
-                                  colorWord: blackColor,
-                                  isCenterLeft: false),
-                              buildSpacer(height: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        child: Column(
+                          children: [
+                            buildTextContent(
+                                EmailLoginConstants.EMAIL_LOGIN_TITLE, true,
+                                fontSize: 17, isCenterLeft: false),
+                            buildSpacer(height: 15),
 
-                              // input
-                              _buildTextFormField(
-                                  _passwordController,
-                                  EmailLoginConstants
-                                      .EMAIL_LOGIN_NAME_PLACEHOLODER),
-                              buildSpacer(height: 10),
-                              // description
-                              _passwordController.text.trim().length > 0
-                                  ? buildButtonForLoginWidget(
-                                      width: width,
-                                      function: () {
-                                        pushToNextScreen(
-                                            context, CompleteLoginPage());
-                                      })
-                                  : Text(
-                                      EmailLoginConstants.EMAIL_LOGIN_SUBTITLE,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: greyColor,
-                                      ),
+                            // input
+                            _buildTextFormField((value) {
+                              setState(() {
+                                _passwordController = value;
+                              });
+                            },
+                                EmailLoginConstants
+                                    .EMAIL_LOGIN_NAME_PLACEHOLODER),
+
+                            buildSpacer(height: 15),
+
+                            // input
+                            _buildTextFormField((value) {
+                              setState(() {
+                                _passwordController = value;
+                              });
+                            }, "Xác nhận mật khẩu"),
+                            buildSpacer(height: 15),
+                            // description
+                            _passwordController.trim().isNotEmpty
+                                ? SizedBox(
+                                    height: 36,
+                                    child: ButtonPrimary(
+                                      label: "Tiếp tục",
+                                      handlePress: () {
+                                        pushAndReplaceToNextScreen(
+                                            context, const CompleteLoginPage());
+                                      },
                                     ),
-                              buildSpacer(height: 10),
-                              // change status button
-                            ],
-                          ),
+                                  )
+                                : Text(
+                                    EmailLoginConstants.EMAIL_LOGIN_SUBTITLE,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      color: greyColor,
+                                    ),
+                                  ),
+                            buildSpacer(height: 15),
+                            // change status button
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ]),
@@ -101,16 +113,14 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
     );
   }
 
-  Widget _buildTextFormField(
-      TextEditingController controller, String placeHolder,
-      {double? borderRadius = 5,
-      bool? isHavePrefix = false,
-      bool? numberType = false}) {
-    return Container(
+  Widget _buildTextFormField(Function handleUpdate, String placeHolder,
+      {double? borderRadius = 5, bool? numberType = false}) {
+    return SizedBox(
       height: 40,
       child: TextFormField(
-        controller: controller,
-        onChanged: ((value) {}),
+        onChanged: ((value) {
+          handleUpdate(value);
+        }),
         validator: (value) {},
         obscureText: _iShowPassword,
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,
@@ -126,7 +136,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
               color: greyColor,
             ),
             suffix: Container(
-              margin: EdgeInsets.only(right: 10),
+              margin: const EdgeInsets.only(right: 10),
               child: InkWell(
                 onTap: () {
                   setState(() {

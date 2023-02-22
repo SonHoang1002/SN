@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -38,76 +39,47 @@ class _CompleteLoginPageState extends State<CompleteLoginPage> {
         }),
         child: Column(children: [
           Expanded(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                          child: Column(
-                            children: [
-                              buildTextContent(
-                                  CompleteLoginConstants.COMPLETE_LOGIN_TITLE,
-                                  true,
-                                  fontSize: 16,
-                                  colorWord: blackColor,
-                                  isCenterLeft: false),
-                              buildSpacer(height: 10),
-                              _buildDescription(),
-                              buildSpacer(height: 10),
-                              // button
-                              buildButtonForLoginWidget(
-                                  title: CompleteLoginConstants
-                                      .COMPLETE_LOGIN_NAME_PLACEHOLODER,
-                                  width: width,
-                                  function: () {
-                                    pushAndReplaceToNextScreen(
-                                        context, MainLoginPage());
-                                  })
-                            ],
-                          ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                        child: Column(
+                          children: [
+                            buildTextContent(
+                                CompleteLoginConstants.COMPLETE_LOGIN_TITLE,
+                                true,
+                                fontSize: 17,
+                                colorWord: blackColor,
+                                isCenterLeft: false),
+                            buildSpacer(height: 10),
+                            _buildDescription(),
+                            buildSpacer(height: 10),
+                            // button
+
+                            SizedBox(
+                              height: 36,
+                              child: ButtonPrimary(
+                                label: "Hoàn tất",
+                                handlePress: () {
+                                  pushAndReplaceToNextScreen(
+                                      context, const MainLoginPage());
+                                },
+                              ),
+                            )
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ]),
-      ),
-    );
-  }
-
-  Widget _buildTextFormField(
-      TextEditingController controller, String placeHolder,
-      {double? borderRadius = 5,
-      bool? isHavePrefix = false,
-      bool? numberType = false}) {
-    return SizedBox(
-      height: 40,
-      child: TextFormField(
-        controller: controller,
-        onChanged: ((value) {}),
-        validator: (value) {},
-        keyboardType: numberType! ? TextInputType.number : TextInputType.text,
-        maxLength: numberType ? 10 : 100000,
-        decoration: InputDecoration(
-            counterText: "",
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
-              borderSide: const BorderSide(color: greyColor, width: 0.2),
-            ),
-            hintText: placeHolder,
-            hintStyle: const TextStyle(
-              color: greyColor,
-            ),
-            contentPadding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)))),
       ),
     );
   }
@@ -123,23 +95,13 @@ class _CompleteLoginPageState extends State<CompleteLoginPage> {
           TextSpan(
             text: subTitle[1],
             style: const TextStyle(color: primaryColor),
-            recognizer: new TapGestureRecognizer()
-              ..onTap = () {
-                ////////////////////////////////////////////////////////////
-                // chuyen den trang dieu khoan cho nguoi dung nghien cuu
-                ////////////////////////////////////////////////////////////
-                print("trang dieu khoan");
-              },
+            recognizer: TapGestureRecognizer()..onTap = () {},
           ),
           TextSpan(text: subTitle[2]),
           TextSpan(
             text: subTitle[3],
             style: const TextStyle(color: primaryColor),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                // chuyen den trang chinh sach du lieu cho nguoi dung nghien cuu
-                print("trang chinh sach du lieu");
-              },
+            recognizer: TapGestureRecognizer()..onTap = () {},
           ),
           TextSpan(
             text: subTitle[4],
@@ -147,11 +109,7 @@ class _CompleteLoginPageState extends State<CompleteLoginPage> {
           TextSpan(
             text: subTitle[5],
             style: const TextStyle(color: primaryColor),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                // chuyen den trang chinh sach cookie cho nguoi dung nghien cuu
-                print("trang chinh sach cookie");
-              },
+            recognizer: TapGestureRecognizer()..onTap = () {},
           ),
           TextSpan(
             text: subTitle[6],

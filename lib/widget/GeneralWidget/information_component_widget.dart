@@ -15,7 +15,8 @@ class GeneralComponent extends StatelessWidget {
   final bool? isHaveBorder;
 
   const GeneralComponent(this.contentWidget,
-      {this.prefixWidget,
+      {super.key,
+      this.prefixWidget,
       this.suffixWidget,
       this.changeBackground,
       this.padding,
@@ -37,7 +38,7 @@ class GeneralComponent extends StatelessWidget {
               // height: 77,
               // color: Colors.red,
               // margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              padding: padding ?? EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: padding ?? const EdgeInsets.fromLTRB(10, 10, 10, 10),
               decoration: BoxDecoration(
                   color: changeBackground ?? Colors.grey[900],
                   border: isHaveBorder == true
@@ -67,16 +68,14 @@ class GeneralComponent extends StatelessWidget {
                         children: [
                           Flexible(
                             flex: 20,
-                            child: Container(
-                              child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: contentWidget.map((itemWidget) {
-                                    return itemWidget;
-                                  }).toList()),
-                            ),
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: contentWidget.map((itemWidget) {
+                                  return itemWidget;
+                                }).toList()),
                           ),
                           suffixWidget != null
                               ? Flexible(

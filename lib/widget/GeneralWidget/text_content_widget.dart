@@ -14,7 +14,6 @@ Widget buildTextContent(String title, bool isBold,
     },
     child: Container(
       alignment: isCenterLeft! ? Alignment.centerLeft : Alignment.center,
-    
       child: Wrap(
         children: [
           iconData != null
@@ -25,16 +24,16 @@ Widget buildTextContent(String title, bool isBold,
                     size: 13,
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
           Text(
             title,
-            maxLines: maxLines ?? null,
+            maxLines: maxLines,
             textAlign: isCenterLeft ? TextAlign.start : TextAlign.center,
             overflow: overflow ?? TextOverflow.visible,
             style: TextStyle(
-                color: colorWord ?? null,
+                color: colorWord,
                 fontSize: fontSize ?? 17,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+                fontWeight: isBold ? FontWeight.w500 : FontWeight.normal),
           ),
         ],
       ),

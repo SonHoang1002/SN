@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -73,7 +74,7 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: GestureDetector(
         onTap: (() {
-          FocusManager.instance.primaryFocus!.unfocus();
+          hiddenKeyboard(context);
         }),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           // main content

@@ -33,9 +33,9 @@ class MainLoginConstants {
 }
 
 class BeginJoinEmsoLoginConstants {
-  static String BEGIN_JOIN_EMSO_LOGIN_TITLE = "Tham gia EmsoNetWork";
+  static String BEGIN_JOIN_EMSO_LOGIN_TITLE = "Tham gia Mạng xã hội Emso";
   static String BEGIN_JOIN_EMSO_LOGIN_SUBTITLE =
-      "Chúng tôi sẽ giúp tạo tài khoản sau vài bước dễ dàng.";
+      "Chúng tôi sẽ giúp bạn tạo tài khoản sau vài bước dễ dàng.";
   static const String BEGIN_JOIN_EMSO_LOGIN_BEGIN_TEXT_BUTTON = "Bắt đầu";
 }
 
@@ -48,7 +48,7 @@ class NameLoginConstants {
 }
 
 class BirthDayLoginConstants {
-  static String BIRTHDAY_LOGIN_TITLE = "Khi nào là Sinh nhật của bạn ?";
+  static String BIRTHDAY_LOGIN_TITLE = "Bạn sinh vào ngày nào ?";
   static String BIRTHDAY_LOGIN_SUBTITLE =
       "Bạn có thể chọn xem ai được thấy nội dung này trên trang cá nhân của mình.";
   static String BIRTHDAY_LOGIN_NAME_PLACEHOLODER =
@@ -69,15 +69,18 @@ class GenderLoginConstants {
     "key": "gender_login_selections",
     "data": [
       {
+        "key": "female",
         "title": "Nữ",
       },
       {
+        "key": "male",
         "title": "Nam",
       },
       {
-        "title": "Tùy chọn",
+        "key": "other",
+        "title": "Khác",
         "subTitle":
-            "Chọn Tùy chỉnh nếu bạn thuộc giới tính khác hoặc không muốn tiết lộ."
+            "Chọn lựa chọn này nếu bạn thuộc giới tính khác hoặc không muốn tiết lộ."
       },
     ]
   };
@@ -158,7 +161,7 @@ class CompleteLoginConstants {
     "Chính sách dữ liệu",
     " và ",
     "Chính sách cookie",
-    " của chúng tôi. Bạn có thể nhận được thông báo của chúng tôi qua SMS và chọn không hận bất cứ lúc nào."
+    " của chúng tôi. Bạn có thể nhận được thông báo của chúng tôi qua SMS và chọn không nhận bất cứ lúc nào."
   ];
   static String COMPLETE_LOGIN_NAME_PLACEHOLODER = 'Hoàn tất';
 }
