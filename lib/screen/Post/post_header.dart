@@ -116,7 +116,11 @@ class _PostHeaderState extends State<PostHeader> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AvatarPost(group: group, page: page, account: account),
+                  AvatarPost(
+                      post: widget.post,
+                      group: group,
+                      page: page,
+                      account: account),
                   const SizedBox(
                     width: 5,
                   ),
@@ -126,6 +130,7 @@ class _PostHeaderState extends State<PostHeader> {
                       SizedBox(
                         width: size.width * 0.6,
                         child: BlockNamePost(
+                            post: widget.post,
                             account: account,
                             description: description,
                             mentions: mentions,
@@ -230,8 +235,9 @@ class BlockNamePost extends StatelessWidget {
     this.group,
     this.page,
     this.statusActivity,
+    this.post,
   });
-
+  final dynamic post;
   final dynamic account;
   final String description;
   final dynamic mentions;
@@ -241,13 +247,21 @@ class BlockNamePost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    renderDisplayName() {
+      if (group != null) {
+        return group['title'];
+      } else if (page != null) {
+        return post['place']?['id'] != page['id']
+            ? page['title']
+            : account['display_name'];
+      } else {
+        return account['display_name'];
+      }
+    }
+
     return RichText(
       text: TextSpan(
-        text: group != null
-            ? group['title']
-            : page != null
-                ? page['title']
-                : account['display_name'],
+        text: renderDisplayName(),
         style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -302,8 +316,10 @@ class AvatarPost extends StatelessWidget {
     required this.account,
     this.group,
     this.page,
+    this.post,
   });
 
+  final dynamic post;
   final dynamic group;
   final dynamic page;
   final dynamic account;
@@ -341,7 +357,10 @@ class AvatarPost extends StatelessWidget {
           )
         : Padding(
             padding: const EdgeInsets.only(top: 1),
-            child: Avatar(path: page != null ? pageLink : accountLink),
+            child: Avatar(
+                path: page != null && post['place']?['id'] != page['id']
+                    ? pageLink
+                    : accountLink),
           );
   }
 }

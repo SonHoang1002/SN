@@ -8,12 +8,12 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/widget/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widget/page_permission_comment.dart';
 import 'package:social_network_app_mobile/widget/page_visibility.dart';
 import 'package:social_network_app_mobile/widget/report_category.dart';
-import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class PostHeaderAction extends ConsumerStatefulWidget {
@@ -27,18 +27,6 @@ class PostHeaderAction extends ConsumerStatefulWidget {
 }
 
 class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
-  String commentModeration = 'public';
-
-  @override
-  void initState() {
-    super.initState();
-    if (mounted) {
-      setState(() {
-        commentModeration = widget.post['comment_moderation'];
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     List actionsPost = [
@@ -167,26 +155,9 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
             content:
                 Text("${type == 'pin_post' ? "Ghim" : "Bỏ ghim"} thành công")));
       }
-
-      setState(() {});
     }
 
-    handleHiddenPost() async {
-      dynamic response =
-          await PostApi().updatePost(widget.post['id'], {"hidden": true});
-
-      ref
-          .read(postControllerProvider.notifier)
-          .actionHiddenDeletePost(widget.type, widget.post);
-
-      if (response != null && mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Ẩn bài viết thành công")));
-      }
-    }
-
-    handleVisibilityPost(data) async {
+    handleUpdatePost(data) async {
       dynamic response = await PostApi().updatePost(widget.post['id'], data);
 
       ref
@@ -195,8 +166,8 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
 
       if (response != null && mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Cập nhật quyền riêng tư thành công")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Cập nhật thành công")));
       }
     }
 
@@ -233,26 +204,16 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
               builder: (context) => CreateModalBaseMenu(
                     title: "Bình luận về bài viết này",
                     body: PagePermissionComment(
-                        commentModeration: commentModeration,
+                        commentModeration: widget.post['comment_moderation'],
                         handleUpdate: (newValue) {
-                          setState(() {
-                            commentModeration = newValue;
-                          });
+                          handleUpdatePost({"comment_moderation": newValue});
                         }),
-                    buttonAppbar: TextAction(
-                      title: "Xong",
-                      fontSize: 17,
-                      action: () {
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop();
-                      },
-                    ),
+                    buttonAppbar: const SizedBox(),
                   )),
         );
       } else if (["hidden_post", "delete_post"].contains(key)) {
         if (key == "hidden_post") {
-          handleHiddenPost();
+          handleUpdatePost({"hidden": true});
         } else {
           Navigator.pop(context);
           showAlertDialog(context);
@@ -278,11 +239,16 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
                     body: PageVisibility(
                       visibility: visibility,
                       handleUpdate: (newVisibility) {
-                        handleVisibilityPost(
-                            {'visibility': newVisibility["key"]});
+                        handleUpdatePost({'visibility': newVisibility["key"]});
                       },
                     ),
                     buttonAppbar: const SizedBox())));
+      } else if (key == "edit_post") {
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreateNewFeed(post: widget.post)));
       }
     }
 

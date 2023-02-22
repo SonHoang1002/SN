@@ -36,7 +36,8 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/map_widget_item.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
-  const CreateNewFeed({Key? key}) : super(key: key);
+  final dynamic post;
+  const CreateNewFeed({Key? key, this.post}) : super(key: key);
 
   @override
   ConsumerState<CreateNewFeed> createState() => _CreateNewFeedState();
@@ -50,7 +51,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   String gifLink = '';
 
   dynamic menuSelected;
-  dynamic visibility;
+  dynamic visibility = typeVisibility[0];
   dynamic backgroundSelected;
   dynamic statusActivity;
   dynamic statusQuestion;
@@ -62,9 +63,18 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      visibility = typeVisibility[0];
-    });
+    if (mounted && widget.post != null) {
+      setState(() {
+        content = widget.post['content'];
+        gifLink = widget.post['card']?['link'] ?? '';
+        backgroundSelected = widget.post['status_background'];
+        visibility = typeVisibility.firstWhere(
+            (element) => element['key'] == widget.post['visibility']);
+        lifeEvent = widget.post['life_event'];
+        statusQuestion =
+            widget.post['status_question'] ?? widget.post['status_target'];
+      });
+    }
   }
 
   functionConvertFile(file) async {
@@ -310,7 +320,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const BackIconAppbar(),
-                  const AppBarTitle(title: "Tạo bài viết"),
+                  AppBarTitle(
+                      title: widget.post != null
+                          ? "Chỉnh sửa bài viết"
+                          : "Tạo bài viết"),
                   ButtonPrimary(
                     label: "Đăng",
                     handlePress:
@@ -324,6 +337,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
               child: Column(
                 children: [
                   CreateFeedStatus(
+                      content: content,
                       checkin: checkin,
                       friendSelected: friendSelected,
                       statusActivity: statusActivity,

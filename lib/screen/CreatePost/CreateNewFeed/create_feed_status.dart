@@ -8,6 +8,7 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import "package:collection/collection.dart";
 
 class CreateFeedStatus extends StatefulWidget {
+  final String? content;
   final bool isShowBackground;
   final dynamic checkin;
   final dynamic visibility;
@@ -24,7 +25,8 @@ class CreateFeedStatus extends StatefulWidget {
       required this.isShowBackground,
       this.statusActivity,
       required this.friendSelected,
-      this.checkin})
+      this.checkin,
+      this.content})
       : super(key: key);
 
   @override
@@ -38,6 +40,10 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
   @override
   void initState() {
     if (!mounted) return;
+
+    if (widget.content!.trim().isNotEmpty) {
+      controller.text = widget.content ?? '';
+    }
     super.initState();
   }
 
