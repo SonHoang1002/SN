@@ -1,19 +1,64 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
-import '../../../widget/GeneralWidget/text_content_widget.dart';
 import 'begin_join_login_page.dart';
 import 'main_login_page.dart';
 
 // ignore: must_be_immutable
-class OnboardingLoginPage extends StatelessWidget {
+class OnboardingLoginPage extends StatefulWidget {
+  const OnboardingLoginPage({super.key});
+
+  @override
+  State<OnboardingLoginPage> createState() => _OnboardingLoginPageState();
+}
+
+class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
   late double width = 0;
   late double height = 0;
+  List dataLogin = [];
 
-  OnboardingLoginPage({super.key});
+  @override
+  void initState() {
+    super.initState();
+
+    if (mounted) {
+      fetchDataLogin();
+    }
+  }
+
+  fetchDataLogin() async {
+    var newList = await SecureStorage().getKeyStorage('dataLogin');
+
+    if (newList != null && newList != 'noData') {
+      setState(() {
+        dataLogin = jsonDecode(newList) ?? [];
+      });
+    }
+  }
+
+  void completeLogin() {
+    Navigator.pushReplacement<void, void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => const Home(),
+      ),
+    );
+  }
+
+  handleLogin(token) async {
+    await SecureStorage().saveKeyStorage(token, 'token');
+    completeLogin();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -57,27 +102,46 @@ class OnboardingLoginPage extends StatelessWidget {
                         )
                       ]),
                   Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 100,
-                          width: 100,
-                          margin: const EdgeInsets.only(bottom: 5),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            // borderRadius: BorderRadius.all(Radius.circular(20))
-                          ),
-                          child: Image.asset(
-                              "${LoginConstants.PATH_IMG}avatar_img.png"),
-                        ),
-                        buildTextContent(
-                            OnboardingLoginConstants.ONBOARDING_LOGIN_USERNAME,
-                            true,
-                            fontSize: 16,
-                            colorWord: Colors.black,
-                            isCenterLeft: false)
-                      ],
-                    ),
+                    child: Wrap(
+                        children: List.generate(
+                            dataLogin.length,
+                            (index) => GestureDetector(
+                                  onTap: () {
+                                    handleLogin(dataLogin[index]['token']);
+                                  },
+                                  child: Column(children: [
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      margin: const EdgeInsets.only(
+                                          bottom: 5, right: 5, left: 5),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          border: Border.all(
+                                              width: 0.2, color: greyColor)),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: ImageCacheRender(
+                                          path: dataLogin[index]['show_url'] ??
+                                              linkAvatarDefault,
+                                          width: 99.8,
+                                          height: 99.8,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        width: 100,
+                                        child: Text(
+                                          dataLogin[index]['name'],
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500),
+                                        ))
+                                  ]),
+                                ))),
                   ),
                   Center(
                     child: Column(

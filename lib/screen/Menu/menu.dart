@@ -61,7 +61,7 @@ class _MenuState extends State<Menu> {
       await SecureStorage().deleteKeyStorage("token");
       await SecureStorage().deleteKeyStorage("userId");
       if (mounted) {
-        pushToNextScreen(context, OnboardingLoginPage());
+        pushAndReplaceToNextScreen(context, const OnboardingLoginPage());
       }
     }
 

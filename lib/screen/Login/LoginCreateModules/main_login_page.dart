@@ -164,7 +164,8 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                           bottomLeft: Radius.circular(18),
                           bottomRight: Radius.circular(18))),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 5, top: 3),
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 5, bottom: 5),
                     child: Stack(
                         alignment: const Alignment(1.0, 1.0),
                         children: <Widget>[

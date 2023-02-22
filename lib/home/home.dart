@@ -34,9 +34,8 @@ class _HomeState extends ConsumerState<Home>
   void initState() {
     if (!mounted) return;
     Future.delayed(Duration.zero, () {
-      if (ref.read(meControllerProvider).isEmpty) {
-        ref.read(meControllerProvider.notifier).getMeData();
-      }
+      ref.read(meControllerProvider.notifier).getMeData();
+      setState(() {});
     });
     super.initState();
   }
