@@ -4,19 +4,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/update_product_module/combine_update_market_place.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
+import 'update_market_place.dart';
 import 'notification_market_page.dart';
 
 class ManageProductMarketPage extends ConsumerStatefulWidget {
+  const ManageProductMarketPage({super.key});
+
   @override
   ConsumerState<ManageProductMarketPage> createState() =>
       _ManageProductMarketPageState();
@@ -69,27 +70,23 @@ class _ManageProductMarketPageState
         body: Column(
           children: [
             Expanded(
-              child: Container(
-                // padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: ListView(
-                  children: [
-                    buildTextContent(
-                        "Chỉ người bán mới thấy được cái này", true,
-                        fontSize: 20, colorWord: red, isCenterLeft: false),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: SingleChildScrollView(
-                        child: Column(
-                            children: List.generate(
-                          _productList!.length,
-                          (index) {
-                            return _buildManageComponent(_productList![index]);
-                          },
-                        ).toList()),
-                      ),
-                    )
-                  ],
-                ),
+              child: ListView(
+                children: [
+                  buildTextContent("Chỉ người bán mới thấy được cái này", true,
+                      fontSize: 20, colorWord: red, isCenterLeft: false),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: SingleChildScrollView(
+                      child: Column(
+                          children: List.generate(
+                        _productList!.length,
+                        (index) {
+                          return _buildManageComponent(_productList![index]);
+                        },
+                      ).toList()),
+                    ),
+                  )
+                ],
               ),
             ),
             //
@@ -157,7 +154,7 @@ class _ManageProductMarketPageState
                                   popToPreviousScreen(context);
                                   pushToNextScreen(
                                       context,
-                                      CombineUpdateMarketPage(
+                                      UpdateMarketPage(
                                           // data:data
                                           ));
                                 },

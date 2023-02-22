@@ -20,6 +20,8 @@ import '../../../../widget/back_icon_appbar.dart';
 import '../../../helper/push_to_new_screen.dart';
 
 class InterestProductMarketPage extends ConsumerStatefulWidget {
+  const InterestProductMarketPage({super.key});
+
   @override
   ConsumerState<InterestProductMarketPage> createState() =>
       _InterestProductMarketPageState();
@@ -63,7 +65,6 @@ class _InterestProductMarketPageState
               Icon(
                 FontAwesomeIcons.bell,
                 size: 18,
-                // color: Colors.black,
               )
             ],
           ),
@@ -88,17 +89,16 @@ class _InterestProductMarketPageState
                       ),
               ),
             ),
-            //
           ],
         ));
   }
 
-  _initData() {
+  void _initData() {
     _interestProductList = ref.watch(interestProductsProvider).listInterest;
     setState(() {});
   }
 
-  _initConcernList() {
+  void _initConcernList() {
     if (_interestProductList!.isNotEmpty) {
       if (_concernList == null) {
         _concernList = _interestProductList!.map(
@@ -113,7 +113,7 @@ class _InterestProductMarketPageState
     }
   }
 
-  _buildInterestComponent(Map<String, dynamic> data, int index) {
+  Widget _buildInterestComponent(Map<String, dynamic> data, int index) {
     return InkWell(
       onTap: () {
         pushToNextScreen(context, DetailProductMarketPage(id: data["id"]));
@@ -150,7 +150,6 @@ class _InterestProductMarketPageState
               ],
               preffixFlexValue: 5,
               prefixWidget: Container(
-                // width: 150,
                 margin: const EdgeInsets.only(right: 10),
                 child: ImageCacheRender(
                   height: 100.0,
@@ -222,12 +221,11 @@ class _InterestProductMarketPageState
                                         suffixFlexValue: 1,
                                         suffixWidget:
                                             data[index]["title"] == "Chia sẻ"
-                                                ? Container(
+                                                ? const SizedBox(
                                                     height: 25,
                                                     // width: 25,
-                                                    child: const Icon(
-                                                        FontAwesomeIcons
-                                                            .chevronRight),
+                                                    child: Icon(FontAwesomeIcons
+                                                        .chevronRight),
                                                   )
                                                 : null,
                                         changeBackground: transparent,
@@ -287,11 +285,11 @@ class _InterestProductMarketPageState
                                                                           [
                                                                           "title"] ==
                                                                       "Chia sẻ"
-                                                                  ? Container(
+                                                                  ? const SizedBox(
                                                                       height:
                                                                           25,
                                                                       // width: 25,
-                                                                      child: const Icon(
+                                                                      child: Icon(
                                                                           FontAwesomeIcons
                                                                               .chevronRight),
                                                                     )
@@ -374,13 +372,13 @@ class _InterestProductMarketPageState
     );
   }
 
-  _getMinximumPriceOfProduct(List<dynamic> product_variants) {
-    double min = product_variants[0]["price"];
-    product_variants.forEach((element) {
+  double _getMinximumPriceOfProduct(List<dynamic> productVariants) {
+    double min = productVariants[0]["price"];
+    for (var element in productVariants) {
       if (element["price"] < min) {
         min = element["price"];
       }
-    });
+    }
     return min;
   }
 }

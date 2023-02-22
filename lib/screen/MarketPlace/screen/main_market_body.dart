@@ -25,6 +25,8 @@ import '../widgets/product_item_widget.dart';
 import 'filter_categories_market_page.dart';
 
 class MainMarketBody extends ConsumerStatefulWidget {
+  const MainMarketBody({super.key});
+
   @override
   ConsumerState<MainMarketBody> createState() => _MainMarketBodyState();
 }
@@ -145,7 +147,6 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                             // childAspectRatio: 0.79),
                             childAspectRatio: 1.1),
                     itemCount: product_categories.length,
-                    // shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -378,12 +379,9 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
     setState(() {});
   }
 
-  getProductCategoriesName() {
+  void getProductCategoriesName() {
     if (product_categories.isEmpty) {
       List<dynamic> primaryProductCategories = [];
-      //  = all_data.map((e) {
-      //   return e["text"];
-      // }).toList();
       for (int i = 0; i < all_data.length; i++) {
         primaryProductCategories
             .add({"title": all_data[i]["text"], "icon": all_data[i]["icon"]});
@@ -395,7 +393,8 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
   }
 }
 
-_buildTitleAndSeeAll(String title, {Widget? suffixWidget, IconData? iconData}) {
+Widget _buildTitleAndSeeAll(String title,
+    {Widget? suffixWidget, IconData? iconData}) {
   return Container(
     margin: const EdgeInsets.only(bottom: 10),
     child: Row(

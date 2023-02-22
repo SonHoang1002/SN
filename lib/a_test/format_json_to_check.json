@@ -1,282 +1,126 @@
 {
-    "id": "6",
-    "account_id": "109141807528358400",
-    "title": "Áo Polo Nam Coolmax Phối Bo Kẻ",
-    "description": "Áo Polo Nam Coolmax Phối Bo Kẻ",
-    "brand": "yody",
-    "visibility": "public",
-    "rating": 0.0,
-    "rating_count": null,
-    "sold": 0,
-    "followers_count": 0,
-    "created_at": "2022-12-22T16:48:43.774+07:00",
-    "updated_at": "2022-12-22T16:48:43.774+07:00",
-    "product_relationships": {
-        "follow_product": false,
-        "host_product": false
-    },
-    "product_image_attachments": [
-        {
-            "id": "10",
-            "product_id": "6",
-            "created_at": "2022-12-22T16:48:43.826+07:00",
-            "updated_at": "2022-12-22T16:48:43.826+07:00",
-            "attachment": {
-                "id": "109556681820365018",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/556/681/820/365/018/original/783c189871f56bbd.jpeg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/556/681/820/365/018/small/783c189871f56bbd.jpeg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
-        },
-        {
-            "id": "11",
-            "product_id": "6",
-            "created_at": "2022-12-22T16:48:43.833+07:00",
-            "updated_at": "2022-12-22T16:48:43.833+07:00",
-            "attachment": {
-                "id": "109556682767431759",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/556/682/767/431/759/original/016927c6dfee955e.jpeg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/556/682/767/431/759/small/016927c6dfee955e.jpeg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
-        },
-        {
-            "id": "12",
-            "product_id": "6",
-            "created_at": "2022-12-22T16:48:43.840+07:00",
-            "updated_at": "2022-12-22T16:48:43.840+07:00",
-            "attachment": {
-                "id": "109556683777384486",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/556/683/777/384/486/original/da3825369e933f69.jpeg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/556/683/777/384/486/small/da3825369e933f69.jpeg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
-        },
-        {
-            "id": "13",
-            "product_id": "6",
-            "created_at": "2022-12-22T16:48:43.846+07:00",
-            "updated_at": "2022-12-22T16:48:43.846+07:00",
-            "attachment": {
-                "id": "109556684976602119",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/556/684/976/602/119/original/27a1245566e6247c.jpeg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/556/684/976/602/119/small/27a1245566e6247c.jpeg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
-        },
-        {
-            "id": "14",
-            "product_id": "6",
-            "created_at": "2022-12-22T16:48:43.851+07:00",
-            "updated_at": "2022-12-22T16:48:43.851+07:00",
-            "attachment": {
-                "id": "109556685801574601",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/556/685/801/574/601/original/775efbcad783ee74.jpeg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/556/685/801/574/601/small/775efbcad783ee74.jpeg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
-        },
-        {
-            "id": "15",
-            "product_id": "6",
-            "created_at": "2022-12-22T16:48:43.856+07:00",
-            "updated_at": "2022-12-22T16:48:43.856+07:00",
-            "attachment": {
-                "id": "109556686427172067",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/556/686/427/172/067/original/56b7225343467b43.jpeg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/556/686/427/172/067/small/56b7225343467b43.jpeg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
-        }
+    "product_images": [
+        "109909345794602267",
+        "109909345794411150"
     ],
     "product_video": null,
-    "product_category": {
-        "id": 6,
-        "text": "Giày Dép",
-        "parent_category_id": null,
-        "created_at": "2022-12-29T18:20:05.642+07:00",
-        "updated_at": "2023-02-21T15:49:10.495+07:00",
-        "icon": "https://media.emso.vn/sn/Category%20MKP/GiayDepNu.png"
+    "product": {
+        "title": "coc dung axit sulfuric",
+        "description": "san phatm uojc ksdfh skjdk kjshdfkjd sdkjskdjf fhsdkfsd fskdjhfksjdfs dfjsfs dfkjsfkjdfsskd sdjfskdhf sdjkfhsd",
+        "product_category_id": null,
+        "brand": "Vải",
+        "visibility": "Công khai",
+        "page_id": null
     },
-    "page": {
-        "id": "108277159419223618",
-        "title": "Neymar khóc nức nở khi Brazil thua cay đắng trước Croatia",
-        "username": null,
-        "avatar_media": {
-            "id": "109505553808165992",
-            "type": "image",
-            "url": "https://snapi.emso.asia/system/media_attachments/files/109/505/553/808/165/992/original/5e4df482a83cef47.jpg",
-            "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/505/553/808/165/992/small/5e4df482a83cef47.jpg",
-            "remote_url": null,
-            "preview_remote_url": null,
-            "text_url": null,
-            "meta": {
-                "original": {
-                    "width": 740,
-                    "height": 442,
-                    "size": "740x442",
-                    "aspect": 1.6742081447963801,
-                    "average_color": "#554724"
-                },
-                "small": {
-                    "width": 517,
-                    "height": 309,
-                    "size": "517x309",
-                    "aspect": 1.6731391585760518,
-                    "average_color": "#544724"
-                }
-            },
-            "description": null,
-            "position": null,
-            "blurhash": "UPDv14xa0{I:D8j@xct7GWofwIoLx@ofj=oL",
-            "status_id": "109505553894345556",
-            "show_url": "https://snapi.emso.asia/system/media_attachments/files/109/505/554/227/779/726/original/d7723537b2c7b26e.jpeg",
-            "created_at": "2022-12-13T16:02:27.479+07:00",
-            "frame": null
-        }
-    },
-    "product_variants": [
+    "product_options_attributes": [
         {
-            "id": "22",
-            "product_id": 6,
-            "title": "Áo Polo Nam Coolmax Phối Bo Kẻ",
-            "price": 3000000000.0,
-            "compare_at_price": null,
-            "sku": "Coolmax4",
+            "name": "loai_1",
             "position": 1,
-            "option1": "Black",
-            "option2": "L",
-            "weight": 0.25,
-            "weight_unit": "Kg",
-            "inventory_quantity": 100,
-            "old_inventory_quantity": 100,
-            "requires_shipping": true,
-            "created_at": "2022-12-22T16:48:43.819+07:00",
-            "updated_at": "2022-12-22T16:48:43.819+07:00",
-            "image": {
-                "id": "109555330906023084",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/small/bcb7c8d2f99b28f5.jpg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
+            "values": [
+                "xanh",
+                "do",
+                "tim"
+            ]
         },
         {
-            "id": "21",
-            "product_id": 6,
-            "title": "Áo Polo Nam Coolmax Phối Bo Kẻ",
-            "price": 3000000000.0,
-            "compare_at_price": null,
-            "sku": "Coolmax3",
-            "position": 1,
-            "option1": "Black",
-            "option2": "M",
-            "weight": 0.25,
-            "weight_unit": "Kg",
-            "inventory_quantity": 100,
-            "old_inventory_quantity": 100,
-            "requires_shipping": true,
-            "created_at": "2022-12-22T16:48:43.812+07:00",
-            "updated_at": "2022-12-22T16:48:43.812+07:00",
-            "image": {
-                "id": "109555330906023084",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/small/bcb7c8d2f99b28f5.jpg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
-        },
-        {
-            "id": "20",
-            "product_id": 6,
-            "title": "Áo Polo Nam Coolmax Phối Bo Kẻ",
-            "price": 3000000000.0,
-            "compare_at_price": null,
-            "sku": "Coolmax2",
-            "position": 1,
-            "option1": "White",
-            "option2": "L",
-            "weight": 0.25,
-            "weight_unit": "Kg",
-            "inventory_quantity": 100,
-            "old_inventory_quantity": 100,
-            "requires_shipping": true,
-            "created_at": "2022-12-22T16:48:43.802+07:00",
-            "updated_at": "2022-12-22T16:48:43.802+07:00",
-            "image": {
-                "id": "109555330906023084",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/small/bcb7c8d2f99b28f5.jpg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
-        },
-        {
-            "id": "19",
-            "product_id": 6,
-            "title": "Áo Polo Nam Coolmax Phối Bo Kẻ",
-            "price": 20000000.0,
-            "compare_at_price": null,
-            "sku": "Coolmax1",
-            "position": 1,
-            "option1": "White",
-            "option2": "M",
-            "weight": 0.25,
-            "weight_unit": "Kg",
-            "inventory_quantity": 100,
-            "old_inventory_quantity": 100,
-            "requires_shipping": true,
-            "created_at": "2022-12-22T16:48:43.794+07:00",
-            "updated_at": "2022-12-22T16:48:43.794+07:00",
-            "image": {
-                "id": "109555330906023084",
-                "type": "image",
-                "url": "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/original/bcb7c8d2f99b28f5.jpg",
-                "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/555/330/906/023/084/small/bcb7c8d2f99b28f5.jpg",
-                "remote_url": null,
-                "preview_remote_url": null
-            }
+            "name": "loai_2",
+            "position": 2,
+            "values": [
+                "S",
+                "A"
+            ]
         }
     ],
-    "product_options": [
+    "product_variants_attributes": [
         {
-            "id": "10",
-            "product_id": "6",
-            "name": "Color",
-            "position": "1",
-            "values": [
-                "White",
-                "Black"
-            ],
-            "created_at": "2022-12-22T16:48:43.782+07:00",
-            "updated_at": "2022-12-22T16:48:43.782+07:00"
+            "title": "coc dung axit sulfuric - xanh - S",
+            "price": "123456",
+            "sku": "ma123",
+            "position": 2,
+            "compare_at_price": null,
+            "option1": "xanh",
+            "option2": "S",
+            "image_id": "109909345960417250",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 100,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
         },
         {
-            "id": "11",
-            "product_id": "6",
-            "name": "Size",
-            "position": "1",
-            "values": [
-                "M",
-                "L"
-            ],
-            "created_at": "2022-12-22T16:48:43.788+07:00",
-            "updated_at": "2022-12-22T16:48:43.788+07:00"
+            "title": "coc dung axit sulfuric - xanh - A",
+            "price": "123456",
+            "sku": "ma123",
+            "position": 2,
+            "compare_at_price": null,
+            "option1": "xanh",
+            "option2": "A",
+            "image_id": "109909345960417250",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 100,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+        },
+        {
+            "title": "coc dung axit sulfuric - do - S",
+            "price": "123456",
+            "sku": "ma123",
+            "position": 2,
+            "compare_at_price": null,
+            "option1": "do",
+            "option2": "S",
+            "image_id": "109909345992352781",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 100,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+        },
+        {
+            "title": "coc dung axit sulfuric - do - A",
+            "price": "123456",
+            "sku": "ma123",
+            "position": 2,
+            "compare_at_price": null,
+            "option1": "do",
+            "option2": "A",
+            "image_id": "109909345992352781",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 100,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+        },
+        {
+            "title": "coc dung axit sulfuric - tim - S",
+            "price": "123456",
+            "sku": "ma123",
+            "position": 2,
+            "compare_at_price": null,
+            "option1": "tim",
+            "option2": "S",
+            "image_id": "109909345996174012",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 100,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+        },
+        {
+            "title": "coc dung axit sulfuric - tim - A",
+            "price": "123456",
+            "sku": "ma123",
+            "position": 2,
+            "compare_at_price": null,
+            "option1": "tim",
+            "option2": "A",
+            "image_id": "109909345996174012",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 100,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
         }
     ]
 }

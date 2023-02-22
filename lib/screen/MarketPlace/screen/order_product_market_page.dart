@@ -7,7 +7,6 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dar
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
@@ -15,6 +14,8 @@ import '../../../helper/push_to_new_screen.dart';
 import 'notification_market_page.dart';
 
 class OrderProductMarketPage extends StatefulWidget {
+  const OrderProductMarketPage({super.key});
+
   @override
   State<OrderProductMarketPage> createState() => _OrderProductMarketPageState();
 }
@@ -35,7 +36,7 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
     height = size.height;
 
     return DefaultTabController(
-      length: 7, // Added
+      length: 7, 
       initialIndex: 0,
       child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -165,104 +166,101 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
           ),
         ),
         buildDivider(color: red),
-        Container(
-          // height: 225,
-          child: Column(
-            children: List.generate(
-              length,
-              (index) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.shop,
-                                size: 20,
-                              ),
-                              buildSpacer(width: 10),
-                              buildTextContent(
-                                  "Real Madrid C.F. Việt Nam", false,
-                                  fontSize: 14),
-                            ],
-                          ),
-                          const SizedBox()
-                        ],
+        Column(
+          children: List.generate(
+            length,
+            (index) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              FontAwesomeIcons.shop,
+                              size: 20,
+                            ),
+                            buildSpacer(width: 10),
+                            buildTextContent(
+                                "Real Madrid C.F. Việt Nam", false,
+                                fontSize: 14),
+                          ],
+                        ),
+                        const SizedBox()
+                      ],
+                    ),
+                  ),
+                  buildDivider(color: red),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: GeneralComponent(
+                      [
+                        buildTextContent(
+                            "Real Madrid C.F. Việt Nam Real Madriddfgdfg  C.F. Việt Nam Real Madriddg  dfg   C.F. Việt Nam",
+                            false,
+                            fontSize: 18),
+                        buildSpacer(height: 10),
+                      ],
+                      preffixFlexValue: 6,
+                      prefixWidget: const Padding(
+                        padding: EdgeInsets.only(right: 10.0),
+                        child: ImageCacheRender(
+                          height: 100.0,
+                          path:
+                              "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
+                        ),
                       ),
+                      suffixFlexValue: 10,
+                      changeBackground: transparent,
+                      padding: EdgeInsets.zero,
                     ),
-                    buildDivider(color: red),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: GeneralComponent(
-                        [
-                          buildTextContent(
-                              "Real Madrid C.F. Việt Nam Real Madriddfgdfg  C.F. Việt Nam Real Madriddg  dfg   C.F. Việt Nam",
-                              false,
-                              fontSize: 18),
-                          buildSpacer(height: 10),
-                        ],
-                        preffixFlexValue: 6,
-                        prefixWidget: const Padding(
-                          padding: EdgeInsets.only(right: 10.0),
-                          child: ImageCacheRender(
-                            height: 100.0,
-                            path:
-                                "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
-                          ),
-                        ),
-                        suffixFlexValue: 10,
-                        changeBackground: transparent,
-                        padding: EdgeInsets.zero,
+                  ),
+                  buildSpacer(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buildTextContent("Phân loại hạng: ", false,
+                          fontSize: 13, colorWord: greyColor),
+                      buildTextContent(
+                        "White",
+                        false,
+                        fontSize: 16,
                       ),
-                    ),
-                    buildSpacer(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildTextContent("Phân loại hạng: ", false,
-                            fontSize: 13, colorWord: greyColor),
-                        buildTextContent(
-                          "White",
-                          false,
-                          fontSize: 16,
-                        ),
-                      ],
-                    ),
-                    buildSpacer(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildTextContent("Số lượng: ", false,
-                            fontSize: 13, colorWord: greyColor),
-                        buildTextContent(
-                          "30",
-                          false,
-                          fontSize: 16,
-                        ),
-                      ],
-                    ),
-                    buildSpacer(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildTextContent("Đơn giá: ", false,
-                            fontSize: 13, colorWord: greyColor),
-                        buildTextContent(
-                          "500000₫",
-                          false,
-                          fontSize: 16,
-                        ),
-                      ],
-                    ),
-                    index == length - 1 ? const SizedBox() : buildDivider(color: red),
-                  ],
-                );
-              },
-            ),
+                    ],
+                  ),
+                  buildSpacer(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buildTextContent("Số lượng: ", false,
+                          fontSize: 13, colorWord: greyColor),
+                      buildTextContent(
+                        "30",
+                        false,
+                        fontSize: 16,
+                      ),
+                    ],
+                  ),
+                  buildSpacer(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buildTextContent("Đơn giá: ", false,
+                          fontSize: 13, colorWord: greyColor),
+                      buildTextContent(
+                        "500000₫",
+                        false,
+                        fontSize: 16,
+                      ),
+                    ],
+                  ),
+                  index == length - 1 ? const SizedBox() : buildDivider(color: red),
+                ],
+              );
+            },
           ),
         ),
         buildDivider(color: red),
@@ -289,90 +287,85 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
                       height * 0.75,
                       "Chi tiết đơn hàng",
                       iconData: FontAwesomeIcons.chevronLeft,
-                      widget: Container(
-                        child: Column(children: [
-                          _buildBetweenContent("Người nhận", "Nguyen Văn A"),
-                          _buildBetweenContent("Số điện thoại", "0346311359"),
-                          _buildBetweenContent("Địa chỉ nhận hàng",
-                              "180 Hoàng Mai, Hai Bà Trưng,dfd dfg sdfsdf rr ư qwq qư qe qư Hà Nội 180 Hoàng Mai, Hai Bà Trưng, Hà Nội"),
-                          _buildBetweenContent(
-                              "Thông tin vận chuyển", "Kiện hàng 1"),
-                          buildSpacer(height: 5),
-                          buildDivider(color: red),
-                          // thong tin thanh toán
-                          buildTextContent("Thông tin thanh toán", true,
-                              fontSize: 22, isCenterLeft: false),
-                          Container(
-                            // height: 320,
-                            child: ListView(shrinkWrap: true, children: [
-                              SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(columns: const [
-                                  DataColumn(
-                                      label: Text('STT',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  DataColumn(
-                                      label: Text('Sản phẩm',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  DataColumn(
-                                      label: Text('Đơn giá',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  DataColumn(
-                                      label: Text('Số lượng',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  DataColumn(
-                                      label: Text('Thành tiền',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                ], rows: const [
-                                  DataRow(cells: [
-                                    DataCell(Text("1")),
-                                    DataCell(Text(
-                                        "Real Madrid C.F. Việt Nam Real Madriddfgdfg  C.F. Việt Nam Real Madriddg  dfg   C.F. Việt Nam")),
-                                    DataCell(Text("20000")),
-                                    DataCell(Text("100")),
-                                    DataCell(Text("120000")),
-                                  ]),
-                                  DataRow(cells: [
-                                    DataCell(Text("2")),
-                                    DataCell(Text(
-                                        "Đồng Hồ Chế Tác Kim Cương Rolex Yacht Master Black Dial, 42mm")),
-                                    DataCell(Text("20000")),
-                                    DataCell(Text("100")),
-                                    DataCell(Text("120000")),
-                                  ]),
-                                ]),
-                              ),
+                      widget: Column(children: [
+                        _buildBetweenContent("Người nhận", "Nguyen Văn A"),
+                        _buildBetweenContent("Số điện thoại", "0346311359"),
+                        _buildBetweenContent("Địa chỉ nhận hàng",
+                            "180 Hoàng Mai, Hai Bà Trưng,dfd dfg sdfsdf rr ư qwq qư qe qư Hà Nội 180 Hoàng Mai, Hai Bà Trưng, Hà Nội"),
+                        _buildBetweenContent(
+                            "Thông tin vận chuyển", "Kiện hàng 1"),
+                        buildSpacer(height: 5),
+                        buildDivider(color: red),
+                        // thong tin thanh toán
+                        buildTextContent("Thông tin thanh toán", true,
+                            fontSize: 22, isCenterLeft: false),
+                        ListView(shrinkWrap: true, children: [
+                          SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(columns: const [
+                              DataColumn(
+                                  label: Text('STT',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))),
+                              DataColumn(
+                                  label: Text('Sản phẩm',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))),
+                              DataColumn(
+                                  label: Text('Đơn giá',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))),
+                              DataColumn(
+                                  label: Text('Số lượng',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))),
+                              DataColumn(
+                                  label: Text('Thành tiền',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))),
+                            ], rows: const [
+                              DataRow(cells: [
+                                DataCell(Text("1")),
+                                DataCell(Text(
+                                    "Real Madrid C.F. Việt Nam Real Madriddfgdfg  C.F. Việt Nam Real Madriddg  dfg   C.F. Việt Nam")),
+                                DataCell(Text("20000")),
+                                DataCell(Text("100")),
+                                DataCell(Text("120000")),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text("2")),
+                                DataCell(Text(
+                                    "Đồng Hồ Chế Tác Kim Cương Rolex Yacht Master Black Dial, 42mm")),
+                                DataCell(Text("20000")),
+                                DataCell(Text("100")),
+                                DataCell(Text("120000")),
+                              ]),
                             ]),
                           ),
-                          _buildBetweenContent("Tổng tiền sản phẩm", "3000000"),
-                          _buildBetweenContent("Phí vận chuyển", "1240000"),
-                          _buildBetweenContent(
-                              "Doanh thu đơn hàng", "480854584",
-                              titleBold: true, colorTitle: blackColor),
-                          buildSpacer(height: 5),
-                          buildDivider(color: red),
-                          // thanh toan của người mua
-                          buildTextContent("Thanh toán của người mua", true,
-                              fontSize: 22, isCenterLeft: false),
-                          buildSpacer(height: 10),
-                          _buildBetweenContent("Tổng tiền sản phẩm", "3000000"),
-                          _buildBetweenContent("Phí vận chuyển", "1240000"),
-                          _buildBetweenContent(
-                              "Tổng tiền thanh toán", "480854584",
-                              titleBold: true, colorTitle: blackColor),
                         ]),
-                      ));
+                        _buildBetweenContent("Tổng tiền sản phẩm", "3000000"),
+                        _buildBetweenContent("Phí vận chuyển", "1240000"),
+                        _buildBetweenContent(
+                            "Doanh thu đơn hàng", "480854584",
+                            titleBold: true, colorTitle: blackColor),
+                        buildSpacer(height: 5),
+                        buildDivider(color: red),
+                        // thanh toan của người mua
+                        buildTextContent("Thanh toán của người mua", true,
+                            fontSize: 22, isCenterLeft: false),
+                        buildSpacer(height: 10),
+                        _buildBetweenContent("Tổng tiền sản phẩm", "3000000"),
+                        _buildBetweenContent("Phí vận chuyển", "1240000"),
+                        _buildBetweenContent(
+                            "Tổng tiền thanh toán", "480854584",
+                            titleBold: true, colorTitle: blackColor),
+                      ]));
                 }),
             buildButtonForMarketWidget(
                 width: width,

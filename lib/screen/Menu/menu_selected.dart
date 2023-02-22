@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/demo_cart/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_market_page.dart';
 
 import '../../helper/push_to_new_screen.dart';

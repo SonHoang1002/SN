@@ -14,6 +14,8 @@ import '../../../helper/push_to_new_screen.dart';
 import 'notification_market_page.dart';
 
 class ManageOrderMarketPage extends StatefulWidget {
+  const ManageOrderMarketPage({super.key});
+
   @override
   State<ManageOrderMarketPage> createState() => _ManageOrderMarketPageState();
 }
@@ -40,10 +42,10 @@ class _ManageOrderMarketPageState extends State<ManageOrderMarketPage> {
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children:  [
+            children: [
               const BackIconAppbar(),
               const AppBarTitle(title: "Quản lý đơn hàng"),
-               GestureDetector(
+              GestureDetector(
                 onTap: () {
                   pushToNextScreen(context, NotificationMarketPage());
                 },
@@ -59,11 +61,8 @@ class _ManageOrderMarketPageState extends State<ManageOrderMarketPage> {
         body: Column(
           children: [
             Expanded(
-              child: Container(
-                // padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: ListView(
-                  children: [_buildManageOrderComponent()],
-                ),
+              child: ListView(
+                children: [_buildManageOrderComponent()],
               ),
             ),
             //
@@ -73,35 +72,39 @@ class _ManageOrderMarketPageState extends State<ManageOrderMarketPage> {
 }
 
 Widget _buildManageOrderComponent() {
-  return Container(
-    // height: 320,
+  return SingleChildScrollView(
     child: SingleChildScrollView(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
+      physics: const BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
           showBottomBorder: true,
-          columns: [
-          const DataColumn(
-              label: Text('Sản phẩm',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-          const DataColumn(
-              label: Text('Số lượng',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-          const DataColumn(
-              label: Text('Tổng đơn hàng',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-          const DataColumn(
-              label: Text('Trạng thái',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-          const DataColumn(
-              label: Text('Đơn vị vận chuyển',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-          const DataColumn(
-              label: Text('Thành tiền',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-        ], rows: _buildDataRow()),
-      ),
+          columns: const [
+            DataColumn(
+                label: Text('Sản phẩm',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text('Số lượng',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text('Tổng đơn hàng',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text('Trạng thái',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text('Đơn vị vận chuyển',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text('Thành tiền',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+          ],
+          rows: _buildDataRow()),
     ),
   );
 }

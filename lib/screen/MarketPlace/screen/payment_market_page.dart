@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
-
 import '../../../helper/push_to_new_screen.dart';
 import '../../../widget/back_icon_appbar.dart';
 
@@ -14,7 +13,6 @@ class PaymentMarketPage extends StatefulWidget {
 class _PaymentMarketPageState extends State<PaymentMarketPage> {
   late double width = 0;
   late double height = 0;
-  final bool _isOpenProductOfYou = false;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

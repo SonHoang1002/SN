@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
-
-import '../../../../constant/marketPlace_constants.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
 import '../widgets/product_item_widget.dart';
 
 class SeeMoreMarketPage extends ConsumerStatefulWidget {
+  const SeeMoreMarketPage({super.key});
+
   @override
   ConsumerState<SeeMoreMarketPage> createState() => _SeeMoreMarketPageState();
 }
@@ -39,10 +39,10 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const BackIconAppbar(),
-            const AppBarTitle(title: "Danh sách sản phẩm"),
-            const Icon(
+          children: const [
+            BackIconAppbar(),
+            AppBarTitle(title: "Danh sách sản phẩm"),
+            Icon(
               FontAwesomeIcons.bell,
               size: 18,
               color: Colors.black,
@@ -61,7 +61,7 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
                   SingleChildScrollView(
                     child: GridView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisSpacing: 4,

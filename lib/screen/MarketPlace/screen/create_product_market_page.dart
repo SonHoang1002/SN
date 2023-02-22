@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -12,8 +13,6 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/create_product_module/sale_information_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
@@ -24,9 +23,10 @@ import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
-import '../update_product_module/update_information_market_page.dart';
 
 class CreateProductMarketPage extends ConsumerStatefulWidget {
+  const CreateProductMarketPage({super.key});
+
   @override
   ConsumerState<CreateProductMarketPage> createState() =>
       _CreateProductMarketPageState();
@@ -39,15 +39,16 @@ class _CreateProductMarketPageState
   String _category = "";
   String _branch = "";
   String _private = "";
-  List<File> _imgFiles = [];
+  final List<File> _imgFiles = [];
   final Map<String, bool> _validatorSelectionList = {
     "category": true,
     "branch": true,
     "private": true,
     "image": true
   };
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _nameController = TextEditingController(text: "jgh");
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController =
+      TextEditingController(text: "jgh");
   final TextEditingController _descriptionController =
       TextEditingController(text: "jhjh");
   final TextEditingController _branchController =
@@ -58,15 +59,36 @@ class _CreateProductMarketPageState
       TextEditingController(text: "");
   final TextEditingController _skuController = TextEditingController(text: "");
 
-  //
-  final List<TextEditingController> _categoryControllers = [
-    TextEditingController(text: "")
-  ];
   late Map<String, dynamic> newData;
   bool _isLoading = false;
-  List<dynamic>? _parentCategoriesList;
   List<dynamic>? _childCategoriesList;
   List<dynamic> productcategoriesData = [];
+
+  /// new
+  final Map<String, dynamic> _categoryData = {
+    "loai_1": {
+      "name": TextEditingController(text: "loai_1"),
+      "values": [
+        TextEditingController(text: "xanh"),
+      ],
+      "images": [""],
+      "contents": {
+        "price": [
+          TextEditingController(text: "1"),
+        ],
+        "repository": [
+          TextEditingController(text: "1"),
+        ],
+        "sku": [
+          TextEditingController(text: "s"),
+        ],
+      },
+    },
+  };
+
+  ///
+  ///
+  ///
   @override
   void initState() {
     if (!mounted) {
@@ -97,7 +119,6 @@ class _CreateProductMarketPageState
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    // _buildParentCategoriesList();
     productcategoriesData = ref.watch(productCategoriesProvider).list;
     return Scaffold(
         resizeToAvoidBottomInset: true,
@@ -182,8 +203,6 @@ class _CreateProductMarketPageState
                               CreateProductMarketConstants
                                   .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE,
                               "Chọn quyền riêng tư",
-                              // dataList: CreateProductMarketConstants
-                              //     .CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS
                             )
                           ]),
                         ),
@@ -196,13 +215,13 @@ class _CreateProductMarketPageState
                               width: width * 0.9,
                               // color: red,
                               margin: const EdgeInsets.only(top: 10),
-                              decoration: _imgFiles.length == 0
+                              decoration: _imgFiles.isEmpty
                                   ? BoxDecoration(
                                       border: Border.all(
                                           color: greyColor, width: 0.4),
                                       borderRadius: BorderRadius.circular(7))
                                   : null,
-                              child: _imgFiles.length == 0
+                              child: _imgFiles.isEmpty
                                   ? _buildIconAndAddImageText()
                                   : SingleChildScrollView(
                                       physics: const BouncingScrollPhysics(),
@@ -216,14 +235,9 @@ class _CreateProductMarketPageState
                                                 right: 10),
                                             height: 100,
                                             width: 80,
-                                            // decoration: BoxDecoration(
-                                            //     border: Border.all(
-                                            //         color: greyColor, width: 0.4),
-                                            //     borderRadius:
-                                            //         BorderRadius.circular(7)),
                                             child: Stack(
                                               children: [
-                                                Container(
+                                                SizedBox(
                                                   height: 100,
                                                   width: 80,
                                                   child: ClipRRect(
@@ -310,56 +324,15 @@ class _CreateProductMarketPageState
                                 child: _buildWarningForSelections(
                                     "Chọn ảnh để tiếp tục"),
                               ),
-                        // sales information
+                        //
+                        // thong tin chi tiet
                         buildDivider(color: red),
                         buildSpacer(height: 10),
                         buildTextContent("Thông tin bán hàng", true,
                             isCenterLeft: false),
-                        // classify category
-                        buildSpacer(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            buildTextContent("Phân loại hàng", true,
-                                fontSize: 16),
-                            buildTextContent(
-                                Random().nextInt(1) == 0
-                                    ? "Xem chi tiết"
-                                    : "Thêm nhóm phân loại",
-                                false,
-                                fontSize: 16,
-                                iconData: FontAwesomeIcons.add, function: () {
-                              pushToNextScreen(
-                                  context, SaleInformationMarketPage());
-                            })
-                          ],
-                        ),
                         buildSpacer(height: 10),
-                        (ref
-                                        .watch(newProductDataProvider)
-                                        .data["product_options_attributes"] ==
-                                    null ||
-                                ref
-                                    .watch(newProductDataProvider)
-                                    .data["product_options_attributes"]
-                                    .isEmpty)
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Column(
-                                  children: [
-                                    _buildInput(_priceController, width,
-                                        "Nhập giá sản phẩm",
-                                        keyboardType: TextInputType.number),
-                                    _buildInput(_repositoryController, width,
-                                        "Nhập tên kho hàng"),
-                                    _buildInput(_skuController, width,
-                                        "Nhập mã sản phẩm"),
-                                  ],
-                                ),
-                              )
-                            : const SizedBox(),
-                        // CircularProgressIndicator()
+                        // main detail information
+                        _buildContentForClassifyCategoryContents()
                       ]),
                     ),
                     // add to cart and buy now
@@ -381,7 +354,6 @@ class _CreateProductMarketPageState
                                   validateForCreateProduct();
                                 }),
                           ),
-                          
                         ],
                       ),
                     ),
@@ -389,11 +361,11 @@ class _CreateProductMarketPageState
                 ),
               ),
               _isLoading
-                  ? Center(
-                      child: Container(
+                  ? const Center(
+                      child: SizedBox(
                         width: 70,
                         height: 70,
-                        child: const CircularProgressIndicator(
+                        child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                           strokeWidth: 3,
                         ),
@@ -415,7 +387,7 @@ class _CreateProductMarketPageState
     if (_private == "") {
       _validatorSelectionList["private"] = false;
     }
-    if (_imgFiles.length == 0) {
+    if (_imgFiles.isEmpty) {
       _validatorSelectionList["image"] = false;
     }
     if (_formKey.currentState!.validate() &&
@@ -426,7 +398,7 @@ class _CreateProductMarketPageState
       setState(() {
         _isLoading = true;
       });
-      List<String> product_images =
+      List<String> productImages =
           await Future.wait(_imgFiles.map((element) async {
         String fileName = element.path.split('/').last;
         FormData formData = FormData.fromMap({
@@ -436,10 +408,7 @@ class _CreateProductMarketPageState
         final response = await MediaApi().uploadMediaEmso(formData);
         return response["id"].toString();
       }));
-
-      // Future.delayed(Duration(seconds: 10), () {
-      newData["product_images"] = product_images;
-
+      newData["product_images"] = productImages;
       // them vao product_video
       // them vao product
       newData["product"]["title"] = _nameController.text.trim();
@@ -449,17 +418,94 @@ class _CreateProductMarketPageState
       newData["product"]["visibility"] = _private.trim();
       newData["product"]["page_id"] = null;
       // them vao product_options_attributes
-      /////////////////// được thêm từ trang sale_information_market_page.dart
-      ///
-      // them vao product_variants_attributes
-      /////////////////// được thêm từ trang sale_information_market_page.dart
-      // sua ten san pham trong truong hop khi sang trang kia null ma khi luu lai co gia tri khac null
-      for (int i = 0; i < newData["product_variants_attributes"].length; i++) {
-        newData["product_variants_attributes"][i] =
-            "${_nameController.text.trim()} - ${newData["product_variants_attributes"][i]["option1"]}${newData["product_variants_attributes"][i]["option2"] == null ? "" : " - ${newData["product_variants_attributes"][i]["option2"]}"}";
-      }
+      // them loai_1
+      Map<String, dynamic> loai_1 = {
+        "name": _categoryData["loai_1"]["name"].text.trim(),
+        "position": 1,
+        "values":
+            _categoryData["loai_1"]["values"].map((e) => e.text.trim()).toList()
+      };
+      newData["product_options_attributes"].add(loai_1);
 
-      ref.read(newProductDataProvider.notifier).updateNewProductData(newData);
+      // them loai_2 (neu co)
+      if (_categoryData["loai_2"] != null) {
+        Map<String, dynamic> loai_2 = {
+          "name": _categoryData["loai_2"]["name"].text.trim(),
+          "position": 2,
+          "values": _categoryData["loai_2"]["values"]
+              .map((e) => e["category_2_name"].text.trim())
+              .toList()
+        };
+        newData["product_options_attributes"].add(loai_2);
+      }
+      // them vao product_variants_attributes
+      List<String> imgList = _categoryData["loai_1"]["images"].toList();
+      List<String> imageIdList = await Future.wait(imgList.map((element) async {
+        String fileName = element.split('/').last;
+        FormData formData = FormData.fromMap({
+          "file": await MultipartFile.fromFile(element, filename: fileName),
+        });
+        final response = await MediaApi().uploadMediaEmso(formData);
+        return response["id"].toString();
+      }).toList());
+      if (_categoryData["loai_2"] == null) {
+        for (int i = 0;
+            i < newData["product_options_attributes"][0]["values"].length;
+            i++) {
+          newData["product_variants_attributes"].add({
+            "title":
+                "${newData["product"]["title"]} - ${newData["product_options_attributes"][0]["values"][i]}",
+            "price": _categoryData["loai_1"]["contents"]["price"][i]
+                .text
+                .trim()
+                .toString(),
+            "sku": _categoryData["loai_1"]["contents"]["sku"][i]
+                .text
+                .trim()
+                .toString(),
+            "position": 1,
+            "compare_at_price": null,
+            "option1": newData["product_options_attributes"][0]["values"][i],
+            "option2": null,
+            "image_id": imageIdList[i],
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 100,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+          });
+        }
+      } else {
+        for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+          for (int z = 0; z < _categoryData["loai_2"]["values"].length; z++) {
+            newData["product_variants_attributes"].add({
+              "title":
+                  "${_nameController.text.trim()} -${_categoryData["loai_1"]["values"][i].text.trim()} - ${_categoryData["loai_2"]["values"][z]["category_2_name"].text.trim()}",
+              "price": _categoryData["loai_2"]["values"][z]["price"][i]
+                  .text
+                  .trim()
+                  .toString(),
+              "sku": _categoryData["loai_2"]["values"][z]["sku"][i]
+                  .text
+                  .trim()
+                  .toString(),
+              "position": 2,
+              "compare_at_price": null,
+              "option1": _categoryData["loai_1"]["values"][i].text.trim(),
+              "option2": _categoryData["loai_2"]["values"][z]["category_2_name"]
+                  .text
+                  .trim(),
+              "image_id": imageIdList[i],
+              "weight": 0.25,
+              "weight_unit": "Kg",
+              "inventory_quantity": 100,
+              "old_inventory_quantity": 100,
+              "requires_shipping": true
+            });
+          }
+        }
+      }
+      print("create new product: ${json.encode(newData)}");
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
         "Lưu thành công",
@@ -488,19 +534,19 @@ class _CreateProductMarketPageState
       child: TextFormField(
         controller: controller,
         maxLines: null,
-        keyboardType: keyboardType != null ? keyboardType : TextInputType.text,
+        keyboardType: keyboardType ?? TextInputType.text,
         validator: (value) {
           switch (hintText) {
             case CreateProductMarketConstants
                 .CREATE_PRODUCT_MARKET_PRODUCT_NAME_PLACEHOLDER:
-              if (value!.length <= 0) {
+              if (value!.isEmpty) {
                 return CreateProductMarketConstants
                     .CREATE_PRODUCT_MARKET_PRODUCT_NAME_WARING;
               }
               break;
             case CreateProductMarketConstants
                 .CREATE_PRODUCT_MARKET_BRAND_PLACEHOLDER:
-              if (value!.length <= 0) {
+              if (value!.isEmpty) {
                 return CreateProductMarketConstants
                     .CREATE_PRODUCT_MARKET_BRAND_WARING;
               }
@@ -543,7 +589,7 @@ class _CreateProductMarketPageState
     );
   }
 
-  _buildSelectionsCategoryAndUnitComponents(
+  Widget _buildSelectionsCategoryAndUnitComponents(
     BuildContext context,
     String title,
     String titleForBottomSheet,
@@ -571,10 +617,10 @@ class _CreateProductMarketPageState
                   ? buildTextContent(_branch, false, fontSize: 17)
                   : const SizedBox(),
             ],
-            suffixWidget: Container(
+            suffixWidget: const SizedBox(
               height: 40,
               width: 40,
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.caretDown,
                 size: 18,
               ),
@@ -586,7 +632,7 @@ class _CreateProductMarketPageState
               showBottomSheetCheckImportantSettings(
                   context, 500, titleForBottomSheet,
                   bgColor: Colors.grey[300],
-                  widget: Container(
+                  widget: SizedBox(
                     height: 400,
                     child: ListView.builder(
                         padding: EdgeInsets.zero,
@@ -605,7 +651,9 @@ class _CreateProductMarketPageState
                             child: Column(
                               children: [
                                 GeneralComponent(
-                                  [buildTextContent(data[index].text, false)],
+                                  [
+                                    buildTextContent(data[index]["text"], false)
+                                  ],
                                   changeBackground: transparent,
                                   function: () {
                                     popToPreviousScreen(context);
@@ -653,7 +701,7 @@ class _CreateProductMarketPageState
     );
   }
 
-  _buildSelectionsPrivateRuleComponent(
+  Widget _buildSelectionsPrivateRuleComponent(
       BuildContext context, String title, String titleForBottomSheet,
       {List<Map<String, dynamic>> privateDatas = CreateProductMarketConstants
           .CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS}) {
@@ -707,7 +755,7 @@ class _CreateProductMarketPageState
               showBottomSheetCheckImportantSettings(
                   context, 500, titleForBottomSheet,
                   bgColor: Colors.grey[300],
-                  widget: Container(
+                  widget: SizedBox(
                     height: 400,
                     child: ListView.builder(
                         padding: EdgeInsets.zero,
@@ -722,7 +770,7 @@ class _CreateProductMarketPageState
                                   buildTextContent(
                                       privateDatas[index]["subTitle"], false),
                                 ],
-                                prefixWidget: Container(
+                                prefixWidget: SizedBox(
                                   height: 30,
                                   width: 30,
                                   child: Icon(privateDatas[index]["icon"]),
@@ -758,6 +806,241 @@ class _CreateProductMarketPageState
     );
   }
 
+  Widget _buildContentForClassifyCategoryContents() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(children: [
+        buildSpacer(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: buildTextContent("Phân loại hàng", true, fontSize: 16),
+            ),
+            const SizedBox()
+          ],
+        ),
+        SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(children: [
+            Column(
+              children: [
+                buildSpacer(height: 10),
+                _buildInformationInput(_categoryData["loai_1"]["name"], width,
+                    "Nhập tên phân loại 1"),
+                // phan loai 1
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Wrap(
+                    children: List.generate(
+                        _categoryData["loai_1"]["values"].length,
+                        (indexDescription) => Padding(
+                              padding: EdgeInsets.only(
+                                  right: indexDescription.isOdd ? 0 : 5,
+                                  left: indexDescription.isEven ? 0 : 5),
+                              child: _buildInformationInput(
+                                  _categoryData["loai_1"]["values"]
+                                      [indexDescription],
+                                  width * 0.48,
+                                  "Màu sắc ${indexDescription + 1}",
+                                  suffixIconData: FontAwesomeIcons.close,
+                                  suffixFunction: () {
+                                _deleteClassifyCategoryOne(indexDescription);
+                              }),
+                            )),
+                  ),
+                ),
+                _categoryData["loai_1"]["values"].length != 10
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 5),
+                        child: buildTextContent(
+                            "Thêm mô tả cho phân loại 1: ${_categoryData["loai_1"]["values"].length}/10",
+                            false,
+                            fontSize: 13, function: () {
+                          _addClassifyCategoryOne();
+                        }),
+                      )
+                    : const SizedBox(),
+                _categoryData["loai_2"] == null ||
+                        _categoryData["loai_2"] == {} ||
+                        _categoryData["loai_2"].isEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: buildTextContent("Thêm nhóm phân loại", true,
+                            fontSize: 16,
+                            iconData: FontAwesomeIcons.add,
+                            isCenterLeft: false, function: () {
+                          _createClassifyCategoryTwo();
+                        }),
+                      )
+                    : const SizedBox(),
+                //loai 2
+                _categoryData["loai_2"] != null &&
+                        _categoryData["loai_2"] != {} &&
+                        _categoryData["loai_2"].isNotEmpty
+                    ? Column(
+                        children: [
+                          buildSpacer(height: 10),
+                          _buildInformationInput(
+                              _categoryData["loai_2"]["name"],
+                              width,
+                              "Nhập tên phân loại 2"),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Wrap(
+                              children: List.generate(
+                                  _categoryData["loai_2"]["values"].length,
+                                  (indexDescription) => Padding(
+                                        padding: EdgeInsets.only(
+                                            right:
+                                                indexDescription.isOdd ? 0 : 5,
+                                            left: indexDescription.isEven
+                                                ? 0
+                                                : 5),
+                                        child: _buildInformationInput(
+                                            _categoryData["loai_2"]["values"]
+                                                    [indexDescription]
+                                                ["category_2_name"],
+                                            width * 0.48,
+                                            "Kích thước ${indexDescription + 1}",
+                                            suffixIconData: FontAwesomeIcons
+                                                .close, suffixFunction: () {
+                                          _deleteClassifyCategoryTwo(
+                                              indexDescription);
+                                        }),
+                                      )),
+                            ),
+                          ),
+                          _categoryData["loai_2"]["values"].length != 10
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 10, top: 5),
+                                  child: buildTextContent(
+                                      "Thêm mô tả cho phân loại 2: ${_categoryData["loai_2"]["values"].length}/10",
+                                      false,
+                                      fontSize: 13, function: () {
+                                    _addClassifyCategoryTwo();
+                                  }),
+                                )
+                              : const SizedBox(),
+                        ],
+                      )
+                    : const SizedBox(),
+
+                buildSpacer(height: 10),
+                buildDivider(color: red),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
+                      _buildInformationInput(
+                          _priceController, width, "Nhập giá sản phẩm",
+                          keyboardType: TextInputType.number),
+                      _buildInformationInput(
+                          _repositoryController, width, "Nhập tên kho hàng",
+                          keyboardType: TextInputType.number),
+                      _buildInformationInput(
+                          _skuController, width, "Nhập mã sản phẩm"),
+                      buildButtonForMarketWidget(
+                          title: "Áp dụng cho tất cả ",
+                          function: () {
+                            if (_priceController.text.isNotEmpty &&
+                                _repositoryController.text.isNotEmpty &&
+                                _skuController.text.isNotEmpty) {
+                              _applyPriceRepositorySkuForAll();
+                            }
+                          })
+                    ],
+                  ),
+                ),
+                // table
+                SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    child: _categoryData["loai_2"] == {} ||
+                            _categoryData["loai_2"] == null
+                        ? _buildDataTableWithOneComponent()
+                        : _buildDataTableForTwoComponents()),
+              ],
+            ),
+          ]),
+        ),
+      ]),
+    );
+  }
+
+  Widget _buildInformationInput(
+      TextEditingController controller, double width, String hintText,
+      {IconData? prefixIconData,
+      IconData? suffixIconData,
+      TextInputType? keyboardType,
+      double? height,
+      Function? suffixFunction}) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        vertical: 5,
+      ),
+      width: width * 0.9,
+      child: TextFormField(
+        controller: controller,
+        maxLines: null,
+        keyboardType: keyboardType != null ? keyboardType : TextInputType.text,
+        validator: (value) {
+          if (hintText != "Nhập giá sản phẩm" &&
+              hintText != "Nhập tên kho hàng" &&
+              hintText != "Nhập mã sản phẩm" &&
+              controller.text.trim().isEmpty) {
+            return "Không hợp lệ";
+          }
+        },
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+            enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                )),
+            errorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: red),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                )),
+            focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                )),
+            hintText: hintText,
+            labelText: hintText,
+            hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+            prefixIcon: prefixIconData != null
+                ? Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Icon(
+                      prefixIconData,
+                      size: 15,
+                    ),
+                  )
+                : null,
+            suffixIcon: suffixIconData != null
+                ? InkWell(
+                    onTap: () {
+                      suffixFunction != null ? suffixFunction() : null;
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Icon(
+                        suffixIconData,
+                        size: 15,
+                      ),
+                    ),
+                  )
+                : null),
+      ),
+    );
+  }
+
   Future getImage(ImageSource src) async {
     XFile getImage = XFile("");
     getImage = (await ImagePicker().pickImage(source: src))!;
@@ -766,7 +1049,31 @@ class _CreateProductMarketPageState
     });
   }
 
-  dialogImgSource() {
+  Widget _buildIconAndAddImageText() {
+    return InkWell(
+      onTap: () {
+        dialogImgSource();
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            MarketPlaceConstants.PATH_ICON + "add_img_file_icon.svg",
+            height: 20,
+          ),
+          buildSpacer(width: 5),
+          buildTextContent(
+              CreateProductMarketConstants
+                  .CREATE_PRODUCT_MARKET_ADD_IMG_PLACEHOLDER,
+              false,
+              isCenterLeft: false,
+              fontSize: 15),
+        ],
+      ),
+    );
+  }
+
+  void dialogImgSource() {
     showDialog(
         context: context,
         builder: (_) {
@@ -797,28 +1104,359 @@ class _CreateProductMarketPageState
         });
   }
 
-  Widget _buildIconAndAddImageText() {
-    return InkWell(
-      onTap: () {
-        dialogImgSource();
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            MarketPlaceConstants.PATH_ICON + "add_img_file_icon.svg",
-            height: 20,
-          ),
-          buildSpacer(width: 5),
-          buildTextContent(
-              CreateProductMarketConstants
-                  .CREATE_PRODUCT_MARKET_ADD_IMG_PLACEHOLDER,
-              false,
-              isCenterLeft: false,
-              fontSize: 15),
-        ],
-      ),
+  void _addClassifyCategoryOne() {
+    // them cac the input vao loai 1
+    _categoryData["loai_1"]["values"].add(TextEditingController(text: ""));
+    _categoryData["loai_1"]["images"].add("");
+    _categoryData["loai_1"]["contents"]["price"]
+        .add(TextEditingController(text: ""));
+    _categoryData["loai_1"]["contents"]["repository"]
+        .add(TextEditingController(text: ""));
+    _categoryData["loai_1"]["contents"]["sku"]
+        .add(TextEditingController(text: ""));
+    // them cac the input vao loai 2 (neu co)
+
+    if (_categoryData["loai_2"] != {} && _categoryData["loai_2"] != null) {
+      for (int i = 0; i < _categoryData["loai_2"]?["values"]?.length; i++) {
+        _categoryData["loai_2"]?["values"]?[i]["price"]
+            .add(TextEditingController(text: ""));
+        _categoryData["loai_2"]?["values"]?[i]["classify"]
+            .add(TextEditingController(text: ""));
+        _categoryData["loai_2"]?["values"]?[i]["sku"]
+            .add(TextEditingController(text: ""));
+      }
+    }
+    setState(() {});
+  }
+
+  void _deleteClassifyCategoryOne(int index) {
+    // xoa trong loai_1
+    if (_categoryData["loai_1"]["values"].length != 1) {
+      _categoryData["loai_1"]["values"].removeAt(index);
+      _categoryData["loai_1"]["contents"]["price"].removeAt(index);
+      _categoryData["loai_1"]["contents"]["repository"].removeAt(index);
+      _categoryData["loai_1"]["contents"]["sku"].removeAt(index);
+
+      // xoa trong loai_2 (neu co)
+      if (_categoryData["loai_2"] != null && _categoryData["loai_2"] != {}) {
+        for (int i = 0; i < _categoryData["loai_2"]["values"].length; i++) {
+          _categoryData["loai_2"]["values"][i]["price"].removeAt(index);
+          _categoryData["loai_2"]["values"][i]["classify"].removeAt(index);
+          _categoryData["loai_2"]["values"][i]["sku"].removeAt(index);
+        }
+      }
+    }
+
+    setState(() {});
+  }
+
+  void _createClassifyCategoryTwo() {
+    Map<String, dynamic> primaryData = {
+      "name": TextEditingController(text: ""),
+      "values": [
+        {
+          "category_2_name": TextEditingController(text: ""),
+          "price": [],
+          "classify": [],
+          "sku": []
+        },
+      ]
+    };
+    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+      primaryData["values"][0]["price"].add(TextEditingController(text: ""));
+      primaryData["values"][0]["classify"].add(TextEditingController(text: ""));
+      primaryData["values"][0]["sku"].add(TextEditingController(text: ""));
+    }
+
+    _categoryData["loai_2"] = primaryData;
+    setState(() {});
+  }
+
+  void _addClassifyCategoryTwo() {
+    // them cac the input vao loai 2
+    List<dynamic> valuesCategory2 = _categoryData["loai_2"]["values"];
+    Map<String, dynamic> primaryData = {
+      "category_2_name": TextEditingController(text: ""),
+      "price": [],
+      "classify": [],
+      "sku": []
+    };
+
+    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+      primaryData["price"].add(TextEditingController(text: ""));
+      primaryData["classify"].add(TextEditingController(text: ""));
+      primaryData["sku"].add(TextEditingController(text: ""));
+    }
+    valuesCategory2.add(primaryData.cast<String, Object>());
+    _categoryData["loai_2"]["values"] = valuesCategory2;
+    setState(() {});
+  }
+
+  void _deleteClassifyCategoryTwo(int index) {
+    // xoa phan tu trong phan loai 2
+    if (_categoryData["loai_2"]["values"].length > 1) {
+      _categoryData["loai_2"]["values"].removeAt(index);
+      setState(() {});
+    }
+  }
+
+  void _applyPriceRepositorySkuForAll() {
+    // ap dung cho cac phan loai 1
+    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+      _categoryData["loai_1"]["contents"]["price"][i].text =
+          _priceController.text.trim();
+      _categoryData["loai_1"]["contents"]["repository"][i].text =
+          _repositoryController.text.trim();
+      _categoryData["loai_1"]["contents"]["sku"][i].text =
+          _skuController.text.trim();
+    }
+    // ap dung cho cac phan loai 2
+    if (_categoryData["loai_2"] != null && _categoryData["loai_2"] != {}) {
+      for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+        for (int z = 0; z < _categoryData["loai_2"]["values"].length; z++) {
+          _categoryData["loai_2"]["values"][z]["price"][i].text =
+              _priceController.text.trim();
+          _categoryData["loai_2"]["values"][z]["classify"][i].text =
+              _repositoryController.text.trim();
+          _categoryData["loai_2"]["values"][z]["sku"][i].text =
+              _skuController.text.trim();
+        }
+      }
+    }
+    setState(() {});
+  }
+
+  DataTable _buildDataTableWithOneComponent() {
+    List<DataColumn> dataColumns = [];
+    List<DataRow> dataRows = [];
+    List<DataCell> dataCells = [];
+
+    // phân loại hàng
+    dataColumns.add(DataColumn(
+        label: Text(
+            _categoryData["loai_1"]["name"].text.length > 0
+                ? _categoryData["loai_1"]["name"].text.trim()
+                : "Phân loại hàng 1",
+            style:
+                const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
+    dataColumns.add(
+      const DataColumn(
+          label: Text('Giá',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
+    dataColumns.add(
+      const DataColumn(
+          label: Text('Kho hàng',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+    );
+    dataColumns.add(
+      const DataColumn(
+          label: Text('Mã(sku) phân loại',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+    );
+
+    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+      dataRows.add(DataRow(cells: [
+        DataCell(
+          Column(
+            children: [
+              buildSpacer(height: 10),
+              buildTextContent(
+                  _categoryData["loai_1"]["values"][i].text.trim(), true,
+                  isCenterLeft: false, fontSize: 17),
+              buildSpacer(height: 10),
+              InkWell(
+                onTap: () {
+                  dialogInformartionImgSource(i);
+                },
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      border: Border.all(color: greyColor, width: 0.4)),
+                  child: _categoryData["loai_1"]["images"][i] != "" &&
+                          _categoryData["loai_1"]["images"][i] != null
+                      ? Image.file(
+                          File(_categoryData["loai_1"]["images"][i]),
+                          fit: BoxFit.fitHeight,
+                        )
+                      : Image.asset(
+                          MarketPlaceConstants.PATH_IMG + "cat_1.png"),
+                ),
+              )
+            ],
+          ),
+        ),
+        DataCell(_buildInput(
+            _categoryData["loai_1"]["contents"]["price"][i], width * 0.5, "Gia",
+            keyboardType: TextInputType.number)),
+        DataCell(_buildInput(
+            _categoryData["loai_1"]["contents"]["repository"][i],
+            width * 0.5,
+            "Kho hang",
+            keyboardType: TextInputType.number)),
+        DataCell(_buildInput(_categoryData["loai_1"]["contents"]["sku"][i],
+            width * 0.5, "Ma phan loai")),
+      ]));
+    }
+
+    return DataTable(
+      columns: dataColumns,
+      rows: dataRows,
+      showBottomBorder: true,
+      dataRowHeight: 100,
+      dividerThickness: .4,
+    );
+  }
+
+  DataTable _buildDataTableForTwoComponents() {
+    List<DataColumn> dataColumns = [];
+    List<DataRow> dataRows = [];
+    List<DataCell> dataCells = [];
+
+    dataColumns.add(DataColumn(
+        label: Text(
+            _categoryData["loai_1"]["name"].text.length > 0
+                ? _categoryData["loai_1"]["name"].text.trim()
+                : "Phân loại hàng 1",
+            style:
+                const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
+
+    dataColumns.add(DataColumn(
+        label: Text(
+            _categoryData["loai_2"]?["name"]?.text.length > 0
+                ? _categoryData["loai_2"]["name"].text.trim()
+                : "Phân loại hàng 2",
+            style:
+                const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
+
+    dataColumns.add(
+      const DataColumn(
+          label: Text('Giá',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+    );
+    dataColumns.add(
+      const DataColumn(
+          label: Text('Kho hàng',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+    );
+    dataColumns.add(
+      const DataColumn(
+          label: Text('Mã(sku) phân loại',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+    );
+
+    // thêm dòng
+    for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
+      for (int z = 0; z < _categoryData["loai_2"]?["values"]?.length; z++) {
+        dataRows.add(DataRow(cells: [
+          z == 0
+              ? DataCell(
+                  Column(
+                    children: [
+                      buildSpacer(height: 10),
+                      buildTextContent(
+                          _categoryData["loai_1"]["values"][i].text.trim(),
+                          true,
+                          isCenterLeft: false,
+                          fontSize: 17),
+                      buildSpacer(height: 10),
+                      InkWell(
+                        onTap: () {
+                          dialogInformartionImgSource(i);
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(color: greyColor, width: 0.4)),
+                          child: _categoryData["loai_1"]["images"][i] != "" &&
+                                  _categoryData["loai_1"]["images"][i] != null
+                              ? Image.file(
+                                  File(_categoryData["loai_1"]["images"][i]),
+                                  fit: BoxFit.fitHeight,
+                                )
+                              : Image.asset(
+                                  MarketPlaceConstants.PATH_IMG + "cat_1.png"),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              : const DataCell(SizedBox()),
+          DataCell(
+            buildTextContent(
+                _categoryData["loai_2"]?["values"][z]["category_2_name"]
+                    .text
+                    .trim(),
+                true,
+                isCenterLeft: false,
+                fontSize: 17),
+          ),
+          DataCell(_buildInput(
+              _categoryData["loai_2"]?["values"][z]["price"][i],
+              width * 0.5,
+              "Giá",
+              keyboardType: TextInputType.number)),
+          DataCell(_buildInput(
+              _categoryData["loai_2"]?["values"][z]["classify"][i],
+              width * 0.5,
+              "Kho hàng",
+              keyboardType: TextInputType.number)),
+          DataCell(_buildInput(_categoryData["loai_2"]?["values"][z]["sku"][i],
+              width * 0.5, "Mã phân loại")),
+        ]));
+      }
+    }
+
+    return DataTable(
+      columns: dataColumns,
+      rows: dataRows,
+      showBottomBorder: true,
+      dataRowHeight: 100,
+      dividerThickness: .4,
+    );
+  }
+
+  dialogInformartionImgSource(int index) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.camera),
+                    title: const Text("Pick From Camera"),
+                    onTap: () {
+                      getInformationImage(ImageSource.camera, index);
+                      popToPreviousScreen(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.camera),
+                    title: const Text("Pick From Galery"),
+                    onTap: () {
+                      popToPreviousScreen(context);
+                      getInformationImage(ImageSource.gallery, index);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future getInformationImage(ImageSource src, int index) async {
+    XFile getImage = XFile("");
+    getImage = (await ImagePicker().pickImage(source: src))!;
+    _categoryData["loai_1"]["images"][index] =
+        getImage.path != null && getImage.path != "" ? getImage.path : null;
+    setState(() {});
   }
 }
 

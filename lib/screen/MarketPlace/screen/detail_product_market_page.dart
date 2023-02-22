@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +9,6 @@ import 'package:social_network_app_mobile/providers/market_place_providers/cart_
 import 'package:social_network_app_mobile/providers/market_place_providers/comment_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/demo_cart/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/rating_star_widget.dart';
@@ -36,7 +33,7 @@ const String share_on_personal_page_of_friend =
 
 class DetailProductMarketPage extends ConsumerStatefulWidget {
   final dynamic id;
-  DetailProductMarketPage({required this.id});
+  const DetailProductMarketPage({super.key, required this.id});
   @override
   ConsumerState<DetailProductMarketPage> createState() =>
       _DetailProductMarketPageComsumerState();
@@ -54,8 +51,8 @@ class _DetailProductMarketPageComsumerState
   List<dynamic>? _commentData;
   List<double>? _prices;
   bool _isLoading = true;
-  List<bool>? _colorCheckList = [];
-  List<bool>? _sizeCheckList = [];
+  final List<bool>? _colorCheckList = [];
+  final List<bool>? _sizeCheckList = [];
   dynamic? _colorValue;
   dynamic? _sizeValue;
   String? _priceTitle;
@@ -111,11 +108,11 @@ class _DetailProductMarketPageComsumerState
         ),
         body: !_isLoading
             ? _buildDetailBody()
-            : Center(
-                child: Container(
+            : const Center(
+                child: SizedBox(
                   width: 70,
                   height: 70,
-                  child: const CircularProgressIndicator(
+                  child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                     strokeWidth: 3,
                   ),
@@ -194,7 +191,7 @@ class _DetailProductMarketPageComsumerState
             physics: const BouncingScrollPhysics(),
             child: Column(children: [
               // img
-              Container(
+              SizedBox(
                   height: 350,
                   width: width,
                   child: ImageCacheRender(
@@ -338,7 +335,7 @@ class _DetailProductMarketPageComsumerState
                                           .deleleInterestProductItem(widget.id);
                                     }
                                   },
-                                  child: Container(
+                                  child: SizedBox(
                                     // color: Colors.red,
                                     height: 20,
                                     width: 20,
@@ -354,11 +351,11 @@ class _DetailProductMarketPageComsumerState
                                   ),
                                 ),
                                 //share
-                                Container(
+                                const SizedBox(
                                   // color: Colors.green,
                                   height: 20,
                                   width: 20,
-                                  child: const Icon(
+                                  child: Icon(
                                     FontAwesomeIcons.envelope,
                                     size: 20,
                                   ),
@@ -368,11 +365,11 @@ class _DetailProductMarketPageComsumerState
                                   onTap: () {
                                     _showShareDetailBottomSheet(context);
                                   },
-                                  child: Container(
+                                  child: const SizedBox(
                                     // color: Colors.red,
                                     height: 20,
                                     width: 20,
-                                    child: const Icon(
+                                    child: Icon(
                                       FontAwesomeIcons.share,
                                       size: 20,
                                     ),
@@ -443,7 +440,7 @@ class _DetailProductMarketPageComsumerState
                                       )),
                                     ),
                                   ),
-                                  Container(
+                                  SizedBox(
                                     height: 30,
                                     width: 30,
                                     child: buildTextContent(
@@ -602,7 +599,7 @@ class _DetailProductMarketPageComsumerState
     );
   }
 
-  _updatePriceTitle() {
+  void _updatePriceTitle() {
     if (_colorValue == null) {
       return;
     } else {
@@ -624,7 +621,7 @@ class _DetailProductMarketPageComsumerState
     setState(() {});
   }
 
-  _updateImgLink() {
+  void _updateImgLink() {
     if (_colorValue != null) {
       _detailData?["product_variants"].forEach((element) {
         if (element["option1"] == _colorValue) {
@@ -642,7 +639,7 @@ class _DetailProductMarketPageComsumerState
       padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: Row(
         children: [
-          Container(
+          SizedBox(
               width: 80, child: buildTextContent(title, true, fontSize: 18)),
           Expanded(
               child: Wrap(
@@ -699,7 +696,7 @@ class _DetailProductMarketPageComsumerState
     );
   }
 
-  _showShareDetailBottomSheet(BuildContext context) {
+  void _showShareDetailBottomSheet(BuildContext context) {
     showBottomSheetCheckImportantSettings(context, 250, "Chia sẻ",
         widget: ListView.builder(
             shrinkWrap: true,
@@ -760,10 +757,9 @@ class _DetailProductMarketPageComsumerState
                 ],
               );
             }));
-    ;
   }
 
-  _getInformationForCart() async {
+  Future<void> _getInformationForCart() async {
     if (_colorValue == null) {
       _productToCart = _detailData?["product_variants"][0];
     } else {
@@ -795,7 +791,7 @@ class _DetailProductMarketPageComsumerState
     // final cartResponse =
     //     await ref.read(cartProductsProvider.notifier).initCartProductList();
 
-//add to local
+    //add to local
 
     setState(() {});
 
@@ -858,7 +854,7 @@ Widget _buildReviewAndComment(
           buildSpacer(height: 5),
           buildRatingStarWidget(rating, size: 10),
         ],
-        prefixWidget: Container(
+        prefixWidget: SizedBox(
           // color: red,
           height: 30,
           // width: 60,
@@ -866,7 +862,7 @@ Widget _buildReviewAndComment(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              SizedBox(
                 height: 20,
                 width: 20,
                 child: ClipRRect(
