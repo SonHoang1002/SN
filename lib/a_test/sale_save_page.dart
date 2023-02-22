@@ -6,14 +6,14 @@ import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
 import '../../../../theme/colors.dart';
 
-class DemoSaleInformationMarketPage extends StatefulWidget {
+class  SaleInformationMarketPage extends StatefulWidget {
   @override
-  State<DemoSaleInformationMarketPage> createState() =>
-      _DemoSaleInformationMarketPageState();
+  State< SaleInformationMarketPage> createState() =>
+      _SaleInformationMarketPageState();
 }
 
-class _DemoSaleInformationMarketPageState
-    extends State<DemoSaleInformationMarketPage> {
+class _SaleInformationMarketPageState
+    extends State< SaleInformationMarketPage> {
   late double width = 0;
   late double height = 0;
 

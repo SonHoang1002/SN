@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
 import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/discover_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
@@ -51,8 +52,9 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
           ref.read(suggestProductsProvider.notifier).getSuggestProducts();
       final discoverProduct =
           ref.read(discoverProductsProvider.notifier).getDiscoverProducts();
-      final interestList =
-          ref.read(interestProductsProvider.notifier).addInterestProductItem({});
+      final interestList = ref
+          .read(interestProductsProvider.notifier)
+          .addInterestProductItem({});
     });
   }
 
@@ -61,6 +63,8 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+
+    print("height:$height");
     all_data = ref.watch(productCategoriesProvider).list;
     getProductCategoriesName();
     return Stack(
@@ -146,8 +150,10 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: buildCategoryProductItemWidget(
-                            product_categories[index],
-                            "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png",
+                            product_categories[index]["title"],
+                            product_categories[index]["icon"] != ""
+                                ? product_categories[index]["icon"]
+                                : "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png",
                             height: 120,
                             width: 100),
                       );
@@ -181,7 +187,8 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                                 crossAxisSpacing: 4,
                                 mainAxisSpacing: 4,
                                 crossAxisCount: 2,
-                                childAspectRatio: 0.8),
+                                childAspectRatio: 0.78),
+                        // childAspectRatio: 0.78),
                         itemCount: _suggestProductList?.length,
                         itemBuilder: (context, index) {
                           return buildProductItem(
@@ -299,7 +306,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                             crossAxisSpacing: 4,
                             mainAxisSpacing: 4,
                             crossAxisCount: 2,
-                            childAspectRatio: 0.8),
+                            childAspectRatio: 0.78),
                     itemCount: _discoverProduct?.length,
                     // shrinkWrap: true,
                     itemBuilder: (context, index) {
@@ -315,7 +322,8 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
   }
 
   Future getSuggestProductList() async {
-    _suggestProductList = ref.watch(suggestProductsProvider).listSuggest;
+    _suggestProductList =
+        ref.watch(suggestProductsProvider).listSuggest.take(6).toList();
     setState(() {});
   }
 
@@ -371,15 +379,19 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
   }
 
   getProductCategoriesName() {
-    List<dynamic> primaryProductCategories = all_data.map((e) {
-      return e["text"];
-    }).toList();
-    for (int i = 0; i < all_data.length; i++) {
-      primaryProductCategories.add(all_data[i]["text"]);
-    }
-    product_categories = primaryProductCategories;
+    if (product_categories.isEmpty) {
+      List<dynamic> primaryProductCategories = [];
+      //  = all_data.map((e) {
+      //   return e["text"];
+      // }).toList();
+      for (int i = 0; i < all_data.length; i++) {
+        primaryProductCategories
+            .add({"title": all_data[i]["text"], "icon": all_data[i]["icon"]});
+      }
+      product_categories = primaryProductCategories;
 
-    setState(() {});
+      setState(() {});
+    }
   }
 }
 

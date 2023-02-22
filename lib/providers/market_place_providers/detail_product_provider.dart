@@ -18,6 +18,10 @@ class DetailProductController extends StateNotifier<DetailProductState> {
 
   getDetailProduct(id) async {
     final response = await DetailProductApi().getDetailProductApi(id);
+    if (response == null) {
+      state = state.copyWith({});
+      return;
+    }
     print("detailData: ${response}");
     state = state.copyWith(response);
   }

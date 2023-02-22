@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/providers/group/select_private_rule_provider.dart';
 
 import '../../../../constant/group_constants.dart';
 import '../../../../helper/push_to_new_screen.dart';
 import '../../../../providers/group/hide_group_provider.dart';
-import '../../../../providers/select_private_rule_provider.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';

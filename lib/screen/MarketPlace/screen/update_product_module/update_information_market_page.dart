@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -9,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/data/market_place_datas/suggest_products_data.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/update_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
@@ -130,8 +128,8 @@ class _UpdateInformationMarketPageState
                 ),
               ),
               _isLoading
-                  ? Center(
-                      child: const SizedBox(
+                  ? const Center(
+                      child: SizedBox(
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
@@ -139,7 +137,7 @@ class _UpdateInformationMarketPageState
                         color: red,
                       ),
                     ))
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
         ));
@@ -147,7 +145,7 @@ class _UpdateInformationMarketPageState
 
   _buildContentForClassifyCategoryContents() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(children: [
         // classify category
         buildSpacer(height: 10),
@@ -158,157 +156,154 @@ class _UpdateInformationMarketPageState
               padding: const EdgeInsets.only(left: 10.0),
               child: buildTextContent("Phân loại hàng", true, fontSize: 16),
             ),
-            SizedBox()
+            const SizedBox()
           ],
         ),
-        Container(
-          // height: 300,
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(children: [
-              Column(
-                children: [
-                  buildSpacer(height: 10),
-                  _buildInformationInput(_categoryData?["loai_1"]["name"], width,
-                      "Nhập tên phân loại 1"),
+        SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(children: [
+            Column(
+              children: [
+                buildSpacer(height: 10),
+                _buildInformationInput(_categoryData?["loai_1"]["name"], width,
+                    "Nhập tên phân loại 1"),
 
-                  // phan loai 1
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Wrap(
-                      children: List.generate(
-                          _categoryData?["loai_1"]["values"].length,
-                          (indexDescription) => Padding(
-                                padding: EdgeInsets.only(
-                                    right: indexDescription.isOdd ? 0 : 5,
-                                    left: indexDescription.isEven ? 0 : 5),
-                                child: _buildInformationInput(
-                                    _categoryData?["loai_1"]["values"]
-                                        [indexDescription],
-                                    width * 0.48,
-                                    "Màu sắc ${indexDescription + 1}",
-                                    suffixIconData: FontAwesomeIcons.close,
-                                    suffixFunction: () {
-                                  _deleteClassifyCategoryOne(indexDescription);
-                                }),
-                              )),
-                    ),
+                // phan loai 1
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Wrap(
+                    children: List.generate(
+                        _categoryData?["loai_1"]["values"].length,
+                        (indexDescription) => Padding(
+                              padding: EdgeInsets.only(
+                                  right: indexDescription.isOdd ? 0 : 5,
+                                  left: indexDescription.isEven ? 0 : 5),
+                              child: _buildInformationInput(
+                                  _categoryData?["loai_1"]["values"]
+                                      [indexDescription],
+                                  width * 0.48,
+                                  "Màu sắc ${indexDescription + 1}",
+                                  suffixIconData: FontAwesomeIcons.close,
+                                  suffixFunction: () {
+                                _deleteClassifyCategoryOne(indexDescription);
+                              }),
+                            )),
                   ),
-                  _categoryData?["loai_1"]["values"].length != 10
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 5),
-                          child: buildTextContent(
-                              "Thêm mô tả cho phân loại 1: ${_categoryData?["loai_1"]["values"].length}/10",
-                              false,
-                              fontSize: 13, function: () {
-                            _addClassifyCategoryOne();
-                          }),
-                        )
-                      : SizedBox(),
-                  _categoryData?["loai_2"] == null ||
-                          _categoryData?["loai_2"] == {}
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: buildTextContent("Thêm nhóm phân loại", true,
-                              fontSize: 16,
-                              iconData: FontAwesomeIcons.add,
-                              isCenterLeft: false, function: () {
-                            _createClassifyCategoryTwo();
-                          }),
-                        )
-                      : SizedBox(),
+                ),
+                _categoryData?["loai_1"]["values"].length != 10
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 5),
+                        child: buildTextContent(
+                            "Thêm mô tả cho phân loại 1: ${_categoryData?["loai_1"]["values"].length}/10",
+                            false,
+                            fontSize: 13, function: () {
+                          _addClassifyCategoryOne();
+                        }),
+                      )
+                    : const SizedBox(),
+                _categoryData?["loai_2"] == null ||
+                        _categoryData?["loai_2"] == {}
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: buildTextContent("Thêm nhóm phân loại", true,
+                            fontSize: 16,
+                            iconData: FontAwesomeIcons.add,
+                            isCenterLeft: false, function: () {
+                          _createClassifyCategoryTwo();
+                        }),
+                      )
+                    : const SizedBox(),
 
-                  //loai 2
-                  _categoryData?["loai_2"] != null &&
-                          _categoryData?["loai_2"] != {}
-                      ? Column(
-                          children: [
-                            buildSpacer(height: 10),
-                            _buildInformationInput(_categoryData?["loai_2"]["name"], width,
-                                "Nhập tên phân loại 2"),
+                //loai 2
+                _categoryData?["loai_2"] != null &&
+                        _categoryData?["loai_2"] != {}
+                    ? Column(
+                        children: [
+                          buildSpacer(height: 10),
+                          _buildInformationInput(_categoryData?["loai_2"]["name"], width,
+                              "Nhập tên phân loại 2"),
 
-                            ///
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Wrap(
-                                children: List.generate(
-                                    _categoryData?["loai_2"]["values"].length,
-                                    (indexDescription) => Padding(
-                                          padding: EdgeInsets.only(
-                                              right: indexDescription.isOdd
-                                                  ? 0
-                                                  : 5,
-                                              left: indexDescription.isEven
-                                                  ? 0
-                                                  : 5),
-                                          child: _buildInformationInput(
-                                              _categoryData?["loai_2"]["values"]
-                                                      [indexDescription]
-                                                  ["category_2_name"],
-                                              width * 0.48,
-                                              "Kích thước ${indexDescription + 1}",
-                                              suffixIconData: FontAwesomeIcons
-                                                  .close, suffixFunction: () {
-                                            _deleteClassifyCategoryTwo(
-                                                indexDescription);
-                                          }),
-                                        )),
-                              ),
+                          ///
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10),
+                            child: Wrap(
+                              children: List.generate(
+                                  _categoryData?["loai_2"]["values"].length,
+                                  (indexDescription) => Padding(
+                                        padding: EdgeInsets.only(
+                                            right: indexDescription.isOdd
+                                                ? 0
+                                                : 5,
+                                            left: indexDescription.isEven
+                                                ? 0
+                                                : 5),
+                                        child: _buildInformationInput(
+                                            _categoryData?["loai_2"]["values"]
+                                                    [indexDescription]
+                                                ["category_2_name"],
+                                            width * 0.48,
+                                            "Kích thước ${indexDescription + 1}",
+                                            suffixIconData: FontAwesomeIcons
+                                                .close, suffixFunction: () {
+                                          _deleteClassifyCategoryTwo(
+                                              indexDescription);
+                                        }),
+                                      )),
                             ),
-                            _categoryData?["loai_2"]["values"].length != 10
-                                ? Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 10, top: 5),
-                                    child: buildTextContent(
-                                        "Thêm mô tả cho phân loại 2: ${_categoryData?["loai_2"]["values"].length}/10",
-                                        false,
-                                        fontSize: 13, function: () {
-                                      _addClassifyCategoryTwo();
-                                    }),
-                                  )
-                                : SizedBox(),
-                          ],
-                        )
-                      : SizedBox(),
+                          ),
+                          _categoryData?["loai_2"]["values"].length != 10
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 10, top: 5),
+                                  child: buildTextContent(
+                                      "Thêm mô tả cho phân loại 2: ${_categoryData?["loai_2"]["values"].length}/10",
+                                      false,
+                                      fontSize: 13, function: () {
+                                    _addClassifyCategoryTwo();
+                                  }),
+                                )
+                              : const SizedBox(),
+                        ],
+                      )
+                    : const SizedBox(),
 
-                  buildSpacer(height: 10),
-                  buildDivider(color: red),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      children: [
-                        _buildInformationInput(
-                            _priceController, width, "Nhập giá sản phẩm",
-                            keyboardType: TextInputType.number),
-                        _buildInformationInput(
-                            _repositoryController, width, "Nhập tên kho hàng",
-                            keyboardType: TextInputType.number),
-                        _buildInformationInput(_skuController, width, "Nhập mã sản phẩm"),
-                        buildButtonForMarketWidget(
-                            title: "Áp dụng cho tất cả ",
-                            function: () {
-                              if (_priceController.text.isNotEmpty &&
-                                  _repositoryController.text.isNotEmpty &&
-                                  _skuController.text.isNotEmpty) {
-                                _applyPriceRepositorySkuForAll();
-                              }
-                            })
-                      ],
-                    ),
+                buildSpacer(height: 10),
+                buildDivider(color: red),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
+                      _buildInformationInput(
+                          _priceController, width, "Nhập giá sản phẩm",
+                          keyboardType: TextInputType.number),
+                      _buildInformationInput(
+                          _repositoryController, width, "Nhập tên kho hàng",
+                          keyboardType: TextInputType.number),
+                      _buildInformationInput(_skuController, width, "Nhập mã sản phẩm"),
+                      buildButtonForMarketWidget(
+                          title: "Áp dụng cho tất cả ",
+                          function: () {
+                            if (_priceController.text.isNotEmpty &&
+                                _repositoryController.text.isNotEmpty &&
+                                _skuController.text.isNotEmpty) {
+                              _applyPriceRepositorySkuForAll();
+                            }
+                          })
+                    ],
                   ),
-                  // table
-                  SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      child: _categoryData?["loai_2"] == {} ||
-                              _categoryData?["loai_2"] == null
-                          ? _buildDataTableWithOneComponent()
-                          : _buildDataTableForTwoComponents()),
-                ],
-              ),
-            ]),
-          ),
+                ),
+                // table
+                SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    child: _categoryData?["loai_2"] == {} ||
+                            _categoryData?["loai_2"] == null
+                        ? _buildDataTableWithOneComponent()
+                        : _buildDataTableForTwoComponents()),
+              ],
+            ),
+          ]),
         ),
       ]),
     );
@@ -447,19 +442,19 @@ class _UpdateInformationMarketPageState
             _categoryData?["loai_1"]["name"].text.length > 0
                 ? _categoryData!["loai_1"]["name"].text.trim()
                 : "Phân loại hàng 1",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
     dataColumns.add(
-      DataColumn(
+      const DataColumn(
           label: Text('Giá',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
     dataColumns.add(
-      DataColumn(
+      const DataColumn(
           label: Text('Kho hàng',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
     dataColumns.add(
-      DataColumn(
+      const DataColumn(
           label: Text('Mã(sku) phân loại',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
@@ -535,27 +530,27 @@ class _UpdateInformationMarketPageState
             _categoryData?["loai_1"]["name"].text.length > 0
                 ? _categoryData!["loai_1"]["name"].text.trim()
                 : "Phân loại hàng 1",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
 
     dataColumns.add(DataColumn(
         label: Text(
             _categoryData?["loai_2"]?["name"]?.text.length > 0
                 ? _categoryData!["loai_2"]["name"].text.trim()
                 : "Phân loại hàng 2",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))));
 
     dataColumns.add(
-      DataColumn(
+      const DataColumn(
           label: Text('Giá',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
     dataColumns.add(
-      DataColumn(
+      const DataColumn(
           label: Text('Kho hàng',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
     dataColumns.add(
-      DataColumn(
+      const DataColumn(
           label: Text('Mã(sku) phân loại',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
@@ -605,7 +600,7 @@ class _UpdateInformationMarketPageState
                     ],
                   ),
                 )
-              : DataCell(SizedBox()),
+              : const DataCell(SizedBox()),
           DataCell(
             buildTextContent(
                 _categoryData?["loai_2"]?["values"][z]["category_2_name"]

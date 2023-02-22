@@ -36,17 +36,13 @@ class NotificationMarketPage extends StatelessWidget {
                 // padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: ListView(
                   children: [
-                    Container(height: 300,),
+                    Container(
+                      height: 300,
+                    ),
                     Container(
                       margin: EdgeInsets.only(top: 30),
                       child: buildTextContent("Không có thông báo nào ", true,
-                          fontSize: 19, isCenterLeft: false, function: () {
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: transparent,
-                          builder: (context) => MyBottomSheet(),
-                        );
-                      }),
+                          fontSize: 19, isCenterLeft: false, function: () {}),
                     )
                   ],
                 ),
@@ -55,31 +51,5 @@ class NotificationMarketPage extends StatelessWidget {
             //
           ],
         ));
-  }
-}
-
-class MyBottomSheet extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.6, // initial size of the sheet
-        minChildSize: 0.2, // minimum size of the sheet
-        maxChildSize: 1.0, // maximum size of the sheet
-        builder: (context, scrollController) {
-          return Container(
-            color: Colors.white,
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: 100,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(title: Text('Item $index'));
-              },
-            ),
-          );
-        },
-      ),
-    );
   }
 }

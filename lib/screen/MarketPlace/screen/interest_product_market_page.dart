@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/providers/market_place_providers/inter
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/share_and_search_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
@@ -315,20 +316,20 @@ class _InterestProductMarketPageState
                                                                   case 'Chia sẻ lên nhóm':
                                                                     title =
                                                                         "Chia sẻ lên nhóm";
-                                                                    body = _buildContentsForShareOnGroup(
-                                                                        InterestProductMarketConstants
+                                                                    body = ShareAndSearchWidget(
+                                                                        data: InterestProductMarketConstants
                                                                             .INTEREST_PRODUCT_BOTTOM_GROUP_SHARE_SELECTIONS,
-                                                                        InterestProductMarketConstants
-                                                                            .INTEREST_PRODUCT_SEARCH_GROUP_PLACEHOLDER);
+                                                                        placeholder:
+                                                                            InterestProductMarketConstants.INTEREST_PRODUCT_SEARCH_GROUP_PLACEHOLDER);
                                                                     break;
                                                                   case 'Chia sẻ lên trang cá nhân':
                                                                     title =
                                                                         "Chia sẻ lên trang cá nhân của bạn bè";
-                                                                    body = _buildContentsForShareOnGroup(
-                                                                        InterestProductMarketConstants
+                                                                    body = ShareAndSearchWidget(
+                                                                        data: InterestProductMarketConstants
                                                                             .INTEREST_PRODUCT_BOTTOM_PERSONAL_PAGE_SELECTIONS,
-                                                                        InterestProductMarketConstants
-                                                                            .INTEREST_PRODUCT_SEARCH_FRIEND_PLACEHOLDER);
+                                                                        placeholder:
+                                                                            InterestProductMarketConstants.INTEREST_PRODUCT_SEARCH_FRIEND_PLACEHOLDER);
 
                                                                     break;
                                                                   case 'Sao chép liên kết':
@@ -370,118 +371,6 @@ class _InterestProductMarketPageState
           ],
         ),
       ),
-    );
-  }
-
-  _buildContentsForShareOnGroup(dynamic data, String placeholder) {
-    return Column(
-      children: [
-        // user
-        GeneralComponent(
-          [
-            buildTextContent(
-              "Chia sẻ với tư cách",
-              false,
-              fontSize: 15,
-            ),
-            buildSpacer(height: 5),
-            buildTextContent(
-              "Nguyen Van A",
-              true,
-              fontSize: 15,
-            ),
-          ],
-          prefixWidget: Container(
-            height: 40.0,
-            width: 40.0,
-            margin: const EdgeInsets.only(right: 10),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: const ImageCacheRender(
-                height: 40.0,
-                width: 40.0,
-                path:
-                    "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
-              ),
-            ),
-          ),
-          changeBackground: transparent,
-          isHaveBorder: true,
-        ),
-
-        // search
-        Container(
-          height: 35,
-          margin: const EdgeInsets.only(top: 10, bottom: 10),
-          child: TextFormField(
-            onChanged: ((value) {}),
-            textAlign: TextAlign.left,
-            style: const TextStyle(),
-            decoration: InputDecoration(
-                prefixIcon: const Icon(
-                  FontAwesomeIcons.search,
-                  color: Colors.grey,
-                  size: 13,
-                ),
-                contentPadding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                hintText: placeholder,
-                hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
-                border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(17)))),
-          ),
-        ),
-        // list
-        Container(
-            height: 376,
-            child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: data.length,
-                itemBuilder: (context, index) => Column(
-                      children: [
-                        GeneralComponent(
-                          [
-                            Text(
-                              data[index][1],
-                              style: const TextStyle(
-                                  // color: white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            data[index][2] == ""
-                                ? const SizedBox()
-                                : Text(
-                                    data[index][2],
-                                    style: const TextStyle(
-                                      color: greyColor,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                          ],
-                          prefixWidget: Container(
-                            margin: const EdgeInsets.only(right: 10, left: 10),
-                            height: 40,
-                            width: 40,
-                            decoration: const BoxDecoration(
-                              color: transparent,
-                            ),
-                            child: Image.asset(
-                              data[index][0],
-                            ),
-                          ),
-                          suffixWidget: Container(
-                              height: 30,
-                              width: 30,
-                              child: const Icon(
-                                FontAwesomeIcons.chevronRight,
-                                size: 17,
-                              )),
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          changeBackground: transparent,
-                        ),
-                        buildDivider(color: greyColor)
-                      ],
-                    ))),
-      ],
     );
   }
 

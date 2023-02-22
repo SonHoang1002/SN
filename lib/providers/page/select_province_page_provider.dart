@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
-import '../constant/page_constants.dart';
+import 'package:social_network_app_mobile/constant/page_constants.dart';
 
 class SelectProvinceProvider with ChangeNotifier {
   List<String> selectList = InformationPageConstants.PROVINCE_LIST;

@@ -608,28 +608,119 @@ class DetailProductMarketConstants {
     "Danh sách đã mua"
   ];
 
-  static Map<String, dynamic> PERSONAL_MARKET_PLACE_PRODUCT_OF_YOU_CONTENTS = {
-    "key": "product_of_you_contents",
+  static Map<String, dynamic> DETAIL_PRODUCT_MARKET_SHARE_SELECTIONS = {
+    "key": "request_selections",
     "data": [
       {
-        "title": "Lời mời",
+        "key": "link",
+        "title": "Link liên kết",
         "icon": FontAwesomeIcons.mailReply,
       },
       {
-        "title": "Quan tâm",
+        "key": "share_on_story_table",
+        "title": "Chia sẻ lên bảng tin",
         "icon": FontAwesomeIcons.star,
       },
       {
-        "title": "Quản lý sản phẩm",
+        "key": "share_on_group",
+        "title": "Chia sẻ lên nhóm",
         "icon": FontAwesomeIcons.bagShopping,
       },
       {
-        "title": "Đơn mua",
+        "key": "share_on_personal_page_of_friend",
+        "title": "Chia sẻ lên trang cá nhân của bạn bè",
         "icon": FontAwesomeIcons.moneyBill,
       },
+    ]
+  };
+
+  static Map<String, dynamic> DETAIL_PRODUCT_MARKET_GROUP_SHARE_SELECTIONS = {
+    "key": "",
+    "data": [
       {
-        "title": "Giỏ hàng",
-        "icon": FontAwesomeIcons.cartArrowDown,
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "title": "Hoạt Hình Trung Quốc - Chinese Animation",
+        "susbTitle": "Nhóm riêng tư - 4,9K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "title": "Nhóm thông tin sinh viên NEU",
+        "susbTitle": "Nhóm công khai - 9K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "title": "Mobile Development Jobs VN",
+        "susbTitle": "Nhóm riêng tư - 5K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "title": "Tuyển dụng Flutter tại Việt Nam",
+        "susbTitle": "Nhóm công khai - 4K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "title": "Hoạt Hình Trung Quốc - Chinese Animation",
+        "susbTitle": "Nhóm riêng tư - 4,9K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "title": "Nhóm thông tin sinh viên NEU",
+        "susbTitle": "Nhóm công khai - 9K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "title": "Mobile Development Jobs VN",
+        "susbTitle": "Nhóm riêng tư - 5K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "title": "Tuyển dụng Flutter tại Việt Nam",
+        "susbTitle": "Nhóm công khai - 4K thành viên",
+      },
+    ],
+  };
+  static Map<String, dynamic> DETAIL_PRODUCT_MARKET_FRIEND_SHARE_SELECTIONS = {
+    "key": "",
+    "data": [
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "title": "Nguyên Văn A",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "title": "Nguyên Văn B",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "title": "Tuyển dụng Flutter tại Việt Nam",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "title": "Mobile Development Jobs VN",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "title": "Nguyên Văn C",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "title": "Nguyên Văn D",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "title": "Tuyển dụng Flutter tại Việt Nam",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "title": "Mobile Development Jobs VN",
+        "subTitle": ""
       },
     ]
   };
@@ -998,71 +1089,97 @@ class InterestProductMarketConstants {
       {"icon": Icon(FontAwesomeIcons.copy), "title": "Sao chép liên kết"},
     ]
   };
-  static List<List<dynamic>> INTEREST_PRODUCT_BOTTOM_GROUP_SHARE_SELECTIONS = [
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_1.png",
-      "Hoạt Hình Trung Quốc - Chinese Animation",
-      "Nhóm riêng tư - 4,9K thành viên",
+  static Map<String, dynamic> INTEREST_PRODUCT_BOTTOM_GROUP_SHARE_SELECTIONS = {
+    "key": "",
+    "data": [
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "title": "Hoạt Hình Trung Quốc - Chinese Animation",
+        "susbTitle": "Nhóm riêng tư - 4,9K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "title": "Nhóm thông tin sinh viên NEU",
+        "susbTitle": "Nhóm công khai - 9K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "title": "Mobile Development Jobs VN",
+        "susbTitle": "Nhóm riêng tư - 5K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "title": "Tuyển dụng Flutter tại Việt Nam",
+        "susbTitle": "Nhóm công khai - 4K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "title": "Hoạt Hình Trung Quốc - Chinese Animation",
+        "susbTitle": "Nhóm riêng tư - 4,9K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "title": "Nhóm thông tin sinh viên NEU",
+        "susbTitle": "Nhóm công khai - 9K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "title": "Mobile Development Jobs VN",
+        "susbTitle": "Nhóm riêng tư - 5K thành viên",
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "title": "Tuyển dụng Flutter tại Việt Nam",
+        "susbTitle": "Nhóm công khai - 4K thành viên",
+      },
     ],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_2.png",
-      "Nhóm thông tin sinh viên NEU",
-      "Nhóm công khai - 9K thành viên",
-    ],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_3.png",
-      "Mobile Development Jobs VN",
-      "Nhóm riêng tư - 5K thành viên",
-    ],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_4.png",
-      "Tuyển dụng Flutter tại Việt Nam",
-      "Nhóm công khai - 4K thành viên",
-    ],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_1.png",
-      "Hoạt Hình Trung Quốc - Chinese Animation",
-      "Nhóm riêng tư - 4,9K thành viên",
-    ],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_2.png",
-      "Nhóm thông tin sinh viên NEU",
-      "Nhóm riêng tư - 100K thành viên",
-    ],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_3.png",
-      "Mobile Development Jobs VN",
-      "Nhóm công khai - 4K thành viên",
-    ],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_4.png",
-      "Tuyển dụng Flutter tại Việt Nam",
-      "Nhóm riêng tư - 854 thành viên",
-    ],
-  ];
-  static List<List<dynamic>> INTEREST_PRODUCT_BOTTOM_PERSONAL_PAGE_SELECTIONS =
-      [
-    [MarketPlaceConstants.PATH_IMG + "cat_1.png", "Nguyên Văn A", ""],
-    [MarketPlaceConstants.PATH_IMG + "cat_2.png", "Nguyên Văn B", ""],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_3.png",
-      "Mobile Development Jobs VN",
-      ""
-    ],
-    [MarketPlaceConstants.PATH_IMG + "cat_4.png", "Nguyên Văn C", ""],
-    [MarketPlaceConstants.PATH_IMG + "cat_1.png", "Nguyên Văn D", ""],
-    [MarketPlaceConstants.PATH_IMG + "cat_2.png", "Nguyên Văn E", ""],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_3.png",
-      "Mobile Development Jobs VN",
-      ""
-    ],
-    [
-      MarketPlaceConstants.PATH_IMG + "cat_4.png",
-      "Tuyển dụng Flutter tại Việt Nam",
-      ""
-    ],
-  ];
+  };
+  static Map<String, dynamic> INTEREST_PRODUCT_BOTTOM_PERSONAL_PAGE_SELECTIONS =
+      {
+    "key": "",
+    "data": [
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "title": "Nguyên Văn A",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "title": "Nguyên Văn B",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "title": "Tuyển dụng Flutter tại Việt Nam",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "title": "Mobile Development Jobs VN",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "title": "Nguyên Văn C",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "title": "Nguyên Văn D",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "title": "Tuyển dụng Flutter tại Việt Nam",
+        "subTitle": ""
+      },
+      {
+        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "title": "Mobile Development Jobs VN",
+        "subTitle": ""
+      },
+    ]
+  };
 
   static const String INTEREST_PRODUCT_SEARCH_GROUP_PLACEHOLDER =
       "Tìm kiếm nhóm của bạn";

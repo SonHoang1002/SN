@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +13,6 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/update_product_provider.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/update_product_module/update_information_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
@@ -28,11 +24,11 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
-import '../create_product_module/sale_information_market_page.dart';
 
 class CombineUpdateMarketPage extends ConsumerStatefulWidget {
   Map<String, dynamic> data = suggestData[0];
-  // CombineUpdateMarketPage({required this.data});
+
+  CombineUpdateMarketPage({super.key});
   @override
   ConsumerState<CombineUpdateMarketPage> createState() =>
       _CombineUpdateMarketPageState();

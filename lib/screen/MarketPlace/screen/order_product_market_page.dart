@@ -45,13 +45,13 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                BackIconAppbar(),
-                AppBarTitle(title: "Danh sách đơn hàng"),
+                const BackIconAppbar(),
+                const AppBarTitle(title: "Danh sách đơn hàng"),
                 GestureDetector(
                   onTap: () {
                     pushToNextScreen(context, NotificationMarketPage());
                   },
-                  child: Icon(
+                  child: const Icon(
                     FontAwesomeIcons.bell,
                     size: 18,
                     color: Colors.black,
@@ -147,7 +147,7 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
 
   Widget _buildOrderComponent() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
           color: greyColor[100],
           borderRadius: BorderRadius.circular(10),
@@ -158,7 +158,7 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(),
+              const SizedBox(),
               buildTextContent("Chờ thanh toán (2 mục)", true,
                   fontSize: 16, colorWord: Colors.yellow[700]),
             ],
@@ -180,7 +180,7 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
                         children: [
                           Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 FontAwesomeIcons.shop,
                                 size: 20,
                               ),
@@ -190,7 +190,7 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
                                   fontSize: 14),
                             ],
                           ),
-                          SizedBox()
+                          const SizedBox()
                         ],
                       ),
                     ),
@@ -206,8 +206,8 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
                           buildSpacer(height: 10),
                         ],
                         preffixFlexValue: 6,
-                        prefixWidget: Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
+                        prefixWidget: const Padding(
+                          padding: EdgeInsets.only(right: 10.0),
                           child: ImageCacheRender(
                             height: 100.0,
                             path:
@@ -258,7 +258,7 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
                         ),
                       ],
                     ),
-                    index == length - 1 ? SizedBox() : buildDivider(color: red),
+                    index == length - 1 ? const SizedBox() : buildDivider(color: red),
                   ],
                 );
               },
@@ -306,7 +306,7 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
                             // height: 320,
                             child: ListView(shrinkWrap: true, children: [
                               SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 child: DataTable(columns: const [
                                   DataColumn(
@@ -411,7 +411,7 @@ Widget _buildBetweenContent(String title, String contents,
     bool titleBold = false,
     Color? colorTitle}) {
   return Container(
-    margin: EdgeInsets.only(top: 10),
+    margin: const EdgeInsets.only(top: 10),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -425,15 +425,15 @@ Widget _buildBetweenContent(String title, String contents,
                       size: 16,
                     ),
                   )
-                : SizedBox(),
-            SizedBox(
+                : const SizedBox(),
+            const SizedBox(
               width: 5,
             ),
             buildTextContent(title, titleBold,
                 fontSize: 14, colorWord: colorTitle ?? greyColor),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           width: 30,
         ),
         Flexible(
