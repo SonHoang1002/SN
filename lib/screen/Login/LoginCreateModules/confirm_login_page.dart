@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/logout_all_device_login.dart';
+import 'package:social_network_app_mobile/apis/authen_api.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/cross_bar.dart';
+import 'package:social_network_app_mobile/widget/text_description.dart';
+import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
 import '../../../constant/login_constants.dart';
-import '../../../helper/push_to_new_screen.dart';
-import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/divider_widget.dart';
-import '../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../widget/GeneralWidget/spacer_widget.dart';
-import '../../../widget/GeneralWidget/text_content_widget.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
-
-import 'main_login_page.dart';
 
 class ConfirmLoginPage extends StatefulWidget {
   const ConfirmLoginPage({super.key});
@@ -23,19 +19,41 @@ class ConfirmLoginPage extends StatefulWidget {
 
 class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
   late double width = 0;
-
   late double height = 0;
-  final _selectionList = ["sms", "email"];
-  String _selectionValue = "sms";
-  bool _isOnEnterCodePart = false;
-
-  final TextEditingController _codeController = TextEditingController(text: "");
+  String email = '';
+  bool isNext = false;
+  bool isLoad = false;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+
+    handleSeedDataEmail() async {
+      setState(() {
+        isLoad = true;
+      });
+      dynamic response;
+      var data = {"email": email};
+      if (isNext) {
+        response = await AuthenApi().forgotPassword(data);
+      } else {
+        response = await AuthenApi().reconfirmationEmail(data);
+      }
+      setState(() {
+        isLoad = false;
+      });
+      if (response != null && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Đã gửi mail xác nhận tới $email")));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: primaryColor,
+            content: Text("Không thể gửi mail xác nhận tới $email")));
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -43,28 +61,10 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Row(
-                children: const [
-                  BackIconAppbar(),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  AppBarTitle(title: "Quay lại"),
-                ],
-              ),
-            ),
+            const BackIconAppbar(),
             AppBarTitle(
                 title: ConfirmLoginConstants.CONFIRM_LOGIN_APPBAR_TITLE),
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const AppBarTitle(title: "Hủy"),
-            ),
+            Container()
           ],
         ),
       ),
@@ -87,167 +87,53 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                   Center(
                     child: Column(
                       children: [
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                          child: Column(
-                            children: [
-                              buildTextContent(
-                                  !_isOnEnterCodePart
-                                      ? ConfirmLoginConstants
-                                          .CONFIRM_LOGIN_TITLE[0]
-                                      : ConfirmLoginConstants
-                                          .CONFIRM_LOGIN_TITLE[1],
-                                  true,
-                                  fontSize: 16,
-                                  colorWord: Colors.orange,
-                                  isCenterLeft: false),
-                              buildSpacer(height: 10),
-                              //
-                              !_isOnEnterCodePart
-                                  ? Column(
-                                      children: [
-                                        GeneralComponent(
-                                          [
-                                            buildTextContent(
-                                                ConfirmLoginConstants
-                                                        .CONFIRM_LOGIN_USER[
-                                                    "title"],
-                                                true,
-                                                fontSize: 16,
-                                                colorWord: Colors.orange),
-                                            buildTextContent(
-                                                ConfirmLoginConstants
-                                                        .CONFIRM_LOGIN_USER[
-                                                    "subTitle"],
-                                                true,
-                                                fontSize: 14,
-                                                colorWord: Colors.purple),
-                                          ],
-                                          prefixWidget: Container(
-                                            height: 60,
-                                            width: 60,
-                                            padding: const EdgeInsets.all(5),
-                                            child: Image.asset(
-                                              ConfirmLoginConstants
-                                                  .CONFIRM_LOGIN_USER["icon"],
-                                              fit: BoxFit.fitHeight,
-                                            ),
-                                          ),
-                                          changeBackground: transparent,
-                                        ),
-                                        buildDivider(color: Colors.black),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.zero,
-                                          itemCount: ConfirmLoginConstants
-                                              .CONFIRM_LOGIN_SELECTIONS["data"]
-                                              .length,
-                                          itemBuilder: (context, index) {
-                                            return Column(
-                                              children: [
-                                                GeneralComponent(
-                                                  [
-                                                    buildTextContent(
-                                                        ConfirmLoginConstants
-                                                                    .CONFIRM_LOGIN_SELECTIONS[
-                                                                "data"][index]
-                                                            ["title"],
-                                                        true,
-                                                        fontSize: 16,
-                                                        colorWord:
-                                                            Colors.orange),
-                                                    buildTextContent(
-                                                        ConfirmLoginConstants
-                                                                    .CONFIRM_LOGIN_SELECTIONS[
-                                                                "data"][index]
-                                                            ["content"],
-                                                        true,
-                                                        fontSize: 14,
-                                                        colorWord:
-                                                            Colors.purple),
-                                                  ],
-                                                  suffixWidget: Container(
-                                                      height: 60,
-                                                      width: 60,
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
-                                                      child: Radio(
-                                                        onChanged: (value) {
-                                                          _selectionValue =
-                                                              _selectionList[
-                                                                  index];
-                                                          setState(() {});
-                                                        },
-                                                        value: _selectionList[
-                                                            index],
-                                                        groupValue:
-                                                            _selectionValue,
-                                                      )),
-                                                  changeBackground: transparent,
-                                                  padding:
-                                                      const EdgeInsets.all(5),
-                                                ),
-                                                const Divider(
-                                                  height: 10,
-                                                  color: Colors.black,
-                                                )
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    )
-                                  : _buildTextFormField(
-                                      _codeController, "Nhập mã"),
-                              // tiep tuc button
-                              !_isOnEnterCodePart
-                                  ? buildButtonForLoginWidget(
-                                      width: width,
-                                      function: () {
+                            padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                            child: Column(children: [
+                              const Text(
+                                "Vui lòng nhập địa chỉ email để tìm kiếm tài khoản của bạn",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                              const CrossBar(
+                                height: 1,
+                              ),
+                              TextFormFieldCustom(
+                                  autofocus: true,
+                                  hintText: "Địa chỉ Email",
+                                  handleGetValue: (value) {
+                                    setState(() {
+                                      email = value;
+                                      isNext = false;
+                                    });
+                                  }),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              const TextDescription(
+                                  description:
+                                      "Bằng cách nhấn vào Tiếp tục, chúng tôi sẽ gửi vào email của bạn một tin nhắn xác nhận. Vui lòng đọc kĩ tin nhắn và thực hiện các bước tiếp theo theo hướng dẫn.")
+                            ])),
+                        const CrossBar(
+                          height: 1,
+                        ),
+                        SizedBox(
+                          height: 36,
+                          child: ButtonPrimary(
+                            label: isNext ? 'Gửi lại' : 'Tiếp tục',
+                            handlePress: email.trim().isNotEmpty
+                                ? isLoad
+                                    ? null
+                                    : () {
                                         setState(() {
-                                          _isOnEnterCodePart = true;
+                                          isNext = true;
                                         });
-                                      })
-                                  : buildButtonForLoginWidget(
-                                      width: width,
-                                      function: () {
-                                        pushToNextScreen(context,
-                                            LogoutAllDeviceLoginPage());
-                                      }),
-                              // nhap mat khau de tiep tuc vaf ko truy cap duoc nua
-                              !_isOnEnterCodePart
-                                  ? Column(
-                                      children: [
-                                        buildSpacer(height: 10),
-                                        buildButtonForLoginWidget(
-                                            width: width,
-                                            bgColor: transparent,
-                                            title: ConfirmLoginConstants
-                                                .CONFIRM_LOGIN_ENTER_PASSWORD_TO_LOGIN,
-                                            colorText: Colors.orange,
-                                            function: () {
-                                              pushToNextScreen(
-                                                  context, MainLoginPage());
-                                            },
-                                            isHaveBoder: true),
-                                        // not access
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(top: 10),
-                                          child: buildTextContent(
-                                              ConfirmLoginConstants
-                                                  .CONFIRM_LOGIN_NOT_ACCESS,
-                                              false,
-                                              fontSize: 15,
-                                              colorWord: Colors.purple,
-                                              isCenterLeft: false,
-                                              function: () {}),
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox()
-                            ],
+                                        handleSeedDataEmail();
+                                      }
+                                : null,
                           ),
                         ),
                       ],
@@ -261,29 +147,4 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
       ),
     );
   }
-}
-
-Widget _buildTextFormField(
-  TextEditingController controller,
-  String placeHolder, {
-  double? borderRadius = 5,
-}) {
-  return Container(
-    height: 40,
-    child: TextFormField(
-        textAlign: TextAlign.center,
-        controller: controller,
-        onChanged: ((value) {}),
-        validator: (value) {},
-        keyboardType: TextInputType.number,
-        maxLength: 6,
-        decoration: InputDecoration(
-          counterText: "",
-          hintText: placeHolder,
-          hintStyle: const TextStyle(
-            color: Colors.grey,
-          ),
-          contentPadding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-        )),
-  );
 }

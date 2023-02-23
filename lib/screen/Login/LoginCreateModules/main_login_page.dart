@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/confirm_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
@@ -282,10 +284,12 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               TextButton(
-                  onPressed: null,
-                  child: Text(
+                  onPressed: () {
+                    pushToNextScreen(context, const ConfirmLoginPage());
+                  },
+                  child: const Text(
                     "Bạn quên mật khẩu ư?",
                     style: TextStyle(color: primaryColor, fontSize: 17),
                   )),

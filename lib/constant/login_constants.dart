@@ -166,9 +166,9 @@ class CompleteLoginConstants {
 }
 
 class ConfirmLoginConstants {
-  static String CONFIRM_LOGIN_APPBAR_TITLE = "Xác nhận tài khoản";
+  static String CONFIRM_LOGIN_APPBAR_TITLE = "Quên mật khẩu";
   static List<String> CONFIRM_LOGIN_TITLE = [
-    "Chúng tôi sẽ gửi cho bạn mã để xác nhận tài khoản là của bạn",
+    "Vui lòng nhập địa chỉ Email để tìm kiếm tài khoản của bạn",
     "Mã đã được gửi đến điện thoại của bạn. Hãy nhập mã đó tại đây."
   ];
   static Map<String, dynamic> CONFIRM_LOGIN_USER = {
