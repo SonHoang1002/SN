@@ -161,9 +161,15 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
     handleUpdatePost(data) async {
       dynamic response = await PostApi().updatePost(widget.post['id'], data);
 
-      ref
-          .read(postControllerProvider.notifier)
-          .actionHiddenDeletePost(widget.type, widget.post);
+      if (data['hidden'] == true) {
+        ref
+            .read(postControllerProvider.notifier)
+            .actionHiddenDeletePost(widget.type, widget.post);
+      } else {
+        ref
+            .read(postControllerProvider.notifier)
+            .actionHiddenDeletePost(widget.type, response);
+      }
 
       if (response != null && mounted) {
         Navigator.pop(context);
@@ -249,7 +255,8 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => CreateNewFeed(post: widget.post)));
+                builder: (context) =>
+                    CreateNewFeed(post: widget.post, type: widget.type)));
       }
     }
 

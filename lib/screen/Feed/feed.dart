@@ -169,7 +169,9 @@ class _FeedState extends ConsumerState<Feed> {
           child: Column(
             children: [
               const CreatePostButton(),
-              const CrossBar(),
+              const CrossBar(
+                height: 5,
+              ),
               ListView.builder(
                   shrinkWrap: true,
                   primary: false,

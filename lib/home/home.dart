@@ -53,10 +53,29 @@ class _HomeState extends ConsumerState<Home>
     var meData = ref.watch(meControllerProvider);
 
     return meData.isEmpty
-        ? Container(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: const Center(
-              child: CupertinoActivityIndicator(),
+        ? Scaffold(
+            body: Center(
+              child: Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Emso",
+                        style: TextStyle(
+                            fontSize: 26,
+                            color: primaryColor,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        "Social",
+                        style: TextStyle(
+                            fontSize: 26,
+                            color: secondaryColor,
+                            fontWeight: FontWeight.w700),
+                      )
+                    ]),
+              ),
             ),
           )
         : Scaffold(

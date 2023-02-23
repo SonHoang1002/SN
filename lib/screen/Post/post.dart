@@ -28,7 +28,9 @@ class Post extends StatelessWidget {
               ),
               isHiddenCrossbar != null && isHiddenCrossbar == true
                   ? const SizedBox()
-                  : const CrossBar(),
+                  : const CrossBar(
+                      height: 5,
+                    ),
             ],
           )
         : const SizedBox();

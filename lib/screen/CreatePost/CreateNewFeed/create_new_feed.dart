@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -38,7 +37,8 @@ import 'package:social_network_app_mobile/widget/map_widget_item.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
-  const CreateNewFeed({Key? key, this.post}) : super(key: key);
+  final String? type;
+  const CreateNewFeed({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   ConsumerState<CreateNewFeed> createState() => _CreateNewFeedState();
@@ -66,14 +66,16 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     super.initState();
     if (mounted && widget.post != null) {
       setState(() {
+        checkin = widget.post['place'];
+        statusActivity = widget.post['status_activity'];
         content = widget.post['content'];
         gifLink = widget.post['card']?['link'] ?? '';
         backgroundSelected = widget.post['status_background'];
         visibility = typeVisibility.firstWhere(
             (element) => element['key'] == widget.post['visibility']);
         lifeEvent = widget.post['life_event'];
-        statusQuestion =
-            widget.post['status_question'] ?? widget.post['status_target'];
+        // statusQuestion =
+        //     widget.post['status_question'] ?? widget.post['status_target'];
       });
     }
   }
@@ -207,7 +209,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     return response;
   }
 
-  handleCreateUpdatePost() async {
+  handleCreatePost() async {
     context.loaderOverlay.show();
     var data = {"status": content, "visibility": visibility['key']};
 
@@ -279,7 +281,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 ? "Video trong bài viết đang được xử lý"
                 : "Tạo bài viết thành công")));
       }
-
       if (isUploadVideo) {
         setState(() {
           isUploadVideo = false;
@@ -290,6 +291,44 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             .createUpdatePost(feedPost, response);
       }
     } else {}
+  }
+
+  handleUpdatePost() async {
+    context.loaderOverlay.show();
+
+    dynamic data = {"content": content};
+
+    if (widget.post['visibility'] != visibility['key']) {
+      data['visibility'] = visibility['key'];
+    }
+
+    if (backgroundSelected != null &&
+        widget.post['status_background']?['id'] != backgroundSelected['id']) {
+      data['status_background_id'] = backgroundSelected['id'];
+    }
+
+    if (gifLink.isNotEmpty) {
+      data["extra_body"] = {"description": "", "link": gifLink, "title": ""};
+    }
+
+    if (statusActivity != null &&
+        widget.post['status_activity']?['id'] != statusActivity['id']) {
+      data = {...data, 'status_activity_id': statusActivity['id']};
+    }
+    print('response, $data');
+    dynamic response = await PostApi().updatePost(widget.post['id'], data);
+    print('responsexxx, $response');
+
+    ref
+        .read(postControllerProvider.notifier)
+        .actionUpdateDetailInPost(widget.type, response);
+
+    if (response != null && mounted) {
+      context.loaderOverlay.hide();
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Cập nhật thành công")));
+    }
   }
 
   checkVisiblePress() {
@@ -328,9 +367,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                           ? "Chỉnh sửa bài viết"
                           : "Tạo bài viết"),
                   ButtonPrimary(
-                    label: "Đăng",
-                    handlePress:
-                        checkVisiblePress() ? handleCreateUpdatePost : null,
+                    label: widget.post != null ? 'Lưu' : "Đăng",
+                    handlePress: checkVisiblePress()
+                        ? widget.post != null
+                            ? handleUpdatePost
+                            : handleCreatePost
+                        : null,
                   )
                 ],
               ),
