@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class PostState {
@@ -36,7 +37,10 @@ class PostState {
 }
 
 final postControllerProvider =
-    StateNotifierProvider<PostController, PostState>((ref) => PostController());
+    StateNotifierProvider.autoDispose<PostController, PostState>((ref) {
+  ref.read(meControllerProvider);
+  return PostController();
+});
 
 class PostController extends StateNotifier<PostState> {
   PostController() : super(const PostState());
