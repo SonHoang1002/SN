@@ -14,8 +14,10 @@ class CreateFeedMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        decoration: const BoxDecoration(
-            border: Border(top: BorderSide(width: 0.1, color: greyColor))),
+        decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            border:
+                const Border(top: BorderSide(width: 0.1, color: greyColor))),
         child: GridView.builder(
           shrinkWrap: true,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -26,7 +28,7 @@ class CreateFeedMenu extends StatelessWidget {
           itemCount: listMenuPost.length,
           itemBuilder: (context, index) => InkWell(
             onTap: () {
-              handleChooseMenu(listMenuPost[index]);
+              handleChooseMenu(listMenuPost[index], 'menu_in');
             },
             child: Container(
               padding: const EdgeInsets.all(8.0),
@@ -54,7 +56,7 @@ class CreateFeedMenu extends StatelessWidget {
                   ),
                   Text(
                     listMenuPost[index]['label'],
-                    style: const TextStyle(fontSize: 10),
+                    style: const TextStyle(fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
                 ],

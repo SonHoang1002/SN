@@ -7,8 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
+import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import 'post_detail.dart';
 
@@ -37,6 +39,7 @@ class _PostHeaderState extends State<PostHeader> {
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
     String description = '';
+    var place = widget.post['place'];
 
     var postType = widget.post['post_type'];
 
@@ -50,8 +53,14 @@ class _PostHeaderState extends State<PostHeader> {
       } else {
         description = ' đã công bố mục tiêu mới';
       }
+    } else if (postType == postVisibleQuestion) {
+      description = ' đã đặt một câu hỏi';
     } else if (widget.post['post_type'] == postShareEvent) {
       description = ' đã chia sẻ một sự kiện';
+    }
+
+    if (place != null) {
+      description = ' đang ở ${place['title']}';
     }
 
     if (mentions.isNotEmpty) {
@@ -67,8 +76,7 @@ class _PostHeaderState extends State<PostHeader> {
     }
 
     if (widget.post['life_event'] != null) {
-      description =
-          ' đã thêm một ${widget.post['life_event']['name'].toLowerCase()}';
+      description = ' đã thêm một sự kiện trong đời';
     }
 
     if (widget.post['reblog'] != null) {
@@ -121,6 +129,7 @@ class _PostHeaderState extends State<PostHeader> {
                             account: account,
                             description: description,
                             mentions: mentions,
+                            statusActivity: statusActivity,
                             group: group,
                             page: page),
                       ),
@@ -168,7 +177,17 @@ class _PostHeaderState extends State<PostHeader> {
                   ? Row(
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20))),
+                                builder: (BuildContext context) {
+                                  return PostHeaderAction(
+                                      post: widget.post, type: widget.type);
+                                });
+                          },
                           child: Icon(
                             FontAwesomeIcons.ellipsis,
                             size: 22,
@@ -176,18 +195,18 @@ class _PostHeaderState extends State<PostHeader> {
                                 Theme.of(context).textTheme.displayLarge!.color,
                           ),
                         ),
-                        SizedBox(
-                          width: widget.type != postDetail ? 10 : 0,
-                        ),
-                        ![postDetail, postPageUser].contains(widget.type)
-                            ? InkWell(
-                                onTap: () {},
-                                child: const Icon(
-                                  FontAwesomeIcons.xmark,
-                                  size: 22,
-                                ),
-                              )
-                            : const SizedBox()
+                        // SizedBox(
+                        //   width: widget.type != postDetail ? 10 : 0,
+                        // ),
+                        // ![postDetail, postPageUser].contains(widget.type)
+                        //     ? InkWell(
+                        //         onTap: () {},
+                        //         child: const Icon(
+                        //           FontAwesomeIcons.xmark,
+                        //           size: 22,
+                        //         ),
+                        //       )
+                        //     : const SizedBox()
                       ],
                     )
                   : const SizedBox()
@@ -210,6 +229,7 @@ class BlockNamePost extends StatelessWidget {
     required this.mentions,
     this.group,
     this.page,
+    this.statusActivity,
   });
 
   final dynamic account;
@@ -217,6 +237,7 @@ class BlockNamePost extends StatelessWidget {
   final dynamic mentions;
   final dynamic group;
   final dynamic page;
+  final dynamic statusActivity;
 
   @override
   Widget build(BuildContext context) {
@@ -232,6 +253,16 @@ class BlockNamePost extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: Theme.of(context).textTheme.displayLarge!.color),
         children: [
+          const TextSpan(text: ' '),
+          statusActivity.isNotEmpty
+              ? WidgetSpan(
+                  child: ImageCacheRender(
+                    path: statusActivity['url'],
+                    width: 18.0,
+                    height: 18.0,
+                  ),
+                )
+              : const TextSpan(text: ''),
           TextSpan(
               text: description,
               style: const TextStyle(fontWeight: FontWeight.normal)),

@@ -4,30 +4,33 @@ import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dar
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
-class Post extends StatefulWidget {
+class Post extends StatelessWidget {
   final dynamic post;
   final String? type;
-  const Post({Key? key, this.post, this.type}) : super(key: key);
+  final bool? isHiddenCrossbar;
+  const Post({Key? key, this.post, this.type, this.isHiddenCrossbar})
+      : super(key: key);
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _PostState createState() => _PostState();
-}
-
-class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PostHeader(
-          post: widget.post,
-          type: widget.type,
-        ),
-        PostCenter(post: widget.post),
-        PostFooter(post: widget.post),
-        const CrossBar(),
-      ],
-    );
+    return post != null
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PostHeader(
+                post: post,
+                type: type,
+              ),
+              PostCenter(post: post),
+              PostFooter(
+                post: post,
+                type: type,
+              ),
+              isHiddenCrossbar != null && isHiddenCrossbar == true
+                  ? const SizedBox()
+                  : const CrossBar(),
+            ],
+          )
+        : const SizedBox();
   }
 }

@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter_video_info/flutter_video_info.dart';
+import 'package:mime/mime.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/animations/animations.dart';
@@ -22,6 +25,10 @@ class GalleryView extends StatefulWidget {
     Key? key,
     this.controller,
     this.setting,
+    this.isMutipleFile,
+    this.handleGetFiles,
+    this.filesSelected,
+    this.typePage,
   }) : super(key: key);
 
   /// Gallery controller
@@ -29,6 +36,11 @@ class GalleryView extends StatefulWidget {
 
   /// Gallery setting
   final GallerySetting? setting;
+
+  final bool? isMutipleFile;
+  final Function? handleGetFiles;
+  final List? filesSelected;
+  final String? typePage;
 
   ///
   static const String name = 'GalleryView';
@@ -63,11 +75,56 @@ class GalleryView extends StatefulWidget {
 
 class _GalleryViewState extends State<GalleryView> {
   late final GalleryController _controller;
+  final videoInfo = FlutterVideoInfo();
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? GalleryController();
+
+    _controller.addListener(() {
+      if (mounted) {
+        final entities = _controller.value.selectedEntities;
+
+        if (widget.isMutipleFile != null && widget.isMutipleFile == true) {
+          fetchDataMutipleFile(entities);
+        } else {
+          widget.handleGetFiles!(entities);
+          Navigator.pop(context);
+        }
+      }
+    });
+  }
+
+  fetchDataMutipleFile(entities) async {
+    if (entities.isEmpty) return;
+
+    List newList = widget.filesSelected ?? [];
+
+    for (var i = 0; i < entities.length; i++) {
+      File fileData = await entities[i].file;
+      var typeFile =
+          lookupMimeType(fileData.path)!.contains('image') ? 'image' : 'video';
+      if (['image', 'video'].contains(typeFile)) {
+        dynamic decodedImage;
+        if (typeFile == 'image') {
+          decodedImage = await decodeImageFromList(fileData.readAsBytesSync());
+        } else {
+          decodedImage = await videoInfo.getVideoInfo(fileData.path);
+        }
+
+        newList.add({
+          'file': fileData,
+          "aspect": decodedImage.width / decodedImage.height,
+          "type": typeFile,
+          "subType": "local"
+        });
+      }
+    }
+
+    if (newList.isNotEmpty) {
+      widget.handleGetFiles!('update_file', newList);
+    }
   }
 
   @override
@@ -82,17 +139,24 @@ class _GalleryViewState extends State<GalleryView> {
   Widget build(BuildContext context) {
     // If [SlidableGallery] is used no need to build panel setting again
     if (!_controller.fullScreenMode) {
-      return _View(controller: _controller, setting: widget.setting!);
+      return _View(
+        controller: _controller,
+        setting: widget.setting!,
+        handleGetFiles: widget.handleGetFiles,
+      );
     }
 
     // Full screen mode
     return PanelSettingBuilder(
       setting: widget.setting?.panelSetting,
       builder: (panelSetting) => _View(
-        controller: _controller,
-        setting: (widget.setting ?? _controller.setting)
-            .copyWith(panelSetting: panelSetting),
-      ),
+          typePage: widget.typePage,
+          controller: _controller,
+          isMutipleFile: widget.isMutipleFile,
+          filesSelected: widget.filesSelected,
+          setting: (widget.setting ?? _controller.setting)
+              .copyWith(panelSetting: panelSetting),
+          handleGetFiles: widget.handleGetFiles),
     );
 
     //
@@ -106,10 +170,18 @@ class _View extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.setting,
+    this.isMutipleFile,
+    this.filesSelected,
+    this.typePage,
+    this.handleGetFiles,
   }) : super(key: key);
 
   final GalleryController controller;
   final GallerySetting setting;
+  final bool? isMutipleFile;
+  final List? filesSelected;
+  final String? typePage;
+  final Function? handleGetFiles;
 
   @override
   State<_View> createState() => _ViewState();
@@ -239,6 +311,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
 
   void _onSelectionClear() {
     _controller.clearSelection();
+    widget.handleGetFiles!('update_file', []);
     Navigator.of(context).pop();
   }
 
@@ -324,8 +397,11 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
               ),
 
               // Send and edit button
-              if (!actionMode)
+              if (!actionMode &&
+                  widget.isMutipleFile != null &&
+                  widget.isMutipleFile == true)
                 GalleryAssetSelector(
+                  typePage: widget.typePage,
                   controller: _controller,
                   albums: _albums,
                 ),

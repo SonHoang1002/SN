@@ -18,18 +18,18 @@ class WatchDrawer extends StatelessWidget {
           child: DrawerHeader(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Trang theo dõi',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
-              TextDescription(
+              const TextDescription(
                   description:
                       "Truy cập để xem video của các trang bạn đang theo dõi."),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               SearchInput()
