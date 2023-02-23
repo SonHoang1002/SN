@@ -8,7 +8,6 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import '../widgets/have_account_widget.dart';
 import 'birthday_login_page.dart';
 import 'main_login_page.dart';
@@ -24,14 +23,12 @@ class _NameLoginPageState extends State<NameLoginPage> {
   late double width = 0;
   late double height = 0;
   String name = '';
-  bool isFillAll = false;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    checkFillAllInput();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -47,7 +44,6 @@ class _NameLoginPageState extends State<NameLoginPage> {
           // main content
           Expanded(
             child: Column(
-              // padding: EdgeInsets.symmetric(vertical: 5),
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // img
@@ -77,14 +73,16 @@ class _NameLoginPageState extends State<NameLoginPage> {
                               ),
                             ),
                             buildSpacer(height: 15),
-                            isFillAll
+                            name.trim().isNotEmpty
                                 ? SizedBox(
                                     height: 36,
                                     child: ButtonPrimary(
                                       label: "Tiếp tục",
                                       handlePress: () {
                                         pushAndReplaceToNextScreen(
-                                            context, const BirthdayLoginPage());
+                                            context,
+                                            BirthdayLoginPage(
+                                                data: {"display_name": name}));
                                       },
                                     ),
                                   )
@@ -114,17 +112,5 @@ class _NameLoginPageState extends State<NameLoginPage> {
         ]),
       ),
     );
-  }
-
-  checkFillAllInput() {
-    if (name.trim().isNotEmpty) {
-      setState(() {
-        isFillAll = true;
-      });
-    } else {
-      setState(() {
-        isFillAll = false;
-      });
-    }
   }
 }

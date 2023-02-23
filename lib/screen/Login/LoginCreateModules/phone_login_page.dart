@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/apis/authen_api.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -9,7 +10,8 @@ import '../../../widget/GeneralWidget/text_content_widget.dart';
 import 'password_login_page.dart';
 
 class PhoneLoginPage extends StatefulWidget {
-  const PhoneLoginPage({super.key});
+  final dynamic data;
+  const PhoneLoginPage({super.key, this.data});
 
   @override
   State<PhoneLoginPage> createState() => _PhoneLoginPageState();
@@ -23,6 +25,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
 
   String _phoneController = '';
   String _emailController = '';
+  String textValidEmail = '';
   List<String> _countryNumberCode = ["VN", "+84"];
 
   @override
@@ -38,6 +41,41 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
         return true;
       } else {
         return false;
+      }
+    }
+
+    handleAction() async {
+      if (_onPhoneScreen) {
+        pushAndReplaceToNextScreen(
+            context,
+            PasswordLoginPage(data: {
+              ...widget.data,
+              "phone_number": _phoneController,
+              "email": _emailController
+            }));
+        setState(() {
+          textValidEmail = "";
+        });
+      } else {
+        var response =
+            await AuthenApi().validateEmail({"email": _emailController});
+
+        if (response != null && mounted) {
+          pushAndReplaceToNextScreen(
+              context,
+              PasswordLoginPage(data: {
+                ...widget.data,
+                "phone_number": _phoneController,
+                "email": _emailController
+              }));
+          setState(() {
+            textValidEmail = "";
+          });
+        } else {
+          setState(() {
+            textValidEmail = "Email đã tồn tại, vui lòng sử dụng email khác";
+          });
+        }
       }
     }
 
@@ -93,6 +131,15 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                                   },
                                     PhoneLoginConstants
                                         .PHONE_LOGIN_PLACEHOLODER[1]),
+
+                            Text(
+                              textValidEmail,
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.red,
+                                  fontStyle: FontStyle.italic),
+                            ),
+
                             buildSpacer(height: 15),
 
                             // description or navigator button
@@ -138,8 +185,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                                     child: ButtonPrimary(
                                       label: "Tiếp tục",
                                       handlePress: () {
-                                        pushAndReplaceToNextScreen(
-                                            context, const PasswordLoginPage());
+                                        handleAction();
                                       },
                                     ),
                                   )

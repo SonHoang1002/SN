@@ -7,11 +7,11 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'complete_login_page.dart';
 
 class PasswordLoginPage extends StatefulWidget {
-  const PasswordLoginPage({super.key});
+  final dynamic data;
+  const PasswordLoginPage({super.key, this.data});
 
   @override
   State<PasswordLoginPage> createState() => _PasswordLoginPageState();
@@ -23,6 +23,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
   late double height = 0;
   bool _iShowPassword = false;
   String _passwordController = '';
+  String _passwordConfirm = '';
 
   @override
   Widget build(BuildContext context) {
@@ -67,25 +68,53 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                             },
                                 EmailLoginConstants
                                     .EMAIL_LOGIN_NAME_PLACEHOLODER),
+                            _passwordController.trim().isEmpty ||
+                                    _passwordController.length < 9
+                                ? const Text(
+                                    "Mật khẩu phải lớn hơn 9 kí tự",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.red,
+                                        fontStyle: FontStyle.italic),
+                                  )
+                                : const SizedBox(),
 
                             buildSpacer(height: 15),
 
                             // input
                             _buildTextFormField((value) {
                               setState(() {
-                                _passwordController = value;
+                                _passwordConfirm = value;
                               });
                             }, "Xác nhận mật khẩu"),
+
+                            _passwordConfirm != _passwordController
+                                ? const Text(
+                                    "Mật khẩu không trùng khớp",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.red,
+                                        fontStyle: FontStyle.italic),
+                                  )
+                                : const SizedBox(),
+
                             buildSpacer(height: 15),
                             // description
-                            _passwordController.trim().isNotEmpty
+                            _passwordController.trim().isNotEmpty &&
+                                    _passwordConfirm == _passwordController
                                 ? SizedBox(
                                     height: 36,
                                     child: ButtonPrimary(
                                       label: "Tiếp tục",
                                       handlePress: () {
                                         pushAndReplaceToNextScreen(
-                                            context, const CompleteLoginPage());
+                                            context,
+                                            CompleteLoginPage(data: {
+                                              ...widget.data,
+                                              "password": _passwordController,
+                                              "password_confirmation":
+                                                  _passwordConfirm,
+                                            }));
                                       },
                                     ),
                                   )

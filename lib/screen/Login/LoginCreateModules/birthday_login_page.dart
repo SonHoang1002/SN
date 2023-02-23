@@ -14,7 +14,8 @@ import 'gender_login_page.dart';
 import 'main_login_page.dart';
 
 class BirthdayLoginPage extends StatefulWidget {
-  const BirthdayLoginPage({super.key});
+  final dynamic data;
+  const BirthdayLoginPage({super.key, this.data});
 
   @override
   State<BirthdayLoginPage> createState() => _BirthdayLoginPageState();
@@ -119,7 +120,16 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
                                       handlePress: () {
                                         popToPreviousScreen(context);
                                         pushAndReplaceToNextScreen(
-                                            context, const GenderLoginPage());
+                                            context,
+                                            GenderLoginPage(data: {
+                                              ...widget.data,
+                                              "birth_date":
+                                                  '${_timeComponent[0]}',
+                                              "birth_month":
+                                                  '${_timeComponent[1]}',
+                                              "birth_year":
+                                                  "${_timeComponent[2]}",
+                                            }));
                                         return;
                                       },
                                     ),
@@ -194,6 +204,7 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
                 Expanded(
                   child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.date,
+                    dateOrder: DatePickerDateOrder.dmy,
                     onDateTimeChanged: (value) {
                       _timeComponent = [value.day, value.month, value.year];
                       setStateFull(() {});

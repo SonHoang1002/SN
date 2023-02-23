@@ -147,8 +147,7 @@ class PhoneLoginConstants {
 
 class EmailLoginConstants {
   static String EMAIL_LOGIN_TITLE = "Tạo mật khẩu";
-  static String EMAIL_LOGIN_SUBTITLE =
-      "Nhập mật khẩu có tối thiểu 6 ký tự bao gồm số, chữ cái và dấu chấm câu (như ! và &)";
+  static String EMAIL_LOGIN_SUBTITLE = "Nhập mật khẩu có tối thiểu 9 ký tự";
   static String EMAIL_LOGIN_NAME_PLACEHOLODER = 'Mật khẩu';
 }
 

@@ -14,7 +14,8 @@ import 'main_login_page.dart';
 import 'phone_login_page.dart';
 
 class GenderLoginPage extends StatefulWidget {
-  const GenderLoginPage({super.key});
+  final dynamic data;
+  const GenderLoginPage({super.key, this.data});
 
   @override
   State<GenderLoginPage> createState() => _GenderLoginPageState();
@@ -138,7 +139,11 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                 label: "Tiếp tục",
                                 handlePress: () {
                                   pushAndReplaceToNextScreen(
-                                      context, const PhoneLoginPage());
+                                      context,
+                                      PhoneLoginPage(data: {
+                                        ...widget.data,
+                                        "gender": _selection
+                                      }));
                                 },
                               ),
                             )
