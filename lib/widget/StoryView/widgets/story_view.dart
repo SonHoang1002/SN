@@ -3,10 +3,12 @@ import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
@@ -382,7 +384,7 @@ class StoryItem {
 /// Widget to display stories just like Whatsapp and Instagram. Can also be used
 /// inline/inside [ListView] or [Column] just like Google News app. Comes with
 /// gestures to pause, forward and go to previous page.
-class StoryView extends StatefulWidget {
+class StoryView extends ConsumerStatefulWidget {
   /// The pages to displayed.
   final List<StoryItem?> storyItems;
   final List medias;
@@ -432,12 +434,13 @@ class StoryView extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return StoryViewState();
   }
 }
 
-class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
+class StoryViewState extends ConsumerState<StoryView>
+    with TickerProviderStateMixin {
   AnimationController? _animationController;
   Animation<double>? _currentAnimation;
   Timer? _nextDebouncer;
@@ -635,6 +638,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var meData = ref.watch(meControllerProvider)[0];
+
     return Stack(
       children: [
         Container(

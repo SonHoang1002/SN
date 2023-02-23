@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 
-class QuestionAnwer extends StatefulWidget {
+class QuestionAnwer extends ConsumerStatefulWidget {
   final String type;
   final dynamic handleUpdateData;
   const QuestionAnwer({Key? key, this.handleUpdateData, required this.type})
       : super(key: key);
 
   @override
-  State<QuestionAnwer> createState() => _QuestionAnwerState();
+  ConsumerState<QuestionAnwer> createState() => _QuestionAnwerState();
 }
 
-class _QuestionAnwerState extends State<QuestionAnwer> {
+class _QuestionAnwerState extends ConsumerState<QuestionAnwer> {
   dynamic gradientSelected = colorsGradient[0];
   String question = '';
 
@@ -51,7 +52,8 @@ class _QuestionAnwerState extends State<QuestionAnwer> {
                         : AvatarSocial(
                             width: size.width * 0.35,
                             height: size.width * 0.35,
-                            path: meData['avatar_media']['preview_url']),
+                            path: ref.watch(meControllerProvider)[0]
+                                ['avatar_media']['preview_url']),
                     const SizedBox(
                       height: 8.0,
                     ),

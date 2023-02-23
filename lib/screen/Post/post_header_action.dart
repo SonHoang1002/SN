@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/widget/Bookmark/bookmark_page.dart';
@@ -37,6 +37,7 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
 
   @override
   Widget build(BuildContext context) {
+    var meData = ref.watch(meControllerProvider)[0];
     List actionsPost = [
       {
         "key": widget.post['pinned'] != null && widget.post['pinned'] == true

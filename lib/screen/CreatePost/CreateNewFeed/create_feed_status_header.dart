@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -11,7 +12,7 @@ import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/page_visibility.dart';
 
-class CreateFeedStatusHeader extends StatefulWidget {
+class CreateFeedStatusHeader extends ConsumerStatefulWidget {
   final dynamic statusActivity;
   final String? description;
   final List? friendSelected;
@@ -34,10 +35,12 @@ class CreateFeedStatusHeader extends StatefulWidget {
   _CreateFeedStatusHeaderState createState() => _CreateFeedStatusHeaderState();
 }
 
-class _CreateFeedStatusHeaderState extends State<CreateFeedStatusHeader> {
+class _CreateFeedStatusHeaderState
+    extends ConsumerState<CreateFeedStatusHeader> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    var meData = ref.watch(meControllerProvider)[0];
 
     renderLinkAvatar() {
       if (widget.entity != null && widget.entity['entityType'] == 'page') {
