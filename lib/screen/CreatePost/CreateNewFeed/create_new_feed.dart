@@ -107,6 +107,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         setState(() {
           content = data;
         });
+
+        if (data.length > 150) {
+          setState(() {
+            backgroundSelected = null;
+          });
+        }
         break;
       case 'update_friend':
         setState(() {
@@ -377,100 +383,115 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 ],
               ),
             ),
-            bottomSheet: getBottomSheet(),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  CreateFeedStatus(
-                      content: content,
-                      checkin: checkin,
-                      friendSelected: friendSelected,
-                      statusActivity: statusActivity,
-                      isShowBackground: checkisShowBackground(),
-                      visibility: visibility,
-                      backgroundSelected: backgroundSelected,
-                      handleUpdateData: handleUpdateData),
-                  Stack(
-                    children: [
-                      files.isNotEmpty
-                          ? GridLayoutImage(
-                              medias: files, handlePress: (media) {})
-                          : const SizedBox(),
-                      gifLink.isNotEmpty
-                          ? ImageCacheRender(
-                              path: gifLink,
-                              width: size.width,
-                            )
-                          : const SizedBox(),
-                      statusQuestion != null
-                          ? PostTarget(
-                              type: statusQuestion['postType'] == 'target'
-                                  ? 'target_create'
-                                  : postCreateQuestionAnwer,
-                              statusQuestion: statusQuestion,
-                            )
-                          : const SizedBox(),
-                      checkin != null
-                          ? MapWidgetItem(checkin: checkin)
-                          : const SizedBox(),
-                      lifeEvent != null
-                          ? PostLifeEvent(
-                              post: {'life_event': lifeEvent},
-                            )
-                          : const SizedBox(),
-                      if (gifLink.isNotEmpty ||
-                          files.isNotEmpty ||
-                          statusQuestion != null ||
-                          checkin != null)
-                        Positioned(
-                            top: statusQuestion != null ? 20 : 10,
-                            right: statusQuestion != null ? 20 : 10,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  files = [];
-                                  gifLink = '';
-                                  statusQuestion = null;
-                                  checkin = null;
-                                  lifeEvent = null;
-                                });
-                              },
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.black.withOpacity(0.5)),
-                                child: const Icon(
-                                  FontAwesomeIcons.xmark,
-                                  color: white,
-                                  size: 20,
-                                ),
-                              ),
-                            )),
-                      if (files.isNotEmpty)
-                        Positioned(
-                            top: 2,
-                            left: 10,
-                            child: SizedBox(
-                              width: 100,
-                              child: ButtonPrimary(
-                                isPrimary: true,
-                                label: "Chỉnh sửa",
-                                handlePress: handlePress,
-                              ),
-                            ))
-                    ],
-                  )
-                ],
-              ),
+            // bottomSheet: getBottomSheet(),
+            body: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CreateFeedStatus(
+                            content: content,
+                            checkin: checkin,
+                            friendSelected: friendSelected,
+                            statusActivity: statusActivity,
+                            isShowBackground: checkisShowBackground(),
+                            visibility: visibility,
+                            backgroundSelected: backgroundSelected,
+                            handleUpdateData: handleUpdateData),
+                        Stack(
+                          children: [
+                            files.isNotEmpty
+                                ? GridLayoutImage(
+                                    medias: files, handlePress: (media) {})
+                                : const SizedBox(),
+                            gifLink.isNotEmpty
+                                ? ImageCacheRender(
+                                    path: gifLink,
+                                    width: size.width,
+                                  )
+                                : const SizedBox(),
+                            statusQuestion != null
+                                ? PostTarget(
+                                    type: statusQuestion['postType'] == 'target'
+                                        ? 'target_create'
+                                        : postCreateQuestionAnwer,
+                                    statusQuestion: statusQuestion,
+                                  )
+                                : const SizedBox(),
+                            checkin != null
+                                ? MapWidgetItem(checkin: checkin)
+                                : const SizedBox(),
+                            lifeEvent != null
+                                ? PostLifeEvent(
+                                    post: {'life_event': lifeEvent},
+                                  )
+                                : const SizedBox(),
+                            if (gifLink.isNotEmpty ||
+                                files.isNotEmpty ||
+                                statusQuestion != null ||
+                                checkin != null)
+                              Positioned(
+                                  top: statusQuestion != null ? 20 : 10,
+                                  right: statusQuestion != null ? 20 : 10,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        files = [];
+                                        gifLink = '';
+                                        statusQuestion = null;
+                                        checkin = null;
+                                        lifeEvent = null;
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 28,
+                                      height: 28,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Colors.black.withOpacity(0.5)),
+                                      child: const Icon(
+                                        FontAwesomeIcons.xmark,
+                                        color: white,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  )),
+                            if (files.isNotEmpty)
+                              Positioned(
+                                  top: 2,
+                                  left: 10,
+                                  child: SizedBox(
+                                    width: 100,
+                                    child: ButtonPrimary(
+                                      isPrimary: true,
+                                      label: "Chỉnh sửa",
+                                      handlePress: handlePress,
+                                    ),
+                                  ))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: getBottomSheet(),
+                )
+              ],
             ),
           ),
         ));
   }
 
   checkisShowBackground() {
-    if (gifLink.isNotEmpty || files.isNotEmpty) {
+    if (gifLink.isNotEmpty ||
+        files.isNotEmpty ||
+        content.length > 150 ||
+        checkin != null ||
+        files.isNotEmpty) {
       return false;
     } else {
       return true;
@@ -553,7 +574,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   getBottomSheet() {
     return Container(
-        height: 60,
+        height: 45,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
@@ -565,12 +586,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         ], color: Theme.of(context).scaffoldBackgroundColor),
         child: GridView.builder(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-            ),
+                crossAxisCount: 5, childAspectRatio: 1),
             itemCount: 5,
             itemBuilder: (context, index) => Container(
-                  margin: const EdgeInsets.only(bottom: 17),
+                  margin: const EdgeInsets.only(bottom: 25),
                   child: InkWell(
                       onTap: () {
                         if (index == 4) {
