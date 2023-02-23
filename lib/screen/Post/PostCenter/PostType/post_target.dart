@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/gradient_color.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
-class PostTarget extends StatelessWidget {
+class PostTarget extends ConsumerWidget {
   final dynamic post;
   final String? type;
   final dynamic statusQuestion;
@@ -14,7 +15,7 @@ class PostTarget extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
 
     return Container(
@@ -41,7 +42,9 @@ class PostTarget extends StatelessWidget {
                   : AvatarSocial(
                       width: size.width * 0.35,
                       height: size.width * 0.35,
-                      path: (post?['account'] ?? meData)['avatar_media']
+                      path: (post?['account'] ??
+                              ref.watch(
+                                  meControllerProvider)[0])['avatar_media']
                           ['preview_url'])
               : post['status_target']['target_status'] == postTargetStatus
                   ? SvgPicture.asset(

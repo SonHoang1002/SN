@@ -18,12 +18,12 @@ class DrawerMoment extends StatelessWidget {
           child: DrawerHeader(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Tài khoản đang theo dõi',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               SearchInput()

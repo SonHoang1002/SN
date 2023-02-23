@@ -67,10 +67,10 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
           errorText: widget.errorText,
           focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(width: 1, color: secondaryColor),
-              borderRadius: BorderRadius.circular(15.0)),
+              borderRadius: BorderRadius.circular(12.0)),
           border: OutlineInputBorder(
               borderSide: const BorderSide(width: 1, color: greyColor),
-              borderRadius: BorderRadius.circular(15.0))),
+              borderRadius: BorderRadius.circular(12.0))),
     );
   }
 }

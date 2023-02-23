@@ -26,6 +26,7 @@ import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_me
 import 'package:social_network_app_mobile/screen/CreatePost/page_edit_media_upload.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_target.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_life_event.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -189,6 +190,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       setState(() {
         isUploadVideo = true;
       });
+
+      var userToken = await SecureStorage().getKeyStorage("token");
       formData = FormData.fromMap({
         "token": userToken,
         "channelId": '2',

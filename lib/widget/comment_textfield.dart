@@ -7,12 +7,14 @@ import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/box_mention.dart';
@@ -24,7 +26,7 @@ import 'package:social_network_app_mobile/widget/mentions/model/social_content_d
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
-class CommentTextfield extends StatefulWidget {
+class CommentTextfield extends ConsumerStatefulWidget {
   final Function? handleComment;
   final FocusNode? commentNode;
   final dynamic commentSelected;
@@ -39,10 +41,10 @@ class CommentTextfield extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CommentTextfield> createState() => _CommentTextfieldState();
+  ConsumerState<CommentTextfield> createState() => _CommentTextfieldState();
 }
 
-class _CommentTextfieldState extends State<CommentTextfield> {
+class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   bool isShowEmoji = false;
   bool isComment = false;
   double heightModal = 250;
@@ -87,9 +89,9 @@ class _CommentTextfieldState extends State<CommentTextfield> {
     });
 
     if (detection.text.substring(1).isEmpty) {
-      List newList =
-          await FriendsApi().getListFriendApi(meData['id'], {"limit": 20}) ??
-              [];
+      List newList = await FriendsApi().getListFriendApi(
+              ref.watch(meControllerProvider)[0]['id'], {"limit": 20}) ??
+          [];
 
       setState(() {
         listMentions = newList.length > 5 ? newList.sublist(0, 5) : newList;

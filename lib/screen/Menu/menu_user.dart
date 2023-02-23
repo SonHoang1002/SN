@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Menu/tranfer_account.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -10,12 +11,12 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/user_item.dart';
 import 'package:badges/badges.dart' as ChipNoti;
 
-class MenuUser extends StatelessWidget {
+class MenuUser extends ConsumerWidget {
   const MenuUser({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeManager>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = pv.Provider.of<ThemeManager>(context);
 
     return InkWell(
       borderRadius: BorderRadius.circular(10.0),
@@ -33,7 +34,9 @@ class MenuUser extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            UserItem(user: meData, subText: 'Xem trang cá nhân của bạn'),
+            UserItem(
+                user: ref.watch(meControllerProvider)[0],
+                subText: 'Xem trang cá nhân của bạn'),
             InkWell(
               onTap: () {
                 showModalBottomSheet(
