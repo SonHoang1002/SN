@@ -4,8 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
 import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/discover_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
@@ -39,6 +37,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
   late List<dynamic> all_data;
   List<dynamic>? _suggestProductList;
   List<dynamic>? _discoverProduct;
+  String? _filterTitle;
   @override
   void initState() {
     if (!mounted) {
@@ -58,6 +57,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
           .read(interestProductsProvider.notifier)
           .addInterestProductItem({});
     });
+    _filterTitle = "Lọc";
   }
 
   @override
@@ -138,11 +138,12 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                 child: GridView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
+                    padding: EdgeInsets.zero,
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisSpacing: 2,
-                            mainAxisSpacing: 2,
+                            crossAxisSpacing: 0,
+                            mainAxisSpacing: 0,
                             crossAxisCount: 2,
                             // childAspectRatio: 0.79),
                             childAspectRatio: 1.1),
@@ -217,7 +218,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
     return Column(
       children: [
         _buildTitleAndSeeAll("Khám phá sản phẩm",
-            suffixWidget: buildTextContent("Lọc", false, function: () {
+            suffixWidget: buildTextContent(_filterTitle!, false, function: () {
               showBottomSheetCheckImportantSettings(
                   context, 400, "Sắp xếp theo",
                   // bgColor: greyColor[400],
@@ -240,6 +241,8 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                               padding: const EdgeInsets.all(5),
                               function: () {
                                 _filterDiscoverProduct(data[index]["title"]);
+                                _filterTitle = data[index]["title"];
+                                setState(() {});
                                 popToPreviousScreen(context);
                               },
                             ),
@@ -264,6 +267,10 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                                           _filterDiscoverProduct(
                                               data[index]["sub_selections"][0]);
                                           popToPreviousScreen(context);
+                                          setState(() {
+                                            _filterTitle = data[index]
+                                                ["sub_selections"][0];
+                                          });
                                         },
                                       ),
                                       buildDivider(color: red),
@@ -283,6 +290,10 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                                         function: () {
                                           _filterDiscoverProduct(
                                               data[index]["sub_selections"][1]);
+                                          setState(() {
+                                            _filterTitle = data[index]
+                                                ["sub_selections"][1];
+                                          });
                                           popToPreviousScreen(context);
                                         },
                                       ),

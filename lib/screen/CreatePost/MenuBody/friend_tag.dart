@@ -80,7 +80,7 @@ class _FriendTagState extends State<FriendTag> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           SearchInput(),
+          SearchInput(),
           const SizedBox(
             height: 8.0,
           ),
@@ -96,7 +96,7 @@ class _FriendTagState extends State<FriendTag> {
                       width: double.infinity,
                       height: 60,
                       child: ListView.builder(
-                        shrinkWrap: true,
+                          shrinkWrap: true,
                           itemCount: friendSelected.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) => Container(

@@ -214,7 +214,6 @@ class _DetailProductMarketPageComsumerState
                         : const SizedBox(),
                     buildSpacer(height: 10),
                     // example color or size product
-
                     SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
@@ -486,6 +485,7 @@ class _DetailProductMarketPageComsumerState
                           color: Colors.blue,
                           height: 2,
                         ),
+                        // tabbar
                         Row(
                           children: List.generate(
                               DetailProductMarketConstants
@@ -532,17 +532,30 @@ class _DetailProductMarketPageComsumerState
                             ? Column(
                                 children: [
                                   Column(
-                                    children: List.generate(10, (index) {
-                                      return _buildReviewAndComment(
-                                          "imgPath",
-                                          "Nguyen Van A",
-                                          4,
-                                          "Sản phẩm này rất tuyệt vời vì nó đáp ứng được tất cả các tiêu chí mà tôi đặt ra. Thiết kế rất đẹp, chất liệu vải tốt và đường may cẩn thận. Điểm đặc biệt là sản phẩm rất tiện lợi khi sử dụng, dễ dàng để mang đi du lịch hay đi làm. Chất lượng âm thanh và độ nhạy cảm của microphone cũng rất tốt.",
-                                          commentImgPath: [
-                                            "https://baokhanhhoa.vn/dataimages/202010/original/images5426900_1.jpg",
-                                            "https://images2.thanhnien.vn/Uploaded/chicuong/2022_11_28/hy-connected-img-1-4608.jpg"
-                                          ]);
-                                    }).toList(),
+                                    children: _commentData != null &&
+                                            _commentData!.isNotEmpty
+                                        ? List.generate(10, (index) {
+                                            return _buildReviewAndComment(
+                                                "imgPath",
+                                                "Nguyen Van A",
+                                                4,
+                                                "Sản phẩm này rất tuyệt vời vì nó đáp ứng được tất cả các tiêu chí mà tôi đặt ra. Thiết kế rất đẹp, chất liệu vải tốt và đường may cẩn thận. Điểm đặc biệt là sản phẩm rất tiện lợi khi sử dụng, dễ dàng để mang đi du lịch hay đi làm. Chất lượng âm thanh và độ nhạy cảm của microphone cũng rất tốt.",
+                                                commentImgPath: [
+                                                  "https://baokhanhhoa.vn/dataimages/202010/original/images5426900_1.jpg",
+                                                  "https://images2.thanhnien.vn/Uploaded/chicuong/2022_11_28/hy-connected-img-1-4608.jpg"
+                                                ]);
+                                          }).toList()
+                                        : [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0),
+                                              child: buildTextContent(
+                                                  "Không có bài đánh giá nào",
+                                                  true,
+                                                  fontSize: 17,
+                                                  isCenterLeft: false),
+                                            )
+                                          ],
                                   ),
                                 ],
                               )
@@ -557,7 +570,6 @@ class _DetailProductMarketPageComsumerState
         ),
         // add to cart and buy now
         Container(
-          // height: 40,
           margin: const EdgeInsets.only(bottom: 10),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           width: width,
@@ -788,11 +800,6 @@ class _DetailProductMarketPageComsumerState
     final response = await CartProductApi().postCartProductApi(data);
 
     print("detail response: $response");
-    // final cartResponse =
-    //     await ref.read(cartProductsProvider.notifier).initCartProductList();
-
-    //add to local
-
     setState(() {});
 
     final listCart = ref.watch(cartProductsProvider).listCart;

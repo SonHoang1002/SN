@@ -787,16 +787,19 @@ class CreateProductMarketConstants {
   static const List<Map<String, dynamic>>
       CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS = [
     {
+      "key": "public",
       "icon": FontAwesomeIcons.earthAfrica,
       "title": "Công khai",
       "subTitle": "Tất cả mọi người"
     },
     {
+      "key": "friend",
       "icon": FontAwesomeIcons.user,
       "title": "Bạn bè",
       "subTitle": "Bạn bè của bạn"
     },
     {
+      "key": "private",
       "icon": FontAwesomeIcons.lock,
       "title": "Riêng tư",
       "subTitle": "Chỉ bạn bè được mời"

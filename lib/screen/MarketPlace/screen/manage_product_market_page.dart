@@ -153,10 +153,9 @@ class _ManageProductMarketPageState
                                 onTap: () {
                                   popToPreviousScreen(context);
                                   pushToNextScreen(
-                                      context,
-                                      UpdateMarketPage(
-                                          // data:data
-                                          ));
+                                      context, UpdateMarketPage(
+                                        data
+                                        ));
                                 },
                               ),
                               ListTile(

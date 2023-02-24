@@ -5,12 +5,10 @@ import 'package:social_network_app_mobile/data/market_place_datas/product_catego
 class ProductCategoriesState {
   List<dynamic> list;
   ProductCategoriesState({this.list = const []});
-  ProductCategoriesState copyWith(
-      {List<dynamic> list = const []}) {
+  ProductCategoriesState copyWith({List<dynamic> list = const []}) {
     return ProductCategoriesState(list: list);
   }
 }
-
 
 final productCategoriesProvider =
     StateNotifierProvider<ProductCategoriesController, ProductCategoriesState>(
@@ -21,12 +19,6 @@ class ProductCategoriesController
   ProductCategoriesController() : super(ProductCategoriesState());
 
   getListProductCategories() async {
-    // final response = await ProductCategoriesApi().getListProductCategoriesApi();
-
-    // List<dynamic> list = [];
-    // productCategories.forEach((e) {
-    //   list.add(dynamic.fromJson(e));
-    // });
     state = state.copyWith(list: productCategories);
   }
 }

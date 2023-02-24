@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -511,10 +513,10 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
 
   _deleteProduct(dynamic indexCategory, dynamic indexProduct) {
     // call api
-    _callDeleteProductApi({
+    _callDeleteProductApi(json.encode({
       "product_variant_id": _cartData![indexCategory]["items"][indexProduct]
           ["product_variant"]["id"]
-    });
+    }));
     _cartData![indexCategory]["items"].removeAt(indexProduct);
      if (_cartData![indexCategory]["items"].isEmpty) {
       _cartData!.removeAt(indexCategory);
@@ -544,6 +546,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
     final response = await ref
         .read(cartProductsProvider.notifier)
         .deleteCartProduct(data);
+    print("cart _callDeleteProductApi");
+
   }
 
   _callUpdateQuantityApi(dynamic data) async {
