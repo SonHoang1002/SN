@@ -10,8 +10,10 @@ import 'package:social_network_app_mobile/providers/market_place_providers/produ
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/see_more_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
 import '../../../../constant/marketPlace_constants.dart';
@@ -21,6 +23,7 @@ import '../../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../../widget/GeneralWidget/text_content_widget.dart';
 import '../widgets/product_item_widget.dart';
 import 'filter_categories_market_page.dart';
+import 'search_modules/category_search_page.dart';
 
 class MainMarketBody extends ConsumerStatefulWidget {
   const MainMarketBody({super.key});
@@ -34,10 +37,11 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
 
   late double height = 0;
   List<dynamic> product_categories = [];
-  late List<dynamic> all_data;
+   List<dynamic>? all_data;
   List<dynamic>? _suggestProductList;
   List<dynamic>? _discoverProduct;
   String? _filterTitle;
+
   @override
   void initState() {
     if (!mounted) {
@@ -66,50 +70,47 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
     width = size.width;
     height = size.height;
 
-    print("height:$height");
-    all_data = ref.watch(productCategoriesProvider).list;
+    if (all_data == null ||all_data!.isEmpty) {
+      all_data = ref.watch(productCategoriesProvider).list;
+    }
     getProductCategoriesName();
     return Stack(
       children: [
         Column(children: [
           // main content
           Expanded(
-            child: Container(
-              // padding: const EdgeInsets.symmetric(horizontal: 10),
-              // color: Colors.grey[900],
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // tim lai o test.dart
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // tim lai o test.dart
 
-                    buildTextContent("thêm icon vào hạng mục", true,
-                        fontSize: 16),
-                    buildTextContent(
-                        "chưa làm sort theo Mới nhất, Bán chạy,", true,
-                        fontSize: 16),
-                    buildTextContent("custom cardSkeleton", true, fontSize: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: _buildCategoriesComponent(),
-                    ),
-                    CrossBar(
-                      height: 10,
-                    ),
-                    // suggest product
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: _buildSuggestProductComponent(),
-                    ),
-                    buildSpacer(height: 10),
-                    CrossBar(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: _buildDiscoverProductComponent(),
-                    )
-                  ],
-                ),
+                  buildTextContent("thêm icon vào hạng mục", true,
+                      fontSize: 16),
+                  buildTextContent(
+                      "chưa làm sort theo Mới nhất, Bán chạy,", true,
+                      fontSize: 16),
+                  buildTextContent("custom cardSkeleton", true, fontSize: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: _buildCategoriesComponent(),
+                  ),
+                  const CrossBar(
+                    height: 10,
+                  ),
+                  // suggest product
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: _buildSuggestProductComponent(),
+                  ),
+                  buildSpacer(height: 10),
+                  const CrossBar(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: _buildDiscoverProductComponent(),
+                  )
+                ],
               ),
             ),
           ),
@@ -123,15 +124,16 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
       children: [
         _buildTitleAndSeeAll(
           "Hạng mục",
-          suffixWidget: buildTextContent("Xem tất cả", false,
+          suffixWidget: buildTextContentButton("Xem tất cả", false,
               fontSize: 14, colorWord: greyColor, function: () {
-            pushToNextScreen(context, FilterCategoriesPage());
+            pushToNextScreen(context, const FilterCategoriesPage());
           }),
           iconData: FontAwesomeIcons.angleRight,
         ),
         Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 10),
+            margin: const EdgeInsets.only(bottom: 10),
             height: 230,
+            padding: const EdgeInsets.only(top: 10),
             child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
@@ -151,13 +153,23 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: buildCategoryProductItemWidget(
-                            product_categories[index]["title"],
-                            product_categories[index]["icon"] != ""
-                                ? product_categories[index]["icon"]
-                                : "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png",
-                            height: 120,
-                            width: 100),
+                        child: InkWell(
+                          onTap: () {
+                            pushToNextScreen(
+                                context,
+                                CategorySearchPage(
+                                    title: product_categories[index]["title"]));
+                          },
+                          child: buildCategoryProductItemWidget(
+                              context,
+                              product_categories[index]["title"],
+                              product_categories[index]["icon"] != ""
+                                  ? product_categories[index]["icon"]
+                                  : "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png",
+                              height: 120,
+                              width: 100,
+                              function: () {}),
+                        ),
                       );
                     }))),
       ],
@@ -169,9 +181,9 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
       children: [
         _buildTitleAndSeeAll(
           "Gợi ý cho bạn",
-          suffixWidget: buildTextContent("Xem tất cả", false,
+          suffixWidget: buildTextContentButton("Xem tất cả", false,
               fontSize: 14, colorWord: greyColor, function: () {
-            pushToNextScreen(context, SeeMoreMarketPage());
+            pushToNextScreen(context, const SeeMoreMarketPage());
           }),
           iconData: FontAwesomeIcons.angleRight,
         ),
@@ -179,6 +191,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
             future: getSuggestProductList(),
             builder: (context, builder) {
               return SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 10),
                 child: _suggestProductList != null &&
                         _suggestProductList!.isNotEmpty
                     ? GridView.builder(
@@ -218,7 +231,8 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
     return Column(
       children: [
         _buildTitleAndSeeAll("Khám phá sản phẩm",
-            suffixWidget: buildTextContent(_filterTitle!, false, function: () {
+            suffixWidget:
+                buildTextContentButton(_filterTitle!, false, function: () {
               showBottomSheetCheckImportantSettings(
                   context, 400, "Sắp xếp theo",
                   // bgColor: greyColor[400],
@@ -256,7 +270,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                                               data[index]["sub_selections"][0],
                                               true,
                                               fontSize: 17),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           )
                                         ],
@@ -280,7 +294,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                                               data[index]["sub_selections"][1],
                                               true,
                                               fontSize: 17),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           )
                                         ],
@@ -300,7 +314,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
                                       buildDivider(color: red),
                                     ],
                                   )
-                                : SizedBox()
+                                : const SizedBox()
                           ],
                         );
                       }));
@@ -310,6 +324,7 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
             future: getDiscoverProductList(),
             builder: (context, builder) {
               return SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 10),
                 child: GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -393,9 +408,9 @@ class _MainMarketBodyState extends ConsumerState<MainMarketBody> {
   void getProductCategoriesName() {
     if (product_categories.isEmpty) {
       List<dynamic> primaryProductCategories = [];
-      for (int i = 0; i < all_data.length; i++) {
+      for (int i = 0; i < all_data!.length; i++) {
         primaryProductCategories
-            .add({"title": all_data[i]["text"], "icon": all_data[i]["icon"]});
+            .add({"title": all_data![i]["text"], "icon": all_data![i]["icon"]});
       }
       product_categories = primaryProductCategories;
 

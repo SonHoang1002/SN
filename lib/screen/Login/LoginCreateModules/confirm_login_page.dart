@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -229,7 +230,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                         // not access
                                         Container(
                                           margin: EdgeInsets.only(top: 10),
-                                          child: buildTextContent(
+                                          child: buildTextContentButton(
                                               ConfirmLoginConstants
                                                   .CONFIRM_LOGIN_NOT_ACCESS,
                                               false,

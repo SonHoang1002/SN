@@ -20,10 +20,10 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      final interestProductList =
-          ref.read(suggestProductsProvider.notifier).getSuggestProducts();
-    });
+    // Future.delayed(Duration.zero, () {
+    //   final interestProductList =
+    //       ref.read(suggestProductsProvider.notifier).getSuggestProducts();
+    // });
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -75,7 +76,7 @@ class MainLoginPage extends StatelessWidget {
                                     .MAIN_LOGIN_LOGIN_TEXT_BUTTON,
                                 width: width,
                                 marginBottom: 20),
-                            buildTextContent(
+                            buildTextContentButton(
                                 MainLoginConstants.MAIN_LOGIN_FORGET_PASSWORD,
                                 true,
                                 fontSize: 16,
@@ -85,7 +86,7 @@ class MainLoginPage extends StatelessWidget {
                                   context, SearchAccountLoginPage());
                             }),
                             buildSpacer(height: 15),
-                            buildTextContent(
+                            buildTextContentButton(
                                 MainLoginConstants.MAIN_LOGIN_BACK_TEXT, true,
                                 fontSize: 16,
                                 colorWord: greyColor,

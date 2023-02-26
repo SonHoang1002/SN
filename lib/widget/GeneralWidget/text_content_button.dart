@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-Widget buildTextContent(String title, bool isBold,
+Widget buildTextContentButton(String title, bool isBold,
     {Color? colorWord,
     double? fontSize,
     bool? isCenterLeft = true,
     int? maxLines,
     TextOverflow? overflow,
     IconData? iconData,
-    // Function? function
+    Function? function
     }) {
   return
-  //  InkWell(
-  //   onTap: () {
-  //     // function != null ? function() : null;
-  //   },
-  //   child: 
+   InkWell(
+    onTap: () {
+      function != null ? function() : null;
+    },
+    child: 
     Container(
       alignment: isCenterLeft! ? Alignment.centerLeft : Alignment.center,
       child: Wrap(
@@ -40,6 +40,6 @@ Widget buildTextContent(String title, bool isBold,
           ),
         ],
       ),
-    // ),
+    ),
   );
 }

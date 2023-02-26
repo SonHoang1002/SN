@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
@@ -207,7 +208,7 @@ class _SaleInformationMarketPageState
                   _categoryData["loai_1"]["values"].length != 10
                       ? Padding(
                           padding: const EdgeInsets.only(left: 10, top: 5),
-                          child: buildTextContent(
+                          child: buildTextContentButton(
                               "Thêm mô tả cho phân loại 1: ${_categoryData["loai_1"]["values"].length}/10",
                               false,
                               fontSize: 13, function: () {
@@ -219,7 +220,7 @@ class _SaleInformationMarketPageState
                           _categoryData["loai_2"] == {}
                       ? Padding(
                           padding: const EdgeInsets.only(top: 20),
-                          child: buildTextContent("Thêm nhóm phân loại", true,
+                          child: buildTextContentButton("Thêm nhóm phân loại", true,
                               fontSize: 16,
                               iconData: FontAwesomeIcons.add,
                               isCenterLeft: false, function: () {
@@ -270,7 +271,7 @@ class _SaleInformationMarketPageState
                                 ? Padding(
                                     padding:
                                         const EdgeInsets.only(left: 10, top: 5),
-                                    child: buildTextContent(
+                                    child: buildTextContentButton(
                                         "Thêm mô tả cho phân loại 2: ${_categoryData["loai_2"]["values"].length}/10",
                                         false,
                                         fontSize: 13, function: () {

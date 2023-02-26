@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/search_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/product_item_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import '../../../../widget/back_icon_appbar.dart';
 
@@ -29,8 +30,10 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
-      _filteredProductList = await SearchProductsApi()
-          .searchProduct({"q": widget.title, "limit": 10,});
+      _filteredProductList = await SearchProductsApi().searchProduct({
+        "q": widget.title,
+        "limit": 10,
+      });
     });
     setState(() {});
   }
@@ -73,7 +76,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
         Expanded(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: _filteredProductList == null || _filteredProductList!.isEmpty
+            child: _filteredProductList == null
                 ? const Center(
                     child: SizedBox(
                       width: 70,
@@ -84,32 +87,36 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
                       ),
                     ),
                   )
-                : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SingleChildScrollView(
-                          child: GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisSpacing: 4,
-                                      mainAxisSpacing: 4,
-                                      crossAxisCount: 2,
-                                      // childAspectRatio: 0.79),
-                                      childAspectRatio: 0.8),
-                              itemCount: _filteredProductList!.length,
-                              // shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return buildProductItem(
-                                    context: context,
-                                    width: width,
-                                    data: _filteredProductList![index]);
-                              }),
+                : _filteredProductList!.isEmpty
+                    ?  Center(
+                        child: buildTextContent("Không có dữ liệu",true,fontSize: 20,isCenterLeft: false),
+                      )
+                    : SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SingleChildScrollView(
+                              child: GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisSpacing: 4,
+                                          mainAxisSpacing: 4,
+                                          crossAxisCount: 2,
+                                          // childAspectRatio: 0.79),
+                                          childAspectRatio: 0.8),
+                                  itemCount: _filteredProductList!.length,
+                                  // shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    return buildProductItem(
+                                        context: context,
+                                        width: width,
+                                        data: _filteredProductList![index]);
+                                  }),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
           ),
         ),
       ]),
@@ -118,8 +125,10 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
 
   Future _initData() async {
     if (_filteredProductList == null) {
-      final response = await SearchProductsApi()
-          .searchProduct({"q": widget.title, "limit": 10,});
+      final response = await SearchProductsApi().searchProduct({
+        "q": widget.title,
+        "limit": 10,
+      });
       _filteredProductList = response;
       setState(() {});
       // Future.delayed(Duration.zero, () {

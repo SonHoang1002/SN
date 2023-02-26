@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -94,7 +95,7 @@ class OnboardingLoginPage extends StatelessWidget {
                           ),
                         ),
                         buildSpacer(height: 20),
-                        buildTextContent(
+                        buildTextContentButton(
                             OnboardingLoginConstants
                                 .ONBOARDING_LOGIN_LOGIN_WITH_DIFFERENCE_ACCOUNT,
                             true,
@@ -104,7 +105,7 @@ class OnboardingLoginPage extends StatelessWidget {
                           pushToNextScreen(context, MainLoginPage());
                         }),
                         buildSpacer(height: 20),
-                        buildTextContent(
+                        buildTextContentButton(
                             OnboardingLoginConstants
                                 .ONBOARDING_LOGIN_SIGNIN_EMSO_ACCOUNT,
                             true,

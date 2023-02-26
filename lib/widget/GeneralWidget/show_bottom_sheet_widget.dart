@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 import '../../theme/colors.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -10,6 +12,7 @@ showBottomSheetCheckImportantSettings(
     Color? bgColor,
     bool? isBarrierTransparent = false,
     IconData? iconData}) {
+       
   showModalBottomSheet(
       enableDrag: true,
       context: context,
@@ -25,7 +28,7 @@ showBottomSheetCheckImportantSettings(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           height: height,
           decoration: BoxDecoration(
-              color: bgColor ?? Colors.grey[300],
+              color: bgColor ?? greyColor[300],
               borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(15), topLeft: Radius.circular(15))),
           child: Column(children: [

@@ -6,7 +6,7 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/comment_product_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/review_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/screen/MarketPlace/widgets/share_and_s
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -70,8 +71,8 @@ class _DetailProductMarketPageComsumerState
           .read(detailProductProvider.notifier)
           .getDetailProduct(widget.id);
       final comment = await ref
-          .read(commentProductProvider.notifier)
-          .getCommentProduct(widget.id);
+          .read(reviewProductProvider.notifier)
+          .getReviewProduct(widget.id);
     });
   }
 
@@ -127,11 +128,11 @@ class _DetailProductMarketPageComsumerState
           .read(detailProductProvider.notifier)
           .getDetailProduct(widget.id);
       final comment = await ref
-          .read(commentProductProvider.notifier)
-          .getCommentProduct(widget.id);
+          .read(reviewProductProvider.notifier)
+          .getReviewProduct(widget.id);
     }
     _detailData = await ref.watch(detailProductProvider).detail;
-    _commentData = await ref.watch(commentProductProvider).commentList;
+    _commentData = await ref.watch(reviewProductProvider).commentList;
     _prices = getMinAndMaxPrice(_detailData?["product_variants"]);
     // khoi tao color and size neu co
     if (_colorCheckList!.isEmpty && _sizeCheckList!.isEmpty) {
@@ -503,7 +504,7 @@ class _DetailProductMarketPageComsumerState
                                     color: _onMorePart == index
                                         ? Colors.blue
                                         : transparent,
-                                    child: buildTextContent(
+                                    child: buildTextContentButton(
                                       DetailProductMarketConstants
                                               .DETAIL_PRODUCT_MARKET_CONTENTS[
                                           index],
@@ -802,7 +803,7 @@ class _DetailProductMarketPageComsumerState
     print("detail response: $response");
     setState(() {});
 
-    final listCart = ref.watch(cartProductsProvider).listCart;
+    List listCart = ref.watch(cartProductsProvider).listCart;
     // neu co cagtegory thi them san pham moi vao list
     for (int i = 0; i < listCart.length; i++) {
       if (listCart[i]["title"] == _detailData!["page"]["title"]) {

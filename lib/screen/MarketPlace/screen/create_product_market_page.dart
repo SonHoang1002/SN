@@ -18,6 +18,7 @@ import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/video_player.dart';
@@ -1281,7 +1282,7 @@ class _CreateProductMarketPageState
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: buildTextContent(
+                child: buildTextContentButton(
                     !_isDetailProduct ? "Xem chi tiết" : "Thu gọn", false,
                     fontSize: 16,
                     iconData: !_isDetailProduct
@@ -1337,7 +1338,7 @@ class _CreateProductMarketPageState
                               ? Padding(
                                   padding:
                                       const EdgeInsets.only(left: 10, top: 5),
-                                  child: buildTextContent(
+                                  child: buildTextContentButton(
                                       "Thêm mô tả cho phân loại 1: ${_categoryData["loai_1"]["values"].length}/10",
                                       false,
                                       fontSize: 13, function: () {
@@ -1352,7 +1353,7 @@ class _CreateProductMarketPageState
                                   _categoryData["loai_2"].isEmpty
                               ? Padding(
                                   padding: const EdgeInsets.only(top: 20),
-                                  child: buildTextContent(
+                                  child: buildTextContentButton(
                                       "Thêm nhóm phân loại", true,
                                       fontSize: 16,
                                       iconData: FontAwesomeIcons.add,
@@ -1411,7 +1412,7 @@ class _CreateProductMarketPageState
                                         ? Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 10, top: 5),
-                                            child: buildTextContent(
+                                            child: buildTextContentButton(
                                                 "Thêm mô tả cho phân loại 2: ${_categoryData["loai_2"]["values"].length}/10",
                                                 false,
                                                 fontSize: 13, function: () {

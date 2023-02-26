@@ -277,12 +277,20 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
                 ),
                 SizedBox(
                   width: isHaveClose ? width * 0.7 : width * 0.8,
-                  child: buildTextContent("${data["title"]}", false,
+                  child: InkWell(
+                    onTap: () {
+                      () {
+                        pushToNextScreen(
+                            context, DetailProductMarketPage(id: data["id"]));
+                      };
+                    },
+                    child: buildTextContent(
+                      "${data["title"]}",
+                      false,
                       fontSize: 17,
-                      overflow: TextOverflow.ellipsis, function: () {
-                    pushToNextScreen(
-                        context, DetailProductMarketPage(id: data["id"]));
-                  }),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
               ],
             ),

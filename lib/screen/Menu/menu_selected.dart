@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 import '../../helper/push_to_new_screen.dart';
 import '../CreatePost/create_modal_base_menu.dart';
@@ -25,6 +28,13 @@ class MenuSelected extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeManager>(context);
+
+    Color colorWord = theme.themeMode == ThemeMode.dark
+        ? white
+        : theme.themeMode == ThemeMode.light
+            ? blackColor
+            : blackColor;
     Widget buttonAppbar = const SizedBox();
     Widget body = const SizedBox();
 
@@ -43,19 +53,19 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 pushToNextScreen(context, CreateGroupPage());
               },
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.plus,
                 size: 20,
-                // color: Colors.black,
+                color: colorWord,
               ),
             ),
             const SizedBox(
               width: 12.0,
             ),
-            const Icon(
+            Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
-              // color: Colors.black,
+              color: colorWord,
             )
           ],
         );
@@ -68,62 +78,62 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 pushToNextScreen(context, const CreateEventPage());
               },
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.cartArrowDown,
                 size: 20,
-                // color: Colors.black,
+                color: colorWord,
               ),
             ),
             const SizedBox(
               width: 12.0,
             ),
-            const Icon(
+            Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
-              // color: Colors.black,
+              color: colorWord,
             )
           ],
         );
         break;
       case 'marketPlace':
-        body = MainMarketBody();
+        body = const MainMarketBody();
         buttonAppbar = Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             GestureDetector(
               onTap: () {
-                pushToNextScreen(context, SearchMarketPage());
+                pushToNextScreen(context, const SearchMarketPage());
               },
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.magnifyingGlass,
                 size: 16,
-                color: Colors.black,
+                color: colorWord,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             GestureDetector(
               onTap: () {
-                pushToNextScreen(context, CartMarketPage());
+                pushToNextScreen(context, const CartMarketPage());
               },
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.cartArrowDown,
                 size: 16,
-                color: Colors.black,
+                color: colorWord,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             GestureDetector(
               onTap: () {
-                pushToNextScreen(context, PersonalMarketPlacePage());
+                pushToNextScreen(context, const PersonalMarketPlacePage());
               },
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.user,
                 size: 16,
-                color: Colors.black,
+                color: colorWord,
               ),
             ),
           ],

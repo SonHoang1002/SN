@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/category_search_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
@@ -48,6 +51,7 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: greyColor,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -75,6 +79,7 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                 SizedBox(
                   width: 80,
                   child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
                       child: Column(
                     children:
                         List.generate(parentCategoriesList!.length, (index) {
@@ -84,6 +89,7 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                                 data![index]["subcategories"]);
                           },
                           child: buildCategoryProductItemWidget(
+                            context,
                             parentCategoriesList![index]["title"],
                             parentCategoriesList![index]["icon"],
                           ));
@@ -114,10 +120,20 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                                       itemCount: childCategoriesList?.length,
                                       // shrinkWrap: true,
                                       itemBuilder: (context, index) {
-                                        return buildCategoryProductItemWidget(
-                                          childCategoriesList?[index]["title"]
-                                              as String,
-                                          childCategoriesList?[index]["icon"],
+                                        return InkWell(
+                                          onTap: () {
+                                            pushAndReplaceToNextScreen(
+                                                context,
+                                                CategorySearchPage(
+                                                    title: childCategoriesList?[
+                                                        index]["title"]));
+                                          },
+                                          child: buildCategoryProductItemWidget(
+                                            context,
+                                            childCategoriesList?[index]["title"]
+                                                as String,
+                                            childCategoriesList?[index]["icon"],
+                                          ),
                                         );
                                       }),
                                 ),

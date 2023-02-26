@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/request_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
@@ -35,6 +38,13 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+        final theme = Provider.of<ThemeManager>(context);
+
+    Color colorWord = theme.themeMode == ThemeMode.dark
+        ? white
+        : theme.themeMode == ThemeMode.light
+            ? blackColor
+            : blackColor;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -49,10 +59,10 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                 onTap: () {
                   pushToNextScreen(context, NotificationMarketPage());
                 },
-                child: const Icon(
+                child:  Icon(
                   FontAwesomeIcons.bell,
                   size: 18,
-                  color: Colors.black,
+                  color: colorWord,
                 ),
               )
             ],
@@ -136,7 +146,7 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                                 "data"];
                             return GeneralComponent(
                               [
-                                buildTextContent(data[index]["title"], false,
+                                buildTextContentButton(data[index]["title"], false,
                                     function: () {
                                   _checkNavigator(data[index]["title"]);
                                 })
