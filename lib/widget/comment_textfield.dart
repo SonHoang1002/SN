@@ -12,7 +12,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -149,7 +148,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
     handleClickMention(data) {
       //Should show notification
-      if (listMentionsSelected.length > 50) return;
+      if (listMentionsSelected.length > 30) return;
 
       String message =
           '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
@@ -180,6 +179,8 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       });
     }
 
+    print('response ${widget.commentSelected}');
+
     handleActionComment() async {
       dynamic dataUploadFile;
       if (files.isNotEmpty) {
@@ -194,7 +195,9 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       }
 
       widget.handleComment!({
-        "status": content,
+        "status": widget.commentSelected != null
+            ? '[${widget.commentSelected['account']['id']}] $content'
+            : content,
         "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : null,
         "extra_body": linkEmojiSticky.isEmpty
             ? null
@@ -204,8 +207,10 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 "link": linkEmojiSticky,
                 "title": ""
               },
-        "tags": listMentionsSelected
-            .where((element) => flagContent.contains(element['id']))
+        "tags": (widget.commentSelected != null
+                ? [...listMentionsSelected, widget.commentSelected['account']]
+                : listMentionsSelected)
+            // .where((element) => flagContent.contains(element['id']))
             .map((e) => {
                   "entity_id": e['id'],
                   "entity_type": e['username'] != null
@@ -216,6 +221,12 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   "name": e['display_name'] ?? e['title']
                 })
             .toList(),
+        "in_reply_to_id": widget.commentSelected != null
+            ? widget.commentSelected['in_reply_to_parent_id'] != null
+                ? widget.commentSelected['in_reply_to_id']
+                : widget.commentSelected['id']
+            : null,
+        "type": widget.commentSelected != null ? "child" : 'parent'
       });
       textController.clear();
       setState(() {
@@ -225,8 +236,17 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         linkEmojiSticky = '';
         listMentionsSelected = [];
       });
+      widget.getCommentSelected!(null);
       // ignore: use_build_context_synchronously
       hiddenKeyboard(context);
+    }
+
+    checkVisibileSubmit() {
+      if (content.trim().isNotEmpty) return true;
+      if (linkEmojiSticky.isNotEmpty) return true;
+      if (files.isNotEmpty) return true;
+
+      return false;
     }
 
     return Container(
@@ -356,9 +376,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     onTap: () {
                       handleClickIcon();
                     },
-                    child: content.trim().isNotEmpty ||
-                            linkEmojiSticky.isNotEmpty ||
-                            files.isNotEmpty
+                    child: checkVisibileSubmit()
                         ? SizedBox(
                             width: 60,
                             child: Center(

@@ -54,8 +54,12 @@ class _PostContentState extends State<PostContent> {
               children: [
                 ClipRect(
                   child: Align(
-                      alignment: Alignment.topCenter,
-                      heightFactor: isMore ? 1 : 0.3,
+                      alignment: Alignment.topLeft,
+                      heightFactor: isMore
+                          ? 1
+                          : widget.post['content'].length > 200
+                              ? 0.35
+                              : 1,
                       child: Linkify(
                         text: widget.post['content'] ?? '',
                         onOpen: (link) async {
@@ -70,25 +74,22 @@ class _PostContentState extends State<PostContent> {
                         options: const LinkifyOptions(humanize: false),
                       )),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isMore = !isMore;
-                    });
-                  },
-                  child: Text(
-                    isMore ? "Thu gọn" : "Xem thêm",
-                    style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w500),
-                  ),
-                )
+                widget.post['content'].length > 200
+                    ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isMore = !isMore;
+                          });
+                        },
+                        child: Text(
+                          isMore ? "Thu gọn" : "Xem thêm",
+                          style: const TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : const SizedBox()
               ],
-            )
-            // Text(
-            //   post['content'],
-            //   style: const TextStyle(fontSize: 15),
-            // ),
-            );
+            ));
       }
     }
 

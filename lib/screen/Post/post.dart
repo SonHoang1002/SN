@@ -21,7 +21,10 @@ class Post extends StatelessWidget {
                 post: post,
                 type: type,
               ),
-              PostCenter(post: post),
+              PostCenter(
+                post: post,
+                type: type,
+              ),
               PostFooter(
                 post: post,
                 type: type,

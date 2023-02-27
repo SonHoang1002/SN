@@ -27,6 +27,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   bool isLoadComment = false;
   FocusNode commentNode = FocusNode();
   dynamic commentSelected;
+  dynamic commentChild;
 
   Future getListCommentPost(postId, params) async {
     setState(() {
@@ -114,19 +115,26 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     };
 
     setState(() {
-      postComment = [newCommentPreview, ...postComment];
+      postComment = data['type'] == 'child'
+          ? postComment
+          : [...postComment, newCommentPreview];
+      commentChild = data['type'] == 'child' ? newCommentPreview : null;
     });
 
     dynamic newComment = await PostApi().createStatus({
           ...data,
           "visibility": "public",
-          "in_reply_to_id": widget.post['id']
+          "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
         }) ??
         newCommentPreview;
-
-    setState(() {
-      postComment = [newComment, ...postComment.sublist(1)];
-    });
+    if (mounted) {
+      setState(() {
+        postComment = data['type'] == 'child'
+            ? postComment
+            : [...postComment.sublist(0, postComment.length - 1), newComment];
+        commentChild = newComment;
+      });
+    }
   }
 
   getCommentSelected(comment) {
@@ -154,113 +162,107 @@ class _PostDetailState extends ConsumerState<PostDetail> {
           commentSelected = null;
         });
       },
-      child: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          body: SizedBox(
-            height: size.height,
-            width: size.width,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const SizedBox(
-                    height: 6.0,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          width: 30,
-                          margin: const EdgeInsets.only(left: 4.0, top: 6.0),
-                          child: const BackIconAppbar()),
-                      SizedBox(
-                        width: size.width - 45,
-                        child: PostHeader(
-                          post: widget.post,
-                          type: postDetail,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PostCenter(
-                            post: widget.post,
-                          ),
-                          PostFooter(post: widget.post, type: postDetail),
-                          Container(
-                            height: 1,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 5),
-                            decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.3)),
-                          ),
-                          ListView.builder(
-                              primary: false,
-                              shrinkWrap: true,
-                              itemCount: postComment.length,
-                              itemBuilder: ((context, index) => CommentTree(
-                                  commentNode: commentNode,
-                                  commentSelected: commentSelected,
-                                  commentParent: postComment[index],
-                                  getCommentSelected: getCommentSelected))),
-                          commentCount - postComment.length > 0
-                              ? InkWell(
-                                  onTap: isLoadComment
-                                      ? null
-                                      : () {
-                                          getListCommentPost(
-                                              widget.post['id'], {
-                                            "max_id": postComment.last['id'],
-                                            "sort_by": "newest"
-                                          });
-                                        },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 12.0, top: 6.0, bottom: 6.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Xem thêm ${commentCount - postComment.length} bình luận",
-                                          style: const TextStyle(
-                                              fontSize: 13,
-                                              color: greyColor,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        const SizedBox(
-                                          width: 8.0,
-                                        ),
-                                        isLoadComment
-                                            ? const SizedBox(
-                                                width: 10,
-                                                height: 10,
-                                                child:
-                                                    CupertinoActivityIndicator())
-                                            : const SizedBox()
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox(),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: CommentTextfield(
-                        commentSelected: commentSelected,
-                        getCommentSelected: getCommentSelected,
-                        commentNode: commentNode,
-                        handleComment: handleComment),
-                  )
-                ]),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const BackIconAppbar(),
+              SizedBox(
+                child: PostHeader(
+                  post: widget.post,
+                  type: postDetail,
+                ),
+              ),
+            ],
           ),
         ),
+        body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PostCenter(
+                        post: widget.post,
+                        type: postDetail,
+                      ),
+                      PostFooter(post: widget.post, type: postDetail),
+                      Container(
+                        height: 1,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 5),
+                        decoration:
+                            BoxDecoration(color: Colors.grey.withOpacity(0.3)),
+                      ),
+                      ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: postComment.length,
+                          itemBuilder: ((context, index) => CommentTree(
+                              commentChildCreate: postComment[index]['id'] ==
+                                      commentChild?['in_reply_to_id']
+                                  ? commentChild
+                                  : null,
+                              commentNode: commentNode,
+                              commentSelected: commentSelected,
+                              commentParent: postComment[index],
+                              getCommentSelected: getCommentSelected))),
+                      commentCount - postComment.length > 0
+                          ? InkWell(
+                              onTap: isLoadComment
+                                  ? null
+                                  : () {
+                                      getListCommentPost(widget.post['id'], {
+                                        "max_id": postComment.last['id'],
+                                        "sort_by": "newest"
+                                      });
+                                    },
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 12.0, top: 6.0, bottom: 6.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Xem thêm ${commentCount - postComment.length} bình luận",
+                                      style: const TextStyle(
+                                          fontSize: 13,
+                                          color: greyColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(
+                                      width: 8.0,
+                                    ),
+                                    isLoadComment
+                                        ? const SizedBox(
+                                            width: 10,
+                                            height: 10,
+                                            child: CupertinoActivityIndicator())
+                                        : const SizedBox()
+                                  ],
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CommentTextfield(
+                    commentSelected: commentSelected,
+                    getCommentSelected: getCommentSelected,
+                    commentNode: commentNode,
+                    handleComment: handleComment),
+              )
+            ]),
       ),
     );
   }

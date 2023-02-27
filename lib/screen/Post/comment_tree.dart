@@ -19,9 +19,11 @@ class CommentTree extends StatefulWidget {
       this.commentParent,
       this.commentNode,
       this.getCommentSelected,
-      this.commentSelected})
+      this.commentSelected,
+      this.commentChildCreate})
       : super(key: key);
 
+  final dynamic commentChildCreate;
   final dynamic commentParent;
   final dynamic commentSelected;
 
@@ -37,6 +39,7 @@ class _CommentTreeState extends State<CommentTree> {
   bool isLoadCommentChild = false;
   List<Comment> commentChild = [];
   List postChildComment = [];
+  int replyCount = 0;
 
   Future getListCommentChild() async {
     setState(() {
@@ -69,6 +72,11 @@ class _CommentTreeState extends State<CommentTree> {
     commentChild = widget.commentParent['replies_total'] > 0
         ? [Comment(avatar: 'icon', userName: 'null', content: '')]
         : [];
+
+    setState(() {
+      replyCount = widget.commentParent?['replies_total'];
+    });
+
     GetTimeAgo.setDefaultLocale('vi');
     super.initState();
   }
@@ -76,7 +84,34 @@ class _CommentTreeState extends State<CommentTree> {
   @override
   Widget build(BuildContext context) {
     dynamic avatarMedia = widget.commentParent?['account']?['avatar_media'];
-    int replyCount = widget.commentParent?['replies_total'] ?? 0;
+
+    checkElement() {
+      int indexCommentChild = postChildComment.indexWhere(
+          (element) => element['id'] == widget.commentChildCreate['id']);
+
+      if (indexCommentChild < 0) return true;
+
+      return false;
+    }
+
+    if (widget.commentChildCreate != null && checkElement()) {
+      setState(() {
+        postChildComment = [...postChildComment, widget.commentChildCreate];
+        commentChild = [
+          ...commentChild,
+          Comment(
+              avatar:
+                  widget.commentChildCreate['account']['avatar_media'] != null
+                      ? widget.commentChildCreate['account']['avatar_media']
+                          ['preview_url']
+                      : linkAvatarDefault,
+              userName: widget.commentChildCreate['account']['display_name'],
+              content: widget.commentChildCreate['id'])
+        ];
+        replyCount = replyCount + 1;
+        isShowCommentChild = true;
+      });
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
@@ -144,7 +179,7 @@ class _CommentTreeState extends State<CommentTree> {
                   data: data,
                   post: postChildComment.firstWhere(
                       (element) => element['id'] == data.content,
-                      orElse: () => ''));
+                      orElse: () => null));
         },
         contentRoot: (context, data) {
           return BoxComment(
@@ -201,101 +236,110 @@ class BoxComment extends StatelessWidget {
       return listRender;
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        data.content != ''
-            ? Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                decoration: BoxDecoration(
-                    color: widget.commentSelected != null &&
-                            widget.commentSelected!['id'] == post['id']
-                        ? secondaryColorSelected
-                        : Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(15)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${data.userName}',
-                      style: const TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    RichText(
-                        text: TextSpan(
-                      text: '',
-                      children: handleGetComment(),
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Theme.of(context).textTheme.bodyLarge!.color),
-                    ))
-                  ],
-                ),
-              )
-            : Container(
-                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                child: Text(
-                  '${data.userName}',
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.w500),
-                )),
-        post['media_attachments'].isNotEmpty || post['card'] != null
-            ? PostMediaComment(post: post)
-            : const SizedBox(),
-        DefaultTextStyle(
-          style: const TextStyle(
-              color: greyColor, fontSize: 12, fontWeight: FontWeight.w500),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: post['typeStatus'] == 'previewComment'
-                ? const Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Text("Đang viết ..."),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+    return post != null
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              data.content != ''
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 8),
+                      decoration: BoxDecoration(
+                          color: widget.commentSelected != null &&
+                                  widget.commentSelected!['id'] == post['id']
+                              ? secondaryColorSelected
+                              : Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          const Text('Thích'),
-                          const SizedBox(
-                            width: 16,
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                widget.commentNode!.requestFocus();
-                                widget.getCommentSelected!(post);
-                              },
-                              child: const Text('Trả lời')),
-                          const SizedBox(
-                            width: 16,
-                          ),
                           Text(
-                            GetTimeAgo.parse(DateTime.parse(
-                                widget.commentParent['created_at'])),
+                            '${data.userName}',
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w500),
                           ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          RichText(
+                              text: TextSpan(
+                            text: '',
+                            children: handleGetComment(),
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color),
+                          ))
                         ],
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 20.0),
-                        child: Row(
+                    )
+                  : Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 8),
+                      child: Text(
+                        '${data.userName}',
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      )),
+              post['media_attachments'].isNotEmpty || post['card'] != null
+                  ? PostMediaComment(post: post)
+                  : const SizedBox(),
+              DefaultTextStyle(
+                style: const TextStyle(
+                    color: greyColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: post['typeStatus'] == 'previewComment'
+                      ? const Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("Đang viết ..."),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('${post['favourites_count']} thích'),
+                            Row(
+                              children: [
+                                const SizedBox(
+                                  width: 2,
+                                ),
+                                const Text('Thích'),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      widget.commentNode!.requestFocus();
+                                      widget.getCommentSelected!(post);
+                                    },
+                                    child: const Text('Trả lời')),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                Text(
+                                  GetTimeAgo.parse(DateTime.parse(
+                                      widget.commentParent['created_at'])),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(right: 20.0),
+                              child: Row(
+                                children: [
+                                  Text('${post['favourites_count']} thích'),
+                                ],
+                              ),
+                            )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-          ),
-        )
-      ],
-    );
+                ),
+              )
+            ],
+          )
+        : const SizedBox();
   }
 }
 
