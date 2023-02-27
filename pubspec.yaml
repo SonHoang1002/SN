@@ -85,6 +85,7 @@ dependencies:
   modal_bottom_sheet: ^3.0.0-pre
   flutter_html: ^3.0.0-alpha.6
   flutter_secure_storage: ^8.0.0
+  linkfy_text: ^1.1.5
 
 dev_dependencies:
   flutter_test:

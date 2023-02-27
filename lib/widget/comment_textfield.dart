@@ -179,8 +179,6 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       });
     }
 
-    print('response ${widget.commentSelected}');
-
     handleActionComment() async {
       dynamic dataUploadFile;
       if (files.isNotEmpty) {

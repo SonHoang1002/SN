@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/linkify.dart';
+import 'package:linkfy_text/linkfy_text.dart';
+import 'package:social_network_app_mobile/helper/regex.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PostContent extends StatefulWidget {
@@ -53,27 +55,43 @@ class _PostContentState extends State<PostContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRect(
-                  child: Align(
-                      alignment: Alignment.topLeft,
-                      heightFactor: isMore
-                          ? 1
-                          : widget.post['content'].length > 200
-                              ? 0.35
-                              : 1,
-                      child: Linkify(
-                        text: widget.post['content'] ?? '',
-                        onOpen: (link) async {
-                          if (await canLaunchUrl(Uri.parse(link.url))) {
-                            await launchUrl(Uri.parse(link.url));
-                          } else {
-                            return;
-                          }
-                        },
-                        style: const TextStyle(
-                            fontSize: 15, overflow: TextOverflow.ellipsis),
-                        options: const LinkifyOptions(humanize: false),
-                      )),
-                ),
+                    child: Align(
+                        alignment: Alignment.topLeft,
+                        heightFactor: isMore
+                            ? 1
+                            : widget.post['content'].length > 200
+                                ? 0.35
+                                : 1,
+                        child: LinkifyText(
+                          widget.post['content'] ?? '',
+                          linkStyle: const TextStyle(
+                              color: secondaryColor,
+                              fontWeight: FontWeight.w500),
+                          linkTypes: const [
+                            LinkType.url,
+                            LinkType.hashTag,
+                            LinkType.userTag,
+                            LinkType.email
+                          ],
+                          onTap: (link) {
+                            String text = link.value.toString();
+
+                            if (getMatchedType(text) == 'hashtag') {
+                            } else if (getMatchedType(text) == 'email') {
+                              final Uri emailLaunchUri = Uri(
+                                scheme: 'mailto',
+                                path: text,
+                                queryParameters: {
+                                  'subject': 'CallOut user Profile',
+                                  'body': ''
+                                },
+                              );
+                              launchUrl(emailLaunchUri);
+                            } else if (getMatchedType(text) == 'url') {
+                              launchUrl(Uri.parse(link.value.toString()));
+                            } else if (getMatchedType(text) == 'userTag') {}
+                          },
+                        ))),
                 widget.post['content'].length > 200
                     ? GestureDetector(
                         onTap: () {
