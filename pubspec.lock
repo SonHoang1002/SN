@@ -41,6 +41,62 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  audioplayers:
+    dependency: "direct main"
+    description:
+      name: audioplayers
+      sha256: "16451eab798b23ad9307aef6f9ca62bb8fb06542af8810eead0d236d3fd40a42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
+  audioplayers_android:
+    dependency: transitive
+    description:
+      name: audioplayers_android
+      sha256: b2c833e6f718b6b030454e329931229afafe9327fdb002874dd544dc8bf2484d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  audioplayers_darwin:
+    dependency: transitive
+    description:
+      name: audioplayers_darwin
+      sha256: e7a3c8759bf11ecfe4b20df338bf9f3d37c7719a5761c46a3833aba0ceeaacff
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
+  audioplayers_linux:
+    dependency: transitive
+    description:
+      name: audioplayers_linux
+      sha256: e95b65e1f4d4764601dac5e65f8d8186fc29401043ab020f1dacec483d708707
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
+  audioplayers_platform_interface:
+    dependency: transitive
+    description:
+      name: audioplayers_platform_interface
+      sha256: "178581a44cb685fd798d2108111d2e98cca3400e30b9c3a05546f124fb37f600"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
+  audioplayers_web:
+    dependency: transitive
+    description:
+      name: audioplayers_web
+      sha256: "859ba09be2a57e57a787273f18c8cf0d9b61383870c5ee4b5632fe9adbc37edf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
+  audioplayers_windows:
+    dependency: transitive
+    description:
+      name: audioplayers_windows
+      sha256: "622e01c4c357c2aaf1b956c3a0f89d97c3cb40315c03f16e3b6c2a31ff9c38bc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
   back_button_interceptor:
     dependency: transitive
     description:
@@ -297,6 +353,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.4"
+  detectable_text_field:
+    dependency: "direct main"
+    description:
+      name: detectable_text_field
+      sha256: f25099a334ab65e3137455799415500ec949a4b9dee32275d646c56740e9980a
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.4"
   dio:
     dependency: "direct main"
     description:
@@ -446,6 +510,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.26+2"
+  flutter_feed_reaction:
+    dependency: "direct main"
+    description:
+      name: flutter_feed_reaction
+      sha256: "26367aaabad445c6cd506804784bf6142d6d5dea7ecd63cad613de330564f85d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
+  flutter_gif:
+    dependency: "direct main"
+    description:
+      name: flutter_gif
+      sha256: b13d7e484e40685e9236ffbaddf012c2448a2e2c1ac48bed345184dd7bc87f88
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   flutter_hooks:
     dependency: "direct main"
     description:
@@ -494,6 +574,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.7"
+  flutter_portal:
+    dependency: transitive
+    description:
+      name: flutter_portal
+      sha256: ec5bd9a0aa7efeea5a95abf54ce91039c812fe6cc8e30d499eaa45ce387e482e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
+  flutter_reaction_button:
+    dependency: "direct main"
+    description:
+      name: flutter_reaction_button
+      sha256: e453eee9ee8743261eda66860d32f9eaf456a20375519a92a775fa63b23fafe5
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1+2"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -768,14 +864,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.8.1"
-  linkfy_text:
-    dependency: "direct main"
-    description:
-      name: linkfy_text
-      sha256: "57286565bfbc7d023a9ab782531c8a61dd02bfb982aee7747260f0ebe47b103a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.5"
   linkify:
     dependency: transitive
     description:

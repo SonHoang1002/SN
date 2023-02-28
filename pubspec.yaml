@@ -85,7 +85,11 @@ dependencies:
   modal_bottom_sheet: ^3.0.0-pre
   flutter_html: ^3.0.0-alpha.6
   flutter_secure_storage: ^8.0.0
-  linkfy_text: ^1.1.5
+  flutter_feed_reaction: ^0.0.6
+  detectable_text_field: ^2.0.4
+  flutter_gif: ^0.0.4
+  audioplayers: ^3.0.1
+  flutter_reaction_button: ^2.0.1+2
 
 dev_dependencies:
   flutter_test:
@@ -115,6 +119,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/reaction/
     - assets/post_media.svg
     - assets/target.svg
     - assets/win.svg

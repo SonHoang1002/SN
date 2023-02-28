@@ -1,8 +1,9 @@
+import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:flutter/material.dart';
-import 'package:linkfy_text/linkfy_text.dart';
 import 'package:social_network_app_mobile/helper/regex.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:detectable_text_field/detectable_text_field.dart';
 
 class PostContent extends StatefulWidget {
   final dynamic post;
@@ -62,36 +63,48 @@ class _PostContentState extends State<PostContent> {
                             : widget.post['content'].length > 200
                                 ? 0.35
                                 : 1,
-                        child: LinkifyText(
-                          widget.post['content'] ?? '',
-                          linkStyle: const TextStyle(
+                        child: DetectableText(
+                          text: widget.post['content'] ?? '',
+                          detectionRegExp: detectionRegExp()!,
+                          detectedStyle: const TextStyle(
                               color: secondaryColor,
                               fontWeight: FontWeight.w500),
-                          linkTypes: const [
-                            LinkType.url,
-                            LinkType.hashTag,
-                            LinkType.userTag,
-                            LinkType.email
-                          ],
-                          onTap: (link) {
-                            String text = link.value.toString();
-
-                            if (getMatchedType(text) == 'hashtag') {
-                            } else if (getMatchedType(text) == 'email') {
-                              final Uri emailLaunchUri = Uri(
-                                scheme: 'mailto',
-                                path: text,
-                                queryParameters: {
-                                  'subject': 'CallOut user Profile',
-                                  'body': ''
-                                },
-                              );
-                              launchUrl(emailLaunchUri);
-                            } else if (getMatchedType(text) == 'url') {
-                              launchUrl(Uri.parse(link.value.toString()));
-                            } else if (getMatchedType(text) == 'userTag') {}
+                          onTap: (tappedText) {
+                            print(tappedText);
                           },
-                        ))),
+                        )
+
+                        // LinkifyText(
+                        //   widget.post['content'] ?? '',
+                        //   linkStyle: const TextStyle(
+                        //       color: secondaryColor,
+                        //       fontWeight: FontWeight.w500),
+                        //   linkTypes: const [
+                        //     LinkType.url,
+                        //     LinkType.hashTag,
+                        //     LinkType.userTag,
+                        //     LinkType.email
+                        //   ],
+                        //   onTap: (link) {
+                        //     // String text = link.value.toString();
+
+                        //     // if (getMatchedType(text) == 'hashtag') {
+                        //     // } else if (getMatchedType(text) == 'email') {
+                        //     //   final Uri emailLaunchUri = Uri(
+                        //     //     scheme: 'mailto',
+                        //     //     path: text,
+                        //     //     queryParameters: {
+                        //     //       'subject': 'CallOut user Profile',
+                        //     //       'body': ''
+                        //     //     },
+                        //     //   );
+                        //     //   launchUrl(emailLaunchUri);
+                        //     // } else if (getMatchedType(text) == 'url') {
+                        //     //   launchUrl(Uri.parse(link.value.toString()));
+                        //     // } else if (getMatchedType(text) == 'userTag') {}
+                        //   },
+                        // )
+                        )),
                 widget.post['content'].length > 200
                     ? GestureDetector(
                         onTap: () {
