@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_feed_reaction/flutter_feed_reaction.dart';
-import 'package:flutter_gif/flutter_gif.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -24,7 +22,6 @@ class _PostFooterButtonState extends State<PostFooterButton>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    FlutterGifController controller = FlutterGifController(vsync: this);
     List buttonAction = [
       {
         "key": "comment",
@@ -71,82 +68,128 @@ class _PostFooterButtonState extends State<PostFooterButton>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.center,
-              child: ReactionButton(
-                onReactionChanged: (value) {
-                  print(value);
-                },
-                reactions: <Reaction>[
-                  Reaction(
-                    previewIcon: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: renderImage('assets/reaction/like.gif'),
-                    ),
-                    icon: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: renderImage('assets/reaction/like.png'),
-                    ),
-                    value: null,
+          Container(
+            alignment: Alignment.centerRight,
+            child: ReactionButton(
+              onReactionChanged: (value) {
+                print(value);
+              },
+              reactions: <Reaction>[
+                Reaction(
+                  previewIcon: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: renderImage('assets/reaction/like.gif'),
                   ),
-                  Reaction(
-                    previewIcon: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: renderImage('assets/reaction/tym.gif'),
-                    ),
-                    icon: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: renderImage('assets/reaction/love.png'),
-                    ),
-                    value: null,
+                  icon: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: renderImage('assets/reaction/like.png'),
                   ),
-                  Reaction(
-                    previewIcon: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: renderImage('assets/reaction/wow.gif'),
-                    ),
-                    icon: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: renderImage('assets/reaction/wow.png'),
-                    ),
-                    value: null,
+                  value: null,
+                ),
+                Reaction(
+                  previewIcon: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: renderImage('assets/reaction/tym.gif'),
                   ),
-                  Reaction(
-                    previewIcon: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: renderImage('assets/reaction/haha.gif'),
-                    ),
-                    icon: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: renderImage('assets/reaction/haha.png'),
-                    ),
-                    value: null,
+                  icon: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: renderImage('assets/reaction/love.png'),
                   ),
-                ],
-                initialReaction: Reaction(
-                    icon: const Padding(
-                      padding:
-                          EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-                      child: ButtonLayout(
-                        button: {
-                          "key": "reaction",
-                          "icon": FontAwesomeIcons.thumbsUp,
-                          "label": "Thích"
-                        },
-                      ),
+                  value: null,
+                ),
+                Reaction(
+                  previewIcon: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: renderImage('assets/reaction/hug.gif'),
+                  ),
+                  icon: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: renderImage('assets/reaction/yay.png'),
+                  ),
+                  value: null,
+                ),
+                Reaction(
+                  previewIcon: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: renderImage('assets/reaction/wow.gif'),
+                  ),
+                  icon: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: renderImage('assets/reaction/wow.png'),
+                  ),
+                  value: null,
+                ),
+                Reaction(
+                  previewIcon: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: renderImage('assets/reaction/haha.gif'),
+                  ),
+                  icon: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: renderImage('assets/reaction/haha.png'),
+                  ),
+                  value: null,
+                ),
+                Reaction(
+                  previewIcon: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: renderImage('assets/reaction/cry.gif'),
+                  ),
+                  icon: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: renderImage('assets/reaction/sad.png'),
+                  ),
+                  value: null,
+                ),
+                Reaction(
+                  previewIcon: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: renderImage('assets/reaction/mad.gif'),
+                  ),
+                  icon: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: renderImage('assets/reaction/angry.png'),
+                  ),
+                  value: null,
+                ),
+              ],
+              initialReaction: Reaction(
+                  icon: const Padding(
+                    padding:
+                        EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+                    child: ButtonLayout(
+                      button: {
+                        "key": "reaction",
+                        "icon": FontAwesomeIcons.thumbsUp,
+                        "label": "Thích"
+                      },
                     ),
-                    value: null),
-              ),
+                  ),
+                  value: const Padding(
+                    padding:
+                        EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+                    child: ButtonLayout(
+                      button: {
+                        "key": "reaction",
+                        "icon": FontAwesomeIcons.thumbsUp,
+                        "label": "Thích"
+                      },
+                    ),
+                  )),
             ),
           ),
           ...List.generate(

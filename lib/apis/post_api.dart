@@ -51,4 +51,12 @@ class PostApi {
   Future reportPostApi(data) {
     return Api().postRequestBase("/api/v1/reports", data);
   }
+
+  Future reactionPostApi(idPost, data) {
+    return Api().postRequestBase("/api/v1/statuses/$idPost/favourite", data);
+  }
+
+  Future unReactionPostApi(idPost, data) {
+    return Api().postRequestBase("/api/v1/statuses/$idPost/unfavourite", data);
+  }
 }

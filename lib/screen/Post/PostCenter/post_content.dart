@@ -72,39 +72,7 @@ class _PostContentState extends State<PostContent> {
                           onTap: (tappedText) {
                             print(tappedText);
                           },
-                        )
-
-                        // LinkifyText(
-                        //   widget.post['content'] ?? '',
-                        //   linkStyle: const TextStyle(
-                        //       color: secondaryColor,
-                        //       fontWeight: FontWeight.w500),
-                        //   linkTypes: const [
-                        //     LinkType.url,
-                        //     LinkType.hashTag,
-                        //     LinkType.userTag,
-                        //     LinkType.email
-                        //   ],
-                        //   onTap: (link) {
-                        //     // String text = link.value.toString();
-
-                        //     // if (getMatchedType(text) == 'hashtag') {
-                        //     // } else if (getMatchedType(text) == 'email') {
-                        //     //   final Uri emailLaunchUri = Uri(
-                        //     //     scheme: 'mailto',
-                        //     //     path: text,
-                        //     //     queryParameters: {
-                        //     //       'subject': 'CallOut user Profile',
-                        //     //       'body': ''
-                        //     //     },
-                        //     //   );
-                        //     //   launchUrl(emailLaunchUri);
-                        //     // } else if (getMatchedType(text) == 'url') {
-                        //     //   launchUrl(Uri.parse(link.value.toString()));
-                        //     // } else if (getMatchedType(text) == 'userTag') {}
-                        //   },
-                        // )
-                        )),
+                        ))),
                 widget.post['content'].length > 200
                     ? GestureDetector(
                         onTap: () {
