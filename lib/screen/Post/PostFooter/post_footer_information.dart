@@ -39,22 +39,17 @@ class PostFooterInformation extends StatelessWidget {
     }
 
     renderImage(link, key) {
+      double size = key == 'love'
+          ? 24
+          : ['angry', 'sad', 'like'].contains(key)
+              ? key == 'yay'
+                  ? 28
+                  : 16
+              : 18;
       return Image.asset(
         link,
-        height: key == 'love'
-            ? 24
-            : ['angry', 'sad'].contains(key)
-                ? key == 'yay'
-                    ? 28
-                    : 16
-                : 18,
-        width: key == 'love'
-            ? 24
-            : ['angry', 'sad'].contains(key)
-                ? key == 'yay'
-                    ? 28
-                    : 16
-                : 18,
+        height: size,
+        width: size,
         errorBuilder: (context, error, stackTrace) =>
             const Icon(FontAwesomeIcons.faceAngry),
       );
@@ -69,7 +64,7 @@ class PostFooterInformation extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

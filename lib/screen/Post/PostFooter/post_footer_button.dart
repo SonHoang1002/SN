@@ -1,24 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/widget/screen_share.dart';
 
-class PostFooterButton extends StatefulWidget {
+class PostFooterButton extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
   const PostFooterButton({Key? key, this.post, this.type}) : super(key: key);
 
   @override
-  State<PostFooterButton> createState() => _PostFooterButtonState();
+  ConsumerState<PostFooterButton> createState() => _PostFooterButtonState();
 }
 
-class _PostFooterButtonState extends State<PostFooterButton>
+class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
@@ -30,6 +33,7 @@ class _PostFooterButtonState extends State<PostFooterButton>
       },
       {"key": "share", "icon": Icons.share, "label": "Chia sẻ"}
     ];
+    String viewerReaction = widget.post['viewer_reaction'] ?? '';
 
     handlePress(key) {
       if (key == 'comment') {
@@ -55,12 +59,84 @@ class _PostFooterButtonState extends State<PostFooterButton>
       }
     }
 
-    renderImage(link) {
+    renderImage(link, type) {
+      double size = type == 'gif' ? 40 : 20;
       return Image.asset(
         link,
+        width: size,
+        height: size,
         errorBuilder: (context, error, stackTrace) =>
             const Icon(FontAwesomeIcons.faceAngry),
       );
+    }
+
+    renderText(key) {
+      String text = 'Thích';
+      if (key == 'like') {
+        text = 'Thích';
+      } else if (key == 'love') {
+        text = 'Yêu thích';
+      } else if (key == 'yay') {
+        text = 'Tự hào';
+      } else if (key == 'wow') {
+        text = 'Wow';
+      } else if (key == 'haha') {
+        text = 'Haha';
+      } else if (key == 'sad') {
+        text = 'Buồn';
+      } else {
+        text = 'Phẫn nộ';
+      }
+
+      return Text(
+        ' $text',
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: key == 'like'
+                ? secondaryColor
+                : key == 'love'
+                    ? Colors.red
+                    : primaryColor,
+            fontSize: 12),
+      );
+    }
+
+    renderGif(type, key, {double size = 40}) {
+      return Row(
+        children: [
+          renderImage('assets/reaction/$key.$type', type),
+          type == 'png' ? renderText(key) : const SizedBox()
+        ],
+      );
+    }
+
+    handleReaction(react) async {
+      var newPost = widget.post;
+      if (react != null) {
+        dynamic data = {"custom_vote_type": react};
+        newPost = {
+          ...newPost,
+          "favourites_count": newPost['viewer_reaction'] != null
+              ? newPost['favourites_count']
+              : newPost['favourites_count'] + 1,
+          "viewer_reaction": react
+        };
+
+        await PostApi().reactionPostApi(widget.post['id'], data);
+      } else {
+        newPost = {
+          ...newPost,
+          "favourites_count": newPost['favourites_count'] != null
+              ? newPost['favourites_count'] - 1
+              : newPost['favourites_count'],
+          "viewer_reaction": null
+        };
+
+        await PostApi().unReactionPostApi(widget.post['id']);
+      }
+      ref
+          .read(postControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, newPost);
     }
 
     return Padding(
@@ -72,124 +148,60 @@ class _PostFooterButtonState extends State<PostFooterButton>
             alignment: Alignment.centerRight,
             child: ReactionButton(
               onReactionChanged: (value) {
-                print(value);
+                handleReaction(value);
               },
               reactions: <Reaction>[
                 Reaction(
-                  previewIcon: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: renderImage('assets/reaction/like.gif'),
-                  ),
-                  icon: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: renderImage('assets/reaction/like.png'),
-                  ),
-                  value: null,
+                  previewIcon: renderGif('gif', 'like'),
+                  icon: renderGif('png', 'like', size: 20),
+                  value: 'like',
                 ),
                 Reaction(
-                  previewIcon: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: renderImage('assets/reaction/tym.gif'),
-                  ),
-                  icon: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: renderImage('assets/reaction/love.png'),
-                  ),
-                  value: null,
+                  previewIcon: renderGif('gif', 'tym'),
+                  icon: renderGif('png', 'love', size: 20),
+                  value: 'love',
                 ),
                 Reaction(
-                  previewIcon: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: renderImage('assets/reaction/hug.gif'),
-                  ),
-                  icon: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: renderImage('assets/reaction/yay.png'),
-                  ),
-                  value: null,
+                  previewIcon: renderGif('gif', 'hug'),
+                  icon: renderGif('png', 'yay', size: 20),
+                  value: 'yay',
                 ),
                 Reaction(
-                  previewIcon: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: renderImage('assets/reaction/wow.gif'),
-                  ),
-                  icon: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: renderImage('assets/reaction/wow.png'),
-                  ),
-                  value: null,
+                  previewIcon: renderGif('gif', 'wow'),
+                  icon: renderGif('png', 'wow', size: 20),
+                  value: 'wow',
                 ),
                 Reaction(
-                  previewIcon: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: renderImage('assets/reaction/haha.gif'),
-                  ),
-                  icon: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: renderImage('assets/reaction/haha.png'),
-                  ),
-                  value: null,
+                  previewIcon: renderGif('gif', 'haha'),
+                  icon: renderGif('png', 'haha', size: 20),
+                  value: 'haha',
                 ),
                 Reaction(
-                  previewIcon: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: renderImage('assets/reaction/cry.gif'),
-                  ),
-                  icon: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: renderImage('assets/reaction/sad.png'),
-                  ),
-                  value: null,
+                  previewIcon: renderGif('gif', 'cry'),
+                  icon: renderGif('png', 'sad', size: 20),
+                  value: 'sad',
                 ),
                 Reaction(
-                  previewIcon: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: renderImage('assets/reaction/mad.gif'),
-                  ),
-                  icon: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: renderImage('assets/reaction/angry.png'),
-                  ),
-                  value: null,
+                  previewIcon: renderGif('gif', 'mad'),
+                  icon: renderGif('png', 'angry', size: 20),
+                  value: 'angry',
                 ),
               ],
               initialReaction: Reaction(
-                  icon: const Padding(
-                    padding:
-                        EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-                    child: ButtonLayout(
-                      button: {
-                        "key": "reaction",
-                        "icon": FontAwesomeIcons.thumbsUp,
-                        "label": "Thích"
-                      },
-                    ),
-                  ),
-                  value: const Padding(
-                    padding:
-                        EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-                    child: ButtonLayout(
-                      button: {
-                        "key": "reaction",
-                        "icon": FontAwesomeIcons.thumbsUp,
-                        "label": "Thích"
-                      },
-                    ),
-                  )),
+                  icon: viewerReaction.isNotEmpty
+                      ? renderGif('png', viewerReaction, size: 20)
+                      : const Padding(
+                          padding: EdgeInsets.only(
+                              left: 8, right: 8, top: 4, bottom: 4),
+                          child: ButtonLayout(
+                            button: {
+                              "key": "reaction",
+                              "icon": FontAwesomeIcons.thumbsUp,
+                              "label": "Thích"
+                            },
+                          ),
+                        ),
+                  value: 'kakakak'),
             ),
           ),
           ...List.generate(

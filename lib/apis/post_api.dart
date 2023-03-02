@@ -56,7 +56,7 @@ class PostApi {
     return Api().postRequestBase("/api/v1/statuses/$idPost/favourite", data);
   }
 
-  Future unReactionPostApi(idPost, data) {
-    return Api().postRequestBase("/api/v1/statuses/$idPost/unfavourite", data);
+  Future unReactionPostApi(idPost) {
+    return Api().postRequestBase("/api/v1/statuses/$idPost/unfavourite", null);
   }
 }
