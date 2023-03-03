@@ -87,7 +87,6 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   detectable_text_field: ^2.0.4
   audioplayers: ^3.0.1
-  flutter_reaction_button: ^2.0.1+2
 
 dev_dependencies:
   flutter_test:

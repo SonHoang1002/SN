@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
@@ -10,6 +9,7 @@ import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/widget/Reaction/flutter_reaction_button.dart';
 import 'package:social_network_app_mobile/widget/screen_share.dart';
 
 class PostFooterButton extends ConsumerStatefulWidget {
@@ -112,6 +112,30 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
 
     handleReaction(react) async {
       var newPost = widget.post;
+      List newFavourites = newPost['reactions'];
+
+      int index = newPost['reactions']
+          .indexWhere((element) => element['type'] == react);
+      int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
+          ? newPost['reactions']
+              .indexWhere((element) => element['type'] == viewerReaction)
+          : -1;
+
+      if (index >= 0) {
+        newFavourites[index] = {
+          "type": react,
+          "${react}s_count": newFavourites[index]['${react}s_count'] + 1
+        };
+      }
+
+      if (indexCurrent >= 0) {
+        newFavourites[indexCurrent] = {
+          "type": viewerReaction,
+          "${viewerReaction}s_count":
+              newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
+        };
+      }
+
       if (react != null) {
         dynamic data = {"custom_vote_type": react};
         newPost = {
@@ -119,8 +143,13 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
           "favourites_count": newPost['viewer_reaction'] != null
               ? newPost['favourites_count']
               : newPost['favourites_count'] + 1,
-          "viewer_reaction": react
+          "viewer_reaction": react,
+          "reactions": newFavourites
         };
+
+        ref
+            .read(postControllerProvider.notifier)
+            .actionUpdateDetailInPost(widget.type, newPost);
 
         await PostApi().reactionPostApi(widget.post['id'], data);
       } else {
@@ -129,14 +158,24 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
           "favourites_count": newPost['favourites_count'] != null
               ? newPost['favourites_count'] - 1
               : newPost['favourites_count'],
-          "viewer_reaction": null
+          "viewer_reaction": null,
+          "reactions": newFavourites
         };
+
+        ref
+            .read(postControllerProvider.notifier)
+            .actionUpdateDetailInPost(widget.type, newPost);
 
         await PostApi().unReactionPostApi(widget.post['id']);
       }
-      ref
-          .read(postControllerProvider.notifier)
-          .actionUpdateDetailInPost(widget.type, newPost);
+    }
+
+    handlePressButton() {
+      if (viewerReaction.isNotEmpty) {
+        handleReaction(null);
+      } else {
+        handleReaction('like');
+      }
     }
 
     return Padding(
@@ -150,6 +189,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
               onReactionChanged: (value) {
                 handleReaction(value);
               },
+              handlePressButton: handlePressButton,
               reactions: <Reaction>[
                 Reaction(
                   previewIcon: renderGif('gif', 'like'),

@@ -22,6 +22,8 @@ class PostFooterInformation extends StatelessWidget {
               "count": element['${element['type']}s_count']
             })
         .toList()
+        .where((element) => element['count'] > 0)
+        .toList()
       ..sort(
         (a, b) => a['count'].compareTo(b['count']),
       );
@@ -93,7 +95,7 @@ class PostFooterInformation extends StatelessWidget {
                             ],
                           )
                         : const SizedBox(),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 8),
                     Text(
                       textRender,
                       style: style,
