@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
-class PostFooterInformation extends StatelessWidget {
+class PostFooterInformation extends ConsumerWidget {
   final dynamic post;
-  const PostFooterInformation({Key? key, this.post}) : super(key: key);
+  final String? type;
+  const PostFooterInformation({Key? key, this.post, this.type})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    dynamic meData = ref.read(meControllerProvider)[0];
+
     const style = TextStyle(color: greyColor, fontSize: 14);
     dynamic favourites = post['favourites'];
     String viewerReaction = post['viewer_reaction'] ?? '';
@@ -33,7 +39,7 @@ class PostFooterInformation extends StatelessWidget {
     if (viewerReaction.isNotEmpty) {
       if (favourites != null && favourites.isNotEmpty) {
         textRender =
-            'Bạn, ${favourites[0]['account']['display_name']}${reactionsCount > 2 ? ' và ${reactionsCount - 2} người khác' : ''}';
+            'Bạn, ${meData['id'] == favourites[0]['account']['id'] ? favourites[1]['account']['display_name'] : favourites[0]['account']['display_name']}${reactionsCount > 2 ? ' và ${reactionsCount - 2} người khác' : ''}';
       } else {
         textRender =
             'Bạn ${reactionsCount > 1 ? 'và ${reactionsCount - 1} người khác' : ''}';

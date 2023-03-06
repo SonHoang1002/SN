@@ -151,8 +151,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     final commentCount = widget.post['replies_count'] ?? 0;
 
     return GestureDetector(
