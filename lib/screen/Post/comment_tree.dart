@@ -1,14 +1,18 @@
 import 'package:comment_tree/comment_tree.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_card.dart';
 import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
+import 'package:social_network_app_mobile/widget/Reaction/flutter_reaction_button.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -193,7 +197,7 @@ class _CommentTreeState extends State<CommentTree> {
   }
 }
 
-class BoxComment extends StatelessWidget {
+class BoxComment extends StatefulWidget {
   final dynamic post;
   const BoxComment({
     super.key,
@@ -206,12 +210,49 @@ class BoxComment extends StatelessWidget {
   final dynamic data;
 
   @override
-  Widget build(BuildContext context) {
-    handleGetComment() {
-      if (post == null) return const [TextSpan(text: '')];
-      List tags = post['status_tags'];
-      String str = post['content'] ?? '';
+  State<BoxComment> createState() => _BoxCommentState();
+}
 
+class _BoxCommentState extends State<BoxComment> {
+  dynamic postRender;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (mounted && widget.post != null) {
+      setState(() {
+        postRender = widget.post;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String viewerReaction = postRender['viewer_reaction'] ?? '';
+    dynamic favourites = postRender['favourites'];
+    String textRender = '${shortenLargeNumber(postRender['favourites_count'])}';
+    int reactionsCount = postRender['favourites_count'];
+    List reactions = postRender['reactions'];
+
+    List sortReactions = reactions
+        .map((element) => {
+              "type": element['type'],
+              "count": element['${element['type']}s_count']
+            })
+        .toList()
+        .where((element) => element['count'] > 0)
+        .toList()
+      ..sort(
+        (a, b) => a['count'].compareTo(b['count']),
+      );
+
+    List renderListReactions = sortReactions.reversed.toList();
+
+    handleGetComment() {
+      if (postRender == null) return const [TextSpan(text: '')];
+      List tags = postRender['status_tags'];
+      String str = postRender['content'] ?? '';
       // return comment;
       List<TextSpan> listRender = [];
 
@@ -236,17 +277,111 @@ class BoxComment extends StatelessWidget {
       return listRender;
     }
 
-    return post != null
+    handleReaction(react) async {
+      var newPost = postRender;
+      List newFavourites = newPost['reactions'];
+
+      int index = newPost['reactions']
+          .indexWhere((element) => element['type'] == react);
+      int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
+          ? newPost['reactions']
+              .indexWhere((element) => element['type'] == viewerReaction)
+          : -1;
+
+      if (index >= 0) {
+        newFavourites[index] = {
+          "type": react,
+          "${react}s_count": newFavourites[index]['${react}s_count'] + 1
+        };
+      }
+
+      if (indexCurrent >= 0) {
+        newFavourites[indexCurrent] = {
+          "type": viewerReaction,
+          "${viewerReaction}s_count":
+              newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
+        };
+      }
+
+      if (react != null) {
+        dynamic data = {"custom_vote_type": react};
+        newPost = {
+          ...newPost,
+          "favourites_count": newPost['viewer_reaction'] != null
+              ? newPost['favourites_count']
+              : newPost['favourites_count'] + 1,
+          "viewer_reaction": react,
+          "reactions": newFavourites
+        };
+
+        setState(() {
+          postRender = newPost;
+        });
+
+        await PostApi().reactionPostApi(postRender['id'], data);
+      } else {
+        newPost = {
+          ...newPost,
+          "favourites_count": newPost['favourites_count'] != null
+              ? newPost['favourites_count'] - 1
+              : newPost['favourites_count'],
+          "viewer_reaction": null,
+          "reactions": newFavourites
+        };
+
+        setState(() {
+          postRender = newPost;
+        });
+
+        await PostApi().unReactionPostApi(postRender['id']);
+      }
+    }
+
+    handlePressButton() {
+      if (viewerReaction.isNotEmpty) {
+        handleReaction(null);
+      } else {
+        handleReaction('like');
+      }
+    }
+
+    renderImageOther(link, key) {
+      double size = key == 'love'
+          ? 24
+          : ['angry', 'sad', 'like'].contains(key)
+              ? key == 'yay'
+                  ? 28
+                  : 16
+              : 18;
+      return Image.asset(
+        link,
+        height: size,
+        width: size,
+        errorBuilder: (context, error, stackTrace) =>
+            const Icon(FontAwesomeIcons.faceAngry),
+      );
+    }
+
+    renderReaction(key) {
+      if (key != null) {
+        return renderImageOther('assets/reaction/$key.png', key);
+      } else {
+        return const SizedBox();
+      }
+    }
+
+    return postRender != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              data.content != ''
+              widget.data.content != ''
                   ? Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8, horizontal: 8),
                       decoration: BoxDecoration(
-                          color: widget.commentSelected != null &&
-                                  widget.commentSelected!['id'] == post['id']
+                          color: widget.widget.commentSelected != null &&
+                                  widget.widget.commentSelected!['id'] ==
+                                      postRender['id']
                               ? secondaryColorSelected
                               : Theme.of(context).colorScheme.background,
                           borderRadius: BorderRadius.circular(15)),
@@ -254,7 +389,7 @@ class BoxComment extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${data.userName}',
+                            '${widget.data.userName}',
                             style: const TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w500),
                           ),
@@ -279,12 +414,13 @@ class BoxComment extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 2, horizontal: 8),
                       child: Text(
-                        '${data.userName}',
+                        '${widget.data.userName}',
                         style: const TextStyle(
                             fontSize: 13, fontWeight: FontWeight.w500),
                       )),
-              post['media_attachments'].isNotEmpty || post['card'] != null
-                  ? PostMediaComment(post: post)
+              postRender['media_attachments'].isNotEmpty ||
+                      postRender['card'] != null
+                  ? PostMediaComment(post: postRender)
                   : const SizedBox(),
               DefaultTextStyle(
                 style: const TextStyle(
@@ -293,7 +429,7 @@ class BoxComment extends StatelessWidget {
                     fontWeight: FontWeight.w500),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 4),
-                  child: post['typeStatus'] == 'previewComment'
+                  child: postRender['typeStatus'] == 'previewComment'
                       ? const Padding(
                           padding: EdgeInsets.only(left: 8.0),
                           child: Text("Đang viết ..."),
@@ -306,33 +442,135 @@ class BoxComment extends StatelessWidget {
                                 const SizedBox(
                                   width: 2,
                                 ),
-                                const Text('Thích'),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: ReactionButton(
+                                    onReactionChanged: (value) {
+                                      handleReaction(value);
+                                    },
+                                    handlePressButton: handlePressButton,
+                                    reactions: <Reaction>[
+                                      Reaction(
+                                        previewIcon: renderGif('gif', 'like'),
+                                        icon:
+                                            renderGif('png', 'like', size: 20),
+                                        value: 'like',
+                                      ),
+                                      Reaction(
+                                        previewIcon: renderGif('gif', 'tym'),
+                                        icon:
+                                            renderGif('png', 'love', size: 20),
+                                        value: 'love',
+                                      ),
+                                      Reaction(
+                                        previewIcon: renderGif('gif', 'hug'),
+                                        icon: renderGif('png', 'yay', size: 20),
+                                        value: 'yay',
+                                      ),
+                                      Reaction(
+                                        previewIcon: renderGif('gif', 'wow'),
+                                        icon: renderGif('png', 'wow', size: 20),
+                                        value: 'wow',
+                                      ),
+                                      Reaction(
+                                        previewIcon: renderGif('gif', 'haha'),
+                                        icon:
+                                            renderGif('png', 'haha', size: 20),
+                                        value: 'haha',
+                                      ),
+                                      Reaction(
+                                        previewIcon: renderGif('gif', 'cry'),
+                                        icon: renderGif('png', 'sad', size: 20),
+                                        value: 'sad',
+                                      ),
+                                      Reaction(
+                                        previewIcon: renderGif('gif', 'mad'),
+                                        icon:
+                                            renderGif('png', 'angry', size: 20),
+                                        value: 'angry',
+                                      ),
+                                    ],
+                                    initialReaction: Reaction(
+                                        icon: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: viewerReaction.isNotEmpty
+                                                    ? 5
+                                                    : 8,
+                                                right: 8,
+                                                top: 2,
+                                                bottom: 2),
+                                            child: viewerReaction.isNotEmpty
+                                                ? renderText(
+                                                    viewerReaction,
+                                                  )
+                                                : const Text(
+                                                    'Thích',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: greyColor,
+                                                        fontSize: 12),
+                                                  )),
+                                        value: 'kakakak'),
+                                  ),
+                                ),
                                 const SizedBox(
-                                  width: 16,
+                                  width: 10,
                                 ),
                                 GestureDetector(
                                     onTap: () {
-                                      widget.commentNode!.requestFocus();
-                                      widget.getCommentSelected!(post);
+                                      widget.widget.commentNode!.requestFocus();
+                                      widget.widget
+                                          .getCommentSelected!(postRender);
                                     },
                                     child: const Text('Trả lời')),
                                 const SizedBox(
-                                  width: 16,
+                                  width: 10,
                                 ),
                                 Text(
-                                  GetTimeAgo.parse(DateTime.parse(
-                                      widget.commentParent['created_at'])),
+                                  GetTimeAgo.parse(DateTime.parse(widget
+                                      .widget.commentParent['created_at'])),
                                 ),
                               ],
                             ),
-                            Container(
-                              margin: const EdgeInsets.only(right: 20.0),
-                              child: Row(
-                                children: [
-                                  Text('${post['favourites_count']} thích'),
-                                ],
-                              ),
-                            )
+                            postRender['favourites_count'] > 0
+                                ? Row(
+                                    children: [
+                                      Transform.translate(
+                                        offset: const Offset(8, 0),
+                                        child: Text(
+                                            '${shortenLargeNumber(postRender['favourites_count'])} '),
+                                      ),
+                                      renderListReactions.isNotEmpty
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Transform.translate(
+                                                    offset: const Offset(6, 0),
+                                                    child: renderReaction(
+                                                        renderListReactions[0]
+                                                            ['type'])),
+                                                renderListReactions.length >= 2
+                                                    ? Transform.translate(
+                                                        offset:
+                                                            const Offset(4, 0),
+                                                        child: renderReaction(
+                                                            renderListReactions[
+                                                                1]['type']),
+                                                      )
+                                                    : const SizedBox(),
+                                                renderListReactions.length >= 3
+                                                    ? renderReaction(
+                                                        renderListReactions[2]
+                                                            ['type'])
+                                                    : const SizedBox(),
+                                              ],
+                                            )
+                                          : const SizedBox(),
+                                    ],
+                                  )
+                                : const SizedBox(),
                           ],
                         ),
                 ),

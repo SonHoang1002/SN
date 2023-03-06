@@ -39,10 +39,10 @@ class PostFooterInformation extends ConsumerWidget {
     if (viewerReaction.isNotEmpty) {
       if (favourites != null && favourites.isNotEmpty) {
         textRender =
-            'Bạn, ${meData['id'] == favourites[0]['account']['id'] ? favourites[1]['account']['display_name'] : favourites[0]['account']['display_name']}${reactionsCount > 2 ? ' và ${reactionsCount - 2} người khác' : ''}';
+            'Bạn, ${meData['id'] == favourites[0]['account']['id'] ? favourites[1]['account']['display_name'] : favourites[0]['account']['display_name']}${reactionsCount > 2 ? ' và ${shortenLargeNumber(reactionsCount - 2)} người khác' : ''}';
       } else {
         textRender =
-            'Bạn ${reactionsCount > 1 ? 'và ${reactionsCount - 1} người khác' : ''}';
+            'Bạn ${reactionsCount > 1 ? 'và ${shortenLargeNumber(reactionsCount - 1)} người khác' : ''}';
       }
     }
 
