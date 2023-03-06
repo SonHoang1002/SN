@@ -169,7 +169,7 @@ class _ReactionsBoxState extends State<ReactionsBox>
                       alignment: Alignment.bottomCenter,
                       children: [
                         Material(
-                          color: widget.color,
+                          color: Theme.of(context).cardColor,
                           elevation: widget.elevation,
                           clipBehavior: Clip.antiAlias,
                           shape: RoundedRectangleBorder(

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
@@ -15,6 +16,7 @@ import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manage
 import 'package:social_network_app_mobile/widget/Reaction/flutter_reaction_button.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/reaction_list.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class CommentTree extends StatefulWidget {
@@ -534,41 +536,53 @@ class _BoxCommentState extends State<BoxComment> {
                               ],
                             ),
                             postRender['favourites_count'] > 0
-                                ? Row(
-                                    children: [
-                                      Transform.translate(
-                                        offset: const Offset(8, 0),
-                                        child: Text(
-                                            '${shortenLargeNumber(postRender['favourites_count'])} '),
-                                      ),
-                                      renderListReactions.isNotEmpty
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Transform.translate(
-                                                    offset: const Offset(6, 0),
-                                                    child: renderReaction(
-                                                        renderListReactions[0]
-                                                            ['type'])),
-                                                renderListReactions.length >= 2
-                                                    ? Transform.translate(
-                                                        offset:
-                                                            const Offset(4, 0),
-                                                        child: renderReaction(
-                                                            renderListReactions[
-                                                                1]['type']),
-                                                      )
-                                                    : const SizedBox(),
-                                                renderListReactions.length >= 3
-                                                    ? renderReaction(
-                                                        renderListReactions[2]
-                                                            ['type'])
-                                                    : const SizedBox(),
-                                              ],
-                                            )
-                                          : const SizedBox(),
-                                    ],
+                                ? GestureDetector(
+                                    onTap: () {
+                                      showBarModalBottomSheet(
+                                          context: context,
+                                          backgroundColor: Colors.transparent,
+                                          builder: (context) =>
+                                              ReactionList(post: postRender));
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Transform.translate(
+                                          offset: const Offset(8, 0),
+                                          child: Text(
+                                              '${shortenLargeNumber(postRender['favourites_count'])} '),
+                                        ),
+                                        renderListReactions.isNotEmpty
+                                            ? Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Transform.translate(
+                                                      offset:
+                                                          const Offset(6, 0),
+                                                      child: renderReaction(
+                                                          renderListReactions[0]
+                                                              ['type'])),
+                                                  renderListReactions.length >=
+                                                          2
+                                                      ? Transform.translate(
+                                                          offset: const Offset(
+                                                              4, 0),
+                                                          child: renderReaction(
+                                                              renderListReactions[
+                                                                  1]['type']),
+                                                        )
+                                                      : const SizedBox(),
+                                                  renderListReactions.length >=
+                                                          3
+                                                      ? renderReaction(
+                                                          renderListReactions[2]
+                                                              ['type'])
+                                                      : const SizedBox(),
+                                                ],
+                                              )
+                                            : const SizedBox(),
+                                      ],
+                                    ),
                                   )
                                 : const SizedBox(),
                           ],

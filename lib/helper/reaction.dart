@@ -44,7 +44,7 @@ renderText(key) {
   );
 }
 
-renderGif(type, key, {double size = 40}) {
+renderGif(type, key, {double size = 30}) {
   return Row(
     children: [
       renderImage('assets/reaction/$key.$type', type),
