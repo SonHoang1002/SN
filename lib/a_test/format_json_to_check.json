@@ -1,247 +1,28 @@
 {
-  "id": "62",
-  "account_id": "107610124722780666",
-  "title": "Laptop asus 9999",
-  "description": "hỏng hết các linh kiện, mua về không có ích lợi gì",
-  "brand": "Laptop",
-  "visibility": "public",
-  "rating": 0.0,
-  "rating_count": 0,
-  "sold": 0,
-  "followers_count": 0,
-  "created_at": "2023-02-23T14:42:29.508+07:00",
-  "updated_at": "2023-02-23T14:42:29.508+07:00",
-  "product_relationships": {
-    "follow_product": false,
-    "host_product": true
-  },
-  "product_image_attachments": [
-    {
-      "id": "61",
-      "product_id": "62",
-      "created_at": "2023-02-23T14:42:29.685+07:00",
-      "updated_at": "2023-02-23T14:42:29.685+07:00",
-      "attachment": {
-        "id": "109912918933242258",
-        "type": "image",
-        "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/918/933/242/258/original/63774dc7a28d5ef1.jpg",
-        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/918/933/242/258/small/63774dc7a28d5ef1.jpg",
-        "remote_url": null,
-        "preview_remote_url": null
-      }
+    "product": {
+        "title": "anime china",
+        "description": "Trong ví dụ này, Widget VideoPlayerWidget sẽ hiển thị khung hình video nhỏ ban đầu. Khi người dùng click vào khung hình này, nó sẽ mở rộng và hiển thị khung hình video lớn bên trong AnimatedContainer. Trong AnimatedContainer, chúng ta có thể hiển thị video player của mình.",
+        "product_category_id": 128,
+        "brand": "EMSO",
+        "visibility": "public",
+        "page_id": "108277159418893569"
     },
-    {
-      "id": "62",
-      "product_id": "62",
-      "created_at": "2023-02-23T14:42:29.692+07:00",
-      "updated_at": "2023-02-23T14:42:29.692+07:00",
-      "attachment": {
-        "id": "109912919280023008",
-        "type": "image",
-        "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/919/280/023/008/original/33f5dab72b21202e.jpg",
-        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/919/280/023/008/small/33f5dab72b21202e.jpg",
-        "remote_url": null,
-        "preview_remote_url": null
-      }
-    },
-    {
-      "id": "63",
-      "product_id": "62",
-      "created_at": "2023-02-23T14:42:29.699+07:00",
-      "updated_at": "2023-02-23T14:42:29.699+07:00",
-      "attachment": {
-        "id": "109912919280159817",
-        "type": "image",
-        "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/919/280/159/817/original/8edcf6bfae2df2db.jpg",
-        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/919/280/159/817/small/8edcf6bfae2df2db.jpg",
-        "remote_url": null,
-        "preview_remote_url": null
-      }
-    }
-  ],
-  "product_video": {
-    "id": "109912921151724800",
-    "type": "video",
-    "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/151/724/800/original/20af7ab222a5d2d7.mp4",
-    "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/151/724/800/small/20af7ab222a5d2d7.png",
-    "remote_url": null,
-    "preview_remote_url": null
-  },
-  "product_category": {
-    "id": 214,
-    "text": "Laptop",
-    "parent_category_id": 21,
-    "created_at": "2022-12-29T18:20:13.607+07:00",
-    "updated_at": "2022-12-29T18:20:13.607+07:00",
-    "icon": null
-  },
-  "page": {
-    "id": "108277159419223832",
-    "title": "Boxing",
-    "username": null,
-    "avatar_media": {
-      "id": "109912175394283476",
-      "type": "image",
-      "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/175/394/283/476/original/15e799d223b1ae00.png",
-      "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/175/394/283/476/small/15e799d223b1ae00.png",
-      "remote_url": null,
-      "preview_remote_url": null,
-      "text_url": null,
-      "meta": {
-        "original": {
-          "width": 905,
-          "height": 463,
-          "size": "905x463",
-          "aspect": 1.9546436285097193,
-          "average_color": "#274469"
-        },
-        "small": {
-          "width": 559,
-          "height": 286,
-          "size": "559x286",
-          "aspect": 1.9545454545454546,
-          "average_color": "#274469"
+    "product_options_attributes": [],
+    "product_variants_attributes": [
+        {
+            "title": "anime china",
+            "price": "542436",
+            "sku": "cgahw",
+            "position": 1,
+            "compare_at_price": null,
+            "option1": null,
+            "option2": null,
+            "image_id": null,
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": "848466",
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
         }
-      },
-      "description": "",
-      "position": null,
-      "blurhash": "Uc7_]NMaV?tnRht9adWBROkDo#V?j^R%bGoN",
-      "status_id": "109912176576270223",
-      "show_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/176/610/083/446/original/a063cacb368bb0f6.jpeg",
-      "created_at": "2023-02-23T11:31:39.757+07:00",
-      "frame": null
-    }
-  },
-  "product_variants": [
-    {
-      "id": "109",
-      "product_id": 62,
-      "title": "Laptop asus 9999 -đỏ - 13x17",
-      "price": 123456789.0,
-      "compare_at_price": null,
-      "sku": "s123",
-      "position": 2,
-      "option1": "đỏ",
-      "option2": "13x17",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 777,
-      "old_inventory_quantity": 777,
-      "requires_shipping": true,
-      "created_at": "2023-02-23T14:42:29.672+07:00",
-      "updated_at": "2023-02-23T14:42:29.672+07:00",
-      "image": {
-        "id": "109912921731783999",
-        "type": "image",
-        "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/731/783/999/original/b786c4196c02cba0.jpg",
-        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/731/783/999/small/b786c4196c02cba0.jpg",
-        "remote_url": null,
-        "preview_remote_url": null
-      }
-    },
-    {
-      "id": "108",
-      "product_id": 62,
-      "title": "Laptop asus 9999 -đỏ - 14x15",
-      "price": 123456789.0,
-      "compare_at_price": null,
-      "sku": "s123",
-      "position": 2,
-      "option1": "đỏ",
-      "option2": "14x15",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 779,
-      "old_inventory_quantity": 779,
-      "requires_shipping": true,
-      "created_at": "2023-02-23T14:42:29.664+07:00",
-      "updated_at": "2023-02-23T14:42:29.664+07:00",
-      "image": {
-        "id": "109912921731783999",
-        "type": "image",
-        "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/731/783/999/original/b786c4196c02cba0.jpg",
-        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/731/783/999/small/b786c4196c02cba0.jpg",
-        "remote_url": null,
-        "preview_remote_url": null
-      }
-    },
-    {
-      "id": "107",
-      "product_id": 62,
-      "title": "Laptop asus 9999 -xanh - 13x17",
-      "price": 123456789.0,
-      "compare_at_price": null,
-      "sku": "s123",
-      "position": 2,
-      "option1": "xanh",
-      "option2": "13x17",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 778,
-      "old_inventory_quantity": 778,
-      "requires_shipping": true,
-      "created_at": "2023-02-23T14:42:29.655+07:00",
-      "updated_at": "2023-02-23T14:42:29.655+07:00",
-      "image": {
-        "id": "109912921766090648",
-        "type": "image",
-        "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/766/090/648/original/fcf230208c8fefc2.jpg",
-        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/766/090/648/small/fcf230208c8fefc2.jpg",
-        "remote_url": null,
-        "preview_remote_url": null
-      }
-    },
-    {
-      "id": "106",
-      "product_id": 62,
-      "title": "Laptop asus 9999 -xanh - 14x15",
-      "price": 986432157.0,
-      "compare_at_price": null,
-      "sku": "s123",
-      "position": 2,
-      "option1": "xanh",
-      "option2": "14x15",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 777,
-      "old_inventory_quantity": 777,
-      "requires_shipping": true,
-      "created_at": "2023-02-23T14:42:29.647+07:00",
-      "updated_at": "2023-02-23T14:42:29.647+07:00",
-      "image": {
-        "id": "109912921766090648",
-        "type": "image",
-        "url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/766/090/648/original/fcf230208c8fefc2.jpg",
-        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/912/921/766/090/648/small/fcf230208c8fefc2.jpg",
-        "remote_url": null,
-        "preview_remote_url": null
-      }
-    }
-  ],
-  "product_options": [
-    {
-      "id": "55",
-      "product_id": "62",
-      "name": "Màu sắc",
-      "position": "1",
-      "values": [
-        "xanh",
-        "đỏ"
-      ],
-      "created_at": "2023-02-23T14:42:29.520+07:00",
-      "updated_at": "2023-02-23T14:42:29.520+07:00"
-    },
-    {
-      "id": "56",
-      "product_id": "62",
-      "name": "Kích cỡ",
-      "position": "2",
-      "values": [
-        "14x15",
-        "13x17"
-      ],
-      "created_at": "2023-02-23T14:42:29.641+07:00",
-      "updated_at": "2023-02-23T14:42:29.641+07:00"
-    }
-  ]
+    ]
 }

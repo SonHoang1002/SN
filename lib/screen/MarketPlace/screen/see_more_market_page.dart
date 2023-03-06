@@ -67,8 +67,9 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
                                 crossAxisSpacing: 4,
                                 mainAxisSpacing: 4,
                                 crossAxisCount: 2,
-                                // childAspectRatio: 0.79),
-                                childAspectRatio: 0.8),
+                                childAspectRatio: 0.79
+                                // childAspectRatio: 0.8
+                                ),
                         itemCount: _seeMoreProductList!.length,
                         // shrinkWrap: true,
                         itemBuilder: (context, index) {
@@ -88,7 +89,9 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
   }
 
   _initData() {
-    _seeMoreProductList = ref.watch(suggestProductsProvider).listSuggest;
+    if (_seeMoreProductList == null || _seeMoreProductList!.isEmpty) {
+      _seeMoreProductList = ref.watch(productsProvider).list;
+    }
     setState(() {});
   }
 }

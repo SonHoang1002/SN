@@ -1,31 +1,38 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 
-class SuggestProductsState {
-  List<dynamic> listSuggest;
-  SuggestProductsState({this.listSuggest = const []});
-  SuggestProductsState copyWith(List<dynamic> list) {
-    return SuggestProductsState(listSuggest: list);
+class ProductsState {
+  List<dynamic> list;
+  ProductsState({this.list = const []});
+  ProductsState copyWith(List<dynamic> list) {
+    return ProductsState(list: list);
   }
 }
 
-final suggestProductsProvider =
-    StateNotifierProvider<SuggestProductsController, SuggestProductsState>(
-        (ref) => SuggestProductsController());
+final productsProvider =
+    StateNotifierProvider<ProductsController, ProductsState>(
+        (ref) => ProductsController());
 
-class SuggestProductsController extends StateNotifier<SuggestProductsState> {
-  SuggestProductsController() : super(SuggestProductsState());
+class ProductsController extends StateNotifier<ProductsState> {
+  ProductsController() : super(ProductsState());
 
-  getSuggestProducts(
-    // {int? count}
-    ) async {
-    List<dynamic> response =
-        await SuggestProductsApi().getListSuggestProductsApi();
-
-    // List<dynamic> data =
-    //     count != null ? response.take(count).toList() : response;
-
+  getProducts() async {
+    List<dynamic> response = await ProductsApi().getProductsApi();
     state = state.copyWith(response);
+  }
+
+  deleteProduct(dynamic id) {
+    final response = ProductsApi().deleteProductApi(id);
+    print("product: $response");
+  }
+
+  updateProductData(Map<String, dynamic> newData) {
+    // state = state.copyWith(newData);
+    // print("updateProduct provider: ${state.data}");
+  }
+
+  createProduct(Map<String, dynamic> data) async {
+    final response = await ProductsApi().postCreateProductApi(data);
+    print(response);
   }
 }

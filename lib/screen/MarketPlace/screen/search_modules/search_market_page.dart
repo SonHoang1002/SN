@@ -100,12 +100,12 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
       BuildContext context, TextEditingController searchController) {
     return Container(
         width: double.infinity,
-        height: 40,
+        height: 30,
         padding: const EdgeInsets.only(top: 2, left: 5, bottom: 5),
         decoration: BoxDecoration(
             color: Theme.of(context).canvasColor,
             border: Border.all(width: 0.2, color: greyColor),
-            borderRadius: BorderRadius.circular(20)),
+            borderRadius: BorderRadius.circular(5)),
         child: TextFormField(
             controller: searchController,
             onChanged: (value) {
@@ -115,35 +115,50 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
             decoration: InputDecoration(
                 hintText: "Tìm kiếm trên Marketplace",
                 hintStyle: const TextStyle(fontSize: 13),
-                contentPadding: EdgeInsets.zero,
+                // contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
                 prefixIcon: InkWell(
                   onTap: () {},
                   child: Icon(
                     FontAwesomeIcons.magnifyingGlass,
                     color: Theme.of(context).textTheme.displayLarge?.color,
-                    size: 17,
+                    size: 14,
                   ),
                 ),
-                suffixIcon: searchController.text.trim().isNotEmpty
-                    ? InkWell(
-                        onTap: () {
-                          _searchController.text = "";
-                        },
-                        child: Container(
-                          width: 20,
-                          height: 20,
-                          decoration: const BoxDecoration(
-                              color: transparent, shape: BoxShape.circle),
-                          child: Icon(
-                            FontAwesomeIcons.xmark,
-                            size: 15,
-                            color:
-                                Theme.of(context).textTheme.displayLarge!.color,
-                          ),
-                        ),
-                      )
-                    : const SizedBox())));
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    searchController.text.trim().isNotEmpty
+                        ? InkWell(
+                            onTap: () {
+                              _searchController.text = "";
+                            },
+                            child: Container(
+                              width: 20,
+                              height: 20,
+                              decoration: const BoxDecoration(
+                                  color: transparent, shape: BoxShape.circle),
+                              child: Icon(
+                                FontAwesomeIcons.xmark,
+                                size: 15,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .color,
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    const Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Icon(
+                        FontAwesomeIcons.camera,
+                        size: 14,
+                      ),
+                    )
+                  ],
+                ))));
   }
 
   Widget categoryBodyWidget() {
@@ -201,11 +216,11 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                         children: List.generate(
-                      MainMarketBodyConstants
+                      MainMarketPageConstants
                           .MAIN_MARKETPLACE_BODY_CATEGORY_SELECTIONS["data"]
                           .length,
                       (index) {
-                        final data = MainMarketBodyConstants
+                        final data = MainMarketPageConstants
                             .MAIN_MARKETPLACE_BODY_CATEGORY_SELECTIONS["data"];
                         return GeneralComponent(
                           [
@@ -277,19 +292,11 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
                 ),
                 SizedBox(
                   width: isHaveClose ? width * 0.7 : width * 0.8,
-                  child: InkWell(
-                    onTap: () {
-                      () {
-                        pushToNextScreen(
-                            context, DetailProductMarketPage(id: data["id"]));
-                      };
-                    },
-                    child: buildTextContent(
-                      "${data["title"]}",
-                      false,
-                      fontSize: 17,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  child: buildTextContent(
+                    "${data["title"]}",
+                    false,
+                    fontSize: 17,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

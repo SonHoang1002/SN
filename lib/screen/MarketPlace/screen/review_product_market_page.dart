@@ -1,15 +1,18 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:social_network_app_mobile/a_test/test.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/review_product_apis.dart';
+import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/review_product_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -19,14 +22,11 @@ import 'package:social_network_app_mobile/widget/video_player.dart';
 
 import '../../../../widget/back_icon_appbar.dart';
 
-const List<String> _sizes = ["Vừa", "Trật", "Rộng"];
-
 class ReviewProductMarketPage extends ConsumerStatefulWidget {
-  final List<dynamic>? completeProductList = get_product_list_for_review;
-  ReviewProductMarketPage({
-    super.key,
-    //  required this.completeProductList
-  });
+  final List<dynamic>? completeProductList;
+  final dynamic reviewId;
+  const ReviewProductMarketPage(
+      {super.key, required this.completeProductList, required this.reviewId});
 
   @override
   ConsumerState<ReviewProductMarketPage> createState() =>
@@ -47,13 +47,15 @@ class _ReviewProductMarketPageState
   List<bool>? _showSwitchList = [];
   List _videoFileList = [];
   Color? colorTheme;
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
+    _initData();
   }
 
   void _initData() {
-    widget.completeProductList!.forEach((element) {
+    for (var element in widget.completeProductList!) {
       _starQualityList!.add(0);
       _starServiceList!.add(0);
       _starTranferList!.add(0);
@@ -62,24 +64,8 @@ class _ReviewProductMarketPageState
       _imgFileList!.add([]);
       _videoFileList.add(null);
       _showSwitchList!.add(false);
-    });
-  }
-
-  Future _createReviewProduct() async {
-    Future.delayed(Duration.zero, () async {
-      final newReview = await ref
-          .read(reviewProductProvider.notifier)
-          .createReviewProduct(15, {
-        // "rating": [
-        //   {
-        //     "media_ids": ["109630124703424265"],
-        //     "product_variant_id": "23",
-        //     "status": reviewControllerList[index].text.trim(),
-        //     "rating_point": "5"
-        //   }
-        // ]
-      });
-    });
+    }
+    setState(() {});
   }
 
 // hướng dẫn, mã giảm giá, chất lượng, mô tả, ảnh, video, thẻ mô tả, kích thước, hiển thị tên, dịch vụ người bạn, dịch vụ vận chuyển.
@@ -91,7 +77,7 @@ class _ReviewProductMarketPageState
     colorTheme = ThemeMode.dark == true
         ? Theme.of(context).cardColor
         : const Color(0xfff1f2f5);
-    _initData();
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -103,79 +89,173 @@ class _ReviewProductMarketPageState
               const BackIconAppbar(),
               const AppBarTitle(title: "Đánh giá sản phẩm"),
               GestureDetector(
-                  onTap: () {
-                    _createReviewProduct();
+                  onTap: () async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    await _createReviewProduct();
                   },
                   child: const AppBarTitle(title: "Gửi"))
             ],
           ),
         ),
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children:
-                    List.generate(widget.completeProductList!.length, (index) {
-                  return Column(
-                    children: [
-                      index == 0
-                          ? const SizedBox(
-                              height: 40,
-                            )
-                          : const CrossBar(
-                              height: 10,
-                            ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: red,
+                ),
+              )
+            : Stack(
+                alignment: Alignment.center,
+                children: [
+                  SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: List.generate(
+                          widget.completeProductList!.length, (index) {
+                        return Column(
                           children: [
-                            
-                            _voucherApply(index),
-                            _ratingComponent(
-                                index, "Chất lượng sản phẩm", "quality"),
-                            buildDivider(color: greyColor, height: 10),
-                            buildTextContent(
-                                "Thêm 50 ký tự, 1-5 hình ảnh và 1 video để nhận đến 200 ECoin",
-                                false,
-                                fontSize: 15,
-                                isCenterLeft: false,
-                                colorWord: greyColor),
-                            _getImageAndVideo(
-                              index,
-                            ),
-                            buildSpacer(height: 10),
-                            _getDescription(
-                              index,
-                            ),
-                            buildSpacer(height: 10),
-                            _getSizes(
-                              index,
-                            ),
-                            buildSpacer(height: 10),
-                            _showUserName(
-                              index,
-                            ),
-                            buildDivider(color: greyColor, height: 10),
-                            _ratingComponent(
-                                index, "Dịch vụ của người bán", "service"),
-                            buildDivider(color: greyColor, height: 10),
-                            _ratingComponent(
-                                index, "Dịch vụ vận chuyển", "tranfer"),
+                            index == 0
+                                ? const SizedBox(
+                                    height: 40,
+                                  )
+                                : const CrossBar(
+                                    height: 10,
+                                  ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                children: [
+                                  _voucherApply(index),
+                                  _ratingComponent(
+                                      index, "Chất lượng sản phẩm", "quality"),
+                                  buildDivider(color: greyColor, height: 10),
+                                  buildTextContent(
+                                      "Thêm 50 ký tự, 1-5 hình ảnh và 1 video để nhận đến 200 ECoin",
+                                      false,
+                                      fontSize: 15,
+                                      isCenterLeft: false,
+                                      colorWord: greyColor),
+                                  _getImageAndVideo(
+                                    index,
+                                  ),
+                                  buildSpacer(height: 10),
+                                  _getDescription(
+                                    index,
+                                  ),
+                                  buildSpacer(height: 10),
+                                  _showUserName(
+                                    index,
+                                  ),
+                                  buildDivider(color: greyColor, height: 10),
+                                  _ratingComponent(index,
+                                      "Dịch vụ của người bán", "service"),
+                                  buildDivider(color: greyColor, height: 10),
+                                  _ratingComponent(
+                                      index, "Dịch vụ vận chuyển", "tranfer"),
+                                ],
+                              ),
+                            )
                           ],
-                        ),
-                      )
-                    ],
-                  );
-                }),
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [_instructStandardReview(), const SizedBox()],
-            ),
-          ],
-        ));
+                        );
+                      }),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [_instructStandardReview(), const SizedBox()],
+                  ),
+                ],
+              ));
+  }
+
+  Future _createReviewProduct() async {
+    List<List<String>> imgIdList = [];
+    List<String> videoIdList = [];
+
+    for (var element in _imgFileList!) {
+      imgIdList.add([]);
+    }
+    for (int i = 0; i < _imgFileList!.length; i++) {
+      if (_imgFileList!.isEmpty) {
+        imgIdList[i] = [];
+      } else {
+        imgIdList[i] = (await Future.wait(_imgFileList![i].map((element) async {
+          if (element == null || element == "") {
+            return "";
+          }
+          String fileName = element.path.split('/').last;
+          FormData formData = FormData.fromMap({
+            "file":
+                await MultipartFile.fromFile(element.path, filename: fileName),
+          });
+          final response = await MediaApi().uploadMediaEmso(formData);
+          return response["id"].toString();
+        }).toList()));
+      }
+    }
+
+    if (_videoFileList.isNotEmpty) {
+      videoIdList = (await Future.wait(_videoFileList.map((element) async {
+        if (element != null) {
+          String fileName = element.split('/').last;
+          FormData formData = FormData.fromMap({
+            "file": await MultipartFile.fromFile(element, filename: fileName),
+          });
+          final response = await MediaApi().uploadMediaEmso(formData);
+          return response["id"].toString();
+        }
+        return "";
+      }).toList()));
+    }
+
+    print("------------------review imgIdList--------------------: $imgIdList");
+    print("------------------review videoIdList----------------: $videoIdList");
+
+    List<Map<String, dynamic>> reviewProductData = [];
+
+    for (int i = 0; i < reviewControllerList!.length; i++) {
+      List<String> mediaList = [];
+      imgIdList[i].forEach((element) {
+        mediaList.add(element);
+      });
+      if (videoIdList[i] != null || videoIdList[i] != "") {
+        mediaList.add(videoIdList[i]);
+      }
+      reviewProductData.add({
+        "media_ids": mediaList,
+        "product_variant_id": widget.completeProductList![i]["product_variant"]
+            ["id"],
+        "status": reviewControllerList![i].text.trim(),
+        "rating_point": _starQualityList![i]
+      });
+    }
+    print("--------------review--------------- ${json.encode(reviewProductData)}");
+    var response;
+    Future.delayed(Duration.zero, () async {
+      response = ReviewProductApi()
+          .createReviewProductApi(widget.reviewId, reviewProductData);
+    });
+    buildMessageDialog(context, response.toString(), oKFunction: () {
+      popToPreviousScreen(context);
+    });
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<List<String>> _convertImageToId(List<dynamic> mediaList) async {
+    List<String> result = await Future.wait(mediaList.map((element) async {
+      String fileName = element.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        "file": await MultipartFile.fromFile(element.path, filename: fileName),
+      });
+      final response = await MediaApi().uploadMediaEmso(formData);
+      return response["id"].toString();
+    }));
+    return result;
   }
 
   Widget _instructStandardReview() {
@@ -185,10 +265,10 @@ class _ReviewProductMarketPageState
             "Xem hướng dẫn đánh giá chuẩn để nhận đến 200 xu", false,
             fontSize: 17)
       ],
-      suffixWidget: Container(
+      suffixWidget: const SizedBox(
         width: 20,
         height: 20,
-        child: const Icon(
+        child: Icon(
           FontAwesomeIcons.chevronRight,
           size: 17,
         ),
@@ -214,7 +294,7 @@ class _ReviewProductMarketPageState
         GeneralComponent(
           [
             buildTextContent(
-                "Mã ABC giả đến 30k đơn 120k - ${widget.completeProductList![index]["product_variants"][0]["title"]}",
+                "Mã ABC giả đến 30k đơn 120k - ${widget.completeProductList![index]["product_variant"]["title"]}",
                 false,
                 fontSize: 17,
                 maxLines: 1,
@@ -222,23 +302,30 @@ class _ReviewProductMarketPageState
             const SizedBox(
               height: 10,
             ),
-            buildTextContent("Phân loại: ${widget.completeProductList![index]["product_variants"][0]["option1"] ?? ""} ${widget.completeProductList![index]["product_variants"][0]["option2"] ?? ""}", false,
-                fontSize: 14, colorWord: greyColor),
+            buildTextContent(
+                "Phân loại: ${widget.completeProductList![index]["product_variant"]["option1"] ?? ""} ${widget.completeProductList![index]["product_variant"]["option2"] ?? ""}",
+                false,
+                fontSize: 14,
+                colorWord: greyColor),
           ],
-          suffixWidget: Container(
+          suffixWidget: const SizedBox(
             width: 20,
             height: 20,
-            child: const Icon(
+            child: Icon(
               FontAwesomeIcons.chevronRight,
               size: 17,
             ),
           ),
-          prefixWidget: Container(
+          prefixWidget: SizedBox(
             width: 40,
             height: 40,
             child: ImageCacheRender(
-                path: widget.completeProductList![index]["product_variants"][0]
-                    ["image"]["url"]),
+                path: widget.completeProductList![index]["product_variant"]
+                            ["image"] !=
+                        null
+                    ? widget.completeProductList![index]["product_variant"]
+                        ["image"]["url"]
+                    : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg"),
           ),
           changeBackground: transparent,
           padding: EdgeInsets.zero,
@@ -260,7 +347,7 @@ class _ReviewProductMarketPageState
           margin: const EdgeInsets.only(left: 20),
           child: buildTextContent(
             title,
-            false,
+            true,
             fontSize: 16,
           ),
         ),
@@ -280,6 +367,8 @@ class _ReviewProductMarketPageState
 
   Widget _getImageAndVideo(int mediaIndex) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           child: _imgFileList![mediaIndex].isEmpty
@@ -297,7 +386,7 @@ class _ReviewProductMarketPageState
                       return Container(
                         margin: const EdgeInsets.only(right: 10, top: 10),
                         height: 100,
-                        // width: 80,
+                        width: 80,
                         child: Stack(
                           children: [
                             SizedBox(
@@ -326,7 +415,7 @@ class _ReviewProductMarketPageState
                                       height: 20,
                                       width: 20,
                                       decoration: BoxDecoration(
-                                          color: red.withOpacity(0.5),
+                                          color: white.withOpacity(0.5),
                                           border: Border.all(
                                               color: greyColor, width: 0.4),
                                           borderRadius:
@@ -345,7 +434,8 @@ class _ReviewProductMarketPageState
                       );
                     } else {
                       if (index != 5) {
-                        return _buildSelectImageVideo(index, "Thêm hình ảnh",
+                        return _buildSelectImageVideo(
+                            mediaIndex, "Thêm hình ảnh",
                             width: 120);
                       } else {
                         return const SizedBox();
@@ -355,42 +445,46 @@ class _ReviewProductMarketPageState
                 ),
         ),
         Container(
-            child: _videoFileList[mediaIndex] == null ||
-                    _videoFileList[mediaIndex] != ""
-                ? _buildSelectImageVideo(
-                    mediaIndex,
-                    "Thêm video",
-                  )
-                : Container(
+          child: _videoFileList[mediaIndex] == null ||
+                  _videoFileList[mediaIndex] == ""
+              ? _buildSelectImageVideo(
+                  mediaIndex,
+                  "Thêm video",
+                )
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
                     margin: const EdgeInsets.only(right: 10, top: 10),
                     height: 100,
-                    // width: 80,
                     child: Stack(
                       children: [
                         SizedBox(
                           height: 100,
-                          width: 80,
+                          width: 180,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(7),
                             child: VideoPlayerRender(
-                                path: _videoFileList[mediaIndex].path),
+                              path: _videoFileList[mediaIndex],
+                            ),
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.only(top: 5),
+                          padding: const EdgeInsets.only(top: 5, left: 10),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InkWell(
                                 onTap: () {
-                                  _videoFileList[mediaIndex] = null;
-                                  setState(() {});
+                                  setState(() {
+                                    _videoFileList[mediaIndex] = null;
+                                  });
                                 },
                                 child: Container(
                                   height: 20,
                                   width: 20,
                                   decoration: BoxDecoration(
-                                      color: red.withOpacity(0.5),
+                                      color: white.withOpacity(0.5),
                                       border: Border.all(
                                           color: greyColor, width: 0.4),
                                       borderRadius: BorderRadius.circular(10)),
@@ -406,6 +500,7 @@ class _ReviewProductMarketPageState
                       ],
                     ),
                   )),
+        )
       ],
     );
   }
@@ -418,36 +513,6 @@ class _ReviewProductMarketPageState
             : greyColor[400]!.withOpacity(0.4),
         child: _buildInput(
             reviewControllerList![index], width, "Nhập mô tả vào đây"));
-  }
-
-// doi voi quan ao
-  Widget _getSizes(int sizeindex) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: buildTextContent("Kích thước", true, fontSize: 17),
-        ),
-        Row(
-          children: List.generate(_sizes.length, (index) {
-            return Row(
-              children: [
-                Radio(
-                    groupValue: _selectedSizeList![sizeindex],
-                    value: _sizes[index],
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedSizeList![sizeindex] = value as String;
-                      });
-                    }),
-                buildSpacer(width: 5),
-                buildTextContent(_sizes[index], false),
-              ],
-            );
-          }),
-        )
-      ],
-    );
   }
 
   Widget _showUserName(int index) {
@@ -478,7 +543,7 @@ class _ReviewProductMarketPageState
 // general
   Widget _changeDescriptionRating(int index, String key) {
     String description = "Không có đánh giá";
-    Color wordColor = blackColor;
+    Color wordColor = greyColor;
     int value;
     switch (key) {
       case "quality":
@@ -518,7 +583,7 @@ class _ReviewProductMarketPageState
       default:
         break;
     }
-    return buildTextContent(description, true,
+    return buildTextContent(description, false,
         fontSize: 15,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -671,6 +736,8 @@ class _ReviewProductMarketPageState
       _imgFileList![index]
           .add(File(selectedImage.path != null ? selectedImage.path : ""));
     });
+    print(
+        "--------------------------------------------------------------_imgFileList $_imgFileList ");
   }
 
   Future getVideo(int index, ImageSource src) async {
@@ -678,7 +745,7 @@ class _ReviewProductMarketPageState
     selectedVideo = (await ImagePicker().pickVideo(source: src))!;
     if (selectedVideo.path != "") {
       setState(() {
-        _videoFileList[index] = File(selectedVideo.path);
+        _videoFileList[index] = selectedVideo.path;
       });
     }
   }

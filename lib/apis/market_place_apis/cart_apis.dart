@@ -13,7 +13,8 @@ class CartProductApi {
     return await Api().getRequestBase("/api/v1/shopping_carts", null);
   }
 
-  Future deleteCartProductApi(dynamic data) async {
-    return await Api().deleteRequestBase("/api/v1/shopping_carts/2", data);
+  Future deleteCartProductApi(dynamic id, dynamic data) async {
+    print("_callDeleteProductApi /api/v1/shopping_carts/$id");
+    return await Api().deleteRequestBase("/api/v1/shopping_carts/$id", data);
   }
 }

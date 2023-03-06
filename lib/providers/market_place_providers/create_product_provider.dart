@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/apis/market_place_apis/Create_product_api.dart';
 
 final newProductDataProvider =
     StateNotifierProvider<NewProductDataController, NewProductDataState>(
@@ -12,10 +11,7 @@ class NewProductDataController extends StateNotifier<NewProductDataState> {
     print("state: ${state.data}");
   }
 
-  postCreateProduct(Map<String, dynamic> data) async {
-    final response = await CreateProductApi().postCreateProductApi(data);
-    print(response);
-  }
+
 }
 
 class NewProductDataState {

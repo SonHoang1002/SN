@@ -40,7 +40,13 @@ class _VideoPlayerRenderState extends State<VideoPlayerRender> {
   Widget build(BuildContext context) {
     return FlickVideoPlayer(
       flickManager: flickManager,
-
+      flickVideoWithControls: FlickVideoWithControls(
+        videoFit: BoxFit.fitHeight,
+        controls: FlickPortraitControls(
+          progressBarSettings:
+              FlickProgressBarSettings(playedColor: Colors.green),
+        ),
+      ),
       // flickVideoWithControls: const FlickVideoWithControls(
       //   closedCaptionTextStyle: TextStyle(fontSize: 8),
       //   controls: FlickPortraitControls(),

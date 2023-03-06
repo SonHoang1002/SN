@@ -15,7 +15,7 @@ class MarketPlaceConstants {
   static const IconData DOWN_ICON_DATA = FontAwesomeIcons.caretDown;
 }
 
-class MainMarketBodyConstants {
+class MainMarketPageConstants {
   static String MAIN_MARKETPLACE_BODY_CATEGORY_TITLE = "";
   static Map<String, dynamic>
       MAIN_MARKETPLACE_BODY_SELL_AND_CATEGORY_BUTTON_CONTENTS = {
@@ -561,7 +561,7 @@ class MainMarketBodyConstants {
       {
         "title": "Giá",
         "icon": Icons.usb_rounded,
-        "sub_selections": ["Giá: Cao đến thấp", "Giá: Thấp đến cao"]
+        "sub_selections": ["Cao đến thấp", "Thấp đến cao"]
       },
     ]
   };
@@ -596,6 +596,45 @@ class PersonalMarketPlaceConstants {
       {
         "title": "Giỏ hàng",
         "icon": FontAwesomeIcons.cartArrowDown,
+      },
+    ]
+  };
+
+  static const Map<String, dynamic> PERSONAL_MARKET_PLACE_YOUR_SHOP = {
+    "key": "your_shop",
+    "data": [
+      {
+        "title": "Quản lý đơn hàng",
+        "icon": FontAwesomeIcons.bagShopping,
+      },
+      {
+        "title": "Quản lý sản phẩm",
+        "icon": FontAwesomeIcons.bagShopping,
+      },
+      {
+        "title": "Tạo sản phẩm mới",
+        "icon": FontAwesomeIcons.add,
+      },
+    ]
+  };
+  static const Map<String, dynamic> PERSONAL_MARKET_PLACE_YOUR_ACCOUNT = {
+    "key": "your_account",
+    "data": [
+      {
+        "title": "Lời mời",
+        "icon": FontAwesomeIcons.mailReply,
+      },
+      {
+        "title": "Quan tâm",
+        "icon": FontAwesomeIcons.star,
+      },
+      {
+        "title": "Đơn hàng của tôi",
+        "icon": FontAwesomeIcons.bagShopping,
+      },
+      {
+        "title": "Thoát",
+        "icon": FontAwesomeIcons.outdent,
       },
     ]
   };
@@ -1340,4 +1379,34 @@ class UpdateProductMarketConstants {
 
   static String UPDATE_PRODUCT_MARKET_SKU_TITLE = "SKU";
   static String UPDATE_PRODUCT_MARKET_SKU_PLACEHOLDER = "Nhập SKU";
+}
+
+class OrderProductMarketConstant {
+  static List<Map<String, dynamic>> ORDER_PRODUCT_MARKET_TAB_LIST = [
+    {
+      "key": "all",
+      "title": "Tất cả",
+    },
+    {
+      "key": "pending",
+      "title": "Chờ thanh toán",
+    },
+    {
+      "key": "delivered",
+      "title": "Vận chuyển",
+    },
+    {
+      "key": "shipping",
+      "title": "Đang giao",
+    },
+    {
+      "key": "finish",
+      "title": "Hoàn thành",
+    },
+    {
+      "key": "cancelled",
+      "title": "Đã hủy",
+    },
+    {"key": "return", "title": "Trả hàng/ Hoàn tiền"},
+  ];
 }

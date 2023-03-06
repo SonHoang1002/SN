@@ -39,7 +39,7 @@ class _InterestProductMarketPageState
     super.initState();
     Future.delayed(Duration.zero, () {
       final interestProductList =
-          ref.read(suggestProductsProvider.notifier).getSuggestProducts();
+          ref.read(productsProvider.notifier).getProducts();
       // final interestList =
       //     ref.read(interestProductsProvider.notifier).addInterestProducts({});
     });
@@ -94,7 +94,10 @@ class _InterestProductMarketPageState
   }
 
   void _initData() {
-    _interestProductList = ref.watch(interestProductsProvider).listInterest;
+    if (_interestProductList == null || _interestProductList!.isEmpty) {
+      _interestProductList = ref.watch(interestProductsProvider).listInterest;
+    }
+
     setState(() {});
   }
 

@@ -10,9 +10,9 @@ class ProductCategoriesState {
   }
 }
 
-final productCategoriesProvider =
-    StateNotifierProvider<ProductCategoriesController, ProductCategoriesState>(
-        (ref) => ProductCategoriesController());
+// final productCategoriesProvider =
+//     StateNotifierProvider<ProductCategoriesController, ProductCategoriesState>(
+//         (ref) => ProductCategoriesController());
 
 class ProductCategoriesController
     extends StateNotifier<ProductCategoriesState> {

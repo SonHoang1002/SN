@@ -1,12 +1,13 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
@@ -19,14 +20,14 @@ import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class CartMarketPage  extends ConsumerStatefulWidget {
-  const CartMarketPage ({super.key});
+class CartMarketPage extends ConsumerStatefulWidget {
+  const CartMarketPage({super.key});
 
   @override
-  ConsumerState<CartMarketPage > createState() => _CartMarketPageState();
+  ConsumerState<CartMarketPage> createState() => _CartMarketPageState();
 }
 
-class _CartMarketPageState extends ConsumerState<CartMarketPage > {
+class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   late double width = 0;
   late double height = 0;
   List<dynamic>? _cartData;
@@ -36,13 +37,19 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 2), () async {
+    Future.delayed(Duration.zero, () async {
       if (ref.watch(cartProductsProvider).listCart.isEmpty) {
-        final initCartData = await ref
-            .read(cartProductsProvider.notifier)
-            .initCartProductList();
+        final initCartData =
+            await ref.read(cartProductsProvider.notifier).initCartProductList();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _cartData = [];
   }
 
   @override
@@ -50,7 +57,16 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    _cartData = ref.watch(cartProductsProvider).listCart;
+    if (_cartData == null || _cartData!.isEmpty) {
+      Future.delayed(Duration.zero, () async {
+        if (ref.watch(cartProductsProvider).listCart.isEmpty) {
+          final initCartData = await ref
+              .read(cartProductsProvider.notifier)
+              .initCartProductList();
+        }
+      });
+      _cartData = ref.watch(cartProductsProvider).listCart;
+    }
     // _buildCartCheckBox();
     _updateTotalPrice();
     _isLoading = false;
@@ -64,7 +80,6 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
             children: [
               InkWell(
                 onTap: () async {
-                  print("cart ---------------------");
                   await ref
                       .read(cartProductsProvider.notifier)
                       .updateCartProductList(_cartData!);
@@ -96,11 +111,11 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
               child: ListView(
                 children: [
                   _isLoading
-                      ? Center(
-                          child: Container(
+                      ? const Center(
+                          child: SizedBox(
                             width: 70,
                             height: 70,
-                            child: const CircularProgressIndicator(
+                            child: CircularProgressIndicator(
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(Colors.red),
                               strokeWidth: 3,
@@ -109,13 +124,10 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
                         )
                       : Column(
                           children: List.generate(
-                              ref
-                                  .watch(cartProductsProvider)
-                                  .listCart
-                                  .length, (index) {
-                          final data = ref
-                              .watch(cartProductsProvider)
-                              .listCart[index];
+                              ref.watch(cartProductsProvider).listCart.length,
+                              (index) {
+                          final data =
+                              ref.watch(cartProductsProvider).listCart[index];
                           return _buildCartProductItem(data, index);
                         })),
                 ],
@@ -125,6 +137,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
           ],
         ));
   }
+
 // _update
   Widget _buildCartProductItem(dynamic data, dynamic indexComponent) {
     return Column(
@@ -165,14 +178,14 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
                       size: 19,
                     ),
                   ),
-                  Container(
+                  SizedBox(
                       width: 180,
                       child: buildTextContent(data["title"], true,
                           fontSize: 17, overflow: TextOverflow.ellipsis)),
-                  Container(
+                  const SizedBox(
                     height: 40,
                     width: 40,
-                    child: const Icon(
+                    child: Icon(
                       FontAwesomeIcons.angleRight,
                       size: 19,
                     ),
@@ -194,143 +207,157 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
           child: Column(
             children: List.generate(data["items"].length, (index) {
               final itemData = data["items"][index];
-              return Column(
-                children: [
-                  index != 0
-                      ? Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          child: buildDivider(color: greyColor),
-                        )
-                      : SizedBox(),
-                  Slidable(
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) {
-                            _deleteProduct(indexComponent, index);
-                          },
-                          backgroundColor: const Color(0xFFFE4A49),
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      height: 80,
-                      width: width,
-                      // margin: EdgeInsets.only(bottom: 5),
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
+              return InkWell(
+                onTap: () {
+                  pushToNextScreen(
+                      context,
+                      DetailProductMarketPage(
+                        id: itemData["product_variant"]["product_id"]
+                            .toString(),
+                      ));
+                },
+                child: Column(
+                  children: [
+                    index != 0
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            child: buildDivider(color: greyColor),
+                          )
+                        : const SizedBox(),
+                    Slidable(
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              _deleteProduct(indexComponent, index);
+                            },
+                            backgroundColor: const Color(0xFFFE4A49),
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Delete',
+                          ),
+                        ],
+                      ),
                       child: Container(
                         height: 80,
-                        child: Row(
-                          children: [
-                            Container(
-                                margin: const EdgeInsets.only(right: 5),
-                                height: 30,
-                                width: 30,
-                                child: Checkbox(
-                                    value: _cartData![indexComponent]["items"]
-                                        [index]["check"] as bool,
-                                    onChanged: (value) {
-                                      _cartData![indexComponent]["items"][index]
-                                          ["check"] = value as bool;
-                                      setState(() {});
-                                    })),
-                            Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              child: ImageCacheRender(
-                                height: 80.0,
-                                width: 80.0,
-                                path: itemData["product_variant"]["image"] !=
-                                            null &&
-                                        itemData["product_variant"]["image"]
-                                            .isNotEmpty
-                                    ? itemData["product_variant"]["image"]
-                                        ["url"]
-                                    : "https://www.w3schools.com/w3css/img_lights.jpg",
-                              ),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // buildTextContent(title, false, fontSize: 17),
-                                Container(
-                                  width: 200,
-                                  child: Text(
-                                    itemData["product_variant"]["title"],
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                        width: width,
+                        // margin: EdgeInsets.only(bottom: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: SizedBox(
+                          height: 80,
+                          child: Row(
+                            children: [
+                              Container(
+                                  margin: const EdgeInsets.only(right: 5),
+                                  height: 30,
+                                  width: 30,
+                                  child: Checkbox(
+                                      value: _cartData![indexComponent]["items"]
+                                          [index]["check"] as bool,
+                                      onChanged: (value) {
+                                        _cartData![indexComponent]["items"]
+                                            [index]["check"] = value as bool;
+                                        setState(() {});
+                                      })),
+                              Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                child: ImageCacheRender(
+                                  height: 80.0,
+                                  width: 80.0,
+                                  path: itemData["product_variant"]["image"] !=
+                                              null &&
+                                          itemData["product_variant"]["image"]
+                                              .isNotEmpty
+                                      ? itemData["product_variant"]["image"]
+                                          ["url"]
+                                      : "https://www.w3schools.com/w3css/img_lights.jpg",
                                 ),
-                                buildTextContent(
-                                    itemData["product_variant"]["price"]
-                                        .toString(),
-                                    true,
-                                    fontSize: 15,
-                                    colorWord: red),
-                                Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        _updateQuantity(
-                                            false, indexComponent, index);
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: greyColor, width: 0.4)),
-                                        height: 25,
-                                        width: 25,
-                                        // padding: EdgeInsets.all(10),
-                                        child: const Icon(
-                                          FontAwesomeIcons.minus,
-                                          size: 16,
+                              ),
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // buildTextContent(title, false, fontSize: 17),
+                                  SizedBox(
+                                    width: 200,
+                                    child: Text(
+                                      itemData["product_variant"]["title"],
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  buildTextContent(
+                                      itemData["product_variant"]["price"]
+                                          .toString(),
+                                      true,
+                                      fontSize: 15,
+                                      colorWord: red),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          _updateQuantity(
+                                              false, indexComponent, index);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: greyColor,
+                                                  width: 0.4)),
+                                          height: 25,
+                                          width: 25,
+                                          // padding: EdgeInsets.all(10),
+                                          child: const Icon(
+                                            FontAwesomeIcons.minus,
+                                            size: 16,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: greyColor, width: 0.2)),
-                                      height: 25,
-                                      width: 40,
-                                      child: Center(
-                                          child: Text(
-                                              itemData["quantity"].toString())),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        _updateQuantity(
-                                            true, indexComponent, index);
-                                      },
-                                      child: Container(
+                                      Container(
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: greyColor, width: 0.2)),
                                         height: 25,
-                                        width: 25,
-                                        // padding: EdgeInsets.all(10),
-                                        child: const Icon(FontAwesomeIcons.plus,
-                                            size: 16),
+                                        width: 40,
+                                        child: Center(
+                                            child: Text(itemData["quantity"]
+                                                .toString())),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
+                                      InkWell(
+                                        onTap: () {
+                                          _updateQuantity(
+                                              true, indexComponent, index);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: greyColor,
+                                                  width: 0.2)),
+                                          height: 25,
+                                          width: 25,
+                                          // padding: EdgeInsets.all(10),
+                                          child: const Icon(
+                                              FontAwesomeIcons.plus,
+                                              size: 16),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }),
           ),
@@ -368,7 +395,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
                           width: 10,
                         ),
                         buildTextContent(
-                          "Phiếu giảm giá",
+                          "Voucher",
                           false,
                           fontSize: 16,
                         )
@@ -376,11 +403,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
                     ),
                     Row(
                       children: [
-                        buildTextContent(
-                          "Phiếu giảm giá",
-                          false,
-                          fontSize: 16,
-                        ),
+                        buildTextContent("Chọn hoặc nhập mã", false,
+                            fontSize: 16, colorWord: greyColor),
                         const SizedBox(
                           width: 10,
                         ),
@@ -412,7 +436,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
                           width: 10,
                         ),
                         buildTextContent(
-                          "Phiếu giảm giá",
+                          "Sử dụng Ecoin",
                           false,
                           fontSize: 16,
                         )
@@ -513,12 +537,15 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
 
   _deleteProduct(dynamic indexCategory, dynamic indexProduct) {
     // call api
-    _callDeleteProductApi(json.encode({
-      "product_variant_id": _cartData![indexCategory]["items"][indexProduct]
-          ["product_variant"]["id"]
-    }));
+    _callDeleteProductApi(
+        _cartData![indexCategory]["items"][indexProduct]["product_variant"]
+            ["product_id"],
+        {
+          "product_variant_id": _cartData![indexCategory]["items"][indexProduct]
+              ["product_variant"]["id"]
+        });
     _cartData![indexCategory]["items"].removeAt(indexProduct);
-     if (_cartData![indexCategory]["items"].isEmpty) {
+    if (_cartData![indexCategory]["items"].isEmpty) {
       _cartData!.removeAt(indexCategory);
     }
     setState(() {});
@@ -541,19 +568,15 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage > {
     setState(() {});
   }
 
-  _callDeleteProductApi(dynamic data) async {
-    print("cart _callDeleteProductApi");
-    final response = await ref
-        .read(cartProductsProvider.notifier)
-        .deleteCartProduct(data);
-    print("cart _callDeleteProductApi");
-
+  _callDeleteProductApi(dynamic id, dynamic data) async {
+    print("_callDeleteProductApi $id - $data");
+    final response = await CartProductApi().deleteCartProductApi(id, data);
+    print("_callDeleteProductApi $response");
   }
 
   _callUpdateQuantityApi(dynamic data) async {
     print("cart _callUpdateQuantityApi");
-    final response = await ref
-        .read(cartProductsProvider.notifier)
-        .updateCartQuantity(data);
+    final response =
+        await ref.read(cartProductsProvider.notifier).updateCartQuantity(data);
   }
 }

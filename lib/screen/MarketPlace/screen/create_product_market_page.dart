@@ -7,16 +7,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
+import 'package:social_network_app_mobile/data/market_place_datas/product_categories_data.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/create_product_provider.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/list_page_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/manage_order_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
@@ -25,7 +27,8 @@ import 'package:social_network_app_mobile/widget/video_player.dart';
 
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../../widget/back_icon_appbar.dart';
+
+import 'manage_product_market_page.dart';
 
 class CreateProductMarketPage extends ConsumerStatefulWidget {
   const CreateProductMarketPage({super.key});
@@ -35,7 +38,8 @@ class CreateProductMarketPage extends ConsumerStatefulWidget {
       _CreateProductMarketPageState();
 }
 
-String selectionImageWarning = "Hãy chọn ảnh cho mục này !!";
+String selectionImageWarnings = "Hãy chọn ảnh cho mục này !!";
+String selectPageTitle = "Chọn Page";
 
 class _CreateProductMarketPageState
     extends ConsumerState<CreateProductMarketPage> {
@@ -53,7 +57,8 @@ class _CreateProductMarketPageState
     "category": true,
     "branch": true,
     "private": true,
-    "image": true
+    "image": true,
+    "page": true
   };
   bool _isDetailProduct = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -75,7 +80,8 @@ class _CreateProductMarketPageState
 
   dynamic _productParentCategoryId;
   dynamic _productChildCategoryId;
-  dynamic _pageId = "108277159419223832";
+  dynamic _selectedPage;
+  List? _listPage;
   final Map<String, dynamic> _categoryData = {
     "loai_1": {
       "name": TextEditingController(text: "Màu sắc"),
@@ -116,9 +122,7 @@ class _CreateProductMarketPageState
       final data = ref
           .read(newProductDataProvider.notifier)
           .updateNewProductData(newData);
-      final categories = ref
-          .read(productCategoriesProvider.notifier)
-          .getListProductCategories();
+      final listPage = ref.read(pagesProvider.notifier).getListPageItem();
     });
     _warningForChildImage.add("Hãy chọn ảnh cho mục này !!");
   }
@@ -128,7 +132,12 @@ class _CreateProductMarketPageState
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    productCategoriesData = ref.watch(productCategoriesProvider).list;
+    if (_listPage == null || _listPage!.isEmpty) {
+      _listPage = ref.watch(pagesProvider).listPage;
+    }
+    if (productCategoriesData.isEmpty) {
+      productCategoriesData = productCategories;
+    }
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -136,10 +145,22 @@ class _CreateProductMarketPageState
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              BackIconAppbar(),
-              AppBarTitle(title: "Tạo sản phẩm"),
-              Icon(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  buildMessageDialog(context, "Bạn có chắc chắn muốn thoát ?",
+                      oKFunction: () {
+                    popToPreviousScreen(context);
+                    popToPreviousScreen(context);
+                  });
+                },
+                child: Icon(
+                  FontAwesomeIcons.chevronLeft,
+                  color: Theme.of(context).textTheme.displayLarge!.color,
+                ),
+              ),
+              const AppBarTitle(title: "Tạo sản phẩm"),
+              const Icon(
                 FontAwesomeIcons.bell,
                 size: 18,
                 color: Colors.black,
@@ -163,10 +184,15 @@ class _CreateProductMarketPageState
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Column(children: [
-                            // ten san pham
                             buildDivider(
                               color: red,
                             ),
+                            _categoryUnitPageSelection(
+                              context,
+                              selectPageTitle,
+                              selectPageTitle,
+                            ),
+                            // ten san pham
                             _buildInput(
                               _nameController,
                               width,
@@ -174,7 +200,7 @@ class _CreateProductMarketPageState
                                   .CREATE_PRODUCT_MARKET_PRODUCT_NAME_PLACEHOLDER,
                             ),
                             // danh muc
-                            _buildSelectionsCategoryAndUnitComponents(
+                            _categoryUnitPageSelection(
                               context,
                               CreateProductMarketConstants
                                   .CREATE_PRODUCT_MARKET_CATEGORY_TITLE,
@@ -182,7 +208,7 @@ class _CreateProductMarketPageState
                             ),
                             // nganh hang (option)
                             _category != ""
-                                ? _buildSelectionsCategoryAndUnitComponents(
+                                ? _categoryUnitPageSelection(
                                     context,
                                     CreateProductMarketConstants
                                         .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE,
@@ -207,7 +233,7 @@ class _CreateProductMarketPageState
                                 CreateProductMarketConstants
                                     .CREATE_PRODUCT_MARKET_BRAND_PLACEHOLDER),
                             // quyen rieng tu
-                            _buildSelectionsPrivateRuleComponent(
+                            _buildPrivateRuleSelection(
                               context,
                               CreateProductMarketConstants
                                   .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE,
@@ -216,239 +242,13 @@ class _CreateProductMarketPageState
                           ]),
                         ),
                         // anh
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 100,
-                              width: width * 0.9,
-                              // color: red,
-                              margin: const EdgeInsets.only(top: 10),
-                              decoration: _imgFiles.isEmpty
-                                  ? BoxDecoration(
-                                      border: Border.all(
-                                          color: greyColor, width: 0.4),
-                                      borderRadius: BorderRadius.circular(7))
-                                  : null,
-                              child: _imgFiles.isEmpty
-                                  ? _buildIconAndAddImageText(
-                                      CreateProductMarketConstants
-                                          .CREATE_PRODUCT_MARKET_ADD_IMG_PLACEHOLDER,
-                                      function: () {
-                                      dialogImgSource();
-                                    })
-                                  : SingleChildScrollView(
-                                      physics: const BouncingScrollPhysics(),
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                          children: List.generate(
-                                              _imgFiles.length + 1, (index) {
-                                        if (index < _imgFiles.length) {
-                                          return Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 10),
-                                            height: 100,
-                                            width: 80,
-                                            child: Stack(
-                                              children: [
-                                                SizedBox(
-                                                  height: 100,
-                                                  width: 80,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            7),
-                                                    child: Image.file(
-                                                      _imgFiles[index],
-                                                      fit: BoxFit.fitHeight,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 5),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      _buildDeleteOrFixIconForImageWidget(
-                                                          Icons.close,
-                                                          function: () {
-                                                        _imgFiles.remove(
-                                                            _imgFiles[index]);
-                                                        setState(() {});
-                                                      }),
-                                                      _buildDeleteOrFixIconForImageWidget(
-                                                          Icons
-                                                              .wifi_protected_setup,
-                                                          function: () {
-                                                        // fix image
-                                                      })
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        } else {
-                                          if (index != 9) {
-                                            return Container(
-                                              height: 100,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: greyColor,
-                                                      width: 0.4),
-                                                  borderRadius:
-                                                      BorderRadius.circular(7)),
-                                              child: _buildIconAndAddImageText(
-                                                  CreateProductMarketConstants
-                                                      .CREATE_PRODUCT_MARKET_ADD_IMG_PLACEHOLDER,
-                                                  function: () {
-                                                dialogImgSource();
-                                              }),
-                                            );
-                                          } else {
-                                            return const SizedBox();
-                                          }
-                                        }
-                                      })),
-                                    ),
-                            ),
-                          ],
-                        ),
+                        _buildImageSelections(),
                         // mô tả ảnh
-                        _validatorSelectionList["image"] == false &&
-                                _imgFiles.isEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                ),
-                                child: _buildWarningForSelections(
-                                    "Chọn ảnh để tiếp tục"),
-                              )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20.0, top: 10),
-                                child: buildTextContent(
-                                    _imgFiles.length == 9
-                                        ? ""
-                                        : "Chọn ${_imgFiles.length}/9. Hãy nhập ảnh chính của bài niêm yết.",
-                                    false,
-                                    colorWord: greyColor,
-                                    fontSize: 13),
-                              ),
+                        _builImageDescription(),
                         // video
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 150,
-                              width: width * 0.9,
-                              margin: const EdgeInsets.only(top: 10),
-                              decoration: _videoFiles.isEmpty
-                                  ? BoxDecoration(
-                                      border: Border.all(
-                                          color: greyColor, width: 0.4),
-                                      borderRadius: BorderRadius.circular(7))
-                                  : null,
-                              child: _videoFiles.isEmpty
-                                  ? _buildIconAndAddImageText("Thêm video",
-                                      function: () {
-                                      dialogVideoSource();
-                                    })
-                                  : SingleChildScrollView(
-                                      physics: const BouncingScrollPhysics(),
-                                      scrollDirection: Axis.horizontal,
-                                      child: _videoFiles.isEmpty
-                                          ? Container(
-                                              height: 150,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: greyColor,
-                                                      width: 0.4),
-                                                  borderRadius:
-                                                      BorderRadius.circular(7)),
-                                              child: _buildIconAndAddImageText(
-                                                  "Thêm video", function: () {
-                                                dialogVideoSource();
-                                              }),
-                                            )
-                                          : Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 10),
-                                              height: 150,
-                                              width: 170,
-                                              child: Stack(
-                                                children: [
-                                                  SizedBox(
-                                                    height: 150,
-                                                    width: 170,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              7),
-                                                      child: VideoPlayerRender(
-                                                        path:
-                                                            _videoFiles[0].path,
-                                                        // fit: BoxFit.fitHeight,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 5),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 5,
-                                                                  right: 10),
-                                                          child:
-                                                              _buildDeleteOrFixIconForImageWidget(
-                                                                  Icons.close,
-                                                                  function: () {
-                                                            _videoFiles.remove(
-                                                                _videoFiles[0]);
-                                                            setState(() {});
-                                                          }),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                            ),
-                          ],
-                        ),
+                        _buildVideoSelection(),
                         // mô tả video
-                        Container(
-                          padding: const EdgeInsets.only(
-                              left: 20.0, top: 10, right: 20),
-                          child: buildTextContent(
-                              _videoFiles.isEmpty
-                                  ? "Hãy chọn video mô tả sản phẩm của bạn(Lưu ý: dung lượng dưới 30Mb, thời gian giới hạn:10s-60s)"
-                                  : "",
-                              false,
-                              colorWord: greyColor,
-                              fontSize: 13),
-                        ),
-
+                        _buildVideoDescription(),
                         // thong tin chi tiet
                         buildSpacer(height: 10),
                         buildSpacer(
@@ -458,7 +258,7 @@ class _CreateProductMarketPageState
                             isCenterLeft: false),
                         buildSpacer(height: 10),
                         // main detail information
-                        _buildContentForClassifyCategoryContents()
+                        _buildClassifyCategoryContents()
                       ]),
                     ),
                     // add to cart and buy now
@@ -474,7 +274,7 @@ class _CreateProductMarketPageState
                             bgColor: Colors.orange[300],
                             title: "Tạo sản phẩm",
                             function: () {
-                              validateForCreateProduct();
+                              validateForCreate();
                             }),
                       ),
                     ),
@@ -498,16 +298,20 @@ class _CreateProductMarketPageState
         ));
   }
 
-  Future<void> validateForCreateProduct() async {
+  Future<void> validateForCreate() async {
     _validatorSelectionList["category"] = true;
     _validatorSelectionList["branch"] = true;
     _validatorSelectionList["private"] = true;
     _validatorSelectionList["image"] = true;
+    _validatorSelectionList["page"] = true;
     if (_category == "") {
       _validatorSelectionList["category"] = false;
     }
     if (_branch == "") {
       _validatorSelectionList["branch"] = false;
+    }
+    if (_selectedPage == null || _selectedPage.isEmpty) {
+      _validatorSelectionList["page"] = false;
     }
     if (_private == "") {
       _validatorSelectionList["private"] = false;
@@ -516,14 +320,13 @@ class _CreateProductMarketPageState
       _validatorSelectionList["image"] = false;
     }
     // for(int i)hgj
-    print("create $_warningForChildImage");
     if (_formKey.currentState!.validate() &&
         _validatorSelectionList["private"] == true &&
         _validatorSelectionList["branch"] == true &&
         _validatorSelectionList["category"] == true &&
         _validatorSelectionList["image"] == true &&
+        _validatorSelectionList["page"] == true &&
         _warningForChildImage.every((element) => element == "")) {
-
       _questionForCreateProduct();
     }
   }
@@ -563,7 +366,7 @@ class _CreateProductMarketPageState
         _productChildCategoryId ?? _productParentCategoryId;
     newData["product"]["brand"] = _branch.trim();
     newData["product"]["visibility"] = _privateKey.trim();
-    newData["product"]["page_id"] = _pageId;
+    newData["product"]["page_id"] = _selectedPage["id"];
     // them vao product_options_attributes
     if (_isDetailProduct) {
       // them loai_1
@@ -687,24 +490,22 @@ class _CreateProductMarketPageState
       });
     }
 
-    print("create new product: ${json.encode(newData)}");
-    final response = Future.wait([postCreateProductApi(newData)]);
-    print("create response: $response");
+    final response = await ProductsApi().postCreateProductApi(newData);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
       "Lưu thành công",
       style: TextStyle(color: Colors.green),
     )));
 
-    ref.read(suggestProductsProvider.notifier).getSuggestProducts();
-    pushToNextScreen(context, ManageOrderMarketPage());
+    final newListProduct = ref.read(productsProvider.notifier).getProducts();
+    pushToNextScreen(context, const ManageProductMarketPage());
     setState(() {
       _isLoading = false;
     });
   }
 
-  Future postCreateProductApi(dynamic data) async {
-    ref.read(newProductDataProvider.notifier).postCreateProduct(data);
+  Future postCreateApi(dynamic data) async {
+    ref.read(productsProvider.notifier).createProduct(data);
   }
 
   void dialogImgSource() {
@@ -865,7 +666,7 @@ class _CreateProductMarketPageState
     }
   }
 
-  void _applyPriceRepositorySkuForAll() {
+  void _applyPriceForAll() {
     // ap dung cho cac phan loai 1
     for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
       _categoryData["loai_1"]["contents"]["price"][i].text =
@@ -922,6 +723,34 @@ class _CreateProductMarketPageState
         });
   }
 
+  Future _questionForCreateProduct() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Tạo mới"),
+          content: const Text("Bạn thực sự muốn tạo mới sản phẩm ?"),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text("Hủy"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text("Đồng ý"),
+              onPressed: () {
+                FocusManager.instance.primaryFocus!.unfocus();
+                Navigator.of(context).pop();
+                _setDataForCreate();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future getImage(ImageSource src) async {
     XFile getImage = XFile("");
     getImage = (await ImagePicker().pickImage(source: src))!;
@@ -948,30 +777,201 @@ class _CreateProductMarketPageState
     setState(() {});
   }
 
-  _questionForCreateProduct() {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Tạo mới"),
-          content: const Text("Bạn thực sự muốn tạo mới sản phẩm ?"),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text("Hủy"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+  Widget _buildImageSelections() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 100,
+          width: width * 0.9,
+          // color: red,
+          margin: const EdgeInsets.only(top: 10),
+          decoration: _imgFiles.isEmpty
+              ? BoxDecoration(
+                  border: Border.all(color: greyColor, width: 0.4),
+                  borderRadius: BorderRadius.circular(7))
+              : null,
+          child: _imgFiles.isEmpty
+              ? _iconAndAddImage(
+                  CreateProductMarketConstants
+                      .CREATE_PRODUCT_MARKET_ADD_IMG_PLACEHOLDER, function: () {
+                  dialogImgSource();
+                })
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      children: List.generate(_imgFiles.length + 1, (index) {
+                    if (index < _imgFiles.length) {
+                      return Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        height: 100,
+                        width: 80,
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              height: 100,
+                              width: 80,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(7),
+                                child: Image.file(
+                                  _imgFiles[index],
+                                  fit: BoxFit.fitHeight,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildDeleteAndFixIcon(Icons.close,
+                                      function: () {
+                                    _imgFiles.remove(_imgFiles[index]);
+                                    setState(() {});
+                                  }),
+                                  _buildDeleteAndFixIcon(
+                                      Icons.wifi_protected_setup, function: () {
+                                    // fix image
+                                  })
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      if (index != 9) {
+                        return Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: greyColor, width: 0.4),
+                              borderRadius: BorderRadius.circular(7)),
+                          child: _iconAndAddImage(
+                              CreateProductMarketConstants
+                                  .CREATE_PRODUCT_MARKET_ADD_IMG_PLACEHOLDER,
+                              function: () {
+                            dialogImgSource();
+                          }),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    }
+                  })),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _builImageDescription() {
+    return _validatorSelectionList["image"] == false && _imgFiles.isEmpty
+        ? Padding(
+            padding: const EdgeInsets.only(
+              left: 20.0,
             ),
-            ElevatedButton(
-              child: const Text("Đồng ý"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _setDataForCreate();
-              },
-            ),
-          ],
-        );
-      },
+            child: _buildWarningSelection("Chọn ảnh để tiếp tục"),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(left: 20.0, top: 10),
+            child: buildTextContent(
+                _imgFiles.length == 9
+                    ? ""
+                    : "Chọn ${_imgFiles.length}/9. Hãy nhập ảnh chính của bài niêm yết.",
+                false,
+                colorWord: greyColor,
+                fontSize: 13),
+          );
+  }
+
+  Widget _buildVideoSelection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 150,
+          width: width * 0.9,
+          margin: const EdgeInsets.only(top: 10),
+          decoration: _videoFiles.isEmpty
+              ? BoxDecoration(
+                  border: Border.all(color: greyColor, width: 0.4),
+                  borderRadius: BorderRadius.circular(7))
+              : null,
+          child: _videoFiles.isEmpty
+              ? _iconAndAddImage("Thêm video", function: () {
+                  dialogVideoSource();
+                })
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: _videoFiles.isEmpty
+                      ? Container(
+                          height: 150,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: greyColor, width: 0.4),
+                              borderRadius: BorderRadius.circular(7)),
+                          child: _iconAndAddImage("Thêm video", function: () {
+                            dialogVideoSource();
+                          }),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          height: 150,
+                          width: 170,
+                          child: Stack(
+                            children: [
+                              SizedBox(
+                                height: 150,
+                                width: 170,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(7),
+                                  child: VideoPlayerRender(
+                                    path: _videoFiles[0].path,
+                                    // fit: BoxFit.fitHeight,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 5, right: 10),
+                                      child: _buildDeleteAndFixIcon(Icons.close,
+                                          function: () {
+                                        _videoFiles.remove(_videoFiles[0]);
+                                        setState(() {});
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVideoDescription() {
+    return Container(
+      padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20),
+      child: buildTextContent(
+          _videoFiles.isEmpty
+              ? "Hãy chọn video mô tả sản phẩm của bạn(Lưu ý: dung lượng dưới 30Mb, thời gian giới hạn:10s-60s)"
+              : "",
+          false,
+          colorWord: greyColor,
+          fontSize: 13),
     );
   }
 
@@ -1045,7 +1045,7 @@ class _CreateProductMarketPageState
     );
   }
 
-  Widget _buildSelectionsCategoryAndUnitComponents(
+  Widget _categoryUnitPageSelection(
     BuildContext context,
     String title,
     String titleForBottomSheet,
@@ -1057,21 +1057,9 @@ class _CreateProductMarketPageState
           GeneralComponent(
             [
               buildTextContent(title, false,
-                  colorWord: greyColor, fontSize: 15),
+                  colorWord: greyColor, fontSize: 14),
               const SizedBox(height: 5),
-              _category != "" &&
-                      title ==
-                          CreateProductMarketConstants
-                              .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
-                  ? buildTextContent(_category, false, fontSize: 17)
-                  : const SizedBox(),
-              _category != "" &&
-                      _branch != "" &&
-                      title ==
-                          CreateProductMarketConstants
-                              .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE
-                  ? buildTextContent(_branch, false, fontSize: 17)
-                  : const SizedBox(),
+              _buildSelectionContents(title)
             ],
             suffixWidget: const SizedBox(
               height: 40,
@@ -1087,60 +1075,77 @@ class _CreateProductMarketPageState
             function: () {
               showBottomSheetCheckImportantSettings(
                   context, 500, titleForBottomSheet,
-                  bgColor: Colors.grey[300],
+                  // bgColor: Colors.grey[300],
                   widget: SizedBox(
                     height: 400,
-                    child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: title ==
-                                CreateProductMarketConstants
-                                    .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
-                            ? productCategoriesData.length
-                            : _childCategoriesList!.length,
-                        itemBuilder: (context, index) {
-                          final data = title ==
-                                  CreateProductMarketConstants
-                                      .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
-                              ? productCategoriesData
-                              : _childCategoriesList!;
-                          return Container(
-                            child: Column(
-                              children: [
-                                GeneralComponent(
-                                  [
-                                    buildTextContent(data[index]["text"], false)
-                                  ],
-                                  changeBackground: transparent,
-                                  function: () {
-                                    popToPreviousScreen(context);
-                                    if (title ==
+                    child: FutureBuilder(builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: title == selectPageTitle
+                                ? _listPage!.length
+                                : title ==
                                         CreateProductMarketConstants
-                                            .CREATE_PRODUCT_MARKET_CATEGORY_TITLE) {
-                                      _category = data[index]["text"];
-                                      _productParentCategoryId =
-                                          data[index]["id"];
-                                      _validatorSelectionList["category"] =
-                                          true;
-                                      _childCategoriesList =
-                                          data[index]["subcategories"];
-                                      _branch = "";
-                                    }
-                                    if (title ==
-                                        CreateProductMarketConstants
-                                            .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE) {
-                                      _productChildCategoryId =
-                                          data[index]["id"];
-                                      _branch = data[index]["text"];
-                                      _validatorSelectionList["branch"] = true;
-                                    }
-                                    setState(() {});
-                                  },
-                                ),
-                                buildDivider(color: red)
-                              ],
-                            ),
-                          );
-                        }),
+                                            .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
+                                    ? productCategoriesData.length
+                                    : _childCategoriesList!.length,
+                            itemBuilder: (context, index) {
+                              final data = title == selectPageTitle
+                                  ? _listPage!
+                                  : title ==
+                                          CreateProductMarketConstants
+                                              .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
+                                      ? productCategoriesData
+                                      : _childCategoriesList!;
+                              return Column(
+                                children: [
+                                  GeneralComponent(
+                                    [
+                                      buildTextContent(
+                                          data[index]["text"] ??
+                                              data[index]["title"],
+                                          false)
+                                    ],
+                                    changeBackground: transparent,
+                                    function: () {
+                                      popToPreviousScreen(context);
+                                      if (title ==
+                                          CreateProductMarketConstants
+                                              .CREATE_PRODUCT_MARKET_CATEGORY_TITLE) {
+                                        _category = data[index]["text"];
+                                        _productParentCategoryId =
+                                            data[index]["id"];
+                                        _validatorSelectionList["category"] =
+                                            true;
+                                        _childCategoriesList =
+                                            data[index]["subcategories"];
+                                        _branch = "";
+                                      }
+                                      if (title ==
+                                          CreateProductMarketConstants
+                                              .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE) {
+                                        _productChildCategoryId =
+                                            data[index]["id"];
+                                        _branch = data[index]["text"];
+                                        _validatorSelectionList["branch"] =
+                                            true;
+                                      }
+                                      if (title == selectPageTitle) {
+                                        _selectedPage = data[index];
+                                        _validatorSelectionList["page"] = true;
+                                      }
+                                      setState(() {});
+                                    },
+                                  ),
+                                  buildDivider(color: red)
+                                ],
+                              );
+                            });
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(color: red),
+                      );
+                    }),
                   ));
             },
           ),
@@ -1148,20 +1153,44 @@ class _CreateProductMarketPageState
                   title ==
                       CreateProductMarketConstants
                           .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
-              ? _buildWarningForSelections("Vui lòng chọn danh mục.")
+              ? _buildWarningSelection("Vui lòng chọn danh mục.")
               : const SizedBox(),
           _validatorSelectionList["branch"] == false &&
                   title ==
                       CreateProductMarketConstants
                           .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE
-              ? _buildWarningForSelections("Vui lòng chọn ngành hàng.")
+              ? _buildWarningSelection("Vui lòng chọn ngành hàng.")
+              : const SizedBox(),
+          _validatorSelectionList["page"] == false && title == selectPageTitle
+              ? _buildWarningSelection("Vui lòng chọn trang của bạn.")
               : const SizedBox(),
         ],
       ),
     );
   }
 
-  Widget _buildSelectionsPrivateRuleComponent(
+  Widget _buildSelectionContents(String title) {
+    if (_selectedPage != null && title == selectPageTitle) {
+      return buildTextContent(_selectedPage["title"], false, fontSize: 17);
+    }
+
+    if (_category != "" &&
+        title ==
+            CreateProductMarketConstants.CREATE_PRODUCT_MARKET_CATEGORY_TITLE) {
+      return buildTextContent(_category, false, fontSize: 17);
+    }
+
+    if (_category != "" &&
+        _branch != "" &&
+        title ==
+            CreateProductMarketConstants
+                .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE) {
+      return buildTextContent(_branch, false, fontSize: 17);
+    }
+    return const SizedBox();
+  }
+
+  Widget _buildPrivateRuleSelection(
       BuildContext context, String title, String titleForBottomSheet,
       {List<Map<String, dynamic>> privateDatas = CreateProductMarketConstants
           .CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS}) {
@@ -1172,7 +1201,7 @@ class _CreateProductMarketPageState
           GeneralComponent(
             [
               buildTextContent(title, false,
-                  colorWord: greyColor, fontSize: 15),
+                  colorWord: greyColor, fontSize: 14),
               const SizedBox(height: 5),
               _private != ""
                   ? buildTextContent(_private, false, fontSize: 17)
@@ -1260,14 +1289,14 @@ class _CreateProductMarketPageState
                   title ==
                       CreateProductMarketConstants
                           .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE
-              ? _buildWarningForSelections("Vui lòng chọn quyền riêng tư.")
+              ? _buildWarningSelection("Vui lòng chọn quyền riêng tư.")
               : const SizedBox(),
         ],
       ),
     );
   }
 
-  Widget _buildContentForClassifyCategoryContents() {
+  Widget _buildClassifyCategoryContents() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(children: [
@@ -1447,7 +1476,7 @@ class _CreateProductMarketPageState
                                 if (_priceController.text.isNotEmpty &&
                                     _repositoryController.text.isNotEmpty &&
                                     _skuController.text.isNotEmpty) {
-                                  _applyPriceRepositorySkuForAll();
+                                  _applyPriceForAll();
                                 }
                               })
                           : const SizedBox()
@@ -1461,8 +1490,8 @@ class _CreateProductMarketPageState
                         scrollDirection: Axis.horizontal,
                         child: _categoryData["loai_2"] == {} ||
                                 _categoryData["loai_2"] == null
-                            ? _buildDataTableWithOneComponent()
-                            : _buildDataTableForTwoComponents())
+                            ? _buildOneDataTable()
+                            : _buildTwoDataTable())
                     : const SizedBox(),
               ],
             ),
@@ -1549,7 +1578,7 @@ class _CreateProductMarketPageState
     );
   }
 
-  Widget _buildIconAndAddImageText(String title, {Function? function}) {
+  Widget _iconAndAddImage(String title, {Function? function}) {
     return InkWell(
       onTap: () {
         function != null ? function() : null;
@@ -1568,7 +1597,7 @@ class _CreateProductMarketPageState
     );
   }
 
-  DataTable _buildDataTableWithOneComponent() {
+  DataTable _buildOneDataTable() {
     List<DataColumn> dataColumns = [];
     List<DataRow> dataRows = [];
     List<DataCell> dataCells = [];
@@ -1661,7 +1690,7 @@ class _CreateProductMarketPageState
     );
   }
 
-  DataTable _buildDataTableForTwoComponents() {
+  DataTable _buildTwoDataTable() {
     List<DataColumn> dataColumns = [];
     List<DataRow> dataRows = [];
     List<DataCell> dataCells = [];
@@ -1781,8 +1810,7 @@ class _CreateProductMarketPageState
   }
 }
 
-Widget _buildDeleteOrFixIconForImageWidget(IconData iconData,
-    {Function? function}) {
+Widget _buildDeleteAndFixIcon(IconData iconData, {Function? function}) {
   return InkWell(
     onTap: () {
       function != null ? function() : null;
@@ -1802,7 +1830,7 @@ Widget _buildDeleteOrFixIconForImageWidget(IconData iconData,
   );
 }
 
-Widget _buildWarningForSelections(String warning) {
+Widget _buildWarningSelection(String warning) {
   return Container(
       padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
       child: buildTextContent(warning, false,

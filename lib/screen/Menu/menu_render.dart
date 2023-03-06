@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu_selected.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -21,9 +22,11 @@ class MenuRender extends StatelessWidget {
           CupertinoPageRoute(
               builder: (context) => menu['key'] == 'moment'
                   ? const Moment(isBack: true)
-                  : MenuSelected(
-                      menuSelected: menu,
-                    )));
+                  : menu["key"] == "marketPlace"
+                      ? const MainMarketPage()
+                      : MenuSelected(
+                          menuSelected: menu,
+                        )));
     }
 
     return Column(

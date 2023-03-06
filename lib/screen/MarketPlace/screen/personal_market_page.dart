@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
+import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/order_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/request_product_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
@@ -19,7 +19,6 @@ import 'interest_product_market_page.dart';
 import 'manage_order_market_page.dart';
 import 'manage_product_market_page.dart';
 import 'notification_market_page.dart';
-import 'order_product_market_page.dart';
 
 class PersonalMarketPlacePage extends StatefulWidget {
   const PersonalMarketPlacePage({super.key});
@@ -32,13 +31,14 @@ class PersonalMarketPlacePage extends StatefulWidget {
 class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
   late double width = 0;
   late double height = 0;
-  bool _isOpenProductOfYou = false;
+  // bool _isOpenYourAccount = false;
+  // bool _isOpenYourShop = false;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-        final theme = Provider.of<ThemeManager>(context);
+    final theme = Provider.of<ThemeManager>(context);
 
     Color colorWord = theme.themeMode == ThemeMode.dark
         ? white
@@ -59,7 +59,7 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                 onTap: () {
                   pushToNextScreen(context, NotificationMarketPage());
                 },
-                child:  Icon(
+                child: Icon(
                   FontAwesomeIcons.bell,
                   size: 18,
                   color: colorWord,
@@ -75,109 +75,34 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(children: [
                   //  san pham cua ban
-                  buildButtonForMarketWidget(
-                      width: width,
-                      bgColor: secondaryColor,
-                      title: "Tạo bài niêm yết mới",
-                      iconData: FontAwesomeIcons.penToSquare,
-                      function: () {
-                        pushToNextScreen(
-                            context, const CreateProductMarketPage());
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: GeneralComponent(
-                      [
-                        buildTextContent("Trang hoạt động của bạn", false,
-                            fontSize: 18)
-                      ],
-                      prefixWidget: Container(
-                        height: 40,
-                        width: 40,
-                        padding: const EdgeInsets.all(5),
-                        child: Image.asset(
-                          "${MarketPlaceConstants.PATH_IMG}cat_1.png",
-                          height: 20,
-                        ),
-                      ),
-                      changeBackground: transparent,
-                      padding: EdgeInsets.zero,
-                      function: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => const Dialog(
-                                  child: Text(
-                                      "Chuyen sang trang trung bay san pham cua ban"),
-                                ));
-                      },
-                    ),
-                  ),
                   GeneralComponent(
                     [
-                      buildTextContent("Sản phẩm của bạn", true),
+                      buildTextContent("Shop của bạn", true),
                     ],
-                    suffixWidget: Container(
-                      height: 40,
-                      width: 40,
-                      padding: const EdgeInsets.all(5),
-                      child: Icon(
-                        _isOpenProductOfYou
-                            ? FontAwesomeIcons.caretUp
-                            : FontAwesomeIcons.caretDown,
-                      ),
-                    ),
                     changeBackground: transparent,
                     padding: const EdgeInsets.all(5),
                     function: () {
-                      setState(() {
-                        _isOpenProductOfYou = !_isOpenProductOfYou;
-                      });
+                      // setState(() {
+                      //   _isOpenYourAccount = !_isOpenYourAccount;
+                      // });
                     },
                   ),
-                  _isOpenProductOfYou
-                      ? Column(
-                          children: List.generate(
-                              PersonalMarketPlaceConstants
-                                  .PERSONAL_MARKET_PLACE_PRODUCT_OF_YOU_CONTENTS[
-                                      "data"]
-                                  .length, (index) {
-                            final data = PersonalMarketPlaceConstants
-                                    .PERSONAL_MARKET_PLACE_PRODUCT_OF_YOU_CONTENTS[
-                                "data"];
-                            return GeneralComponent(
-                              [
-                                buildTextContentButton(data[index]["title"], false,
-                                    function: () {
-                                  _checkNavigator(data[index]["title"]);
-                                })
-                              ],
-                              prefixWidget: Container(
-                                height: 40,
-                                width: 40,
-                                margin: const EdgeInsets.only(right: 10),
-                                padding: const EdgeInsets.all(5),
-                                child: Icon(
-                                  data[index]["icon"],
-                                ),
-                              ),
-                              changeBackground: transparent,
-                              padding: const EdgeInsets.all(5),
-                            );
-                          }).toList(),
-                        )
-                      : const SizedBox(),
+
+                  // _isOpenYourAccount
+                  //     ?
+                  _buildRenderList(PersonalMarketPlaceConstants
+                      .PERSONAL_MARKET_PLACE_YOUR_SHOP["data"]),
+                  // : const SizedBox(),
                   GeneralComponent(
                     [
-                      buildTextContent("Thông báo(có hoặc không)", true),
+                      buildTextContent("Tài khoản", true),
                     ],
-                    suffixWidget: Container(
-                      height: 40,
-                      width: 40,
-                      padding: const EdgeInsets.all(5),
-                    ),
                     changeBackground: transparent,
                     padding: const EdgeInsets.all(5),
+                    function: () {},
                   ),
+                  _buildRenderList(PersonalMarketPlaceConstants
+                      .PERSONAL_MARKET_PLACE_YOUR_ACCOUNT["data"]),
                 ]),
               ),
             )
@@ -187,24 +112,51 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
 
   _checkNavigator(String value) {
     switch (value) {
-      case "Lời mời":
-        pushToNextScreen(context, const RequestProductMarketPage());
-        break;
-      case "Quan tâm":
-        pushToNextScreen(context, const InterestProductMarketPage());
-        break;
       case "Quản lý đơn hàng":
         pushToNextScreen(context, const ManageOrderMarketPage());
         break;
       case "Quản lý sản phẩm":
         pushToNextScreen(context, const ManageProductMarketPage());
         break;
-      case "Đơn mua":
+      case "Tạo sản phẩm mới":
+        pushToNextScreen(context, const CreateProductMarketPage());
+        break;
+      case "Đơn hàng của tôi":
         pushToNextScreen(context, const OrderProductMarketPage());
+        break;
+      case "Lời mời":
+        pushToNextScreen(context, const RequestProductMarketPage());
+        break;
+      case "Quan tâm":
+        pushToNextScreen(context, const InterestProductMarketPage());
         break;
       default:
         pushToNextScreen(context, const CartMarketPage());
         break;
     }
+  }
+
+  Widget _buildRenderList(dynamic data) {
+    return Column(
+      children: List.generate(data.length, (index) {
+        return GeneralComponent(
+          [buildTextContent(data[index]["title"], false)],
+          prefixWidget: Container(
+            height: 40,
+            width: 40,
+            margin: const EdgeInsets.only(right: 10),
+            padding: const EdgeInsets.all(5),
+            child: Icon(
+              data[index]["icon"],
+            ),
+          ),
+          changeBackground: transparent,
+          padding: const EdgeInsets.all(5),
+          function: () {
+            _checkNavigator(data[index]["title"]);
+          },
+        );
+      }).toList(),
+    );
   }
 }

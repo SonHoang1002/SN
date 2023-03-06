@@ -11,7 +11,6 @@ import '../CreatePost/create_modal_base_menu.dart';
 import '../EventScreen/screen/create_event_page.dart';
 import '../Group/GroupCreateModules/screen/create_group_page.dart';
 import '../Group/group.dart';
-import '../MarketPlace/screen/main_market_body.dart';
 import '../MarketPlace/screen/personal_market_page.dart';
 import '../Page/page_general.dart';
 import '../Watch/watch_render.dart';
@@ -96,48 +95,50 @@ class MenuSelected extends StatelessWidget {
         );
         break;
       case 'marketPlace':
-        body = const MainMarketBody();
-        buttonAppbar = Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: () {
-                pushToNextScreen(context, const SearchMarketPage());
-              },
-              child: Icon(
-                FontAwesomeIcons.magnifyingGlass,
-                size: 16,
-                color: colorWord,
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            GestureDetector(
-              onTap: () {
-                pushToNextScreen(context, const CartMarketPage());
-              },
-              child: Icon(
-                FontAwesomeIcons.cartArrowDown,
-                size: 16,
-                color: colorWord,
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            GestureDetector(
-              onTap: () {
-                pushToNextScreen(context, const PersonalMarketPlacePage());
-              },
-              child: Icon(
-                FontAwesomeIcons.user,
-                size: 16,
-                color: colorWord,
-              ),
-            ),
-          ],
-        );
+        // pushToNextScreen(context, newScreen)
+        // body = const MainMarketPage();
+        // buttonAppbar = Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //   children: [
+        //     GestureDetector(
+        //       onTap: () {
+        //         pushToNextScreen(context, const SearchMarketPage());
+        //       },
+        //       child: Icon(
+        //         FontAwesomeIcons.magnifyingGlass,
+        //         size: 16,
+        //         color: colorWord,
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       width: 10,
+        //     ),
+        //     GestureDetector(
+        //       onTap: () {
+        //         pushToNextScreen(context, const CartMarketPage());
+        //       },
+        //       child: Icon(
+        //         FontAwesomeIcons.cartArrowDown,
+        //         size: 16,
+        //         color: colorWord,
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       width: 10,
+        //     ),
+        //     GestureDetector(
+        //       onTap: () {
+        //         pushToNextScreen(context, const PersonalMarketPlacePage());
+        //       },
+        //       child: Icon(
+        //         FontAwesomeIcons.user,
+        //         size: 16,
+        //         color: colorWord,
+        //       ),
+        //     ),
+        //   ],
+        // );
+
         break;
       // return CreateSearchBaseMenu(
       //     placeHolder: "nhập sản phẩm",

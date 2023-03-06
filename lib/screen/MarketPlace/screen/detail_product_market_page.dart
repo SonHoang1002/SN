@@ -5,13 +5,13 @@ import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart'
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/review_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/rating_star_widget.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/review_item_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/share_and_search_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
@@ -20,6 +20,7 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_butt
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/video_player.dart';
 
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
@@ -32,9 +33,13 @@ const String share_on_group = "share_on_group";
 const String share_on_personal_page_of_friend =
     "share_on_personal_page_of_friend";
 
+// ignore: must_be_immutable
 class DetailProductMarketPage extends ConsumerStatefulWidget {
   final dynamic id;
-  const DetailProductMarketPage({super.key, required this.id});
+  const DetailProductMarketPage({
+    super.key,
+    required this.id,
+  });
   @override
   ConsumerState<DetailProductMarketPage> createState() =>
       _DetailProductMarketPageComsumerState();
@@ -44,22 +49,22 @@ class _DetailProductMarketPageComsumerState
     extends ConsumerState<DetailProductMarketPage> {
   late double width = 0;
   late double height = 0;
-  // Map<String, dynamic>? _product;
   int productNumber = 1;
   int _onMorePart = 0;
   bool? _isConcern;
   Map<String, dynamic>? _detailData;
   List<dynamic>? _commentData;
-  List<double>? _prices;
+  List<dynamic>? _prices;
   bool _isLoading = true;
-  final List<bool>? _colorCheckList = [];
-  final List<bool>? _sizeCheckList = [];
-  dynamic? _colorValue;
-  dynamic? _sizeValue;
+  final List<bool> _colorCheckList = [];
+  final List<bool> _sizeCheckList = [];
+  dynamic _colorValue;
+  dynamic _sizeValue;
   String? _priceTitle;
-  dynamic? _imgLink;
-  dynamic? _productToCart;
-
+  dynamic _imgChildLink;
+  dynamic _productToCart;
+  List<dynamic>? mediaList = [];
+  int mediaIndex = 0;
   @override
   void initState() {
     if (!mounted) {
@@ -134,48 +139,58 @@ class _DetailProductMarketPageComsumerState
     _detailData = await ref.watch(detailProductProvider).detail;
     _commentData = await ref.watch(reviewProductProvider).commentList;
     _prices = getMinAndMaxPrice(_detailData?["product_variants"]);
+
     // khoi tao color and size neu co
-    if (_colorCheckList!.isEmpty && _sizeCheckList!.isEmpty) {
+    if (_colorCheckList.isEmpty && _sizeCheckList.isEmpty) {
       if (_detailData?["product_options"] != null &&
           _detailData?["product_options"].isNotEmpty) {
         for (int i = 0;
             i < _detailData?["product_options"][0]["values"].length;
             i++) {
-          _colorCheckList?.add(false);
+          _colorCheckList.add(false);
         }
         if (_detailData?["product_options"].length == 2) {
           for (int i = 0;
               i < _detailData?["product_options"][1]["values"].length;
               i++) {
-            _sizeCheckList?.add(false);
+            _sizeCheckList.add(false);
           }
         }
       }
     }
-    // _priceTitle ??= _prices?[0] == _prices?[1]
-    //     ? "₫${_prices?[0].toString()}"
-    //     : "₫${_prices?[0].toString()} - ₫${_prices?[1].toString()}";
-    _priceTitle ??=
-        "₫${_detailData?["product_variants"][0]["price"].toString()}";
-    _imgLink ??= !_detailData?["product_image_attachments"].isEmpty
-        ? _detailData!["product_image_attachments"][0]["attachment"]["url"]
-        : "https://cdn.pixabay.com/photo/2015/11/16/14/43/cat-1045782__340.jpg";
+    if (_detailData?["product_variants"] != null ||
+        _detailData?["product_variants"].isNotEmpty) {
+      _priceTitle ??=
+          "₫${_detailData?["product_variants"][0]["price"].toString()}";
+    } else {
+      _priceTitle ??= "₫0";
+    }
 
+    if (mediaList == null || mediaList!.isEmpty) {
+      if (_detailData!["product_video"] != null) {
+        mediaList?.add(_detailData!["product_video"]["url"]);
+      }
+      if (_detailData!["product_image_attachments"] != null &&
+          _detailData!["product_image_attachments"].isNotEmpty) {
+        _detailData!["product_image_attachments"].forEach((element) {
+          mediaList?.add(element["attachment"]["url"]);
+        });
+      }
+    }
     // khoi tao concern
     _isConcern = false;
     final primaryInterestList =
         ref.watch(interestProductsProvider).listInterest;
     if (primaryInterestList.isNotEmpty) {
-      primaryInterestList.forEach(
-        (element) {
-          if (element["id"] == widget.id) {
-            _isConcern = true;
-            return;
-          }
-        },
-      );
+      for (var element in primaryInterestList) {
+        if (element["id"] == widget.id) {
+          _isConcern = true;
+          continue;
+        }
+      }
     }
     _productToCart = _detailData!["product_variants"][0];
+
     // load xong
     _isLoading = false;
     setState(() {});
@@ -192,24 +207,99 @@ class _DetailProductMarketPageComsumerState
             physics: const BouncingScrollPhysics(),
             child: Column(children: [
               // img
-              SizedBox(
-                  height: 350,
-                  width: width,
-                  child: ImageCacheRender(
-                    path: _imgLink,
-                    height: 120.0,
+              Stack(
+                children: [
+                  SizedBox(
+                      height: 350,
+                      width: width,
+                      child: _imgChildLink != null
+                          ? ImageCacheRender(
+                              path: _imgChildLink,
+                            )
+                          : mediaList![mediaIndex]?.endsWith('.mp4')
+                              ? Container(
+                                  height: 300,
+                                  width: width,
+                                  // color: red,
+                                  child: SizedBox(
+                                    height: 300,
+                                    child: VideoPlayerRender(
+                                      path: mediaList![mediaIndex],
+                                      autoPlay: true,
+                                    ),
+                                  ))
+                              : ImageCacheRender(
+                                  path: mediaList![mediaIndex],
+                                )),
+                  SizedBox(
+                    height: 350,
                     width: width,
-                  )),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          mediaIndex != 0 && mediaIndex != -1
+                              ? InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      mediaIndex--;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        color: red.withOpacity(0.5),
+                                        child: const Icon(
+                                          FontAwesomeIcons.chevronLeft,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
+                          mediaIndex != mediaList!.length - 1 &&
+                                  mediaIndex != -1
+                              ? Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        mediaIndex++;
+                                      });
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        color: red.withOpacity(0.5),
+                                        child: const Icon(
+                                          FontAwesomeIcons.chevronRight,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ]),
+                  )
+                ],
+              ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // selections
+                    // selections title
                     buildSpacer(height: 10),
                     _detailData?["product_image_attachments"] != null
                         ? buildTextContent(
-                            "Có ${(_detailData?["product_image_attachments"].length)} lựa chọn khác",
+                            "Có ${(_detailData!["product_video"] != null ? mediaList!.length - 1 : mediaList!.length)} lựa chọn khác",
                             false,
                             fontSize: 15)
                         : const SizedBox(),
@@ -219,44 +309,33 @@ class _DetailProductMarketPageComsumerState
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: List.generate(
-                            _detailData?["product_image_attachments"].length,
-                            (index) {
-                          final childProducts =
-                              _detailData?["product_image_attachments"];
-                          if (childProducts?[index]["attachment"] != null &&
-                              childProducts?[index]["attachment"] != {}) {
-                            return InkWell(
-                              onTap: () {
-                                if (_colorValue == null || _colorValue == "") {
-                                  setState(() {
-                                    _imgLink = childProducts?[index]
-                                        ["attachment"]["url"];
-                                  });
-                                }
-                              },
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      border: _imgLink ==
-                                              childProducts?[index]
-                                                  ["attachment"]["url"]
-                                          ? Border.all(color: red, width: 0.6)
-                                          : null),
-                                  margin: const EdgeInsets.only(right: 10),
-                                  child: ImageCacheRender(
-                                    path: childProducts?[index]["attachment"]
-                                        ["preview_url"],
-                                    height: 80.0,
-                                    width: 80.0,
-                                  )),
-                            );
-                          } else {
-                            return Container(
-                              height: 80,
-                              width: 80,
-                              color: greyColor,
-                            );
-                          }
+                        children: List.generate(mediaList!.length, (index) {
+                          return InkWell(
+                            onTap: () {
+                              if (_colorValue == null || _colorValue == "") {
+                                setState(() {
+                                  mediaIndex = index;
+                                });
+                              }
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    border: mediaIndex == index
+                                        ? Border.all(color: red, width: 0.6)
+                                        : null),
+                                margin: const EdgeInsets.only(right: 10),
+                                child: mediaList![index].endsWith(".mp4")
+                                    ? SizedBox(
+                                        height: 120,
+                                        width: 180,
+                                        child: VideoPlayerRender(
+                                            path: mediaList![index]))
+                                    : ImageCacheRender(
+                                        path: mediaList![index],
+                                        height: 120.0,
+                                        width: 120.0,
+                                      )),
+                          );
                         }).toList(),
                       ),
                     ),
@@ -286,12 +365,12 @@ class _DetailProductMarketPageComsumerState
                           Row(
                             children: [
                               buildRatingStarWidget(
-                                  _detailData?["rating"].round()),
+                                  _detailData?["rating_count"]),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 10, right: 5),
                                 child: buildTextContent(
-                                    "${_detailData?["rating"].round().toString()}",
+                                    "${_detailData?["rating_count"].toString()}",
                                     false,
                                     fontSize: 18),
                               ),
@@ -535,16 +614,11 @@ class _DetailProductMarketPageComsumerState
                                   Column(
                                     children: _commentData != null &&
                                             _commentData!.isNotEmpty
-                                        ? List.generate(10, (index) {
-                                            return _buildReviewAndComment(
-                                                "imgPath",
-                                                "Nguyen Van A",
-                                                4,
-                                                "Sản phẩm này rất tuyệt vời vì nó đáp ứng được tất cả các tiêu chí mà tôi đặt ra. Thiết kế rất đẹp, chất liệu vải tốt và đường may cẩn thận. Điểm đặc biệt là sản phẩm rất tiện lợi khi sử dụng, dễ dàng để mang đi du lịch hay đi làm. Chất lượng âm thanh và độ nhạy cảm của microphone cũng rất tốt.",
-                                                commentImgPath: [
-                                                  "https://baokhanhhoa.vn/dataimages/202010/original/images5426900_1.jpg",
-                                                  "https://images2.thanhnien.vn/Uploaded/chicuong/2022_11_28/hy-connected-img-1-4608.jpg"
-                                                ]);
+                                        ? List.generate(_commentData!.length,
+                                            (index) {
+                                            final data = _commentData![index];
+                                            return buildReviewItemWidget(
+                                                context, _commentData![index]);
                                           }).toList()
                                         : [
                                             Padding(
@@ -639,7 +713,10 @@ class _DetailProductMarketPageComsumerState
       _detailData?["product_variants"].forEach((element) {
         if (element["option1"] == _colorValue) {
           setState(() {
-            _imgLink = element["image"]["url"] ?? _imgLink;
+            if (element["image"] != null) {
+              _imgChildLink = element["image"]["url"];
+              mediaIndex = -1;
+            }
           });
           return;
         }
@@ -662,19 +739,19 @@ class _DetailProductMarketPageComsumerState
               return InkWell(
                 onTap: () {
                   if (title == "Màu sắc") {
-                    if (_colorCheckList!.isNotEmpty) {
-                      for (int i = 0; i < _colorCheckList!.length; i++) {
-                        _colorCheckList![i] = false;
+                    if (_colorCheckList.isNotEmpty) {
+                      for (int i = 0; i < _colorCheckList.length; i++) {
+                        _colorCheckList[i] = false;
                       }
-                      _colorCheckList![index] = true;
+                      _colorCheckList[index] = true;
                       _colorValue = data[index];
                     }
                   } else {
-                    if (_sizeCheckList!.isNotEmpty) {
-                      for (int i = 0; i < _sizeCheckList!.length; i++) {
-                        _sizeCheckList![i] = false;
+                    if (_sizeCheckList.isNotEmpty) {
+                      for (int i = 0; i < _sizeCheckList.length; i++) {
+                        _sizeCheckList[i] = false;
                       }
-                      _sizeCheckList?[index] = true;
+                      _sizeCheckList[index] = true;
                       _sizeValue = data[index];
                     }
                   }
@@ -689,11 +766,10 @@ class _DetailProductMarketPageComsumerState
 
                   decoration: BoxDecoration(
                       color: title == "Màu sắc"
-                          ? _colorCheckList!.isNotEmpty &&
-                                  _colorCheckList![index]
+                          ? _colorCheckList.isNotEmpty && _colorCheckList[index]
                               ? blueColor
                               : white
-                          : _sizeCheckList!.isNotEmpty && _sizeCheckList![index]
+                          : _sizeCheckList.isNotEmpty && _sizeCheckList[index]
                               ? blueColor
                               : white,
                       border: Border.all(color: greyColor, width: 0.6),
@@ -774,6 +850,7 @@ class _DetailProductMarketPageComsumerState
 
   Future<void> _getInformationForCart() async {
     if (_colorValue == null) {
+      // khong co  sp con nen chon sp duy nhat
       _productToCart = _detailData?["product_variants"][0];
     } else {
       if (_sizeValue != null) {
@@ -800,147 +877,50 @@ class _DetailProductMarketPageComsumerState
     };
     final response = await CartProductApi().postCartProductApi(data);
 
-    print("detail response: $response");
-    setState(() {});
+    // setState(() {});
 
-    List listCart = ref.watch(cartProductsProvider).listCart;
-    // neu co cagtegory thi them san pham moi vao list
-    for (int i = 0; i < listCart.length; i++) {
-      if (listCart[i]["title"] == _detailData!["page"]["title"]) {
-        for (int j = 0; j < listCart[i]["items"].length; j++) {
-          if (listCart[i]["items"][j]["product_variant"]["id"] ==
-              _productToCart["id"]) {
-            listCart[i]["items"][j]["quantity"] += productNumber;
-            return;
-          }
-        }
-        listCart[i]["items"].add({
-          "quantity": productNumber,
-          "check": false,
-          "product_variant": _productToCart
-        });
-        ref.read(cartProductsProvider.notifier).updateCartProductList(listCart);
-        return;
-      }
-    }
+    // List<dynamic> listCart = ref.watch(cartProductsProvider).listCart;
+    // // neu co cagtegory thi them san pham moi vao list
+    // for (int i = 0; i < listCart.length; i++) {
+    //   if (listCart[i]["title"] == _detailData!["page"]["title"]) {
+    //     for (int j = 0; j < listCart[i]["items"].length; j++) {
+    //       if (listCart[i]["items"][j]["product_variant"]["id"] ==
+    //           _productToCart["id"]) {
+    //         listCart[i]["items"][j]["quantity"] += productNumber;
+    //         return;
+    //       }
+    //     }
+    //     listCart[i]["items"].add({
+    //       "quantity": productNumber,
+    //       "check": false,
+    //       "product_variant": _productToCart
+    //     });
+    //     ref.read(cartProductsProvider.notifier).updateCartProductList(listCart);
+    //     return;
+    //   }
+    // }
     // neu khong co category tu truoc thi them moi category moi
-    listCart.add({
-      "page_id":
-          _detailData!["page"] != null ? _detailData!["page"]["id"] : null,
-      "title": _detailData!["page"] != null
-          ? _detailData!["page"]["title"]
-          : "Vô danh Page",
-      "avatar_id": _detailData!["page"] != null
-          ? _detailData!["page"]["avatar_media"]["id"]
-          : null,
-      "username": _detailData!["page"] != null
-          ? _detailData!["page"]["username"]
-          : null,
-      "check": false,
-      "items": [
-        {
-          "quantity": productNumber,
-          "check": false,
-          "product_variant": _productToCart
-        }
-      ]
-    });
-    ref.read(cartProductsProvider.notifier).updateCartProductList(listCart);
+    // listCart.add({
+    //   "page_id":
+    //       _detailData!["page"] != null ? _detailData!["page"]["id"] : null,
+    //   "title": _detailData!["page"] != null
+    //       ? _detailData!["page"]["title"]
+    //       : "Vô danh Page",
+    //   "avatar_id": _detailData!["page"] != null
+    //       ? _detailData!["page"]["avatar_media"]["id"]
+    //       : null,
+    //   "username": _detailData!["page"] != null
+    //       ? _detailData!["page"]["username"]
+    //       : null,
+    //   "check": false,
+    //   "items": [
+    //     {
+    //       "quantity": productNumber,
+    //       "check": false,
+    //       "product_variant": _productToCart
+    //     }
+    //   ]
+    // });
+    // ref.read(cartProductsProvider.notifier).updateCartProductList(listCart);
   }
-}
-
-Widget _buildReviewAndComment(
-    String userImgPath, String nameOfUser, int rating, String contents,
-    {List<String>? commentImgPath}) {
-  return Container(
-    margin: const EdgeInsets.only(top: 5),
-    child: Column(children: [
-      GeneralComponent(
-        [
-          buildTextContent(nameOfUser, false,
-              colorWord: Colors.grey, fontSize: 14),
-          buildSpacer(height: 5),
-          buildRatingStarWidget(rating, size: 10),
-        ],
-        prefixWidget: SizedBox(
-          // color: red,
-          height: 30,
-          // width: 60,
-          // padding: const EdgeInsets.all(5),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.asset(
-                        MarketPlaceConstants.PATH_IMG + "cat_1.png")),
-              ),
-              const SizedBox()
-            ],
-          ),
-        ),
-        suffixFlexValue: 5,
-        suffixWidget: Row(children: [
-          const Icon(
-            FontAwesomeIcons.thumbsUp,
-            size: 15,
-          ),
-          buildSpacer(width: 5),
-          buildTextContent("2", false, colorWord: greyColor, fontSize: 12),
-          buildSpacer(width: 10),
-          const Icon(
-            FontAwesomeIcons.ellipsis,
-            size: 15,
-          ),
-        ]),
-        changeBackground: transparent,
-        padding: EdgeInsets.zero,
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            buildSpacer(height: 5),
-            buildTextContent("Phân loại: Quần áo đen s", false,
-                fontSize: 12, colorWord: greyColor),
-            buildSpacer(height: 10),
-            buildTextContent(contents, false, fontSize: 16),
-            commentImgPath != null && commentImgPath.isNotEmpty
-                ? Column(
-                    children: [
-                      Container(
-                        height: 100,
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        alignment: Alignment.centerLeft,
-                        child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children:
-                                  List.generate(commentImgPath.length, (index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: ImageCacheRender(
-                                    path: commentImgPath[index],
-                                    height: 100.0,
-                                    width: 100.0,
-                                  ),
-                                );
-                              }).toList(),
-                            )),
-                      ),
-                      buildTextContent("17-02-2023 13:09", false,
-                          fontSize: 11, colorWord: greyColor)
-                    ],
-                  )
-                : const SizedBox(),
-          ],
-        ),
-      ),
-      buildSpacer(height: 10),
-      buildDivider(height: 10, color: red)
-    ]),
-  );
 }
