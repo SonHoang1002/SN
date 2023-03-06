@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../constant/event_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import '../../../widget/GeneralWidget/build_stage_navigation_bar.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
-import '../widget/event_with_facebook_live_event.dart';
+import '../widget/event_live_event.dart';
 import 'description_event_page.dart';
 
 class LocationEventPage extends StatefulWidget {

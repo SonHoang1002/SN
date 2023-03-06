@@ -65,7 +65,42 @@ class _CheckinState extends State<Checkin> {
       children: [
         Container(
             margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-            child:  SearchInput()),
+            child: locationSelected != null
+                ? Container(
+                    height: 45,
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    decoration: BoxDecoration(
+                        color: primaryColorSelected,
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                            width: size.width - 70,
+                            child: Text(
+                              locationSelected['title'],
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            )),
+                        InkWell(
+                          onTap: () {
+                            widget.handleUpdateData('update_checkin', null);
+                            setState(() {
+                              locationSelected = null;
+                            });
+                          },
+                          child: Icon(
+                            FontAwesomeIcons.xmark,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                            size: 20,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : SearchInput(
+                    handleSearch: handleSearch,
+                  )),
         const SizedBox(
           height: 10.0,
         ),

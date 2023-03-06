@@ -17,7 +17,7 @@ class OnboardingLoginConstants {
   static const ONBOARDING_LOGIN_USERNAME = "Simon Smiths";
   static const ONBOARDING_LOGIN_LOGIN_WITH_DIFFERENCE_ACCOUNT =
       "Đăng nhập bằng tài khoản khác";
-  static const ONBOARDING_LOGIN_SIGNIN_EMSO_ACCOUNT = "Đăng ký EmsoNetwork";
+  static const ONBOARDING_LOGIN_SIGNIN_EMSO_ACCOUNT = "Đăng ký tài khoản Emso";
 }
 
 class MainLoginConstants {
@@ -33,9 +33,9 @@ class MainLoginConstants {
 }
 
 class BeginJoinEmsoLoginConstants {
-  static String BEGIN_JOIN_EMSO_LOGIN_TITLE = "Tham gia EmsoNetWork";
+  static String BEGIN_JOIN_EMSO_LOGIN_TITLE = "Tham gia Mạng xã hội Emso";
   static String BEGIN_JOIN_EMSO_LOGIN_SUBTITLE =
-      "Chúng tôi sẽ giúp tạo tài khoản sau vài bước dễ dàng.";
+      "Chúng tôi sẽ giúp bạn tạo tài khoản sau vài bước dễ dàng.";
   static const String BEGIN_JOIN_EMSO_LOGIN_BEGIN_TEXT_BUTTON = "Bắt đầu";
 }
 
@@ -48,7 +48,7 @@ class NameLoginConstants {
 }
 
 class BirthDayLoginConstants {
-  static String BIRTHDAY_LOGIN_TITLE = "Khi nào là Sinh nhật của bạn ?";
+  static String BIRTHDAY_LOGIN_TITLE = "Bạn sinh vào ngày nào ?";
   static String BIRTHDAY_LOGIN_SUBTITLE =
       "Bạn có thể chọn xem ai được thấy nội dung này trên trang cá nhân của mình.";
   static String BIRTHDAY_LOGIN_NAME_PLACEHOLODER =
@@ -69,15 +69,18 @@ class GenderLoginConstants {
     "key": "gender_login_selections",
     "data": [
       {
+        "key": "female",
         "title": "Nữ",
       },
       {
+        "key": "male",
         "title": "Nam",
       },
       {
-        "title": "Tùy chọn",
+        "key": "other",
+        "title": "Khác",
         "subTitle":
-            "Chọn Tùy chỉnh nếu bạn thuộc giới tính khác hoặc không muốn tiết lộ."
+            "Chọn lựa chọn này nếu bạn thuộc giới tính khác hoặc không muốn tiết lộ."
       },
     ]
   };
@@ -144,8 +147,7 @@ class PhoneLoginConstants {
 
 class EmailLoginConstants {
   static String EMAIL_LOGIN_TITLE = "Tạo mật khẩu";
-  static String EMAIL_LOGIN_SUBTITLE =
-      "Nhập mật khẩu có tối thiểu 6 ký tự bao gồm số, chữ cái và dấu chấm câu (như ! và &)";
+  static String EMAIL_LOGIN_SUBTITLE = "Nhập mật khẩu có tối thiểu 9 ký tự";
   static String EMAIL_LOGIN_NAME_PLACEHOLODER = 'Mật khẩu';
 }
 
@@ -158,15 +160,15 @@ class CompleteLoginConstants {
     "Chính sách dữ liệu",
     " và ",
     "Chính sách cookie",
-    " của chúng tôi. Bạn có thể nhận được thông báo của chúng tôi qua SMS và chọn không hận bất cứ lúc nào."
+    " của chúng tôi. Bạn có thể nhận được thông báo của chúng tôi qua SMS và chọn không nhận bất cứ lúc nào."
   ];
   static String COMPLETE_LOGIN_NAME_PLACEHOLODER = 'Hoàn tất';
 }
 
 class ConfirmLoginConstants {
-  static String CONFIRM_LOGIN_APPBAR_TITLE = "Xác nhận tài khoản";
+  static String CONFIRM_LOGIN_APPBAR_TITLE = "Quên mật khẩu";
   static List<String> CONFIRM_LOGIN_TITLE = [
-    "Chúng tôi sẽ gửi cho bạn mã để xác nhận tài khoản là của bạn",
+    "Vui lòng nhập địa chỉ Email để tìm kiếm tài khoản của bạn",
     "Mã đã được gửi đến điện thoại của bạn. Hãy nhập mã đó tại đây."
   ];
   static Map<String, dynamic> CONFIRM_LOGIN_USER = {

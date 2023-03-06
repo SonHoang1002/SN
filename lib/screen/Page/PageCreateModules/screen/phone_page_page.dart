@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../../../constant/page_constants.dart';
 import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import 'request_friends_page_page.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

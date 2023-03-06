@@ -421,8 +421,7 @@ class _OrderProductMarketPageState
               ],
             );
           }))
-        : buildTextContent("Bạn không có đơn hàng nào !!", false,
-            isCenterLeft: false);
+        : buildTextContent("Bạn không có đơn hàng nào !!", false);
   }
 
   Widget _buildOrderItem(dynamic childfilterData) {

@@ -52,19 +52,19 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 pushToNextScreen(context, CreateGroupPage());
               },
-              child: Icon(
+              child: const Icon(
                 FontAwesomeIcons.plus,
                 size: 20,
-                color: colorWord,
+                color: Colors.black,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 12.0,
             ),
-            Icon(
+            const Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
-              color: colorWord,
+              color: Colors.black,
             )
           ],
         );
@@ -77,68 +77,47 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 pushToNextScreen(context, const CreateEventPage());
               },
-              child: Icon(
+              child: const Icon(
                 FontAwesomeIcons.cartArrowDown,
                 size: 20,
-                color: colorWord,
+                color: Colors.black,
               ),
             ),
             const SizedBox(
               width: 12.0,
             ),
-            Icon(
+            const Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
-              color: colorWord,
+              color: Colors.black,
             )
           ],
         );
         break;
       case 'marketPlace':
-        // pushToNextScreen(context, newScreen)
-        // body = const MainMarketPage();
-        // buttonAppbar = Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   children: [
-        //     GestureDetector(
-        //       onTap: () {
-        //         pushToNextScreen(context, const SearchMarketPage());
-        //       },
-        //       child: Icon(
-        //         FontAwesomeIcons.magnifyingGlass,
-        //         size: 16,
-        //         color: colorWord,
-        //       ),
-        //     ),
-        //     const SizedBox(
-        //       width: 10,
-        //     ),
-        //     GestureDetector(
-        //       onTap: () {
-        //         pushToNextScreen(context, const CartMarketPage());
-        //       },
-        //       child: Icon(
-        //         FontAwesomeIcons.cartArrowDown,
-        //         size: 16,
-        //         color: colorWord,
-        //       ),
-        //     ),
-        //     const SizedBox(
-        //       width: 10,
-        //     ),
-        //     GestureDetector(
-        //       onTap: () {
-        //         pushToNextScreen(context, const PersonalMarketPlacePage());
-        //       },
-        //       child: Icon(
-        //         FontAwesomeIcons.user,
-        //         size: 16,
-        //         color: colorWord,
-        //       ),
-        //     ),
-        //   ],
-        // );
-
+        body = MainMarketBody();
+        buttonAppbar = Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              onTap: () {},
+              child: const Icon(
+                FontAwesomeIcons.user,
+                size: 20,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(width: 5,),
+            GestureDetector(
+              onTap: () {},
+              child: const Icon(
+                FontAwesomeIcons.magnifyingGlass,
+                size: 20,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        );
         break;
       // return CreateSearchBaseMenu(
       //     placeHolder: "nhập sản phẩm",

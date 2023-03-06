@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class PostState {
@@ -36,7 +37,10 @@ class PostState {
 }
 
 final postControllerProvider =
-    StateNotifierProvider<PostController, PostState>((ref) => PostController());
+    StateNotifierProvider.autoDispose<PostController, PostState>((ref) {
+  ref.read(meControllerProvider);
+  return PostController();
+});
 
 class PostController extends StateNotifier<PostState> {
   PostController() : super(const PostState());
@@ -78,36 +82,89 @@ class PostController extends StateNotifier<PostState> {
         postsPin: state.postsPin,
         posts: type == feedPost ? [newPost] + state.posts : state.posts,
         isMore: state.isMore,
-        postUserPage: state.postUserPage,
+        postUserPage: [feedPost, postPageUser].contains(type)
+            ? [newPost] + state.postUserPage
+            : state.postUserPage,
         isMoreUserPage: state.isMoreUserPage);
   }
 
-  actionPinPost(type, postId) async {
-    dynamic response;
-    if (type == 'pin') {
-      response = await PostApi().pinPostApi(postId);
-      if (response == null) return;
+  actionPinPost(type, post) async {
+    state = state.copyWith(
+        postsPin: type == 'pin_post'
+            ? state.postsPin + [post]
+            : state.postsPin
+                .where((element) => element['id'] != post['id'])
+                .toList(),
+        isMore: state.isMore,
+        posts: state.posts,
+        postUserPage: type == 'pin_post'
+            ? state.postUserPage
+                .where((element) => element['id'] != post['id'])
+                .toList()
+            : [post] + state.postUserPage,
+        isMoreUserPage: state.isMoreUserPage);
+  }
 
-      state = state.copyWith(
-          postsPin: state.postsPin + [response],
-          isMore: state.isMore,
-          posts: state.posts,
-          postUserPage: state.postUserPage
-              .where((element) => element['id'] != response['id'])
-              .toList(),
-          isMoreUserPage: state.isMoreUserPage);
-    } else if (type == 'unpin') {
-      response = await PostApi().unPinPostApi(postId);
-      if (response == null) return;
-      state = state.copyWith(
-          postsPin: state.postsPin
-              .where((element) => element['id'] != response['id'])
-              .toList(),
-          postUserPage: [response] + state.postUserPage,
-          isMore: state.isMore,
-          isMoreUserPage: state.isMoreUserPage,
-          posts: state.posts);
+  actionUpdateDetailInPost(type, data) async {
+    int index = -1;
+
+    if (type == feedPost) {
+      index = state.posts.indexWhere((element) => element['id'] == data['id']);
+    } else if (type == postPageUser) {
+      index = state.postUserPage
+          .indexWhere((element) => element['id'] == data['id']);
     }
+
+    if (index < 0) return;
+
+    state = state.copyWith(
+        postsPin: state.postsPin,
+        posts: type == feedPost
+            ? [
+                ...state.posts.sublist(0, index),
+                data,
+                ...state.posts.sublist(index + 1)
+              ]
+            : state.posts,
+        isMore: state.isMore,
+        postUserPage: type == postPageUser
+            ? [
+                ...state.postUserPage.sublist(0, index),
+                data,
+                ...state.postUserPage.sublist(index + 1)
+              ]
+            : state.posts,
+        isMoreUserPage: state.isMoreUserPage);
+  }
+
+  actionHiddenDeletePost(type, data) {
+    int index = -1;
+
+    if (type == feedPost) {
+      index = state.posts.indexWhere((element) => element['id'] == data['id']);
+    } else if (type == postPageUser) {
+      index = state.postUserPage
+          .indexWhere((element) => element['id'] == data['id']);
+    }
+
+    if (index < 0) return;
+
+    state = state.copyWith(
+        postsPin: state.postsPin,
+        posts: type == feedPost
+            ? [
+                ...state.posts.sublist(0, index),
+                ...state.posts.sublist(index + 1)
+              ]
+            : state.posts,
+        isMore: state.isMore,
+        postUserPage: type == postPageUser
+            ? [
+                ...state.postUserPage.sublist(0, index),
+                ...state.postUserPage.sublist(index + 1)
+              ]
+            : state.posts,
+        isMoreUserPage: state.isMoreUserPage);
   }
 
   refreshListPost(params) async {

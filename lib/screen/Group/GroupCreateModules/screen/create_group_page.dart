@@ -6,8 +6,9 @@ import 'package:social_network_app_mobile/providers/group/select_private_rule_pr
 import '../../../../constant/group_constants.dart';
 import '../../../../helper/push_to_new_screen.dart';
 import '../../../../providers/group/hide_group_provider.dart';
+import '../../../../providers/select_private_rule_provider.dart';
 import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import '../../../../widget/GeneralWidget/build_stage_navigation_bar.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../../widget/GeneralWidget/text_content_widget.dart';

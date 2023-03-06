@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar.dart';
 
 import '../../../constant/event_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/appbar_title.dart';

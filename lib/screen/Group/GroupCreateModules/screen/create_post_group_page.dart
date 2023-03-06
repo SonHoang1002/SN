@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../constant/group_constants.dart';
 import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import '../../../../widget/GeneralWidget/build_stage_navigation_bar.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';

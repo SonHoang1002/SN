@@ -1,6 +1,5 @@
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/editor/editor.dart';
 import 'package:flutter/material.dart';
-
-import '../../editor.dart';
 
 ///
 class ColorPicker extends StatelessWidget {

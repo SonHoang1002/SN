@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 class GroupConstants {
   static String PATH_IMG = "assets/images/";
   static String PATH_ICON = "assets/icons/";
@@ -12,7 +12,7 @@ class GroupConstants {
 }
 
 class CreateGroupConstants {
- static const String TITLE_APPBAR = "Tạo nhóm";
+  static const String TITLE_APPBAR = "Tạo nhóm";
   static const List<String> TITLE_LIST = [
     "Tên",
     "Quyền riêng tư",

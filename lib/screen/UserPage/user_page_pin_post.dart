@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -20,7 +21,9 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
     super.initState();
 
     Future.delayed(Duration.zero, () {
-      ref.read(postControllerProvider.notifier).getListPostPin(meData['id']);
+      ref
+          .read(postControllerProvider.notifier)
+          .getListPostPin(ref.watch(meControllerProvider)[0]['id']);
     });
   }
 
@@ -68,6 +71,7 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
                           border: Border.all(width: 0.3, color: greyColor),
                           borderRadius: BorderRadius.circular(12.0)),
                       child: Post(
+                        type: postPageUser,
                         isHiddenCrossbar: true,
                         post: pinPosts[index],
                       ),

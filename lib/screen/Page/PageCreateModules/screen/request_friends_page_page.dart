@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../constant/page_constants.dart';
 import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import 'settting_page_page.dart';
 

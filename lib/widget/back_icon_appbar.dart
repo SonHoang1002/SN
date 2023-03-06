@@ -19,7 +19,6 @@ class BackIconAppbar extends StatelessWidget {
 }
 
 class CloseIconAppbar extends StatelessWidget {
-
   const CloseIconAppbar({Key? key}) : super(key: key);
 
   @override
@@ -35,6 +34,7 @@ class CloseIconAppbar extends StatelessWidget {
     );
   }
 }
+
 class MenuIconAppbar extends StatelessWidget {
   const MenuIconAppbar({Key? key}) : super(key: key);
 
@@ -51,4 +51,3 @@ class MenuIconAppbar extends StatelessWidget {
     );
   }
 }
-

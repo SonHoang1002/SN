@@ -1,22 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/main_login_page.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu_user.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
 import '../../helper/push_to_new_screen.dart';
-import '../../theme/colors.dart';
-import '../../widget/appbar_title.dart';
-import '../Feed/drawer.dart';
 import '../Login/LoginCreateModules/onboarding_login_page.dart';
 import '../Setting/darkmode_setting.dart';
-import '../Setting/setting.dart';
 import 'menu_render.dart';
 import 'menu_shortcut.dart';
-import 'menu_user.dart';
 
 class Menu extends StatefulWidget {
   const Menu({Key? key}) : super(key: key);
@@ -59,6 +57,14 @@ class _MenuState extends State<Menu> {
         }
       },
     ];
+
+    logout() async {
+      await SecureStorage().deleteKeyStorage("token");
+      await SecureStorage().deleteKeyStorage("userId");
+      if (mounted) {
+        pushAndReplaceToNextScreen(context, const OnboardingLoginPage());
+      }
+    }
 
     return Scaffold(
       key: _key,
@@ -170,9 +176,7 @@ class _MenuState extends State<Menu> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             backgroundColor: const Color(0xffdcdcdc)),
-                        onPressed: () {
-                          pushToNextScreen(context, OnboardingLoginPage());
-                        },
+                        onPressed: () {},
                         child: const Text(
                           "Đăng xuất",
                           style: TextStyle(color: Colors.black, fontSize: 13),

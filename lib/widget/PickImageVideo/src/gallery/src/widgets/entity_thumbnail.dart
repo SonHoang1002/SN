@@ -1,9 +1,9 @@
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../drishya_picker.dart';
 
 /// Widget to display [DrishyaEntity] thumbnail
 class EntityThumbnail extends StatelessWidget {

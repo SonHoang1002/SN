@@ -1,13 +1,12 @@
 import 'dart:math';
 
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/repo/gallery_repository.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/album_builder.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/widgets/gallery_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../../../theme/colors.dart';
-import '../../../../drishya_picker.dart';
-import '../repo/gallery_repository.dart';
-import 'album_builder.dart';
-import 'gallery_builder.dart';
 
 ///
 class GalleryHeader extends StatefulWidget {

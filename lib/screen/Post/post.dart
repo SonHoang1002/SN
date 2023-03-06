@@ -13,19 +13,24 @@ class Post extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PostHeader(
-          post: post,
-          type: type,
-        ),
-        PostCenter(post: post),
-        PostFooter(post: post),
-        isHiddenCrossbar != null && isHiddenCrossbar == true
-            ? const SizedBox()
-            : const CrossBar(),
-      ],
-    );
+    return post != null
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PostHeader(
+                post: post,
+                type: type,
+              ),
+              PostCenter(post: post),
+              PostFooter(
+                post: post,
+                type: type,
+              ),
+              isHiddenCrossbar != null && isHiddenCrossbar == true
+                  ? const SizedBox()
+                  : const CrossBar(),
+            ],
+          )
+        : const SizedBox();
   }
 }

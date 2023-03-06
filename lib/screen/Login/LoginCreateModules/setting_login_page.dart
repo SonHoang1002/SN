@@ -10,6 +10,8 @@ import '../../../widget/appbar_title.dart';
 import 'main_login_page.dart';
 
 class SettingLoginPage extends StatefulWidget {
+  const SettingLoginPage({super.key});
+
   @override
   State<SettingLoginPage> createState() => _SettingLoginPageState();
 }

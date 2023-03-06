@@ -8,6 +8,7 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dar
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 import '../../../../constant/page_constants.dart';
+import '../../../../providers/select_province_page_bloc.dart';
 import '../../../../theme/colors.dart';
 import 'avatar_page_page.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/bottom_navigator_bar_widget.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../widget/GeneralWidget/title_description_and_content_list.dart';
+import '../../../widget/GeneralWidget/title_description_content_list.dart';
 import '../../../widget/back_icon_appbar.dart';
 import '../../../widget/search_input.dart';
 import 'personal_page_constants.dart';

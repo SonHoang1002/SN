@@ -9,19 +9,18 @@ class RouteProvider with ChangeNotifier {
     false,
     false,
   ];
-  setRouteProvider( int index) {
+  setRouteProvider(int index) {
     List<bool> primaryList = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ];
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ];
     primaryList[index] = true;
     routeList = primaryList;
     notifyListeners();
-    print(routeList);
   }
 
   List<bool> get getRouteList => routeList;

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
@@ -30,11 +31,12 @@ class UserPage extends ConsumerStatefulWidget {
 
 class _UserPageState extends ConsumerState<UserPage> {
   final scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
+
     Future.delayed(Duration.zero, () {
+      var meData = ref.watch(meControllerProvider)[0];
       ref.read(postControllerProvider.notifier).getListPostUserPage(
           meData['id'], {"limit": 3, "exclude_replies": true});
     });
@@ -43,6 +45,8 @@ class _UserPageState extends ConsumerState<UserPage> {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
         if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
+        var meData = ref.watch(meControllerProvider)[0];
+
         String maxId = ref.read(postControllerProvider).postUserPage.last['id'];
         ref.read(postControllerProvider.notifier).getListPostUserPage(
             meData['id'],
@@ -53,6 +57,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    var meData = ref.watch(meControllerProvider)[0];
     final size = MediaQuery.of(context).size;
     final postUser = ref.watch(postControllerProvider).postUserPage;
     final isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;

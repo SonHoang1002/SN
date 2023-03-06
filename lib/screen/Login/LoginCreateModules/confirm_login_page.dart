@@ -1,39 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 
 import '../../../constant/login_constants.dart';
-import '../../../helper/push_to_new_screen.dart';
-import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/divider_widget.dart';
-import '../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../widget/GeneralWidget/spacer_widget.dart';
-import '../../../widget/GeneralWidget/text_content_widget.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
+import '../widgets/build_elevateButton_widget.dart';
 import 'logout_all_device_login_papge.dart';
 import 'main_login_page.dart';
 
 class ConfirmLoginPage extends StatefulWidget {
+  const ConfirmLoginPage({super.key});
+
   @override
   State<ConfirmLoginPage> createState() => _ConfirmLoginPageState();
 }
 
 class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
   late double width = 0;
-
   late double height = 0;
   final _selectionList = ["sms", "email"];
   String _selectionValue = "sms";
   bool _isOnEnterCodePart = false;
 
-  final TextEditingController _codeController = TextEditingController(text: "");
+  TextEditingController _codeController = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+
+    handleSeedDataEmail() async {
+      setState(() {
+        isLoad = true;
+      });
+      dynamic response;
+      var data = {"email": email};
+      if (isNext) {
+        response = await AuthenApi().forgotPassword(data);
+      } else {
+        response = await AuthenApi().reconfirmationEmail(data);
+      }
+      setState(() {
+        isLoad = false;
+      });
+      if (response != null && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Đã gửi mail xác nhận tới $email")));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: primaryColor,
+            content: Text("Không thể gửi mail xác nhận tới $email")));
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -41,28 +60,10 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Row(
-                children: [
-                  BackIconAppbar(),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  const AppBarTitle(title: "Quay lại"),
-                ],
-              ),
-            ),
+            const BackIconAppbar(),
             AppBarTitle(
                 title: ConfirmLoginConstants.CONFIRM_LOGIN_APPBAR_TITLE),
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const AppBarTitle(title: "Hủy"),
-            ),
+            Container()
           ],
         ),
       ),
@@ -76,7 +77,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
           // main content
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
               ),
               child: Column(
@@ -85,6 +86,9 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                   Center(
                     child: Column(
                       children: [
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
                           child: Column(
@@ -131,7 +135,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                               fit: BoxFit.fitHeight,
                                             ),
                                           ),
-                                          changeBackground: transparent,
+                                          changeBackground: Colors.transparent,
                                         ),
                                         buildDivider(color: Colors.black),
                                         ListView.builder(
@@ -181,7 +185,8 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                                         groupValue:
                                                             _selectionValue,
                                                       )),
-                                                  changeBackground: transparent,
+                                                  changeBackground:
+                                                      Colors.transparent,
                                                   padding: EdgeInsets.all(5),
                                                 ),
                                                 Divider(
@@ -198,14 +203,14 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                       _codeController, "Nhập mã"),
                               // tiep tuc button
                               !_isOnEnterCodePart
-                                  ? buildButtonForLoginWidget(
+                                  ? buildElevateButtonWidget(
                                       width: width,
                                       function: () {
                                         setState(() {
-                                          _isOnEnterCodePart = true;
+                                          isNext = true;
                                         });
                                       })
-                                  : buildButtonForLoginWidget(
+                                  : buildElevateButtonWidget(
                                       width: width,
                                       function: () {
                                         pushToNextScreen(context,
@@ -216,9 +221,9 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                   ? Column(
                                       children: [
                                         buildSpacer(height: 10),
-                                        buildButtonForLoginWidget(
+                                        buildElevateButtonWidget(
                                             width: width,
-                                            bgColor: transparent,
+                                            bgColor: Colors.transparent,
                                             title: ConfirmLoginConstants
                                                 .CONFIRM_LOGIN_ENTER_PASSWORD_TO_LOGIN,
                                             colorText: Colors.orange,
@@ -230,7 +235,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                                         // not access
                                         Container(
                                           margin: EdgeInsets.only(top: 10),
-                                          child: buildTextContentButton(
+                                          child: buildTextContent(
                                               ConfirmLoginConstants
                                                   .CONFIRM_LOGIN_NOT_ACCESS,
                                               false,
@@ -256,29 +261,4 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
       ),
     );
   }
-}
-
-Widget _buildTextFormField(
-  TextEditingController controller,
-  String placeHolder, {
-  double? borderRadius = 5,
-}) {
-  return Container(
-    height: 40,
-    child: TextFormField(
-        textAlign: TextAlign.center,
-        controller: controller,
-        onChanged: ((value) {}),
-        validator: (value) {},
-        keyboardType: TextInputType.number,
-        maxLength: 6,
-        decoration: InputDecoration(
-          counterText: "",
-          hintText: placeHolder,
-          hintStyle: const TextStyle(
-            color: Colors.grey,
-          ),
-          contentPadding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-        )),
-  );
 }

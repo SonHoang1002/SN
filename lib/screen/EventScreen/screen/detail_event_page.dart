@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/event_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/EventScreen/screen/location_event_page.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';

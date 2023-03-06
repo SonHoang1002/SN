@@ -9,7 +9,7 @@ import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../../widget/appbar_title.dart';
-import '../widgets/additional_information_for_selection_of_request_friend.dart';
+import '../widgets/additional_information_request_friend.dart';
 import '../widgets/addtional_information_group_widget.dart';
 import 'cover_image_group_page.dart';
 

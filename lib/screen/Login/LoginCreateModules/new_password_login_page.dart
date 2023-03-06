@@ -10,6 +10,8 @@ import '../../../widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 
 class NewPasswordLoginPage extends StatefulWidget {
+  const NewPasswordLoginPage({super.key});
+
   @override
   State<NewPasswordLoginPage> createState() => _NewPasswordLoginPageState();
 }

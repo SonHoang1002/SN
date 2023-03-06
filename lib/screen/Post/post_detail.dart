@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
@@ -13,15 +14,15 @@ import 'package:social_network_app_mobile/widget/comment_textfield.dart';
 
 import 'comment_tree.dart';
 
-class PostDetail extends StatefulWidget {
+class PostDetail extends ConsumerStatefulWidget {
   final dynamic post;
   const PostDetail({Key? key, this.post}) : super(key: key);
 
   @override
-  State<PostDetail> createState() => _PostDetailState();
+  ConsumerState<PostDetail> createState() => _PostDetailState();
 }
 
-class _PostDetailState extends State<PostDetail> {
+class _PostDetailState extends ConsumerState<PostDetail> {
   List postComment = [];
   bool isLoadComment = false;
   FocusNode commentNode = FocusNode();
@@ -44,7 +45,7 @@ class _PostDetailState extends State<PostDetail> {
     if (!mounted) return;
     var newCommentPreview = {
       "in_reply_to_id": widget.post['id'],
-      "account": meData,
+      "account": ref.watch(meControllerProvider)[0],
       "content": data['status'],
       "typeStatus": "previewComment",
       "created_at": "2023-02-01T23:04:48.047+07:00",

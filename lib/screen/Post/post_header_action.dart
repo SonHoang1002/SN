@@ -1,16 +1,22 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/apis/bookmark_api.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/widget/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widget/page_permission_comment.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class PostHeaderAction extends ConsumerStatefulWidget {
   final dynamic post;
-  const PostHeaderAction({Key? key, this.post}) : super(key: key);
+  final String type;
+  const PostHeaderAction({Key? key, this.post, required this.type})
+      : super(key: key);
 
   @override
   ConsumerState<PostHeaderAction> createState() => _PostHeaderActionState();
@@ -22,13 +28,16 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      commentModeration = widget.post['comment_moderation'];
-    });
+    if (mounted) {
+      setState(() {
+        commentModeration = widget.post['comment_moderation'];
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    var meData = ref.watch(meControllerProvider)[0];
     List actionsPost = [
       {
         "key": widget.post['pinned'] != null && widget.post['pinned'] == true
@@ -41,10 +50,12 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "isShow": meData['id'] == widget.post['account']['id'],
       },
       {
-        "key": "save_post",
-        "label": "Lưu bài viết",
+        "key": widget.post['bookmarked'] ? 'unsave_post' : "save_post",
+        "label": widget.post['bookmarked'] ? "Bỏ lưu bài viết" : "Lưu bài viết",
         "icon": FontAwesomeIcons.solidBookmark,
-        "description": "Thêm vào danh sách mục đã lưu",
+        "description": widget.post['bookmarked']
+            ? "Loại khỏi danh sách mục đã lưu"
+            : "Thêm vào danh sách mục đã lưu",
         "isShow": true
       },
       {
@@ -81,23 +92,95 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "isShow": meData['id'] != widget.post['account']['id']
       },
       {
-        "key": "delete_post",
-        "label": "Xoá bài viết",
+        "key": ["account_avatar", "account_banner"]
+                .contains(widget.post['post_type'])
+            ? "hidden_post"
+            : "delete_post",
+        "label": ["account_avatar", "account_banner"]
+                .contains(widget.post['post_type'])
+            ? "Ẩn bài viết"
+            : "Xoá bài viết",
         "icon": FontAwesomeIcons.trash,
         "isShow": meData['id'] == widget.post['account']['id']
       },
     ];
 
+    handleUnBookmark() async {
+      var response =
+          await BookmarkApi().unBookmarkApi({"bookmark_id": widget.post['id']});
+      if (response != null && mounted) {
+        ref
+            .read(postControllerProvider.notifier)
+            .actionUpdateDetailInPost(widget.type, response);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Bỏ lưu thành công")));
+      }
+    }
+
+    handleActionPinPost(type) async {
+      dynamic response;
+      if (type == 'pin_post') {
+        response = await PostApi().pinPostApi(widget.post['id']);
+        if (response == null) return;
+      } else {
+        response = await PostApi().unPinPostApi(widget.post['id']);
+        if (response == null) return;
+      }
+
+      ref.read(postControllerProvider.notifier).actionPinPost(type, response);
+
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text("${type == 'pin_post' ? "Ghim" : "Bỏ ghim"} thành công")));
+      }
+
+      setState(() {});
+    }
+
+    handleHiddenPost(type) async {
+      dynamic response =
+          await PostApi().updatePost(widget.post['id'], {"hidden": true});
+
+      ref
+          .read(postControllerProvider.notifier)
+          .actionHiddenDeletePost(widget.type, widget.post);
+
+      if (response != null && mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Ẩn bài viết thành công")));
+      }
+    }
+
+    void showAlertDialog(BuildContext context) {
+      showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => AlertDialogDelete(
+                post: widget.post,
+                type: widget.type,
+              ));
+    }
+
     handleAction(key) {
       if (["unpin_post", "pin_post"].contains(key)) {
-        ref.read(postControllerProvider.notifier).actionPinPost(
-            widget.post['pinned'] != null && widget.post['pinned'] == true
-                ? 'unpin'
-                : 'pin',
-            widget.post['id']);
-        Navigator.pop(context);
+        handleActionPinPost(key);
       } else if (['save_post'].contains(key)) {
         Navigator.pop(context);
+        showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+            builder: (context) => BookmarkPage(
+                type: widget.type,
+                entitySave: widget.post,
+                entityType: 'Status'));
+      } else if (['unsave_post'].contains(key)) {
+        handleUnBookmark();
       } else if (key == "comment_permission_post") {
         Navigator.push(
           context,
@@ -122,17 +205,15 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
                     ),
                   )),
         );
+      } else if (["hidden_post", "delete_post"].contains(key)) {
+        if (key == "hidden_post") {
+          handleHiddenPost(key);
+        } else {
+          Navigator.pop(context);
+          showAlertDialog(context);
+        }
       }
     }
-
-    // ref.listen<dynamic>(
-    //     postControllerProvider.select((value) => value.postsPin),
-    //     (previous, next) {
-    //   print('abc $previous');
-    //   print('abc $next');
-    //   ScaffoldMessenger.of(context)
-    //       .showSnackBar(const SnackBar(content: Text('Thành công')));
-    // });
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
@@ -193,6 +274,53 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AlertDialogDelete extends ConsumerWidget {
+  final dynamic post;
+  final String type;
+  const AlertDialogDelete({super.key, this.post, required this.type});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    handleDeletePost(key) async {
+      var response = await PostApi().deletePostApi(post!['id']);
+
+      ref
+          .read(postControllerProvider.notifier)
+          .actionHiddenDeletePost(type, post);
+
+      if (response != null) {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Xóa bài viết thành công")));
+      }
+    }
+
+    return CupertinoAlertDialog(
+      title: const Text('Xóa bài viết'),
+      content: const Text(
+          'Bạn chắc chắn muốn xóa bài viết? Hành động này không thể hoàn tác'),
+      actions: <CupertinoDialogAction>[
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Hủy'),
+        ),
+        CupertinoDialogAction(
+          isDestructiveAction: true,
+          onPressed: () {
+            handleDeletePost('delete_post');
+          },
+          child: const Text('Xóa'),
+        ),
+      ],
     );
   }
 }

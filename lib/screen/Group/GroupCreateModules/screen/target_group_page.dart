@@ -5,7 +5,7 @@ import 'package:social_network_app_mobile/constant/group_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/group/select_target_group_provider.dart';
 import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/screen/create_post_group_page.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 

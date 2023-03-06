@@ -76,8 +76,7 @@ class _PostHeaderState extends State<PostHeader> {
     }
 
     if (widget.post['life_event'] != null) {
-      description =
-          ' đã thêm một ${widget.post['life_event']['name'].toLowerCase()}';
+      description = ' đã thêm một sự kiện trong đời';
     }
 
     if (widget.post['reblog'] != null) {
@@ -181,13 +180,12 @@ class _PostHeaderState extends State<PostHeader> {
                           onTap: () {
                             showModalBottomSheet(
                                 context: context,
-                                // isScrollControlled: true,
-                                // clipBehavior: Clip.antiAliasWithSaveLayer,
                                 shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
                                         top: Radius.circular(20))),
                                 builder: (BuildContext context) {
-                                  return PostHeaderAction(post: widget.post);
+                                  return PostHeaderAction(
+                                      post: widget.post, type: widget.type);
                                 });
                           },
                           child: Icon(

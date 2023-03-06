@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/Page/PageCreateModules/screen/category_page_page.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 

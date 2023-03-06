@@ -93,7 +93,7 @@ List lifeEventCategories = [
       },
       {
         "id": 43,
-        "name": "Hôm nhân",
+        "name": "Hôn nhân",
         "url": null,
         "video_url": [
           "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/hon_nhan1.mp4",

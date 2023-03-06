@@ -76,7 +76,52 @@ class _EmojiActivityState extends State<EmojiActivity>
           ],
         ),
       ),
-      Container(margin: const EdgeInsets.all(8.0), child:  SearchInput()),
+      Container(
+          margin: const EdgeInsets.all(8.0),
+          child: preStatus != null
+              ? Container(
+                  height: 45,
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  decoration: BoxDecoration(
+                      color: primaryColorSelected,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          ImageCacheRender(
+                            path: widget.statusActivity['url'],
+                            width: 20.0,
+                            height: 20.0,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            widget.statusActivity['name'],
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      InkWell(
+                        onTap: () {
+                          widget.handleUpdateData(
+                              'update_status_activity', null);
+                          setState(() {
+                            preStatus = null;
+                          });
+                        },
+                        child: Icon(
+                          FontAwesomeIcons.xmark,
+                          color: Theme.of(context).textTheme.bodyLarge!.color,
+                          size: 20,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              : SearchInput(handleSearch: handleSearch)),
       Expanded(
         child: TabBarView(
           controller: _tabController,

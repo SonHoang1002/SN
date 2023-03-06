@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
@@ -14,17 +15,19 @@ import 'main_login_page.dart';
 import 'phone_login_page.dart';
 
 class GenderLoginPage extends StatefulWidget {
+  final dynamic data;
+  const GenderLoginPage({super.key, this.data});
+
   @override
   State<GenderLoginPage> createState() => _GenderLoginPageState();
 }
 
-final selectionList = ["Nam", "Nữ", "Tùy chọn"];
-String _anonymousName = "";
+final selectionList = ["female", "male", "other"];
 
 class _GenderLoginPageState extends State<GenderLoginPage> {
   late double width = 0;
   late double height = 0;
-  String _selection = "Nam";
+  String _selection = "female";
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -39,7 +42,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: GestureDetector(
         onTap: (() {
-          FocusManager.instance.primaryFocus!.unfocus();
+          hiddenKeyboard(context);
         }),
         child: Column(children: [
           // main content
@@ -110,7 +113,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                                 )
                                               : const SizedBox()
                                         ],
-                                        suffixWidget: SizedBox(
+                                        suffixWidget: Container(
                                           height: 30,
                                           width: 30,
                                           child: Radio(
@@ -122,7 +125,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                                 });
                                               }),
                                         ),
-                                        changeBackground: transparent,
+                                        changeBackground: Colors.transparent,
                                         padding: const EdgeInsets.all(5),
                                         function: () {},
                                       ),
@@ -138,7 +141,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                   ? Column(
                                       children: [
                                         // chọn danh xưng
-                                        buildButtonForLoginWidget(
+                                        buildElevateButtonWidget(
                                             bgColor: white,
                                             colorText: blackColor,
                                             width: width,
@@ -256,7 +259,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                                       ],
                                     )
                                   : const SizedBox(),
-                              buildButtonForLoginWidget(
+                              buildElevateButtonWidget(
                                   width: width,
                                   function: () {
                                     pushToNextScreen(context, PhoneLoginPage());
@@ -272,7 +275,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
             ),
           ),
           buildHaveAccountWidget(function: () {
-            pushToNextScreen(context, MainLoginPage());
+            pushToNextScreen(context, const MainLoginPage());
           })
         ]),
       ),
@@ -283,7 +286,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
 Widget _buildTextFormField(
     // TextEditingController controller,
     String placeHolder) {
-  return SizedBox(
+  return Container(
     height: 40,
     child: TextFormField(
       // controller: controller,

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +7,7 @@ import 'package:social_network_app_mobile/constant/group_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'dart:io';
 import 'package:social_network_app_mobile/screen/Group/GroupCreateModules/screen/detail_group_page.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/build_stage_navigation_bar.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
@@ -56,65 +55,63 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
           child: Column(children: [
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 // color: Colors.black87,
                 child: Column(
                   children: [
                     // title
                     Container(
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  CoverImageGroupConstants.TITLE[0],
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                CoverImageGroupConstants.TITLE[0],
+                                style: const TextStyle(
+                                    // color:  white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Text(CoverImageGroupConstants.SUBTITLE[0],
                                   style: const TextStyle(
                                       // color:  white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                Text(CoverImageGroupConstants.SUBTITLE[0],
-                                    style: const TextStyle(
-                                        // color:  white,
-                                        fontSize: 18)),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  CoverImageGroupConstants.TITLE[1],
-                                  style: const TextStyle(
-                                      // color:  white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
+                                      fontSize: 18)),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                CoverImageGroupConstants.TITLE[1],
+                                style: const TextStyle(
+                                    // color:  white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
                       ),
                     ),
                     // img
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Stack(
                         children: [
                           Container(
@@ -125,8 +122,8 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                 border: Border.all(
                                     // color:  white,
                                     ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(10))),
                             child: _pickedCoverImage != null
                                 ? Image.file(
                                     _pickedCoverImage!,
@@ -139,7 +136,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                       )
                                     : Container(),
                           ),
-                          Container(
+                          SizedBox(
                             height: 200,
                             child: imgPath == "" && _pickedCoverImage == null
                                 ? Center(
@@ -152,11 +149,12 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                         height: 30,
                                         decoration: BoxDecoration(
                                             color: Colors.grey.withOpacity(0.6),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(10))),
                                         child: Row(
                                           children: [
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 10,
                                             ),
                                             Container(
@@ -164,17 +162,16 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                                 width: 10,
                                                 // padding: EdgeInsets.all(),
                                                 child: SvgPicture.asset(
-                                                  GroupConstants.PATH_ICON +
-                                                      "add_img_file_icon.svg",
+                                                  "${GroupConstants.PATH_ICON}add_img_file_icon.svg",
                                                   color: white,
                                                 )),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 10,
                                             ),
                                             Text(
                                               CoverImageGroupConstants
                                                   .PLACEHOLDER_LIST[0],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: white,
                                                 fontSize: 13,
                                               ),
@@ -199,22 +196,23 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                                             decoration: BoxDecoration(
                                                 color: Colors.black
                                                     .withOpacity(0.7),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5))),
-                                            margin: EdgeInsets.only(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5))),
+                                            margin: const EdgeInsets.only(
                                                 bottom: 10, right: 10),
-                                            padding: EdgeInsets.all(10),
+                                            padding: const EdgeInsets.all(10),
                                             child: Row(children: [
                                               Container(
-                                                margin:
-                                                    EdgeInsets.only(right: 10),
-                                                child: Icon(
+                                                margin: const EdgeInsets.only(
+                                                    right: 10),
+                                                child: const Icon(
                                                   FontAwesomeIcons.pen,
                                                   color: white,
                                                   size: 14,
                                                 ),
                                               ),
-                                              Text(
+                                              const Text(
                                                 "Chỉnh sửa",
                                                 style: TextStyle(
                                                     color: Colors.grey,
@@ -231,21 +229,21 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                       ),
                     ),
                     //space
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     // example
                     Container(
                       height: (width * 0.9 - 4 * 8) / 5,
                       // width: width,
-                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: 5,
                         itemBuilder: ((context, index) {
                           return Container(
                             width: (width * 0.9 - 4 * 9) / 5,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                             margin: EdgeInsets.fromLTRB(
@@ -278,7 +276,7 @@ class _CoverImageGroupPageState extends State<CoverImageGroupPage> {
                 isPassCondition: true,
                 title: GroupConstants.NEXT,
                 function: () {
-                  pushToNextScreen(context, DetailGroupPage());
+                  pushToNextScreen(context, const DetailGroupPage());
                 })
           ]),
         ));

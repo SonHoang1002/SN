@@ -5,7 +5,6 @@ class SelectionPrivateEventProvider with ChangeNotifier {
   setSelectionPrivateEventProvider(String value) {
     selection = value;
     notifyListeners();
-    print(selection);
   }
 
   get getSelectionPrivateEventProvider => selection;

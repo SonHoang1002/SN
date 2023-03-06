@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-
-import '../../data/drawer.dart';
-import '../../widget/group_item.dart';
-import '../../widget/search_input.dart';
-import '../../widget/text_description.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/data/drawer.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/group_item.dart';
+import 'package:social_network_app_mobile/widget/text_action.dart';
+import 'package:social_network_app_mobile/widget/text_description.dart';
+import 'package:social_network_app_mobile/widget/search_input.dart';
 
 class DrawerFeed extends StatelessWidget {
   const DrawerFeed({Key? key}) : super(key: key);
@@ -19,7 +21,7 @@ class DrawerFeed extends StatelessWidget {
           child: DrawerHeader(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children:  [
+            children: [
               const Text(
                 'Lối tắt',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),

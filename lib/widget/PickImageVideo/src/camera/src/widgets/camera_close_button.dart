@@ -1,10 +1,8 @@
+import 'package:social_network_app_mobile/widget/PickImageVideo/icons/custom_icons.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/camera_builder.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/camera/src/widgets/ui_handler.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../../../theme/colors.dart';
-import '../../../../drishya_picker.dart';
-import '../../../../icons/custom_icons.dart';
-import 'camera_builder.dart';
-import 'ui_handler.dart';
 
 ///
 class CameraCloseButton extends StatelessWidget {
@@ -38,7 +36,7 @@ class CameraCloseButton extends StatelessWidget {
           ),
           child: const Icon(
             CustomIcons.close,
-            color: white,
+            color: Colors.white,
             size: 16,
           ),
         ),

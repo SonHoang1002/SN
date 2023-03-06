@@ -16,13 +16,6 @@ showBottomSheetCheckImportantSettings(
   showModalBottomSheet(
       enableDrag: true,
       context: context,
-      isScrollControlled: true,
-      barrierColor: isBarrierTransparent! ? transparent : null,
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
-      backgroundColor: transparent,
-      // context: context,
       builder: (context) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -64,9 +57,8 @@ showBottomSheetCheckImportantSettings(
                   ),
                   Text(
                     title,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        // color: white,
+                    style: TextStyle(
+                        color: white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),

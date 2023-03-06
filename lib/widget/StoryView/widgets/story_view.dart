@@ -3,10 +3,12 @@ import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
@@ -49,7 +51,7 @@ class StoryItem {
   /// Short hand to create text-only page.
   ///
   /// [title] is the text to be displayed on [backgroundColor]. The text color
-  /// alternates between [Colors.black] and [ white] depending on the
+  /// alternates between [Colors.black] and [Colors.white] depending on the
   /// calculated contrast. This is to ensure readability of text.
   ///
   /// Works for inline and full-page stories. See [StoryView.inline] for more on
@@ -92,10 +94,10 @@ class StoryItem {
           child: Text(
             title,
             style: textStyle?.copyWith(
-                  color: contrast > 1.8 ? white : Colors.black,
+                  color: contrast > 1.8 ? Colors.white : Colors.black,
                 ) ??
                 TextStyle(
-                  color: contrast > 1.8 ? white : Colors.black,
+                  color: contrast > 1.8 ? Colors.white : Colors.black,
                   fontSize: 18,
                 ),
             textAlign: TextAlign.center,
@@ -150,7 +152,7 @@ class StoryItem {
                           caption,
                           style: const TextStyle(
                             fontSize: 15,
-                            color: white,
+                            color: Colors.white,
                           ),
                           textAlign: TextAlign.center,
                         )
@@ -256,7 +258,8 @@ class StoryItem {
                     child: caption != null
                         ? Text(
                             caption,
-                            style: const TextStyle(fontSize: 15, color: white),
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.white),
                             textAlign: TextAlign.center,
                           )
                         : const SizedBox(),
@@ -313,7 +316,7 @@ class StoryItem {
                             caption,
                             style: const TextStyle(
                               fontSize: 15,
-                              color: white,
+                              color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
                           )
@@ -379,7 +382,7 @@ class StoryItem {
 /// Widget to display stories just like Whatsapp and Instagram. Can also be used
 /// inline/inside [ListView] or [Column] just like Google News app. Comes with
 /// gestures to pause, forward and go to previous page.
-class StoryView extends StatefulWidget {
+class StoryView extends ConsumerStatefulWidget {
   /// The pages to displayed.
   final List<StoryItem?> storyItems;
   final List medias;
@@ -424,17 +427,18 @@ class StoryView extends StatefulWidget {
     this.repeat = false,
     this.inline = false,
     this.onVerticalSwipeComplete,
-    this.indicatorColor = white,
+    this.indicatorColor = Colors.white,
     required this.medias,
   });
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return StoryViewState();
   }
 }
 
-class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
+class StoryViewState extends ConsumerState<StoryView>
+    with TickerProviderStateMixin {
   AnimationController? _animationController;
   Animation<double>? _currentAnimation;
   Timer? _nextDebouncer;
@@ -632,12 +636,14 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var meData = ref.watch(meControllerProvider)[0];
+
     return Stack(
       children: [
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
-            color: white,
+            color: Colors.white,
           ),
           child: Stack(
             children: <Widget>[
@@ -812,7 +818,7 @@ class PageBar extends StatefulWidget {
     this.pages,
     this.animation, {
     this.indicatorHeight = IndicatorHeight.large,
-    this.indicatorColor = white,
+    this.indicatorColor = Colors.white,
     Key? key,
   }) : super(key: key);
 
@@ -881,7 +887,7 @@ class StoryProgressIndicator extends StatelessWidget {
     this.value, {
     super.key,
     this.indicatorHeight = 5,
-    this.indicatorColor = white,
+    this.indicatorColor = Colors.white,
   });
 
   @override

@@ -11,6 +11,8 @@ import 'confirm_login_page.dart';
 class SearchAccountLoginPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
+
+  SearchAccountLoginPage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -23,7 +25,7 @@ class SearchAccountLoginPage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BackIconAppbar(),
+            const BackIconAppbar(),
             Expanded(
                 child: SearchInput(
               handleSearchClick: () {
