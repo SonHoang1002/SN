@@ -44,10 +44,10 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
               CupertinoPageRoute(
                   builder: (context) => PostDetail(post: widget.post)));
         } else if (widget.type == postMultipleMedia) {
-          Navigator.push(
-              context,
-              CupertinoModalPopupRoute(
-                  builder: ((context) => CommentPostModal(post: widget.post))));
+          showBarModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              builder: (context) => CommentPostModal(post: widget.post));
         }
       } else if (key == 'share') {
         showBarModalBottomSheet(

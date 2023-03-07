@@ -18,9 +18,9 @@ class PostFooterInformation extends ConsumerWidget {
     const style = TextStyle(color: greyColor, fontSize: 14);
     dynamic favourites = post['favourites'];
     String viewerReaction = post['viewer_reaction'] ?? '';
-    String textRender = '${shortenLargeNumber(post['favourites_count'])}';
-    int reactionsCount = post['favourites_count'];
-    List reactions = post['reactions'];
+    String textRender = '${shortenLargeNumber(post?['favourites_count'] ?? 0)}';
+    int reactionsCount = post['favourites_count'] ?? 0;
+    List reactions = post['reactions'] ?? [];
 
     List sortReactions = reactions
         .map((element) => {
@@ -76,7 +76,7 @@ class PostFooterInformation extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          post['favourites_count'] > 0
+          (post['favourites_count'] ?? 0) > 0
               ? Row(
                   children: [
                     renderListReactions.isNotEmpty
@@ -111,7 +111,7 @@ class PostFooterInformation extends ConsumerWidget {
               : const SizedBox(),
           Row(
             children: [
-              post['replies_total'] > 0
+              (post['replies_total'] ?? 0) > 0
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -133,7 +133,7 @@ class PostFooterInformation extends ConsumerWidget {
               const SizedBox(
                 width: 10,
               ),
-              post['reblogs_count'] > 0
+              (post['reblogs_count'] ?? 0) > 0
                   ? Row(
                       children: [
                         Text(

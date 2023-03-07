@@ -71,13 +71,16 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
                                         )));
                           },
                           child: checkIsImage(medias[index])
-                              ? ImageCacheRender(path: medias[index]['url'])
+                              ? ImageCacheRender(
+                                  key: Key(medias[index]['id'].toString()),
+                                  path: medias[index]['url'])
                               : FeedVideo(
+                                  key: Key(medias[index]['id'].toString()),
                                   flickMultiManager: flickMultiManager,
                                   path: medias[index]['url'],
                                   image: medias[index]['preview_url'])),
                       PostFooter(
-                        post: widget.post,
+                        post: medias[index],
                         type: postMultipleMedia,
                       ),
                       const SizedBox(

@@ -45,6 +45,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   Future handleComment(data) async {
     if (!mounted) return;
     var newCommentPreview = {
+      "id": "111111111111",
       "in_reply_to_id": widget.post['id'],
       "account": ref.watch(meControllerProvider)[0],
       "content": data['status'],

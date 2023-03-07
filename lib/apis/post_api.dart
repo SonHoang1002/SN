@@ -13,6 +13,10 @@ class PostApi {
     return await Api().getRequestBase('/api/v1/comments/$postId', params);
   }
 
+  Future getPostDetailMedia(String postId) async {
+    return await Api().getRequestBase('/api/v1/media/$postId', null);
+  }
+
   Future createStatus(data) async {
     return await Api().postRequestBase('/api/v1/statuses', data);
   }
