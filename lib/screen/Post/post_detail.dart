@@ -117,7 +117,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     setState(() {
       postComment = data['type'] == 'child'
           ? postComment
-          : [...postComment, newCommentPreview];
+          : [newCommentPreview, ...postComment];
       commentChild = data['type'] == 'child' ? newCommentPreview : null;
     });
 
@@ -131,7 +131,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       setState(() {
         postComment = data['type'] == 'child'
             ? postComment
-            : [...postComment.sublist(0, postComment.length - 1), newComment];
+            : [newComment, ...postComment.sublist(1)];
         commentChild = newComment;
       });
     }
@@ -141,6 +141,17 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     setState(() {
       commentSelected = comment;
     });
+  }
+
+  handleDeleteComment(post) {
+    if (post != null) {
+      List newPostComment =
+          postComment.where((element) => element['id'] != post['id']).toList();
+
+      setState(() {
+        postComment = newPostComment;
+      });
+    }
   }
 
   @override
@@ -204,6 +215,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                           shrinkWrap: true,
                           itemCount: postComment.length,
                           itemBuilder: ((context, index) => CommentTree(
+                              key: Key(postComment[index]['id']),
                               commentChildCreate: postComment[index]['id'] ==
                                       commentChild?['in_reply_to_id']
                                   ? commentChild
@@ -211,7 +223,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                               commentNode: commentNode,
                               commentSelected: commentSelected,
                               commentParent: postComment[index],
-                              getCommentSelected: getCommentSelected))),
+                              getCommentSelected: getCommentSelected,
+                              handleDeleteComment: handleDeleteComment))),
                       commentCount - postComment.length > 0
                           ? InkWell(
                               onTap: isLoadComment

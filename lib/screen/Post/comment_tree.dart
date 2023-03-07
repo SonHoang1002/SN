@@ -28,7 +28,8 @@ class CommentTree extends StatefulWidget {
       this.commentNode,
       this.getCommentSelected,
       this.commentSelected,
-      this.commentChildCreate})
+      this.commentChildCreate,
+      this.handleDeleteComment})
       : super(key: key);
 
   final dynamic commentChildCreate;
@@ -37,6 +38,7 @@ class CommentTree extends StatefulWidget {
 
   final FocusNode? commentNode;
   final Function? getCommentSelected;
+  final Function? handleDeleteComment;
 
   @override
   State<CommentTree> createState() => _CommentTreeState();
@@ -114,14 +116,33 @@ class _CommentTreeState extends State<CommentTree> {
                           ['preview_url']
                       : linkAvatarDefault,
               userName: widget.commentChildCreate['account']['display_name'],
-              content: widget.commentChildCreate['id'])
+              content: widget.commentChildCreate['id']),
         ];
-        replyCount = replyCount + 1;
         isShowCommentChild = true;
+        replyCount = replyCount + 1;
       });
     }
 
-    handleUpdatePost(post) {}
+    handleUpdatePost(post) {
+      if (post != null && post['in_reply_to_parent_id'] != null) {
+        int index = postChildComment
+            .indexWhere((element) => element['id'] == post['id']);
+        if (index < 0) return;
+        setState(() {
+          postChildComment = [
+            ...postChildComment.sublist(0, index),
+            ...postChildComment.sublist((index + 1))
+          ];
+
+          commentChild = [
+            ...commentChild.sublist(0, index),
+            ...commentChild.sublist((index + 1))
+          ];
+        });
+      } else {
+        widget.handleDeleteComment!(post);
+      }
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
@@ -185,6 +206,7 @@ class _CommentTreeState extends State<CommentTree> {
                   ),
                 )
               : BoxComment(
+                  key: Key(data.content.toString()),
                   widget: widget,
                   data: data,
                   getCommentSelected: widget.getCommentSelected!,
@@ -196,6 +218,7 @@ class _CommentTreeState extends State<CommentTree> {
         },
         contentRoot: (context, data) {
           return BoxComment(
+            key: Key(widget.commentParent['id']),
             widget: widget,
             data: data,
             getCommentSelected: widget.getCommentSelected!,
@@ -249,8 +272,8 @@ class _BoxCommentState extends State<BoxComment> {
 
   @override
   Widget build(BuildContext context) {
-    String viewerReaction = postRender['viewer_reaction'] ?? '';
-    List reactions = postRender['reactions'];
+    String viewerReaction = postRender?['viewer_reaction'] ?? '';
+    List reactions = postRender?['reactions'] ?? [];
 
     List sortReactions = reactions
         .map((element) => {
@@ -471,7 +494,7 @@ class _BoxCommentState extends State<BoxComment> {
                       fontWeight: FontWeight.w500),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: postRender['typeStatus'] == 'previewComment'
+                    child: widget.post['typeStatus'] == 'previewComment'
                         ? const Padding(
                             padding: EdgeInsets.only(left: 8.0),
                             child: Text("Đang viết ..."),
