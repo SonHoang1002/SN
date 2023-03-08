@@ -28,12 +28,13 @@ class PostContent extends StatelessWidget {
                 post['content'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: double.parse(
-                        backgroundObject['style']['fontSize'].substring(0, 2)),
+                    fontSize: double.parse(backgroundObject['style']['fontSize']
+                            .substring(0, 2)) -
+                        10,
                     color: Color(int.parse(backgroundObject['style']
                             ['fontColor']
                         .replaceAll('#', '0xff'))),
-                    fontWeight: FontWeight.w500),
+                    fontWeight: FontWeight.w700),
               ),
             ),
           ),

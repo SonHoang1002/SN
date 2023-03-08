@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
+
+import '../theme/colors.dart';
 
 class SearchInput extends StatefulWidget {
   final Function? handleSearch;
   final Function? handleUpdateFocus;
+  final Function? handleSearchClick;
+  String? title = "Tìm kiếm";
 
-  const SearchInput({
-    super.key,
-    this.handleSearch,
-    this.handleUpdateFocus,
-  });
+  SearchInput(
+      {super.key,
+      this.handleSearch,
+      this.handleUpdateFocus,
+      this.title,
+      this.handleSearchClick});
 
   @override
   State<SearchInput> createState() => _SearchInputState();
@@ -22,7 +26,6 @@ class _SearchInputState extends State<SearchInput> {
   @override
   void initState() {
     if (!mounted) return;
-
     super.initState();
   }
 
@@ -43,14 +46,21 @@ class _SearchInputState extends State<SearchInput> {
             },
             cursorColor: Theme.of(context).textTheme.displayLarge?.color,
             decoration: InputDecoration(
-                hintText: "Tìm kiếm",
+                hintText: widget.title,
                 hintStyle: const TextStyle(fontSize: 13),
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
-                prefixIcon: Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: Theme.of(context).textTheme.displayLarge?.color,
-                  size: 17,
+                prefixIcon: InkWell(
+                  onTap: () {
+                    widget.handleSearchClick != null
+                        ? widget.handleSearchClick!()
+                        : null;
+                  },
+                  child: Icon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
+                    size: 17,
+                  ),
                 ),
                 suffixIcon: controller.text.isNotEmpty
                     ? InkWell(
@@ -62,8 +72,7 @@ class _SearchInputState extends State<SearchInput> {
                           width: 20,
                           height: 20,
                           decoration: const BoxDecoration(
-                              color: Colors.transparent,
-                              shape: BoxShape.circle),
+                              color: transparent, shape: BoxShape.circle),
                           child: Icon(
                             FontAwesomeIcons.xmark,
                             size: 15,

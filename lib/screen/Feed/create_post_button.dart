@@ -1,42 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class CreatePostButton extends StatefulWidget {
+class CreatePostButton extends ConsumerWidget {
   const CreatePostButton({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CreatePostButtonState createState() => _CreatePostButtonState();
-}
-
-class _CreatePostButtonState extends State<CreatePostButton> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
+      borderRadius: BorderRadius.circular(10.0),
       onTap: () {
         Navigator.push(context,
             CupertinoPageRoute(builder: ((context) => const CreateNewFeed())));
       },
       child: Container(
-        padding: const EdgeInsets.only(left: 15, right: 15),
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 6, bottom: 6),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
-                children: const [
+                children: [
                   AvatarSocial(
                       width: 40,
                       height: 40,
-                      path:
-                          "https://snapi.emso.asia/system/media_attachments/files/108/853/138/654/944/677/original/cc4c8fd4be1d7a96.jpg"),
-                  SizedBox(
+                      path: ref.watch(meControllerProvider)[0]['avatar_media']
+                          ['preview_url']),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text(
+                  const Text(
                     "Bạn đang nghĩ gì?",
                     style: TextStyle(fontSize: 15),
                   ),

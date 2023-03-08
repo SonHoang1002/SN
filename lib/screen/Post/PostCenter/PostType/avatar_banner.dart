@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
@@ -12,7 +13,9 @@ class AvatarBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var media = post['media_attachments'][0];
+    var media = post['media_attachments'].isNotEmpty
+        ? post['media_attachments'][0]
+        : {'preview_url': linkAvatarDefault};
     String path = media['preview_url'];
     return postType == postAvatarAccount
         ? Center(

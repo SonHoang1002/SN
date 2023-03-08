@@ -8,7 +8,7 @@ class PostFooterInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const style = TextStyle(color: greyColor, fontSize: 12);
+    const style = TextStyle(color: greyColor, fontSize: 13);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),

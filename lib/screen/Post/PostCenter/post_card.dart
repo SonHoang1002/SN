@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -63,7 +64,7 @@ class PostCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 8),
                 child: ClipRect(
                   child: ImageCacheRender(
-                    path: card['link'],
+                    path: card?['link'] ?? linkBannerDefault,
                     width: size.width,
                   ),
                 ),

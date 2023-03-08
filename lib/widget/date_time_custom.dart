@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DateTimeCustom extends StatefulWidget {
-  const DateTimeCustom({Key? key}) : super(key: key);
+  final Function handleGetDate;
+  const DateTimeCustom({Key? key, required this.handleGetDate})
+      : super(key: key);
 
   @override
   State<DateTimeCustom> createState() => _DateTimeCustomState();
@@ -43,6 +45,8 @@ class _DateTimeCustomState extends State<DateTimeCustom> {
         // This is called when the user changes the date.
         onDateTimeChanged: (DateTime newDate) {
           setState(() => date = newDate);
+          //date type: 2020-02-13 00:00:00.000
+          widget.handleGetDate(date);
         },
       )),
       child: Container(
