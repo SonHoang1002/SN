@@ -8,7 +8,6 @@ import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
 import '../../../widget/image_cache.dart';
-
 Widget buildProductItem(
     {required BuildContext context,
     required double width,

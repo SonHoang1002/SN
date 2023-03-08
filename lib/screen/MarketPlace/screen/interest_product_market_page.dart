@@ -189,8 +189,7 @@ class _InterestProductMarketPageState
                       iconData: FontAwesomeIcons.ellipsisVertical,
                       width: 30,
                       function: () {
-                        showBottomSheetCheckImportantSettings(
-                            context, 210, "Quan tâm",
+                        showCustomBottomSheet(context, 210, "Quan tâm",
                             bgColor: bgColor,
                             widget: ListView.builder(
                                 shrinkWrap: true,
@@ -230,10 +229,8 @@ class _InterestProductMarketPageState
                                         padding: const EdgeInsets.all(5),
                                         function: () {
                                           data[index]["title"] == "Chia sẻ"
-                                              ? showBottomSheetCheckImportantSettings(
-                                                  context,
-                                                  300,
-                                                  "Chia sẻ sản phẩm",
+                                              ? showCustomBottomSheet(context,
+                                                  300, "Chia sẻ sản phẩm",
                                                   iconData: FontAwesomeIcons
                                                       .chevronLeft,
                                                   bgColor: bgColor,
@@ -332,7 +329,7 @@ class _InterestProductMarketPageState
                                                                   default:
                                                                     break;
                                                                 }
-                                                                showBottomSheetCheckImportantSettings(
+                                                                showCustomBottomSheet(
                                                                     context,
                                                                     height *
                                                                         0.7,

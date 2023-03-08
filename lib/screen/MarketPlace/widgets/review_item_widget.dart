@@ -102,8 +102,6 @@ Widget buildReviewItemWidget(BuildContext context, dynamic data,
                                     context,
                                     PreviewVideoImage(
                                       src: commentImgPath[index],
-                                      category: data["comment"]
-                                          ["media_attachments"][index]["type"],
                                     ));
                               },
                               child: Padding(

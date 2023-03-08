@@ -16,7 +16,10 @@ import 'package:social_network_app_mobile/data/market_place_datas/product_catego
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/page_list_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/manage_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_message_dialog_widget.dart';
@@ -79,12 +82,8 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
   List<dynamic>? imgLink;
   dynamic categoryId;
   Map<String, dynamic>? _categoryData;
-  List<String> _warningForChildImage = [];
   bool? _isDetailEmpty;
   bool _isLoading = true;
-  // kiem tra ne dung api nao
-  // bool? _isShowDetail;
-  // dynamic oldData;
   @override
   void initState() {
     if (!mounted) {
@@ -123,10 +122,22 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              BackIconAppbar(),
-              AppBarTitle(title: "Cập nhật sản phẩm"),
-              Icon(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  buildMessageDialog(context, "Bạn có chắc chắn muốn thoát ?",
+                      oKFunction: () {
+                    popToPreviousScreen(context);
+                    popToPreviousScreen(context);
+                  });
+                },
+                child: Icon(
+                  FontAwesomeIcons.chevronLeft,
+                  color: Theme.of(context).textTheme.displayLarge!.color,
+                ),
+              ),
+              const AppBarTitle(title: "Cập nhật sản phẩm"),
+              const Icon(
                 FontAwesomeIcons.bell,
                 size: 18,
                 color: Colors.black,
@@ -135,9 +146,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
           ),
         ),
         body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(color: red),
-              )
+            ? buildCircularProgressIndicator()
             : GestureDetector(
                 onTap: (() {
                   FocusManager.instance.primaryFocus!.unfocus();
@@ -364,7 +373,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
                           ),
                           // add to cart and buy now
                           Container(
-                            // height: 40,
                             margin: const EdgeInsets.only(bottom: 10),
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             width: width,
@@ -383,17 +391,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
                       ),
                     ),
                     _isLoading
-                        ? const Center(
-                            child: SizedBox(
-                              width: 70,
-                              height: 70,
-                              child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.red),
-                                strokeWidth: 3,
-                              ),
-                            ),
-                          )
+                        ? buildCircularProgressIndicator()
                         : const SizedBox(),
                   ],
                 ),
@@ -475,7 +473,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
             }
           }
           final Map<String, dynamic> informationData = primaryData;
-          ////
           _categoryData = {
             "loai_1": {
               "name": TextEditingController(
@@ -485,7 +482,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
                   .map((element) {
                 return TextEditingController(text: element.toString());
               }).toList(),
-              /////
               "images": _initCategoryOneImages(informationData),
               "contents": {"price": [], "repository": [], "sku": []}
             },
@@ -508,7 +504,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
               ),
               "values": []
             };
-            // List<Map<String, dynamic>> valuesOfLoai2 = [];
             for (int i = 0;
                 i < informationData["product_options"][1]["values"].length;
                 i++) {
@@ -555,7 +550,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
                 }
               }
             });
-            // _categoryData!["loai_2"]["values"] = valuesOfLoai2;
           } else {
             // gan gia tri cac the input cua loai neu khong co loai 2
             informationData["product_options"][0]["values"]
@@ -575,17 +569,8 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
               });
             });
           }
-          for (int i = 0; i < _categoryData!["loai_1"]["images"].length; i++) {
-            if (_categoryData!["loai_1"]["images"][i] == null ||
-                _categoryData!["loai_1"]["images"][i] == "") {
-              _warningForChildImage.add(selectionImageWarnings);
-            } else {
-              _warningForChildImage.add("");
-            }
-          }
         }
       }
-      print("update: $_categoryData");
     }
     _isLoading = false;
     setState(() {});
@@ -609,6 +594,9 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
           if (!imageChildList.contains(optionElement['image']["url"])) {
             imageChildList.add(optionElement['image']["url"]);
           }
+        } else {
+          imageChildList.add(
+              "https://haycafe.vn/wp-content/uploads/2022/02/Tranh-to-mau-bien-bao-giao-thong-1.jpg");
         }
       }
     }
@@ -644,8 +632,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
         _validatorSelectionList["private"] == true &&
         _validatorSelectionList["branch"] == true &&
         _validatorSelectionList["category"] == true &&
-        _validatorSelectionList["image"] == true &&
-        _warningForChildImage.every((element) => element == "")) {
+        _validatorSelectionList["image"] == true) {
       _questionForUpdateProduct();
     }
     setState(() {});
@@ -725,24 +712,12 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
           // chuyen doi anh con hoac so sanh de lay id anh con lay tu data cu
           String imageId = "";
           _oldData?["product_variants"].forEach((optionAttributeComponent) {
-            if (element == optionAttributeComponent["image"]["url"]) {
+            if (optionAttributeComponent["image"] != null &&
+                element == optionAttributeComponent["image"]["url"]) {
               imageId = optionAttributeComponent["image"]["id"];
             }
-            return;
-
-            // if (element == optionAttributeComponent["image"]["url"]) {
-            //   imageId = optionAttributeComponent["image"]["id"];
-            // }
-            // return;
+            return "";
           });
-          // if (imageId == "") {
-          //   _oldData?["product_variants"].forEach((optionAttributeComponent) {
-          //     if (element == optionAttributeComponent["image"]["url"]) {
-          //       imageId = optionAttributeComponent["image"]["id"];
-          //       return;
-          //     }
-          //   });
-          // }
           return imageId;
         }
       }).toList());
@@ -836,14 +811,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
         "requires_shipping": true
       });
     }
-    // print(
-    //     "-----------------------update page---------------------: ${json.encode(newData)}");
     _chooseApi();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-      "Cập nhật thành công",
-      style: TextStyle(color: Colors.green),
-    )));
     _isLoading = false;
     setState(() {});
   }
@@ -851,59 +819,62 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
   Future _chooseApi() async {
     dynamic updateBodyData = {};
     // thay doi thong tin product co san
-    // so sanh title,description,brand, visibility,
-    // print(
-    //     '--------------------------------------------oldData!["title"]- _nameController.text.trim() ${_oldData!["title"]}-${_nameController.text.trim()}');
-    if (_oldData!["title"] != _nameController.text.trim() ||
-        _oldData!["description"] != _descriptionController.text.trim() ||
-        _oldData!["brand"] != _branchController.text.trim() ||
-        _oldData!["visibility"] != _privateData!["key"] ||
-        // category_id cha hoac con
-        _oldData!["product_category_id"] != categoryId ||
-        _oldData!["page_id"] != _pageData["id"]) {
-      updateBodyData["product"] = {
-        "title": _nameController.text.trim(),
-        "description": _descriptionController.text.trim(),
-        "product_category_id": categoryId,
-        "brand": _branchController.text.trim(),
-        "visibility": _privateData!["key"],
-        "page_id": _pageData["id"]
-      };
-    }
-    // them moi option hoac bo option
-    if (((_oldData!["product_options"] == null ||
-                _oldData!["product_options"].isEmpty) &&
-            _categoryData!["loai_2"]["values"].isNotEmpty) ||
-        ((_oldData!["product_options"] != null ||
-                _oldData!["product_options"].isNotEmpty) &&
-            (_categoryData!["loai_2"] == null ||
-                _categoryData!["loai_2"].isEmpty))) {
-      updateBodyData["product_options_attributes"] =
-          newData!["product_options_attributes"];
-
-      updateBodyData["product_variants_attributes"] =
-          newData!["product_variants_attributes"];
-    }
-    // truong hop thay doi option co san
-    if ((_oldData!["product_options"] != null ||
-        _oldData!["product_options"].isNotEmpty)) {
-      if (_categoryData!["loai_2"] != null &&
-          _categoryData!["loai_2"].isNotEmpty) {
-        updateBodyData["product_options_attributes"] =
-            newData!["product_options_attributes"];
-
-        updateBodyData["product_variants_attributes"] =
-            newData!["product_variants_attributes"];
-      }
-    }
-    print(
-        "----------------------------updateBodyData-----------------${json.encode(updateBodyData)}");
+    // if (_oldData!["title"] != _nameController.text.trim() ||
+    //     _oldData!["description"] != _descriptionController.text.trim() ||
+    //     _oldData!["brand"] != _branchController.text.trim() ||
+    //     _oldData!["visibility"] != _privateData!["key"] ||
+    //     // category_id cha hoac con
+    //     _oldData!["product_category_id"] != categoryId ||
+    //     _oldData!["page_id"] != _pageData["id"]) {
+    //   updateBodyData["product"] = {
+    //     "title": _nameController.text.trim(),
+    //     "description": _descriptionController.text.trim(),
+    //     "product_category_id": categoryId,
+    //     "brand": _branchController.text.trim(),
+    //     "visibility": _privateData!["key"],
+    //     "page_id": _pageData["id"]
+    //   };
+    // }
+    // // them moi option hoac bo option
+    // if (((_oldData!["product_options"] == null ||
+    //             _oldData!["product_options"].isEmpty) &&
+    //         _categoryData!["loai_2"]["values"].isNotEmpty) ||
+    //     ((_oldData!["product_options"] != null ||
+    //             _oldData!["product_options"].isNotEmpty) &&
+    //         (_categoryData!["loai_2"] == null ||
+    //             _categoryData!["loai_2"].isEmpty))) {
+    //   updateBodyData["product_options_attributes"] =
+    //       newData!["product_options_attributes"];
+    //   updateBodyData["product_variants_attributes"] =
+    //       newData!["product_variants_attributes"];
+    // }
+    // // truong hop thay doi option co san
+    // if ((_oldData!["product_options"] != null ||
+    //     _oldData!["product_options"].isNotEmpty)) {
+    //   if (_categoryData!["loai_2"] != null &&
+    //       _categoryData!["loai_2"].isNotEmpty) {
+    //     updateBodyData["product_options_attributes"] =
+    //         newData!["product_options_attributes"];
+    //     updateBodyData["product_variants_attributes"] =
+    //         newData!["product_variants_attributes"];
+    //   }
+    // }
+    updateBodyData = {
+      "product": newData!["product"],
+      "product_options_attributes": newData!["product_options_attributes"],
+      "product_variants_attributes": newData!["product_variants_attributes"],
+    };
     // goi api
     final response =
         await ProductsApi().updateProductApi(_oldData!["id"], updateBodyData);
-    print(
-        "---------------------update response------------------- ${json.encode(response)}");
-    buildMessageDialog(context, response ?? "chua load xong");
+    final reset = await ref.read(productsProvider.notifier).updateProductData([]);
+    buildMessageDialog(
+        context,
+        response != null && response.isNotEmpty
+            ? "Update thành công =))!"
+            : "Update không thành  =((", oKFunction: () {
+      pushToNextScreen(context, ManageProductMarketPage());
+    });
   }
 
   Widget _categoryUnitPageSelection(
@@ -934,7 +905,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
             padding: const EdgeInsets.all(5),
             isHaveBorder: true,
             function: () {
-              showBottomSheetCheckImportantSettings(
+              showCustomBottomSheet(
                 context, 500, titleForBottomSheet,
                 // bgColor: Colors.grey[300],
                 widget: SizedBox(
@@ -1096,8 +1067,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
             isHaveBorder: true,
             function: () {
-              showBottomSheetCheckImportantSettings(
-                  context, 500, titleForBottomSheet,
+              showCustomBottomSheet(context, 500, titleForBottomSheet,
                   bgColor: Colors.grey[300],
                   widget: SizedBox(
                     height: 400,
@@ -1256,8 +1226,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
                                       "Thêm mô tả cho phân loại 1: ${_categoryData?["loai_1"]["values"].length}/10",
                                       false,
                                       fontSize: 13, function: () {
-                                    _warningForChildImage
-                                        .add(selectionImageWarnings);
                                     _addClassifyCategoryOne();
                                   }),
                                 )
@@ -1475,11 +1443,17 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
         maxLines: null,
         keyboardType: keyboardType != null ? keyboardType : TextInputType.text,
         validator: (value) {
-          if (hintText != "Nhập giá sản phẩm" &&
-              hintText != "Nhập tên kho hàng" &&
-              hintText != "Nhập mã sản phẩm" &&
-              controller.text.trim().isEmpty) {
-            return "Không hợp lệ";
+          if (_isDetailEmpty!) {
+            if (controller.text.trim().isEmpty) {
+              return "Không hợp lệ";
+            }
+          } else {
+            if (hintText != "Nhập giá sản phẩm" &&
+                hintText != "Nhập tên kho hàng" &&
+                hintText != "Nhập mã sản phẩm" &&
+                controller.text.trim().isEmpty) {
+              return "Không hợp lệ";
+            }
           }
         },
         decoration: InputDecoration(
@@ -1530,7 +1504,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
   }
 
   void _createClassifyCategoryOne() {
-    _warningForChildImage.add(selectionImageWarnings);
     _categoryData ??= {
       "loai_1": {
         "name": TextEditingController(
@@ -1572,8 +1545,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
             .add(TextEditingController(text: ""));
       }
     }
-    print(
-        "-------------------------images loai 1------------------ ${_categoryData!["loai_1"]["images"]}");
     setState(() {});
   }
 
@@ -1741,14 +1712,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
                 ),
               ),
               buildSpacer(height: 5),
-              _warningForChildImage[i] != null && _warningForChildImage[i] != ""
-                  ? buildTextContent(
-                      _warningForChildImage[i],
-                      false,
-                      colorWord: red,
-                      fontSize: 12,
-                    )
-                  : const SizedBox()
             ],
           ),
         ),
@@ -1857,15 +1820,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
                         ),
                       ),
                       buildSpacer(height: 5),
-                      _warningForChildImage[i] != null &&
-                              _warningForChildImage[i] != ""
-                          ? buildTextContent(
-                              _warningForChildImage[i],
-                              false,
-                              colorWord: red,
-                              fontSize: 8,
-                            )
-                          : const SizedBox()
                     ],
                   ),
                 )
@@ -1919,7 +1873,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
     pickedImage = (await ImagePicker().pickImage(source: src))!;
     _categoryData?["loai_1"]["images"][index] =
         pickedImage.path != null && pickedImage.path != "" ? pickedImage : null;
-    _warningForChildImage[index] = "";
     setState(() {});
   }
 

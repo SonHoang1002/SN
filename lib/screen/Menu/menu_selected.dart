@@ -83,7 +83,7 @@ class MenuSelected extends StatelessWidget {
                 color: colorWord,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 12.0,
             ),
             Icon(

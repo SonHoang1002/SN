@@ -8,6 +8,7 @@ import 'package:social_network_app_mobile/data/market_place_datas/product_catego
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/banner_widget.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/product_item_widget.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -58,27 +59,14 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
           children: [
             const BackIconAppbar(),
             AppBarTitle(title: widget.title.toString()),
-            InkWell(
-              onTap: () {
-                pushToNextScreen(context, const CartMarketPage());
-              },
-              child: const Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Icon(
-                  FontAwesomeIcons.cartArrowDown,
-                  size: 18,
-                  color: Colors.black,
-                ),
-              ),
-            )
+            const CartWidget(),
           ],
         ),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(children: [
-          buildBanner(),
-          // const CrossBar(height: 5),
+          buildBanner(context),
           _buildCategoriesComponent(),
           const CrossBar(height: 5),
           Container(

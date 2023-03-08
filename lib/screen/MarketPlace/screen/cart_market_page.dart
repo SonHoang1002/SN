@@ -37,18 +37,11 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      if (ref.watch(cartProductsProvider).listCart.isEmpty) {
-        final initCartData =
-            await ref.read(cartProductsProvider.notifier).initCartProductList();
-      }
-    });
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _cartData = [];
+    Future.delayed(Duration.zero, () async {
+      final initCartData =
+          await ref.read(cartProductsProvider.notifier).initCartProductList();
+    });
   }
 
   @override
@@ -56,18 +49,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    if (_cartData == null || _cartData!.isEmpty) {
-      Future.delayed(Duration.zero, () async {
-        if (ref.watch(cartProductsProvider).listCart.isEmpty) {
-          final initCartData = await ref
-              .read(cartProductsProvider.notifier)
-              .initCartProductList();
-        }
-      });
-      _cartData = ref.watch(cartProductsProvider).listCart;
-    }
-    _updateTotalPrice();
-    _isLoading = false;
+    Future.wait([_initData()]);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -111,11 +93,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                   _isLoading
                       ? buildCircularProgressIndicator()
                       : Column(
-                          children: List.generate(
-                              ref.watch(cartProductsProvider).listCart.length,
-                              (index) {
-                          final data =
-                              ref.watch(cartProductsProvider).listCart[index];
+                          children: List.generate(_cartData!.length, (index) {
+                          final data = _cartData![index];
                           return _buildCartProductItem(data, index);
                         })),
                 ],
@@ -124,6 +103,21 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
             _voucherAndBuyComponent()
           ],
         ));
+  }
+
+  Future _initData() async {
+    _cartData = null;
+    if (_cartData == null || _cartData!.isEmpty) {
+      Future.delayed(Duration.zero, () async {
+        final initCartData =
+            await ref.read(cartProductsProvider.notifier).initCartProductList();
+      });
+      _cartData = ref.watch(cartProductsProvider).listCart;
+    }
+    _updateTotalPrice();
+    setState(() {
+      _isLoading = false;
+    });
   }
 
 // _update
@@ -229,9 +223,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                         ],
                       ),
                       child: Container(
-                        height: 80,
+                        height: 100,
                         width: width,
-                        // margin: EdgeInsets.only(bottom: 5),
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: SizedBox(
                           height: 80,
@@ -252,8 +245,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                               Container(
                                 margin: const EdgeInsets.only(right: 10),
                                 child: ImageCacheRender(
-                                  height: 80.0,
-                                  width: 80.0,
+                                  height: 100.0,
+                                  width: 100.0,
                                   path: itemData["product_variant"]["image"] !=
                                               null &&
                                           itemData["product_variant"]["image"]
@@ -264,28 +257,42 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                                 ),
                               ),
                               Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // buildTextContent(title, false, fontSize: 17),
                                   SizedBox(
-                                    width: 200,
+                                    width: 220,
                                     child: Text(
                                       itemData["product_variant"]["title"],
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       style: const TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
+                                  buildSpacer(height: 10),
+                                  Text(
+                                    itemData["product_variant"]["option1"] ==
+                                                null &&
+                                            itemData["product_variant"]
+                                                    ["option2"] ==
+                                                null
+                                        ? "Phân loại: Không có"
+                                        : "Phân loại  ${itemData["product_variant"]["option1"] ?? ""} ${itemData["product_variant"]["option2"] ?? ""}}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  buildSpacer(height: 10),
                                   buildTextContent(
-                                      itemData["product_variant"]["price"]
-                                          .toString(),
+                                      "₫ ${itemData["product_variant"]["price"].toString()}",
                                       true,
                                       fontSize: 15,
                                       colorWord: red),
+                                  buildSpacer(height: 10),
                                   Row(
                                     children: [
                                       InkWell(
@@ -298,9 +305,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                                               border: Border.all(
                                                   color: greyColor,
                                                   width: 0.4)),
-                                          height: 25,
-                                          width: 25,
-                                          // padding: EdgeInsets.all(10),
+                                          height: 20,
+                                          width: 20,
                                           child: const Icon(
                                             FontAwesomeIcons.minus,
                                             size: 16,
@@ -311,8 +317,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: greyColor, width: 0.2)),
-                                        height: 25,
-                                        width: 40,
+                                        height: 20,
+                                        width: 25,
                                         child: Center(
                                             child: Text(itemData["quantity"]
                                                 .toString())),
@@ -327,8 +333,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                                               border: Border.all(
                                                   color: greyColor,
                                                   width: 0.2)),
-                                          height: 25,
-                                          width: 25,
+                                          height: 20,
+                                          width: 20,
                                           // padding: EdgeInsets.all(10),
                                           child: const Icon(
                                               FontAwesomeIcons.plus,
@@ -557,10 +563,13 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   }
 
   _callDeleteProductApi(dynamic id, dynamic data) async {
+    print("_callDeleteProductApi $id - $data");
     final response = await CartProductApi().deleteCartProductApi(id, data);
+    print("_callDeleteProductApi $response");
   }
 
   _callUpdateQuantityApi(dynamic data) async {
+    print("cart _callUpdateQuantityApi");
     final response =
         await ref.read(cartProductsProvider.notifier).updateCartQuantity(data);
   }

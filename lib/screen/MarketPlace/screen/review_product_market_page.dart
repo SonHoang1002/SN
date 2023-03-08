@@ -101,7 +101,7 @@ class _ReviewProductMarketPageState
           ),
         ),
         body: _isLoading
-            ? buildCircularProgressIndicator()
+            ?buildCircularProgressIndicator()
             : Stack(
                 alignment: Alignment.center,
                 children: [
@@ -228,13 +228,16 @@ class _ReviewProductMarketPageState
         "rating_point": _starQualityList![i]
       });
     }
-    print("--------------review--------------- ${json.encode(reviewProductData)}");
+    print(
+        "--------------review---------------${widget.reviewId} ${json.encode(reviewProductData)}");
     var response;
     Future.delayed(Duration.zero, () async {
       response = ReviewProductApi()
           .createReviewProductApi(widget.reviewId, reviewProductData);
     });
-    buildMessageDialog(context, response.toString(), oKFunction: () {
+    buildMessageDialog(
+        context, response.toString() ?? "Chỉ được đánh giá một lần duy nhất",
+        oKFunction: () {
       popToPreviousScreen(context);
     });
 

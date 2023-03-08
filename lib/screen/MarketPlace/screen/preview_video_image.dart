@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/video_player.dart';
 
 import '../../../../widget/back_icon_appbar.dart';
 
-class PreviewVideoImage extends ConsumerStatefulWidget {
-  final dynamic src;
-  final String category;
-  const PreviewVideoImage(
-      {super.key, required this.src, required this.category});
+class PreviewVideoImage extends StatefulWidget {
+  final List<dynamic> src;
+  int? index;
+  PreviewVideoImage({super.key, required this.src, this.index});
   @override
-  ConsumerState<PreviewVideoImage> createState() =>
-      _PreviewVideoImageComsumerState();
+  State<PreviewVideoImage> createState() => _PreviewVideoImageComsumerState();
 }
 
-class _PreviewVideoImageComsumerState extends ConsumerState<PreviewVideoImage> {
+class _PreviewVideoImageComsumerState extends State<PreviewVideoImage> {
   late double width = 0;
   late double height = 0;
+  int? _currentPage;
   @override
   void initState() {
     if (!mounted) {
       return;
     }
     super.initState();
+    _currentPage = widget.index ?? 0;
   }
 
   @override
@@ -50,18 +50,41 @@ class _PreviewVideoImageComsumerState extends ConsumerState<PreviewVideoImage> {
   }
 
   Widget _buildReviewBody() {
-    return widget.category == "image"
-        ? Center(
-            child: ImageCacheRender(
-              path: widget.src,
-              height: 400,
-              width: 300,
-            ),
-          )
-        : Center(
-            child: Container(
-                height: 400,
-                width: 300,
-                child: VideoPlayerRender(path: widget.src)));
+    return PreloadPageView.builder(
+      controller: PreloadPageController(initialPage: _currentPage!),
+      itemCount: widget.src.length,
+      itemBuilder: (context, index) {
+        final data = widget.src[index];
+        return data.endsWith(".mp4")
+            ? Center(
+              child: Container(
+                  height: 350,
+                  width: 250,
+                  child: VideoPlayerRender(path: data)),
+            )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ImageCacheRender(
+                    path: data,
+                    height: 400.0,
+                    width: width,
+                  ),
+                ],
+              );
+
+        //          Container(
+        //   width: MediaQuery.of(context).size.width,
+        //   height: 200,
+        //   margin: const EdgeInsets.all(5.0),
+        //   child: Image.network(images[index], fit: BoxFit.fitWidth),
+        // );
+      },
+      onPageChanged: (index) {
+        setState(() {
+          _currentPage = index;
+        });
+      },
+    );
   }
 }

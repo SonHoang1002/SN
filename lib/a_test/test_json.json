@@ -1,110 +1,96 @@
 {
-  "product_images": [
-    "109906070056658229"
-  ],
-  "product_video": null,
   "product": {
-    "title": "Áo Polo",
-    "description": "Đẹp",
-    "product_category_id": null,
-    "brand": "Bộ",
-    "visibility": "Công khai",
-    "page_id": null
+    "title": "banh mi tri nho cua doraemon",
+    "description": "new comment",
+    "product_category_id": 75,
+    "brand": "new brand",
+    "visibility": "public",
+    "page_id": "108277159418893569"
   },
-  "product_options": [
+  "product_variants_attributes": [
     {
-      "name": "loai 1",
-      "position": 1,
-      "values": [
-        "xanh",
-        "tím"
-      ]
-    },
-    {
-      "name": "loai 2",
+      "id": 323,
+      "title": "ppppp -x - s",
+      "price": "250000.00",
+      "sku": "fyd",
       "position": 2,
-      "values": [
-        "s",
-        "d"
-      ]
+      "compare_at_price": null,
+      "option1": "x",
+      "option2": "s",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 453,
+      "old_inventory_quantity": 453,
+      "requires_shipping": true
     },
     {
-      "name": "loai 1",
-      "position": 1,
-      "values": [
-        "xanh",
-        "tím"
-      ]
-    },
-    {
-      "name": "loai 2",
+      "id": 322,
+      "title": "ppppp -x - h",
+      "price": "290000.00",
+      "sku": "fyd",
       "position": 2,
-      "values": [
-        "s",
-        "d"
-      ]
+      "compare_at_price": null,
+      "option1": "x",
+      "option2": "h",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 453,
+      "old_inventory_quantity": 453,
+      "requires_shipping": true
+    },
+    {
+      "id": 321,
+      "title": "ppppp -a - s",
+      "price": "234402.00",
+      "sku": "fyd",
+      "position": 2,
+      "compare_at_price": null,
+      "option1": "a",
+      "option2": "s",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 453,
+      "old_inventory_quantity": 453,
+      "requires_shipping": true
+    },
+    {
+      "id": 320,
+      "title": "ppppp -a - h",
+      "price": "250000.00",
+      "sku": "fyd",
+      "position": 2,
+      "compare_at_price": null,
+      "option1": "a",
+      "option2": "h",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 453,
+      "old_inventory_quantity": 453,
+      "requires_shipping": true
     }
   ],
-  "product_variants": [
+  "product_options_attributes": [
     {
-      "title": "Áo Polo - xanh - s ",
-      "price": "1200000.0",
-      "sku": "adad1133",
+      "id": 102,
+      "name": "Color",
       "position": 1,
-      "compare_at_price": null,
-      "option1": "xanh",
-      "option2": "s",
-      "image_id": "109918514522447277",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": "123",
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
+      "values": [
+        "x",
+        "a"
+      ]
     },
     {
-      "title": "Áo Polo - xanh - d ",
-      "price": "1200000.0",
-      "sku": "adad1133",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "xanh",
-      "option2": "d",
-      "image_id": "109918514522447277",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": "123",
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "Áo Polo - tím - s ",
-      "price": "1200000.0",
-      "sku": "adad1133",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "tím",
-      "option2": "s",
-      "image_id": "109918515507555483",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": "123",
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "Áo Polo - tím - d ",
-      "price": "1200000.0",
-      "sku": "adad1133",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "tím",
-      "option2": "d",
-      "image_id": "109918515507555483",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": "123",
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
+      "id": 103,
+      "name": "Size",
+      "position": 2,
+      "values": [
+        "s",
+        "h"
+      ]
     }
   ]
 }

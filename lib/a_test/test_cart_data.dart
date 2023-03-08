@@ -1,3 +1,245 @@
+dynamic demoProductData = {
+  "id": "97",
+  "account_id": "108786718361607198",
+  "title": "banh mi tri nho cua doraemon",
+  "description": "new comment",
+  "brand": "new brand",
+  "visibility": "public",
+  "rating": 0.0,
+  "rating_count": 0,
+  "sold": 0,
+  "followers_count": 0,
+  "created_at": "2023-03-08T14:07:53.681+07:00",
+  "updated_at": "2023-03-08T19:47:30.785+07:00",
+  "product_relationships": {"follow_product": false, "host_product": true},
+  "product_image_attachments": [
+    {
+      "id": "185",
+      "product_id": "97",
+      "created_at": "2023-03-08T14:07:53.778+07:00",
+      "updated_at": "2023-03-08T14:07:53.778+07:00",
+      "attachment": {
+        "id": "109986398950288017",
+        "type": "image",
+        "url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/986/398/950/288/017/original/1a63e05f0096ad9c.jpg",
+        "meta": {
+          "original": {
+            "width": 960,
+            "height": 1280,
+            "size": "960x1280",
+            "aspect": 0.75,
+            "average_color": "#847362"
+          },
+          "small": {
+            "width": 346,
+            "height": 461,
+            "size": "346x461",
+            "aspect": 0.7505422993492408,
+            "average_color": "#847362"
+          }
+        },
+        "preview_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/986/398/950/288/017/small/1a63e05f0096ad9c.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "show_url": null,
+        "status_id": "",
+        "description": null,
+        "position": null,
+        "created_at": "2023-03-08T14:07:41.325+07:00"
+      }
+    }
+  ],
+  "product_video": {
+    "id": "109986399730752059",
+    "type": "video",
+    "url":
+        "https://snapi.emso.asia/system/media_attachments/files/109/986/399/730/752/059/original/7fbbf1619ca6dd92.mp4",
+    "meta": {
+      "original": {
+        "width": 1280,
+        "height": 720,
+        "frame_rate": "27000/2261",
+        "duration": 2.0601,
+        "bitrate": 5288263
+      },
+      "small": {
+        "width": 225,
+        "height": 400,
+        "size": "225x400",
+        "aspect": 0.5625,
+        "average_color": "#877460"
+      }
+    },
+    "preview_url":
+        "https://snapi.emso.asia/system/media_attachments/files/109/986/399/730/752/059/small/7fbbf1619ca6dd92.png",
+    "remote_url": null,
+    "preview_remote_url": null,
+    "show_url": null,
+    "status_id": "",
+    "description": null,
+    "position": null,
+    "created_at": "2023-03-08T14:07:53.233+07:00"
+  },
+  "product_category": {
+    "id": 75,
+    "text": "Giày tây lười",
+    "parent_category_id": 6,
+    "created_at": "2022-12-29T18:20:08.091+07:00",
+    "updated_at": "2022-12-29T18:20:08.091+07:00",
+    "icon": null
+  },
+  "page": {
+    "id": "108277159418893569",
+    "title": "Chữ nghĩa là chi?",
+    "username": null,
+    "avatar_media": {
+      "id": "109060264992850864",
+      "type": "image",
+      "url":
+          "https://snapi.emso.asia/system/media_attachments/files/109/060/264/992/850/864/original/199667faa9161f6f.jpg",
+      "preview_url":
+          "https://snapi.emso.asia/system/media_attachments/files/109/060/264/992/850/864/small/199667faa9161f6f.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "text_url": null,
+      "meta": {
+        "original": {
+          "width": 600,
+          "height": 400,
+          "size": "600x400",
+          "aspect": 1.5,
+          "average_color": "#edebb5"
+        },
+        "small": {
+          "width": 490,
+          "height": 327,
+          "size": "490x327",
+          "aspect": 1.4984709480122325,
+          "average_color": "#edebb5"
+        }
+      },
+      "description": "",
+      "position": null,
+      "blurhash": "UFSF%Wt6~nRkRjoextWB%KayM|oe%LWBIpt6",
+      "status_id": "109060264996692167",
+      "show_url":
+          "https://snapi.emso.asia/system/media_attachments/files/109/060/265/078/221/646/original/2daaf6defdb2accd.jpeg",
+      "created_at": "2022-09-26T00:39:38.640+07:00",
+      "frame": null,
+      "status_media": {
+        "id": 109060264996692167,
+        "favourites_count": 0,
+        "reblogs_count": 0,
+        "replies_total": 0
+      }
+    },
+    "location": null,
+    "page_categories": [
+      {"id": "82", "text": "Trang web giáo dục"}
+    ]
+  },
+  "product_variants": [
+    {
+      "id": "320",
+      "product_id": 97,
+      "title": "ppppp -a - h",
+      "price": 250000.0,
+      "compare_at_price": null,
+      "sku": "fyd",
+      "position": 2,
+      "option1": "a",
+      "option2": "h",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 453,
+      "old_inventory_quantity": 453,
+      "requires_shipping": true,
+      "created_at": "2023-03-08T19:47:30.837+07:00",
+      "updated_at": "2023-03-08T19:47:30.837+07:00",
+      "image": null
+    },
+    {
+      "id": "321",
+      "product_id": 97,
+      "title": "ppppp -a - s",
+      "price": 234402.0,
+      "compare_at_price": null,
+      "sku": "fyd",
+      "position": 2,
+      "option1": "a",
+      "option2": "s",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 453,
+      "old_inventory_quantity": 453,
+      "requires_shipping": true,
+      "created_at": "2023-03-08T19:47:30.833+07:00",
+      "updated_at": "2023-03-08T19:47:30.833+07:00",
+      "image": null
+    },
+    {
+      "id": "322",
+      "product_id": 97,
+      "title": "ppppp -x - h",
+      "price": 290000.0,
+      "compare_at_price": null,
+      "sku": "fyd",
+      "position": 2,
+      "option1": "x",
+      "option2": "h",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 453,
+      "old_inventory_quantity": 453,
+      "requires_shipping": true,
+      "created_at": "2023-03-08T19:47:30.829+07:00",
+      "updated_at": "2023-03-08T19:47:30.829+07:00",
+      "image": null
+    },
+    {
+      "id": "323",
+      "product_id": 97,
+      "title": "ppppp -x - s",
+      "price": 250000.0,
+      "compare_at_price": null,
+      "sku": "fyd",
+      "position": 2,
+      "option1": "x",
+      "option2": "s",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 453,
+      "old_inventory_quantity": 453,
+      "requires_shipping": true,
+      "created_at": "2023-03-08T19:47:30.824+07:00",
+      "updated_at": "2023-03-08T19:47:30.824+07:00",
+      "image": null
+    }
+  ],
+  "product_options": [
+    {
+      "id": "102",
+      "product_id": "97",
+      "name": "Color",
+      "position": "1",
+      "values": ["x", "a"],
+      "created_at": "2023-03-08T14:07:53.724+07:00",
+      "updated_at": "2023-03-08T18:52:02.259+07:00"
+    },
+    {
+      "id": "103",
+      "product_id": "97",
+      "name": "Size",
+      "position": "2",
+      "values": ["s", "h"],
+      "created_at": "2023-03-08T14:07:53.744+07:00",
+      "updated_at": "2023-03-08T18:52:02.284+07:00"
+    }
+  ]
+};
+
 // List cartData = [
 //   {
 //     "key": "finish",

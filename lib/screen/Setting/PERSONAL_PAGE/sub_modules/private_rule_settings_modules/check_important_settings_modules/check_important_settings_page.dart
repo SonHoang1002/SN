@@ -160,7 +160,7 @@ Widget _buildCheckImportantSettingContentItem(String path, String title,
   );
 }
 
-// showBottomSheetCheckImportantSettings(BuildContext context) {
+// showCustomBottomSheet(BuildContext context) {
 //   showMaterialModalBottomSheet(
 //       backgroundColor: transparent,
 //       context: context,

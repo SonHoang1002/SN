@@ -26,13 +26,11 @@ class ProductsController extends StateNotifier<ProductsState> {
     print("product: $response");
   }
 
-  updateProductData(Map<String, dynamic> newData) {
-    // state = state.copyWith(newData);
-    // print("updateProduct provider: ${state.data}");
+  updateProductData(List<dynamic> newData) {
+    state = state.copyWith(newData);
   }
 
   createProduct(Map<String, dynamic> data) async {
     final response = await ProductsApi().postCreateProductApi(data);
-    print(response);
   }
 }

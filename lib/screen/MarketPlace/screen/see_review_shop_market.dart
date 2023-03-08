@@ -31,7 +31,7 @@ class _SeeReviewShopMarketPageComsumerState
   late double height = 0;
   int mediaIndex = 0;
   bool _isMainLoading = true;
-  bool _isDetailLoading = true;
+  bool _isDetailLoading = false;
   List<dynamic>? mediaList;
   List<dynamic>? reviewList = [];
   dynamic _imgChildLink;
@@ -54,6 +54,7 @@ class _SeeReviewShopMarketPageComsumerState
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+    // Future<int> a = _initData();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -72,7 +73,9 @@ class _SeeReviewShopMarketPageComsumerState
             ],
           ),
         ),
-        body: _buildReviewBody());
+        body: !_isMainLoading
+            ? _buildReviewBody()
+            : buildCircularProgressIndicator());
   }
 
   Future<int> _initData() async {
@@ -81,19 +84,20 @@ class _SeeReviewShopMarketPageComsumerState
           await Future.wait(widget.reviewData!.map((element) async {
         List<dynamic> response = await ReviewProductApi()
             .getReviewProductApi(element["product_variant"]["product_id"]);
+        print(
+            "----------------- review productid --------------------------${widget.reviewId}-${element["product_variant"]["product_id"]}");
         return response;
       }).toList());
+      List<dynamic> filterReviewList = [];
       for (var reviewItem in newList) {
         newList[newList.indexOf(reviewItem)] = reviewItem
-            .where((child) =>
-                child["comment"]["account"]["id"] == simpleDatData["id"])
+            .where((child) => child["comment"]["id"] == simpleDatData["id"])
             .toList();
       }
       reviewList = newList;
     }
     // load xong
     _isMainLoading = false;
-    _isDetailLoading = false;
     setState(() {});
     return 0;
   }
@@ -159,8 +163,7 @@ class _SeeReviewShopMarketPageComsumerState
                                   return buildReviewItemWidget(
                                       context, reviewList?[index][childIndex],
                                       updateFunction: () {
-                                    showBottomSheetCheckImportantSettings(
-                                        context, 200, "",
+                                    showCustomBottomSheet(context, 200, "",
                                         widget: SingleChildScrollView(
                                           child: ListBody(
                                             children: [
@@ -200,7 +203,8 @@ class _SeeReviewShopMarketPageComsumerState
                                   });
                                 }),
                               )
-                            : buildTextContent("Không có đánh giá nào", false)
+                            : buildTextContent("Không có đánh giá !!", false,
+                                isCenterLeft: false, fontSize: 18)
                   ],
                 );
               }),

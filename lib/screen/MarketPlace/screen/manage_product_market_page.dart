@@ -59,11 +59,14 @@ class _ManageProductMarketPageState
   int _onMorePart = 0;
   List<dynamic>? _commentData;
 
+  ///
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      final getProduct = ref.read(productsProvider.notifier).getProducts();
+      if(ref.watch(productsProvider).list==null || ref.watch(productsProvider).list.isEmpty){
+        final getProduct = ref.read(productsProvider.notifier).getProducts();
+      }
     });
   }
 
@@ -76,11 +79,8 @@ class _ManageProductMarketPageState
         ? Theme.of(context).cardColor
         : const Color(0xfff1f2f5);
     final mainData = Future.wait([_initMainData()]);
-    final response = SecureStorage().getKeyStorage("userId");
-    print("meControllerProvider: ${response}");
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        // backgroundColor: greyColor[200],
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -109,15 +109,18 @@ class _ManageProductMarketPageState
                 children: [
                   buildTextContent("Chỉ người bán mới thấy được cái này", true,
                       fontSize: 20, colorWord: red, isCenterLeft: false),
-                  SingleChildScrollView(
-                    child: Column(
-                        children: List.generate(
-                      _productList!.length,
-                      (index) {
-                        return _buildManageComponent(
-                            _productList![index], index);
-                      },
-                    ).toList()),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: SingleChildScrollView(
+                      child: Column(
+                          children: List.generate(
+                        _productList!.length,
+                        (index) {
+                          return _buildManageComponent(
+                              _productList![index], index);
+                        },
+                      ).toList()),
+                    ),
                   )
                 ],
               ),
@@ -143,9 +146,9 @@ class _ManageProductMarketPageState
       );
     }
     return Container(
-      // margin: const EdgeInsets.symmetric(vertical: 5),
-      // decoration: BoxDecoration(
-      //     color: colorTheme, borderRadius: BorderRadius.circular(7)),
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+          color: colorTheme, borderRadius: BorderRadius.circular(7)),
       child: Column(
         children: [
           GeneralComponent(
@@ -170,12 +173,10 @@ class _ManageProductMarketPageState
                 ),
               ),
             ),
-            borderRadiusValue: 0,
             suffixFlexValue: 5,
             suffixWidget: InkWell(
               onTap: () {
-                showBottomSheetCheckImportantSettings(
-                    context, 300, "Chọn phương thức",
+                showCustomBottomSheet(context, 300, "Chọn phương thức",
                     widget: SingleChildScrollView(
                       child: ListBody(
                         children: [
@@ -239,8 +240,7 @@ class _ManageProductMarketPageState
                 _isDetailLoading = true;
               });
               _detailData = null;
-              showBottomSheetCheckImportantSettings(
-                  context, height * 0.8, "Chi tiết sản phẩm",
+              showCustomBottomSheet(context, height * 0.8, "Chi tiết sản phẩm",
                   widget: StatefulBuilder(builder: (context, setStateFull) {
                 Future.delayed(Duration.zero, () async {
                   _detailData =
@@ -370,7 +370,7 @@ class _ManageProductMarketPageState
                                   ? Column(
                                       children: [
                                         //color
-                                        _buildColorSizeWidget(
+                                        _buildColorOrSizeWidget(
                                             "Màu sắc",
                                             _detailData?["product_options"][0]
                                                 ["values"]),
@@ -378,7 +378,7 @@ class _ManageProductMarketPageState
                                         _detailData?["product_options"]
                                                     .length ==
                                                 2
-                                            ? _buildColorSizeWidget(
+                                            ? _buildColorOrSizeWidget(
                                                 "Kích cỡ",
                                                 _detailData?["product_options"]
                                                     [1]["values"])
@@ -409,6 +409,7 @@ class _ManageProductMarketPageState
                                             },
                                             child: Container(
                                               height: 50,
+                                              // margin: EdgeInsets.only(right:),
                                               width: width / 4.25,
                                               color: _onMorePart == index
                                                   ? Colors.blue
@@ -482,8 +483,7 @@ class _ManageProductMarketPageState
                       );
               }));
             },
-          ),
-          const CrossBar(height: 10)
+          )
         ],
       ),
     );
@@ -500,7 +500,7 @@ class _ManageProductMarketPageState
     return 0;
   }
 
-  Widget _buildColorSizeWidget(String title, List<dynamic> data) {
+  Widget _buildColorOrSizeWidget(String title, List<dynamic> data) {
     return Padding(
       padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: Row(

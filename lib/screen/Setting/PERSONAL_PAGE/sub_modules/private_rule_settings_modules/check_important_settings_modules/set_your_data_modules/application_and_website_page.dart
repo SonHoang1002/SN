@@ -103,7 +103,7 @@ class ApplicationAndWebsitePage extends StatelessWidget {
                                   // )
                                   GestureDetector(
                                 onTap: (() {
-                                  showBottomSheetCheckImportantSettings(
+                                  showCustomBottomSheet(
                                       context,
                                       370,
                                       ApplicationAndWebsiteConstants

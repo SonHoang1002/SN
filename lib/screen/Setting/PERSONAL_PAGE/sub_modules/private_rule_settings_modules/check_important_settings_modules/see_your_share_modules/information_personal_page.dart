@@ -172,7 +172,7 @@ _buildContentForBottomSheet(
   dynamic data,
 ) {
   final listChoose = data.map((e) => e["key"]).toList();
-  showBottomSheetCheckImportantSettings(context, height, "Chọn đối tượng",
+  showCustomBottomSheet(context, height, "Chọn đối tượng",
       widget: StatefulBuilder(builder: (context, setStateFull) {
     return ListView.builder(
         padding: EdgeInsets.zero,

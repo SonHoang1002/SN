@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,7 +39,6 @@ class CreateProductMarketPage extends ConsumerStatefulWidget {
       _CreateProductMarketPageState();
 }
 
-String selectionImageWarnings = "Hãy chọn ảnh cho mục này !!";
 String selectPageTitle = "Chọn Page";
 
 class _CreateProductMarketPageState
@@ -49,11 +47,9 @@ class _CreateProductMarketPageState
   late double height = 0;
   String _category = "";
   String _branch = "";
-  String _private = "";
-  String _privateKey = "";
+  dynamic _private;
   final List<File> _imgFiles = [];
   final List<File> _videoFiles = [];
-  List<String> _warningForChildImage = [];
 
   final Map<String, bool> _validatorSelectionList = {
     "category": true,
@@ -126,7 +122,6 @@ class _CreateProductMarketPageState
           .updateNewProductData(newData);
       final listPage = ref.read(pagesProvider.notifier).getListPageItem();
     });
-    _warningForChildImage.add("Hãy chọn ảnh cho mục này !!");
   }
 
   @override
@@ -134,12 +129,7 @@ class _CreateProductMarketPageState
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    if (_listPage == null || _listPage!.isEmpty) {
-      _listPage = ref.watch(pagesProvider).listPage;
-    }
-    if (productCategoriesData.isEmpty) {
-      productCategoriesData = demoProductCategories;
-    }
+    Future.wait([_initSelections()]);
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -289,6 +279,21 @@ class _CreateProductMarketPageState
         ));
   }
 
+  Future<int> _initSelections() async {
+    if (_listPage == null || _listPage!.isEmpty) {
+      _listPage = ref.watch(pagesProvider).listPage;
+    }
+    if (productCategoriesData.isEmpty) {
+      productCategoriesData = demoProductCategories;
+    }
+    if (_listPage!.isNotEmpty) {
+      _selectedPage = _listPage![0];
+    }
+    _private = CreateProductMarketConstants
+        .CREATE_PRODUCT_MARKET_PRIVATE_RULE_SELECTIONS[0];
+    return 0;
+  }
+
   Future<void> validateForCreate() async {
     _validatorSelectionList["category"] = true;
     _validatorSelectionList["branch"] = true;
@@ -304,7 +309,7 @@ class _CreateProductMarketPageState
     if (_selectedPage == null || _selectedPage.isEmpty) {
       _validatorSelectionList["page"] = false;
     }
-    if (_private == "") {
+    if (_private == null || _private.isEmpty) {
       _validatorSelectionList["private"] = false;
     }
     if (_imgFiles.isEmpty) {
@@ -316,8 +321,7 @@ class _CreateProductMarketPageState
         _validatorSelectionList["branch"] == true &&
         _validatorSelectionList["category"] == true &&
         _validatorSelectionList["image"] == true &&
-        _validatorSelectionList["page"] == true &&
-        _warningForChildImage.every((element) => element == "")) {
+        _validatorSelectionList["page"] == true) {
       _questionForCreateProduct();
     }
   }
@@ -356,7 +360,7 @@ class _CreateProductMarketPageState
     newData["product"]["product_category_id"] =
         _productChildCategoryId ?? _productParentCategoryId;
     newData["product"]["brand"] = _branch.trim();
-    newData["product"]["visibility"] = _privateKey.trim();
+    newData["product"]["visibility"] = _private["key"];
     newData["product"]["page_id"] = _selectedPage["id"];
     // them vao product_options_attributes
     if (_isDetailProduct) {
@@ -387,6 +391,9 @@ class _CreateProductMarketPageState
     if (_isDetailProduct) {
       List<String> imgList = _categoryData["loai_1"]["images"].toList();
       List<String> imageIdList = await Future.wait(imgList.map((element) async {
+        if (element == "") {
+          return "";
+        }
         String fileName = element.split('/').last;
         FormData formData = FormData.fromMap({
           "file": await MultipartFile.fromFile(element, filename: fileName),
@@ -480,14 +487,7 @@ class _CreateProductMarketPageState
         "requires_shipping": true
       });
     }
-
     final response = await ProductsApi().postCreateProductApi(newData);
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-      "Lưu thành công",
-      style: TextStyle(color: Colors.green),
-    )));
-
     final newListProduct = ref.read(productsProvider.notifier).getProducts();
     pushToNextScreen(context, const ManageProductMarketPage());
     setState(() {
@@ -602,7 +602,6 @@ class _CreateProductMarketPageState
         }
       }
     }
-    _warningForChildImage.removeAt(index);
     setState(() {});
   }
 
@@ -764,7 +763,6 @@ class _CreateProductMarketPageState
     getImage = (await ImagePicker().pickImage(source: src))!;
     _categoryData["loai_1"]["images"][index] =
         getImage.path != "" ? getImage.path : null;
-    _warningForChildImage[index] = "";
     setState(() {});
   }
 
@@ -1010,7 +1008,7 @@ class _CreateProductMarketPageState
                 borderRadius: BorderRadius.all(
                   Radius.circular(5),
                 )),
-            errorBorder: const OutlineInputBorder(
+            errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: red),
                 borderRadius: BorderRadius.all(
                   Radius.circular(5),
@@ -1064,77 +1062,79 @@ class _CreateProductMarketPageState
             padding: const EdgeInsets.all(5),
             isHaveBorder: true,
             function: () {
-              showBottomSheetCheckImportantSettings(
-                  context, 500, titleForBottomSheet,
-                  // bgColor: Colors.grey[300],
+              showCustomBottomSheet(context, 500, titleForBottomSheet,
                   widget: SizedBox(
                     height: 400,
-                    child: FutureBuilder(builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return ListView.builder(
-                            padding: EdgeInsets.zero,
-                            itemCount: title == selectPageTitle
-                                ? _listPage!.length
-                                : title ==
-                                        CreateProductMarketConstants
-                                            .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
-                                    ? productCategoriesData.length
-                                    : _childCategoriesList!.length,
-                            itemBuilder: (context, index) {
-                              final data = title == selectPageTitle
-                                  ? _listPage!
-                                  : title ==
-                                          CreateProductMarketConstants
-                                              .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
-                                      ? productCategoriesData
-                                      : _childCategoriesList!;
-                              return Column(
-                                children: [
-                                  GeneralComponent(
-                                    [
-                                      buildTextContent(
-                                          data[index]["text"] ??
-                                              data[index]["title"],
-                                          false)
+                    child: FutureBuilder(
+                        future: _initSelections(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return ListView.builder(
+                                padding: EdgeInsets.zero,
+                                itemCount: title == selectPageTitle
+                                    ? _listPage!.length
+                                    : title ==
+                                            CreateProductMarketConstants
+                                                .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
+                                        ? productCategoriesData.length
+                                        : _childCategoriesList!.length,
+                                itemBuilder: (context, index) {
+                                  final data = title == selectPageTitle
+                                      ? _listPage!
+                                      : title ==
+                                              CreateProductMarketConstants
+                                                  .CREATE_PRODUCT_MARKET_CATEGORY_TITLE
+                                          ? productCategoriesData
+                                          : _childCategoriesList!;
+                                  return Column(
+                                    children: [
+                                      GeneralComponent(
+                                        [
+                                          buildTextContent(
+                                              data[index]["text"] ??
+                                                  data[index]["title"],
+                                              false)
+                                        ],
+                                        changeBackground: transparent,
+                                        function: () {
+                                          popToPreviousScreen(context);
+                                          if (title ==
+                                              CreateProductMarketConstants
+                                                  .CREATE_PRODUCT_MARKET_CATEGORY_TITLE) {
+                                            _category = data[index]["text"];
+                                            _productParentCategoryId =
+                                                data[index]["id"];
+                                            _validatorSelectionList[
+                                                "category"] = true;
+                                            _childCategoriesList =
+                                                data[index]["subcategories"];
+                                            _branch = "";
+                                          }
+                                          if (title ==
+                                              CreateProductMarketConstants
+                                                  .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE) {
+                                            _productChildCategoryId =
+                                                data[index]["id"];
+                                            _branch = data[index]["text"];
+                                            _validatorSelectionList["branch"] =
+                                                true;
+                                          }
+                                          if (title == selectPageTitle) {
+                                            _selectedPage = data[index];
+                                            _validatorSelectionList["page"] =
+                                                true;
+                                          }
+                                          setState(() {});
+                                        },
+                                      ),
+                                      buildDivider(color: red)
                                     ],
-                                    changeBackground: transparent,
-                                    function: () {
-                                      popToPreviousScreen(context);
-                                      if (title ==
-                                          CreateProductMarketConstants
-                                              .CREATE_PRODUCT_MARKET_CATEGORY_TITLE) {
-                                        _category = data[index]["text"];
-                                        _productParentCategoryId =
-                                            data[index]["id"];
-                                        _validatorSelectionList["category"] =
-                                            true;
-                                        _childCategoriesList =
-                                            data[index]["subcategories"];
-                                        _branch = "";
-                                      }
-                                      if (title ==
-                                          CreateProductMarketConstants
-                                              .CREATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE) {
-                                        _productChildCategoryId =
-                                            data[index]["id"];
-                                        _branch = data[index]["text"];
-                                        _validatorSelectionList["branch"] =
-                                            true;
-                                      }
-                                      if (title == selectPageTitle) {
-                                        _selectedPage = data[index];
-                                        _validatorSelectionList["page"] = true;
-                                      }
-                                      setState(() {});
-                                    },
-                                  ),
-                                  buildDivider(color: red)
-                                ],
-                              );
-                            });
-                      }
-                      return buildCircularProgressIndicator();
-                    }),
+                                  );
+                                });
+                          }
+                          return buildCircularProgressIndicator();
+                        }),
                   ));
             },
           ),
@@ -1192,11 +1192,11 @@ class _CreateProductMarketPageState
               buildTextContent(title, false,
                   colorWord: greyColor, fontSize: 14),
               const SizedBox(height: 5),
-              _private != ""
-                  ? buildTextContent(_private, false, fontSize: 17)
+              _private != null && _private.isNotEmpty
+                  ? buildTextContent(_private["title"], false, fontSize: 17)
                   : const SizedBox(),
             ],
-            prefixWidget: _private != ""
+            prefixWidget: _private != null && _private.isNotEmpty
                 ? Container(
                     height: 40,
                     width: 40,
@@ -1205,9 +1205,9 @@ class _CreateProductMarketPageState
                         borderRadius: BorderRadius.circular(20),
                         color: greyColor[400]),
                     child: Icon(
-                      _private == privateDatas[0]["title"]
+                      _private["key"] == privateDatas[0]["key"]
                           ? FontAwesomeIcons.earthAfrica
-                          : _private == privateDatas[1]["title"]
+                          : _private["key"] == privateDatas[1]["key"]
                               ? FontAwesomeIcons.user
                               : FontAwesomeIcons.lock,
                       size: 18,
@@ -1218,7 +1218,7 @@ class _CreateProductMarketPageState
               alignment: Alignment.centerRight,
               height: 40,
               width: 40,
-              margin: _private != ""
+              margin: _private != null && _private.isNotEmpty
                   ? const EdgeInsets.only(right: 5)
                   : const EdgeInsets.only(right: 15),
               child: const Icon(
@@ -1230,48 +1230,44 @@ class _CreateProductMarketPageState
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
             isHaveBorder: true,
             function: () {
-              showBottomSheetCheckImportantSettings(
-                  context, 500, titleForBottomSheet,
+              showCustomBottomSheet(context, 250, titleForBottomSheet,
                   bgColor: Colors.grey[300],
-                  widget: SizedBox(
-                    height: 400,
-                    child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: privateDatas.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              GeneralComponent(
-                                [
-                                  buildTextContent(
-                                      privateDatas[index]["title"], true),
-                                  buildTextContent(
-                                      privateDatas[index]["subTitle"], false),
-                                ],
-                                prefixWidget: SizedBox(
-                                  height: 30,
-                                  width: 30,
-                                  child: Icon(privateDatas[index]["icon"]),
-                                ),
-                                changeBackground: transparent,
-                                padding: const EdgeInsets.all(5),
-                                function: () {
-                                  popToPreviousScreen(context);
-                                  if (title ==
-                                      CreateProductMarketConstants
-                                          .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE) {
-                                    _private = privateDatas[index]["title"];
-                                    _privateKey = privateDatas[index]["key"];
-                                    _validatorSelectionList["private"] = true;
-                                  }
-                                  setState(() {});
-                                },
+                  widget: ListView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: privateDatas.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            GeneralComponent(
+                              [
+                                buildTextContent(
+                                    privateDatas[index]["title"], true),
+                                buildTextContent(
+                                    privateDatas[index]["subTitle"], false),
+                              ],
+                              prefixWidget: SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: Icon(privateDatas[index]["icon"]),
                               ),
-                              buildDivider(color: red)
-                            ],
-                          );
-                        }),
-                  ));
+                              changeBackground: transparent,
+                              padding: const EdgeInsets.all(5),
+                              function: () {
+                                popToPreviousScreen(context);
+                                if (title ==
+                                    CreateProductMarketConstants
+                                        .CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE) {
+                                  _private = privateDatas;
+                                  _validatorSelectionList["private"] = true;
+                                }
+                                setState(() {});
+                              },
+                            ),
+                            buildDivider(color: red)
+                          ],
+                        );
+                      }));
             },
           ),
           _validatorSelectionList["private"] == false &&
@@ -1360,8 +1356,6 @@ class _CreateProductMarketPageState
                                       "Thêm mô tả cho phân loại 1: ${_categoryData["loai_1"]["values"].length}/10",
                                       false,
                                       fontSize: 13, function: () {
-                                    _warningForChildImage
-                                        .add("selectionImageWarning");
                                     _addClassifyCategoryOne();
                                   }),
                                 )
@@ -1527,7 +1521,7 @@ class _CreateProductMarketPageState
                 borderRadius: BorderRadius.all(
                   Radius.circular(5),
                 )),
-            errorBorder: const OutlineInputBorder(
+            errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: red),
                 borderRadius: BorderRadius.all(
                   Radius.circular(5),
@@ -1614,6 +1608,7 @@ class _CreateProductMarketPageState
           label: Text('Mã(sku) phân loại',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
+
     for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
       dataRows.add(DataRow(cells: [
         DataCell(
@@ -1622,15 +1617,18 @@ class _CreateProductMarketPageState
               buildSpacer(height: 5),
               buildTextContent(
                   _categoryData["loai_1"]["values"][i].text.trim(), true,
-                  isCenterLeft: false, fontSize: 16),
+                  isCenterLeft: false, fontSize: 17),
               buildSpacer(height: 5),
               InkWell(
                 onTap: () {
                   dialogInformartionImgSource(i);
                 },
-                child: SizedBox(
+                child: Container(
                   height: 50,
                   width: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      border: Border.all(color: greyColor, width: 0.4)),
                   child: _categoryData["loai_1"]["images"][i] != "" &&
                           _categoryData["loai_1"]["images"][i] != null
                       ? Image.file(
@@ -1641,15 +1639,6 @@ class _CreateProductMarketPageState
                           "${MarketPlaceConstants.PATH_IMG}cat_1.png"),
                 ),
               ),
-              buildSpacer(height: 5),
-              _warningForChildImage[i] != null && _warningForChildImage[i] != ""
-                  ? buildTextContent(
-                      _warningForChildImage[i],
-                      false,
-                      colorWord: red,
-                      fontSize: 12,
-                    )
-                  : const SizedBox()
             ],
           ),
         ),
@@ -1677,6 +1666,8 @@ class _CreateProductMarketPageState
   DataTable _buildTwoDataTable() {
     List<DataColumn> dataColumns = [];
     List<DataRow> dataRows = [];
+    List<DataCell> dataCells = [];
+
     dataColumns.add(DataColumn(
         label: Text(
             _categoryData["loai_1"]["name"].text.length > 0
@@ -1722,15 +1713,18 @@ class _CreateProductMarketPageState
                           _categoryData["loai_1"]["values"][i].text.trim(),
                           true,
                           isCenterLeft: false,
-                          fontSize: 16),
+                          fontSize: 17),
                       buildSpacer(height: 5),
                       InkWell(
                         onTap: () {
                           dialogInformartionImgSource(i);
                         },
-                        child: SizedBox(
+                        child: Container(
                           height: 50,
                           width: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(color: greyColor, width: 0.4)),
                           child: _categoryData["loai_1"]["images"][i] != "" &&
                                   _categoryData["loai_1"]["images"][i] != null
                               ? Image.file(
@@ -1741,16 +1735,6 @@ class _CreateProductMarketPageState
                                   "${MarketPlaceConstants.PATH_IMG}cat_1.png"),
                         ),
                       ),
-                      buildSpacer(height: 5),
-                      _warningForChildImage[i] != null &&
-                              _warningForChildImage[i] != ""
-                          ? buildTextContent(
-                              _warningForChildImage[i],
-                              false,
-                              colorWord: red,
-                              fontSize: 8,
-                            )
-                          : const SizedBox()
                     ],
                   ),
                 )

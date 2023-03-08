@@ -136,7 +136,7 @@
   
   
   
-  // showBottomSheetCheckImportantSettings(
+  // showCustomBottomSheet(
   //                 context, 500, "Chi tiết sản phẩm",
   //                 bgColor: greyColor[300],
   //                 widget: Container(

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 import '../../theme/colors.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-showBottomSheetCheckImportantSettings(
-    BuildContext context, double height, String title,
+showCustomBottomSheet(BuildContext context, double height, String title,
     {Widget? widget,
     Color? bgColor,
     bool? isBarrierTransparent = false,
     IconData? iconData}) {
-       
+  final bgColor1 =
+  ThemeMode.dark == true
+      ? Theme.of(context).cardColor
+      : const Color(0xfff1f2f5);
   showModalBottomSheet(
       enableDrag: true,
       context: context,
@@ -26,7 +29,8 @@ showBottomSheetCheckImportantSettings(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           height: height,
           decoration: BoxDecoration(
-              color: bgColor ?? greyColor[300],
+              color: bgColor1,
+              // color: bgColor ?? greyColor[300],
               borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(15), topLeft: Radius.circular(15))),
           child: Column(children: [

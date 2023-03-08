@@ -193,7 +193,7 @@ class _OrderProductMarketPageState
         ]));
       }
     }
-    showBottomSheetCheckImportantSettings(
+    showCustomBottomSheet(
         bgColor: colorTheme,
         context,
         height * 0.75,
@@ -469,6 +469,7 @@ class _OrderProductMarketPageState
         ],
       )
     ]);
+    // index == length - 1 ? const SizedBox() : buildDivider(color: red),
   }
 
   Widget _buildButtons(dynamic data) {
