@@ -10,3 +10,6 @@ Function(int num) shortenLargeNumber = (int num) {
   }
   return num;
 };
+Function(int num) convertNumberToVND = (int num) {
+  return num.toString().replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
+};

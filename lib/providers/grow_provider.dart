@@ -5,21 +5,32 @@ import 'package:social_network_app_mobile/apis/grow_api.dart';
 @immutable
 class GrowState {
   final List grows;
-  // final dynamic detailGrow;
+  final List hosts;
+  final List growsSuggest;
+  final dynamic detailGrow;
+  final dynamic growTransactions;
 
   const GrowState({
     this.grows = const [],
-    // this.detailGrow = const {},
+    this.hosts = const [],
+    this.growsSuggest = const [],
+    this.detailGrow = const {},
+    this.growTransactions = const {},
   });
 
   GrowState copyWith({
     List grows = const [],
-    // dynamic detailGrow = const {},
+    List hosts = const [],
+    List growsSuggest = const [],
+    dynamic detailGrow = const {},
+    dynamic growTransactions = const {},
   }) {
     return GrowState(
-      grows: grows,
-      // detailGrow: detailGrow,
-    );
+        grows: grows,
+        hosts: hosts,
+        growsSuggest: growsSuggest,
+        detailGrow: detailGrow,
+        growTransactions: growTransactions);
   }
 }
 
@@ -33,28 +44,74 @@ class GrowController extends StateNotifier<GrowState> {
     List response = await GrowApi().getListGrowApi(params);
     if (response.isNotEmpty) {
       state = state.copyWith(
-        grows: [...response],
-      );
+          grows: [...response],
+          hosts: state.hosts,
+          detailGrow: state.detailGrow,
+          growsSuggest: state.growsSuggest);
     }
   }
 
-  // getDetailGrow(id) async {
-  //   var response = await GrowApi().getDetailGrowApi(id);
-  //   if (response.isNotEmpty) {
-  //     state = state.copyWith(grows: state.grows, detailGrow: response);
-  //   }
-  // }
-  // updateStatusEvent(id, data) async {
-  //   var res = await EventApi().statusEventApi(id, data);
-  //   var indexEventUpdate =
-  //       state.events.indexWhere((element) => element['id'] == id.toString());
-  //   var eventUpdate = state.events[indexEventUpdate];
-  //   eventUpdate['event_relationship']['status'] = res['status'] ?? '';
-  //   state = state.copyWith(
-  //       events: state.events.sublist(0, indexEventUpdate) +
-  //           [eventUpdate] +
-  //           state.events.sublist(indexEventUpdate + 1),
-  //       hosts: state.hosts,
-  //       eventsSuggested: state.eventsSuggested);
-  // }
+  getListGrowSuggest(params) async {
+    List response = await GrowApi().getListGrowApi(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          growsSuggest: [...response],
+          grows: state.grows,
+          hosts: state.hosts,
+          detailGrow: state.detailGrow);
+    }
+  }
+
+  getDetailGrow(id) async {
+    var response = await GrowApi().getDetailGrowApi(id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          grows: state.grows,
+          detailGrow: response,
+          hosts: state.hosts,
+          growsSuggest: state.growsSuggest);
+    }
+  }
+
+  updateStatusGrow(id, data) async {
+    if (data) {
+      var res = await GrowApi().statusGrowApi(id);
+    } else {
+      var res = await GrowApi().deleteStatusGrowApi(id);
+    }
+    var indexEventUpdate =
+        state.grows.indexWhere((element) => element['id'] == id.toString());
+    var eventUpdate = state.grows[indexEventUpdate];
+    eventUpdate['project_relationship']['follow_project'] = data;
+    state = state.copyWith(
+        grows: state.grows.sublist(0, indexEventUpdate) +
+            [eventUpdate] +
+            state.grows.sublist(indexEventUpdate + 1),
+        hosts: state.hosts,
+        detailGrow: state.detailGrow,
+        growsSuggest: state.growsSuggest);
+  }
+
+  getGrowHosts(id) async {
+    List response = await GrowApi().getGrowHostApi(id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          hosts: [...response],
+          grows: state.grows,
+          detailGrow: state.detailGrow,
+          growsSuggest: state.growsSuggest);
+    }
+  }
+
+  getGrowTransactions(params) async {
+    var response = await GrowApi().getGrowTransactionsApi(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          growTransactions: response,
+          hosts: state.hosts,
+          grows: state.grows,
+          detailGrow: state.detailGrow,
+          growsSuggest: state.growsSuggest);
+    }
+  }
 }

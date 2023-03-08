@@ -299,96 +299,88 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                           GestureDetector(
                               onTap: () {
                                 showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => Container(
-                                          margin: const EdgeInsets.only(
-                                              left: 8.0, top: 15.0),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.3 +
-                                              30,
-                                          child: Column(children: [
-                                            ListView.builder(
-                                              scrollDirection: Axis.vertical,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              itemCount:
-                                                  iconActionEllipsis.length,
-                                              itemBuilder: ((context, index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 10.0),
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      showModalBottomSheet(
-                                                          context: context,
-                                                          isScrollControlled:
-                                                              true,
-                                                          barrierColor: Colors
-                                                              .transparent,
-                                                          clipBehavior: Clip
-                                                              .antiAliasWithSaveLayer,
-                                                          shape: const RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius.vertical(
-                                                                      top: Radius
-                                                                          .circular(
-                                                                              10))),
-                                                          builder:
-                                                              (context) =>
-                                                                  SizedBox(
-                                                                    height:
-                                                                        height *
-                                                                            0.9,
-                                                                    width:
-                                                                        width,
-                                                                    child: ActionEllipsis(
-                                                                        menuSelected:
-                                                                            iconActionEllipsis[index]),
-                                                                  ));
-                                                    },
-                                                    child: Row(
-                                                      children: [
-                                                        CircleAvatar(
-                                                          radius: 18.0,
-                                                          backgroundColor:
-                                                              greyColor[350],
-                                                          child: Icon(
-                                                            iconActionEllipsis[
-                                                                index]["icon"],
-                                                            size: 18.0,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 10.0),
-                                                          child: Text(
-                                                              iconActionEllipsis[
-                                                                      index]
-                                                                  ["label"],
-                                                              style: const TextStyle(
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500)),
-                                                        ),
-                                                      ],
+                                  context: context,
+                                  builder: (context) => Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 8.0, top: 15.0),
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height *
+                                            0.3 +
+                                        30,
+                                    child: Column(
+                                      children: [
+                                        ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: iconActionEllipsis.length,
+                                          itemBuilder: ((context, index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 10.0),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  showModalBottomSheet(
+                                                      context: context,
+                                                      isScrollControlled: true,
+                                                      barrierColor:
+                                                          Colors.transparent,
+                                                      clipBehavior: Clip
+                                                          .antiAliasWithSaveLayer,
+                                                      shape: const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.vertical(
+                                                                  top: Radius
+                                                                      .circular(
+                                                                          10))),
+                                                      builder: (context) =>
+                                                          SizedBox(
+                                                            height:
+                                                                height * 0.9,
+                                                            width: width,
+                                                            child: ActionEllipsis(
+                                                                menuSelected:
+                                                                    iconActionEllipsis[
+                                                                        index]),
+                                                          ));
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      radius: 18.0,
+                                                      backgroundColor:
+                                                          greyColor[350],
+                                                      child: Icon(
+                                                        iconActionEllipsis[
+                                                            index]["icon"],
+                                                        size: 18.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                );
-                                              }),
-                                            )
-                                          ]),
-                                        ));
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 10.0),
+                                                      child: Text(
+                                                          iconActionEllipsis[
+                                                              index]["label"],
+                                                          style: const TextStyle(
+                                                              fontSize: 14.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500)),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
                               },
                               child: Container(
                                 height: 30,

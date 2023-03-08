@@ -21,7 +21,6 @@ class MenuSelected extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget buttonAppbar = const SizedBox();
     Widget body = const SizedBox();
-    print(menuSelected['key']);
     switch (menuSelected['key']) {
       case 'pageSocial':
         body = const PageGeneral();

@@ -74,7 +74,7 @@ class _ShareModalBottomState extends State<ShareModalBottom> {
                             onTap: () {},
                             child: Container(
                               height: 18,
-                              width: MediaQuery.of(context).size.width * 0.2,
+                              width: MediaQuery.of(context).size.width * 0.25,
                               margin: const EdgeInsets.fromLTRB(10, 0, 6, 10),
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -93,7 +93,7 @@ class _ShareModalBottomState extends State<ShareModalBottom> {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 3.0,
+                                    width: 1.0,
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(bottom: 8.0),
@@ -107,7 +107,7 @@ class _ShareModalBottomState extends State<ShareModalBottom> {
                           onTap: () {},
                           child: Container(
                             height: 18,
-                            width: MediaQuery.of(context).size.width * 0.2,
+                            width: MediaQuery.of(context).size.width * 0.25,
                             margin: const EdgeInsets.fromLTRB(2, 0, 6, 10),
                             decoration: BoxDecoration(
                                 color: Colors.white,
@@ -170,9 +170,9 @@ class _ShareModalBottomState extends State<ShareModalBottom> {
               onTap: () {},
               child: Container(
                 height: 30,
-                width: MediaQuery.of(context).size.width * 0.2,
+                width: 90,
                 decoration: BoxDecoration(
-                    color: primaryColor,
+                    color: secondaryColor,
                     borderRadius: BorderRadius.circular(4),
                     border: Border.all(width: 0.2, color: greyColor)),
                 child: Row(

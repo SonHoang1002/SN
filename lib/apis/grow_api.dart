@@ -13,4 +13,22 @@ class GrowApi {
   Future getDetailGrowApi(id) async {
     return await Api().getRequestBase('/api/v1/projects/$id', {});
   }
+
+  Future statusGrowApi(id) async {
+    return await Api()
+        .postRequestBase('/api/v1/projects/$id/project_followers', {});
+  }
+
+  Future deleteStatusGrowApi(id) async {
+    return await Api()
+        .deleteRequestBase('/api/v1/projects/$id/project_followers', {});
+  }
+
+  Future getGrowHostApi(id) async {
+    return await Api().getRequestBase('/api/v1/projects/$id/hosts', {});
+  }
+
+  Future getGrowTransactionsApi(params) async {
+    return await Api().getRequestBase('/api/v1/transactions', {});
+  }
 }
