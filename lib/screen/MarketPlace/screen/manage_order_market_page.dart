@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/a_test/test.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/order_product_apis.dart';
-import 'package:social_network_app_mobile/data/market_place_datas/demo_order_list.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
@@ -17,7 +17,6 @@ import 'notification_market_page.dart';
 
 class ManageOrderMarketPage extends ConsumerStatefulWidget {
   const ManageOrderMarketPage({super.key});
-
   @override
   ConsumerState<ManageOrderMarketPage> createState() =>
       _ManageOrderMarketPageState();
@@ -29,7 +28,7 @@ List<Map<String, dynamic>> actionList = [
   {"key": "delivered", "title": "Đã nhận hàng"},
   {"key": "finish", "title": "Hoàn thành"},
 ];
-List<Map<String, dynamic>> changeActionList = [
+List<Map<String, dynamic>> nextActionList = [
   {"key": "pending", "title": "Đang giao"},
   {"key": "shipping", "title": "Đã giao"},
 ];
@@ -38,10 +37,11 @@ class _ManageOrderMarketPageState extends ConsumerState<ManageOrderMarketPage> {
   late double width = 0;
   late double height = 0;
   List<dynamic>? _orderData;
-
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
+    Future.wait([_initManageOrder()]);
   }
 
   @override
@@ -49,7 +49,7 @@ class _ManageOrderMarketPageState extends ConsumerState<ManageOrderMarketPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-
+    Future.wait([_initManageOrder()]);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -77,19 +77,30 @@ class _ManageOrderMarketPageState extends ConsumerState<ManageOrderMarketPage> {
           children: [
             Expanded(
               child: ListView(
-                children: [_buildManageOrderComponent()],
+                children: [
+                  !_isLoading
+                      ? _orderData!.isEmpty
+                          ? Center(
+                              child: buildTextContent(
+                                  "Bạn chưa có đơn hàng nào !!", true,
+                                  fontSize: 19, isCenterLeft: false),
+                            )
+                          : _buildManageOrderComponent()
+                      : buildCircularProgressIndicator()
+                ],
               ),
             ),
-            //
           ],
         ));
   }
 
   Future _initManageOrder() async {
     if (_orderData == null || _orderData!.isEmpty) {
-      // _orderData = testOrderData["data"];
       _orderData = await OrderApis().getOrderApi();
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Widget _buildManageOrderComponent() {
@@ -261,9 +272,9 @@ class _ManageOrderMarketPageState extends ConsumerState<ManageOrderMarketPage> {
   String _changeActionValue(dynamic key, int index) {
     switch (key) {
       case "pending":
-        return changeActionList[0]["title"];
+        return nextActionList[0]["title"];
       case "shipping":
-        return changeActionList[1]["title"];
+        return nextActionList[1]["title"];
       default:
         return "none";
     }

@@ -18,15 +18,11 @@ class MainLoginPage extends ConsumerStatefulWidget {
   ConsumerState<MainLoginPage> createState() => _MainLoginPageState();
 }
 
-import '../../../constant/login_constants.dart';
-import '../../../helper/push_to_new_screen.dart';
-import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/spacer_widget.dart';
-import '../../../widget/GeneralWidget/text_content_widget.dart';
-import '../../../widget/back_icon_appbar.dart';
-import '../widgets/build_elevateButton_widget.dart';
-import 'begin_join_emso_login_page.dart';
-import 'search_account_login_page.dart';
+class _MainLoginPageState extends ConsumerState<MainLoginPage> {
+  String username = '';
+  String password = '';
+  bool showPassword = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,108 +46,256 @@ import 'search_account_login_page.dart';
           body: getBody(context, size),
         ),
       ),
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: GestureDetector(
-        onTap: (() {
-          FocusManager.instance.primaryFocus!.unfocus();
-        }),
-        child: Column(children: [
-          // main content
-          Expanded(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // img
-                  Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 270,
-                          width: width,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                          ),
-                          child: Image.asset(
-                            LoginConstants.PATH_IMG + "example_cover_img_1.jpg",
-                            fit: BoxFit.fitHeight,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                          child: Column(
-                            children: [
-                              _buildTextFormField(MainLoginConstants
-                                  .MAIN_LOGIN_EMAIL_OR_PHONE_PLACEHOLDER),
-                              buildSpacer(height: 5),
-                              _buildTextFormField(MainLoginConstants
-                                  .MAIN_LOGIN_PASSWORD_PLACEHOLDER),
-                              buildElevateButtonWidget(
-                                  title: MainLoginConstants
-                                      .MAIN_LOGIN_LOGIN_TEXT_BUTTON,
-                                  width: width,
-                                  marginBottom: 20),
-                              buildTextContent(
-                                  MainLoginConstants.MAIN_LOGIN_FORGET_PASSWORD,
-                                  true,
-                                  fontSize: 16,
-                                  colorWord: Colors.red,
-                                  isCenterLeft: false, function: () {
-                                pushToNextScreen(
-                                    context, SearchAccountLoginPage());
-                              }),
-                              buildSpacer(height: 15),
-                              buildTextContent(
-                                  MainLoginConstants.MAIN_LOGIN_BACK_TEXT, true,
-                                  fontSize: 16,
-                                  colorWord: greyColor,
-                                  isCenterLeft: false, function: () {
-                                popToPreviousScreen(context);
-                              })
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                    child: Column(
-                      children: [
-                        // buildTextContent(
-                        //     MainLoginConstants.MAIN_LOGIN_OR_TEXT, true,
-                        //     fontSize: 16,
-                        //     colorWord: Colors.black,
-                        //     isCenterLeft: false),
-                        buildSpacer(height: 20),
-                        buildElevateButtonWidget(
-                          title: "Tiếp tục với Google",
-                          width: width,
-                          bgColor: blueColor,
-                          function: () {
-                            pushToNextScreen(context, BeginJoinEmsoLoginPage());
-                          },
-                        ),
-                        buildElevateButtonWidget(
-                          title:
-                              MainLoginConstants.MAIN_LOGIN_CREATE_NEW_ACCOUNT,
-                          // colorText: Colors.orange,
-                          width: width,
-                          bgColor: secondaryColor,
-                          function: () {
-                            pushToNextScreen(context, BeginJoinEmsoLoginPage());
-                          },
-                        ),
-                        buildSpacer(height: 10),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+    );
+  }
+
+  void completeLogin() {
+    Navigator.pushReplacement<void, void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => const Home(),
+      ),
+    );
+  }
+
+  handleLogin() async {
+    setState(() {
+      isLoading = true;
+    });
+    var data = {
+      "client_id": "Ev2mh1kSfbrea3IodHtNd7aA4QlkMbDIOPr4Y5eEjNg",
+      "client_secret": "f2PrtRsNb7scscIn_3R_cz6k_fzPUv1uj7ZollSWBBY",
+      "grant_type": "password",
+      "scope": "write read follow",
+      "username": username,
+      "password": password,
+    };
+
+    var response = await AuthenApi().fetchDataToken(data);
+    if (response != null && response['access_token'] != null) {
+      await SecureStorage().saveKeyStorage(response['access_token'], 'token');
+      completeLogin();
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+                "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại")));
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  getBody(context, size) {
+    return SizedBox(
+      height: size.height,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+            Text(
+              "Emso",
+              style: TextStyle(
+                  fontSize: 26,
+                  color: primaryColor,
+                  fontWeight: FontWeight.w700),
+            ),
+            Text(
+              "Social",
+              style: TextStyle(
+                  fontSize: 26,
+                  color: secondaryColor,
+                  fontWeight: FontWeight.w700),
+            )
+          ]),
+          const SizedBox(
+            height: 15,
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Text(
+              "Sử dụng email/số điện thoại hoặc tài khoản Google",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+              textAlign: TextAlign.center,
             ),
           ),
-        ]),
+          const SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Column(
+              children: [
+                Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(18),
+                          topRight: Radius.circular(18))),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 5, top: 5),
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          username = value;
+                        });
+                      },
+                      cursorColor:
+                          Theme.of(context).textTheme.displayLarge?.color,
+                      decoration: const InputDecoration(
+                          hintText: "Email hoặc số điện thoại",
+                          hintStyle: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 17),
+                          border: InputBorder.none),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 3,
+                ),
+                Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(18),
+                          bottomRight: Radius.circular(18))),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 5, bottom: 5),
+                    child: Stack(
+                        alignment: const Alignment(1.0, 1.0),
+                        children: <Widget>[
+                          TextField(
+                            onChanged: (value) {
+                              setState(() {
+                                password = value;
+                              });
+                            },
+                            obscureText: !showPassword,
+                            cursorColor:
+                                Theme.of(context).textTheme.displayLarge?.color,
+                            decoration: const InputDecoration(
+                                hintText: "Mật khẩu",
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 17),
+                                border: InputBorder.none),
+                          ),
+                          IconButton(
+                            hoverColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            onPressed: () {
+                              setState(() {
+                                showPassword = !showPassword;
+                              });
+                            },
+                            icon: Icon(
+                                showPassword
+                                    ? FontAwesomeIcons.eyeSlash
+                                    : FontAwesomeIcons.eye,
+                                size: 18),
+                          )
+                        ]),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Column(
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      minimumSize: const Size.fromHeight(47),
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20))),
+                  onPressed:
+                      username.trim().isNotEmpty && password.trim().isNotEmpty
+                          ? isLoading
+                              ? null
+                              : handleLogin
+                          : null,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        FontAwesomeIcons.arrowRightToBracket,
+                        size: 18,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      isLoading
+                          ? const CupertinoActivityIndicator()
+                          : const Text(
+                              'Đăng nhập',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      minimumSize: const Size.fromHeight(47),
+                      backgroundColor: const Color(0xfff1f2f5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20))),
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        FontAwesomeIcons.google,
+                        size: 18,
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Đăng nhập bằng Google',
+                        style: TextStyle(color: Colors.black, fontSize: 17),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    pushToNextScreen(context, const ConfirmLoginPage());
+                  },
+                  child: const Text(
+                    "Bạn quên mật khẩu ư?",
+                    style: TextStyle(color: primaryColor, fontSize: 17),
+                  )),
+            ],
+          )
+        ],
       ),
     );
   }

@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/search_product_api.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/search_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/category_search_page.dart';
@@ -40,7 +39,6 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    print("search filteredProductList :$filteredProductList");
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -115,7 +113,6 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
             decoration: InputDecoration(
                 hintText: "Tìm kiếm trên Marketplace",
                 hintStyle: const TextStyle(fontSize: 13),
-                // contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
                 prefixIcon: InkWell(
                   onTap: () {},

@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/providers/market_place_providers/creat
 import 'package:social_network_app_mobile/providers/market_place_providers/list_page_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_message_dialog_widget.dart';
@@ -30,6 +31,7 @@ import '../../../../widget/GeneralWidget/information_component_widget.dart';
 
 import 'manage_product_market_page.dart';
 
+/// chưa làm phần chỉnh sửa ảnh
 class CreateProductMarketPage extends ConsumerStatefulWidget {
   const CreateProductMarketPage({super.key});
 
@@ -136,7 +138,7 @@ class _CreateProductMarketPageState
       _listPage = ref.watch(pagesProvider).listPage;
     }
     if (productCategoriesData.isEmpty) {
-      productCategoriesData = productCategories;
+      productCategoriesData = demoProductCategories;
     }
     return Scaffold(
         resizeToAvoidBottomInset: true,
@@ -281,18 +283,7 @@ class _CreateProductMarketPageState
                   ],
                 ),
               ),
-              _isLoading
-                  ? const Center(
-                      child: SizedBox(
-                        width: 70,
-                        height: 70,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                          strokeWidth: 3,
-                        ),
-                      ),
-                    )
-                  : const SizedBox(),
+              _isLoading ? buildCircularProgressIndicator() : const SizedBox(),
             ],
           ),
         ));
@@ -1142,9 +1133,7 @@ class _CreateProductMarketPageState
                               );
                             });
                       }
-                      return const Center(
-                        child: CircularProgressIndicator(color: red),
-                      );
+                      return buildCircularProgressIndicator();
                     }),
                   ));
             },
@@ -1625,28 +1614,23 @@ class _CreateProductMarketPageState
           label: Text('Mã(sku) phân loại',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
     );
-
     for (int i = 0; i < _categoryData["loai_1"]["values"].length; i++) {
       dataRows.add(DataRow(cells: [
         DataCell(
           Column(
             children: [
               buildSpacer(height: 5),
-
               buildTextContent(
                   _categoryData["loai_1"]["values"][i].text.trim(), true,
-                  isCenterLeft: false, fontSize: 17),
+                  isCenterLeft: false, fontSize: 16),
               buildSpacer(height: 5),
               InkWell(
                 onTap: () {
                   dialogInformartionImgSource(i);
                 },
-                child: Container(
+                child: SizedBox(
                   height: 50,
                   width: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      border: Border.all(color: greyColor, width: 0.4)),
                   child: _categoryData["loai_1"]["images"][i] != "" &&
                           _categoryData["loai_1"]["images"][i] != null
                       ? Image.file(
@@ -1657,7 +1641,7 @@ class _CreateProductMarketPageState
                           "${MarketPlaceConstants.PATH_IMG}cat_1.png"),
                 ),
               ),
-              //
+              buildSpacer(height: 5),
               _warningForChildImage[i] != null && _warningForChildImage[i] != ""
                   ? buildTextContent(
                       _warningForChildImage[i],
@@ -1693,8 +1677,6 @@ class _CreateProductMarketPageState
   DataTable _buildTwoDataTable() {
     List<DataColumn> dataColumns = [];
     List<DataRow> dataRows = [];
-    List<DataCell> dataCells = [];
-
     dataColumns.add(DataColumn(
         label: Text(
             _categoryData["loai_1"]["name"].text.length > 0
@@ -1740,18 +1722,15 @@ class _CreateProductMarketPageState
                           _categoryData["loai_1"]["values"][i].text.trim(),
                           true,
                           isCenterLeft: false,
-                          fontSize: 17),
+                          fontSize: 16),
                       buildSpacer(height: 5),
                       InkWell(
                         onTap: () {
                           dialogInformartionImgSource(i);
                         },
-                        child: Container(
+                        child: SizedBox(
                           height: 50,
                           width: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              border: Border.all(color: greyColor, width: 0.4)),
                           child: _categoryData["loai_1"]["images"][i] != "" &&
                                   _categoryData["loai_1"]["images"][i] != null
                               ? Image.file(
@@ -1762,6 +1741,7 @@ class _CreateProductMarketPageState
                                   "${MarketPlaceConstants.PATH_IMG}cat_1.png"),
                         ),
                       ),
+                      buildSpacer(height: 5),
                       _warningForChildImage[i] != null &&
                               _warningForChildImage[i] != ""
                           ? buildTextContent(

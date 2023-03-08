@@ -1,16 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/a_test/sale_save_page.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/review_product_apis.dart';
 import 'package:social_network_app_mobile/data/market_place_datas/dat_data.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/review_item_widget.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
@@ -35,7 +31,7 @@ class _SeeReviewShopMarketPageComsumerState
   late double height = 0;
   int mediaIndex = 0;
   bool _isMainLoading = true;
-  bool _isDetailLoading = false;
+  bool _isDetailLoading = true;
   List<dynamic>? mediaList;
   List<dynamic>? reviewList = [];
   dynamic _imgChildLink;
@@ -58,7 +54,6 @@ class _SeeReviewShopMarketPageComsumerState
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    // Future<int> a = _initData();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -77,18 +72,7 @@ class _SeeReviewShopMarketPageComsumerState
             ],
           ),
         ),
-        body: !_isMainLoading
-            ? _buildReviewBody()
-            : const Center(
-                child: SizedBox(
-                  width: 70,
-                  height: 70,
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                    strokeWidth: 3,
-                  ),
-                ),
-              ));
+        body: _buildReviewBody());
   }
 
   Future<int> _initData() async {
@@ -97,24 +81,19 @@ class _SeeReviewShopMarketPageComsumerState
           await Future.wait(widget.reviewData!.map((element) async {
         List<dynamic> response = await ReviewProductApi()
             .getReviewProductApi(element["product_variant"]["product_id"]);
-        print(
-            "----------------- review productid --------------------------${widget.reviewId}-${element["product_variant"]["product_id"]}");
         return response;
       }).toList());
-      List<dynamic> filterReviewList = [];
       for (var reviewItem in newList) {
         newList[newList.indexOf(reviewItem)] = reviewItem
             .where((child) =>
                 child["comment"]["account"]["id"] == simpleDatData["id"])
             .toList();
       }
-
       reviewList = newList;
-      print(
-          "----------------- review reviewList ---------------------------${reviewList}");
     }
     // load xong
     _isMainLoading = false;
+    _isDetailLoading = false;
     setState(() {});
     return 0;
   }
@@ -172,15 +151,13 @@ class _SeeReviewShopMarketPageComsumerState
                     ),
                     buildSpacer(height: 20),
                     reviewList!.isEmpty
-                        ? const CircularProgressIndicator(
-                            color: red,
-                          )
+                        ? buildCircularProgressIndicator()
                         : reviewList?[index].isNotEmpty
                             ? Column(
                                 children: List.generate(
                                     reviewList?[index].length, (childIndex) {
-                                  return buildReviewItemWidget(context,
-                                      reviewList?[index][childIndex],
+                                  return buildReviewItemWidget(
+                                      context, reviewList?[index][childIndex],
                                       updateFunction: () {
                                     showBottomSheetCheckImportantSettings(
                                         context, 200, "",
@@ -190,31 +167,25 @@ class _SeeReviewShopMarketPageComsumerState
                                               ListTile(
                                                 leading: const Icon(
                                                     FontAwesomeIcons.pen),
-                                                title:
-                                                    const Text("Cập nhật"),
+                                                title: const Text("Cập nhật"),
                                                 onTap: () {
-                                                  popToPreviousScreen(
-                                                      context);
+                                                  popToPreviousScreen(context);
                                                 },
                                               ),
                                               ListTile(
                                                 leading: const Icon(
-                                                    FontAwesomeIcons
-                                                        .trashCan),
+                                                    FontAwesomeIcons.trashCan),
                                                 title: const Text("Xóa"),
                                                 onTap: () async {
                                                   setState(() {
                                                     reviewList?[index]
-                                                        .removeAt(
-                                                            childIndex);
+                                                        .removeAt(childIndex);
                                                   });
-                                                  popToPreviousScreen(
-                                                      context);
+                                                  popToPreviousScreen(context);
                                                   final response =
                                                       await ReviewProductApi()
                                                           .deleteReviewProductApi(
-                                                              widget
-                                                                  .reviewId,
+                                                              widget.reviewId,
                                                               reviewList?[index]
                                                                       [
                                                                       childIndex]
@@ -229,7 +200,7 @@ class _SeeReviewShopMarketPageComsumerState
                                   });
                                 }),
                               )
-                            : buildTextContent("Khong co du lieu", false)
+                            : buildTextContent("Không có đánh giá nào", false)
                   ],
                 );
               }),

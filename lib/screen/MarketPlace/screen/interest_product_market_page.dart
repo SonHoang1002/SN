@@ -13,7 +13,6 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dar
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
@@ -21,7 +20,6 @@ import '../../../helper/push_to_new_screen.dart';
 
 class InterestProductMarketPage extends ConsumerStatefulWidget {
   const InterestProductMarketPage({super.key});
-
   @override
   ConsumerState<InterestProductMarketPage> createState() =>
       _InterestProductMarketPageState();
@@ -40,8 +38,6 @@ class _InterestProductMarketPageState
     Future.delayed(Duration.zero, () {
       final interestProductList =
           ref.read(productsProvider.notifier).getProducts();
-      // final interestList =
-      //     ref.read(interestProductsProvider.notifier).addInterestProducts({});
     });
   }
 
@@ -96,9 +92,8 @@ class _InterestProductMarketPageState
   void _initData() {
     if (_interestProductList == null || _interestProductList!.isEmpty) {
       _interestProductList = ref.watch(interestProductsProvider).listInterest;
+      setState(() {});
     }
-
-    setState(() {});
   }
 
   void _initConcernList() {
@@ -291,7 +286,6 @@ class _InterestProductMarketPageState
                                                                   ? const SizedBox(
                                                                       height:
                                                                           25,
-                                                                      // width: 25,
                                                                       child: Icon(
                                                                           FontAwesomeIcons
                                                                               .chevronRight),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
-import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/order_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/request_product_market_page.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
@@ -31,8 +30,6 @@ class PersonalMarketPlacePage extends StatefulWidget {
 class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
   late double width = 0;
   late double height = 0;
-  // bool _isOpenYourAccount = false;
-  // bool _isOpenYourShop = false;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -81,18 +78,12 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
                     ],
                     changeBackground: transparent,
                     padding: const EdgeInsets.all(5),
-                    function: () {
-                      // setState(() {
-                      //   _isOpenYourAccount = !_isOpenYourAccount;
-                      // });
-                    },
+                    function: () {},
                   ),
 
-                  // _isOpenYourAccount
-                  //     ?
                   _buildRenderList(PersonalMarketPlaceConstants
                       .PERSONAL_MARKET_PLACE_YOUR_SHOP["data"]),
-                  // : const SizedBox(),
+
                   GeneralComponent(
                     [
                       buildTextContent("Tài khoản", true),
@@ -121,14 +112,14 @@ class _PersonalMarketPlacePageState extends State<PersonalMarketPlacePage> {
       case "Tạo sản phẩm mới":
         pushToNextScreen(context, const CreateProductMarketPage());
         break;
-      case "Đơn hàng của tôi":
-        pushToNextScreen(context, const OrderProductMarketPage());
-        break;
       case "Lời mời":
         pushToNextScreen(context, const RequestProductMarketPage());
         break;
       case "Quan tâm":
         pushToNextScreen(context, const InterestProductMarketPage());
+        break;
+      case "Đơn hàng của tôi":
+        pushToNextScreen(context, const OrderProductMarketPage());
         break;
       default:
         pushToNextScreen(context, const CartMarketPage());

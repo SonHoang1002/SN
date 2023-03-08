@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/apis/market_place_apis/review_product_
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_message_dialog_widget.dart';
@@ -100,11 +101,7 @@ class _ReviewProductMarketPageState
           ),
         ),
         body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                  color: red,
-                ),
-              )
+            ? buildCircularProgressIndicator()
             : Stack(
                 alignment: Alignment.center,
                 children: [

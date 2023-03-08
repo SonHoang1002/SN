@@ -82,13 +82,10 @@ class _FriendTagState extends ConsumerState<FriendTag> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-<<<<<<<<< Temporary merge branch 1
            SearchInput(),
-=========
           SearchInput(
             handleSearch: handleSearch,
           ),
->>>>>>>>> Temporary merge branch 2
           const SizedBox(
             height: 8.0,
           ),

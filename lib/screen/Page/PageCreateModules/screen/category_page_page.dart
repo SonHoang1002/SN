@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/providers/page/search_category_provider.dart';
 import '../../../../constant/page_constants.dart';
-import '../../../../providers/current_number_page.dart';
-import '../../../../providers/page/category_bloc.dart';
-import '../../../../providers/search_category_bloc.dart';
+import '../../../../providers/page/category_provider.dart';
 
 import 'information_page_page.dart';
 import '../../../../theme/colors.dart';

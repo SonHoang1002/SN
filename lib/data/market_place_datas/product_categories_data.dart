@@ -1,8 +1,8 @@
  const path = "assets/images/";
-List productCategories = [
+List demoProductCategories = [
   {
     "id": "1",
-    "text": "Thời Trang và phụ kiện",
+    "text": "Thời Trang Và Phụ Kiện",
     "icon": "${path}Thời trang nữ.png",
     "subcategories": [
       {"id": "43", "text": "Vớ/Tất", "icon": "", "subcategories": []},

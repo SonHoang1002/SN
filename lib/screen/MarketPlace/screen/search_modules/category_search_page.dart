@@ -7,28 +7,19 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/data/market_place_datas/product_categories_data.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/filter_categories_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/banner_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/product_item_widget.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/widgets/title_and_see_all.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import '../../../../widget/back_icon_appbar.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class CategorySearchPage extends ConsumerStatefulWidget {
-  // final List<dynamic> categoryList;
   final dynamic title;
-  dynamic id;
-  CategorySearchPage(
-      {super.key,
-      //  required this.categoryList,
-      required this.title,
-      this.id});
+  final dynamic id;
+  const CategorySearchPage({super.key, required this.title, this.id});
 
   @override
   ConsumerState<CategorySearchPage> createState() => _CategorySearchPageState();
@@ -83,13 +74,14 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
           ],
         ),
       ),
-      body: Column(children: [
-        buildBanner(),
-        const CrossBar(height: 5),
-        _buildCategoriesComponent(),
-        const CrossBar(height: 5),
-        Expanded(
-          child: Container(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(children: [
+          buildBanner(),
+          // const CrossBar(height: 5),
+          _buildCategoriesComponent(),
+          const CrossBar(height: 5),
+          Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: _filteredProductList == null
                 ? ListView.builder(
@@ -107,35 +99,27 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
                         child: buildTextContent("Không có dữ liệu", true,
                             fontSize: 20, isCenterLeft: false),
                       )
-                    : SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            SingleChildScrollView(
-                              child: GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisSpacing: 4,
-                                          mainAxisSpacing: 4,
-                                          crossAxisCount: 2,
-                                          // childAspectRatio: 0.79),
-                                          childAspectRatio: 0.8),
-                                  itemCount: _filteredProductList!.length,
-                                  // shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return buildProductItem(
-                                        context: context,
-                                        width: width,
-                                        data: _filteredProductList![index]);
-                                  }),
-                            ),
-                          ],
-                        ),
-                      ),
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisSpacing: 4,
+                                mainAxisSpacing: 4,
+                                crossAxisCount: 2,
+                                // childAspectRatio: 0.79),
+                                childAspectRatio: 0.8),
+                        itemCount: _filteredProductList!.length,
+                        // shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return buildProductItem(
+                              context: context,
+                              width: width,
+                              data: _filteredProductList![index]);
+                        }),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 
@@ -158,7 +142,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
                   )
                 : Container(
                     margin: const EdgeInsets.only(bottom: 10),
-                    height: _childCategoryList!.length > 6 ? 250 : 150,
+                    height: _childCategoryList!.length > 6 ? 230 : 140,
                     padding: const EdgeInsets.only(top: 10),
                     child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
@@ -172,9 +156,10 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisSpacing: 0,
                                     mainAxisSpacing: 0,
-                                    crossAxisCount:
-                                        _childCategoryList!.length > 6 ? 2 : 1,
-                                    // childAspectRatio: 0.79),
+                                    crossAxisCount: _childCategoryList!.length >
+                                            6
+                                        ? 2
+                                        : 1,
                                     childAspectRatio:
                                         _childCategoryList!.length > 6
                                             ? 1.1
@@ -204,8 +189,6 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
     );
   }
 
- 
-
   Future _initData() async {
     if (_filteredProductList == null) {
       final response = await SearchProductsApi().searchProduct({
@@ -216,10 +199,9 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
       setState(() {});
     }
     if (_childCategoryList == null || _childCategoryList!.isEmpty) {
-      for (var element in productCategories) {
+      for (var element in demoProductCategories) {
         if (element["id"] == widget.id) {
           _childCategoryList = element["subcategories"];
-          print("_childCategoryList $_childCategoryList");
           setState(() {});
           return;
         }

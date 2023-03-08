@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/providers/market_place_providers/cart_
 import 'package:social_network_app_mobile/providers/market_place_providers/discover_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/personal_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
@@ -16,10 +17,10 @@ import 'package:social_network_app_mobile/screen/MarketPlace/screen/see_more_mar
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/banner_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/title_and_see_all.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
@@ -43,8 +44,8 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   late double width = 0;
 
   late double height = 0;
-  List<dynamic> product_categories = [];
-  List<dynamic>? all_data;
+  List<dynamic> productCategories = [];
+  List<dynamic>? allData;
   List<dynamic>? _suggestProductList;
   List<dynamic>? _discoverProduct;
   String? _filterTitle;
@@ -79,8 +80,8 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     width = size.width;
     height = size.height;
 
-    if (all_data == null || all_data!.isEmpty) {
-      all_data = productCategories;
+    if (allData == null || allData!.isEmpty) {
+      allData = demoProductCategories;
     }
     getCategoriesName();
     return Scaffold(
@@ -91,10 +92,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  buildBanner(width: width,height: 300),
-                  // buildTextContent("thêm icon vào hạng mục", true,
-                  //     fontSize: 16),
-                  // buildTextContent("custom cardSkeleton", true, fontSize: 16),
+                  buildBanner(width: width, height: 300),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: _buildCategoriesComponent(),
@@ -136,7 +134,6 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       children: [
         SizedBox(
           height: 50,
-          // color: blackColor.withOpacity(0.4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -262,23 +259,23 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                             crossAxisCount: 2,
                             // childAspectRatio: 0.79),
                             childAspectRatio: 1.0),
-                    itemCount: product_categories.length,
+                    itemCount: productCategories.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: buildCategoryProductItemWidget(
                             context,
-                            product_categories[index]["title"],
-                            product_categories[index]["icon"] != ""
-                                ? product_categories[index]["icon"]
+                            productCategories[index]["title"],
+                            productCategories[index]["icon"] != ""
+                                ? productCategories[index]["icon"]
                                 : "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png",
                             height: 120,
                             width: 100, function: () {
                           pushToNextScreen(
                               context,
                               CategorySearchPage(
-                                title: product_categories[index]["title"],
-                                id: product_categories[index]["id"],
+                                title: productCategories[index]["title"],
+                                id: productCategories[index]["id"],
                               ));
                         }),
                       );
@@ -314,7 +311,6 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                                 mainAxisSpacing: 4,
                                 crossAxisCount: 2,
                                 childAspectRatio: 0.78),
-                        // childAspectRatio: 0.78),
                         itemCount: _suggestProductList?.length,
                         itemBuilder: (context, index) {
                           return buildProductItem(
@@ -394,7 +390,6 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                 buildTextContentButton(_filterTitle!, false, function: () {
               showBottomSheetCheckImportantSettings(
                   context, 400, "Sắp xếp theo",
-                  // bgColor: greyColor[400],
                   widget: ListView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.zero,
@@ -529,7 +524,6 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   }
 
   void _filterDiscover(String sortedTitle) {
-    print("main :$sortedTitle");
     List<dynamic> filterDiscoverList = _discoverProduct!;
     const String newTitle = "Mới nhất";
     const String soldRun = "Bán chạy";
@@ -599,16 +593,16 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   }
 
   void getCategoriesName() {
-    if (product_categories.isEmpty) {
+    if (productCategories.isEmpty) {
       List<dynamic> primaryProductCategories = [];
-      for (int i = 0; i < all_data!.length; i++) {
+      for (int i = 0; i < allData!.length; i++) {
         primaryProductCategories.add({
-          "id": all_data![i]["id"],
-          "title": all_data![i]["text"],
-          "icon": all_data![i]["icon"]
+          "id": allData![i]["id"],
+          "title": allData![i]["text"],
+          "icon": allData![i]["icon"]
         });
       }
-      product_categories = primaryProductCategories;
+      productCategories = primaryProductCategories;
 
       setState(() {});
     }

@@ -10,15 +10,15 @@ class ProductCategoriesState {
   }
 }
 
-// final productCategoriesProvider =
-//     StateNotifierProvider<ProductCategoriesController, ProductCategoriesState>(
-//         (ref) => ProductCategoriesController());
+final productCategoriesProvider =
+    StateNotifierProvider<ProductCategoriesController, ProductCategoriesState>(
+        (ref) => ProductCategoriesController());
 
 class ProductCategoriesController
     extends StateNotifier<ProductCategoriesState> {
   ProductCategoriesController() : super(ProductCategoriesState());
 
   getListProductCategories() async {
-    state = state.copyWith(list: productCategories);
+    state = state.copyWith(list: demoProductCategories);
   }
 }

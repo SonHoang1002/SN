@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:social_network_app_mobile/constant/page_constants.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class SettingsPage extends StatefulWidget {

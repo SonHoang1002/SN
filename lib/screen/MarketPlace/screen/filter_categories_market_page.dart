@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/market_place_datas/product_categories_data.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/category_search_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
@@ -24,7 +22,6 @@ class FilterCategoriesPage extends ConsumerStatefulWidget {
 
 class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
   late double width = 0;
-
   late double height = 0;
   List<dynamic>? parentCategoriesList;
   List<dynamic>? data;
@@ -35,11 +32,6 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
       return;
     }
     super.initState();
-    // Future.delayed(Duration.zero, () {
-    //   final primaryData = ref
-    //       .read(productCategoriesProvider.notifier)
-    //       .getListProductCategories();
-    // });
   }
 
   @override
@@ -48,11 +40,9 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
     width = size.width;
     height = size.height;
     if (data == null || data!.isEmpty) {
-      data = productCategories;
+      data = demoProductCategories;
     }
-
     _getParentCategoriesList();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -76,7 +66,6 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
         Expanded(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            // color: Colors.grey,
             child: Row(
               children: [
                 SizedBox(
@@ -100,7 +89,6 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                 buildSpacer(width: 20),
                 Expanded(
                     child: Container(
-                        // color: red,
                         child: childCategoriesList != null
                             ? Container(
                                 alignment: Alignment.topCenter,
@@ -114,12 +102,9 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                                       gridDelegate:
                                           const SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisSpacing: 10,
-                                              // mainAxisSpacing: 5,
                                               crossAxisCount: 3,
-                                              // childAspectRatio: 0.79),
                                               childAspectRatio: 0.65),
                                       itemCount: childCategoriesList?.length,
-                                      // shrinkWrap: true,
                                       itemBuilder: (context, index) {
                                         return buildCategoryProductItemWidget(
                                             context,
@@ -156,14 +141,12 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
             : "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png"
       };
     }).toList();
-
     parentCategoriesList = primaryProductCategories;
     setState(() {});
   }
 
   void _getChildCategoriesList(List<dynamic> subcategories) {
     List<dynamic> primaryList = [];
-
     for (int i = 0; i < subcategories.length; i++) {
       primaryList.add({
         "title": subcategories[i]["text"],

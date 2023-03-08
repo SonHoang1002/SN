@@ -5,8 +5,6 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:social_network_app_mobile/widget/screen_share.dart';
 
 class PostFooterButton extends StatelessWidget {
   final dynamic post;
@@ -36,12 +34,6 @@ class PostFooterButton extends StatelessWidget {
               CupertinoModalPopupRoute(
                   builder: ((context) => CommentPostModal(post: post))));
         }
-      } else if (key == 'share') {
-        showBarModalBottomSheet(
-            context: context,
-            backgroundColor: Colors.transparent,
-            builder: (context) =>
-                ScreenShare(entityShare: post, type: type, entityType: 'post'));
       }
     }
 

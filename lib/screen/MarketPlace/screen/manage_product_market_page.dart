@@ -8,12 +8,12 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/data/market_place_datas/dat_data.dart';
 import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/rating_star_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/review_item_widget.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/widgets/title_and_see_all.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_message_dialog_widget.dart';
@@ -21,6 +21,7 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dar
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/video_player.dart';
 import '../../../../theme/colors.dart';
@@ -57,8 +58,7 @@ class _ManageProductMarketPageState
   dynamic _colorValue;
   int _onMorePart = 0;
   List<dynamic>? _commentData;
-  
-  ///
+
   @override
   void initState() {
     super.initState();
@@ -76,8 +76,11 @@ class _ManageProductMarketPageState
         ? Theme.of(context).cardColor
         : const Color(0xfff1f2f5);
     final mainData = Future.wait([_initMainData()]);
+    final response = SecureStorage().getKeyStorage("userId");
+    print("meControllerProvider: ${response}");
     return Scaffold(
         resizeToAvoidBottomInset: false,
+        // backgroundColor: greyColor[200],
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -106,18 +109,15 @@ class _ManageProductMarketPageState
                 children: [
                   buildTextContent("Chỉ người bán mới thấy được cái này", true,
                       fontSize: 20, colorWord: red, isCenterLeft: false),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: SingleChildScrollView(
-                      child: Column(
-                          children: List.generate(
-                        _productList!.length,
-                        (index) {
-                          return _buildManageComponent(
-                              _productList![index], index);
-                        },
-                      ).toList()),
-                    ),
+                  SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                      _productList!.length,
+                      (index) {
+                        return _buildManageComponent(
+                            _productList![index], index);
+                      },
+                    ).toList()),
                   )
                 ],
               ),
@@ -143,9 +143,9 @@ class _ManageProductMarketPageState
       );
     }
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-          color: colorTheme, borderRadius: BorderRadius.circular(7)),
+      // margin: const EdgeInsets.symmetric(vertical: 5),
+      // decoration: BoxDecoration(
+      //     color: colorTheme, borderRadius: BorderRadius.circular(7)),
       child: Column(
         children: [
           GeneralComponent(
@@ -170,6 +170,7 @@ class _ManageProductMarketPageState
                 ),
               ),
             ),
+            borderRadiusValue: 0,
             suffixFlexValue: 5,
             suffixWidget: InkWell(
               onTap: () {
@@ -265,14 +266,7 @@ class _ManageProductMarketPageState
                   return 0;
                 });
                 return _detailData == null || _detailData.isEmpty
-                    ? Container(
-                      height: 100,
-                      child: const Center(
-                          child: CircularProgressIndicator(
-                            color: red,
-                          ),
-                        ),
-                    )
+                    ? buildCircularProgressIndicator()
                     : Expanded(
                         child: SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),
@@ -366,7 +360,7 @@ class _ManageProductMarketPageState
                                       ],
                                     ),
                                     const SizedBox()
-                                   ],
+                                  ],
                                 ),
                               ),
 
@@ -376,7 +370,7 @@ class _ManageProductMarketPageState
                                   ? Column(
                                       children: [
                                         //color
-                                        _buildColorOrSizeWidget(
+                                        _buildColorSizeWidget(
                                             "Màu sắc",
                                             _detailData?["product_options"][0]
                                                 ["values"]),
@@ -384,7 +378,7 @@ class _ManageProductMarketPageState
                                         _detailData?["product_options"]
                                                     .length ==
                                                 2
-                                            ? _buildColorOrSizeWidget(
+                                            ? _buildColorSizeWidget(
                                                 "Kích cỡ",
                                                 _detailData?["product_options"]
                                                     [1]["values"])
@@ -415,7 +409,6 @@ class _ManageProductMarketPageState
                                             },
                                             child: Container(
                                               height: 50,
-                                              // margin: EdgeInsets.only(right:),
                                               width: width / 4.25,
                                               color: _onMorePart == index
                                                   ? Colors.blue
@@ -489,7 +482,8 @@ class _ManageProductMarketPageState
                       );
               }));
             },
-          )
+          ),
+          const CrossBar(height: 10)
         ],
       ),
     );
@@ -506,7 +500,7 @@ class _ManageProductMarketPageState
     return 0;
   }
 
-  Widget _buildColorOrSizeWidget(String title, List<dynamic> data) {
+  Widget _buildColorSizeWidget(String title, List<dynamic> data) {
     return Padding(
       padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: Row(

@@ -20,10 +20,6 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
   @override
   void initState() {
     super.initState();
-    // Future.delayed(Duration.zero, () {
-    //   final interestProductList =
-    //       ref.read(suggestProductsProvider.notifier).getSuggestProducts();
-    // });
   }
 
   @override
@@ -68,10 +64,8 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
                                 mainAxisSpacing: 4,
                                 crossAxisCount: 2,
                                 childAspectRatio: 0.79
-                                // childAspectRatio: 0.8
                                 ),
                         itemCount: _seeMoreProductList!.length,
-                        // shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return buildProductItem(
                               context: context,

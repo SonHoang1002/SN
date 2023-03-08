@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
+import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -72,10 +73,10 @@ class CompleteLoginPage extends StatelessWidget {
                               _buildDescription(),
                               buildSpacer(height: 10),
                               // button
-                              buildElevateButtonWidget(
+                              buildButtonForLoginWidget(
                                   title: CompleteLoginConstants
                                       .COMPLETE_LOGIN_NAME_PLACEHOLODER,
-                                  width: width,
+                                
                                   function: () {
                                     pushAndReplaceToNextScreen(
                                         context, MainLoginPage());

@@ -25,15 +25,14 @@ import 'package:social_network_app_mobile/widget/video_player.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/information_component_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
+import '../../../widget/GeneralWidget/circular_progress_indicator.dart';
 import 'cart_market_page.dart';
 
-const String link = "link";
-const String share_on_story_table = "share_on_story_table";
-const String share_on_group = "share_on_group";
-const String share_on_personal_page_of_friend =
+const String LINK = "link";
+const String SHARE_ON_STORY_TABLE = "share_on_story_table";
+const String SHARE_ON_GROUP = "share_on_group";
+const String SHARE_ON_PERSONAL_PAGE_OF_FRIEND =
     "share_on_personal_page_of_friend";
-
-// ignore: must_be_immutable
 class DetailProductMarketPage extends ConsumerStatefulWidget {
   final dynamic id;
   const DetailProductMarketPage({
@@ -44,7 +43,6 @@ class DetailProductMarketPage extends ConsumerStatefulWidget {
   ConsumerState<DetailProductMarketPage> createState() =>
       _DetailProductMarketPageComsumerState();
 }
-
 class _DetailProductMarketPageComsumerState
     extends ConsumerState<DetailProductMarketPage> {
   late double width = 0;
@@ -114,16 +112,7 @@ class _DetailProductMarketPageComsumerState
         ),
         body: !_isLoading
             ? _buildDetailBody()
-            : const Center(
-                child: SizedBox(
-                  width: 70,
-                  height: 70,
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                    strokeWidth: 3,
-                  ),
-                ),
-              ));
+            : buildCircularProgressIndicator());
   }
 
   Future<int> _initData() async {
@@ -190,7 +179,6 @@ class _DetailProductMarketPageComsumerState
       }
     }
     _productToCart = _detailData!["product_variants"][0];
-
     // load xong
     _isLoading = false;
     setState(() {});
@@ -339,7 +327,6 @@ class _DetailProductMarketPageComsumerState
                         }).toList(),
                       ),
                     ),
-
                     buildSpacer(height: 10),
                     buildDivider(
                       color: secondaryColor,
@@ -578,7 +565,6 @@ class _DetailProductMarketPageComsumerState
                                   },
                                   child: Container(
                                     height: 50,
-                                    // margin: EdgeInsets.only(right:),
                                     width: width / 4.25,
                                     color: _onMorePart == index
                                         ? Colors.blue
@@ -660,7 +646,6 @@ class _DetailProductMarketPageComsumerState
                     iconData: FontAwesomeIcons.cartArrowDown,
                     function: () async {
                       await _getInformationForCart();
-
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text(
                         "Thêm vào giỏ hàng thành công",
@@ -670,7 +655,6 @@ class _DetailProductMarketPageComsumerState
                     }),
               ),
               Container(
-                // margin: EdgeInsets.only(right: 10),
                 child: buildButtonForMarketWidget(
                     width: width * 0.3,
                     bgColor: Colors.red,
@@ -755,7 +739,6 @@ class _DetailProductMarketPageComsumerState
                       _sizeValue = data[index];
                     }
                   }
-
                   setState(() {});
                   _updatePriceTitle();
                   _updateImgLink();
@@ -774,7 +757,6 @@ class _DetailProductMarketPageComsumerState
                               : white,
                       border: Border.all(color: greyColor, width: 0.6),
                       borderRadius: BorderRadius.circular(5)),
-                  // margin: EdgeInsets.only(right: 10),
                   child: buildTextContent(data[index], false, fontSize: 14),
                 ),
               );
@@ -815,15 +797,15 @@ class _DetailProductMarketPageComsumerState
                       Widget body = const SizedBox();
                       switch (data[index]["key"]) {
                         // link
-                        case link:
+                        case LINK:
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text("Sao chép sản phẩm")));
                           popToPreviousScreen(context);
                           return;
-                        case share_on_story_table:
+                        case SHARE_ON_STORY_TABLE:
                         //
-                        case share_on_group:
+                        case SHARE_ON_GROUP:
                           body = ShareAndSearchWidget(
                               data: DetailProductMarketConstants
                                   .DETAIL_PRODUCT_MARKET_GROUP_SHARE_SELECTIONS,
@@ -870,57 +852,10 @@ class _DetailProductMarketPageComsumerState
         });
       }
     }
-
     final data = {
       "product_variant_id": _productToCart["id"].toString(),
       "quantity": productNumber
     };
     final response = await CartProductApi().postCartProductApi(data);
-
-    // setState(() {});
-
-    // List<dynamic> listCart = ref.watch(cartProductsProvider).listCart;
-    // // neu co cagtegory thi them san pham moi vao list
-    // for (int i = 0; i < listCart.length; i++) {
-    //   if (listCart[i]["title"] == _detailData!["page"]["title"]) {
-    //     for (int j = 0; j < listCart[i]["items"].length; j++) {
-    //       if (listCart[i]["items"][j]["product_variant"]["id"] ==
-    //           _productToCart["id"]) {
-    //         listCart[i]["items"][j]["quantity"] += productNumber;
-    //         return;
-    //       }
-    //     }
-    //     listCart[i]["items"].add({
-    //       "quantity": productNumber,
-    //       "check": false,
-    //       "product_variant": _productToCart
-    //     });
-    //     ref.read(cartProductsProvider.notifier).updateCartProductList(listCart);
-    //     return;
-    //   }
-    // }
-    // neu khong co category tu truoc thi them moi category moi
-    // listCart.add({
-    //   "page_id":
-    //       _detailData!["page"] != null ? _detailData!["page"]["id"] : null,
-    //   "title": _detailData!["page"] != null
-    //       ? _detailData!["page"]["title"]
-    //       : "Vô danh Page",
-    //   "avatar_id": _detailData!["page"] != null
-    //       ? _detailData!["page"]["avatar_media"]["id"]
-    //       : null,
-    //   "username": _detailData!["page"] != null
-    //       ? _detailData!["page"]["username"]
-    //       : null,
-    //   "check": false,
-    //   "items": [
-    //     {
-    //       "quantity": productNumber,
-    //       "check": false,
-    //       "product_variant": _productToCart
-    //     }
-    //   ]
-    // });
-    // ref.read(cartProductsProvider.notifier).updateCartProductList(listCart);
   }
 }

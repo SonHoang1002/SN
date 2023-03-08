@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_produ
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/payment_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -36,7 +37,6 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   @override
   void initState() {
     super.initState();
-
     Future.delayed(Duration.zero, () async {
       if (ref.watch(cartProductsProvider).listCart.isEmpty) {
         final initCartData =
@@ -47,7 +47,6 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _cartData = [];
   }
@@ -67,7 +66,6 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
       });
       _cartData = ref.watch(cartProductsProvider).listCart;
     }
-    // _buildCartCheckBox();
     _updateTotalPrice();
     _isLoading = false;
     return Scaffold(
@@ -111,17 +109,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
               child: ListView(
                 children: [
                   _isLoading
-                      ? const Center(
-                          child: SizedBox(
-                            width: 70,
-                            height: 70,
-                            child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.red),
-                              strokeWidth: 3,
-                            ),
-                          ),
-                        )
+                      ? buildCircularProgressIndicator()
                       : Column(
                           children: List.generate(
                               ref.watch(cartProductsProvider).listCart.length,
@@ -569,13 +557,10 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   }
 
   _callDeleteProductApi(dynamic id, dynamic data) async {
-    print("_callDeleteProductApi $id - $data");
     final response = await CartProductApi().deleteCartProductApi(id, data);
-    print("_callDeleteProductApi $response");
   }
 
   _callUpdateQuantityApi(dynamic data) async {
-    print("cart _callUpdateQuantityApi");
     final response =
         await ref.read(cartProductsProvider.notifier).updateCartQuantity(data);
   }

@@ -48,21 +48,8 @@ class _GifState extends State<Gif> {
     return Column(
       children: [
         Container(
-<<<<<<<<< Temporary merge branch 1
+
             margin: const EdgeInsets.all(8.0), child:  SearchInput()),
-        Expanded(
-            child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisSpacing: 0,
-                  mainAxisSpacing: 0,
-                  crossAxisCount: 2,
-                ),
-                itemCount: gifs.length,
-                itemBuilder: (context, index) => ImageCacheRender(
-                    path: gifs[index]['images']['original']['url'])))
-=========
-            margin: const EdgeInsets.all(8.0), child: const SearchInput()),
         isLoadingGif
             ? Container(
                 margin: const EdgeInsets.only(top: 20),
@@ -89,7 +76,7 @@ class _GifState extends State<Gif> {
                           child: ImageCacheRender(
                               path: gifs[index]['images']['original']['url']),
                         )))
->>>>>>>>> Temporary merge branch 2
+
       ],
     );
   }

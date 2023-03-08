@@ -106,7 +106,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
           .read(detailProductProvider.notifier)
           .getDetailProduct(widget.id);
     });
-    productCategoriesData = productCategories;
+    productCategoriesData = demoProductCategories;
     Future<int> a = _initData();
   }
 
@@ -603,19 +603,21 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
 
   List<dynamic> _initCategoryOneImages(Map<String, dynamic> informationData) {
     List<dynamic> imageChildList = [];
-    // if (informationData["product_options"].isNotEmpty) {
-    for (var optionElement in informationData["product_variants"]) {
-      if (!imageChildList.contains(optionElement['image']["url"])) {
-        imageChildList.add(optionElement['image']["url"]);
+    if (informationData["product_options"].isNotEmpty) {
+      for (var optionElement in informationData["product_variants"]) {
+        if (optionElement['image'] != null) {
+          if (!imageChildList.contains(optionElement['image']["url"])) {
+            imageChildList.add(optionElement['image']["url"]);
+          }
+        }
       }
     }
-    // }
     return imageChildList;
   }
 
   List<dynamic> _initChildCategoryList(dynamic childId) {
     List<dynamic> childCategoryList = [];
-    for (var element in productCategories) {
+    for (var element in demoProductCategories) {
       for (var childElement in element["subcategories"]) {
         if (childId == childElement["id"]) {
           childCategoryList = element["subcategories"];
@@ -1528,6 +1530,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
   }
 
   void _createClassifyCategoryOne() {
+    _warningForChildImage.add(selectionImageWarnings);
     _categoryData ??= {
       "loai_1": {
         "name": TextEditingController(

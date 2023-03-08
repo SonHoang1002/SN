@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';

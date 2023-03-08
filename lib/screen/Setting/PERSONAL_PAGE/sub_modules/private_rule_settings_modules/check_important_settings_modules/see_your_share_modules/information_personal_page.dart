@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/choose_object_provider.dart';
+import 'package:social_network_app_mobile/providers/setting/choose_object_provider.dart';
 import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/see_your_share_modules/post_and_story_module/post_and_story_page.dart';
 import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/see_your_share_modules/who_see_share_constants.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_bar_widget.dart';
@@ -13,9 +11,8 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-import '../../../../../../../widget/GeneralWidget/content_and_status_widget.dart';
-import '../../../../../../../widget/GeneralWidget/text_content_widget.dart';
-import '../../../../../setting_constants/general_settings_constants.dart';
+import '../../../../../../../../widget/GeneralWidget/content_and_status_widget.dart';
+import '../../../../../../../../widget/GeneralWidget/text_content_widget.dart';
 
 class InformationOnPersonalPagePage extends StatelessWidget {
   late double width = 0;

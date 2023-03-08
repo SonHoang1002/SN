@@ -52,19 +52,19 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 pushToNextScreen(context, CreateGroupPage());
               },
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.plus,
                 size: 20,
-                color: Colors.black,
+                color: colorWord,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 12.0,
             ),
-            const Icon(
+            Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
-              color: Colors.black,
+              color: colorWord,
             )
           ],
         );
@@ -77,47 +77,25 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 pushToNextScreen(context, const CreateEventPage());
               },
-              child: const Icon(
+              child: Icon(
                 FontAwesomeIcons.cartArrowDown,
                 size: 20,
-                color: Colors.black,
+                color: colorWord,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 12.0,
             ),
-            const Icon(
+            Icon(
               FontAwesomeIcons.magnifyingGlass,
               size: 18,
-              color: Colors.black,
+              color: colorWord,
             )
           ],
         );
         break;
       case 'marketPlace':
-        body = MainMarketBody();
-        buttonAppbar = Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                FontAwesomeIcons.user,
-                size: 20,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(width: 5,),
-            GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
-                size: 20,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        );
+       
         break;
       // return CreateSearchBaseMenu(
       //     placeHolder: "nhập sản phẩm",

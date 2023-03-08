@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -132,7 +133,7 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
             ),
           ),
           buildHaveAccountWidget(function: () {
-            pushToNextScreen(context, const MainLoginPage());
+            pushToNextScreen(context,  MainLoginPage());
           })
         ]),
       ),
@@ -228,7 +229,7 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
                       Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0, right: 10),
-                      child: buildTextContent("Tiếp tục", true,
+                      child: buildTextContentButton("Tiếp tục", true,
                           colorWord: _isValid
                               ? blackColor
                               : blackColor.withOpacity(0.4), function: () {

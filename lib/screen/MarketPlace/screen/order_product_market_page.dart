@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/a_test/test.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/order_product_apis.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/order_product_provider.dart';
@@ -17,6 +16,7 @@ import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import '../../../helper/push_to_new_screen.dart';
+import '../../../widget/GeneralWidget/circular_progress_indicator.dart';
 import 'notification_market_page.dart';
 import 'review_product_market_page.dart';
 import 'see_review_shop_market.dart';
@@ -113,16 +113,7 @@ class _OrderProductMarketPageState
                       _buildReturnBody(),
                     ],
                   )
-                : const Center(
-                    child: SizedBox(
-                      width: 70,
-                      height: 70,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                        strokeWidth: 3,
-                      ),
-                    ),
-                  )));
+                : buildCircularProgressIndicator()));
   }
 
   Future<int> _initData() async {
@@ -478,7 +469,6 @@ class _OrderProductMarketPageState
         ],
       )
     ]);
-    // index == length - 1 ? const SizedBox() : buildDivider(color: red),
   }
 
   Widget _buildButtons(dynamic data) {

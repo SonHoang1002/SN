@@ -5,8 +5,8 @@ import '../../../../widget/back_icon_appbar.dart';
 
 class NotificationMarketPage extends StatelessWidget {
   NotificationMarketPage({super.key});
-   double width = 0;
-   double height = 0;
+  double width = 0;
+  double height = 0;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

@@ -90,86 +90,117 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                   // main content
                   Expanded(
                     child: Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[900],
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      child: Image.asset(LoginConstants.PATH_IMG + "cat_1.png"),
-                    ),
-                  ),
-                  Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 100,
-                          width: 100,
-                          margin: EdgeInsets.only(bottom: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            // borderRadius: BorderRadius.all(Radius.circular(20))
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  "Emso",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: primaryColor,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                Text(
+                                  "Social",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: secondaryColor,
+                                      fontWeight: FontWeight.w700),
+                                )
+                              ]),
+                          Center(
+                            child: Wrap(
+                                children: List.generate(
+                                    dataLogin.length,
+                                    (index) => GestureDetector(
+                                          onTap: () {
+                                            context.loaderOverlay.show();
+
+                                            handleLogin(
+                                                dataLogin[index]['token']);
+                                          },
+                                          child: Column(children: [
+                                            Container(
+                                              height: 100,
+                                              width: 100,
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 5, right: 5, left: 5),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  border: Border.all(
+                                                      width: 0.2,
+                                                      color: greyColor)),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: ImageCacheRender(
+                                                  path: dataLogin[index]
+                                                          ['show_url'] ??
+                                                      linkAvatarDefault,
+                                                  width: 99.8,
+                                                  height: 99.8,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                width: 100,
+                                                child: Text(
+                                                  dataLogin[index]['name'],
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ))
+                                          ]),
+                                        ))),
                           ),
-                          child: Image.asset(
-                              LoginConstants.PATH_IMG + "avatar_img.png"),
-                        ),
-                        buildTextContent(
-                            OnboardingLoginConstants.ONBOARDING_LOGIN_USERNAME,
-                            true,
-                            fontSize: 16,
-                            colorWord: Colors.black,
-                            isCenterLeft: false)
-                      ],
-                    ),
-                  ),
-                  Center(
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            pushToNextScreen(context, SettingLoginPage());
-                          },
-                          child: Container(
-                            height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                                // color: Colors.grey[900],
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            child: Icon(
-                              FontAwesomeIcons.gear,
-                              color: blackColor,
+                          Center(
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    pushToNextScreen(
+                                        context, const MainLoginPage());
+                                  },
+                                  child: const Text(
+                                    OnboardingLoginConstants
+                                        .ONBOARDING_LOGIN_LOGIN_WITH_DIFFERENCE_ACCOUNT,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                buildSpacer(height: 20),
+                                GestureDetector(
+                                  onTap: () {
+                                    pushToNextScreen(
+                                        context, BeginJoinEmsoLoginPage());
+                                  },
+                                  child: const Text(
+                                    OnboardingLoginConstants
+                                        .ONBOARDING_LOGIN_SIGNIN_EMSO_ACCOUNT,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                buildSpacer(height: 30),
+                              ],
                             ),
                           ),
-                        ),
-                        buildSpacer(height: 20),
-                        buildTextContent(
-                            OnboardingLoginConstants
-                                .ONBOARDING_LOGIN_LOGIN_WITH_DIFFERENCE_ACCOUNT,
-                            true,
-                            fontSize: 15,
-                            colorWord: blackColor,
-                            isCenterLeft: false, function: () {
-                          pushToNextScreen(context, MainLoginPage());
-                        }),
-                        buildSpacer(height: 20),
-                        buildTextContent(
-                            OnboardingLoginConstants
-                                .ONBOARDING_LOGIN_SIGNIN_EMSO_ACCOUNT,
-                            true,
-                            fontSize: 15,
-                            colorWord: blackColor,
-                            isCenterLeft: false, function: () {
-                          pushToNextScreen(context, BeginJoinEmsoLoginPage());
-                        })
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
+                ]),
           ),
-        ]),
-      ),
-    );
+        ));
   }
 }

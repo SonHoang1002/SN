@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/providers/page/select_province_page_provider.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_with_button_and_chip_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 import '../../../../constant/page_constants.dart';
-import '../../../../providers/select_province_page_bloc.dart';
 import '../../../../theme/colors.dart';
 import 'avatar_page_page.dart';
 
