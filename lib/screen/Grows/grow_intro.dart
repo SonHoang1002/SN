@@ -209,7 +209,9 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return Container(
-                            width: MediaQuery.of(context).size.width * 0.91,
+                            width: hosts.length > 1
+                                ? MediaQuery.of(context).size.width * 0.61
+                                : MediaQuery.of(context).size.width * 0.91,
                             margin: const EdgeInsets.only(top: 10),
                             child: CardComponents(
                               imageCard: Column(
@@ -227,6 +229,8 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                                     ['avatar_media']['url']
                                                 : hosts[index]['account']
                                                     ['avatar_static'],
+                                            width: 300.0,
+                                            height: 180.0,
                                           ),
                                         )
                                       : ClipOval(
@@ -238,13 +242,19 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                                     ['avatar_media']['url']
                                                 : hosts[index]['account']
                                                     ['avatar_static'],
-                                            width: 180.0,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.6,
                                             height: 180.0,
                                           ),
                                         ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 8.0, bottom: 8.0),
+                                        top: 8.0,
+                                        bottom: 8.0,
+                                        left: 8.0,
+                                        right: 8.0),
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: Text(
@@ -258,13 +268,17 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                       ),
                                     ),
                                   ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '${hosts[index]['account']['followers_count'].toString()} người quan tâm · ${hosts[index]['account']['following_count'].toString()} người theo dõi ',
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w700,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, right: 8.0),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${hosts[index]['account']['followers_count'].toString()} người quan tâm · ${hosts[index]['account']['following_count'].toString()} người theo dõi',
+                                        style: const TextStyle(
+                                          fontSize: 11.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
                                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/data/event.dart';
@@ -54,7 +55,6 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
 
   @override
   Widget build(BuildContext context) {
-    print(growTransactions);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -172,28 +172,22 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                               children: [
                                                                 InkWell(
                                                                   onTap: () {
+                                                                    Navigator.pop(
+                                                                        context);
                                                                     showModalBottomSheet(
+                                                                        shape:
+                                                                            const RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.vertical(
+                                                                            top:
+                                                                                Radius.circular(15),
+                                                                          ),
+                                                                        ),
                                                                         context:
                                                                             context,
-                                                                        builder: (context) =>
-                                                                            SizedBox(
-                                                                              height: 300,
-                                                                              child: Column(
-                                                                                children: [
-                                                                                  Row(
-                                                                                    children: [
-                                                                                      IconButton(
-                                                                                        icon: const Icon(Icons.close),
-                                                                                        onPressed: () {
-                                                                                          Navigator.pop(context);
-                                                                                        },
-                                                                                      ),
-                                                                                      const Text('Ủng hộ'),
-                                                                                    ],
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ));
+                                                                        builder:
+                                                                            (context) =>
+                                                                                ModalDonate(growDetail: growDetail));
                                                                   },
                                                                   child:
                                                                       const ListTile(
@@ -699,6 +693,179 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
               );
             }
           }),
+    );
+  }
+}
+
+const growPrice = [
+  {"value": 50},
+  {"value": 100},
+  {"value": 200},
+  {"value": 500},
+  {"value": 1000},
+  {"value": 2000},
+];
+
+class ModalDonate extends StatelessWidget {
+  final dynamic growDetail;
+  const ModalDonate({super.key, this.growDetail});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.35,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Tặng xu để ủng hộ ${growDetail['title']}',
+                      maxLines: 2,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: secondaryColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text('Nạp',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black)),
+                              SvgPicture.asset('assets/IconCoin.svg',
+                                  width: 22, height: 22, color: secondaryColor)
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16, left: 16, top: 8.0),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // change this to 3
+                  childAspectRatio: 3,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16),
+              itemCount: growPrice.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                    decoration: BoxDecoration(
+                      color: secondaryColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${growPrice[index]['value']}',
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ));
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: secondaryColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Tuỳ chỉnh',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const Divider(
+            height: 20,
+            thickness: 1,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: secondaryColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Ủng hộ',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
