@@ -70,4 +70,9 @@ class PostApi {
     return await Api()
         .getRequestBase('/api/v1/statuses/$idPost/favourited_by', params);
   }
+
+  Future getListPostReblog(idPost, params) async {
+    return await Api()
+        .getRequestBase('/api/v1/statuses/$idPost/reblog', params);
+  }
 }

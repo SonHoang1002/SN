@@ -172,7 +172,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       } else if (data['type'] == 'child' && data['typeStatus'] == null) {
         dataCommentUpdate = postComment;
       } else if (data['typeStatus'] == 'editComment') {
-        print('rrrrrrrrr ${newComment['content']}');
         dataCommentUpdate = newListUpdate;
       }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -109,47 +110,49 @@ class PostFooterInformation extends ConsumerWidget {
                   ],
                 )
               : const SizedBox(),
-          Row(
-            children: [
-              (post['replies_total'] ?? 0) > 0
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${shortenLargeNumber(post['replies_total'])}",
-                          style: style,
-                        ),
-                        const SizedBox(
-                          width: 3.0,
-                        ),
-                        const Icon(
-                          FontAwesomeIcons.message,
-                          size: 14,
-                          color: greyColor,
-                        )
-                      ],
-                    )
-                  : const SizedBox(),
-              const SizedBox(
-                width: 10,
-              ),
-              (post['reblogs_count'] ?? 0) > 0
-                  ? Row(
-                      children: [
-                        Text(
-                          '${shortenLargeNumber(post['reblogs_count'])}',
-                          style: style,
-                        ),
-                        const Icon(
-                          Icons.share,
-                          size: 14,
-                          color: greyColor,
-                        )
-                      ],
-                    )
-                  : const SizedBox()
-            ],
-          )
+          type == postDetail
+              ? const SizedBox()
+              : Row(
+                  children: [
+                    (post['replies_total'] ?? 0) > 0
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${shortenLargeNumber(post['replies_total'])}",
+                                style: style,
+                              ),
+                              const SizedBox(
+                                width: 3.0,
+                              ),
+                              const Icon(
+                                FontAwesomeIcons.message,
+                                size: 14,
+                                color: greyColor,
+                              )
+                            ],
+                          )
+                        : const SizedBox(),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    (post['reblogs_count'] ?? 0) > 0
+                        ? Row(
+                            children: [
+                              Text(
+                                '${shortenLargeNumber(post['reblogs_count'])}',
+                                style: style,
+                              ),
+                              const Icon(
+                                Icons.share,
+                                size: 14,
+                                color: greyColor,
+                              )
+                            ],
+                          )
+                        : const SizedBox()
+                  ],
+                )
         ],
       ),
     );

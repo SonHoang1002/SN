@@ -1,8 +1,6 @@
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/helper/regex.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:detectable_text_field/detectable_text_field.dart';
 
 class PostContent extends StatefulWidget {
@@ -70,7 +68,7 @@ class _PostContentState extends State<PostContent> {
                               color: secondaryColor,
                               fontWeight: FontWeight.w500),
                           onTap: (tappedText) {
-                            print(tappedText);
+                            // print(tappedText);
                           },
                         ))),
                 widget.post['content'].length > 200
