@@ -2,6 +2,7 @@ import 'package:comment_tree/comment_tree.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -9,6 +10,7 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_card.dart';
 import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -95,6 +97,7 @@ class _CommentTreeState extends State<CommentTree> {
   Widget build(BuildContext context) {
     dynamic avatarMedia = widget.commentParent?['account']?['avatar_media'];
 
+    // print('******** ${widget.commentParent}');
     checkElement() {
       int indexCommentChild = postChildComment.indexWhere(
           (element) => element['id'] == widget.commentChildCreate['id']);
@@ -104,23 +107,44 @@ class _CommentTreeState extends State<CommentTree> {
       return false;
     }
 
-    if (widget.commentChildCreate != null && checkElement()) {
-      setState(() {
-        postChildComment = [...postChildComment, widget.commentChildCreate];
-        commentChild = [
-          ...commentChild,
-          Comment(
-              avatar:
-                  widget.commentChildCreate['account']['avatar_media'] != null
-                      ? widget.commentChildCreate['account']['avatar_media']
-                          ['preview_url']
-                      : linkAvatarDefault,
-              userName: widget.commentChildCreate['account']['display_name'],
-              content: widget.commentChildCreate['id']),
-        ];
-        isShowCommentChild = true;
-        replyCount = replyCount + 1;
-      });
+    if (widget.commentChildCreate != null) {
+      Comment commentCreate = Comment(
+          avatar: widget.commentChildCreate['account']['avatar_media'] != null
+              ? widget.commentChildCreate['account']['avatar_media']
+                  ['preview_url']
+              : linkAvatarDefault,
+          userName: widget.commentChildCreate['account']['display_name'],
+          content: widget.commentChildCreate['id']);
+
+      if (checkElement()) {
+        setState(() {
+          postChildComment = [...postChildComment, widget.commentChildCreate];
+          commentChild = [
+            ...commentChild,
+            commentCreate,
+          ];
+          isShowCommentChild = true;
+          replyCount = replyCount + 1;
+        });
+      } else {
+        int indexComment = postChildComment.indexWhere(
+            (element) => element['id'] == widget.commentChildCreate['id']);
+
+        if (indexComment > -1) {
+          setState(() {
+            postChildComment = [
+              ...postChildComment.sublist(0, indexComment),
+              widget.commentChildCreate,
+              ...postChildComment.sublist(indexComment + 1)
+            ];
+            commentChild = [
+              ...commentChild.sublist(0, indexComment),
+              commentCreate,
+              ...commentChild.sublist(indexComment + 1)
+            ];
+          });
+        }
+      }
     }
 
     handleUpdatePost(post) {
@@ -424,6 +448,7 @@ class _BoxCommentState extends State<BoxComment> {
       showCupertinoModalPopup<void>(
           context: context,
           builder: (BuildContext context) => ActionComment(
+              key: Key(postRender['id'].toString()),
               post: postRender,
               textRender: textRender,
               commentNode: widget.commentNode!,
@@ -667,7 +692,7 @@ class _BoxCommentState extends State<BoxComment> {
   }
 }
 
-class ActionComment extends StatelessWidget {
+class ActionComment extends ConsumerWidget {
   final dynamic post;
   final String textRender;
   final FocusNode? commentNode;
@@ -685,14 +710,30 @@ class ActionComment extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    dynamic meData = ref.read(meControllerProvider)[0];
+
     List action = [
       {'key': 'reply', 'label': 'Phản hồi', "visible": true},
       {'key': 'copy', 'label': 'Sao chép', "visible": true},
-      {'key': 'edit', 'label': 'Chỉnh sửa bình luận', "visible": true},
-      {'key': 'delete', 'label': 'Xóa bình luận', "visible": true},
-      {'key': 'report', 'label': 'Báo cáo', "visible": true},
+      {
+        'key': 'edit',
+        'label': 'Chỉnh sửa bình luận',
+        "visible": meData['id'] == post['account']['id']
+      },
+      {
+        'key': 'delete',
+        'label': 'Xóa bình luận',
+        "visible": meData['id'] == post['account']['id']
+      },
+      {
+        'key': 'report',
+        'label': 'Báo cáo',
+        "visible": meData['id'] != post['account']['id']
+      },
     ];
+
+    List actionRender = action.where((element) => element['visible']).toList();
 
     void showAlertDialog(BuildContext context) {
       showCupertinoModalPopup<void>(
@@ -722,20 +763,24 @@ class ActionComment extends StatelessWidget {
       } else if (key == 'delete') {
         Navigator.pop(context);
         showAlertDialog(context);
+      } else if (key == 'edit') {
+        Navigator.pop(context);
+        commentNode!.requestFocus();
+        await getCommentSelected!({...post, "typeStatus": "editComment"});
       }
     }
 
     return CupertinoActionSheet(
       actions: <CupertinoActionSheetAction>[
         ...List.generate(
-          action.length,
+          actionRender.length,
           (index) => CupertinoActionSheetAction(
             isDefaultAction: true,
             onPressed: () {
-              handleAction(action[index]['key']);
+              handleAction(actionRender[index]['key']);
             },
             child: Text(
-              action[index]['label'],
+              actionRender[index]['label'],
               style: const TextStyle(
                   color: secondaryColor, fontWeight: FontWeight.normal),
             ),

@@ -45,11 +45,11 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   Future handleComment(data) async {
     if (!mounted) return;
     var newCommentPreview = {
-      "id": "111111111111",
+      "id": data['id'],
       "in_reply_to_id": widget.post['id'],
       "account": ref.watch(meControllerProvider)[0],
       "content": data['status'],
-      "typeStatus": "previewComment",
+      "typeStatus": data['typeStatus'] ?? "previewComment",
       "created_at": "2023-02-01T23:04:48.047+07:00",
       "backdated_time": "2023-02-01T23:04:48.047+07:00",
       "sensitive": false,
@@ -115,24 +115,69 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       "status_target": null
     };
 
+    List dataPreComment = [];
+
+    if (data['type'] == 'parent' && data['typeStatus'] == null) {
+      dataPreComment = [newCommentPreview, ...postComment];
+    } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+      dataPreComment = postComment;
+    } else if (data['typeStatus'] == 'editComment') {
+      int indexComment = postComment
+          .indexWhere((element) => element['id'] == newCommentPreview['id']);
+      List newListUpdate = [];
+
+      if (indexComment > -1) {
+        newListUpdate = [
+          ...postComment.sublist(0, indexComment),
+          newCommentPreview,
+          ...postComment.sublist(indexComment + 1)
+        ];
+      }
+      dataPreComment = newListUpdate;
+    }
+
     setState(() {
-      postComment = data['type'] == 'child'
-          ? postComment
-          : [newCommentPreview, ...postComment];
+      postComment = dataPreComment;
       commentChild = data['type'] == 'child' ? newCommentPreview : null;
     });
 
-    dynamic newComment = await PostApi().createStatus({
-          ...data,
-          "visibility": "public",
-          "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
-        }) ??
-        newCommentPreview;
-    if (mounted) {
+    dynamic newComment;
+
+    if (data['typeStatus'] != 'editComment') {
+      newComment = await PostApi().createStatus({
+            ...data,
+            "visibility": "public",
+            "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
+          }) ??
+          newCommentPreview;
+    } else {
+      newComment = await PostApi().updatePost(data['id'],
+          {"extra_body": null, "status": data['status'], "tags": []});
+    }
+    if (mounted && newComment != null) {
+      int indexComment = postComment
+          .indexWhere((element) => element['id'] == newComment['id']);
+      List newListUpdate = [];
+
+      if (indexComment > -1) {
+        newListUpdate = postComment.sublist(0, indexComment) +
+            [newComment] +
+            postComment.sublist(indexComment + 1);
+      }
+
+      List dataCommentUpdate = [];
+
+      if (data['type'] == 'parent' && data['typeStatus'] == null) {
+        dataCommentUpdate = [newComment, ...postComment.sublist(1)];
+      } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+        dataCommentUpdate = postComment;
+      } else if (data['typeStatus'] == 'editComment') {
+        print('rrrrrrrrr ${newComment['content']}');
+        dataCommentUpdate = newListUpdate;
+      }
+
       setState(() {
-        postComment = data['type'] == 'child'
-            ? postComment
-            : [newComment, ...postComment.sublist(1)];
+        postComment = dataCommentUpdate;
         commentChild = newComment;
       });
     }

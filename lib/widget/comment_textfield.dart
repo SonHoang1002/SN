@@ -64,6 +64,17 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   @override
   void initState() {
     super.initState();
+    if (widget.commentSelected != null &&
+        widget.commentSelected!["typeStatus"] == 'editComment') {
+      setState(() {
+        content = widget.commentSelected!['content'];
+      });
+
+      setState(() {
+        linkEmojiSticky = widget.commentSelected['card']?['link'] ?? '';
+      });
+    }
+
     textController = SocialTextEditingController()
       ..text = content
       ..setTextStyle(
@@ -193,7 +204,11 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       }
 
       widget.handleComment!({
-        "status": widget.commentSelected != null
+        "id": widget.commentSelected?['typeStatus'] == 'editComment'
+            ? widget.commentSelected['id']
+            : '111111111111',
+        "status": widget.commentSelected != null &&
+                widget.commentSelected['typeStatus'] != 'editComment'
             ? '[${widget.commentSelected['account']['id']}] $content'
             : content,
         "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : null,
@@ -205,7 +220,8 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 "link": linkEmojiSticky,
                 "title": ""
               },
-        "tags": (widget.commentSelected != null
+        "tags": (widget.commentSelected != null &&
+                    widget.commentSelected['typeStatus'] != 'editComment'
                 ? [...listMentionsSelected, widget.commentSelected['account']]
                 : listMentionsSelected)
             // .where((element) => flagContent.contains(element['id']))
@@ -224,7 +240,11 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 ? widget.commentSelected['in_reply_to_id']
                 : widget.commentSelected['id']
             : null,
-        "type": widget.commentSelected != null ? "child" : 'parent'
+        "type": widget.commentSelected != null &&
+                widget.commentSelected['typeStatus'] != 'editComment'
+            ? "child"
+            : 'parent',
+        "typeStatus": widget.commentSelected?['typeStatus']
       });
       textController.clear();
       setState(() {
@@ -240,7 +260,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
     }
 
     checkVisibileSubmit() {
-      if (content.trim().isNotEmpty) return true;
+      if (textController.text.trim().isNotEmpty) return true;
       if (linkEmojiSticky.isNotEmpty) return true;
       if (files.isNotEmpty) return true;
 
@@ -265,7 +285,8 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     },
                   )
                 : const SizedBox(),
-            widget.commentSelected != null
+            widget.commentSelected != null &&
+                    widget.commentSelected['typeStatus'] != 'editComment'
                 ? Container(
                     margin: const EdgeInsets.only(top: 4, bottom: 4, left: 30),
                     child: RichText(
@@ -387,7 +408,10 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                                         handleActionComment();
                                       }
                                     : null,
-                                title: "Đăng",
+                                title: widget.commentSelected?['typeStatus'] ==
+                                        'editComment'
+                                    ? 'Lưu'
+                                    : "Đăng",
                                 fontSize: 15,
                               ),
                             ),
