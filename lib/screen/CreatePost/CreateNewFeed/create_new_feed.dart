@@ -321,9 +321,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         widget.post['status_activity']?['id'] != statusActivity['id']) {
       data = {...data, 'status_activity_id': statusActivity['id']};
     }
-    print('response, $data');
     dynamic response = await PostApi().updatePost(widget.post['id'], data);
-    print('responsexxx, $response');
 
     ref
         .read(postControllerProvider.notifier)
@@ -574,7 +572,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   getBottomSheet() {
     return Container(
-        height: 45,
+        height: 50,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
