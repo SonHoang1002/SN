@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -13,7 +16,15 @@ class Api {
         "Content-Type": "application/json",
       },
     );
-    return Dio(options);
+
+    Dio dio = Dio(options);
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    return dio;
   }
 
   Future getRequestBase(String path, Map<String, dynamic>? params) async {

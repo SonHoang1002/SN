@@ -27,6 +27,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   bool isLoadComment = false;
   FocusNode commentNode = FocusNode();
   dynamic commentSelected;
+  dynamic commentChild;
 
   Future getListCommentPost(postId, params) async {
     setState(() {
@@ -43,11 +44,13 @@ class _PostDetailState extends ConsumerState<PostDetail> {
 
   Future handleComment(data) async {
     if (!mounted) return;
+
     var newCommentPreview = {
+      "id": data['id'],
       "in_reply_to_id": widget.post['id'],
       "account": ref.watch(meControllerProvider)[0],
       "content": data['status'],
-      "typeStatus": "previewComment",
+      "typeStatus": data['typeStatus'] ?? "previewComment",
       "created_at": "2023-02-01T23:04:48.047+07:00",
       "backdated_time": "2023-02-01T23:04:48.047+07:00",
       "sensitive": false,
@@ -113,26 +116,106 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       "status_target": null
     };
 
+    List dataPreComment = [];
+
+    if (data['type'] == 'parent' && data['typeStatus'] == null) {
+      //Comment parent
+      dataPreComment = [newCommentPreview, ...postComment];
+    } else if (data['type'] == 'child' && data['typeStatus'] == 'editChild') {
+      //Edit comment child
+      dataPreComment = postComment;
+    } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+      //Comment child
+      dataPreComment = postComment;
+    } else if (data['type'] == 'parent' &&
+        data['typeStatus'] == 'editComment') {
+      //Edit comment parent
+      int indexComment = postComment
+          .indexWhere((element) => element['id'] == newCommentPreview['id']);
+      List newListUpdate = [];
+
+      if (indexComment > -1) {
+        newListUpdate = [
+          ...postComment.sublist(0, indexComment),
+          newCommentPreview,
+          ...postComment.sublist(indexComment + 1)
+        ];
+      }
+      dataPreComment = newListUpdate;
+    }
+
     setState(() {
-      postComment = [newCommentPreview, ...postComment];
+      postComment = dataPreComment;
+      commentChild = data['type'] == 'child' ? newCommentPreview : null;
     });
 
-    dynamic newComment = await PostApi().createStatus({
-          ...data,
-          "visibility": "public",
-          "in_reply_to_id": widget.post['id']
-        }) ??
-        newCommentPreview;
+    dynamic newComment;
 
-    setState(() {
-      postComment = [newComment, ...postComment.sublist(1)];
-    });
+    if (!['editComment', 'editChild'].contains(data['typeStatus'])) {
+      newComment = await PostApi().createStatus({
+            ...data,
+            "visibility": "public",
+            "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
+          }) ??
+          newCommentPreview;
+    } else {
+      newComment = await PostApi().updatePost(data['id'], {
+        "extra_body": data['extra_body'],
+        "status": data['status'],
+        "tags": data['tags']
+      });
+    }
+
+    if (mounted && newComment != null) {
+      int indexComment = postComment
+          .indexWhere((element) => element['id'] == newComment['id']);
+      List newListUpdate = [];
+
+      if (indexComment > -1) {
+        newListUpdate = postComment.sublist(0, indexComment) +
+            [newComment] +
+            postComment.sublist(indexComment + 1);
+      }
+
+      List dataCommentUpdate = postComment;
+
+      if (data['type'] == 'parent' && data['typeStatus'] == null) {
+        //Comment parent
+        dataCommentUpdate = [newComment, ...postComment.sublist(1)];
+      } else if (data['type'] == 'child' && data['typeStatus'] == 'editChild') {
+        //Edit comment child
+        dataCommentUpdate = postComment;
+      } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+        //Comment child
+        dataCommentUpdate = postComment;
+      } else if (data['type'] == 'parent' &&
+          data['typeStatus'] == 'editComment') {
+        //Edit comment parent
+        dataCommentUpdate = newListUpdate;
+      }
+
+      setState(() {
+        postComment = dataCommentUpdate;
+        commentChild = newComment;
+      });
+    }
   }
 
   getCommentSelected(comment) {
     setState(() {
       commentSelected = comment;
     });
+  }
+
+  handleDeleteComment(post) {
+    if (post != null) {
+      List newPostComment =
+          postComment.where((element) => element['id'] != post['id']).toList();
+
+      setState(() {
+        postComment = newPostComment;
+      });
+    }
   }
 
   @override
@@ -143,124 +226,111 @@ class _PostDetailState extends ConsumerState<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     final commentCount = widget.post['replies_count'] ?? 0;
 
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
-        setState(() {
-          commentSelected = null;
-        });
       },
-      child: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          body: SizedBox(
-            height: size.height,
-            width: size.width,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const SizedBox(
-                    height: 6.0,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          width: 30,
-                          margin: const EdgeInsets.only(left: 4.0, top: 6.0),
-                          child: const BackIconAppbar()),
-                      SizedBox(
-                        width: size.width - 45,
-                        child: PostHeader(
-                          post: widget.post,
-                          type: postDetail,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PostCenter(
-                            post: widget.post,
-                          ),
-                          PostFooter(post: widget.post, type: postDetail),
-                          Container(
-                            height: 1,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 5),
-                            decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.3)),
-                          ),
-                          ListView.builder(
-                              primary: false,
-                              shrinkWrap: true,
-                              itemCount: postComment.length,
-                              itemBuilder: ((context, index) => CommentTree(
-                                  commentNode: commentNode,
-                                  commentSelected: commentSelected,
-                                  commentParent: postComment[index],
-                                  getCommentSelected: getCommentSelected))),
-                          commentCount - postComment.length > 0
-                              ? InkWell(
-                                  onTap: isLoadComment
-                                      ? null
-                                      : () {
-                                          getListCommentPost(
-                                              widget.post['id'], {
-                                            "max_id": postComment.last['id'],
-                                            "sort_by": "newest"
-                                          });
-                                        },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 12.0, top: 6.0, bottom: 6.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Xem thêm ${commentCount - postComment.length} bình luận",
-                                          style: const TextStyle(
-                                              fontSize: 13,
-                                              color: greyColor,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        const SizedBox(
-                                          width: 8.0,
-                                        ),
-                                        isLoadComment
-                                            ? const SizedBox(
-                                                width: 10,
-                                                height: 10,
-                                                child:
-                                                    CupertinoActivityIndicator())
-                                            : const SizedBox()
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox(),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: CommentTextfield(
-                        commentSelected: commentSelected,
-                        getCommentSelected: getCommentSelected,
-                        commentNode: commentNode,
-                        handleComment: handleComment),
-                  )
-                ]),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const BackIconAppbar(),
+              SizedBox(
+                child: PostHeader(
+                  post: widget.post,
+                  type: postDetail,
+                ),
+              ),
+            ],
           ),
         ),
+        body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PostCenter(
+                        post: widget.post,
+                        type: postDetail,
+                      ),
+                      PostFooter(post: widget.post, type: postDetail),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: postComment.length,
+                          itemBuilder: ((context, index) => CommentTree(
+                              key: Key(postComment[index]['id']),
+                              commentChildCreate: postComment[index]['id'] ==
+                                      commentChild?['in_reply_to_id']
+                                  ? commentChild
+                                  : null,
+                              commentNode: commentNode,
+                              commentSelected: commentSelected,
+                              commentParent: postComment[index],
+                              getCommentSelected: getCommentSelected,
+                              handleDeleteComment: handleDeleteComment))),
+                      commentCount - postComment.length > 0
+                          ? InkWell(
+                              onTap: isLoadComment
+                                  ? null
+                                  : () {
+                                      getListCommentPost(widget.post['id'], {
+                                        "max_id": postComment.last['id'],
+                                        "sort_by": "newest"
+                                      });
+                                    },
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 12.0, top: 6.0, bottom: 6.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Xem thêm ${commentCount - postComment.length} bình luận",
+                                      style: const TextStyle(
+                                          fontSize: 13,
+                                          color: greyColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(
+                                      width: 8.0,
+                                    ),
+                                    isLoadComment
+                                        ? const SizedBox(
+                                            width: 10,
+                                            height: 10,
+                                            child: CupertinoActivityIndicator())
+                                        : const SizedBox()
+                                  ],
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CommentTextfield(
+                    commentSelected: commentSelected,
+                    getCommentSelected: getCommentSelected,
+                    commentNode: commentNode,
+                    handleComment: handleComment),
+              )
+            ]),
       ),
     );
   }

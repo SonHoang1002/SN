@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:transparent_image/transparent_image.dart';

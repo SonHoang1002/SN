@@ -22,7 +22,6 @@ class CreatePost extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          // backgroundColor: Theme.of(context).colorScheme.background,
           automaticallyImplyLeading: false,
           elevation: 0,
           title: const AppBarTitle(title: "Tạo bài viết"),

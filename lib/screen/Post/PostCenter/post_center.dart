@@ -16,7 +16,8 @@ import 'post_share.dart';
 
 class PostCenter extends StatefulWidget {
   final dynamic post;
-  const PostCenter({Key? key, this.post}) : super(key: key);
+  final String? type;
+  const PostCenter({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -41,7 +42,7 @@ class _PostCenterState extends State<PostCenter> {
                     postType == postAvatarAccount ||
                     postType == postBannerAccount)
                 ? const SizedBox()
-                : PostMedia(post: widget.post),
+                : PostMedia(post: widget.post, type: widget.type),
             widget.post['card'] != null &&
                     widget.post['media_attachments'].length == 0
                 ? PostCard(post: widget.post)

@@ -7,12 +7,12 @@ import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -23,10 +23,9 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/mentions/controller/social_text_editing_controller.dart';
 import 'package:social_network_app_mobile/widget/mentions/model/detected_type_enum.dart';
 import 'package:social_network_app_mobile/widget/mentions/model/social_content_detection_model.dart';
-import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
-class CommentTextfield extends ConsumerStatefulWidget {
+class CommentTextfield extends StatefulHookConsumerWidget {
   final Function? handleComment;
   final FocusNode? commentNode;
   final dynamic commentSelected;
@@ -65,6 +64,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   @override
   void initState() {
     super.initState();
+
     textController = SocialTextEditingController()
       ..text = content
       ..setTextStyle(
@@ -117,6 +117,51 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
   @override
   Widget build(BuildContext context) {
+    useEffect(
+      () {
+        if (widget.commentSelected != null &&
+            ['editComment', 'editChild']
+                .contains(widget.commentSelected['typeStatus'])) {
+          String contentUpdate = widget.commentSelected['content'];
+
+          textController.text =
+              widget.commentSelected['typeStatus'] == 'editChild' &&
+                      contentUpdate.length >= 21
+                  ? contentUpdate.substring(21)
+                  : contentUpdate;
+          textController.selection = TextSelection.collapsed(
+              offset: widget.commentSelected['typeStatus'] == 'editChild' &&
+                      contentUpdate.length >= 21
+                  ? contentUpdate.substring(21).length
+                  : contentUpdate.length);
+          setState(() {
+            content = contentUpdate;
+          });
+          dynamic card = widget.commentSelected['card'];
+          dynamic medias = widget.commentSelected['media_attachments'] ?? [];
+
+          if (card != null && card['link'] != null) {
+            setState(() {
+              linkEmojiSticky = card['link'];
+            });
+          }
+
+          if (medias.isNotEmpty) {
+            setState(() {
+              files = medias;
+            });
+          }
+        } else {
+          textController.text = '';
+          setState(() {
+            linkEmojiSticky = '';
+            files = [];
+          });
+        }
+        return null;
+      },
+      [widget.commentSelected?['id']],
+    );
     handleClickIcon() {
       setState(() {
         isShowEmoji = !isShowEmoji;
@@ -149,7 +194,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
     handleClickMention(data) {
       //Should show notification
-      if (listMentionsSelected.length > 50) return;
+      if (listMentionsSelected.length > 30) return;
 
       String message =
           '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
@@ -180,9 +225,16 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       });
     }
 
+    checkHasMention(data) {
+      if (data == null) return false;
+      if (data['typeStatus'] == 'editComment') return false;
+
+      return true;
+    }
+
     handleActionComment() async {
       dynamic dataUploadFile;
-      if (files.isNotEmpty) {
+      if (files.isNotEmpty && files[0]['id'] == null) {
         File? fileData = await files[0].file;
         String fileName = fileData!.path.split('/').last;
         FormData formData = FormData.fromMap({
@@ -192,9 +244,15 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
         dataUploadFile = await MediaApi().uploadMediaEmso(formData);
       }
-
       widget.handleComment!({
-        "status": content,
+        "id": widget.commentSelected != null &&
+                ['editComment', 'editChild']
+                    .contains(widget.commentSelected['typeStatus'])
+            ? widget.commentSelected['id']
+            : '111111111111',
+        "status": checkHasMention(widget.commentSelected)
+            ? '[${widget.commentSelected['account']['id']}] $content'
+            : content,
         "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : null,
         "extra_body": linkEmojiSticky.isEmpty
             ? null
@@ -204,8 +262,10 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 "link": linkEmojiSticky,
                 "title": ""
               },
-        "tags": listMentionsSelected
-            .where((element) => flagContent.contains(element['id']))
+        "tags": (checkHasMention(widget.commentSelected)
+                ? [...listMentionsSelected, widget.commentSelected['account']]
+                : listMentionsSelected)
+            // .where((element) => flagContent.contains(element['id']))
             .map((e) => {
                   "entity_id": e['id'],
                   "entity_type": e['username'] != null
@@ -216,6 +276,16 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   "name": e['display_name'] ?? e['title']
                 })
             .toList(),
+        "in_reply_to_id": widget.commentSelected != null
+            ? widget.commentSelected['in_reply_to_parent_id'] != null
+                ? widget.commentSelected['in_reply_to_id']
+                : widget.commentSelected['id']
+            : null,
+        "type": widget.commentSelected != null &&
+                widget.commentSelected['typeStatus'] != 'editComment'
+            ? "child"
+            : 'parent',
+        "typeStatus": widget.commentSelected?['typeStatus']
       });
       textController.clear();
       setState(() {
@@ -225,8 +295,17 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         linkEmojiSticky = '';
         listMentionsSelected = [];
       });
+      widget.getCommentSelected!(null);
       // ignore: use_build_context_synchronously
       hiddenKeyboard(context);
+    }
+
+    checkVisibileSubmit() {
+      if (textController.text.trim().isNotEmpty) return true;
+      if (linkEmojiSticky.isNotEmpty) return true;
+      if (files.isNotEmpty) return true;
+
+      return false;
     }
 
     return Container(
@@ -247,7 +326,8 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     },
                   )
                 : const SizedBox(),
-            widget.commentSelected != null
+            widget.commentSelected != null &&
+                    widget.commentSelected['typeStatus'] != 'editComment'
                 ? Container(
                     margin: const EdgeInsets.only(top: 4, bottom: 4, left: 30),
                     child: RichText(
@@ -286,16 +366,22 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                         ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
                             child: files.isNotEmpty
-                                ? Image.memory(
-                                    files[0].pickedThumbData,
-                                    fit: BoxFit.cover,
-                                    height: 80,
-                                    width: 70,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
+                                ? files[0]['id'] != null
+                                    ? ImageCacheRender(
+                                        path: files[0]['preview_url'],
+                                        height: 80.0,
+                                        width: 70.0,
+                                      )
+                                    : Image.memory(
+                                        files[0].pickedThumbData,
+                                        fit: BoxFit.cover,
+                                        height: 80,
+                                        width: 70,
+                                        errorBuilder: (context, error,
+                                                stackTrace) =>
                                             const Text(
                                                 'Hình ảnh không được hiển thị'),
-                                  )
+                                      )
                                 : ImageCacheRender(
                                     height: 70.0, path: linkEmojiSticky)),
                         Positioned(
@@ -337,7 +423,8 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 },
                 child: const Icon(
                   FontAwesomeIcons.camera,
-                  color: greyColor,
+                  color: secondaryColor,
+                  size: 20,
                 ),
               ),
               const SizedBox(
@@ -356,31 +443,51 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     onTap: () {
                       handleClickIcon();
                     },
-                    child: content.trim().isNotEmpty ||
-                            linkEmojiSticky.isNotEmpty ||
-                            files.isNotEmpty
-                        ? SizedBox(
-                            width: 60,
-                            child: Center(
-                              child: TextAction(
-                                action: !isComment
-                                    ? () {
-                                        setState(() {
-                                          isComment = true;
-                                        });
-                                        handleActionComment();
-                                      }
-                                    : null,
-                                title: "Đăng",
-                                fontSize: 15,
-                              ),
-                            ),
-                          )
-                        : Icon(
-                            FontAwesomeIcons.solidFaceSmile,
-                            color: isShowEmoji ? primaryColor : greyColor,
-                          )),
-              ))
+                    child: Icon(
+                      FontAwesomeIcons.solidFaceSmile,
+                      size: 20,
+                      color: isShowEmoji ? secondaryColor : greyColor,
+                    )),
+              )),
+              const SizedBox(
+                width: 8.0,
+              ),
+              checkVisibileSubmit()
+                  ? GestureDetector(
+                      onTap: !isComment
+                          ? () {
+                              setState(() {
+                                isComment = true;
+                              });
+                              handleActionComment();
+                            }
+                          : null,
+                      child: const Icon(
+                        Icons.send,
+                        color: secondaryColor,
+                        size: 20,
+                      ),
+                    )
+                  : const SizedBox(),
+              widget.commentSelected != null
+                  ? Row(
+                      children: [
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            widget.getCommentSelected!(null);
+                          },
+                          child: const Icon(
+                            FontAwesomeIcons.xmark,
+                            color: secondaryColor,
+                            size: 20,
+                          ),
+                        )
+                      ],
+                    )
+                  : const SizedBox()
             ]),
             isShowEmoji
                 ? DraggableBottomSheet(

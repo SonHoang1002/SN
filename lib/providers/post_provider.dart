@@ -133,7 +133,7 @@ class PostController extends StateNotifier<PostState> {
                 data,
                 ...state.postUserPage.sublist(index + 1)
               ]
-            : state.posts,
+            : state.postUserPage,
         isMoreUserPage: state.isMoreUserPage);
   }
 

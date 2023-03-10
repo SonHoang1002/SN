@@ -134,10 +134,10 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
               indicatorColor: Colors.grey.withOpacity(0.5),
               tabs: const [
                 Tab(
-                  icon: Icon(Icons.emoji_emotions, color: primaryColor),
+                  icon: Icon(Icons.emoji_emotions, color: secondaryColor),
                 ),
                 Tab(
-                  icon: Icon(Icons.gif_box, size: 26, color: primaryColor),
+                  icon: Icon(Icons.gif_box, size: 26, color: secondaryColor),
                 ),
               ],
             ),

@@ -1,17 +1,25 @@
+import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/linkify.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:detectable_text_field/detectable_text_field.dart';
 
-class PostContent extends StatelessWidget {
+class PostContent extends StatefulWidget {
   final dynamic post;
   const PostContent({Key? key, this.post}) : super(key: key);
+
+  @override
+  State<PostContent> createState() => _PostContentState();
+}
+
+class _PostContentState extends State<PostContent> {
+  bool isMore = false;
 
   @override
   Widget build(BuildContext context) {
     renderPostContent() {
       final size = MediaQuery.of(context).size;
-      if (post['status_background'] != null) {
-        var backgroundObject = post['status_background'];
+      if (widget.post['status_background'] != null) {
+        var backgroundObject = widget.post['status_background'];
         return Container(
           width: size.width,
           constraints: const BoxConstraints(minHeight: 320),
@@ -25,7 +33,7 @@ class PostContent extends StatelessWidget {
             padding: const EdgeInsets.all(15.0),
             child: Center(
               child: Text(
-                post['content'],
+                widget.post['content'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: double.parse(backgroundObject['style']['fontSize']
@@ -42,24 +50,43 @@ class PostContent extends StatelessWidget {
       } else {
         return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Linkify(
-              text: post['content'] ?? '',
-              onOpen: (link) async {
-                if (await canLaunchUrl(Uri.parse(link.url))) {
-                  await launchUrl(Uri.parse(link.url));
-                } else {
-                  return;
-                }
-              },
-              style: const TextStyle(
-                  fontSize: 15, overflow: TextOverflow.ellipsis),
-              options: const LinkifyOptions(humanize: false),
-            )
-            // Text(
-            //   post['content'],
-            //   style: const TextStyle(fontSize: 15),
-            // ),
-            );
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRect(
+                    child: Align(
+                        alignment: Alignment.topLeft,
+                        heightFactor: isMore
+                            ? 1
+                            : widget.post['content'].length > 200
+                                ? 0.35
+                                : 1,
+                        child: DetectableText(
+                          text: widget.post['content'] ?? '',
+                          detectionRegExp: detectionRegExp()!,
+                          detectedStyle: const TextStyle(
+                              color: secondaryColor,
+                              fontWeight: FontWeight.w500),
+                          onTap: (tappedText) {
+                            // print(tappedText);
+                          },
+                        ))),
+                widget.post['content'].length > 200
+                    ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isMore = !isMore;
+                          });
+                        },
+                        child: Text(
+                          isMore ? "Thu gọn" : "Xem thêm",
+                          style: const TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : const SizedBox()
+              ],
+            ));
       }
     }
 

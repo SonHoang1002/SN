@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -37,7 +36,9 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/map_widget_item.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
-  const CreateNewFeed({Key? key}) : super(key: key);
+  final dynamic post;
+  final String? type;
+  const CreateNewFeed({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   ConsumerState<CreateNewFeed> createState() => _CreateNewFeedState();
@@ -51,7 +52,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   String gifLink = '';
 
   dynamic menuSelected;
-  dynamic visibility;
+  dynamic visibility = typeVisibility[0];
   dynamic backgroundSelected;
   dynamic statusActivity;
   dynamic statusQuestion;
@@ -63,9 +64,20 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      visibility = typeVisibility[0];
-    });
+    if (mounted && widget.post != null) {
+      setState(() {
+        checkin = widget.post['place'];
+        statusActivity = widget.post['status_activity'];
+        content = widget.post['content'];
+        gifLink = widget.post['card']?['link'] ?? '';
+        backgroundSelected = widget.post['status_background'];
+        visibility = typeVisibility.firstWhere(
+            (element) => element['key'] == widget.post['visibility']);
+        lifeEvent = widget.post['life_event'];
+        // statusQuestion =
+        //     widget.post['status_question'] ?? widget.post['status_target'];
+      });
+    }
   }
 
   functionConvertFile(file) async {
@@ -95,6 +107,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         setState(() {
           content = data;
         });
+
+        if (data.length > 150) {
+          setState(() {
+            backgroundSelected = null;
+          });
+        }
         break;
       case 'update_friend':
         setState(() {
@@ -197,7 +215,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     return response;
   }
 
-  handleCreateUpdatePost() async {
+  handleCreatePost() async {
     context.loaderOverlay.show();
     var data = {"status": content, "visibility": visibility['key']};
 
@@ -269,7 +287,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 ? "Video trong bài viết đang được xử lý"
                 : "Tạo bài viết thành công")));
       }
-
       if (isUploadVideo) {
         setState(() {
           isUploadVideo = false;
@@ -280,6 +297,42 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             .createUpdatePost(feedPost, response);
       }
     } else {}
+  }
+
+  handleUpdatePost() async {
+    context.loaderOverlay.show();
+
+    dynamic data = {"content": content};
+
+    if (widget.post['visibility'] != visibility['key']) {
+      data['visibility'] = visibility['key'];
+    }
+
+    if (backgroundSelected != null &&
+        widget.post['status_background']?['id'] != backgroundSelected['id']) {
+      data['status_background_id'] = backgroundSelected['id'];
+    }
+
+    if (gifLink.isNotEmpty) {
+      data["extra_body"] = {"description": "", "link": gifLink, "title": ""};
+    }
+
+    if (statusActivity != null &&
+        widget.post['status_activity']?['id'] != statusActivity['id']) {
+      data = {...data, 'status_activity_id': statusActivity['id']};
+    }
+    dynamic response = await PostApi().updatePost(widget.post['id'], data);
+
+    ref
+        .read(postControllerProvider.notifier)
+        .actionUpdateDetailInPost(widget.type, response);
+
+    if (response != null && mounted) {
+      context.loaderOverlay.hide();
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Cập nhật thành công")));
+    }
   }
 
   checkVisiblePress() {
@@ -313,108 +366,131 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const BackIconAppbar(),
-                  const AppBarTitle(title: "Tạo bài viết"),
+                  AppBarTitle(
+                      title: widget.post != null
+                          ? "Chỉnh sửa bài viết"
+                          : "Tạo bài viết"),
                   ButtonPrimary(
-                    label: "Đăng",
-                    handlePress:
-                        checkVisiblePress() ? handleCreateUpdatePost : null,
+                    label: widget.post != null ? 'Lưu' : "Đăng",
+                    handlePress: checkVisiblePress()
+                        ? widget.post != null
+                            ? handleUpdatePost
+                            : handleCreatePost
+                        : null,
                   )
                 ],
               ),
             ),
-            bottomSheet: getBottomSheet(),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  CreateFeedStatus(
-                      checkin: checkin,
-                      friendSelected: friendSelected,
-                      statusActivity: statusActivity,
-                      isShowBackground: checkisShowBackground(),
-                      visibility: visibility,
-                      backgroundSelected: backgroundSelected,
-                      handleUpdateData: handleUpdateData),
-                  Stack(
-                    children: [
-                      files.isNotEmpty
-                          ? GridLayoutImage(
-                              medias: files, handlePress: (media) {})
-                          : const SizedBox(),
-                      gifLink.isNotEmpty
-                          ? ImageCacheRender(
-                              path: gifLink,
-                              width: size.width,
-                            )
-                          : const SizedBox(),
-                      statusQuestion != null
-                          ? PostTarget(
-                              type: statusQuestion['postType'] == 'target'
-                                  ? 'target_create'
-                                  : postCreateQuestionAnwer,
-                              statusQuestion: statusQuestion,
-                            )
-                          : const SizedBox(),
-                      checkin != null
-                          ? MapWidgetItem(checkin: checkin)
-                          : const SizedBox(),
-                      lifeEvent != null
-                          ? PostLifeEvent(
-                              post: {'life_event': lifeEvent},
-                            )
-                          : const SizedBox(),
-                      if (gifLink.isNotEmpty ||
-                          files.isNotEmpty ||
-                          statusQuestion != null ||
-                          checkin != null)
-                        Positioned(
-                            top: statusQuestion != null ? 20 : 10,
-                            right: statusQuestion != null ? 20 : 10,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  files = [];
-                                  gifLink = '';
-                                  statusQuestion = null;
-                                  checkin = null;
-                                  lifeEvent = null;
-                                });
-                              },
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.black.withOpacity(0.5)),
-                                child: const Icon(
-                                  FontAwesomeIcons.xmark,
-                                  color: white,
-                                  size: 20,
-                                ),
-                              ),
-                            )),
-                      if (files.isNotEmpty)
-                        Positioned(
-                            top: 2,
-                            left: 10,
-                            child: SizedBox(
-                              width: 100,
-                              child: ButtonPrimary(
-                                isPrimary: true,
-                                label: "Chỉnh sửa",
-                                handlePress: handlePress,
-                              ),
-                            ))
-                    ],
-                  )
-                ],
-              ),
+            // bottomSheet: getBottomSheet(),
+            body: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CreateFeedStatus(
+                            content: content,
+                            checkin: checkin,
+                            friendSelected: friendSelected,
+                            statusActivity: statusActivity,
+                            isShowBackground: checkisShowBackground(),
+                            visibility: visibility,
+                            backgroundSelected: backgroundSelected,
+                            handleUpdateData: handleUpdateData),
+                        Stack(
+                          children: [
+                            files.isNotEmpty
+                                ? GridLayoutImage(
+                                    medias: files, handlePress: (media) {})
+                                : const SizedBox(),
+                            gifLink.isNotEmpty
+                                ? ImageCacheRender(
+                                    path: gifLink,
+                                    width: size.width,
+                                  )
+                                : const SizedBox(),
+                            statusQuestion != null
+                                ? PostTarget(
+                                    type: statusQuestion['postType'] == 'target'
+                                        ? 'target_create'
+                                        : postCreateQuestionAnwer,
+                                    statusQuestion: statusQuestion,
+                                  )
+                                : const SizedBox(),
+                            checkin != null
+                                ? MapWidgetItem(checkin: checkin)
+                                : const SizedBox(),
+                            lifeEvent != null
+                                ? PostLifeEvent(
+                                    post: {'life_event': lifeEvent},
+                                  )
+                                : const SizedBox(),
+                            if (gifLink.isNotEmpty ||
+                                files.isNotEmpty ||
+                                statusQuestion != null ||
+                                checkin != null)
+                              Positioned(
+                                  top: statusQuestion != null ? 20 : 10,
+                                  right: statusQuestion != null ? 20 : 10,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        files = [];
+                                        gifLink = '';
+                                        statusQuestion = null;
+                                        checkin = null;
+                                        lifeEvent = null;
+                                        menuSelected = null;
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 28,
+                                      height: 28,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Colors.black.withOpacity(0.5)),
+                                      child: const Icon(
+                                        FontAwesomeIcons.xmark,
+                                        color: white,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  )),
+                            if (files.isNotEmpty)
+                              Positioned(
+                                  top: 2,
+                                  left: 10,
+                                  child: SizedBox(
+                                    width: 100,
+                                    child: ButtonPrimary(
+                                      isPrimary: true,
+                                      label: "Chỉnh sửa",
+                                      handlePress: handlePress,
+                                    ),
+                                  ))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: getBottomSheet(),
+                )
+              ],
             ),
           ),
         ));
   }
 
   checkisShowBackground() {
-    if (gifLink.isNotEmpty || files.isNotEmpty) {
+    if (gifLink.isNotEmpty ||
+        files.isNotEmpty ||
+        content.length > 150 ||
+        checkin != null ||
+        files.isNotEmpty) {
       return false;
     } else {
       return true;
@@ -497,7 +573,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   getBottomSheet() {
     return Container(
-        height: 60,
+        height: 50,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
@@ -509,12 +585,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         ], color: Theme.of(context).scaffoldBackgroundColor),
         child: GridView.builder(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-            ),
+                crossAxisCount: 5, childAspectRatio: 1),
             itemCount: 5,
             itemBuilder: (context, index) => Container(
-                  margin: const EdgeInsets.only(bottom: 17),
+                  margin: const EdgeInsets.only(bottom: 25),
                   child: InkWell(
                       onTap: () {
                         if (index == 4) {
@@ -527,6 +603,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                       top: Radius.circular(15))),
                               builder: (BuildContext context) {
                                 return CreateFeedMenu(
+                                    menuSelected: menuSelected,
                                     handleChooseMenu: handleChooseMenu);
                               });
                         }
@@ -534,34 +611,49 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       child: index != 4
                           ? listMenuPost[index]['image'] != null
                               ? IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) => Expanded(
-                                                    child: GalleryView(
-                                                  typePage: 'page_edit',
-                                                  isMutipleFile: true,
-                                                  handleGetFiles:
-                                                      handleUpdateData,
-                                                  filesSelected: files,
-                                                ))));
-                                  },
+                                  onPressed: (menuSelected?['disabled'] ?? [])
+                                          ?.contains('media')
+                                      ? null
+                                      : () {
+                                          Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      Expanded(
+                                                          child: GalleryView(
+                                                        typePage: 'page_edit',
+                                                        isMutipleFile: true,
+                                                        handleGetFiles:
+                                                            handleUpdateData,
+                                                        filesSelected: files,
+                                                      ))));
+                                        },
                                   icon: SvgPicture.asset(
                                     listMenuPost[index]['image'],
                                     height: 28,
                                     width: 28,
                                     fit: BoxFit.scaleDown,
+                                    color: (menuSelected?['disabled'] ?? [])
+                                            ?.contains('media')
+                                        ? greyColor
+                                        : null,
                                   ),
                                 )
                               : GestureDetector(
-                                  onTap: () {
-                                    handleChooseMenu(
-                                        listMenuPost[index], 'menu_out');
-                                  },
+                                  onTap: (menuSelected?['disabled'] ?? [])
+                                          ?.contains(listMenuPost[index]['key'])
+                                      ? null
+                                      : () {
+                                          handleChooseMenu(
+                                              listMenuPost[index], 'menu_out');
+                                        },
                                   child: Icon(
                                     listMenuPost[index]['icon'],
-                                    color: Color(listMenuPost[index]['color']),
+                                    color: (menuSelected?['disabled'] ?? [])
+                                            ?.contains(
+                                                listMenuPost[index]['key'])
+                                        ? greyColor
+                                        : Color(listMenuPost[index]['color']),
                                     size: 24,
                                   ),
                                 )

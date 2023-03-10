@@ -14,7 +14,9 @@ import 'package:social_network_app_mobile/screen/Search/search.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
+import 'package:social_network_app_mobile/widget/skeleton.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
+import 'package:loader_skeleton/loader_skeleton.dart';
 
 class Feed extends ConsumerStatefulWidget {
   const Feed({Key? key}) : super(key: key);
@@ -169,24 +171,28 @@ class _FeedState extends ConsumerState<Feed> {
           child: Column(
             children: [
               const CreatePostButton(),
-              const CrossBar(),
+              const CrossBar(
+                height: 5,
+              ),
               ListView.builder(
                   shrinkWrap: true,
                   primary: false,
-                  itemCount: posts.length,
+                  itemCount: posts.length + 1,
                   itemBuilder: (context, index) {
                     if (index < posts.length) {
                       return Post(type: feedPost, post: posts[index]);
                     } else {
                       return isMore == true
-                          ? const Center(
-                              child: CupertinoActivityIndicator(),
+                          ? Center(
+                              child: SkeletonCustom().postSkeleton(context),
                             )
                           : const SizedBox();
                     }
                   }),
               isMore
-                  ? const SizedBox()
+                  ? Center(
+                      child: SkeletonCustom().postSkeleton(context),
+                    )
                   : const Center(
                       child: TextDescription(
                           description: "Bạn đã xem hết các bài viết mới rồi"),

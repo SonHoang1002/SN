@@ -2,14 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/widget/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widget/page_permission_comment.dart';
-import 'package:social_network_app_mobile/widget/text_action.dart';
+import 'package:social_network_app_mobile/widget/page_visibility.dart';
+import 'package:social_network_app_mobile/widget/report_category.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class PostHeaderAction extends ConsumerStatefulWidget {
@@ -23,18 +28,6 @@ class PostHeaderAction extends ConsumerStatefulWidget {
 }
 
 class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
-  String commentModeration = 'public';
-
-  @override
-  void initState() {
-    super.initState();
-    if (mounted) {
-      setState(() {
-        commentModeration = widget.post['comment_moderation'];
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var meData = ref.watch(meControllerProvider)[0];
@@ -65,6 +58,13 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "isShow": meData['id'] == widget.post['account']['id']
       },
       {
+        "key": "complete_goal",
+        "label": "Đánh dấu hoàn thành mục tiêu",
+        "icon": FontAwesomeIcons.bullseye,
+        "isShow": meData['id'] == widget.post['account']['id'] &&
+            widget.post['post_type'] == postTarget
+      },
+      {
         "key": "comment_permission_post",
         "label": "Ai có thể bình luận về bài viết này?",
         "icon": FontAwesomeIcons.solidComment,
@@ -78,10 +78,18 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "isShow": meData['id'] == widget.post['account']['id']
       },
       {
-        "key": "open_notification_post",
-        "label": "Bật thông báo bài viết này",
-        "icon": FontAwesomeIcons.solidBell,
-        "description": "Thêm vào danh sách mục đã lưu",
+        "key": widget.post['notify']
+            ? "unopen_notification_post"
+            : "open_notification_post",
+        "label": widget.post['notify']
+            ? "Tắt thông báo bài viết này"
+            : "Bật thông báo bài viết này",
+        "icon": widget.post['notify']
+            ? FontAwesomeIcons.solidBellSlash
+            : FontAwesomeIcons.solidBell,
+        "description": widget.post['notify']
+            ? "Không nhận thông báo từ bài viết này"
+            : "Bạn sẽ nhận được thông báo của bài viết này",
         "isShow": true
       },
       {
@@ -118,6 +126,26 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       }
     }
 
+    handleNotifyPost(key) async {
+      var response = key == "unopen_notification_post"
+          ? await PostApi().turnOffNotification(widget.post['id'])
+          : await PostApi().turnOnNotification(widget.post['id']);
+      if (response != null && mounted) {
+        var newData = {
+          ...widget.post,
+          "notify": key == "unopen_notification_post" ? false : true
+        };
+        ref
+            .read(postControllerProvider.notifier)
+            .actionUpdateDetailInPost(widget.type, newData);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(key == "unopen_notification_post"
+                ? "Tắt thông báo thành công"
+                : "Bật thông báo thành công")));
+      }
+    }
+
     handleActionPinPost(type) async {
       dynamic response;
       if (type == 'pin_post') {
@@ -136,22 +164,25 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
             content:
                 Text("${type == 'pin_post' ? "Ghim" : "Bỏ ghim"} thành công")));
       }
-
-      setState(() {});
     }
 
-    handleHiddenPost(type) async {
-      dynamic response =
-          await PostApi().updatePost(widget.post['id'], {"hidden": true});
+    handleUpdatePost(data) async {
+      dynamic response = await PostApi().updatePost(widget.post['id'], data);
 
-      ref
-          .read(postControllerProvider.notifier)
-          .actionHiddenDeletePost(widget.type, widget.post);
+      if (data['hidden'] == true) {
+        ref
+            .read(postControllerProvider.notifier)
+            .actionHiddenDeletePost(widget.type, widget.post);
+      } else {
+        ref
+            .read(postControllerProvider.notifier)
+            .actionHiddenDeletePost(widget.type, response);
+      }
 
       if (response != null && mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Ẩn bài viết thành công")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Cập nhật thành công")));
       }
     }
 
@@ -188,30 +219,52 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
               builder: (context) => CreateModalBaseMenu(
                     title: "Bình luận về bài viết này",
                     body: PagePermissionComment(
-                        commentModeration: commentModeration,
+                        commentModeration: widget.post['comment_moderation'],
                         handleUpdate: (newValue) {
-                          setState(() {
-                            commentModeration = newValue;
-                          });
+                          handleUpdatePost({"comment_moderation": newValue});
                         }),
-                    buttonAppbar: TextAction(
-                      title: "Xong",
-                      fontSize: 17,
-                      action: () {
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop();
-                      },
-                    ),
+                    buttonAppbar: const SizedBox(),
                   )),
         );
       } else if (["hidden_post", "delete_post"].contains(key)) {
         if (key == "hidden_post") {
-          handleHiddenPost(key);
+          handleUpdatePost({"hidden": true});
         } else {
           Navigator.pop(context);
           showAlertDialog(context);
         }
+      } else if (key == "report_post") {
+        Navigator.pop(context);
+        showBarModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            builder: (context) =>
+                ReportCategory(entityReport: widget.post, entityType: "post"));
+      } else if (["unopen_notification_post", "open_notification_post"]
+          .contains(key)) {
+        handleNotifyPost(key);
+      } else if (key == "object_post") {
+        var visibility = typeVisibility.firstWhere(
+            (element) => element['key'] == widget.post['visibility']);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreateModalBaseMenu(
+                    title: "Chỉnh sửa quyền riêng tư",
+                    body: PageVisibility(
+                      visibility: visibility,
+                      handleUpdate: (newVisibility) {
+                        handleUpdatePost({'visibility': newVisibility["key"]});
+                      },
+                    ),
+                    buttonAppbar: const SizedBox())));
+      } else if (key == "edit_post") {
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    CreateNewFeed(post: widget.post, type: widget.type)));
       }
     }
 
@@ -251,10 +304,10 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
                     borderRadius: BorderRadius.circular(8)),
                 child: Column(
                   children: List.generate(
-                      5,
-                      (index) => actionsPost.sublist(2, 7)[index]['isShow']
+                      6,
+                      (index) => actionsPost.sublist(2, 8)[index]['isShow']
                           ? BlockAction(
-                              item: actionsPost.sublist(2, 7)[index],
+                              item: actionsPost.sublist(2, 8)[index],
                               handleAction: handleAction,
                             )
                           : const SizedBox()),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
@@ -176,7 +174,9 @@ class _MenuState extends State<Menu> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             backgroundColor: const Color(0xffdcdcdc)),
-                        onPressed: () {},
+                        onPressed: () {
+                          logout();
+                        },
                         child: const Text(
                           "Đăng xuất",
                           style: TextStyle(color: Colors.black, fontSize: 13),

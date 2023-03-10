@@ -13,6 +13,10 @@ class PostApi {
     return await Api().getRequestBase('/api/v1/comments/$postId', params);
   }
 
+  Future getPostDetailMedia(String postId) async {
+    return await Api().getRequestBase('/api/v1/media/$postId', null);
+  }
+
   Future createStatus(data) async {
     return await Api().postRequestBase('/api/v1/statuses', data);
   }
@@ -48,7 +52,27 @@ class PostApi {
     return Api().deleteRequestBase("/api/v1/statuses/$postId", null);
   }
 
-  Future reportPostApi(data) {
-    return Api().postRequestBase("/api/v1/reports", data);
+  Future reportPostApi(data) async {
+    return await Api().postRequestBase("/api/v1/reports", data);
+  }
+
+  Future reactionPostApi(idPost, data) async {
+    return await Api()
+        .postRequestBase("/api/v1/statuses/$idPost/favourite", data);
+  }
+
+  Future unReactionPostApi(idPost) async {
+    return await Api()
+        .postRequestBase("/api/v1/statuses/$idPost/unfavourite", null);
+  }
+
+  Future getListFavourited(idPost, params) async {
+    return await Api()
+        .getRequestBase('/api/v1/statuses/$idPost/favourited_by', params);
+  }
+
+  Future getListPostReblog(idPost, params) async {
+    return await Api()
+        .getRequestBase('/api/v1/statuses/$idPost/reblog', params);
   }
 }

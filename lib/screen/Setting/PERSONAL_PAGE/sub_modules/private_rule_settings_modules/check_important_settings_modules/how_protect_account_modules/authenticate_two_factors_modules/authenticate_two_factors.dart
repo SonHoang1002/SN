@@ -16,6 +16,8 @@ import 'main_authenticate_two_factors.dart';
 class MainAuthenticateTwoFactorsPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
+
+  MainAuthenticateTwoFactorsPage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
