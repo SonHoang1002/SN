@@ -13,6 +13,10 @@ Function(int num) shortenLargeNumber = (int num) {
   return num;
 };
 
+Function(int num) convertNumberToVND = (int num) {
+  return num.toString().replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
+};
+
 hiddenKeyboard(context) {
   FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -34,3 +38,4 @@ checkObjectUniqueInList(list, keyCheck) {
 
   return newList;
 }
+

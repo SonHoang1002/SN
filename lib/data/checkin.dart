@@ -249,7 +249,7 @@ List locations = [
   },
   {
     "id": "108277159418893553",
-    "title": "DemoSize",
+    "title": " Size",
     "description": "a",
     "description_html": "&lt;p&gt;a&lt;/p&gt;",
     "email": null,

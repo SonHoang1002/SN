@@ -25,7 +25,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: ((context) => const OnboardingLoginPage())));
+                  builder: ((context) =>  OnboardingLoginPage())));
         }
       });
     }

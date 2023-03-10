@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
+import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/main_login_page.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu_user.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -173,9 +174,7 @@ class _MenuState extends State<Menu> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             backgroundColor: const Color(0xffdcdcdc)),
-                        onPressed: () {
-                          logout();
-                        },
+                        onPressed: () {},
                         child: const Text(
                           "Đăng xuất",
                           style: TextStyle(color: Colors.black, fontSize: 13),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
-buildRatingStarWidget(int rating, {double? size}) {
+Widget buildRatingStarWidget(dynamic rating, {double? size}) {
   return Row(
       children: List.generate(5, (indexList) {
     return Container(

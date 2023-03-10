@@ -175,7 +175,7 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
         ),
         commentChild,
         treeThemeData: TreeThemeData(
-            lineColor: replyCount == 0 ? Colors.transparent : greyColor,
+            lineColor: replyCount == 0 ? transparent : greyColor,
             lineWidth: 0.5),
         avatarRoot: (context, data) => PreferredSize(
             preferredSize: const Size.fromRadius(18),

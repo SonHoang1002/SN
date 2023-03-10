@@ -96,9 +96,9 @@ class _PostHeaderState extends State<PostHeader> {
     }
 
     return InkWell(
-      hoverColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
+      hoverColor: transparent,
+      highlightColor: transparent,
+      splashColor: transparent,
       onTap: () {
         if (widget.type != postDetail) {
           Navigator.push(

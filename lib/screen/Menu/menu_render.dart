@@ -8,6 +8,8 @@ import 'package:social_network_app_mobile/screen/Moment/moment.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
+import '../MarketPlace/screen/main_market_page.dart';
+
 class MenuRender extends StatelessWidget {
   const MenuRender({Key? key}) : super(key: key);
 
@@ -21,9 +23,11 @@ class MenuRender extends StatelessWidget {
           CupertinoPageRoute(
               builder: (context) => menu['key'] == 'moment'
                   ? const Moment(isBack: true)
-                  : MenuSelected(
-                      menuSelected: menu,
-                    )));
+                  : menu["key"] == "marketPlace"
+                      ? const MainMarketPage()
+                      : MenuSelected(
+                          menuSelected: menu,
+                        )));
     }
 
     return Column(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
+import 'package:social_network_app_mobile/data/market_place_datas/product_categories_data.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/category_search_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
@@ -11,6 +13,8 @@ import '../../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../../widget/GeneralWidget/text_content_widget.dart';
 
 class FilterCategoriesPage extends ConsumerStatefulWidget {
+  const FilterCategoriesPage({super.key});
+
   @override
   ConsumerState<FilterCategoriesPage> createState() =>
       _FilterCategoriesPageState();
@@ -18,7 +22,6 @@ class FilterCategoriesPage extends ConsumerStatefulWidget {
 
 class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
   late double width = 0;
-
   late double height = 0;
   List<dynamic>? parentCategoriesList;
   List<dynamic>? data;
@@ -29,12 +32,6 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
       return;
     }
     super.initState();
-
-    Future.delayed(Duration.zero, () {
-      final primaryData = ref
-          .read(productCategoriesProvider.notifier)
-          .getListProductCategories();
-    });
   }
 
   @override
@@ -42,9 +39,10 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    data = ref.watch(productCategoriesProvider).list;
+    if (data == null || data!.isEmpty) {
+      data = demoProductCategories;
+    }
     _getParentCategoriesList();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -52,7 +50,7 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: const [
             BackIconAppbar(),
             AppBarTitle(title: "Lọc theo hạng mục"),
             Icon(
@@ -68,37 +66,29 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
         Expanded(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            // color: Colors.grey,
             child: Row(
               children: [
-                Container(
+                SizedBox(
                   width: 80,
                   child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
                       child: Column(
-                    children:
-                        List.generate(parentCategoriesList!.length, (index) {
-                      return InkWell(
-                        onTap: () {
-                          _getChildCategoriesFromParentCategoriesList(
-                              data![index]["subcategories"]);
-                        },
-                        child: buildCategoryProductItemWidget(
-                            parentCategoriesList![index],
-                            MarketPlaceConstants.PATH_IMG +
-                                "Bách hóa Online.png"),
-                      );
-                    }),
-                  )),
+                        children: List.generate(parentCategoriesList!.length,
+                            (index) {
+                          return buildCategoryProductItemWidget(
+                              context,
+                              parentCategoriesList![index]["title"],
+                              parentCategoriesList![index]["icon"],
+                              function: () {
+                            _getChildCategoriesList(
+                                data![index]["subcategories"]);
+                          });
+                        }),
+                      )),
                 ),
                 buildSpacer(width: 20),
-                // Container(
-                //   color: red,
-                //   width: 10,
-                //   margin: EdgeInsets.symmetric(horizontal: 5),
-                // ),
                 Expanded(
                     child: Container(
-                        // color: red,
                         child: childCategoriesList != null
                             ? Container(
                                 alignment: Alignment.topCenter,
@@ -112,18 +102,22 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
                                       gridDelegate:
                                           const SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisSpacing: 10,
-                                              // mainAxisSpacing: 5,
                                               crossAxisCount: 3,
-                                              // childAspectRatio: 0.79),
                                               childAspectRatio: 0.65),
                                       itemCount: childCategoriesList?.length,
-                                      // shrinkWrap: true,
                                       itemBuilder: (context, index) {
                                         return buildCategoryProductItemWidget(
-                                          childCategoriesList?[index] as String,
-                                          MarketPlaceConstants.PATH_IMG +
-                                              "Bách hóa Online.png",
-                                        );
+                                            context,
+                                            childCategoriesList?[index]["title"]
+                                                as String,
+                                            childCategoriesList?[index]["icon"],
+                                            function: () {
+                                          pushAndReplaceToNextScreen(
+                                              context,
+                                              CategorySearchPage(
+                                                  title: childCategoriesList?[
+                                                      index]["title"]));
+                                        });
                                       }),
                                 ),
                               )
@@ -138,23 +132,28 @@ class _FilterCategoriesPageState extends ConsumerState<FilterCategoriesPage> {
     );
   }
 
-  _getParentCategoriesList() {
-    List<dynamic> primary_product_categories = data!.map((e) {
-      return e["text"];
+  void _getParentCategoriesList() {
+    List<dynamic> primaryProductCategories = data!.map((e) {
+      return {
+        "title": e["text"],
+        "icon": e["icon"] != ""
+            ? e["icon"]
+            : "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png"
+      };
     }).toList();
-    // for (int i = 0; i < data!.length; i++) {
-    //   primary_product_categories.add(data![i]["text"]);
-    // }
-
-    parentCategoriesList = primary_product_categories;
+    parentCategoriesList = primaryProductCategories;
     setState(() {});
   }
 
-  _getChildCategoriesFromParentCategoriesList(List<dynamic> subcategories) {
-    List<String> primaryList = [];
-
+  void _getChildCategoriesList(List<dynamic> subcategories) {
+    List<dynamic> primaryList = [];
     for (int i = 0; i < subcategories.length; i++) {
-      primaryList.add(subcategories[i]["text"]);
+      primaryList.add({
+        "title": subcategories[i]["text"],
+        "icon": subcategories[i]["icon"] != ""
+            ? subcategories[i]["icon"]
+            : "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png"
+      });
     }
     childCategoriesList = primaryList;
     setState(() {});

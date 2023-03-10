@@ -1,44 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/apis/market_place_apis/Create_product_api.dart';
+final updateProductProvider =
+    StateNotifierProvider<UpdateProductDataController, UpdateProductDataState>(
+        (ref) => UpdateProductDataController());
 
-class CreateProductState {
-  Map<String, dynamic> data;
-  CreateProductState({this.data = const {}});
-  CreateProductState copyWith(Map<String, dynamic> newData) {
-    return CreateProductState(data: newData);
-  }
-}
-
-final createProductProvider =
-    StateNotifierProvider<CreateProductController, CreateProductState>(
-        (ref) => CreateProductController());
-
-class CreateProductController extends StateNotifier<CreateProductState> {
-  CreateProductController() : super(CreateProductState());
-
-  postCreateProduct(Map<String, dynamic> data) async {
-    final response = await CreateProductApi().getListCreateProductApi(data);
-    print(response);
-  }
-}
-
-final updateProductDataProvider =
-    StateNotifierProvider<NewProductDataController, NewProductDataState>(
-        (ref) => NewProductDataController());
-
-class NewProductDataController extends StateNotifier<NewProductDataState> {
-  NewProductDataController() : super(NewProductDataState());
-  updateNewProductData(Map<String, dynamic> newData) {
-    
+class UpdateProductDataController extends StateNotifier<UpdateProductDataState> {
+  UpdateProductDataController() : super(UpdateProductDataState());
+  updateProductData(Map<String, dynamic> newData) {
     state = state.copyWith(newData);
-    print("state: ${state.data}");
+    print("updateProduct provider: ${state.data}");
   }
 }
 
-class NewProductDataState {
+class UpdateProductDataState {
   Map<String, dynamic> data;
-  NewProductDataState({this.data = const {}});
-  NewProductDataState copyWith(Map<String, dynamic> data) {
-    return NewProductDataState(data: data);
+  UpdateProductDataState({this.data = const {}});
+  UpdateProductDataState copyWith(Map<String, dynamic> data) {
+    return UpdateProductDataState(data: data);
   }
 }

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 
@@ -55,27 +55,59 @@ class FeedPlayerPortraitControls extends StatelessWidget {
           ),
           type == postMoment
               ? const SizedBox()
-              : FlickAutoHideChild(
-                  autoHide: false,
-                  showIfVideoNotInitialized: false,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: Colors.black38,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: FlickSoundToggle(
-                          toggleMute: () => flickMultiManager?.toggleMute(),
-                          color: Colors.white,
-                        ),
+              : type == 'showFullScreen'
+                  ? FlickAutoHideChild(
+                      autoHide: false,
+                      showIfVideoNotInitialized: false,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.black38,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: FlickSoundToggle(
+                              toggleMute: () => flickMultiManager?.toggleMute(),
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.black38,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const FlickFullScreenToggle(),
+                          ),
+                        ],
                       ),
-                      // FlickFullScreenToggle(),
-                    ],
-                  ),
-                ),
+                    )
+                  : FlickAutoHideChild(
+                      autoHide: false,
+                      showIfVideoNotInitialized: false,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.black38,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: FlickSoundToggle(
+                              toggleMute: () => flickMultiManager?.toggleMute(),
+                              color: Colors.white,
+                            ),
+                          ),
+                          // const FlickFullScreenToggle(),
+                        ],
+                      ),
+                    ),
         ],
       ),
     );

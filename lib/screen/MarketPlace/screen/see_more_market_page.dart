@@ -1,38 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../../../constant/marketPlace_constants.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import '../../../widget/appbar_title.dart';
 import '../../../widget/back_icon_appbar.dart';
 import '../widgets/product_item_widget.dart';
 
-class SeeMoreMarketPage extends StatelessWidget {
+class SeeMoreMarketPage extends ConsumerStatefulWidget {
+  const SeeMoreMarketPage({super.key});
+
+  @override
+  ConsumerState<SeeMoreMarketPage> createState() => _SeeMoreMarketPageState();
+}
+
+class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
   late double width = 0;
   late double height = 0;
+  List<dynamic>? _seeMoreProductList;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+    _initData();
     return Scaffold(
       resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const BackIconAppbar(),
-              const AppBarTitle(title: "Gợi ý sản phẩm"),
-              const Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
-              )
-            ],
-          ),
+      appBar: AppBar(
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            BackIconAppbar(),
+            AppBarTitle(title: "Danh sách sản phẩm"),
+            Icon(
+              FontAwesomeIcons.bell,
+              size: 18,
+              color: Colors.black,
+            )
+          ],
         ),
+      ),
       body: Column(children: [
         // main content
         Expanded(
@@ -44,37 +57,20 @@ class SeeMoreMarketPage extends StatelessWidget {
                   SingleChildScrollView(
                     child: GridView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisSpacing: 4,
                                 mainAxisSpacing: 4,
                                 crossAxisCount: 2,
-                                // childAspectRatio: 0.79),
-                                childAspectRatio: 0.87),
-                        itemCount: MainMarketBodyConstants
-                            .MAIN_MARKETPLACE_BODY_SUGGEST_FOR_YOU_CONTENTS[
-                                "data"]
-                            .length,
-                        // shrinkWrap: true,
+                                childAspectRatio: 0.79
+                                ),
+                        itemCount: _seeMoreProductList!.length,
                         itemBuilder: (context, index) {
-                          final data = MainMarketBodyConstants
-                                  .MAIN_MARKETPLACE_BODY_SUGGEST_FOR_YOU_CONTENTS[
-                              "data"];
-                          return buildOldProductItem(
-                                context: context,
-                                id: data[index]["id"].toString(),
-                                imgPath: data[index]["img"],
-                                width: width,
-                                title: data[index]["title"],
-                                price: [
-                                  data[index]["min_price"],
-                                  data[index]["max_price"] != null
-                                      ? data[index]["max_price"]
-                                      : null
-                                ],
-                                rate: data[index]["rate"],
-                                selled: data[index]["selled"]);
+                          return buildProductItem(
+                              context: context,
+                              width: width,
+                              data: _seeMoreProductList?[index]);
                         }),
                   ),
                 ],
@@ -85,7 +81,11 @@ class SeeMoreMarketPage extends StatelessWidget {
       ]),
     );
   }
+
+  _initData() {
+    if (_seeMoreProductList == null || _seeMoreProductList!.isEmpty) {
+      _seeMoreProductList = ref.watch(productsProvider).list;
+    }
+    setState(() {});
+  }
 }
-
-
- 

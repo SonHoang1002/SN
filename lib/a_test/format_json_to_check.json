@@ -1,0 +1,90 @@
+{
+    "product": {
+        "title": "demo update",
+        "description": "_categoryTitle != \"\"\n                                      ? _categoryUnitPageSelection(\n                                          context,\n                                          UpdateProductMarketConstants\n                                              .UPDATE_PRODUCT_MARKET_BRANCH_PRODUCT_TITLE,\n                                          \"Chọn ngành hàng\",\n                                        )\n                                      : const SizedBox(),",
+        "product_category_id": 55,
+        "brand": "Bộ sản phẩm làm đẹp",
+        "visibility": "public",
+        "page_id": "108277159418893569"
+    },
+    "product_options_attributes": [
+        {
+            "name": "dd",
+            "position": 1,
+            "values": [
+                "t",
+                "u"
+            ]
+        },
+        {
+            "name": "ggg",
+            "position": 2,
+            "values": [
+                "rtt",
+                "w"
+            ]
+        }
+    ],
+    "product_variants_attributes": [
+        {
+            "title": "demo update - t - rtt ",
+            "price": "12000.0",
+            "sku": "2rtryr56",
+            "position": 1,
+            "compare_at_price": null,
+            "option1": "t",
+            "option2": "rtt",
+            "image_id": "",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 2324,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+        },
+        {
+            "title": "demo update - t - w ",
+            "price": "12000.0",
+            "sku": "2rtryr56",
+            "position": 1,
+            "compare_at_price": null,
+            "option1": "t",
+            "option2": "w",
+            "image_id": "",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 2324,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+        },
+        {
+            "title": "demo update - u - rtt ",
+            "price": "12000.0",
+            "sku": "2rtryr56",
+            "position": 1,
+            "compare_at_price": null,
+            "option1": "u",
+            "option2": "rtt",
+            "image_id": "",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 2324,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+        },
+        {
+            "title": "demo update - u - w ",
+            "price": "12000.0",
+            "sku": "2rtryr56",
+            "position": 1,
+            "compare_at_price": null,
+            "option1": "u",
+            "option2": "w",
+            "image_id": "",
+            "weight": 0.25,
+            "weight_unit": "Kg",
+            "inventory_quantity": 2324,
+            "old_inventory_quantity": 100,
+            "requires_shipping": true
+        }
+    ]
+}

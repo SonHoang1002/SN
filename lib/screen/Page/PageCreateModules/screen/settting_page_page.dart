@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/page_constants.dart';
-import 'package:social_network_app_mobile/providers/current_number_page.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 

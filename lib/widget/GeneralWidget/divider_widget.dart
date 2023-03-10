@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme/colors.dart';
 
-buildDivider(
+Widget buildDivider(
     {double? left,
     double? height=10,
     double? top,
