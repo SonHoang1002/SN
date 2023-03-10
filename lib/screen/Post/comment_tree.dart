@@ -123,8 +123,6 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
             ...commentChild,
             commentCreate,
           ];
-          isShowCommentChild = true;
-          replyCount = replyCount + 1;
         });
       } else {
         int indexComment = postChildComment.indexWhere(
@@ -196,7 +194,9 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
               : AvatarSocial(width: 30, height: 30, path: data.avatar!),
         ),
         contentChild: (context, data) {
-          return replyCount > 0 && !isShowCommentChild
+          int index = postChildComment
+              .indexWhere((element) => element['id'] + '' == '${data.content}');
+          return replyCount > 0 && !isShowCommentChild && index < 0
               ? GestureDetector(
                   onTap: isLoadCommentChild
                       ? null
