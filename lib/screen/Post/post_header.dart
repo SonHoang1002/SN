@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
@@ -183,15 +184,12 @@ class _PostHeaderState extends State<PostHeader> {
                       children: [
                         InkWell(
                           onTap: () {
-                            showModalBottomSheet(
+                            showBarModalBottomSheet(
                                 context: context,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(20))),
-                                builder: (BuildContext context) {
-                                  return PostHeaderAction(
-                                      post: widget.post, type: widget.type);
-                                });
+                                backgroundColor: Theme.of(context).canvasColor,
+                                barrierColor: Colors.transparent,
+                                builder: (context) => PostHeaderAction(
+                                    post: widget.post, type: widget.type));
                           },
                           child: Icon(
                             FontAwesomeIcons.ellipsis,

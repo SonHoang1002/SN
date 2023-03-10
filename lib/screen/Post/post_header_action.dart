@@ -6,6 +6,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
@@ -55,6 +56,13 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "label": "Chỉnh sửa bài viết",
         "icon": FontAwesomeIcons.solidEdit,
         "isShow": meData['id'] == widget.post['account']['id']
+      },
+      {
+        "key": "complete_goal",
+        "label": "Đánh dấu hoàn thành mục tiêu",
+        "icon": FontAwesomeIcons.bullseye,
+        "isShow": meData['id'] == widget.post['account']['id'] &&
+            widget.post['post_type'] == postTarget
       },
       {
         "key": "comment_permission_post",
@@ -296,10 +304,10 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
                     borderRadius: BorderRadius.circular(8)),
                 child: Column(
                   children: List.generate(
-                      5,
-                      (index) => actionsPost.sublist(2, 7)[index]['isShow']
+                      6,
+                      (index) => actionsPost.sublist(2, 8)[index]['isShow']
                           ? BlockAction(
-                              item: actionsPost.sublist(2, 7)[index],
+                              item: actionsPost.sublist(2, 8)[index],
                               handleAction: handleAction,
                             )
                           : const SizedBox()),
