@@ -440,6 +440,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                         statusQuestion = null;
                                         checkin = null;
                                         lifeEvent = null;
+                                        menuSelected = null;
                                       });
                                     },
                                     child: Container(
@@ -602,6 +603,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                       top: Radius.circular(15))),
                               builder: (BuildContext context) {
                                 return CreateFeedMenu(
+                                    menuSelected: menuSelected,
                                     handleChooseMenu: handleChooseMenu);
                               });
                         }
@@ -609,34 +611,49 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       child: index != 4
                           ? listMenuPost[index]['image'] != null
                               ? IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) => Expanded(
-                                                    child: GalleryView(
-                                                  typePage: 'page_edit',
-                                                  isMutipleFile: true,
-                                                  handleGetFiles:
-                                                      handleUpdateData,
-                                                  filesSelected: files,
-                                                ))));
-                                  },
+                                  onPressed: (menuSelected?['disabled'] ?? [])
+                                          ?.contains('media')
+                                      ? null
+                                      : () {
+                                          Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      Expanded(
+                                                          child: GalleryView(
+                                                        typePage: 'page_edit',
+                                                        isMutipleFile: true,
+                                                        handleGetFiles:
+                                                            handleUpdateData,
+                                                        filesSelected: files,
+                                                      ))));
+                                        },
                                   icon: SvgPicture.asset(
                                     listMenuPost[index]['image'],
                                     height: 28,
                                     width: 28,
                                     fit: BoxFit.scaleDown,
+                                    color: (menuSelected?['disabled'] ?? [])
+                                            ?.contains('media')
+                                        ? greyColor
+                                        : null,
                                   ),
                                 )
                               : GestureDetector(
-                                  onTap: () {
-                                    handleChooseMenu(
-                                        listMenuPost[index], 'menu_out');
-                                  },
+                                  onTap: (menuSelected?['disabled'] ?? [])
+                                          ?.contains(listMenuPost[index]['key'])
+                                      ? null
+                                      : () {
+                                          handleChooseMenu(
+                                              listMenuPost[index], 'menu_out');
+                                        },
                                   child: Icon(
                                     listMenuPost[index]['icon'],
-                                    color: Color(listMenuPost[index]['color']),
+                                    color: (menuSelected?['disabled'] ?? [])
+                                            ?.contains(
+                                                listMenuPost[index]['key'])
+                                        ? greyColor
+                                        : Color(listMenuPost[index]['color']),
                                     size: 24,
                                   ),
                                 )
