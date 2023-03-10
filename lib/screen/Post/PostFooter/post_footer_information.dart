@@ -38,7 +38,7 @@ class PostFooterInformation extends ConsumerWidget {
     List renderListReactions = sortReactions.reversed.toList();
 
     if (viewerReaction.isNotEmpty) {
-      if (favourites != null && favourites.isNotEmpty) {
+      if (favourites != null && favourites.length == 2) {
         textRender =
             'Bạn, ${meData['id'] == favourites[0]['account']['id'] ? favourites[1]['account']['display_name'] : favourites[0]['account']['display_name']}${reactionsCount > 2 ? ' và ${shortenLargeNumber(reactionsCount - 2)} người khác' : ''}';
       } else {

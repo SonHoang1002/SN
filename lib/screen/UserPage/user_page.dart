@@ -21,6 +21,8 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
+import 'package:loader_skeleton/loader_skeleton.dart';
+import 'package:social_network_app_mobile/widget/skeleton.dart';
 
 class UserPage extends ConsumerStatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -178,9 +180,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                       post: postUser[index],
                     )),
             isMorePageUser
-                ? const Center(
-                    child: CupertinoActivityIndicator(),
-                  )
+                ? Center(child: SkeletonCustom().postSkeleton(context))
                 : const SizedBox()
           ],
         ),
