@@ -16,6 +16,40 @@ List watchMenu = [
     "label": "Video đã lưu",
   }
 ];
+List eventMenu = [
+  {
+    "key": "event_for_you",
+    "label": "Dành cho bạn",
+  },
+  {
+    "key": "event_local",
+    "label": "Địa phương",
+  },
+  {
+    "key": "event_this_week",
+    "label": "Tuần này",
+  },
+  {
+    "key": "event_group",
+    "label": "Nhóm",
+  },
+  {
+    "key": "event_online",
+    "label": "Online",
+  },
+  {
+    "key": "event_following",
+    "label": "Đang theo dõi",
+  },
+  {
+    "key": "event_class",
+    "label": "Lớp học",
+  },
+  {
+    "key": "event_art",
+    "label": "Nghệ thuật",
+  }
+];
 
 List listSocial = [
   {

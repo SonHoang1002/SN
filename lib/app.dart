@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/providers/choose_object_provider.dart';
