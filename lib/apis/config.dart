@@ -1,5 +1,5 @@
 const baseRoot = 'https://snapi.emso.asia';
-const baseRootPtube = 'https://pt2.emso.vn';
+const baseRootPtube = 'https://pt3.emso.vn';
 
 // const BASE_ROOT = 'https://mxh.emso.asia';
 
