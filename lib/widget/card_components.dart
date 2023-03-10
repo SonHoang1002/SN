@@ -117,9 +117,8 @@ class CardComponents extends StatelessWidget {
                       )),
                 ),
                 SizedBox(
-                  height: 60,
-                  child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                       child: buttonCard),
                 )
               ],

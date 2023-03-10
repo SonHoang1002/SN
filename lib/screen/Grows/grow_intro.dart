@@ -24,6 +24,8 @@ List growSuggest = [];
 
 class _GrowIntroState extends ConsumerState<GrowIntro> {
   late FlickMultiManager flickMultiManager;
+
+
   var paramsConfig = {
     "limit": 3,
     "exclude_current_user": true,
@@ -44,6 +46,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
         () => ref
             .read(growControllerProvider.notifier)
             .getListGrowSuggest(paramsConfig));
+
   }
 
   List<bool> isReadMoreList = [true, true, true];
@@ -52,7 +55,6 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
   Widget build(BuildContext context) {
     List hosts = ref.watch(growControllerProvider).hosts;
     List grows = ref.watch(growControllerProvider).growsSuggest;
-
     var growDetail = widget.data;
     return Stack(
       children: [
@@ -167,19 +169,22 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: SizedBox(
-                      height: growDetail['introduction_video']['meta'] != null
+                      // height: MediaQuery.of(context).size.height - 66,
+                      height: growDetail['introduction_video']['meta'] != null && growDetail['introduction_video']['meta']['small'] != null
                           ? growDetail['introduction_video']['meta']['small']
                                       ['aspect'] <
                                   0.58
                               ? MediaQuery.of(context).size.height - 66
                               : null
-                          : null,
+                          :  MediaQuery.of(context).size.height - 66,
                       child: FeedVideo(
                           type: 'showFullScreen',
-                          path: growDetail['introduction_video']['remote_url'],
+                          path: growDetail['banner']['remote_url'] ??
+                            "",
                           flickMultiManager: flickMultiManager,
                           image: growDetail['introduction_video']
-                              ['preview_url']),
+                                  ['preview_url'] ??
+                             ""),
                     ),
                   ),
                 ],
@@ -229,7 +234,9 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                                     ['avatar_media']['url']
                                                 : hosts[index]['account']
                                                     ['avatar_static'],
-                                            width: 300.0,
+                                            width: hosts.length > 1
+                                                ? MediaQuery.of(context).size.width * 0.61
+                                                : MediaQuery.of(context).size.width * 0.91,
                                             height: 180.0,
                                           ),
                                         )
@@ -242,10 +249,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                                     ['avatar_media']['url']
                                                 : hosts[index]['account']
                                                     ['avatar_static'],
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.6,
+                                            width: 180.0,
                                             height: 180.0,
                                           ),
                                         ),
@@ -312,13 +316,13 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: const [
-                                      Icon(FontAwesomeIcons.solidStar,
+                                      Icon(FontAwesomeIcons.user,
                                           color: Colors.black, size: 14),
                                       SizedBox(
                                         width: 5.0,
                                       ),
                                       Text(
-                                        'Quan tâm',
+                                        'Xem',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 12.0,
@@ -357,7 +361,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.44,
+                    height: MediaQuery.of(context).size.height * 0.4,
                     child: ListView.builder(
                         itemCount: grows.length,
                         scrollDirection: Axis.horizontal,
@@ -384,44 +388,57 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                   ),
                                 ],
                               ),
-                              textCard: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Text(
-                                      grows[indexSuggest]['title'],
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w700,
-                                        overflow: TextOverflow.ellipsis,
+                              textCard: Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Text(
+                                          grows[indexSuggest]['title'],
+                                          maxLines: 2,
+                                          style: const TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Text(
-                                      'Cam kết mục tiêu ${convertNumberToVND(grows[indexSuggest]['target_value'] ~/ 1)} VNĐ',
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
-                                        color: greyColor,
-                                        fontWeight: FontWeight.w700,
+                                    Container(
+                                      height: 20,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 4.0),
+                                        child: Text(
+                                          'Cam kết mục tiêu ${convertNumberToVND(grows[indexSuggest]['target_value'] ~/ 1)} VNĐ',
+                                          maxLines: 2,
+                                          style: const TextStyle(
+                                            fontSize: 12.0,
+                                            color: greyColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Text(
-                                      '${grows[indexSuggest]['followers_count'].toString()} người quan tâm · ${grows[indexSuggest]['backers_count'].toString()} người ủng hộ',
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
-                                        color: greyColor,
-                                        fontWeight: FontWeight.w700,
+                                    Container(
+                                      height: 30,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 10.0),
+                                        child: Text(
+                                          '${grows[indexSuggest]['followers_count'].toString()} người quan tâm · ${grows[indexSuggest]['backers_count'].toString()} người ủng hộ',
+                                          maxLines: 2,
+                                          style: const TextStyle(
+                                            fontSize: 12.0,
+                                            color: greyColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               buttonCard: Row(
                                 children: [
@@ -436,14 +453,14 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                           ref
                                               .read(growControllerProvider
                                                   .notifier)
-                                              .updateStatusGrow(
+                                              .updateStatusHost(
                                                   grows[indexSuggest]['id'],
                                                   false);
                                         } else {
                                           ref
                                               .read(growControllerProvider
                                                   .notifier)
-                                              .updateStatusGrow(
+                                              .updateStatusHost(
                                                   grows[indexSuggest]['id'],
                                                   true);
                                         }
@@ -560,5 +577,10 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
