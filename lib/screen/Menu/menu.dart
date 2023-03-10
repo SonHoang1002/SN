@@ -174,7 +174,9 @@ class _MenuState extends State<Menu> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             backgroundColor: const Color(0xffdcdcdc)),
-                        onPressed: () {},
+                        onPressed: () {
+                          logout();
+                        },
                         child: const Text(
                           "Đăng xuất",
                           style: TextStyle(color: Colors.black, fontSize: 13),
