@@ -1,6 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 
+
+
+
 final growApiProvider = Provider((ref) {
   return GrowApi();
 });
@@ -31,4 +34,8 @@ class GrowApi {
   Future getGrowTransactionsApi(params) async {
     return await Api().getRequestBase('/api/v1/transactions', {});
   }
+  Future transactionDonateApi(id, data) async {
+    return await Api().postRequestBase('/api/v1/projects/$id/transaction', data);
+  }
 }
+

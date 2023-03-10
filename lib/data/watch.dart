@@ -417,11 +417,11 @@ List watchSaved = [
         "url":
             "https://snapi.emso.asia/media_proxy/109544934393059998/original",
         "preview_url":
-            "https://pt2.emso.vn/lazy-static/previews/95e24f46-62b0-459e-ac3c-f0e5168e5265.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/95e24f46-62b0-459e-ac3c-f0e5168e5265.jpg",
         "remote_url":
-            "https://pt2.emso.vn/static/streaming-playlists/hls/3afd146a-9452-4e89-817c-6326d178e818/a2b82430-a807-45a5-8326-55dcd325130d-master.m3u8",
+            "https://pt3.emso.vn/static/streaming-playlists/hls/3afd146a-9452-4e89-817c-6326d178e818/a2b82430-a807-45a5-8326-55dcd325130d-master.m3u8",
         "preview_remote_url":
-            "https://pt2.emso.vn/lazy-static/previews/95e24f46-62b0-459e-ac3c-f0e5168e5265.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/95e24f46-62b0-459e-ac3c-f0e5168e5265.jpg",
         "text_url": null,
         "meta": {
           "original": {
@@ -965,11 +965,11 @@ List watchSaved = [
         "url":
             "https://snapi.emso.asia/media_proxy/109543748364301446/original",
         "preview_url":
-            "https://pt2.emso.vn/lazy-static/previews/d130e6bf-a37a-4fe2-a4ec-e711dd99ebea.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/d130e6bf-a37a-4fe2-a4ec-e711dd99ebea.jpg",
         "remote_url":
-            "https://pt2.emso.vn/static/streaming-playlists/hls/0d206936-9ccc-4583-9742-13373cfb5a2d/3e39362c-837a-4ed2-b12d-e000e4b982a5-master.m3u8",
+            "https://pt3.emso.vn/static/streaming-playlists/hls/0d206936-9ccc-4583-9742-13373cfb5a2d/3e39362c-837a-4ed2-b12d-e000e4b982a5-master.m3u8",
         "preview_remote_url":
-            "https://pt2.emso.vn/lazy-static/previews/d130e6bf-a37a-4fe2-a4ec-e711dd99ebea.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/d130e6bf-a37a-4fe2-a4ec-e711dd99ebea.jpg",
         "text_url": null,
         "meta": {
           "original": {
@@ -1438,11 +1438,11 @@ List watchSaved = [
         "url":
             "https://snapi.emso.asia/media_proxy/109557101609431740/original",
         "preview_url":
-            "https://pt2.emso.vn/lazy-static/previews/47252b3a-f6cc-49b6-b1de-379e5a98d4ba.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/47252b3a-f6cc-49b6-b1de-379e5a98d4ba.jpg",
         "remote_url":
-            "https://pt2.emso.vn/static/streaming-playlists/hls/f4722f64-9ba5-402d-b1ab-37ab20b8b82f/e979c9e9-31c4-48b2-a30a-5bb8467ccf9e-master.m3u8",
+            "https://pt3.emso.vn/static/streaming-playlists/hls/f4722f64-9ba5-402d-b1ab-37ab20b8b82f/e979c9e9-31c4-48b2-a30a-5bb8467ccf9e-master.m3u8",
         "preview_remote_url":
-            "https://pt2.emso.vn/lazy-static/previews/47252b3a-f6cc-49b6-b1de-379e5a98d4ba.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/47252b3a-f6cc-49b6-b1de-379e5a98d4ba.jpg",
         "text_url": null,
         "meta": {
           "original": {
@@ -3482,11 +3482,11 @@ List watchs = [
         "url":
             "https://snapi.emso.asia/media_proxy/109557052136713992/original",
         "preview_url":
-            "https://pt2.emso.vn/lazy-static/previews/50f29856-4473-4173-accb-02c7ebaad329.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/50f29856-4473-4173-accb-02c7ebaad329.jpg",
         "remote_url":
-            "https://pt2.emso.vn/static/streaming-playlists/hls/b8a4b7b3-0c3a-4c92-9070-31b0da08562b/1cfccd13-0783-46a2-a23b-d0972e09b8e3-master.m3u8",
+            "https://pt3.emso.vn/static/streaming-playlists/hls/b8a4b7b3-0c3a-4c92-9070-31b0da08562b/1cfccd13-0783-46a2-a23b-d0972e09b8e3-master.m3u8",
         "preview_remote_url":
-            "https://pt2.emso.vn/lazy-static/previews/50f29856-4473-4173-accb-02c7ebaad329.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/50f29856-4473-4173-accb-02c7ebaad329.jpg",
         "text_url": null,
         "meta": {
           "original": {
@@ -3938,11 +3938,11 @@ List watchs = [
         "url":
             "https://snapi.emso.asia/media_proxy/109549292903424879/original",
         "preview_url":
-            "https://pt2.emso.vn/lazy-static/previews/e2ec4cbc-3618-4bc4-be71-d0fecceec522.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/e2ec4cbc-3618-4bc4-be71-d0fecceec522.jpg",
         "remote_url":
-            "https://pt2.emso.vn/static/streaming-playlists/hls/c498cae0-3e66-4474-ad5a-72df4566fe41/02674af5-050a-4d6f-826e-4c92ae131828-master.m3u8",
+            "https://pt3.emso.vn/static/streaming-playlists/hls/c498cae0-3e66-4474-ad5a-72df4566fe41/02674af5-050a-4d6f-826e-4c92ae131828-master.m3u8",
         "preview_remote_url":
-            "https://pt2.emso.vn/lazy-static/previews/e2ec4cbc-3618-4bc4-be71-d0fecceec522.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/e2ec4cbc-3618-4bc4-be71-d0fecceec522.jpg",
         "text_url": null,
         "meta": {
           "original": {
@@ -4404,11 +4404,11 @@ List watchs = [
         "url":
             "https://snapi.emso.asia/media_proxy/109556925288250227/original",
         "preview_url":
-            "https://pt2.emso.vn/lazy-static/previews/736f157a-7d80-42fd-8780-69168da79e5d.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/736f157a-7d80-42fd-8780-69168da79e5d.jpg",
         "remote_url":
-            "https://pt2.emso.vn/static/streaming-playlists/hls/48e99123-305b-433e-aea1-00d6865d89bb/b82cbdf5-4899-4d7b-97e1-52bca6b30597-master.m3u8",
+            "https://pt3.emso.vn/static/streaming-playlists/hls/48e99123-305b-433e-aea1-00d6865d89bb/b82cbdf5-4899-4d7b-97e1-52bca6b30597-master.m3u8",
         "preview_remote_url":
-            "https://pt2.emso.vn/lazy-static/previews/736f157a-7d80-42fd-8780-69168da79e5d.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/736f157a-7d80-42fd-8780-69168da79e5d.jpg",
         "text_url": null,
         "meta": {
           "original": {
@@ -4857,11 +4857,11 @@ List watchs = [
         "url":
             "https://snapi.emso.asia/media_proxy/109567666384562353/original",
         "preview_url":
-            "https://pt2.emso.vn/lazy-static/previews/231e0856-3762-4003-9001-a4e61542e3a4.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/231e0856-3762-4003-9001-a4e61542e3a4.jpg",
         "remote_url":
-            "https://pt2.emso.vn/static/streaming-playlists/hls/113d6535-3207-4442-ab76-30ac71c5c8b9/3d944ad8-6c73-495a-86a8-ac1bbc1d0728-master.m3u8",
+            "https://pt3.emso.vn/static/streaming-playlists/hls/113d6535-3207-4442-ab76-30ac71c5c8b9/3d944ad8-6c73-495a-86a8-ac1bbc1d0728-master.m3u8",
         "preview_remote_url":
-            "https://pt2.emso.vn/lazy-static/previews/231e0856-3762-4003-9001-a4e61542e3a4.jpg",
+            "https://pt3.emso.vn/lazy-static/previews/231e0856-3762-4003-9001-a4e61542e3a4.jpg",
         "text_url": null,
         "meta": {
           "original": {
