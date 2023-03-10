@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:comment_tree/comment_tree.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -23,7 +26,7 @@ import 'package:social_network_app_mobile/widget/reaction_list.dart';
 import 'package:social_network_app_mobile/widget/report_category.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class CommentTree extends StatefulWidget {
+class CommentTree extends StatefulHookConsumerWidget {
   const CommentTree(
       {Key? key,
       this.commentParent,
@@ -43,10 +46,10 @@ class CommentTree extends StatefulWidget {
   final Function? handleDeleteComment;
 
   @override
-  State<CommentTree> createState() => _CommentTreeState();
+  ConsumerState<CommentTree> createState() => _CommentTreeState();
 }
 
-class _CommentTreeState extends State<CommentTree> {
+class _CommentTreeState extends ConsumerState<CommentTree> {
   bool isShowCommentChild = false;
   bool isLoadCommentChild = false;
   List<Comment> commentChild = [];
@@ -97,14 +100,13 @@ class _CommentTreeState extends State<CommentTree> {
   Widget build(BuildContext context) {
     dynamic avatarMedia = widget.commentParent?['account']?['avatar_media'];
 
-    // print('******** ${widget.commentParent}');
     checkElement() {
       int indexCommentChild = postChildComment.indexWhere(
           (element) => element['id'] == widget.commentChildCreate['id']);
 
-      if (indexCommentChild < 0) return true;
+      if (indexCommentChild < 0) return false;
 
-      return false;
+      return true;
     }
 
     if (widget.commentChildCreate != null) {
@@ -116,7 +118,7 @@ class _CommentTreeState extends State<CommentTree> {
           userName: widget.commentChildCreate['account']['display_name'],
           content: widget.commentChildCreate['id']);
 
-      if (checkElement()) {
+      if (!checkElement()) {
         setState(() {
           postChildComment = [...postChildComment, widget.commentChildCreate];
           commentChild = [
@@ -129,7 +131,6 @@ class _CommentTreeState extends State<CommentTree> {
       } else {
         int indexComment = postChildComment.indexWhere(
             (element) => element['id'] == widget.commentChildCreate['id']);
-
         if (indexComment > -1) {
           setState(() {
             postChildComment = [
@@ -256,7 +257,7 @@ class _CommentTreeState extends State<CommentTree> {
   }
 }
 
-class BoxComment extends StatefulWidget {
+class BoxComment extends StatefulHookConsumerWidget {
   final dynamic post;
   final Function? getCommentSelected;
   final FocusNode? commentNode;
@@ -276,26 +277,25 @@ class BoxComment extends StatefulWidget {
   final dynamic data;
 
   @override
-  State<BoxComment> createState() => _BoxCommentState();
+  ConsumerState<BoxComment> createState() => _BoxCommentState();
 }
 
-class _BoxCommentState extends State<BoxComment> {
+class _BoxCommentState extends ConsumerState<BoxComment> {
   dynamic postRender;
   String textRender = '';
 
   @override
-  void initState() {
-    super.initState();
-
-    if (mounted && widget.post != null) {
-      setState(() {
-        postRender = widget.post;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    useEffect(() {
+      if (mounted && widget.post != null) {
+        setState(() {
+          postRender = widget.post;
+        });
+      }
+
+      return null;
+    }, [widget.post]);
+
     String viewerReaction = postRender?['viewer_reaction'] ?? '';
     List reactions = postRender?['reactions'] ?? [];
 
@@ -822,6 +822,7 @@ class _PostMediaCommentState extends State<PostMediaComment> {
     List medias = widget.post['media_attachments'] ?? [];
     final size = MediaQuery.of(context).size;
     renderCard() {
+      if (card['link'] == null) return const SizedBox();
       if (card['description'] == 'sticky') {
         return ImageCacheRender(
           path: card['link'],

@@ -7,8 +7,9 @@ import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
@@ -22,10 +23,9 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/mentions/controller/social_text_editing_controller.dart';
 import 'package:social_network_app_mobile/widget/mentions/model/detected_type_enum.dart';
 import 'package:social_network_app_mobile/widget/mentions/model/social_content_detection_model.dart';
-import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
-class CommentTextfield extends ConsumerStatefulWidget {
+class CommentTextfield extends StatefulHookConsumerWidget {
   final Function? handleComment;
   final FocusNode? commentNode;
   final dynamic commentSelected;
@@ -127,6 +127,34 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
   @override
   Widget build(BuildContext context) {
+    useEffect(
+      () {
+        if (widget.commentSelected != null &&
+            widget.commentSelected['typeStatus'] == 'editComment') {
+          textController.text = widget.commentSelected['content'];
+          textController.selection = TextSelection.collapsed(
+              offset: widget.commentSelected['content'].length);
+          setState(() {
+            content = widget.commentSelected['content'];
+          });
+          dynamic card = widget.commentSelected['card'];
+
+          if (card != null && card['link'] != null) {
+            setState(() {
+              linkEmojiSticky = card['link'];
+            });
+          }
+        } else {
+          textController.text = '';
+          setState(() {
+            linkEmojiSticky = '';
+            files = [];
+          });
+        }
+        return null;
+      },
+      [widget.commentSelected?['id']],
+    );
     handleClickIcon() {
       setState(() {
         isShowEmoji = !isShowEmoji;
@@ -376,7 +404,8 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 },
                 child: const Icon(
                   FontAwesomeIcons.camera,
-                  color: greyColor,
+                  color: secondaryColor,
+                  size: 20,
                 ),
               ),
               const SizedBox(
@@ -395,32 +424,51 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     onTap: () {
                       handleClickIcon();
                     },
-                    child: checkVisibileSubmit()
-                        ? SizedBox(
-                            width: 60,
-                            child: Center(
-                              child: TextAction(
-                                action: !isComment
-                                    ? () {
-                                        setState(() {
-                                          isComment = true;
-                                        });
-                                        handleActionComment();
-                                      }
-                                    : null,
-                                title: widget.commentSelected?['typeStatus'] ==
-                                        'editComment'
-                                    ? 'Lưu'
-                                    : "Đăng",
-                                fontSize: 15,
-                              ),
-                            ),
-                          )
-                        : Icon(
-                            FontAwesomeIcons.solidFaceSmile,
-                            color: isShowEmoji ? primaryColor : greyColor,
-                          )),
-              ))
+                    child: Icon(
+                      FontAwesomeIcons.solidFaceSmile,
+                      size: 20,
+                      color: isShowEmoji ? secondaryColor : greyColor,
+                    )),
+              )),
+              const SizedBox(
+                width: 8.0,
+              ),
+              checkVisibileSubmit()
+                  ? GestureDetector(
+                      onTap: !isComment
+                          ? () {
+                              setState(() {
+                                isComment = true;
+                              });
+                              handleActionComment();
+                            }
+                          : null,
+                      child: const Icon(
+                        Icons.send,
+                        color: secondaryColor,
+                        size: 20,
+                      ),
+                    )
+                  : const SizedBox(),
+              widget.commentSelected != null
+                  ? Row(
+                      children: [
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            widget.getCommentSelected!(null);
+                          },
+                          child: const Icon(
+                            FontAwesomeIcons.xmark,
+                            color: secondaryColor,
+                            size: 20,
+                          ),
+                        )
+                      ],
+                    )
+                  : const SizedBox()
             ]),
             isShowEmoji
                 ? DraggableBottomSheet(

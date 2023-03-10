@@ -118,10 +118,17 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     List dataPreComment = [];
 
     if (data['type'] == 'parent' && data['typeStatus'] == null) {
+      //Comment parent
       dataPreComment = [newCommentPreview, ...postComment];
+    } else if (data['type'] == 'parent' &&
+        data['typeStatus'] == 'editComment') {
+      //Edit comment child
+      dataPreComment = postComment;
     } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+      //Comment child
       dataPreComment = postComment;
     } else if (data['typeStatus'] == 'editComment') {
+      //Edit comment parent
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newCommentPreview['id']);
       List newListUpdate = [];
@@ -151,9 +158,13 @@ class _PostDetailState extends ConsumerState<PostDetail> {
           }) ??
           newCommentPreview;
     } else {
-      newComment = await PostApi().updatePost(data['id'],
-          {"extra_body": null, "status": data['status'], "tags": []});
+      newComment = await PostApi().updatePost(data['id'], {
+        "extra_body": data['extra_body'],
+        "status": data['status'],
+        "tags": []
+      });
     }
+
     if (mounted && newComment != null) {
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newComment['id']);
@@ -165,13 +176,20 @@ class _PostDetailState extends ConsumerState<PostDetail> {
             postComment.sublist(indexComment + 1);
       }
 
-      List dataCommentUpdate = [];
+      List dataCommentUpdate = postComment;
 
       if (data['type'] == 'parent' && data['typeStatus'] == null) {
+        //Comment parent
         dataCommentUpdate = [newComment, ...postComment.sublist(1)];
+      } else if (data['type'] == 'parent' &&
+          data['typeStatus'] == 'editComment') {
+        //Edit comment child
+        dataCommentUpdate = postComment;
       } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+        //Comment child
         dataCommentUpdate = postComment;
       } else if (data['typeStatus'] == 'editComment') {
+        //Edit comment parent
         dataCommentUpdate = newListUpdate;
       }
 
@@ -212,9 +230,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
-        setState(() {
-          commentSelected = null;
-        });
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,

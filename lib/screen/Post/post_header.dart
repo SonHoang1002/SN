@@ -328,10 +328,10 @@ class AvatarPost extends StatelessWidget {
   Widget build(BuildContext context) {
     String accountLink = account['avatar_media'] != null
         ? account['avatar_media']['preview_url']
-        : '';
+        : linkAvatarDefault;
     String pageLink = page != null && page['avatar_media'] != null
         ? page['avatar_media']['preview_url']
-        : '';
+        : linkAvatarDefault;
     return group != null
         ? SizedBox(
             width: 50,
