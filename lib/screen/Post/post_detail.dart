@@ -44,6 +44,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
 
   Future handleComment(data) async {
     if (!mounted) return;
+
     var newCommentPreview = {
       "id": data['id'],
       "in_reply_to_id": widget.post['id'],
@@ -120,14 +121,14 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     if (data['type'] == 'parent' && data['typeStatus'] == null) {
       //Comment parent
       dataPreComment = [newCommentPreview, ...postComment];
-    } else if (data['type'] == 'parent' &&
-        data['typeStatus'] == 'editComment') {
+    } else if (data['type'] == 'child' && data['typeStatus'] == 'editChild') {
       //Edit comment child
       dataPreComment = postComment;
     } else if (data['type'] == 'child' && data['typeStatus'] == null) {
       //Comment child
       dataPreComment = postComment;
-    } else if (data['typeStatus'] == 'editComment') {
+    } else if (data['type'] == 'parent' &&
+        data['typeStatus'] == 'editComment') {
       //Edit comment parent
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newCommentPreview['id']);
@@ -150,7 +151,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
 
     dynamic newComment;
 
-    if (data['typeStatus'] != 'editComment') {
+    if (!['editComment', 'editChild'].contains(data['typeStatus'])) {
       newComment = await PostApi().createStatus({
             ...data,
             "visibility": "public",
@@ -161,7 +162,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       newComment = await PostApi().updatePost(data['id'], {
         "extra_body": data['extra_body'],
         "status": data['status'],
-        "tags": []
+        "tags": data['tags']
       });
     }
 
@@ -181,14 +182,14 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       if (data['type'] == 'parent' && data['typeStatus'] == null) {
         //Comment parent
         dataCommentUpdate = [newComment, ...postComment.sublist(1)];
-      } else if (data['type'] == 'parent' &&
-          data['typeStatus'] == 'editComment') {
+      } else if (data['type'] == 'child' && data['typeStatus'] == 'editChild') {
         //Edit comment child
         dataCommentUpdate = postComment;
       } else if (data['type'] == 'child' && data['typeStatus'] == null) {
         //Comment child
         dataCommentUpdate = postComment;
-      } else if (data['typeStatus'] == 'editComment') {
+      } else if (data['type'] == 'parent' &&
+          data['typeStatus'] == 'editComment') {
         //Edit comment parent
         dataCommentUpdate = newListUpdate;
       }
@@ -263,12 +264,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                         type: postDetail,
                       ),
                       PostFooter(post: widget.post, type: postDetail),
-                      Container(
-                        height: 1,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 5),
-                        decoration:
-                            BoxDecoration(color: Colors.grey.withOpacity(0.3)),
+                      const SizedBox(
+                        height: 8,
                       ),
                       ListView.builder(
                           primary: false,

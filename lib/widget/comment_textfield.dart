@@ -64,16 +64,6 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   @override
   void initState() {
     super.initState();
-    if (widget.commentSelected != null &&
-        widget.commentSelected!["typeStatus"] == 'editComment') {
-      setState(() {
-        content = widget.commentSelected!['content'];
-      });
-
-      setState(() {
-        linkEmojiSticky = widget.commentSelected['card']?['link'] ?? '';
-      });
-    }
 
     textController = SocialTextEditingController()
       ..text = content
@@ -130,18 +120,35 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
     useEffect(
       () {
         if (widget.commentSelected != null &&
-            widget.commentSelected['typeStatus'] == 'editComment') {
-          textController.text = widget.commentSelected['content'];
+            ['editComment', 'editChild']
+                .contains(widget.commentSelected['typeStatus'])) {
+          String contentUpdate = widget.commentSelected['content'];
+
+          textController.text =
+              widget.commentSelected['typeStatus'] == 'editChild' &&
+                      contentUpdate.length >= 21
+                  ? contentUpdate.substring(21)
+                  : contentUpdate;
           textController.selection = TextSelection.collapsed(
-              offset: widget.commentSelected['content'].length);
+              offset: widget.commentSelected['typeStatus'] == 'editChild' &&
+                      contentUpdate.length >= 21
+                  ? contentUpdate.substring(21).length
+                  : contentUpdate.length);
           setState(() {
-            content = widget.commentSelected['content'];
+            content = contentUpdate;
           });
           dynamic card = widget.commentSelected['card'];
+          dynamic medias = widget.commentSelected['media_attachments'] ?? [];
 
           if (card != null && card['link'] != null) {
             setState(() {
               linkEmojiSticky = card['link'];
+            });
+          }
+
+          if (medias.isNotEmpty) {
+            setState(() {
+              files = medias;
             });
           }
         } else {
@@ -218,9 +225,16 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       });
     }
 
+    checkHasMention(data) {
+      if (data == null) return false;
+      if (data['typeStatus'] == 'editComment') return false;
+
+      return true;
+    }
+
     handleActionComment() async {
       dynamic dataUploadFile;
-      if (files.isNotEmpty) {
+      if (files.isNotEmpty && files[0]['id'] == null) {
         File? fileData = await files[0].file;
         String fileName = fileData!.path.split('/').last;
         FormData formData = FormData.fromMap({
@@ -230,13 +244,13 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
         dataUploadFile = await MediaApi().uploadMediaEmso(formData);
       }
-
       widget.handleComment!({
-        "id": widget.commentSelected?['typeStatus'] == 'editComment'
+        "id": widget.commentSelected != null &&
+                ['editComment', 'editChild']
+                    .contains(widget.commentSelected['typeStatus'])
             ? widget.commentSelected['id']
             : '111111111111',
-        "status": widget.commentSelected != null &&
-                widget.commentSelected['typeStatus'] != 'editComment'
+        "status": checkHasMention(widget.commentSelected)
             ? '[${widget.commentSelected['account']['id']}] $content'
             : content,
         "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : null,
@@ -248,8 +262,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 "link": linkEmojiSticky,
                 "title": ""
               },
-        "tags": (widget.commentSelected != null &&
-                    widget.commentSelected['typeStatus'] != 'editComment'
+        "tags": (checkHasMention(widget.commentSelected)
                 ? [...listMentionsSelected, widget.commentSelected['account']]
                 : listMentionsSelected)
             // .where((element) => flagContent.contains(element['id']))
@@ -353,16 +366,22 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                         ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
                             child: files.isNotEmpty
-                                ? Image.memory(
-                                    files[0].pickedThumbData,
-                                    fit: BoxFit.cover,
-                                    height: 80,
-                                    width: 70,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
+                                ? files[0]['id'] != null
+                                    ? ImageCacheRender(
+                                        path: files[0]['preview_url'],
+                                        height: 80.0,
+                                        width: 70.0,
+                                      )
+                                    : Image.memory(
+                                        files[0].pickedThumbData,
+                                        fit: BoxFit.cover,
+                                        height: 80,
+                                        width: 70,
+                                        errorBuilder: (context, error,
+                                                stackTrace) =>
                                             const Text(
                                                 'Hình ảnh không được hiển thị'),
-                                  )
+                                      )
                                 : ImageCacheRender(
                                     height: 70.0, path: linkEmojiSticky)),
                         Positioned(

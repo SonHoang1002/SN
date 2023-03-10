@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:comment_tree/comment_tree.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -766,7 +764,12 @@ class ActionComment extends ConsumerWidget {
       } else if (key == 'edit') {
         Navigator.pop(context);
         commentNode!.requestFocus();
-        await getCommentSelected!({...post, "typeStatus": "editComment"});
+        await getCommentSelected!({
+          ...post,
+          "typeStatus": post['in_reply_to_parent_id'] != null
+              ? "editChild"
+              : "editComment"
+        });
       }
     }
 
