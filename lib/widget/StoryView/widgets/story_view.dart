@@ -146,7 +146,7 @@ class StoryItem {
                     horizontal: 24,
                     vertical: 8,
                   ),
-                  color: caption != null ? Colors.black54 : Colors.transparent,
+                  color: caption != null ? Colors.black54 : transparent,
                   child: caption != null
                       ? Text(
                           caption,
@@ -254,8 +254,7 @@ class StoryItem {
                     margin: const EdgeInsets.only(bottom: 24),
                     padding:
                         const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
+                    color: caption != null ? Colors.black54 : transparent,
                     child: caption != null
                         ? Text(
                             caption,
@@ -311,8 +310,7 @@ class StoryItem {
                       horizontal: 24,
                       vertical: 8,
                     ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
+                    color: caption != null ? Colors.black54 : transparent,
                     child: caption != null
                         ? Text(
                             caption,

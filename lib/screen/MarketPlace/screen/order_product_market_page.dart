@@ -1,31 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/order_product_apis.dart';
+import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/order_product_provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/divider_widget.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import '../../../helper/push_to_new_screen.dart';
+import '../../../widget/GeneralWidget/circular_progress_indicator.dart';
 import 'notification_market_page.dart';
+import 'review_product_market_page.dart';
+import 'see_review_shop_market.dart';
 
-class OrderProductMarketPage extends StatefulWidget {
+class OrderProductMarketPage extends ConsumerStatefulWidget {
+  const OrderProductMarketPage({super.key});
+
   @override
-  State<OrderProductMarketPage> createState() => _OrderProductMarketPageState();
+  ConsumerState<OrderProductMarketPage> createState() =>
+      _OrderProductMarketPageState();
 }
 
-class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
+class _OrderProductMarketPageState
+    extends ConsumerState<OrderProductMarketPage> {
   late double width = 0;
   late double height = 0;
-  int length = 3;
+  List<dynamic>? _orderData = [];
+  List<dynamic>? _filteredOrderData;
+  Color? colorTheme;
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () async {
+      final orderData = await ref.read(orderProvider.notifier).getOrder();
+    });
   }
 
   @override
@@ -33,357 +50,608 @@ class _OrderProductMarketPageState extends State<OrderProductMarketPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-
+    colorTheme = ThemeMode.dark == true
+        ? Theme.of(context).cardColor
+        : const Color(0xfff1f2f5);
+    Color colorWord = ThemeMode.dark == true
+        ? white
+        : true == ThemeMode.light
+            ? blackColor
+            : blackColor;
+    Future.wait([_initData()]);
     return DefaultTabController(
-      length: 7, // Added
-      initialIndex: 0,
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                BackIconAppbar(),
-                AppBarTitle(title: "Danh sách đơn hàng"),
-                GestureDetector(
-                  onTap: () {
-                    pushToNextScreen(context, NotificationMarketPage());
-                  },
-                  child: Icon(
-                    FontAwesomeIcons.bell,
-                    size: 18,
-                    color: Colors.black,
-                  ),
-                )
-              ],
+        length: 7,
+        initialIndex: 0,
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const BackIconAppbar(),
+                  const AppBarTitle(title: "Danh sách đơn hàng"),
+                  GestureDetector(
+                    onTap: () {
+                      pushToNextScreen(context, NotificationMarketPage());
+                    },
+                    child:
+                        Icon(FontAwesomeIcons.bell, size: 18, color: colorWord),
+                  )
+                ],
+              ),
+              bottom: TabBar(
+                isScrollable: true,
+                tabs: OrderProductMarketConstant.ORDER_PRODUCT_MARKET_TAB_LIST
+                    .map((e) {
+                  return Tab(
+                      icon:
+                          Icon(FontAwesomeIcons.searchengin, color: colorWord),
+                      child: Text(
+                          e["title"] +
+                              " (" +
+                              _filteredOrderData?[OrderProductMarketConstant
+                                      .ORDER_PRODUCT_MARKET_TAB_LIST
+                                      .indexOf(e)]["data"]
+                                  .length
+                                  .toString() +
+                              ")",
+                          style: TextStyle(color: colorWord)));
+                }).toList(),
+              ),
             ),
-            bottom: const TabBar(
-              isScrollable: true,
-              tabs: [
-                Tab(
-                  icon: Icon(FontAwesomeIcons.list),
-                  child: Text("Tất cả"),
-                ),
-                Tab(
-                    icon: Icon(FontAwesomeIcons.watchmanMonitoring),
-                    child: Text("Chờ thanh toán (10)")),
-                Tab(
-                  icon: Icon(FontAwesomeIcons.list),
-                  child: Text("Vận chuyển (10)"),
-                ),
-                Tab(
-                    icon: Icon(FontAwesomeIcons.searchengin),
-                    child: Text("Đang giao (10)")),
-                Tab(
-                    icon: Icon(FontAwesomeIcons.searchengin),
-                    child: Text("Hoàn thành")),
-                Tab(
-                    icon: Icon(FontAwesomeIcons.searchengin),
-                    child: Text("Đã hủy")),
-                Tab(
-                    icon: Icon(FontAwesomeIcons.searchengin),
-                    child: Text("Trả hàng/hoàn tiền")),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              _buildAllBody(),
-              _buildWaitForPaymentBody(),
-              _buildTranferBody(),
-              _buildDeliveringBody(),
-              _buildCompleteBody(),
-              _buildCancelBody(),
-              _buildRefundBody(),
-            ],
-          )),
-    );
+            body: _orderData != null && _orderData!.isNotEmpty
+                ? TabBarView(
+                    children: [
+                      _buildAllBody(),
+                      _buildPendingBody(),
+                      _buildDeliveredBody(),
+                      _buildShippingBody(),
+                      _buildFinishBody(),
+                      _buildCancelBody(),
+                      _buildReturnBody(),
+                    ],
+                  )
+                : buildCircularProgressIndicator()));
+  }
+
+  Future<int> _initData() async {
+    if (_orderData == null || _orderData!.isEmpty) {
+      Future.delayed(Duration.zero, () async {
+        final orderData = await ref.read(orderProvider.notifier).getOrder();
+      });
+      _filteredOrderData =
+          OrderProductMarketConstant.ORDER_PRODUCT_MARKET_TAB_LIST.map(
+        (e) {
+          return {"key": e["key"], "title": e["title"], "data": []};
+        },
+      ).toList();
+
+      _orderData = ref.watch(orderProvider).order;
+
+//  _filterAndSort(_orderData);
+      _orderData?.forEach((_orderDataElement) {
+        for (var _filteredOrderDataElement in _filteredOrderData!) {
+          if (_filteredOrderDataElement["key"] == _orderDataElement["status"]) {
+            _filteredOrderData![_filteredOrderData!
+                    .indexOf(_filteredOrderDataElement)]['data']
+                .add(_orderDataElement);
+          }
+        }
+      });
+      _filteredOrderData![0]["data"] = _orderData;
+    }
+    _isLoading = false;
+    setState(() {});
+    return 0;
   }
 
   Widget _buildAllBody() {
-    return _buildBaseBody(_buildOrderComponent());
+    return _buildBaseBody(_buildOrderComponent(_filteredOrderData![0]));
   }
 
-  Widget _buildWaitForPaymentBody() {
-    return _buildBaseBody(_buildOrderComponent());
+  Widget _buildPendingBody() {
+    return _buildBaseBody(_buildOrderComponent(_filteredOrderData![1]));
   }
 
-  Widget _buildTranferBody() {
-    return Container(
-      color: greyColor,
-      height: 200,
-    );
+  Widget _buildDeliveredBody() {
+    return _buildBaseBody(_buildOrderComponent(_filteredOrderData![2]));
   }
 
-  Widget _buildDeliveringBody() {
-    return Container(
-      color: white,
-      height: 200,
-    );
+  Widget _buildShippingBody() {
+    return _buildBaseBody(_buildOrderComponent(_filteredOrderData![3]));
   }
 
-  Widget _buildCompleteBody() {
-    return Container(
-      color: blackColor,
-      height: 200,
-    );
+  Widget _buildFinishBody() {
+    return _buildBaseBody(_buildOrderComponent(_filteredOrderData![4]));
   }
 
   Widget _buildCancelBody() {
-    return Container(
-      color: secondaryColor,
-      height: 200,
-    );
+    return _buildBaseBody(_buildOrderComponent(_filteredOrderData![5]));
   }
 
-  Widget _buildRefundBody() {
-    return Container(
-      color: primaryColor,
-      height: 200,
-    );
+  Widget _buildReturnBody() {
+    return _buildBaseBody(_buildOrderComponent(_filteredOrderData![6]));
   }
 
-  Widget _buildOrderComponent() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-          color: greyColor[100],
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 0.4, color: greyColor)),
-      child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 5.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(),
-              buildTextContent("Chờ thanh toán (2 mục)", true,
-                  fontSize: 16, colorWord: Colors.yellow[700]),
-            ],
-          ),
-        ),
-        buildDivider(color: red),
-        Container(
-          // height: 225,
-          child: Column(
-            children: List.generate(
-              length,
-              (index) {
-                return Column(
-                  children: [
+  void _showDetailDialog(dynamic data) {
+    List<DataRow> rowList = <DataRow>[];
+    if (data["delivery_address"] != null &&
+        data["delivery_address"].isNotEmpty) {
+      for (int i = 0; i < data["order_items"].length; i++) {
+        rowList.add(DataRow(cells: [
+          DataCell(Text((i + 1).toString())),
+          DataCell(Text(data["order_items"][i]["product_variant"]["title"])),
+          DataCell(Text(data["order_items"][i]["product_variant"]["sku"])),
+          DataCell(Text(
+              data["order_items"][i]["product_variant"]["price"].toString())),
+          DataCell(Text(data["order_items"][i]["quantity"].toString())),
+          DataCell(Text((data["order_items"][i]["product_variant"]["price"] *
+                  data["order_items"][i]["quantity"])
+              .toString())),
+        ]));
+      }
+    }
+    showCustomBottomSheet(
+        bgColor: colorTheme,
+        context,
+        height * 0.75,
+        "Chi tiết đơn hàng",
+        iconData: FontAwesomeIcons.chevronLeft,
+        widget: data["delivery_address"] != null &&
+                data["delivery_address"].isNotEmpty
+            ? Expanded(
+                child: ListView(children: [
+                  _buildBetweenContent(
+                      "Người nhận", data["delivery_address"]["name"],
+                      titleColor: greyColor),
+                  _buildBetweenContent(
+                      "Số điện thoại", data["delivery_address"]["phone_number"],
+                      titleColor: greyColor),
+                  _buildBetweenContent(
+                      "Địa chỉ nhận hàng",
+                      data["delivery_address"]["detail_addresses"] +
+                          ", " +
+                          "Địa chỉ nhận hàng" +
+                          data["delivery_address"]["addresses"],
+                      titleColor: greyColor),
+                  _buildBetweenContent("Thông tin vận chuyển", "Kiện hàng 1",
+                      titleColor: greyColor),
+                  buildDivider(color: red, top: 5, bottom: 5),
+                  // thong tin thanh toán
+                  buildTextContent("Thông tin thanh toán", true,
+                      fontSize: 22, isCenterLeft: false),
+                  SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(columns: const [
+                        DataColumn(
+                            label: Text('STT',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Sản phẩm',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Sku phân loại',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Đơn giá',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Số lượng',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold))),
+                        DataColumn(
+                            label: Text('Thành tiền',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold))),
+                      ], rows: rowList),
+                    ),
+                  ),
+                  _buildBetweenContent(
+                    "Tổng tiền sản phẩm",
+                    data["subtotal"].toString(),
+                  ),
+                  _buildBetweenContent(
+                    "Phí vận chuyển",
+                    data["delivery_fee"].toString(),
+                  ),
+                  _buildBetweenContent(
+                    "Doanh thu đơn hàng",
+                    data["order_total"].toString(),
+                    titleBold: true,
+                  ),
+                  buildSpacer(height: 5),
+                  buildDivider(color: red),
+                  // thanh toan của người mua
+                  buildTextContent("Thanh toán của người mua", true,
+                      fontSize: 22, isCenterLeft: false),
+                  buildSpacer(height: 10),
+                  _buildBetweenContent(
+                      "Tổng tiền sản phẩm", data["subtotal"].toString()),
+                  _buildBetweenContent(
+                      "Phí vận chuyển", data["delivery_fee"].toString()),
+                  _buildBetweenContent(
+                      "Tổng tiền thanh toán", data["order_total"].toString(),
+                      titleBold: true, titleColor: blackColor),
+                  buildSpacer(height: 10)
+                ]),
+              )
+            : const SizedBox());
+  }
+
+  Widget _getStatus(dynamic key) {
+    Color wordColor = blackColor;
+    String title = "";
+    switch (key) {
+      case "pending":
+        wordColor = Colors.orange;
+        title = "Chờ thanh toán";
+        break;
+      case "delivered":
+        wordColor = Colors.grey;
+        title = "Vận chuyển";
+        break;
+      case "shipping":
+        wordColor = Colors.green;
+        title = "Đang giao";
+        break;
+      case "finish":
+        wordColor = Colors.blue;
+        title = "Hoàn thành";
+        break;
+      case "cancelled":
+        wordColor = Colors.red;
+        title = "Đã hủy";
+        break;
+      case "return":
+        wordColor = Colors.purple;
+        title = "Trả hàng/ Hoàn tiền";
+        break;
+      default:
+        break;
+    }
+    return buildTextContent(title, true, fontSize: 16, colorWord: wordColor);
+  }
+// general
+
+  Widget _buildOrderComponent(dynamic filterData) {
+    return filterData["data"].length != 0
+        ? Column(
+            children: List.generate(filterData["data"].length, (index) {
+            final data = filterData["data"][index];
+            return Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    _showDetailDialog(data);
+                  },
+                  child: Column(children: [
+                    index != 0 ? buildSpacer(height: 10) : const SizedBox(),
+                    const CrossBar(
+                      height: 10,
+                    ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      padding:
+                          const EdgeInsets.only(top: 5, right: 10, bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.shop,
-                                size: 20,
-                              ),
-                              buildSpacer(width: 10),
-                              buildTextContent(
-                                  "Real Madrid C.F. Việt Nam", false,
-                                  fontSize: 14),
-                            ],
-                          ),
-                          SizedBox()
+                          const SizedBox(),
+                          //status
+                          _getStatus(data["status"])
                         ],
                       ),
                     ),
                     buildDivider(color: red),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: GeneralComponent(
-                        [
-                          buildTextContent(
-                              "Real Madrid C.F. Việt Nam Real Madriddfgdfg  C.F. Việt Nam Real Madriddg  dfg   C.F. Việt Nam",
-                              false,
-                              fontSize: 18),
-                          buildSpacer(height: 10),
-                        ],
-                        preffixFlexValue: 6,
-                        prefixWidget: Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: ImageCacheRender(
-                            height: 100.0,
-                            path:
-                                "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.shop,
+                                size: 20,
+                              ),
+                              buildSpacer(width: 10),
+                              SizedBox(
+                                width: width * 0.7,
+                                child: buildTextContent(
+                                  data["page"]["title"],
+                                  false,
+                                  fontSize: 18,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        suffixFlexValue: 10,
-                        changeBackground: transparent,
-                        padding: EdgeInsets.zero,
+                          const SizedBox()
+                        ],
                       ),
                     ),
-                    buildSpacer(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildTextContent("Phân loại hạng: ", false,
-                            fontSize: 13, colorWord: greyColor),
-                        buildTextContent(
-                          "White",
-                          false,
-                          fontSize: 16,
-                        ),
-                      ],
+                    Column(
+                      children: List.generate(
+                        data["order_items"].length,
+                        (index) {
+                          return _buildOrderItem(data["order_items"][index]);
+                        },
+                      ),
                     ),
-                    buildSpacer(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildTextContent("Số lượng: ", false,
-                            fontSize: 13, colorWord: greyColor),
-                        buildTextContent(
-                          "30",
-                          false,
-                          fontSize: 16,
-                        ),
-                      ],
-                    ),
-                    buildSpacer(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildTextContent("Đơn giá: ", false,
-                            fontSize: 13, colorWord: greyColor),
-                        buildTextContent(
-                          "500000₫",
-                          false,
-                          fontSize: 16,
-                        ),
-                      ],
-                    ),
-                    index == length - 1 ? SizedBox() : buildDivider(color: red),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
-        buildDivider(color: red),
-        Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              buildTextContent("Thành tiền", false, fontSize: 16),
-              buildTextContent("1200000₫", true, fontSize: 18),
-            ],
-          ),
-        ),
-        Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            buildButtonForMarketWidget(
-                width: width,
-                title: "Xem chi tiết",
-                function: () {
-                  showBottomSheetCheckImportantSettings(
-                      bgColor: greyColor[300],
-                      context,
-                      height * 0.75,
-                      "Chi tiết đơn hàng",
-                      iconData: FontAwesomeIcons.chevronLeft,
-                      widget: Container(
-                        child: Column(children: [
-                          _buildBetweenContent("Người nhận", "Nguyen Văn A"),
-                          _buildBetweenContent("Số điện thoại", "0346311359"),
-                          _buildBetweenContent("Địa chỉ nhận hàng",
-                              "180 Hoàng Mai, Hai Bà Trưng,dfd dfg sdfsdf rr ư qwq qư qe qư Hà Nội 180 Hoàng Mai, Hai Bà Trưng, Hà Nội"),
-                          _buildBetweenContent(
-                              "Thông tin vận chuyển", "Kiện hàng 1"),
-                          buildSpacer(height: 5),
-                          buildDivider(color: red),
-                          // thong tin thanh toán
-                          buildTextContent("Thông tin thanh toán", true,
-                              fontSize: 22, isCenterLeft: false),
-                          Container(
-                            // height: 320,
-                            child: ListView(shrinkWrap: true, children: [
-                              SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(columns: const [
-                                  DataColumn(
-                                      label: Text('STT',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  DataColumn(
-                                      label: Text('Sản phẩm',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  DataColumn(
-                                      label: Text('Đơn giá',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  DataColumn(
-                                      label: Text('Số lượng',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                  DataColumn(
-                                      label: Text('Thành tiền',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
-                                ], rows: const [
-                                  DataRow(cells: [
-                                    DataCell(Text("1")),
-                                    DataCell(Text(
-                                        "Real Madrid C.F. Việt Nam Real Madriddfgdfg  C.F. Việt Nam Real Madriddg  dfg   C.F. Việt Nam")),
-                                    DataCell(Text("20000")),
-                                    DataCell(Text("100")),
-                                    DataCell(Text("120000")),
-                                  ]),
-                                  DataRow(cells: [
-                                    DataCell(Text("2")),
-                                    DataCell(Text(
-                                        "Đồng Hồ Chế Tác Kim Cương Rolex Yacht Master Black Dial, 42mm")),
-                                    DataCell(Text("20000")),
-                                    DataCell(Text("100")),
-                                    DataCell(Text("120000")),
-                                  ]),
-                                ]),
-                              ),
-                            ]),
-                          ),
-                          _buildBetweenContent("Tổng tiền sản phẩm", "3000000"),
-                          _buildBetweenContent("Phí vận chuyển", "1240000"),
-                          _buildBetweenContent(
-                              "Doanh thu đơn hàng", "480854584",
-                              titleBold: true, colorTitle: blackColor),
-                          buildSpacer(height: 5),
-                          buildDivider(color: red),
-                          // thanh toan của người mua
-                          buildTextContent("Thanh toán của người mua", true,
-                              fontSize: 22, isCenterLeft: false),
-                          buildSpacer(height: 10),
-                          _buildBetweenContent("Tổng tiền sản phẩm", "3000000"),
-                          _buildBetweenContent("Phí vận chuyển", "1240000"),
-                          _buildBetweenContent(
-                              "Tổng tiền thanh toán", "480854584",
-                              titleBold: true, colorTitle: blackColor),
-                        ]),
-                      ));
-                }),
-            buildButtonForMarketWidget(
-                width: width,
-                title: "Liên hệ với người bán",
-                bgColor: blueColor),
-            buildButtonForMarketWidget(
-                width: width, title: "Hủy đơn hàng", bgColor: red)
-          ],
-        ),
-      ]),
+                    buildDivider(color: red),
+                    _buildBetweenContent(
+                        "Tổng tiền", data["subtotal"].toString(),
+                        titleSize: 13, contentSize: 15, haveIcon: false),
+                    _buildBetweenContent(
+                        "Phí ship", data["delivery_fee"].toString(),
+                        titleSize: 13, contentSize: 15, haveIcon: false),
+                    _buildBetweenContent(
+                        "Thành tiền", data["order_total"].toString(),
+                        titleSize: 14,
+                        contentSize: 16,
+                        haveIcon: false,
+                        contentBold: true),
+                    _buildButtons(data)
+                  ]),
+                ),
+              ],
+            );
+          }))
+        : buildTextContent("Bạn không có đơn hàng nào !!", false);
+  }
+
+  Widget _buildOrderItem(dynamic childfilterData) {
+    return Column(children: [
+      // cac san pham
+      buildDivider(color: greyColor[700], right: 40, left: 40),
+      Column(
+        children: [
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: Row(
+                children: [
+                  ImageCacheRender(
+                    height: 100.0,
+                    width: 100.0,
+                    path: childfilterData["product_variant"] != null &&
+                            childfilterData["product_variant"].isNotEmpty
+                        ? childfilterData["product_variant"]["image"] != null
+                            ? childfilterData["product_variant"]["image"]["url"]
+                            : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg"
+                        : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg",
+                  ),
+                  buildSpacer(width: 10),
+                  Expanded(
+                    child: buildTextContent(
+                        childfilterData["product_variant"]["title"], false,
+                        fontSize: 15),
+                  ),
+                ],
+              )),
+          buildSpacer(height: 5),
+          _buildBetweenContent(
+              "Phân loại hạng",
+              childfilterData["product_variant"]["option1"] == null &&
+                      childfilterData["product_variant"]["option2"] == null
+                  ? "Không phân loại"
+                  : childfilterData["product_variant"]["option1"] != null
+                      ? childfilterData["product_variant"]["option1"]
+                      : "" + childfilterData["product_variant"]["option2"] !=
+                              null
+                          ? childfilterData["product_variant"]["option2"]
+                          : "",
+              titleColor: greyColor[700],
+              titleSize: 13,
+              contentSize: 15),
+          buildSpacer(height: 5),
+          _buildBetweenContent(
+              "Số lượng", childfilterData["quantity"].toString(),
+              titleColor: greyColor[700], titleSize: 13, contentSize: 15),
+          buildSpacer(height: 5),
+          _buildBetweenContent(
+              "Đơn giá", childfilterData["product_variant"]["price"].toString(),
+              titleColor: greyColor[700], titleSize: 13, contentSize: 15),
+        ],
+      )
+    ]);
+    // index == length - 1 ? const SizedBox() : buildDivider(color: red),
+  }
+
+  Widget _buildButtons(dynamic data) {
+    List<Widget> buttonList = [];
+
+    switch (data["status"]) {
+      case "pending":
+        buttonList.add(_cancelOrderButton(data));
+        buttonList.add(_payButton(data));
+        // buttonList.add(_seeDetailButton(data));
+        break;
+      case "delivered":
+        buttonList.add(_cancelOrderButton(data));
+        buttonList.add(_contactWithSellerButton(data));
+        break;
+      case "shipping":
+        buttonList.add(_gotOrder(data));
+
+        break;
+      case "finish":
+        buttonList.add(_reviewButton(data));
+        // buttonList.add(_reBuyButton(data));
+        buttonList.add(_seeReviewButton(data));
+        break;
+      case "cancelled":
+        buttonList.add(_contactWithSellerButton(data));
+        buttonList.add(_reBuyButton(data));
+        // buttonList.add(_detailCanceledButton(data));
+        break;
+      case "return":
+        break;
+      default:
+        break;
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: buttonList.length > 1
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.center,
+        children: buttonList,
+      ),
     );
+  }
+
+  Widget _payButton(dynamic data) {
+    return buildButtonForMarketWidget(
+        width: width * 0.4,
+        title: "Thanh toán",
+        function: () {
+          // _showDetailDialog(data);
+        });
+  }
+
+  Widget _contactWithSellerButton(dynamic data) {
+    return buildButtonForMarketWidget(
+        width: width * 0.4,
+        title: "Liên hệ",
+        bgColor: blueColor,
+        function: () {
+          // _showDetailDialog(data);
+        });
+  }
+
+  Widget _cancelOrderButton(dynamic data) {
+    return buildButtonForMarketWidget(
+        width: width * 0.4,
+        title: "Hủy đơn hàng",
+        bgColor: red,
+        function: () async {
+          buildMessageDialog(context,
+              'Bạn muốn xóa đơn hàng từ shop " ${data["page"]["title"]} "',
+              oKFunction: () async {
+            setState(() {
+              _isLoading = true;
+            });
+            data["status"] = "cancelled";
+            List<dynamic> primaryOrderList = _orderData!;
+            for (int i = 0; i < primaryOrderList.length; i++) {
+              if (primaryOrderList[i]["id"] == data["id"]) {
+                primaryOrderList[i] = data;
+              }
+            }
+            _filterAndSort(primaryOrderList);
+
+            // chua co api huy don hang tu phia nguoi mua
+            // final response = await OrderApis()
+            // .verifyFinishOrderApi(data["id"], {"status": "cancelled"});
+            setState(() {
+              _isLoading = false;
+            });
+            popToPreviousScreen(context);
+          });
+        });
+  }
+
+  Widget _reBuyButton(dynamic data) {
+    return buildButtonForMarketWidget(
+        width: width * 0.4,
+        title: "Mua lại",
+        bgColor: blueColor,
+        function: () {
+          // _showDetailDialog(data);
+        });
+  }
+
+  Widget _reviewButton(dynamic data) {
+    return buildButtonForMarketWidget(
+        width: width * 0.4,
+        title: "Đánh giá",
+        bgColor: blueColor,
+        function: () {
+          pushToNextScreen(
+              context,
+              ReviewProductMarketPage(
+                reviewId: data["id"],
+                completeProductList: data["order_items"],
+              ));
+        });
+  }
+
+  Widget _seeReviewButton(dynamic data) {
+    return buildButtonForMarketWidget(
+        width: width * 0.4,
+        title: "Đánh giá shop",
+        bgColor: blueColor,
+        function: () {
+          pushToNextScreen(
+              context,
+              SeeReviewShopMarketPage(
+                reviewId: data["id"],
+                reviewData: data["order_items"],
+              ));
+        });
+  }
+
+  Widget _gotOrder(dynamic data) {
+    return buildButtonForMarketWidget(
+        width: width * 0.4,
+        title: "Đã nhận hàng",
+        bgColor: blueColor,
+        function: () async {
+          setState(() {
+            _isLoading = true;
+          });
+          data["status"] = "finish";
+          List<dynamic> primaryOrderList = _orderData!;
+          for (int i = 0; i < primaryOrderList.length; i++) {
+            if (primaryOrderList[i]["id"] == data["id"]) {
+              primaryOrderList[i] = data;
+            }
+          }
+          _filterAndSort(primaryOrderList);
+          final response = await OrderApis()
+              .verifyFinishOrderApi(data["id"], {"status": "finish"});
+          setState(() {
+            _isLoading = false;
+          });
+        });
+  }
+
+  Future _filterAndSort(List<dynamic>? primaryOrderList) async {
+    //resst list
+    _filteredOrderData = [];
+    _filteredOrderData =
+        await OrderProductMarketConstant.ORDER_PRODUCT_MARKET_TAB_LIST.map(
+      (e) {
+        return {"key": e["key"], "title": e["title"], "data": []};
+      },
+    ).toList();
+
+    primaryOrderList?.forEach((primaryOrderElement) {
+      for (var filteredOrderDataElement in _filteredOrderData!) {
+        if (filteredOrderDataElement["key"] == primaryOrderElement["status"]) {
+          _filteredOrderData![
+                  _filteredOrderData!.indexOf(filteredOrderDataElement)]['data']
+              .add(primaryOrderElement);
+        }
+      }
+    });
+    _filteredOrderData![0]["data"] = primaryOrderList;
+    setState(() {});
   }
 }
 
@@ -391,27 +659,29 @@ Widget _buildBaseBody(Widget widget) {
   return Padding(
     padding: const EdgeInsets.only(top: 10, bottom: 10),
     child: Expanded(
-      child: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [widget],
-            ),
-          )
-        ],
-      ),
+      child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [widget],
+          )),
     ),
   );
 }
 
-Widget _buildBetweenContent(String title, String contents,
-    {IconData? iconData,
-    bool haveIcon = true,
-    bool titleBold = false,
-    Color? colorTitle}) {
+Widget _buildBetweenContent(
+  String title,
+  String contents, {
+  IconData? iconData,
+  bool haveIcon = false,
+  bool titleBold = false,
+  bool contentBold = false,
+  double? titleSize,
+  double? contentSize,
+  Color? contentColor,
+  Color? titleColor,
+}) {
   return Container(
-    margin: EdgeInsets.only(top: 10),
+    margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -419,26 +689,29 @@ Widget _buildBetweenContent(String title, String contents,
         Row(
           children: [
             haveIcon
-                ? Container(
-                    child: Icon(
-                      iconData ?? FontAwesomeIcons.locationPin,
-                      size: 16,
-                    ),
+                ? Column(
+                    children: [
+                      Icon(
+                        iconData ?? FontAwesomeIcons.locationPin,
+                        size: 16,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                    ],
                   )
-                : SizedBox(),
-            SizedBox(
-              width: 5,
-            ),
+                : const SizedBox(),
             buildTextContent(title, titleBold,
-                fontSize: 14, colorWord: colorTitle ?? greyColor),
+                fontSize: titleSize ?? 14, colorWord: titleColor),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           width: 30,
         ),
-        Flexible(
-          flex: 10,
+        Expanded(
+          // flex: 10,
           child: Wrap(
+            alignment: WrapAlignment.end,
             children: [
               Container(
                 alignment: Alignment.centerRight,
@@ -446,10 +719,14 @@ Widget _buildBetweenContent(String title, String contents,
                   contents,
                   textAlign: TextAlign.left,
                   maxLines: 10,
+                  style: TextStyle(
+                      color: contentColor,
+                      fontSize: contentSize,
+                      fontWeight:
+                          contentBold ? FontWeight.bold : FontWeight.normal),
                 ),
               ),
             ],
-            alignment: WrapAlignment.end,
           ),
         )
       ],

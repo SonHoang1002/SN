@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:social_network_app_mobile/apis/config.dart';
+
+import '../../../apis/config.dart';
 import 'package:social_network_app_mobile/apis/emoji_sticky_api.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:social_network_app_mobile/widget/search_input.dart';
+import '../../../widget/image_cache.dart';
+import '../../../widget/search_input.dart';
 
 class Gif extends StatefulWidget {
   final Function handleUpdateData;
@@ -46,7 +47,9 @@ class _GifState extends State<Gif> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(margin: const EdgeInsets.all(8.0), child: SearchInput()),
+        Container(
+
+            margin: const EdgeInsets.all(8.0), child:  SearchInput()),
         isLoadingGif
             ? Container(
                 margin: const EdgeInsets.only(top: 20),
@@ -73,6 +76,7 @@ class _GifState extends State<Gif> {
                           child: ImageCacheRender(
                               path: gifs[index]['images']['original']['url']),
                         )))
+
       ],
     );
   }

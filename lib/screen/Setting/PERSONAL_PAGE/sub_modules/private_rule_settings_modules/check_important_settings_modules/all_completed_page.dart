@@ -10,7 +10,7 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/information_compo
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-import '../../../../../../theme/colors.dart';
+import '../../../../../../../theme/colors.dart';
 import 'how_protect_account_modules/protect_your_account_constants.dart';
 
 class AllCompletedPage extends StatelessWidget {

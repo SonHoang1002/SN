@@ -39,14 +39,22 @@ class _VideoPlayerRenderState extends State<VideoPlayerRender> {
   @override
   Widget build(BuildContext context) {
     return FlickVideoPlayer(
-        flickManager: flickManager,
-        flickVideoWithControls: const FlickVideoWithControls(
-          closedCaptionTextStyle: TextStyle(fontSize: 8),
-          controls: FlickPortraitControls(),
+      flickManager: flickManager,
+      flickVideoWithControls: FlickVideoWithControls(
+        videoFit: BoxFit.fitHeight,
+        controls: FlickPortraitControls(
+          progressBarSettings:
+              FlickProgressBarSettings(playedColor: Colors.green),
         ),
-        flickVideoWithControlsFullscreen: const FlickVideoWithControls(
-          controls: FlickLandscapeControls(),
-        ));
+      ),
+      // flickVideoWithControls: const FlickVideoWithControls(
+      //   closedCaptionTextStyle: TextStyle(fontSize: 8),
+      //   controls: FlickPortraitControls(),
+      // ),
+      // flickVideoWithControlsFullscreen: const FlickVideoWithControls(
+      //   controls: FlickLandscapeControls(),
+      // )
+    );
   }
 
   @override

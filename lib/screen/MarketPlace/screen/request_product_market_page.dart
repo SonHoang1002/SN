@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
-
 import '../../../../widget/back_icon_appbar.dart';
 
 class RequestProductMarketPage extends StatefulWidget {
+  const RequestProductMarketPage({super.key});
+
   @override
   State<RequestProductMarketPage> createState() =>
       _RequestProductMarketPageState();
@@ -47,20 +48,16 @@ class _RequestProductMarketPageState extends State<RequestProductMarketPage> {
         body: Column(
           children: [
             Expanded(
-              child: Container(
-                // padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: ListView(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 30),
-                      child: buildTextContent("Không có lời mời nào", true,
-                          fontSize: 19, isCenterLeft: false),
-                    )
-                  ],
-                ),
+              child: ListView(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 30),
+                    child: buildTextContent("Không có lời mời nào", true,
+                        fontSize: 19, isCenterLeft: false),
+                  )
+                ],
               ),
             ),
-            //
           ],
         ));
   }

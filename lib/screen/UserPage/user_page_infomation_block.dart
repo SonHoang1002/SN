@@ -126,7 +126,7 @@ class UserPageInfomationBlock extends StatelessWidget {
                           showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
-                              barrierColor: Colors.transparent,
+                              barrierColor: transparent,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(

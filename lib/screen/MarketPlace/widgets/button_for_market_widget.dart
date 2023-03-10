@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
 
-Widget  buildButtonForMarketWidget(
-    {String? title = 'Tiếp tục',
+Widget buildButtonForMarketWidget(
+    {String? title,
     Function? function,
     Color? bgColor = secondaryColor,
     Color? colorText = white,
@@ -14,7 +14,10 @@ Widget  buildButtonForMarketWidget(
     double? marginLeft = 0,
     double? marginRight = 0,
     double? width = 300,
+    double? fontSize,
     IconData? iconData,
+    bool? isVertical = false,
+    double? radiusValue,
     bool? isHaveBoder = false}) {
   return InkWell(
     onTap: () {
@@ -24,7 +27,7 @@ Widget  buildButtonForMarketWidget(
       height: 40,
       decoration: isHaveBoder!
           ? BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(radiusValue ?? 5),
               border: Border.all(width: 0.6, color: Colors.grey))
           : null,
       margin: EdgeInsets.only(
@@ -38,31 +41,54 @@ Widget  buildButtonForMarketWidget(
               shadowColor: transparent,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               fixedSize: width != null ? Size(width, 40) : null,
+              
               backgroundColor: bgColor),
           onPressed: () {
             function != null ? function() : null;
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              iconData != null
-                  ? Icon(
-                      iconData,
-                      size: 16,
-                      color: Colors.white,
-                    )
-                  : const SizedBox(),
-              title != null || title != "Tiếp tục"
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: buildTextContent(title!, true,
-                          fontSize: 17,
-                          colorWord: colorText,
-                          isCenterLeft: false),
-                    )
-                  : const SizedBox(),
-            ],
-          )),
+          child: isVertical!
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    iconData != null
+                        ? Icon(
+                            iconData,
+                            size: 14,
+                            color: Colors.white,
+                          )
+                        : const SizedBox(),
+                    title != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: buildTextContent(title, true,
+                                fontSize: fontSize ?? 17,
+                                colorWord: colorText,
+                                isCenterLeft: false),
+                          )
+                        : const SizedBox(),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    iconData != null
+                        ? Icon(
+                            iconData,
+                            size: 14,
+                            color: Colors.white,
+                          )
+                        : const SizedBox(),
+                    title != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: buildTextContent(title, true,
+                                fontSize: 17,
+                                colorWord: colorText,
+                                isCenterLeft: false),
+                          )
+                        : const SizedBox(),
+                  ],
+                )),
     ),
   );
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -49,103 +50,90 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
         child: Column(children: [
           // main content
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // img
-                Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                        child: Column(
-                          children: [
-                            buildTextContent(
-                                BirthDayLoginConstants.BIRTHDAY_LOGIN_TITLE,
-                                true,
-                                fontSize: 17,
-                                isCenterLeft: false),
-                            buildSpacer(height: 10),
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border:
-                                      Border.all(width: 0.2, color: greyColor)),
-                              child: GeneralComponent(
-                                [
-                                  buildTextContent(
-                                      _timeComponent.isEmpty
-                                          ? BirthDayLoginConstants
-                                              .BIRTHDAY_LOGIN_NAME_PLACEHOLODER
-                                          : "${_timeComponent[0]} tháng ${_timeComponent[1]}, ${_timeComponent[2]}",
-                                      false,
-                                      fontSize: 16,
-                                      colorWord: greyColor)
-                                ],
-                                suffixWidget: const Icon(
-                                  LoginConstants.DOWN_ICON_DATA,
+            child: Container(
+              child: Column(
+                // padding: EdgeInsets.symmetric(vertical: 5),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // img
+                  Center(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                          child: Column(
+                            children: [
+                              buildTextContent(
+                                  BirthDayLoginConstants.BIRTHDAY_LOGIN_TITLE,
+                                  true,
+                                  fontSize: 16,
+                                  colorWord: blackColor,
+                                  isCenterLeft: false),
+                              buildSpacer(height: 10),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        width: 0.2, color: greyColor)),
+                                child: GeneralComponent(
+                                  [
+                                    buildTextContent(
+                                        _timeComponent.length == 0
+                                            ? BirthDayLoginConstants
+                                                .BIRTHDAY_LOGIN_NAME_PLACEHOLODER
+                                            : "ngày ${_timeComponent[0]} tháng ${_timeComponent[1]}, ${_timeComponent[2]}",
+                                        false,
+                                        fontSize: 16,
+                                        colorWord: greyColor)
+                                  ],
+                                  suffixWidget: Icon(
+                                    LoginConstants.DOWN_ICON_DATA,
+                                    color: greyColor,
+                                  ),
+                                  changeBackground: Colors.transparent,
+                                  function: () {
+                                    _showPickerModalBottomSheet(context);
+                                  },
+                                ),
+                              ),
+                              buildSpacer(height: 5),
+                              !_isValid
+                                  ? buildTextContent(
+                                      BirthDayLoginConstants
+                                          .BIRTHDAY_LOGIN_WARNING,
+                                      true,
+                                      fontSize: 13,
+                                      colorWord: Colors.red,
+                                    )
+                                  : SizedBox(),
+                              buildSpacer(height: 10),
+                              Text(
+                                BirthDayLoginConstants.BIRTHDAY_LOGIN_SUBTITLE,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
                                   color: greyColor,
                                 ),
-                                changeBackground: transparent,
-                                function: () {
-                                  _showPickerModalBottomSheet(context);
-                                },
                               ),
-                            ),
-                            buildSpacer(height: 5),
-                            !_isValid
-                                ? buildTextContent(
-                                    BirthDayLoginConstants
-                                        .BIRTHDAY_LOGIN_WARNING,
-                                    true,
-                                    fontSize: 13,
-                                    colorWord: Colors.red,
-                                  )
-                                : const SizedBox(),
-                            buildSpacer(height: 10),
-                            Text(
-                              BirthDayLoginConstants.BIRTHDAY_LOGIN_SUBTITLE,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
+                              buildTextContent(
+                                BirthDayLoginConstants.BIRTHDAY_LOGIN_QUESTION,
+                                true,
                                 fontSize: 16,
-                                color: greyColor,
+                                colorWord: blackColor,
+                                isCenterLeft: false,
                               ),
-                            ),
-                            buildSpacer(height: 10),
-                            _isValid && _timeComponent.isNotEmpty
-                                ? SizedBox(
-                                    height: 36,
-                                    child: ButtonPrimary(
-                                      label: "Tiếp tục",
-                                      handlePress: () {
-                                        popToPreviousScreen(context);
-                                        pushAndReplaceToNextScreen(
-                                            context,
-                                            GenderLoginPage(data: {
-                                              ...widget.data,
-                                              "birth_date":
-                                                  '${_timeComponent[0]}',
-                                              "birth_month":
-                                                  '${_timeComponent[1]}',
-                                              "birth_year":
-                                                  "${_timeComponent[2]}",
-                                            }));
-                                        return;
-                                      },
-                                    ),
-                                  )
-                                : const SizedBox()
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           buildHaveAccountWidget(function: () {
-            pushToNextScreen(context, const MainLoginPage());
+            pushToNextScreen(context,  MainLoginPage());
           })
         ]),
       ),
@@ -188,6 +176,40 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
     }
   }
 
+  Widget _buildTextFormField(
+    TextEditingController controller,
+    String placeHolder, {
+    double? borderRadius = 5,
+  }) {
+    return Container(
+      height: 50,
+      child: TextFormField(
+        controller: controller,
+        onChanged: ((value) {}),
+        validator: (value) {},
+        readOnly: true,
+        decoration: InputDecoration(
+            counterText: "",
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
+              borderSide: const BorderSide(color: greyColor, width: 2),
+            ),
+            hintText: placeHolder,
+            hintStyle: const TextStyle(
+              color: greyColor,
+            ),
+            suffix: Icon(
+              LoginConstants.DOWN_ICON_DATA,
+              color: greyColor,
+              size: 10,
+            ),
+            contentPadding: const EdgeInsets.fromLTRB(10, 5, 0, 30),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(borderRadius)))),
+      ),
+    );
+  }
+
   _showPickerModalBottomSheet(
     BuildContext context,
   ) {
@@ -201,6 +223,26 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
             height: 220,
             child: StatefulBuilder(builder: (context, setStateFull) {
               return Column(children: [
+                Container(
+                  height: 40,
+                  child:
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0, right: 10),
+                      child: buildTextContentButton("Tiếp tục", true,
+                          colorWord: _isValid
+                              ? blackColor
+                              : blackColor.withOpacity(0.4), function: () {
+                        if (_isValid) {
+                          popToPreviousScreen(context);
+                          pushToNextScreen(context, GenderLoginPage());
+                          return;
+                        }
+                        popToPreviousScreen(context);
+                      }),
+                    ),
+                  ]),
+                ),
                 Expanded(
                   child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.date,
