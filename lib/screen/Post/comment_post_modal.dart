@@ -8,7 +8,6 @@ import 'package:social_network_app_mobile/screen/Post/comment_tree.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/comment_textfield.dart';
-// import 'package:social_network_app_mobile/widget/no_comment.dart';
 
 class CommentPostModal extends ConsumerStatefulWidget {
   final dynamic post;
@@ -67,12 +66,13 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
 
   Future handleComment(data) async {
     if (!mounted) return;
+
     var newCommentPreview = {
-      "id": "11111111111",
+      "id": data['id'],
       "in_reply_to_id": widget.post['id'],
       "account": ref.watch(meControllerProvider)[0],
       "content": data['status'],
-      "typeStatus": "previewComment",
+      "typeStatus": data['typeStatus'] ?? "previewComment",
       "created_at": "2023-02-01T23:04:48.047+07:00",
       "backdated_time": "2023-02-01T23:04:48.047+07:00",
       "sensitive": false,
@@ -138,24 +138,86 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       "status_target": null
     };
 
+    List dataPreComment = [];
+
+    if (data['type'] == 'parent' && data['typeStatus'] == null) {
+      //Comment parent
+      dataPreComment = [newCommentPreview, ...postComment];
+    } else if (data['type'] == 'child' && data['typeStatus'] == 'editChild') {
+      //Edit comment child
+      dataPreComment = postComment;
+    } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+      //Comment child
+      dataPreComment = postComment;
+    } else if (data['type'] == 'parent' &&
+        data['typeStatus'] == 'editComment') {
+      //Edit comment parent
+      int indexComment = postComment
+          .indexWhere((element) => element['id'] == newCommentPreview['id']);
+      List newListUpdate = [];
+
+      if (indexComment > -1) {
+        newListUpdate = [
+          ...postComment.sublist(0, indexComment),
+          newCommentPreview,
+          ...postComment.sublist(indexComment + 1)
+        ];
+      }
+      dataPreComment = newListUpdate;
+    }
+
     setState(() {
-      postComment = data['type'] == 'child'
-          ? postComment
-          : [newCommentPreview, ...postComment];
+      postComment = dataPreComment;
       commentChild = data['type'] == 'child' ? newCommentPreview : null;
     });
 
-    dynamic newComment = await PostApi().createStatus({
-          ...data,
-          "visibility": "public",
-          "in_reply_to_id": data['in_reply_to_id'] ?? postDetail?['id']
-        }) ??
-        newCommentPreview;
-    if (mounted) {
+    dynamic newComment;
+
+    if (!['editComment', 'editChild'].contains(data['typeStatus'])) {
+      newComment = await PostApi().createStatus({
+            ...data,
+            "visibility": "public",
+            "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
+          }) ??
+          newCommentPreview;
+    } else {
+      newComment = await PostApi().updatePost(data['id'], {
+        "extra_body": data['extra_body'],
+        "status": data['status'],
+        "tags": data['tags']
+      });
+    }
+
+    if (mounted && newComment != null) {
+      int indexComment = postComment
+          .indexWhere((element) => element['id'] == newComment['id']);
+      List newListUpdate = [];
+
+      if (indexComment > -1) {
+        newListUpdate = postComment.sublist(0, indexComment) +
+            [newComment] +
+            postComment.sublist(indexComment + 1);
+      }
+
+      List dataCommentUpdate = postComment;
+
+      if (data['type'] == 'parent' && data['typeStatus'] == null) {
+        //Comment parent
+        dataCommentUpdate = [newComment, ...postComment.sublist(1)];
+      } else if (data['type'] == 'child' && data['typeStatus'] == 'editChild') {
+        //Edit comment child
+        dataCommentUpdate = postComment;
+      } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+        //Comment child
+        dataCommentUpdate = postComment;
+      } else if (data['type'] == 'parent' &&
+          data['typeStatus'] == 'editComment') {
+        //Edit comment parent
+        dataCommentUpdate = newListUpdate;
+      }
+
       setState(() {
-        postComment = data['type'] == 'child'
-            ? postComment
-            : [newComment, ...postComment.sublist(1)];
+        postComment = dataCommentUpdate;
         commentChild = newComment;
       });
     }
@@ -185,9 +247,6 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
-        setState(() {
-          commentSelected = null;
-        });
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
@@ -204,10 +263,6 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              // Expanded(
-              //     child: SingleChildScrollView(
-              //   child: NoComment(),
-              // )),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(

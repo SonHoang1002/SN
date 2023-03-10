@@ -8,7 +8,6 @@ import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer_inf
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/post_list_share.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/reaction_list.dart';
 
 class PostFooter extends StatelessWidget {
