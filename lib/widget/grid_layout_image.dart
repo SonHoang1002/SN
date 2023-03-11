@@ -108,27 +108,25 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               medias: medias);
         case 3:
           if (getAspectMedia(medias[0]) > 1) {
-            return Expanded(
-              child: Column(
-                children: [
-                  GirdviewBuilderMedia(
-                      handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
-                      crossAxisCount: 1,
-                      aspectRatio:
-                          double.parse(getAspectMedia(medias[0]).toString()),
-                      medias: medias.sublist(0, 1)),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  GirdviewBuilderMedia(
-                      handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
-                      crossAxisCount: 2,
-                      aspectRatio: 1,
-                      medias: medias.sublist(1, 3)),
-                ],
-              ),
+            return Column(
+              children: [
+                GirdviewBuilderMedia(
+                    handlePress: widget.handlePress,
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio:
+                        double.parse(getAspectMedia(medias[0]).toString()),
+                    medias: medias.sublist(0, 1)),
+                const SizedBox(
+                  height: 3,
+                ),
+                GirdviewBuilderMedia(
+                    handlePress: widget.handlePress,
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 2,
+                    aspectRatio: 1,
+                    medias: medias.sublist(1, 3)),
+              ],
             );
           } else {
             return Row(
@@ -195,8 +193,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               ],
             );
           } else if (getAspectMedia(medias[0]) > 1) {
-            return Expanded(
-                child: Column(
+            return Column(
               children: [
                 GirdviewBuilderMedia(
                     handlePress: widget.handlePress,
@@ -215,7 +212,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     aspectRatio: 1,
                     medias: medias.sublist(1)),
               ],
-            ));
+            );
           } else {
             return Padding(
               padding: const EdgeInsets.only(left: 2, right: 2),
@@ -227,23 +224,21 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 childAspectRatio: 0.315,
                 children: List.generate(
                     medias.length,
-                    (index) => Expanded(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: (index == 1 || index == 3) ? 25 : 0,
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: GirdviewBuilderMedia(
-                                    handlePress: widget.handlePress,
-                                    flickMultiManager: flickMultiManager,
-                                    crossAxisCount: 1,
-                                    aspectRatio: 0.35,
-                                    medias: [medias[index]]),
-                              ),
-                            ],
-                          ),
+                    (index) => Column(
+                          children: [
+                            SizedBox(
+                              height: (index == 1 || index == 3) ? 25 : 0,
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: GirdviewBuilderMedia(
+                                  handlePress: widget.handlePress,
+                                  flickMultiManager: flickMultiManager,
+                                  crossAxisCount: 1,
+                                  aspectRatio: 0.35,
+                                  medias: [medias[index]]),
+                            ),
+                          ],
                         )),
               ),
             );
@@ -251,27 +246,25 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
 
         default:
           if (getAspectMedia(medias[0]) < 1) {
-            return Expanded(
-              child: Column(
-                children: [
-                  GirdviewBuilderMedia(
-                      handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
-                      crossAxisCount: 2,
-                      aspectRatio: 1,
-                      medias: medias.sublist(0, 2)),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  GirdviewBuilderMedia(
-                      handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
-                      crossAxisCount: 3,
-                      aspectRatio: 1,
-                      imageRemain: medias.length - 5,
-                      medias: medias.sublist(2, 5)),
-                ],
-              ),
+            return Column(
+              children: [
+                GirdviewBuilderMedia(
+                    handlePress: widget.handlePress,
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 2,
+                    aspectRatio: 1,
+                    medias: medias.sublist(0, 2)),
+                const SizedBox(
+                  height: 3,
+                ),
+                GirdviewBuilderMedia(
+                    handlePress: widget.handlePress,
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 3,
+                    aspectRatio: 1,
+                    imageRemain: medias.length - 5,
+                    medias: medias.sublist(2, 5)),
+              ],
             );
           } else {
             return Row(

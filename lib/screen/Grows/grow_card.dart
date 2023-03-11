@@ -41,6 +41,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
     width = size.width;
     height = size.height;
     return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       child: Column(children: [
         SizedBox(
             child: ListView.builder(
