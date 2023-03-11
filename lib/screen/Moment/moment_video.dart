@@ -40,6 +40,7 @@ class _MomentVideoState extends State<MomentVideo> {
                 ? size.height - 66
                 : null,
             child: FeedVideo(
+                key: Key('post_moment${widget.moment(['id'])}'),
                 type: postMoment,
                 path: widget.moment['media_attachments'][0]['url'],
                 flickMultiManager: flickMultiManager,

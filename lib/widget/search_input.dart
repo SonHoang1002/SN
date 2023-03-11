@@ -46,7 +46,7 @@ class _SearchInputState extends State<SearchInput> {
             },
             cursorColor: Theme.of(context).textTheme.displayLarge?.color,
             decoration: InputDecoration(
-                hintText: widget.title,
+                hintText: widget.title ?? 'Tìm kiếm', 
                 hintStyle: const TextStyle(fontSize: 13),
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,

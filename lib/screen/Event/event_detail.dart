@@ -84,590 +84,100 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         ),
         elevation: 0.0,
       ),
-      body: Expanded(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30.0),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(0.0, 2.0),
-                              blurRadius: 6.0,
-                            ),
-                          ],
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.0),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0.0, 2.0),
+                            blurRadius: 6.0,
+                          ),
+                        ],
+                      ),
+                      child: Hero(
+                        tag: eventDetail['banner']['url'],
+                        child: ClipRRect(
+                          child: ImageCacheRender(
+                            path: eventDetail['banner']['url'],
+                          ),
                         ),
-                        child: Hero(
-                          tag: eventDetail['banner']['url'],
-                          child: ClipRRect(
-                            child: ImageCacheRender(
-                              path: eventDetail['banner']['url'],
-                            ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text(
+                          GetTimeAgo.parse(
+                            DateTime.parse(eventDetail['start_time']),
+                          ),
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text(
+                          eventDetail['title'],
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: Text(
+                          // eventDetail['location'],
+                          'HÀ NỘI · Hà Nội',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: greyColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text(
+                          '${eventDetail['users_interested_count'].toString()} người quan tâm · ${eventDetail['users_going_count'].toString()} người tham gia ',
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            color: greyColor,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text(
-                            GetTimeAgo.parse(
-                              DateTime.parse(eventDetail['start_time']),
-                            ),
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text(
-                            eventDetail['title'],
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(2.0),
-                          child: Text(
-                            // eventDetail['location'],
-                            'HÀ NỘI · Hà Nội',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              color: greyColor,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text(
-                            '${eventDetail['users_interested_count'].toString()} người quan tâm · ${eventDetail['users_going_count'].toString()} người tham gia ',
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                              color: greyColor,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(children: [
-                    SizedBox(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                if (eventDetail['event_relationship']
-                                        ['status'] !=
-                                    'interested') {
-                                  ref
-                                      .read(eventControllerProvider.notifier)
-                                      .updateStatusEvent(eventDetail['id'],
-                                          {'status': 'interested'});
-                                } else {
-                                  ref
-                                      .read(eventControllerProvider.notifier)
-                                      .updateStatusEvent(
-                                          eventDetail['id'], {'status': ''});
-                                }
-                                setState(() {});
-                              },
-                              child: Container(
-                                  height: 30,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  margin:
-                                      const EdgeInsets.fromLTRB(10, 0, 6, 10),
-                                  decoration: BoxDecoration(
-                                      color: eventDetail['event_relationship']
-                                                  ['status'] !=
-                                              'interested'
-                                          ? secondaryColor
-                                          : secondaryColor.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(
-                                          width: 0.2, color: greyColor)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(FontAwesomeIcons.solidStar,
-                                          color:
-                                              eventDetail['event_relationship']
-                                                          ['status'] !=
-                                                      'interested'
-                                                  ? Colors.white
-                                                  : secondaryColor,
-                                          size: 14),
-                                      const SizedBox(
-                                        width: 5.0,
-                                      ),
-                                      Text(
-                                        'Quan tâm',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color:
-                                              eventDetail['event_relationship']
-                                                          ['status'] !=
-                                                      'interested'
-                                                  ? Colors.white
-                                                  : secondaryColor,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ],
-                                  ))),
-                          InkWell(
-                              onTap: () {
-                                if (eventDetail['event_relationship']
-                                        ['status'] !=
-                                    'going') {
-                                  ref
-                                      .read(eventControllerProvider.notifier)
-                                      .updateStatusEvent(eventDetail['id'],
-                                          {'status': 'going'});
-                                } else {
-                                  ref
-                                      .read(eventControllerProvider.notifier)
-                                      .updateStatusEvent(
-                                          eventDetail['id'], {'status': ''});
-                                }
-                                setState(() {});
-                              },
-                              child: Container(
-                                height: 30,
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                margin: const EdgeInsets.fromLTRB(2, 0, 6, 10),
-                                decoration: BoxDecoration(
-                                    color: eventDetail['event_relationship']
-                                                ['status'] !=
-                                            'going'
-                                        ? const Color.fromARGB(
-                                            189, 202, 202, 202)
-                                        : secondaryColor.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                        width: 0.2, color: greyColor)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                        eventDetail['event_relationship']
-                                                    ['status'] !=
-                                                'going'
-                                            ? FontAwesomeIcons.clipboardQuestion
-                                            : FontAwesomeIcons.circleCheck,
-                                        color: Colors.black,
-                                        size: 14),
-                                    const SizedBox(
-                                      width: 3.0,
-                                    ),
-                                    const Text(
-                                      'Sẽ tham gia',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                          GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 8.0, top: 15.0),
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height *
-                                            0.3 +
-                                        30,
-                                    child: Column(
-                                      children: [
-                                        ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount: iconActionEllipsis.length,
-                                          itemBuilder: ((context, index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 10.0),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  showModalBottomSheet(
-                                                      context: context,
-                                                      isScrollControlled: true,
-                                                      barrierColor:
-                                                          Colors.transparent,
-                                                      clipBehavior: Clip
-                                                          .antiAliasWithSaveLayer,
-                                                      shape: const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.vertical(
-                                                                  top: Radius
-                                                                      .circular(
-                                                                          10))),
-                                                      builder: (context) =>
-                                                          SizedBox(
-                                                            height:
-                                                                height * 0.9,
-                                                            width: width,
-                                                            child: ActionEllipsis(
-                                                                menuSelected:
-                                                                    iconActionEllipsis[
-                                                                        index]),
-                                                          ));
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    CircleAvatar(
-                                                      radius: 18.0,
-                                                      backgroundColor:
-                                                          greyColor[350],
-                                                      child: Icon(
-                                                        iconActionEllipsis[
-                                                            index]["icon"],
-                                                        size: 18.0,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              left: 10.0),
-                                                      child: Text(
-                                                          iconActionEllipsis[
-                                                              index]["label"],
-                                                          style: const TextStyle(
-                                                              fontSize: 14.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500)),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          }),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                height: 30,
-                                width: MediaQuery.of(context).size.width * 0.1,
-                                margin: const EdgeInsets.fromLTRB(2, 0, 0, 10),
-                                decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        189, 202, 202, 202),
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                        width: 0.2, color: greyColor)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(FontAwesomeIcons.ellipsis,
-                                        color: Colors.black, size: 14),
-                                  ],
-                                ),
-                              ))
-                        ],
-                      ),
-                    )
-                  ]),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 4, 4, 4),
-                    child: Column(
+                ),
+                Row(children: [
+                  SizedBox(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {},
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(FontAwesomeIcons.stopwatch,
-                                      color: Colors.black, size: 20),
-                                  SizedBox(
-                                    width: 9.0,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 4.0),
-                                    child: Text(
-                                      '43 Ngày',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(FontAwesomeIcons.solidUser,
-                                        color: Colors.black, size: 20),
-                                    SizedBox(
-                                      width: 9.0,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 4.0),
-                                      child: Text(
-                                        'Sự kiện của ',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {},
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Icon(FontAwesomeIcons.locationDot,
-                                      color: Colors.black, size: 20),
-                                  const SizedBox(
-                                    width: 9.0,
-                                  ),
-                                  Column(
-                                    children: const [
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 10, bottom: 4),
-                                        child: Text('Sự kiện của ',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              fontWeight: FontWeight.w500,
-                                            )),
-                                      ),
-                                      Text('Sự kiện của ',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            color: greyColor,
-                                            fontWeight: FontWeight.normal,
-                                          )),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(FontAwesomeIcons.clipboardCheck,
-                                        color: Colors.black, size: 20),
-                                    SizedBox(
-                                      width: 9.0,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 4.0),
-                                      child: Text(
-                                        'Sự kiện của ',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(FontAwesomeIcons.earthAmericas,
-                                        color: Colors.black, size: 20),
-                                    SizedBox(
-                                      width: 9.0,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 4.0),
-                                      child: Text(
-                                        'Công khai · Tất cả mọi người trong hoặc ngoài EMSO',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Row(
-                            children: [
-                              InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      eventAction = true;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.45,
-                                    margin:
-                                        const EdgeInsets.fromLTRB(0, 8, 10, 8),
-                                    decoration: BoxDecoration(
-                                        color: secondaryColor.withOpacity(0.4),
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            width: 0.2, color: greyColor)),
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Text(
-                                            'Giới thiệu',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: secondaryColor,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ]),
-                                  )),
-                              InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      eventAction = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.45,
-                                    margin:
-                                        const EdgeInsets.fromLTRB(2, 8, 0, 8),
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            189, 202, 202, 202),
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            width: 0.2, color: greyColor)),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Text(
-                                          'Cuộc thảo luận',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ))
-                            ],
-                          ),
-                        ),
-                        const CrossBar(),
-                        eventAction
-                            ? EventIntro(
-                                eventDetail: eventDetail,
-                              )
-                            : EventDiscuss(eventDetail: eventDetail)
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Visibility(
-              visible: _isVisible,
-              child: Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 60,
-                  color: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: InkWell(
+                        InkWell(
                             onTap: () {
                               if (eventDetail['event_relationship']['status'] !=
                                   'interested') {
@@ -685,13 +195,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                             },
                             child: Container(
                                 height: 30,
-                                width: MediaQuery.of(context).size.width * 0.4,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                margin: const EdgeInsets.fromLTRB(10, 0, 6, 10),
                                 decoration: BoxDecoration(
                                     color: eventDetail['event_relationship']
                                                 ['status'] !=
                                             'interested'
                                         ? secondaryColor
-                                        : secondaryColor.withOpacity(0.6),
+                                        : secondaryColor.withOpacity(0.5),
                                     borderRadius: BorderRadius.circular(4),
                                     border: Border.all(
                                         width: 0.2, color: greyColor)),
@@ -723,67 +234,149 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                     ),
                                   ],
                                 ))),
-                      ),
-                      InkWell(
-                          onTap: () {
-                            if (eventDetail['event_relationship']['status'] !=
-                                'going') {
-                              ref
-                                  .read(eventControllerProvider.notifier)
-                                  .updateStatusEvent(
-                                      eventDetail['id'], {'status': 'going'});
-                            } else {
-                              ref
-                                  .read(eventControllerProvider.notifier)
-                                  .updateStatusEvent(
-                                      eventDetail['id'], {'status': ''});
-                            }
-                            setState(() {});
-                          },
-                          child: Container(
-                            height: 30,
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            decoration: BoxDecoration(
-                                color: eventDetail['event_relationship']
-                                            ['status'] !=
-                                        'going'
-                                    ? const Color.fromARGB(189, 202, 202, 202)
-                                    : secondaryColor.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(4),
-                                border:
-                                    Border.all(width: 0.2, color: greyColor)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                    eventDetail['event_relationship']
-                                                ['status'] !=
-                                            'going'
-                                        ? FontAwesomeIcons.clipboardQuestion
-                                        : FontAwesomeIcons.circleCheck,
-                                    color: Colors.black,
-                                    size: 14),
-                                const SizedBox(
-                                  width: 3.0,
-                                ),
-                                const Text(
-                                  'Sẽ tham gia',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
+                        InkWell(
+                            onTap: () {
+                              if (eventDetail['event_relationship']['status'] !=
+                                  'going') {
+                                ref
+                                    .read(eventControllerProvider.notifier)
+                                    .updateStatusEvent(
+                                        eventDetail['id'], {'status': 'going'});
+                              } else {
+                                ref
+                                    .read(eventControllerProvider.notifier)
+                                    .updateStatusEvent(
+                                        eventDetail['id'], {'status': ''});
+                              }
+                              setState(() {});
+                            },
+                            child: Container(
+                              height: 30,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              margin: const EdgeInsets.fromLTRB(2, 0, 6, 10),
+                              decoration: BoxDecoration(
+                                  color: eventDetail['event_relationship']
+                                              ['status'] !=
+                                          'going'
+                                      ? const Color.fromARGB(189, 202, 202, 202)
+                                      : secondaryColor.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border:
+                                      Border.all(width: 0.2, color: greyColor)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                      eventDetail['event_relationship']
+                                                  ['status'] !=
+                                              'going'
+                                          ? FontAwesomeIcons.clipboardQuestion
+                                          : FontAwesomeIcons.circleCheck,
+                                      color: Colors.black,
+                                      size: 14),
+                                  const SizedBox(
+                                    width: 3.0,
+                                  ),
+                                  const Text(
+                                    'Sẽ tham gia',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 8.0, top: 15.0),
+                                  width: MediaQuery.of(context).size.width,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.3 +
+                                          30,
+                                  child: Column(
+                                    children: [
+                                      ListView.builder(
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: iconActionEllipsis.length,
+                                        itemBuilder: ((context, index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 10.0),
+                                            child: InkWell(
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                    context: context,
+                                                    isScrollControlled: true,
+                                                    barrierColor:
+                                                        Colors.transparent,
+                                                    clipBehavior: Clip
+                                                        .antiAliasWithSaveLayer,
+                                                    shape: const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.vertical(
+                                                                top: Radius
+                                                                    .circular(
+                                                                        10))),
+                                                    builder: (context) =>
+                                                        SizedBox(
+                                                          height: height * 0.9,
+                                                          width: width,
+                                                          child: ActionEllipsis(
+                                                              menuSelected:
+                                                                  iconActionEllipsis[
+                                                                      index]),
+                                                        ));
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 18.0,
+                                                    backgroundColor:
+                                                        greyColor[350],
+                                                    child: Icon(
+                                                      iconActionEllipsis[index]
+                                                          ["icon"],
+                                                      size: 18.0,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 10.0),
+                                                    child: Text(
+                                                        iconActionEllipsis[
+                                                            index]["label"],
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: InkWell(
-                            onTap: () {},
+                              );
+                            },
                             child: Container(
                               height: 30,
                               width: MediaQuery.of(context).size.width * 0.1,
+                              margin: const EdgeInsets.fromLTRB(2, 0, 0, 10),
                               decoration: BoxDecoration(
                                   color:
                                       const Color.fromARGB(189, 202, 202, 202),
@@ -797,15 +390,407 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                       color: Colors.black, size: 14),
                                 ],
                               ),
-                            )),
+                            ))
+                      ],
+                    ),
+                  )
+                ]),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 4, 4, 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(FontAwesomeIcons.stopwatch,
+                                    color: Colors.black, size: 20),
+                                SizedBox(
+                                  width: 9.0,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 4.0),
+                                  child: Text(
+                                    '43 Ngày',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {},
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(FontAwesomeIcons.solidUser,
+                                      color: Colors.black, size: 20),
+                                  SizedBox(
+                                    width: 9.0,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 4.0),
+                                    child: Text(
+                                      'Sự kiện của ',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(FontAwesomeIcons.locationDot,
+                                    color: Colors.black, size: 20),
+                                const SizedBox(
+                                  width: 9.0,
+                                ),
+                                Column(
+                                  children: const [
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 10, bottom: 4),
+                                      child: Text('Sự kiện của ',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w500,
+                                          )),
+                                    ),
+                                    Text('Sự kiện của ',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 12.0,
+                                          color: greyColor,
+                                          fontWeight: FontWeight.normal,
+                                        )),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {},
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(FontAwesomeIcons.clipboardCheck,
+                                      color: Colors.black, size: 20),
+                                  SizedBox(
+                                    width: 9.0,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 4.0),
+                                    child: Text(
+                                      'Sự kiện của ',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {},
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(FontAwesomeIcons.earthAmericas,
+                                      color: Colors.black, size: 20),
+                                  SizedBox(
+                                    width: 9.0,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 4.0),
+                                    child: Text(
+                                      'Công khai · Tất cả mọi người trong hoặc ngoài EMSO',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    eventAction = true;
+                                  });
+                                },
+                                child: Container(
+                                  height: 30,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  margin:
+                                      const EdgeInsets.fromLTRB(0, 8, 10, 8),
+                                  decoration: BoxDecoration(
+                                      color: secondaryColor.withOpacity(0.4),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                          width: 0.2, color: greyColor)),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Text(
+                                          'Giới thiệu',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            color: secondaryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ]),
+                                )),
+                            InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    eventAction = false;
+                                  });
+                                },
+                                child: Container(
+                                  height: 30,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                  margin: const EdgeInsets.fromLTRB(2, 8, 0, 8),
+                                  decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          189, 202, 202, 202),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                          width: 0.2, color: greyColor)),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'Cuộc thảo luận',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                      const CrossBar(),
+                      eventAction
+                          ? EventIntro(
+                              eventDetail: eventDetail,
+                            )
+                          : EventDiscuss(eventDetail: eventDetail)
                     ],
                   ),
+                )
+              ],
+            ),
+          ),
+          Visibility(
+            visible: _isVisible,
+            child: Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 60,
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: InkWell(
+                          onTap: () {
+                            if (eventDetail['event_relationship']['status'] !=
+                                'interested') {
+                              ref
+                                  .read(eventControllerProvider.notifier)
+                                  .updateStatusEvent(eventDetail['id'],
+                                      {'status': 'interested'});
+                            } else {
+                              ref
+                                  .read(eventControllerProvider.notifier)
+                                  .updateStatusEvent(
+                                      eventDetail['id'], {'status': ''});
+                            }
+                            setState(() {});
+                          },
+                          child: Container(
+                              height: 30,
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              decoration: BoxDecoration(
+                                  color: eventDetail['event_relationship']
+                                              ['status'] !=
+                                          'interested'
+                                      ? secondaryColor
+                                      : secondaryColor.withOpacity(0.6),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border:
+                                      Border.all(width: 0.2, color: greyColor)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(FontAwesomeIcons.solidStar,
+                                      color: eventDetail['event_relationship']
+                                                  ['status'] !=
+                                              'interested'
+                                          ? Colors.white
+                                          : secondaryColor,
+                                      size: 14),
+                                  const SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    'Quan tâm',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      color: eventDetail['event_relationship']
+                                                  ['status'] !=
+                                              'interested'
+                                          ? Colors.white
+                                          : secondaryColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ))),
+                    ),
+                    InkWell(
+                        onTap: () {
+                          if (eventDetail['event_relationship']['status'] !=
+                              'going') {
+                            ref
+                                .read(eventControllerProvider.notifier)
+                                .updateStatusEvent(
+                                    eventDetail['id'], {'status': 'going'});
+                          } else {
+                            ref
+                                .read(eventControllerProvider.notifier)
+                                .updateStatusEvent(
+                                    eventDetail['id'], {'status': ''});
+                          }
+                          setState(() {});
+                        },
+                        child: Container(
+                          height: 30,
+                          width: MediaQuery.of(context).size.width * 0.35,
+                          decoration: BoxDecoration(
+                              color: eventDetail['event_relationship']
+                                          ['status'] !=
+                                      'going'
+                                  ? const Color.fromARGB(189, 202, 202, 202)
+                                  : secondaryColor.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(width: 0.2, color: greyColor)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                  eventDetail['event_relationship']['status'] !=
+                                          'going'
+                                      ? FontAwesomeIcons.clipboardQuestion
+                                      : FontAwesomeIcons.circleCheck,
+                                  color: Colors.black,
+                                  size: 14),
+                              const SizedBox(
+                                width: 3.0,
+                              ),
+                              const Text(
+                                'Sẽ tham gia',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: InkWell(
+                          onTap: () {},
+                          child: Container(
+                            height: 30,
+                            width: MediaQuery.of(context).size.width * 0.1,
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(189, 202, 202, 202),
+                                borderRadius: BorderRadius.circular(4),
+                                border:
+                                    Border.all(width: 0.2, color: greyColor)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(FontAwesomeIcons.ellipsis,
+                                    color: Colors.black, size: 14),
+                              ],
+                            ),
+                          )),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -908,135 +893,150 @@ class _EventIntroState extends ConsumerState<EventIntro> {
         const CrossBar(),
         SizedBox(
           width: MediaQuery.of(context).size.width,
-          child: Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
-                  child: Text(
-                    'Gặp gỡ người tổ chức',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w900,
-                    ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
+                child: Text(
+                  'Gặp gỡ người tổ chức',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: hosts.length <= 1 ? 240 : 260,
-                      width: hosts.length <= 1 ? 400 : width,
-                      child: ListView.builder(
-                          itemCount: hosts.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return SizedBox(
-                              width: hosts.length <= 1
-                                  ? width * 0.95
-                                  : width * 0.6,
-                              child: Card(
-                                elevation: 0,
-                                shape: const RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: Colors.grey,
-                                      style: BorderStyle.solid,
-                                      width: 0.5,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8))),
-                                child: Expanded(
-                                  child: Stack(
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: hosts.length <= 1 ? 240 : 260,
+                    width: hosts.length <= 1 ? 400 : width,
+                    child: ListView.builder(
+                        itemCount: hosts.length,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return SizedBox(
+                            width:
+                                hosts.length <= 1 ? width * 0.95 : width * 0.6,
+                            child: Card(
+                              elevation: 0,
+                              shape: const RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color: Colors.grey,
+                                    style: BorderStyle.solid,
+                                    width: 0.5,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Stack(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: hosts.length <= 1
-                                                ? width * 0.95
-                                                : width * 0.6,
-                                            height: hosts[index]['account']
-                                                    ['group']
-                                                ? hosts.length <= 1
-                                                    ? height * 0.125
-                                                    : height * 0.13
-                                                : height * 0.12,
-                                            child: hosts[index]['account']
-                                                    ['group']
-                                                ? ClipRRect(
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    8),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    8)),
-                                                    child: ImageCacheRender(
-                                                      path: hosts[index]
-                                                                  ['account']
-                                                              ['avatar_media']
-                                                          ['url'],
-                                                    ),
-                                                  )
-                                                : Center(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 2.0),
-                                                      child: ClipOval(
-                                                        child:
-                                                            SizedBox.fromSize(
-                                                          size: const Size
-                                                                  .fromRadius(
-                                                              48), // Image radius
-                                                          child:
-                                                              ImageCacheRender(
-                                                            path: hosts[index][
-                                                                        'account']
-                                                                    [
-                                                                    'avatar_media']
-                                                                ['url'],
-                                                          ),
-                                                        ),
+                                      SizedBox(
+                                        width: hosts.length <= 1
+                                            ? width * 0.95
+                                            : width * 0.6,
+                                        height: hosts[index]['account']['group']
+                                            ? hosts.length <= 1
+                                                ? height * 0.125
+                                                : height * 0.13
+                                            : height * 0.12,
+                                        child: hosts[index]['account']['group']
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(8),
+                                                        topRight:
+                                                            Radius.circular(8)),
+                                                child: ImageCacheRender(
+                                                  path: hosts[index]['account']
+                                                      ['avatar_media']['url'],
+                                                ),
+                                              )
+                                            : Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 2.0),
+                                                  child: ClipOval(
+                                                    child: SizedBox.fromSize(
+                                                      size: const Size
+                                                              .fromRadius(
+                                                          48), // Image radius
+                                                      child: ImageCacheRender(
+                                                        path: hosts[index]
+                                                                    ['account']
+                                                                ['avatar_media']
+                                                            ['url'],
                                                       ),
                                                     ),
                                                   ),
-                                          ),
-                                          const Padding(
-                                            padding: EdgeInsets.only(top: 8.0),
-                                            child: Text(
-                                              'Gặp gỡ người tổ chức',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w900,
+                                                ),
                                               ),
-                                            ),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(top: 8.0),
+                                        child: Text(
+                                          'Gặp gỡ người tổ chức',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w900,
                                           ),
-                                          const SizedBox(
-                                            height: 5.0,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      Text(
+                                        '14 sự kiện đã qua · 4.5K lượt thích',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 12.0,
+                                          color: Colors.black.withOpacity(0.8),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      SizedBox(
+                                        width: hosts.length < 2
+                                            ? MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.87
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.48,
+                                        child: Text(
+                                          'Vietnam Gender Equality Movement (VGEM) là chuỗi hoạt động thúc đẩy quyền bình đẳng giới tại Việt Nam.',
+                                          maxLines: 3,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w600,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          Text(
-                                            '14 sự kiện đã qua · 4.5K lượt thích',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color:
-                                                  Colors.black.withOpacity(0.8),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          SizedBox(
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {},
+                                          child: Container(
+                                            height: 30,
                                             width: hosts.length < 2
                                                 ? MediaQuery.of(context)
                                                         .size
@@ -1045,82 +1045,49 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                 : MediaQuery.of(context)
                                                         .size
                                                         .width *
-                                                    0.48,
-                                            child: Text(
-                                              'Vietnam Gender Equality Movement (VGEM) là chuỗi hoạt động thúc đẩy quyền bình đẳng giới tại Việt Nam.',
-                                              maxLines: 3,
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                                fontWeight: FontWeight.w600,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          GestureDetector(
-                                              onTap: () {},
-                                              child: Container(
-                                                height: 30,
-                                                width: hosts.length < 2
-                                                    ? MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.87
-                                                    : MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.5,
-                                                decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                        189, 202, 202, 202),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                    border: Border.all(
-                                                        width: 0.2,
-                                                        color: greyColor)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: const [
-                                                    Icon(
-                                                        FontAwesomeIcons
-                                                            .solidThumbsUp,
-                                                        color: Colors.black,
-                                                        size: 14),
-                                                    SizedBox(
-                                                      width: 7.0,
-                                                    ),
-                                                    Text(
-                                                      'Xem',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: 12.0,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                  ],
+                                                    0.5,
+                                            decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                    189, 202, 202, 202),
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: greyColor)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const [
+                                                Icon(
+                                                    FontAwesomeIcons
+                                                        .solidThumbsUp,
+                                                    color: Colors.black,
+                                                    size: 14),
+                                                SizedBox(
+                                                  width: 7.0,
                                                 ),
-                                              ))
-                                        ],
-                                      ),
+                                                Text(
+                                                  'Xem',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ))
                                     ],
                                   ),
-                                ),
+                                ],
                               ),
-                            );
-                          }),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
         const CrossBar(),
@@ -1175,323 +1142,146 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 ),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),
-                            child: Expanded(
-                              child: Stack(
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        height: height * 0.15,
-                                        width: width * 0.6,
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(8),
-                                              topRight: Radius.circular(8)),
-                                          child: ImageCacheRender(
-                                            path: eventsSuggested[index]
-                                                    ['account']['avatar_media']
-                                                ['url'],
-                                          ),
+                            child: Stack(
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: height * 0.15,
+                                      width: width * 0.6,
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            topRight: Radius.circular(8)),
+                                        child: ImageCacheRender(
+                                          path: eventsSuggested[index]
+                                                  ['account']['avatar_media']
+                                              ['url'],
                                         ),
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                          left: 8.0,
-                                          top: 8.0,
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                        left: 8.0,
+                                        top: 8.0,
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: Text(
+                                              GetTimeAgo.parse(
+                                                DateTime.parse(
+                                                    eventsSuggested[index]
+                                                        ['start_time']),
+                                              ),
+                                              style: const TextStyle(
+                                                fontSize: 12.0,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: width * 0.55,
+                                            child: Padding(
                                               padding:
                                                   const EdgeInsets.all(2.0),
                                               child: Text(
-                                                GetTimeAgo.parse(
-                                                  DateTime.parse(
-                                                      eventsSuggested[index]
-                                                          ['start_time']),
-                                                ),
+                                                eventsSuggested[index]['title'],
                                                 style: const TextStyle(
                                                   fontSize: 12.0,
                                                   fontWeight: FontWeight.w700,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ),
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.all(2.0),
+                                            child: Text(
+                                              // isCare[index]['location'],
+                                              'HÀ NỘI',
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: greyColor,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: Text(
+                                              '${eventsSuggested[index]['users_interested_count'].toString()} người quan tâm · ${eventsSuggested[index]['users_going_count'].toString()} người tham gia ',
+                                              style: const TextStyle(
+                                                fontSize: 12.0,
+                                                color: greyColor,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                          Row(children: [
                                             SizedBox(
-                                              width: width * 0.55,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2.0),
-                                                child: Text(
-                                                  eventsSuggested[index]
-                                                      ['title'],
-                                                  style: const TextStyle(
-                                                    fontSize: 12.0,
-                                                    fontWeight: FontWeight.w700,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            const Padding(
-                                              padding: EdgeInsets.all(2.0),
-                                              child: Text(
-                                                // isCare[index]['location'],
-                                                'HÀ NỘI',
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  color: greyColor,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(2.0),
-                                              child: Text(
-                                                '${eventsSuggested[index]['users_interested_count'].toString()} người quan tâm · ${eventsSuggested[index]['users_going_count'].toString()} người tham gia ',
-                                                style: const TextStyle(
-                                                  fontSize: 12.0,
-                                                  color: greyColor,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                            ),
-                                            Row(children: [
-                                              SizedBox(
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    InkWell(
-                                                        onTap: () {
-                                                          String key = eventsSuggested[
-                                                                          index]
-                                                                      [
-                                                                      'event_relationship']
-                                                                  ['status'] ??
-                                                              '';
-                                                          if (key != '') {
-                                                            showModalBottomSheet(
-                                                              isScrollControlled:
-                                                                  true,
-                                                              shape:
-                                                                  const RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .vertical(
-                                                                  top: Radius
-                                                                      .circular(
-                                                                          10),
-                                                                ),
-                                                              ),
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  StatefulBuilder(
-                                                                      builder:
-                                                                          (context,
-                                                                              setStateful) {
-                                                                return Container(
-                                                                  height: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height /
-                                                                      2.9,
-                                                                  width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                                  margin: const EdgeInsets
-                                                                          .only(
-                                                                      top: 10),
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    children: [
-                                                                      const Text(
-                                                                        'Phản hồi của bạn',
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              12.0,
-                                                                          fontWeight:
-                                                                              FontWeight.w700,
-                                                                        ),
-                                                                      ),
-                                                                      const CrossBar(),
-                                                                      Column(
-                                                                        children: List.generate(
-                                                                            iconEventCare.length,
-                                                                            (indexGes) => GestureDetector(
-                                                                                  onTap: () {
-                                                                                    ref.read(eventControllerProvider.notifier).updateStatusEvent(eventsSuggested[index]['id'], {
-                                                                                      'status': iconEventCare[indexGes]['key']
-                                                                                    });
-                                                                                    Navigator.pop(context);
-                                                                                  },
-                                                                                  child: ListTile(
-                                                                                    dense: true,
-                                                                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
-                                                                                    visualDensity: const VisualDensity(horizontal: -4, vertical: -1),
-                                                                                    leading: Icon(iconEventCare[indexGes]['icon'], color: Colors.black),
-                                                                                    title: Text(iconEventCare[indexGes]['label'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                                                                                    trailing: Radio(
-                                                                                        groupValue: eventsSuggested[index]['event_relationship']['status'],
-                                                                                        value: iconEventCare[indexGes]['key'],
-                                                                                        onChanged: (value) {
-                                                                                          ref.read(eventControllerProvider.notifier).updateStatusEvent(eventsSuggested[index]['id'], {
-                                                                                            'status': value
-                                                                                          });
-                                                                                          Navigator.pop(context);
-                                                                                        }),
-                                                                                  ),
-                                                                                )),
-                                                                      ),
-                                                                      const CrossBar(),
-                                                                      const ListTile(
-                                                                        dense:
-                                                                            true,
-                                                                        contentPadding: EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                8.0,
-                                                                            vertical:
-                                                                                0.0),
-                                                                        visualDensity: VisualDensity(
-                                                                            horizontal:
-                                                                                -4,
-                                                                            vertical:
-                                                                                -4),
-                                                                        leading:
-                                                                            Icon(
-                                                                          FontAwesomeIcons
-                                                                              .userGroup,
-                                                                          color:
-                                                                              Colors.black,
-                                                                          size:
-                                                                              20,
-                                                                        ),
-                                                                        title: Text
-                                                                            .rich(
-                                                                          TextSpan(
-                                                                            text:
-                                                                                'Hiển thị với người tổ chức và',
-                                                                            style:
-                                                                                TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                                                                            children: <InlineSpan>[
-                                                                              TextSpan(
-                                                                                text: ' Bạn bè',
-                                                                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        trailing:
-                                                                            Padding(
-                                                                          padding:
-                                                                              EdgeInsets.only(right: 15.0),
-                                                                          child:
-                                                                              Icon(
-                                                                            FontAwesomeIcons.chevronRight,
-                                                                            color:
-                                                                                Colors.black,
-                                                                            size:
-                                                                                20,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                );
-                                                              }),
-                                                            );
-                                                          }
-                                                          if (eventsSuggested[
-                                                                          index]
-                                                                      [
-                                                                      'event_relationship']
-                                                                  ['status'] ==
-                                                              '') {
-                                                            ref
-                                                                .read(eventControllerProvider
-                                                                    .notifier)
-                                                                .updateStatusEvent(
-                                                                    eventsSuggested[
-                                                                        index]['id'],
-                                                                    {
-                                                                  'status':
-                                                                      'interested'
-                                                                });
-                                                          }
-                                                        },
-                                                        child: Container(
-                                                          height: 24,
-                                                          width: width * 0.45,
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 10.0,
-                                                                  right: 8.0),
-                                                          decoration: BoxDecoration(
-                                                              color: eventsSuggested[index]
-                                                                              ['event_relationship']
-                                                                          [
-                                                                          'status'] !=
-                                                                      ''
-                                                                  ? secondaryColor
-                                                                  : const Color.fromARGB(
-                                                                      189,
-                                                                      202,
-                                                                      202,
-                                                                      202),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  InkWell(
+                                                      onTap: () {
+                                                        String key = eventsSuggested[
+                                                                        index][
+                                                                    'event_relationship']
+                                                                ['status'] ??
+                                                            '';
+                                                        if (key != '') {
+                                                          showModalBottomSheet(
+                                                            isScrollControlled:
+                                                                true,
+                                                            shape:
+                                                                const RoundedRectangleBorder(
                                                               borderRadius:
                                                                   BorderRadius
-                                                                      .circular(
-                                                                          4),
-                                                              border: Border.all(
-                                                                  width: 0.2,
-                                                                  color:
-                                                                      greyColor)),
-                                                          child: eventsSuggested[
-                                                                              index]
-                                                                          [
-                                                                          'event_relationship']
-                                                                      [
-                                                                      'status'] ==
-                                                                  'interested'
-                                                              ? Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: const [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.only(
-                                                                          bottom:
-                                                                              3.0),
-                                                                      child: Icon(
-                                                                          FontAwesomeIcons
-                                                                              .solidStar,
-                                                                          color: Colors
-                                                                              .black,
-                                                                          size:
-                                                                              14),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width:
-                                                                          5.0,
-                                                                    ),
-                                                                    Text(
-                                                                      'Quan tâm',
+                                                                      .vertical(
+                                                                top: Radius
+                                                                    .circular(
+                                                                        10),
+                                                              ),
+                                                            ),
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                StatefulBuilder(
+                                                                    builder:
+                                                                        (context,
+                                                                            setStateful) {
+                                                              return Container(
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height /
+                                                                    2.9,
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            10),
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    const Text(
+                                                                      'Phản hồi của bạn',
                                                                       textAlign:
                                                                           TextAlign
                                                                               .center,
@@ -1503,170 +1293,348 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                                             FontWeight.w700,
                                                                       ),
                                                                     ),
-                                                                    SizedBox(
-                                                                      width:
-                                                                          5.0,
+                                                                    const CrossBar(),
+                                                                    Column(
+                                                                      children: List.generate(
+                                                                          iconEventCare.length,
+                                                                          (indexGes) => GestureDetector(
+                                                                                onTap: () {
+                                                                                  ref.read(eventControllerProvider.notifier).updateStatusEvent(eventsSuggested[index]['id'], {
+                                                                                    'status': iconEventCare[indexGes]['key']
+                                                                                  });
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: ListTile(
+                                                                                  dense: true,
+                                                                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                                                                                  visualDensity: const VisualDensity(horizontal: -4, vertical: -1),
+                                                                                  leading: Icon(iconEventCare[indexGes]['icon'], color: Colors.black),
+                                                                                  title: Text(iconEventCare[indexGes]['label'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                                                                                  trailing: Radio(
+                                                                                      groupValue: eventsSuggested[index]['event_relationship']['status'],
+                                                                                      value: iconEventCare[indexGes]['key'],
+                                                                                      onChanged: (value) {
+                                                                                        ref.read(eventControllerProvider.notifier).updateStatusEvent(eventsSuggested[index]['id'], {
+                                                                                          'status': value
+                                                                                        });
+                                                                                        Navigator.pop(context);
+                                                                                      }),
+                                                                                ),
+                                                                              )),
                                                                     ),
-                                                                    Padding(
-                                                                      padding: EdgeInsets.only(
-                                                                          bottom:
-                                                                              5.0),
-                                                                      child: Icon(
+                                                                    const CrossBar(),
+                                                                    const ListTile(
+                                                                      dense:
+                                                                          true,
+                                                                      contentPadding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              8.0,
+                                                                          vertical:
+                                                                              0.0),
+                                                                      visualDensity: VisualDensity(
+                                                                          horizontal:
+                                                                              -4,
+                                                                          vertical:
+                                                                              -4),
+                                                                      leading:
+                                                                          Icon(
+                                                                        FontAwesomeIcons
+                                                                            .userGroup,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        size:
+                                                                            20,
+                                                                      ),
+                                                                      title: Text
+                                                                          .rich(
+                                                                        TextSpan(
+                                                                          text:
+                                                                              'Hiển thị với người tổ chức và',
+                                                                          style: TextStyle(
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.w700),
+                                                                          children: <
+                                                                              InlineSpan>[
+                                                                            TextSpan(
+                                                                              text: ' Bạn bè',
+                                                                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      trailing:
+                                                                          Padding(
+                                                                        padding:
+                                                                            EdgeInsets.only(right: 15.0),
+                                                                        child:
+                                                                            Icon(
                                                                           FontAwesomeIcons
-                                                                              .sortDown,
+                                                                              .chevronRight,
+                                                                          color:
+                                                                              Colors.black,
+                                                                          size:
+                                                                              20,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            }),
+                                                          );
+                                                        }
+                                                        if (eventsSuggested[
+                                                                        index][
+                                                                    'event_relationship']
+                                                                ['status'] ==
+                                                            '') {
+                                                          ref
+                                                              .read(
+                                                                  eventControllerProvider
+                                                                      .notifier)
+                                                              .updateStatusEvent(
+                                                                  eventsSuggested[
+                                                                      index]['id'],
+                                                                  {
+                                                                'status':
+                                                                    'interested'
+                                                              });
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 24,
+                                                        width: width * 0.45,
+                                                        margin: const EdgeInsets
+                                                                .only(
+                                                            top: 10.0,
+                                                            right: 8.0),
+                                                        decoration: BoxDecoration(
+                                                            color: eventsSuggested[index]
+                                                                            ['event_relationship']
+                                                                        [
+                                                                        'status'] !=
+                                                                    ''
+                                                                ? secondaryColor
+                                                                : const Color.fromARGB(
+                                                                    189,
+                                                                    202,
+                                                                    202,
+                                                                    202),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                            border: Border.all(
+                                                                width: 0.2,
+                                                                color:
+                                                                    greyColor)),
+                                                        child: eventsSuggested[
+                                                                            index]
+                                                                        [
+                                                                        'event_relationship']
+                                                                    [
+                                                                    'status'] ==
+                                                                'interested'
+                                                            ? Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: const [
+                                                                  Padding(
+                                                                    padding: EdgeInsets.only(
+                                                                        bottom:
+                                                                            3.0),
+                                                                    child: Icon(
+                                                                        FontAwesomeIcons
+                                                                            .solidStar,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        size:
+                                                                            14),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5.0,
+                                                                  ),
+                                                                  Text(
+                                                                    'Quan tâm',
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          12.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5.0,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsets.only(
+                                                                        bottom:
+                                                                            5.0),
+                                                                    child: Icon(
+                                                                        FontAwesomeIcons
+                                                                            .sortDown,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        size:
+                                                                            14),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : eventsSuggested[index]
+                                                                            [
+                                                                            'event_relationship']
+                                                                        [
+                                                                        'status'] ==
+                                                                    'going'
+                                                                ? Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: const [
+                                                                      Icon(
+                                                                          FontAwesomeIcons
+                                                                              .circleCheck,
                                                                           color: Colors
                                                                               .black,
                                                                           size:
                                                                               14),
-                                                                    ),
-                                                                  ],
-                                                                )
-                                                              : eventsSuggested[
-                                                                              index]['event_relationship']
-                                                                          [
-                                                                          'status'] ==
-                                                                      'going'
-                                                                  ? Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: const [
-                                                                        Icon(
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5.0,
+                                                                      ),
+                                                                      Text(
+                                                                        'Sẽ tham gia',
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              12.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w700,
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5.0,
+                                                                      ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            EdgeInsets.only(bottom: 4.0),
+                                                                        child: Icon(
                                                                             FontAwesomeIcons
-                                                                                .circleCheck,
+                                                                                .sortDown,
                                                                             color:
                                                                                 Colors.black,
                                                                             size: 14),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              5.0,
+                                                                      )
+                                                                    ],
+                                                                  )
+                                                                : Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: const [
+                                                                      Padding(
+                                                                        padding:
+                                                                            EdgeInsets.only(bottom: 3.0),
+                                                                        child: Icon(
+                                                                            FontAwesomeIcons
+                                                                                .solidStar,
+                                                                            color:
+                                                                                Colors.black,
+                                                                            size: 14),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5.0,
+                                                                      ),
+                                                                      Text(
+                                                                        'Quan tâm',
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              12.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w700,
                                                                         ),
-                                                                        Text(
-                                                                          'Sẽ tham gia',
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                12.0,
-                                                                            fontWeight:
-                                                                                FontWeight.w700,
-                                                                          ),
-                                                                        ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              5.0,
-                                                                        ),
-                                                                        Padding(
-                                                                          padding:
-                                                                              EdgeInsets.only(bottom: 4.0),
-                                                                          child: Icon(
-                                                                              FontAwesomeIcons.sortDown,
-                                                                              color: Colors.black,
-                                                                              size: 14),
-                                                                        )
-                                                                      ],
-                                                                    )
-                                                                  : Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: const [
-                                                                        Padding(
-                                                                          padding:
-                                                                              EdgeInsets.only(bottom: 3.0),
-                                                                          child: Icon(
-                                                                              FontAwesomeIcons.solidStar,
-                                                                              color: Colors.black,
-                                                                              size: 14),
-                                                                        ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              5.0,
-                                                                        ),
-                                                                        Text(
-                                                                          'Quan tâm',
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                12.0,
-                                                                            fontWeight:
-                                                                                FontWeight.w700,
-                                                                          ),
-                                                                        ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              3.0,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                        )),
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          showModalBottomSheet(
-                                                              shape:
-                                                                  const RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .vertical(
-                                                                  top: Radius
-                                                                      .circular(
-                                                                          10),
-                                                                ),
-                                                              ),
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  const ShareModalBottom());
-                                                        },
-                                                        child: Container(
-                                                          height: 24,
-                                                          width: width * 0.1,
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 10),
-                                                          decoration: BoxDecoration(
-                                                              color: const Color
-                                                                      .fromARGB(
-                                                                  189,
-                                                                  202,
-                                                                  202,
-                                                                  202),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            3.0,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                      )),
+                                                  GestureDetector(
+                                                      onTap: () {
+                                                        showModalBottomSheet(
+                                                            shape:
+                                                                const RoundedRectangleBorder(
                                                               borderRadius:
                                                                   BorderRadius
-                                                                      .circular(
-                                                                          4),
-                                                              border: Border.all(
-                                                                  width: 0.2,
-                                                                  color:
-                                                                      greyColor)),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: const [
-                                                              Icon(
-                                                                  FontAwesomeIcons
-                                                                      .share,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  size: 14),
-                                                            ],
-                                                          ),
-                                                        ))
-                                                  ],
-                                                ),
-                                              )
-                                            ]),
-                                          ],
-                                        ),
+                                                                      .vertical(
+                                                                top: Radius
+                                                                    .circular(
+                                                                        10),
+                                                              ),
+                                                            ),
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                const ShareModalBottom());
+                                                      },
+                                                      child: Container(
+                                                        height: 24,
+                                                        width: width * 0.1,
+                                                        margin: const EdgeInsets
+                                                            .only(top: 10),
+                                                        decoration: BoxDecoration(
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                189,
+                                                                202,
+                                                                202,
+                                                                202),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                            border: Border.all(
+                                                                width: 0.2,
+                                                                color:
+                                                                    greyColor)),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: const [
+                                                            Icon(
+                                                                FontAwesomeIcons
+                                                                    .share,
+                                                                color: Colors
+                                                                    .black,
+                                                                size: 14),
+                                                          ],
+                                                        ),
+                                                      ))
+                                                ],
+                                              ),
+                                            )
+                                          ]),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         );

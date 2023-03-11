@@ -13,13 +13,13 @@ class Moment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _key = GlobalKey();
+    final GlobalKey<ScaffoldState> key = GlobalKey();
 
     List iconAction = [
       {"icon": Icons.search, 'type': 'icon'},
     ];
     return Scaffold(
-        key: _key,
+        key: key,
         drawerEnableOpenDragGesture: false,
         drawer: const Drawer(
           child: DrawerMoment(),
@@ -33,7 +33,8 @@ class Moment extends StatelessWidget {
             itemBuilder: (context, index) {
               return Stack(
                 children: [
-                  MomentVideo(moment: moments[index]),
+                  MomentVideo(
+                      key: Key(moments[index]['id']), moment: moments[index]),
                   Positioned(
                       bottom: 15,
                       left: 15,
@@ -60,7 +61,7 @@ class Moment extends StatelessWidget {
                         isBack != null
                             ? const BackButton()
                             : InkWell(
-                                onTap: () => _key.currentState!.openDrawer(),
+                                onTap: () => key.currentState!.openDrawer(),
                                 child: const Padding(
                                   padding: EdgeInsets.only(top: 0),
                                   child: Icon(

@@ -82,7 +82,6 @@ class _FriendTagState extends ConsumerState<FriendTag> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           SearchInput(),
           SearchInput(
             handleSearch: handleSearch,
           ),
@@ -101,7 +100,7 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                       width: double.infinity,
                       height: 60,
                       child: ListView.builder(
-                        shrinkWrap: true,
+                          shrinkWrap: true,
                           itemCount: friendSelected.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) => Container(

@@ -57,7 +57,10 @@ class _WatchRenderState extends State<WatchRender> {
             menuSelected == 'watch_home'
                 ? Column(
                     children: List.generate(
-                        watchs.length, (index) => Post(post: watchs[index])))
+                        watchs.length,
+                        (index) => Post(
+                            key: Key(watchs[index]['id']),
+                            post: watchs[index])))
                 : const SizedBox(),
             menuSelected == 'watch_saved'
                 ? const WatchSaved()

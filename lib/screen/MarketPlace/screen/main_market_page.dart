@@ -9,8 +9,6 @@ import 'package:social_network_app_mobile/providers/market_place_providers/cart_
 import 'package:social_network_app_mobile/providers/market_place_providers/discover_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
-import 'package:social_network_app_mobile/providers/me_provider.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/personal_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/see_more_market_page.dart';
@@ -18,7 +16,6 @@ import 'package:social_network_app_mobile/screen/MarketPlace/widgets/banner_widg
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/category_product_item_widget.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/title_and_see_all.dart';
-import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/information_component_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
@@ -104,38 +101,36 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                children: [
-                  buildBanner(context, width: width, height: 300),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: _buildCategoriesComponent(),
-                  ),
-                  const CrossBar(
-                    height: 10,
-                  ),
-                  // suggest product
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: _buildSuggestComponent(),
-                  ),
-                  buildSpacer(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: _buildLatestSearchComponent(),
-                  ),
-                  const CrossBar(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: _buildDiscoverComponent(),
-                  )
-                ],
-              ),
+          SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              children: [
+                buildBanner(context, width: width, height: 300),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: _buildCategoriesComponent(),
+                ),
+                const CrossBar(
+                  height: 10,
+                ),
+                // suggest product
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: _buildSuggestComponent(),
+                ),
+                buildSpacer(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: _buildLatestSearchComponent(),
+                ),
+                const CrossBar(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: _buildDiscoverComponent(),
+                )
+              ],
             ),
           ),
           Column(

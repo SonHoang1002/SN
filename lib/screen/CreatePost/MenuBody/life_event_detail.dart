@@ -162,67 +162,62 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
             ),
             Container(
                 margin: const EdgeInsets.all(8.0),
-                child: Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        height: 20.0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    SizedBox(
+                      height: 80,
+                      child: TextFormFieldCustom(
+                        handleGetValue: (value) {
+                          widget.updateLifeEvent!('name', value);
+                        },
+                        autofocus: true,
+                        maxLines: 1,
+                        hintText: "Tiêu đề",
+                        initialValue: widget.event['name'],
+                        helperText:
+                            "Ví dụ: thành tích, hoạt động tình nguyện, kĩ năng hoặc bằng cấp mới",
                       ),
-                      SizedBox(
-                        height: 80,
-                        child: TextFormFieldCustom(
-                          handleGetValue: (value) {
-                            widget.updateLifeEvent!('name', value);
-                          },
-                          autofocus: true,
-                          maxLines: 1,
-                          hintText: "Tiêu đề",
-                          initialValue: widget.event['name'],
-                          helperText:
-                              "Ví dụ: thành tích, hoạt động tình nguyện, kĩ năng hoặc bằng cấp mới",
-                        ),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    SizedBox(
+                      height: 46,
+                      child: ButtonPrimary(
+                        label: titleButton,
+                        handlePress: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => CreateModalBaseMenu(
+                                      title: "Chọn địa điểm",
+                                      body: Checkin(
+                                        handleUpdateData: (type, data) {
+                                          widget.updateLifeEvent!('place_id',
+                                              data != null ? data['id'] : data);
+                                          setState(() {
+                                            titleButton = data['title'];
+                                          });
+                                        },
+                                        checkin: null,
+                                        type: "menu_out",
+                                      ),
+                                      buttonAppbar: const SizedBox())));
+                        },
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      SizedBox(
-                        height: 46,
-                        child: ButtonPrimary(
-                          label: titleButton,
-                          handlePress: () {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => CreateModalBaseMenu(
-                                        title: "Chọn địa điểm",
-                                        body: Checkin(
-                                          handleUpdateData: (type, data) {
-                                            widget.updateLifeEvent!(
-                                                'place_id',
-                                                data != null
-                                                    ? data['id']
-                                                    : data);
-                                            setState(() {
-                                              titleButton = data['title'];
-                                            });
-                                          },
-                                          checkin: null,
-                                          type: "menu_out",
-                                        ),
-                                        buttonAppbar: const SizedBox())));
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      DateTimeCustom(handleGetDate: (date) {
-                        widget.updateLifeEvent!('start_date',
-                            '${date.year} - ${date.month} - ${date.day}');
-                      })
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    DateTimeCustom(handleGetDate: (date) {
+                      widget.updateLifeEvent!('start_date',
+                          '${date.year} - ${date.month} - ${date.day}');
+                    })
+                  ],
                 )),
           ],
         ),
