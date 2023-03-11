@@ -7,9 +7,6 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/spacer_widget.dart';
 import '../../../widget/GeneralWidget/text_content_widget.dart';
-
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
-
 import 'password_login_page.dart';
 
 class PhoneLoginPage extends StatefulWidget {
@@ -216,7 +213,9 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
         onChanged: ((value) {
           handleUpdate(value);
         }),
-        validator: (value) {},
+        validator: (value) {
+          return null;
+        },
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,
         maxLength: numberType ? 10 : 100000,
         decoration: InputDecoration(

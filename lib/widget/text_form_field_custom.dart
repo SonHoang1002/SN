@@ -8,6 +8,7 @@ class TextFormFieldCustom extends StatefulWidget {
   final String? label;
   final String? hintText;
   final String? value;
+  final bool? isDense;
 
   final Function? handleGetValue;
   final TextEditingController? textController;
@@ -33,7 +34,8 @@ class TextFormFieldCustom extends StatefulWidget {
       this.handleGetValue,
       this.textController,
       this.focusNode,
-      this.value})
+      this.value,
+      this.isDense})
       : super(key: key);
 
   @override
@@ -59,7 +61,7 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
         widget.handleGetValue!(value);
       },
       decoration: InputDecoration(
-        isDense: true,
+        isDense: widget.isDense ?? false,
         border: OutlineInputBorder(
             borderSide: const BorderSide(width: 1, color: secondaryColor),
             borderRadius: BorderRadius.circular(12.0)),

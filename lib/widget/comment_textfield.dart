@@ -416,10 +416,9 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   Navigator.push(
                       context,
                       CupertinoPageRoute(
-                          builder: (context) => Expanded(
-                              child: GalleryView(
-                                  filesSelected: files,
-                                  handleGetFiles: handleGetFiles))));
+                          builder: (context) => GalleryView(
+                              filesSelected: files,
+                              handleGetFiles: handleGetFiles)));
                 },
                 child: const Icon(
                   FontAwesomeIcons.camera,
@@ -432,6 +431,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
               ),
               Expanded(
                   child: TextFormFieldCustom(
+                isDense: true,
                 minLines: 1,
                 maxLines: 5,
                 autofocus: true,
