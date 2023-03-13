@@ -157,6 +157,7 @@ class UserPageInfomationBlock extends StatelessWidget {
                                                                       20))),
                                               builder: (BuildContext context) {
                                                 return StoryPage(
+                                                    user: user,
                                                     story:
                                                         featureContents[index]);
                                               });

@@ -45,9 +45,9 @@ class UserPageApi {
         .getRequestBase('/api/v1/accounts/$idUser/featured_contents', null);
   }
 
-  Future getUserFeatureContentMedia(idUser, params) async {
+  Future getUserFeatureContentMedia(idUser, idEntity) async {
     return Api().getRequestBase(
-        '/api/v1/accounts/$idUser/featured_contents/featured_content_id/media_attachments',
-        params);
+        '/api/v1/accounts/$idUser/featured_contents/$idEntity/media_attachments',
+        null);
   }
 }
