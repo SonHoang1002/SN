@@ -16,7 +16,6 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
-import 'package:loader_skeleton/loader_skeleton.dart';
 
 class Feed extends ConsumerStatefulWidget {
   const Feed({Key? key}) : super(key: key);
