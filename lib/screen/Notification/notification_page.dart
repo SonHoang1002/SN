@@ -22,6 +22,11 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     renderName(noti) {
       dynamic status = noti['status'];

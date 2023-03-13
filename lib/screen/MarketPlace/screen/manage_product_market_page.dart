@@ -64,10 +64,16 @@ class _ManageProductMarketPageState
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      if(ref.watch(productsProvider).list==null || ref.watch(productsProvider).list.isEmpty){
+      if (ref.watch(productsProvider).list == null ||
+          ref.watch(productsProvider).list.isEmpty) {
         final getProduct = ref.read(productsProvider.notifier).getProducts();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

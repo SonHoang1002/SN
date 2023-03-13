@@ -46,6 +46,11 @@ class _HomeState extends ConsumerState<Home>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> pages = const [
       Feed(),

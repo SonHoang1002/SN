@@ -100,6 +100,11 @@ class _ReactionButtonState<T> extends State<ReactionButton<T>> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => GestureDetector(
         key: _buttonKey,
         behavior: HitTestBehavior.translucent,

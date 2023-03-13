@@ -49,6 +49,11 @@ class _GalleryHeaderState extends State<GalleryHeader> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final panelSetting = _controller.panelSetting;
 

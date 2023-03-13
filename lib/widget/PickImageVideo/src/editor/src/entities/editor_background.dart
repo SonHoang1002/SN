@@ -187,6 +187,11 @@ class _EntityBGViewState extends State<_EntityBGView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final entity = widget.entity;
 

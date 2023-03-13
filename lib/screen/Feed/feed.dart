@@ -50,6 +50,12 @@ class _FeedState extends ConsumerState<Feed> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _key = GlobalKey();
     List posts = ref.watch(postControllerProvider).posts;

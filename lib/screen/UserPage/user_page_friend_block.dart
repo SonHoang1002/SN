@@ -29,6 +29,11 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     final size = MediaQuery.of(context).size;

@@ -43,6 +43,11 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     checkIsImage(media) {

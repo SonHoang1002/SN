@@ -41,6 +41,11 @@ class _EventCardState extends ConsumerState<EventCard> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List events = ref.watch(eventControllerProvider).events;
     bool isMore = ref.watch(eventControllerProvider).isMore;
@@ -59,7 +64,6 @@ class _EventCardState extends ConsumerState<EventCard> {
                     itemCount: events.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
-
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 6),

@@ -36,6 +36,11 @@ class _CheckinState extends State<Checkin> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   handleSearch(value) {
     if (value.isEmpty) {
       setState(() {

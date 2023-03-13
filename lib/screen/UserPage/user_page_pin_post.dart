@@ -28,6 +28,11 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List pinPosts = ref.watch(postControllerProvider).postsPin;
     final size = MediaQuery.of(context).size;

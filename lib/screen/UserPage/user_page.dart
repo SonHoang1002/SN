@@ -67,6 +67,11 @@ class _UserPageState extends ConsumerState<UserPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var meData = ref.watch(meControllerProvider)[0];
     final size = MediaQuery.of(context).size;

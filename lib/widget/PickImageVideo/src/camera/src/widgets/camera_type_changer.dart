@@ -96,6 +96,11 @@ class _TypesPageViewState extends State<_TypesPageView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PageView.builder(
       itemCount: CameraType.values.length,

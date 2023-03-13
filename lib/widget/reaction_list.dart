@@ -27,6 +27,11 @@ class _ReactionListState extends State<ReactionList> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   fetchDataReaction(params) async {
     if (isMore == false) return;
     var response = await PostApi().getListFavourited(widget.post['id'], params);

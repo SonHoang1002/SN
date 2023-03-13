@@ -80,6 +80,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   functionConvertFile(file) async {
     if (file == null) return;
     Uint8List? bytes;

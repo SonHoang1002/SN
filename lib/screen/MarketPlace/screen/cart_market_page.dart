@@ -45,6 +45,11 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;

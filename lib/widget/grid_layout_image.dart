@@ -24,6 +24,11 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     checkIsImage(media) {
       return media['type'] == 'image' ? true : false;

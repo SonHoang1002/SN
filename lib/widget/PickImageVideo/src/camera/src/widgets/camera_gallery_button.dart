@@ -63,6 +63,11 @@ class _GalleyViewState extends State<_GalleyView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: widget.controller.openGallery,

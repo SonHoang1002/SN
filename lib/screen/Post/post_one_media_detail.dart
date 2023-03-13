@@ -37,6 +37,11 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String path =
         postRender['media_attachments']?[0]?['url'] ?? postRender['url'];
