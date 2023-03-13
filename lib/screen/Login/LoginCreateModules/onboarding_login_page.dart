@@ -38,6 +38,11 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   fetchDataLogin() async {
     var newList = await SecureStorage().getKeyStorage('dataLogin');
 

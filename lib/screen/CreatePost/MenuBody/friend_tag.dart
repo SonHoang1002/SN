@@ -37,6 +37,11 @@ class _FriendTagState extends ConsumerState<FriendTag> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   fetchFriends(params) async {
     var response = await FriendsApi()
         .getListFriendApi(ref.watch(meControllerProvider)[0]['id'], params);

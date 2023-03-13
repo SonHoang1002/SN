@@ -833,6 +833,11 @@ class _EventIntroState extends ConsumerState<EventIntro> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List hosts = ref.watch(eventControllerProvider).hosts;
     List eventsSuggested = ref.watch(eventControllerProvider).eventsSuggested;

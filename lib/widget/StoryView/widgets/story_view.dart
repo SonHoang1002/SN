@@ -850,6 +850,11 @@ class PageBarState extends State<PageBar> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   bool isPlaying(PageData page) {
     return widget.pages.firstWhereOrNull((it) => !it.shown) == page;
   }

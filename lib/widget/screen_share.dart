@@ -64,6 +64,11 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     handlePress(key) {
       if (key == "share_group") {

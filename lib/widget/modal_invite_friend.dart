@@ -25,9 +25,13 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List friendExcludes = ref.watch(eventControllerProvider).friendExcludes;
-    print(friendExcludes);
     return SizedBox(
       width: double.infinity,
       child: Expanded(

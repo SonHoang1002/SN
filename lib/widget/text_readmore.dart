@@ -32,6 +32,11 @@ class _TextReadMoreState extends State<TextReadMore> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: secondHalf.isEmpty

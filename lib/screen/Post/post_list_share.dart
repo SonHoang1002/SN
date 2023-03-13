@@ -40,6 +40,11 @@ class _PostListShareState extends State<PostListShare> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   fetchListPostShare(params) async {
     var response = await PostApi().getListPostReblog(widget.post['id'], params);
     if (response != null) {

@@ -55,6 +55,11 @@ class _ReviewProductMarketPageState
     _initData();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _initData() {
     for (var element in widget.completeProductList!) {
       _starQualityList!.add(0);
@@ -101,7 +106,7 @@ class _ReviewProductMarketPageState
           ),
         ),
         body: _isLoading
-            ?buildCircularProgressIndicator()
+            ? buildCircularProgressIndicator()
             : Stack(
                 alignment: Alignment.center,
                 children: [

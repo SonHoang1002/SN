@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-
 import '../../../apis/config.dart';
 import 'package:social_network_app_mobile/apis/emoji_sticky_api.dart';
 import '../../../widget/image_cache.dart';
@@ -28,6 +27,11 @@ class _GifState extends State<Gif> {
     fetchDataGif({"offset": 0, "api_key": gifKey, "limit": 20});
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   fetchDataGif(params) async {
     setState(() {
       isLoadingGif = true;
@@ -47,9 +51,7 @@ class _GifState extends State<Gif> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-
-            margin: const EdgeInsets.all(8.0), child:  SearchInput()),
+        Container(margin: const EdgeInsets.all(8.0), child: SearchInput()),
         isLoadingGif
             ? Container(
                 margin: const EdgeInsets.only(top: 20),
@@ -76,7 +78,6 @@ class _GifState extends State<Gif> {
                           child: ImageCacheRender(
                               path: gifs[index]['images']['original']['url']),
                         )))
-
       ],
     );
   }

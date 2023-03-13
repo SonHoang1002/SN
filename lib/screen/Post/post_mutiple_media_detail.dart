@@ -26,6 +26,11 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List medias = widget.post['media_attachments'];
 

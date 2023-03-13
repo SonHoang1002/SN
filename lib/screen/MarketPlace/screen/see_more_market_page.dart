@@ -23,6 +23,11 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
@@ -63,8 +68,7 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
                                 crossAxisSpacing: 4,
                                 mainAxisSpacing: 4,
                                 crossAxisCount: 2,
-                                childAspectRatio: 0.79
-                                ),
+                                childAspectRatio: 0.79),
                         itemCount: _seeMoreProductList!.length,
                         itemBuilder: (context, index) {
                           return buildProductItem(

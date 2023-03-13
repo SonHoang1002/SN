@@ -820,6 +820,11 @@ class _PostMediaCommentState extends State<PostMediaComment> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     dynamic card = widget.post['card'];
     List medias = widget.post['media_attachments'] ?? [];

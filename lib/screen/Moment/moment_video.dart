@@ -23,6 +23,11 @@ class _MomentVideoState extends State<MomentVideo> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(

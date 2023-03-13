@@ -88,6 +88,11 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;

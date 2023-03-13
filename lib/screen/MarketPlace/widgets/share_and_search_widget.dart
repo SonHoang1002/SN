@@ -31,8 +31,12 @@ class _ShareAndSearchWidgetState extends State<ShareAndSearchWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("_filterData:${_filterData.length}");
     return Column(
       children: [
         // user

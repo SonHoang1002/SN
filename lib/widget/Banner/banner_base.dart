@@ -20,73 +20,79 @@ class BannerBase extends StatelessWidget {
     String subTitle = objectMore?['general_information']?['other_name'] ?? '';
     final size = MediaQuery.of(context).size;
 
-    return Container(
-      constraints: const BoxConstraints(minHeight: 290),
-      child: Stack(
-        children: [
-          ImageCacheRender(
-            path: path,
-            height: 200.0,
-            width: size.width,
+    return Column(
+      children: [
+        Container(
+          constraints: const BoxConstraints(minHeight: 240),
+          child: Stack(
+            children: [
+              ImageCacheRender(
+                path: path,
+                height: 200.0,
+                width: size.width,
+              ),
+              Positioned(
+                  top: 100,
+                  left: 15,
+                  child: Container(
+                      width: 132.0,
+                      height: 132.0,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 2.0, color: white)),
+                      child: Stack(
+                        children: [
+                          AvatarSocial(
+                              width: 130.0, height: 130.0, path: pathAvatar),
+                          Positioned(
+                              right: 6,
+                              bottom: 6,
+                              child: Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                    color: white,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 1.0, color: Colors.black)),
+                                child: const Icon(
+                                  FontAwesomeIcons.camera,
+                                  size: 18,
+                                  color: Colors.black,
+                                ),
+                              ))
+                        ],
+                      ))),
+              Positioned(
+                  right: 6,
+                  top: 159,
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                        color: white,
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 1.0, color: Colors.black)),
+                    child: const Icon(
+                      FontAwesomeIcons.camera,
+                      size: 18,
+                      color: Colors.black,
+                    ),
+                  )),
+            ],
           ),
-          Positioned(
-              top: 100,
-              left: 15,
-              child: Container(
-                  width: 132.0,
-                  height: 132.0,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 2.0, color: white)),
-                  child: Stack(
-                    children: [
-                      AvatarSocial(
-                          width: 130.0, height: 130.0, path: pathAvatar),
-                      Positioned(
-                          right: 6,
-                          bottom: 6,
-                          child: Container(
-                            width: 35,
-                            height: 35,
-                            decoration: BoxDecoration(
-                                color: white,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    width: 1.0, color: Colors.black)),
-                            child: const Icon(
-                              FontAwesomeIcons.camera,
-                              size: 18,
-                              color: Colors.black,
-                            ),
-                          ))
-                    ],
-                  ))),
-          Positioned(
-              right: 6,
-              top: 159,
-              child: Container(
-                width: 35,
-                height: 35,
-                decoration: BoxDecoration(
-                    color: white,
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 1.0, color: Colors.black)),
-                child: const Icon(
-                  FontAwesomeIcons.camera,
-                  size: 18,
-                  color: Colors.black,
-                ),
-              )),
-          Positioned(
-            left: 15.0,
-            top: 240,
-            child: Text(
-              '$title ${subTitle != '' ? '($subTitle)' : ''}',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-            ),
-          )
-        ],
-      ),
+        ),
+        SizedBox(
+          width: size.width - 30,
+          child: Text(
+            '$title ${subTitle != '' ? '($subTitle)' : ''}',
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        )
+      ],
     );
   }
 }
