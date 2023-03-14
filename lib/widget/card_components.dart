@@ -28,114 +28,99 @@ class CardComponents extends StatelessWidget {
     return SafeArea(
       top: false,
       bottom: false,
-      child: SizedBox(
-        height: height,
-        child: Stack(
-          children: [
-            Card(
-              shape: const RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: Colors.grey,
-                    width: 0.5,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: onTap,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      child: Card(
+        shape: const RoundedRectangleBorder(
+            side: BorderSide(
+              color: Colors.grey,
+              width: 0.5,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(15))),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 184,
+                child: Stack(
                   children: [
-                    SizedBox(
-                      height: 184,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(child: imageCard),
-                          type == 'homeScreen'
-                              ? Stack(
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 35.0),
-                                      child: Align(
-                                        alignment: Alignment.topRight,
-                                        child: Container(
-                                          height: 26,
-                                          width: 26,
-                                          margin: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(0.4),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              border: Border.all(
-                                                  width: 0.2,
-                                                  color: greyColor)),
-                                          child: InkWell(
-                                            onTap: () {},
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Icon(FontAwesomeIcons.ellipsis,
-                                                    color: Colors.white,
-                                                    size: 16),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
+                    Positioned.fill(child: imageCard),
+                    type == 'homeScreen'
+                        ? Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 35.0),
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Container(
+                                    height: 26,
+                                    width: 26,
+                                    margin: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.4),
+                                        borderRadius:
+                                            BorderRadius.circular(15),
+                                        border: Border.all(
+                                            width: 0.2, color: greyColor)),
+                                    child: InkWell(
+                                      onTap: () {},
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(FontAwesomeIcons.ellipsis,
+                                              color: Colors.white, size: 16),
+                                        ],
                                       ),
                                     ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: Container(
-                                        height: 26,
-                                        width: 26,
-                                        margin: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.4),
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            border: Border.all(
-                                                width: 0.2, color: greyColor)),
-                                        child: InkWell(
-                                          onTap: () {},
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Icon(FontAwesomeIcons.xmark,
-                                                  color: Colors.white,
-                                                  size: 16),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  height: 26,
+                                  width: 26,
+                                  margin: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.4),
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                          width: 0.2, color: greyColor)),
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(FontAwesomeIcons.xmark,
+                                            color: Colors.white, size: 16),
+                                      ],
                                     ),
-                                  ],
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [textCard],
-                          )),
-                    ),
-                    SizedBox(
-                      child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                          child: buttonCard),
-                    )
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(),
                   ],
                 ),
               ),
-            ),
-          ],
+              SizedBox(
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: Column(
+                      children: [textCard],
+                    )),
+              ),
+              SizedBox(
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                    child: buttonCard),
+              )
+            ],
+          ),
         ),
       ),
     );

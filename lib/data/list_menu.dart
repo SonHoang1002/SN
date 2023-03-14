@@ -50,6 +50,32 @@ List eventMenu = [
     "label": "Nghệ thuật",
   }
 ];
+List growMenu = [
+  {
+    "key": "grow_interesting",
+    "label": "Khám phá",
+  },
+  {
+    "key": "grow_for_u",
+    "label": "Dự án của bạn",
+  },
+  {
+    "key": "grow_donated",
+    "label": "Đã ủng hộ",
+  },
+  {
+    "key": "grow_following",
+    "label": "Quan tâm",
+  },
+  {
+    "key": "grow_hosting",
+    "label": "Tổ chức",
+  },
+  {
+    "key": "grow_past",
+    "label": "Dự án đã gọi vốn",
+  },
+];
 
 List listSocial = [
   {
