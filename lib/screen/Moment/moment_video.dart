@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
+import 'package:video_player/video_player.dart';
 
 class MomentVideo extends StatefulWidget {
   const MomentVideo({Key? key, this.moment}) : super(key: key);
@@ -14,43 +11,67 @@ class MomentVideo extends StatefulWidget {
 }
 
 class _MomentVideoState extends State<MomentVideo> {
-  late FlickMultiManager flickMultiManager;
+  late VideoPlayerController videoPlayerController;
+  bool isShowPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    flickMultiManager = FlickMultiManager();
+    videoPlayerController = VideoPlayerController.network(
+        widget.moment['media_attachments'][0]['url'])
+      ..initialize().then((value) {
+        videoPlayerController.play();
+        videoPlayerController.setVolume(1);
+        videoPlayerController.setLooping(true);
+
+        setState(() {
+          isShowPlaying = false;
+        });
+      });
   }
 
   @override
   void dispose() {
     super.dispose();
+    videoPlayerController.dispose();
+  }
+
+  Widget isPlaying() {
+    return videoPlayerController.value.isPlaying && !isShowPlaying
+        ? Container()
+        : Icon(
+            Icons.play_arrow,
+            size: 80,
+            color: Colors.white.withOpacity(0.3),
+          );
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
-      decoration: const BoxDecoration(
-          color: Colors.black,
-          border: Border(bottom: BorderSide(width: 0.3, color: greyColor))),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          videoPlayerController.value.isPlaying
+              ? videoPlayerController.pause()
+              : videoPlayerController.play();
+        });
+      },
+      child: Stack(
         children: [
-          SizedBox(
-            height: widget.moment['media_attachments'][0]['meta']['small']
-                        ['aspect'] <
-                    0.58
-                ? size.height - 66
-                : null,
-            child: FeedVideo(
-                key: Key('post_moment${widget.moment(['id'])}'),
-                type: postMoment,
-                path: widget.moment['media_attachments'][0]['url'],
-                flickMultiManager: flickMultiManager,
-                image: widget.moment['media_attachments'][0]['preview_url']),
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.black,
+            ),
+            child: VideoPlayer(videoPlayerController),
           ),
+          Center(
+            child: Container(
+              decoration: const BoxDecoration(),
+              child: isPlaying(),
+            ),
+          )
         ],
       ),
     );

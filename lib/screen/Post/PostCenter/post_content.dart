@@ -1,7 +1,7 @@
-import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:detectable_text_field/detectable_text_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostContent extends StatefulWidget {
   final dynamic post;
@@ -53,38 +53,33 @@ class _PostContentState extends State<PostContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRect(
-                    child: Align(
-                        alignment: Alignment.topLeft,
-                        heightFactor: isMore
-                            ? 1
-                            : widget.post['content'].length > 200
-                                ? 0.35
-                                : 1,
-                        child: DetectableText(
-                          text: widget.post['content'] ?? '',
-                          detectionRegExp: detectionRegExp()!,
-                          detectedStyle: const TextStyle(
-                              color: secondaryColor,
-                              fontWeight: FontWeight.w500),
-                          onTap: (tappedText) {
-                            // print(tappedText);
-                          },
-                        ))),
-                widget.post['content'].length > 200
-                    ? GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isMore = !isMore;
-                          });
-                        },
-                        child: Text(
-                          isMore ? "Thu gọn" : "Xem thêm",
-                          style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
-                        ),
-                      )
-                    : const SizedBox()
+                ExpandableText(
+                  widget.post['content'],
+                  expandText: 'Xem thêm',
+                  collapseText: 'Thu gọn',
+                  style: const TextStyle(fontSize: 13),
+                  maxLines: 5,
+                  linkColor: Theme.of(context).textTheme.bodyLarge!.color,
+                  linkStyle: const TextStyle(fontWeight: FontWeight.w500),
+                  animation: true,
+                  collapseOnTextTap: true,
+                  onHashtagTap: (name) => {},
+                  hashtagStyle: const TextStyle(
+                    color: secondaryColor,
+                  ),
+                  onMentionTap: (username) => {},
+                  mentionStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                  onUrlTap: (url) async {
+                    if (await canLaunchUrl(Uri.parse(url))) {
+                      await launchUrl(Uri.parse(url));
+                    } else {
+                      return;
+                    }
+                  },
+                  urlStyle: const TextStyle(color: secondaryColor),
+                ),
               ],
             ));
       }
