@@ -87,9 +87,11 @@ dependencies:
   modal_bottom_sheet: ^3.0.0-pre
   flutter_html: ^3.0.0-alpha.6
   flutter_secure_storage: ^8.0.0
-  detectable_text_field: ^2.0.4
   audioplayers: ^3.0.1
   hooks_riverpod: ^2.3.1
+  flutter_video_newfeed: ^1.0.2
+  flutter_page_indicator: ^0.0.3
+  marquee: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -155,6 +157,7 @@ flutter:
     - assets/LogoEmso.svg
     - assets/loading.gif
     - assets/IconCoin.svg
+    - assets/disc.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

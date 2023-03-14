@@ -342,7 +342,8 @@ class AvatarPost extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       image: DecorationImage(
-                          image: NetworkImage(group['banner']['preview_url']),
+                          image: NetworkImage(group['banner']?['preview_url'] ??
+                              linkBannerDefault),
                           onError: (exception, stackTrace) => const SizedBox(),
                           fit: BoxFit.cover)),
                 ),
