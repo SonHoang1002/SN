@@ -27,7 +27,6 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
   @override
   Widget build(BuildContext context) {
     List friendExcludes = ref.watch(eventControllerProvider).friendExcludes;
-    print(friendExcludes);
     return SizedBox(
       width: double.infinity,
       child: Expanded(
@@ -37,13 +36,16 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return ListTile(
+                onTap: () {
+                  print(friendExcludes[index]);
+                },
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(
                       friendExcludes[index]['avatar_media'] != null
                           ? friendExcludes[index]['avatar_media']['preview_url']
                           : friendExcludes[index]['avatar_static']),
                 ),
-                title: Text(friendExcludes[index]['display_name']),
+                title: Text(friendExcludes[index]['display_name'], style: const TextStyle(color: Colors.black)),
                 trailing: Container(
                     width: 50,
                     height: 30,

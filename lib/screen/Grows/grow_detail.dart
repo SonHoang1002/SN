@@ -5,15 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/data/event.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow_provider.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_disscussion.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-
-import '../../icons/grow_button.dart';
+import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
 class GrowDetail extends ConsumerStatefulWidget {
   final dynamic data;
@@ -22,12 +23,13 @@ class GrowDetail extends ConsumerStatefulWidget {
   ConsumerState<GrowDetail> createState() => _GrowDetailState();
 }
 
-const growPriceTitle = [
+List growPriceTitle = [
   {
     "id": 0,
     "title": "Ủng hộ",
     "subTitle": "Tặng quà để giúp phát triển dự án",
     "type": "donate_project",
+    "icon": FontAwesomeIcons.circleDollarToSlot,
   },
   {
     "id": 1,
@@ -35,12 +37,14 @@ const growPriceTitle = [
     "subTitle":
         "Đầu tư cho dự án để hưởng những ưu đãi và lợi nhuận đã được cam kết",
     "type": "invest_project",
+    "icon": FontAwesomeIcons.solidStar,
   },
   {
     "id": 2,
     "title": "Nhắn tin",
     "subTitle":
         "Chúng tôi không chịu trách nhiệm khi nhà đầu tư liên hệ trực tiếp và đầu tư không thông qua nền tảng EMSO",
+    "icon": FontAwesomeIcons.solidStar,
   },
 ];
 
@@ -65,7 +69,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
             ref.read(growControllerProvider.notifier).getGrowTransactions({}));
     growButtonFollower = widget.data['project_relationship']['follow_project'];
     _scrollController.addListener(() {
-      if (_scrollController.offset > 200) {
+      if (_scrollController.offset > 400) {
         setState(() {
           _isVisible = true;
         });
@@ -80,6 +84,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
   @override
   Widget build(BuildContext context) {
     var growDetail = ref.watch(growControllerProvider).detailGrow;
+    var valueLinearProgressBar = ((growDetail['real_value'] - 0) * 100) / (growDetail['target_value'] - 0);
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
@@ -171,7 +176,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                   const SizedBox(
                                     height: 5,
                                   ),
-                                  Row(
+                                  !growDetail['project_relationship']['host_project'] ?  Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment:
@@ -240,7 +245,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                   ));
                                         },
                                         child: Container(
-                                            height: 30,
+                                            height: 32,
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -279,7 +284,6 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                       const SizedBox(width: 5),
                                       InkWell(
                                         onTap: () {
-                                          print(growButtonFollower);
                                           if (growButtonFollower) {
                                             ref
                                                 .read(growControllerProvider
@@ -299,7 +303,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                           });
                                         },
                                         child: Container(
-                                            height: 30,
+                                            height: 32,
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -449,7 +453,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                           );
                                         },
                                         child: Container(
-                                          height: 30,
+                                          height: 32,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
@@ -474,6 +478,228 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                         ),
                                       ),
                                     ],
+                                  ) : Padding(
+                                    padding: const EdgeInsets.fromLTRB(2, 0, 3, 0),
+                                    child: Row(children: [
+                                      InkWell(
+                                        onTap: () {
+                                          showBarModalBottomSheet(
+                                              context: context,
+                                              backgroundColor: Colors.white,
+                                              builder: (context) =>
+                                                        SizedBox(
+                                                            height:
+                                                            MediaQuery.of(context).size.height * 0.9,
+                                                            child: const InviteFriend()));
+                                        },
+                                        child: Container(
+                                            height: 32,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                                0.4,
+                                            decoration: BoxDecoration(
+                                                color:
+
+                                                     const Color.fromARGB(
+                                                    189, 202, 202, 202),
+                                                borderRadius:
+                                                BorderRadius.circular(4),
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: greyColor)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: const [
+                                                Icon(FontAwesomeIcons.solidEnvelope,
+                                                    color:
+                                                         Colors.black,
+                                                    size: 14),
+                                                 SizedBox(
+                                                  width: 5.0,
+                                                ),
+                                                Text(
+                                                  'Mời',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      InkWell(
+                                        onTap: () {
+                                        },
+                                        child: Container(
+                                            height: 32,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                                0.36,
+                                            decoration: BoxDecoration(
+                                                color:
+
+                                                const Color.fromARGB(
+                                                    189, 202, 202, 202),
+                                                borderRadius:
+                                                BorderRadius.circular(4),
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: greyColor)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: const[
+                                                Text(
+                                                  'Dự án',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      InkWell(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => Container(
+                                              margin: const EdgeInsets.only(
+                                                  left: 8.0, top: 15.0),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                                  0.3 +
+                                                  30,
+                                              child: Column(
+                                                children: [
+                                                  ListView.builder(
+                                                    scrollDirection:
+                                                    Axis.vertical,
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                    itemCount:
+                                                    iconActionEllipsis
+                                                        .length ,
+                                                    itemBuilder:
+                                                    ((context, index) {
+                                                      if (index == 0) {
+                                                        return const SizedBox.shrink();
+                                                      }
+                                                      return Padding(
+                                                        padding:
+                                                        const EdgeInsets
+                                                            .only(
+                                                            bottom: 10.0),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            showModalBottomSheet(
+                                                                context:
+                                                                context,
+                                                                isScrollControlled:
+                                                                true,
+                                                                barrierColor: Colors
+                                                                    .transparent,
+                                                                clipBehavior: Clip
+                                                                    .antiAliasWithSaveLayer,
+                                                                shape: const RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                    BorderRadius.vertical(
+                                                                        top: Radius.circular(
+                                                                            10))),
+                                                                builder:
+                                                                    (context) =>
+                                                                    SizedBox(
+                                                                      height:
+                                                                      MediaQuery.of(context).size.height * 0.9,
+                                                                      width: MediaQuery.of(context)
+                                                                          .size
+                                                                          .width,
+                                                                      child:
+                                                                      ActionEllipsis(menuSelected: iconActionEllipsis[index]),
+                                                                    ));
+                                                          },
+                                                          child: Row(
+                                                            children: [
+                                                              CircleAvatar(
+                                                                radius: 18.0,
+                                                                backgroundColor:
+                                                                greyColor[
+                                                                350],
+                                                                child: Icon(
+                                                                  iconActionEllipsis[
+                                                                  index]
+                                                                  ["icon"],
+                                                                  size: 18.0,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                margin: const EdgeInsets
+                                                                    .only(
+                                                                    left: 10.0),
+                                                                child: Text(
+                                                                    iconActionEllipsis[
+                                                                    index]
+                                                                    [
+                                                                    "label"],
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                        14.0,
+                                                                        fontWeight:
+                                                                        FontWeight.w500)),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 32,
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                              0.1,
+                                          decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                  189, 202, 202, 202),
+                                              borderRadius:
+                                              BorderRadius.circular(4),
+                                              border: Border.all(
+                                                  width: 0.2,
+                                                  color: greyColor)),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: const [
+                                              Icon(FontAwesomeIcons.ellipsis,
+                                                  color: Colors.black,
+                                                  size: 14),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],),
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -586,28 +812,127 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                           ],
                                         ),
                                       ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: const [
+                                            Icon(FontAwesomeIcons.earthAmericas,
+                                                color: Colors.black, size: 20),
+                                            SizedBox(
+                                              width: 9.0,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 4.0),
+                                              child: Text(
+                                                'Công khai · Tất cả mọi người trong hoặc ngoài EMSO',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
-                                        children: const [
-                                          Icon(FontAwesomeIcons.earthAmericas,
+                                        children: [
+                                          const Icon(FontAwesomeIcons.bullseye,
                                               color: Colors.black, size: 20),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 9.0,
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(top: 4.0),
-                                            child: Text(
-                                              'Công khai · Tất cả mọi người trong hoặc ngoài EMSO',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                fontWeight: FontWeight.w500,
+                                            padding:
+                                                const EdgeInsets.only(top: 4.0),
+                                            child: RichText(
+                                              text: TextSpan(
+                                                text: 'Số vốn cần gọi ',
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                      text:
+                                                          '${convertNumberToVND(growDetail['target_value'] ~/ 1)} VNĐ',
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black)),
+                                                ],
                                               ),
                                             ),
                                           ),
                                         ],
                                       ),
+                                      Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              4, 16, 4, 10),
+                                          child: Column(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Container(
+                                                  height: 10,
+                                                  child:
+                                                      LinearProgressIndicator(
+                                                    value:
+                                                    valueLinearProgressBar / 100, // percent filled
+                                                    valueColor:
+                                                     const   AlwaysStoppedAnimation<
+                                                                Color>(
+                                                            secondaryColor),
+                                                    backgroundColor:
+                                                        secondaryColor
+                                                            .withOpacity(0.5),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        text: 'Đã ủng hộ được ',
+                                                        style: const TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                Colors.black),
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                              text: '${convertNumberToVND(growDetail['real_value'] ~/ 1)} VNĐ',
+                                                              style: const TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text(' ${valueLinearProgressBar ~/ 1}%')
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          )),
                                     ],
                                   ),
                                 ])),
@@ -623,7 +948,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                   });
                                 },
                                 child: Container(
-                                  height: 30,
+                                  height: 35,
                                   width:
                                       MediaQuery.of(context).size.width * 0.44,
                                   decoration: BoxDecoration(
@@ -631,7 +956,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                           ? secondaryColor.withOpacity(0.4)
                                           : const Color.fromARGB(
                                               189, 202, 202, 202),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
                                           width: 0.2, color: greyColor)),
                                   child: Column(
@@ -659,14 +984,14 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                 });
                               },
                               child: Container(
-                                height: 30,
+                                height: 35,
                                 width: MediaQuery.of(context).size.width * 0.44,
                                 decoration: BoxDecoration(
                                     color: !growStatus
                                         ? secondaryColor.withOpacity(0.4)
                                         : const Color.fromARGB(
                                             189, 202, 202, 202),
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
                                         width: 0.2, color: greyColor)),
                                 child: Column(
@@ -699,10 +1024,11 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                       growStatus
                           ? GrowIntro(data: growDetail)
                           : GrowDiscuss(data: growDetail),
+                      const SizedBox(height: 70),
                     ],
                   ),
                 ),
-                Visibility(
+                !growDetail['project_relationship']['host_project']  ? Visibility(
                   visible: _isVisible,
                   child: Positioned(
                     bottom: 0,
@@ -711,50 +1037,87 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                     child: Container(
                       height: 70,
                       color: Colors.white,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: growButton.map((button) {
-                            return Container(
-                              height: 30,
-                              decoration: BoxDecoration(
+                      padding: const EdgeInsets.only(left: 25.0, right: 18.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(
+                          growPriceTitle.length,
+                          (indexButton) {
+                            final button = growPriceTitle[indexButton];
+                            if (indexButton == 2) {
+                              return const SizedBox();
+                            } else {
+                              return Container(
+                                height: 35,
+                                width: MediaQuery.of(context).size.width * 0.43,
+                                decoration: BoxDecoration(
                                   color: secondaryColor,
                                   borderRadius: BorderRadius.circular(4),
                                   border:
-                                      Border.all(width: 0.2, color: greyColor)),
-                              width: button['label'] == ''
-                                  ? MediaQuery.of(context).size.width * 0.1
-                                  : button['label'] == 'Ủng hộ'
-                                      ? MediaQuery.of(context).size.width * 0.4
-                                      : MediaQuery.of(context).size.width * 0.3,
-                              child: InkWell(
-                                onTap: () {},
-                                child: button['label'] == ''
-                                    ? Icon(
-                                        button['icon'],
-                                        size: 16.0,
-                                      )
-                                    : Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          button['label'],
+                                      Border.all(width: 0.2, color: greyColor),
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(15),
+                                          ),
+                                        ),
+                                        context: context,
+                                        isScrollControlled: true,
+                                        isDismissible: true,
+                                        builder: (context) =>
+                                            SingleChildScrollView(
+                                              primary: true,
+                                              padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom),
+                                              child: ModalDonate(
+                                                  data: growDetail,
+                                                  dataModal: button),
+                                            ));
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 3.0),
+                                        child: Icon(button['icon'],
+                                            size: 16, color: Colors.white),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(button['title'],
                                           textAlign: TextAlign.center,
-                                        )),
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                                          style: const TextStyle(
+                                              color: Colors.white)),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        )
+                            .expand(
+                                (widget) => [widget, const SizedBox(width: 15)])
+                            .toList(),
                       ),
                     ),
                   ),
-                ),
+                ) : const SizedBox(),
               ],
             )
           : const Center(
               child: CircularProgressIndicator(),
             ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 

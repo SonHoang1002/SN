@@ -12,7 +12,7 @@ class GrowRender extends StatefulWidget {
 }
 
 class _GrowRenderState extends State<GrowRender> {
-  String menuSelected = 'event_for_you';
+  String menuSelected = 'grow_interesting';
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +23,21 @@ class _GrowRenderState extends State<GrowRender> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: List.generate(
-                eventMenu.length,
+                growMenu.length,
                 (index) => InkWell(
                       onTap: () {
                         setState(() {
-                          menuSelected = eventMenu[index]['key'];
+                          menuSelected = growMenu[index]['key'];
                         });
                       },
                       child: ChipMenu(
-                          isSelected: menuSelected == eventMenu[index]['key'],
-                          label: eventMenu[index]['label']),
+                          isSelected: menuSelected == growMenu[index]['key'],
+                          label: growMenu[index]['label']),
                     )),
           ),
         ),
         const CrossBar(),
-        const GrowCard()
+        menuSelected == 'grow_interesting' ?  const GrowCard() : const SizedBox(),
       ],
     );
   }
