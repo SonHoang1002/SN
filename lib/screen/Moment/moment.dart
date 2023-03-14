@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/data/moment.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_video.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import 'drawer_moment.dart';
 import 'video_description.dart';
 
-class Moment extends StatefulWidget {
+class Moment extends ConsumerStatefulWidget {
   final bool? isBack;
   const Moment({Key? key, this.isBack}) : super(key: key);
 
   @override
-  State<Moment> createState() => _MomentState();
+  ConsumerState<Moment> createState() => _MomentState();
 }
 
-class _MomentState extends State<Moment> with TickerProviderStateMixin {
+class _MomentState extends ConsumerState<Moment> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -23,6 +24,12 @@ class _MomentState extends State<Moment> with TickerProviderStateMixin {
 
     super.initState();
     _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
+
+    Future.delayed(Duration.zero, () {
+      ref
+          .read(momentControllerProvider.notifier)
+          .getListMomentSuggest({"limit": 3});
+    });
   }
 
   @override
@@ -32,6 +39,9 @@ class _MomentState extends State<Moment> with TickerProviderStateMixin {
     List iconAction = [
       {"icon": Icons.search, 'type': 'icon'},
     ];
+
+    List momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
+
     return Scaffold(
         key: key,
         drawerEnableOpenDragGesture: false,
@@ -45,18 +55,29 @@ class _MomentState extends State<Moment> with TickerProviderStateMixin {
                 color: Colors.red,
               ),
               PageView.builder(
-                itemCount: moments.length,
+                itemCount: momentSuggests.length,
                 scrollDirection: Axis.vertical,
+                onPageChanged: (value) {
+                  if (value == momentSuggests.length - 3) {
+                    ref
+                        .read(momentControllerProvider.notifier)
+                        .getListMomentSuggest({
+                      "limit": 5,
+                      "max_id": momentSuggests.last['score']
+                    });
+                  }
+                },
                 itemBuilder: (context, index) {
                   return Stack(
                     children: [
                       MomentVideo(
-                          key: Key(moments[index]['id']),
-                          moment: moments[index]),
+                          key: Key(momentSuggests[index]['id']),
+                          moment: momentSuggests[index]),
                       Positioned(
                           bottom: 15,
                           left: 15,
-                          child: VideoDescription(moment: moments[index]))
+                          child:
+                              VideoDescription(moment: momentSuggests[index]))
                     ],
                   );
                 },

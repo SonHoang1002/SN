@@ -46,9 +46,14 @@ class _VideoDescriptionState extends State<VideoDescription>
     var account = widget.moment['account'];
     var page = widget.moment['page'];
     final size = MediaQuery.of(context).size;
+    int reactionsCount = widget.moment['favourites_count'] ?? 0;
 
     List iconsAction = [
-      {"key": "reaction", "icon": FontAwesomeIcons.solidHeart, "count": 2345},
+      {
+        "key": "reaction",
+        "icon": FontAwesomeIcons.solidHeart,
+        "count": reactionsCount
+      },
       {
         "key": "comment",
         "icon": FontAwesomeIcons.solidCommentDots,
