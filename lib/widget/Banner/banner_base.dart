@@ -1,7 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/Banner/page_edit_media_profile.dart';
+import 'package:social_network_app_mobile/widget/Banner/page_pick_frames.dart';
+import 'package:social_network_app_mobile/widget/Banner/page_pick_media.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
@@ -47,38 +52,22 @@ class BannerBase extends StatelessWidget {
                           Positioned(
                               right: 6,
                               bottom: 6,
-                              child: Container(
-                                width: 35,
-                                height: 35,
-                                decoration: BoxDecoration(
-                                    color: white,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        width: 1.0, color: Colors.black)),
-                                child: const Icon(
-                                  FontAwesomeIcons.camera,
-                                  size: 18,
-                                  color: Colors.black,
-                                ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  showModal(context, 'avatar');
+                                },
+                                child: const CameraIcon(),
                               ))
                         ],
                       ))),
               Positioned(
                   right: 6,
                   top: 159,
-                  child: Container(
-                    width: 35,
-                    height: 35,
-                    decoration: BoxDecoration(
-                        color: white,
-                        shape: BoxShape.circle,
-                        border: Border.all(width: 1.0, color: Colors.black)),
-                    child: const Icon(
-                      FontAwesomeIcons.camera,
-                      size: 18,
-                      color: Colors.black,
-                    ),
-                  )),
+                  child: GestureDetector(
+                      onTap: () {
+                        showModal(context, 'banner');
+                      },
+                      child: const CameraIcon())),
             ],
           ),
         ),
@@ -93,6 +82,126 @@ class BannerBase extends StatelessWidget {
           height: 20,
         )
       ],
+    );
+  }
+
+  Future<dynamic> showModal(BuildContext context, typePage) {
+    List listMenu = [
+      {
+        "key": "upload",
+        "label": "Tải ảnh lên",
+        "icon": FontAwesomeIcons.upload,
+        "isVisibled": true
+      },
+      {
+        "key": "pick_media",
+        "label": "Chọn ảnh trên Emso",
+        "icon": FontAwesomeIcons.images,
+        "isVisibled": true
+      },
+      {
+        "key": "frames",
+        "label": "Thêm khung",
+        "icon": FontAwesomeIcons.box,
+        "isVisibled": typePage == 'avatar'
+      },
+    ];
+
+    handleChooseMedia(type, entity) {
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) =>
+                  PageEditMediaProfile(typePage: typePage, entityObj: object)));
+    }
+
+    handleActionMenu(key) {
+      Navigator.pop(context);
+      if (key == 'upload') {
+      } else if (key == 'pick_media') {
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => PagePickMedia(
+                    user: object, handleAction: handleChooseMedia)));
+      } else if (key == 'frames') {
+        showBarModalBottomSheet(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            context: context,
+            builder: (context) =>
+                PagePickFrames(handleAction: handleChooseMedia));
+      }
+    }
+
+    return showBarModalBottomSheet(
+        context: context,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        builder: (context) => Container(
+              margin: const EdgeInsets.all(15.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: List.generate(
+                      listMenu.length,
+                      (index) => listMenu[index]['isVisibled']
+                          ? InkWell(
+                              onTap: () {
+                                handleActionMenu(listMenu[index]['key']);
+                              },
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12.0, horizontal: 8.0),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.6),
+                                          shape: BoxShape.circle),
+                                      child: Icon(
+                                        listMenu[index]['icon'],
+                                        size: 16,
+                                        color: white,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 8.0,
+                                    ),
+                                    Text(
+                                      listMenu[index]['label'],
+                                      style: const TextStyle(fontSize: 14),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          : const SizedBox()),
+                ),
+              ),
+            ));
+  }
+}
+
+class CameraIcon extends StatelessWidget {
+  const CameraIcon({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 35,
+      height: 35,
+      decoration: BoxDecoration(
+          color: white,
+          shape: BoxShape.circle,
+          border: Border.all(width: 1.0, color: Colors.black)),
+      child: const Icon(
+        FontAwesomeIcons.camera,
+        size: 18,
+        color: Colors.black,
+      ),
     );
   }
 }
