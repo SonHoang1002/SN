@@ -28,6 +28,7 @@ class CreatePostButton extends ConsumerWidget {
                   AvatarSocial(
                       width: 40,
                       height: 40,
+                      object: ref.watch(meControllerProvider)[0],
                       path: ref.watch(meControllerProvider)[0]['avatar_media']
                           ['preview_url']),
                   const SizedBox(

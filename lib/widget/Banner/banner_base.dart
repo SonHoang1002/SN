@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -10,19 +13,27 @@ import 'package:social_network_app_mobile/widget/Banner/page_pick_media.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
-class BannerBase extends StatelessWidget {
+class BannerBase extends StatefulWidget {
   final dynamic object;
   final dynamic objectMore;
   const BannerBase({Key? key, required this.object, this.objectMore})
       : super(key: key);
 
   @override
+  State<BannerBase> createState() => _BannerBaseState();
+}
+
+class _BannerBaseState extends State<BannerBase> {
+  late File image;
+
+  @override
   Widget build(BuildContext context) {
-    String path = object['banner']?['preview_url'] ?? linkBannerDefault;
+    String path = widget.object['banner']?['preview_url'] ?? linkBannerDefault;
     String pathAvatar =
-        object['avatar_media']?['preview_url'] ?? linkAvatarDefault;
-    String title = object['display_name'];
-    String subTitle = objectMore?['general_information']?['other_name'] ?? '';
+        widget.object['avatar_media']?['preview_url'] ?? linkAvatarDefault;
+    String title = widget.object['display_name'];
+    String subTitle =
+        widget.objectMore?['general_information']?['other_name'] ?? '';
     final size = MediaQuery.of(context).size;
 
     return Column(
@@ -48,7 +59,11 @@ class BannerBase extends StatelessWidget {
                       child: Stack(
                         children: [
                           AvatarSocial(
-                              width: 130.0, height: 130.0, path: pathAvatar),
+                            width: 130.0,
+                            height: 130.0,
+                            path: pathAvatar,
+                            object: widget.object,
+                          ),
                           Positioned(
                               right: 6,
                               bottom: 6,
@@ -111,19 +126,44 @@ class BannerBase extends StatelessWidget {
       Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) =>
-                  PageEditMediaProfile(typePage: typePage, entityObj: object)));
+              builder: (context) => PageEditMediaProfile(
+                  typePage: typePage,
+                  entityObj: widget.object,
+                  entityType: type,
+                  file: entity)));
+    }
+
+    void openEditor() async {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          image = File(pickedFile.path);
+        });
+
+        // ignore: use_build_context_synchronously
+        await Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => PageEditMediaProfile(
+                    typePage: typePage,
+                    entityObj: widget.object,
+                    entityType: 'file',
+                    file: File(pickedFile.path))));
+      }
     }
 
     handleActionMenu(key) {
       Navigator.pop(context);
       if (key == 'upload') {
+        openEditor();
       } else if (key == 'pick_media') {
         Navigator.push(
             context,
             CupertinoPageRoute(
                 builder: (context) => PagePickMedia(
-                    user: object, handleAction: handleChooseMedia)));
+                    user: widget.object, handleAction: handleChooseMedia)));
       } else if (key == 'frames') {
         showBarModalBottomSheet(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,

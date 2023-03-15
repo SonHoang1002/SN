@@ -11,8 +11,8 @@ class ImageCacheRender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeInImage.memoryNetwork(
-      placeholder: kTransparentImage,
+    return FadeInImage.assetNetwork(
+      placeholder: 'assets/grey.png',
       image: path,
       width: width,
       height: height,

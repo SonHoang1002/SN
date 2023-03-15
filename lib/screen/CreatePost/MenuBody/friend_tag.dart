@@ -116,6 +116,7 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                                   AvatarSocial(
                                     width: 56,
                                     height: 56,
+                                    object: friendSelected[index],
                                     path: friendSelected[index]
                                                 ['avatar_media'] !=
                                             null
@@ -175,6 +176,7 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                                 AvatarSocial(
                                     width: 40,
                                     height: 40,
+                                    object: friends[index],
                                     path: friends[index]['avatar_media'] != null
                                         ? friends[index]['avatar_media']
                                             ['preview_url']

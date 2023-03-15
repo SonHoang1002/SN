@@ -179,7 +179,11 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
             lineWidth: 0.5),
         avatarRoot: (context, data) => PreferredSize(
             preferredSize: const Size.fromRadius(18),
-            child: AvatarSocial(width: 36, height: 36, path: data.avatar!)),
+            child: AvatarSocial(
+                width: 36,
+                height: 36,
+                object: widget.commentParent['account'],
+                path: data.avatar!)),
         avatarChild: (context, data) => PreferredSize(
           preferredSize: const Size.fromRadius(12),
           child: data.avatar == 'icon'
@@ -191,7 +195,14 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
                     size: 14,
                   ),
                 )
-              : AvatarSocial(width: 30, height: 30, path: data.avatar!),
+              : AvatarSocial(
+                  width: 30,
+                  height: 30,
+                  object: postChildComment.firstWhere(
+                    (element) => element['id'] + '' == '${data.content}',
+                    orElse: () => {},
+                  )?['account'],
+                  path: data.avatar!),
         ),
         contentChild: (context, data) {
           int index = postChildComment

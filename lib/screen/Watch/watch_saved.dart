@@ -49,6 +49,7 @@ class WatchSaved extends StatelessWidget {
                                   isGroup: true,
                                   width: 86,
                                   height: 86,
+                                  object: {'avatar_media': media},
                                   path: media['preview_remote_url'] ??
                                       media['preview_url']),
                               const Positioned(
@@ -85,6 +86,7 @@ class WatchSaved extends StatelessWidget {
                                 AvatarSocial(
                                     width: 30,
                                     height: 30,
+                                    object: watch['page'],
                                     path: watch['page']['avatar_media'] != null
                                         ? watch['page']['avatar_media']
                                             ['preview_url']

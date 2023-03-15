@@ -751,6 +751,7 @@ class StoryViewState extends ConsumerState<StoryView>
                       AvatarSocial(
                           width: 36,
                           height: 36,
+                          object: meData,
                           path: meData['avatar_media']?['preview_url'] ??
                               linkAvatarDefault),
                       const SizedBox(
