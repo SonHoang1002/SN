@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class MomentVideo extends StatefulWidget {
   const MomentVideo({Key? key, this.moment}) : super(key: key);
@@ -12,7 +13,8 @@ class MomentVideo extends StatefulWidget {
 
 class _MomentVideoState extends State<MomentVideo> {
   late VideoPlayerController videoPlayerController;
-  bool isShowPlaying = false;
+  bool isShowPlaying = true;
+  bool isVisible = false;
 
   @override
   void initState() {
@@ -20,10 +22,11 @@ class _MomentVideoState extends State<MomentVideo> {
     videoPlayerController = VideoPlayerController.network(
         widget.moment['media_attachments'][0]['url'])
       ..initialize().then((value) {
-        videoPlayerController.play();
+        if (isVisible) {
+          videoPlayerController.play();
+        }
         videoPlayerController.setVolume(1);
         videoPlayerController.setLooping(true);
-
         setState(() {
           isShowPlaying = false;
         });
@@ -48,31 +51,46 @@ class _MomentVideoState extends State<MomentVideo> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return InkWell(
-      onTap: () {
-        setState(() {
-          videoPlayerController.value.isPlaying
-              ? videoPlayerController.pause()
-              : videoPlayerController.play();
-        });
+    return VisibilityDetector(
+      key: Key('moment_video_${widget.moment['id']}'),
+      onVisibilityChanged: (visibilityInfo) {
+        if (mounted) {
+          setState(() {
+            isVisible = visibilityInfo.visibleFraction > 0;
+            if (isVisible) {
+              videoPlayerController.play();
+            } else {
+              videoPlayerController.pause();
+            }
+          });
+        }
       },
-      child: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.black,
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            videoPlayerController.value.isPlaying
+                ? videoPlayerController.pause()
+                : videoPlayerController.play();
+          });
+        },
+        child: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+              child: VideoPlayer(
+                videoPlayerController,
+              ),
             ),
-            child: VideoPlayer(videoPlayerController),
-          ),
-          Center(
-            child: Container(
-              decoration: const BoxDecoration(),
-              child: isPlaying(),
-            ),
-          )
-        ],
+            Center(
+              child: Container(
+                decoration: const BoxDecoration(),
+                child: isPlaying(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

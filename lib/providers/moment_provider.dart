@@ -45,9 +45,14 @@ class MomentController extends StateNotifier<MomentState> {
   getListMomentSuggest(params) async {
     List response = await MomentApi().getListMomentSuggest(params) ?? [];
     if (mounted) {
+      final newMoment = response
+          .where((item) => !state.momentSuggest.contains(item))
+          .toList();
       state = state.copyWith(
           momentFollow: state.momentFollow,
-          momentSuggest: state.momentSuggest + response);
+          momentSuggest: params.containsKey('max_id')
+              ? [...state.momentSuggest, ...newMoment]
+              : newMoment);
     }
   }
 }
