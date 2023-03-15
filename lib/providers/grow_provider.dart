@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/grow_api.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class GrowState {
   final List grows;
   final List growsOwner;
   final List hosts;
+  final List posts;
   final List growsSuggest;
   final dynamic detailGrow;
   final dynamic growTransactions;
   final dynamic updateGrowTransactions;
   final bool isMore;
 
-
   const GrowState({
     this.grows = const [],
+    this.posts = const [],
     this.growsOwner = const [],
     this.hosts = const [],
     this.growsSuggest = const [],
@@ -27,6 +29,7 @@ class GrowState {
 
   GrowState copyWith({
     List grows = const [],
+    List posts = const [],
     List growsOwner = const [],
     List hosts = const [],
     List growsSuggest = const [],
@@ -34,45 +37,55 @@ class GrowState {
     dynamic growTransactions = const {},
     dynamic updateGrowTransactions = const {},
     bool isMore = true,
-
   }) {
     return GrowState(
-        grows: grows,
-        growsOwner: growsOwner,
-        hosts: hosts,
-        growsSuggest: growsSuggest,
-        detailGrow: detailGrow,
-        updateGrowTransactions: updateGrowTransactions,
-        growTransactions: growTransactions,
-        isMore: isMore,
+      grows: grows,
+      posts: posts,
+      growsOwner: growsOwner,
+      hosts: hosts,
+      growsSuggest: growsSuggest,
+      detailGrow: detailGrow,
+      updateGrowTransactions: updateGrowTransactions,
+      growTransactions: growTransactions,
+      isMore: isMore,
     );
-
   }
 }
 
 final growControllerProvider =
-    StateNotifierProvider<GrowController, GrowState>((ref) => GrowController());
+StateNotifierProvider.autoDispose<GrowController, GrowState>((ref) {
+  ref.read(meControllerProvider);
+  return GrowController();
+});
 
 class GrowController extends StateNotifier<GrowState> {
   GrowController() : super(const GrowState());
 
   getListGrow(params) async {
-    List response = await GrowApi().getListGrowApi(params);
+    List response = await GrowApi().getListGrowApi(params) ?? [];
     if (response.isNotEmpty) {
-      final newGrows = response.where((item) => !state.grows.contains(item)).toList();
+      final newGrows =
+          response.where((item) => !state.grows.contains(item)).toList();
       state = state.copyWith(
-          grows: params.containsKey('max_id') ? [...state.grows, ...newGrows] : newGrows,
+          grows: params.containsKey('max_id')
+              ? [...state.grows, ...newGrows]
+              : newGrows,
           hosts: state.hosts,
+          posts: state.posts,
           growsOwner: state.growsOwner,
           detailGrow: state.detailGrow,
           growTransactions: state.growTransactions,
           isMore: response.length < params['limit'] ? false : true,
           growsSuggest: state.growsSuggest);
     } else {
-      final newGrows = response.where((item) => !state.grows.contains(item)).toList();
+      final newGrows =
+          response.where((item) => !state.grows.contains(item)).toList();
       state = state.copyWith(
           hosts: state.hosts,
-          grows: params.containsKey('max_id') ? [...state.grows, ...newGrows] : newGrows,
+          grows: params.containsKey('max_id')
+              ? [...state.grows, ...newGrows]
+              : newGrows,
+          posts: state.posts,
           growsOwner: state.growsOwner,
           detailGrow: state.detailGrow,
           growTransactions: state.growTransactions,
@@ -80,12 +93,14 @@ class GrowController extends StateNotifier<GrowState> {
           growsSuggest: state.growsSuggest);
     }
   }
+
   getListOwnerGrow(params) async {
     List response = await GrowApi().getListGrowApi(params);
     if (response.isNotEmpty) {
       state = state.copyWith(
           growsOwner: [...response],
           grows: state.grows,
+          posts: state.posts,
           hosts: state.hosts,
           detailGrow: state.detailGrow,
           growTransactions: state.growTransactions,
@@ -99,6 +114,7 @@ class GrowController extends StateNotifier<GrowState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
           growsSuggest: [...response],
+          posts: state.posts,
           growsOwner: state.growsOwner,
           grows: state.grows,
           hosts: state.hosts,
@@ -114,6 +130,7 @@ class GrowController extends StateNotifier<GrowState> {
       state = state.copyWith(
           grows: state.grows,
           detailGrow: response,
+          posts: state.posts,
           growsOwner: state.growsOwner,
           hosts: state.hosts,
           isMore: state.isMore,
@@ -138,19 +155,21 @@ class GrowController extends StateNotifier<GrowState> {
             state.grows.sublist(indexEventUpdate + 1),
         hosts: state.hosts,
         detailGrow: state.detailGrow,
+        posts: state.posts,
         growsOwner: state.growsOwner,
         isMore: state.isMore,
         growTransactions: state.growTransactions,
         growsSuggest: state.growsSuggest);
   }
+
   updateStatusHost(id, data) async {
     if (data) {
       var res = await GrowApi().statusGrowApi(id);
     } else {
       var res = await GrowApi().deleteStatusGrowApi(id);
     }
-    var indexEventUpdate =
-    state.growsSuggest.indexWhere((element) => element['id'] == id.toString());
+    var indexEventUpdate = state.growsSuggest
+        .indexWhere((element) => element['id'] == id.toString());
     var eventUpdate = state.growsSuggest[indexEventUpdate];
     eventUpdate['project_relationship']['follow_project'] = data;
     state = state.copyWith(
@@ -159,16 +178,19 @@ class GrowController extends StateNotifier<GrowState> {
             state.growsSuggest.sublist(indexEventUpdate + 1),
         grows: state.grows,
         detailGrow: state.detailGrow,
+        posts: state.posts,
         growsOwner: state.growsOwner,
         isMore: state.isMore,
         growTransactions: state.growTransactions,
         hosts: state.hosts);
   }
+
   getGrowHosts(id) async {
     List response = await GrowApi().getGrowHostApi(id);
     if (response.isNotEmpty) {
       state = state.copyWith(
           hosts: [...response],
+          posts: state.posts,
           grows: state.grows,
           detailGrow: state.detailGrow,
           growsOwner: state.growsOwner,
@@ -185,12 +207,29 @@ class GrowController extends StateNotifier<GrowState> {
           growTransactions: response,
           hosts: state.hosts,
           growsOwner: state.growsOwner,
+          posts: state.posts,
           grows: state.grows,
           detailGrow: state.detailGrow,
           isMore: state.isMore,
           growsSuggest: state.growsSuggest);
     }
   }
+
+  getGrowPost(id, params) async {
+    var response = await GrowApi().getGrowPostApi(id, params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          posts: [...response],
+          growTransactions: response,
+          hosts: state.hosts,
+          growsOwner: state.growsOwner,
+          grows: state.grows,
+          detailGrow: state.detailGrow,
+          isMore: state.isMore,
+          growsSuggest: state.growsSuggest);
+    }
+  }
+
   updateTransactionDonate(data, id) async {
     var response = await GrowApi().transactionDonateApi(id, data);
     if (response.isNotEmpty) {
@@ -199,6 +238,7 @@ class GrowController extends StateNotifier<GrowState> {
           growTransactions: state.growTransactions,
           hosts: state.hosts,
           grows: state.grows,
+          posts: state.posts,
           growsOwner: state.growsOwner,
           detailGrow: state.detailGrow,
           isMore: state.isMore,

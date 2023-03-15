@@ -1,16 +1,53 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/screen/Post/post.dart';
 
-class GrowDiscuss extends StatefulWidget {
+import '../../providers/grow_provider.dart';
+
+class GrowDiscuss extends ConsumerStatefulWidget {
   final dynamic data;
   const GrowDiscuss({super.key, this.data});
 
   @override
-  State<GrowDiscuss> createState() => _GrowDiscussState();
+  ConsumerState<GrowDiscuss> createState() => _GrowDiscussState();
 }
 
-class _GrowDiscussState extends State<GrowDiscuss> {
+class _GrowDiscussState extends ConsumerState<GrowDiscuss> {
+  @override
+  void initState() {
+    if (!mounted) return;
+    super.initState();
+    Future.delayed(
+        Duration.zero,
+        () => ref.read(growControllerProvider.notifier).getGrowPost(
+                widget.data['id'], {
+              "project_id": widget.data['id'],
+              "exclude_replies": true,
+              'limit': 3
+            }));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    List growPosts = ref.watch(growControllerProvider).posts;
+    return growPosts.isNotEmpty
+        ? Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                primary: false,
+                itemCount: growPosts.length,
+                itemBuilder: (context, index) {
+                 return  Post(post: growPosts[index]);
+                })
+          ])
+        : const Center(child: CupertinoActivityIndicator());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

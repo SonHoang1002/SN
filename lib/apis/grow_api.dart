@@ -30,7 +30,9 @@ class GrowApi {
   Future getGrowHostApi(id) async {
     return await Api().getRequestBase('/api/v1/projects/$id/hosts', {});
   }
-
+  Future getGrowPostApi(id, params) async {
+    return await Api().getRequestBase('/api/v1/timelines/project/$id', params);
+  }
   Future getGrowTransactionsApi(params) async {
     return await Api().getRequestBase('/api/v1/transactions', {});
   }

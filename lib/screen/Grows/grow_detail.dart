@@ -881,7 +881,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                               ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
-                                                child: Container(
+                                                child: SizedBox(
                                                   height: 10,
                                                   child:
                                                       LinearProgressIndicator(
@@ -1501,5 +1501,9 @@ class _RechargeModalState extends ConsumerState<RechargeModal> {
       height: 300,
       child: Placeholder(),
     );
+  }
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

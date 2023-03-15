@@ -9,7 +9,6 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
-import 'package:social_network_app_mobile/widget/skeleton.dart';
 
 class GrowCard extends ConsumerStatefulWidget {
   const GrowCard({Key? key}) : super(key: key);
@@ -263,6 +262,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
               )
             ],
           ) : const SizedBox(),
+          grows.isNotEmpty ?
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -456,8 +456,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                   )),
               isMore == true ? const Center(child:  CupertinoActivityIndicator()) : const SizedBox()
             ],
-
-          ),
+          ) : const SizedBox(),
         ]),
       ),
     );
