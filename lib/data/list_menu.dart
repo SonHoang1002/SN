@@ -88,7 +88,7 @@ List listSocial = [
     "key": 'chatSocial',
     "label": 'Tin nhắn',
     "subLabel": 'Trò chuyện cùng bạn bè trên EMSO.',
-    "icon": "assets/Chat_1.svg"
+    "icon": "assets/Chat_1.png"
   },
   {
     "key": 'groupSocial',
@@ -112,13 +112,13 @@ List listSocial = [
     "key": 'blood',
     "label": 'Hiến máu',
     "subLabel": 'Hiến máu thiện nguyện vì cộng đồng.',
-    "icon": "assets/blood.svg"
+    "icon": "assets/blood.png"
   },
   {
     "key": 'moment',
     "subLabel": 'khoảnh khắc thú vị làm bạn yêu thích.',
     "label": 'Moment',
-    "icon": "assets/moment_menu.svg"
+    "icon": "assets/moment_menu.png"
   },
   {
     "key": 'watch',

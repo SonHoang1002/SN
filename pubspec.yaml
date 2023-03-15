@@ -63,7 +63,6 @@ dependencies:
   flutter_cache_manager: ^3.0.2
   rxdart: ^0.27.2
   collection: ^1.15.0
-  image_picker: ^0.8.6+2
   file_picker: ^5.2.5
   table_calendar: ^3.0.9
   carousel_slider: ^4.2.1
@@ -92,6 +91,7 @@ dependencies:
   flutter_video_newfeed: ^1.0.2
   flutter_page_indicator: ^0.0.3
   marquee: ^2.2.3
+  image_picker: ^0.8.7
 
 dev_dependencies:
   flutter_test:
@@ -135,7 +135,9 @@ flutter:
     - assets/HomeFC.svg
     - assets/notification.svg
     - assets/blood.svg
+    - assets/blood.png
     - assets/Chat_1.svg
+    - assets/Chat_1.png
     - assets/event.svg
     - assets/friend.svg
     - assets/Groups_1.svg
@@ -144,6 +146,7 @@ flutter:
     - assets/learnspace.svg
     - assets/Maket.svg
     - assets/moment_menu.svg
+    - assets/moment_menu.png
     - assets/music.svg
     - assets/Page.svg
     - assets/saved.svg
@@ -158,6 +161,8 @@ flutter:
     - assets/loading.gif
     - assets/IconCoin.svg
     - assets/disc.png
+    - assets/grey.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

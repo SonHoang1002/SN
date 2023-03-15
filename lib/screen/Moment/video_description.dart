@@ -201,6 +201,7 @@ class _VideoDescriptionState extends State<VideoDescription>
                             child: AvatarSocial(
                                 width: 45,
                                 height: 45,
+                                object: page ?? account,
                                 path: page != null
                                     ? page['avatar_media'] != null
                                         ? page['avatar_media']['preview_url']
@@ -275,6 +276,7 @@ class _VideoDescriptionState extends State<VideoDescription>
                                 child: AvatarSocial(
                                     width: 20,
                                     height: 20,
+                                    object: page ?? account,
                                     path: page != null
                                         ? page['avatar_media'] != null
                                             ? page['avatar_media']

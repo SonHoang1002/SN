@@ -1,3 +1,10 @@
+import 'dart:io';
+
+import 'package:dio/adapter.dart';
+import 'package:dio/dio.dart';
+import 'package:social_network_app_mobile/apis/config.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
+
 import 'api_root.dart';
 
 class UserPageApi {
@@ -16,10 +23,6 @@ class UserPageApi {
 
   Future updateOtherInformation(idUser, data) async {
     return Api().postRequestBase('/api/v1/account_general_infomation', data);
-  }
-
-  Future updateCredentialUser(data) async {
-    return Api().postRequestBase('/api/v1/accounts/update_credentials', data);
   }
 
   Future getUserMedia(idUser, params) async {
@@ -49,5 +52,41 @@ class UserPageApi {
     return Api().getRequestBase(
         '/api/v1/accounts/$idUser/featured_contents/$idEntity/media_attachments',
         null);
+  }
+}
+
+class UserPageCredentical {
+  getDio(userToken) {
+    BaseOptions options = BaseOptions(
+      baseUrl: baseRoot,
+      connectTimeout: 30 * 1000,
+      receiveTimeout: 30 * 1000,
+      headers: {
+        'authorization': 'Bearer $userToken',
+        "Content-Type": "application/json",
+      },
+    );
+
+    Dio dio = Dio(options);
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    return dio;
+  }
+
+  Future updateCredentialUser(data) async {
+    try {
+      var userToken = await SecureStorage().getKeyStorage("token");
+
+      Dio dio = getDio(userToken);
+      var response =
+          await dio.patch('/api/v1/accounts/update_credentials', data: data);
+      return response.data;
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

@@ -63,10 +63,16 @@ class MenuRender extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                          listSocial[index]['icon'],
-                          width: 20,
-                        ),
+                        listSocial[index]['icon'].contains('svg')
+                            ? SvgPicture.asset(
+                                listSocial[index]['icon'],
+                                width: 20,
+                              )
+                            : Image.asset(
+                                listSocial[index]['icon'],
+                                width: 22,
+                                height: 22,
+                              ),
                         const SizedBox(
                           width: 12,
                         ),

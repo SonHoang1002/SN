@@ -55,7 +55,12 @@ class _CreateFeedStatusHeaderState
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AvatarSocial(width: 38, height: 38, path: renderLinkAvatar()),
+        AvatarSocial(
+          width: 38,
+          height: 38,
+          path: renderLinkAvatar(),
+          object: widget.entity,
+        ),
         const SizedBox(
           width: 8,
         ),

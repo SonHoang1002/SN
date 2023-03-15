@@ -158,6 +158,7 @@ class _HomeState extends ConsumerState<Home>
                               AvatarSocial(
                                   width: 23.0,
                                   height: 23.0,
+                                  object: meData[0],
                                   path: meData[0]['avatar_media']
                                       ['preview_url']),
                               Positioned(
