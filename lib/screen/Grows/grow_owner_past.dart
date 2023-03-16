@@ -10,17 +10,15 @@ import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 
-class GrowDonated extends ConsumerStatefulWidget {
-  const GrowDonated({Key? key}) : super(key: key);
+class GrowPast extends ConsumerStatefulWidget {
+  const GrowPast({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<GrowDonated> createState() => _GrowDonatedState();
+  ConsumerState<GrowPast> createState() => _GrowPastState();
 }
 
-class _GrowDonatedState extends ConsumerState<GrowDonated> {
-  var configParams = {
-    "limit": 10, "grow_account_status": 'going'
-  };
+class _GrowPastState extends ConsumerState<GrowPast> {
+  var configParams = {"limit": 10, "only_current_user": true, "time": "past" };
   final scrollController = ScrollController();
 
   @override
@@ -59,7 +57,7 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
               const Padding(
                 padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
                 child: Text(
-                  'Dự án đã ủng hộ',
+                  'Dự án bạn gọi vốn đã qua',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -81,7 +79,7 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
                                 topLeft: Radius.circular(15),
                                 topRight: Radius.circular(15)),
                             child: ImageCacheRender(
-                              path: grows[indexOwner]['banner']['url'],
+                              path: grows[indexOwner]['banner'] != null ? grows[indexOwner]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
                             ),
                           ),
                           onTap: () {
@@ -248,7 +246,6 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
   }
   @override
   void dispose() {
-    scrollController.dispose();
     super.dispose();
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 
-import '../../providers/grow_provider.dart';
+import '../../providers/grow/grow_provider.dart';
 
 class GrowDiscuss extends ConsumerStatefulWidget {
   final dynamic data;

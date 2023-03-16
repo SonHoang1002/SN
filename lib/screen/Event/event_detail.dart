@@ -37,6 +37,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         () => ref
             .read(eventControllerProvider.notifier)
             .getEventHosts(widget.eventDetail['id']));
+    Future.delayed(
+        Duration.zero,
+            () => ref
+            .read(eventControllerProvider.notifier)
+            .getDetailEvent(widget.eventDetail['id']));
     _scrollController.addListener(() {
       if (_scrollController.offset > 200) {
         setState(() {
@@ -49,11 +54,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
       }
     });
   }
-
+ @override
+ void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+ }
   @override
   Widget build(BuildContext context) {
-    ref.watch(eventControllerProvider);
-    var eventDetail = widget.eventDetail;
+    var eventDetail = ref.watch(eventControllerProvider).eventDetail;
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
@@ -84,7 +92,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         ),
         elevation: 0.0,
       ),
-      body: Stack(
+      body: eventDetail.isNotEmpty ? Stack(
         children: [
           SingleChildScrollView(
             controller: _scrollController,
@@ -791,7 +799,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
             ),
           ),
         ],
-      ),
+      ) : const SizedBox(),
     );
   }
 }

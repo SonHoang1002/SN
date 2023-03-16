@@ -19,45 +19,33 @@ List watchMenu = [
 List eventMenu = [
   {
     "key": "event_for_you",
-    "label": "Dành cho bạn",
+    "label": "Khám phá",
   },
   {
-    "key": "event_local",
-    "label": "Địa phương",
+    "key": "event_will_join",
+    "label": "Sẽ tham gia",
   },
   {
-    "key": "event_this_week",
-    "label": "Tuần này",
+    "key": "event_invite",
+    "label": "Lời mời",
   },
   {
-    "key": "event_group",
-    "label": "Nhóm",
+    "key": "event_star",
+    "label": "Quan tâm",
   },
   {
-    "key": "event_online",
-    "label": "Online",
+    "key": "event_host",
+    "label": "Tổ chức",
   },
   {
-    "key": "event_following",
-    "label": "Đang theo dõi",
+    "key": "event_past",
+    "label": "Sự kiện đã qua",
   },
-  {
-    "key": "event_class",
-    "label": "Lớp học",
-  },
-  {
-    "key": "event_art",
-    "label": "Nghệ thuật",
-  }
 ];
 List growMenu = [
   {
     "key": "grow_interesting",
     "label": "Khám phá",
-  },
-  {
-    "key": "grow_for_u",
-    "label": "Dự án của bạn",
   },
   {
     "key": "grow_donated",

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/grow_provider.dart';
+import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
@@ -49,7 +49,7 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
               const Padding(
                 padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
                 child: Text(
-                  'Dự án của bạn',
+                  'Dự án bạn quan tâm',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,

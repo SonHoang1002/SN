@@ -8,7 +8,7 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/grow_provider.dart';
+import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_disscussion.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -84,7 +84,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
   @override
   Widget build(BuildContext context) {
     var growDetail = ref.watch(growControllerProvider).detailGrow;
-    var valueLinearProgressBar = ((growDetail['real_value'] - 0) * 100) / (growDetail['target_value'] - 0);
+    var valueLinearProgressBar = ((growDetail['real_value'] ?? 0 - 0) * 100) / (growDetail['target_value'] ?? 0 - 0);
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
@@ -107,7 +107,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
             ),
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
         elevation: 0.0,

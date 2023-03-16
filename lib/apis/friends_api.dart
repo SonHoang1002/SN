@@ -5,4 +5,8 @@ class FriendsApi {
     return await Api()
         .getRequestBase('/api/v1/accounts/$idUser/friendships', params);
   }
+  Future getListFriendsApi(params) async {
+    return await Api()
+        .getRequestBase('/api/v1/friendships', params);
+  }
 }

@@ -62,7 +62,7 @@ class GrowController extends StateNotifier<GrowState> {
   GrowController() : super(const GrowState());
 
   getListGrow(params) async {
-    List response = await GrowApi().getListGrowApi(params) ?? [];
+    List response = await GrowApi().getListGrowApi(params);
     if (response.isNotEmpty) {
       final newGrows =
           response.where((item) => !state.grows.contains(item)).toList();
@@ -75,7 +75,7 @@ class GrowController extends StateNotifier<GrowState> {
           growsOwner: state.growsOwner,
           detailGrow: state.detailGrow,
           growTransactions: state.growTransactions,
-          isMore: response.length < params['limit'] ? false : true,
+          isMore: params['limit'] != null ? response.length < params['limit'] ? false : true : false,
           growsSuggest: state.growsSuggest);
     } else {
       final newGrows =
@@ -164,9 +164,9 @@ class GrowController extends StateNotifier<GrowState> {
 
   updateStatusHost(id, data) async {
     if (data) {
-      var res = await GrowApi().statusGrowApi(id);
+      await GrowApi().statusGrowApi(id);
     } else {
-      var res = await GrowApi().deleteStatusGrowApi(id);
+     await GrowApi().deleteStatusGrowApi(id);
     }
     var indexEventUpdate = state.growsSuggest
         .indexWhere((element) => element['id'] == id.toString());

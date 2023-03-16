@@ -10,14 +10,6 @@ class EventApi {
     return await Api().getRequestBase('/api/v1/events', params);
   }
 
-  Future getListFriendIncudesApi(params) async {
-    return await Api().getRequestBase('/api/v1/friendships', params);
-  }
-
-  Future getListFriendExcludesApi(params) async {
-    return await Api().getRequestBase('/api/v1/friendships', params);
-  }
-
   Future getEventHostApi(id) async {
     return await Api().getRequestBase('/api/v1/events/$id/hosts', {});
   }
@@ -26,8 +18,8 @@ class EventApi {
     return await Api().getRequestBase('/api/v1/suggestions/event', params);
   }
 
-  Future getListEventDetailApi(id, data) async {
-    return await Api().postRequestBase('/api/v1/events/$id', data);
+  Future getEventDetailApi(id) async {
+    return await Api().getRequestBase('/api/v1/events/$id', {});
   }
 
   Future statusEventApi(id, data) async {

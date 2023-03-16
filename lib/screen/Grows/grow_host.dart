@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/grow_provider.dart';
+import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
@@ -67,7 +67,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                                 topLeft: Radius.circular(15),
                                 topRight: Radius.circular(15)),
                             child: ImageCacheRender(
-                              path: grows[indexOwner]['banner']['url'],
+                              path: grows[indexOwner]['banner'] != null ? grows[indexOwner]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
                             ),
                           ),
                           onTap: () {

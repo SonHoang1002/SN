@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
+import 'package:social_network_app_mobile/providers/friend_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class InviteFriend extends ConsumerStatefulWidget {
@@ -20,7 +21,7 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
     Future.delayed(
         Duration.zero,
         () => ref
-            .read(eventControllerProvider.notifier)
+            .read(friendControllerProvider.notifier)
             .getListFriendExcludes(paramsConfig));
   }
 
@@ -31,7 +32,7 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
 
   @override
   Widget build(BuildContext context) {
-    List friendExcludes = ref.watch(eventControllerProvider).friendExcludes;
+    List friendExcludes = ref.watch(friendControllerProvider).friendExcludes;
     return SizedBox(
       width: double.infinity,
       child: Expanded(
@@ -42,7 +43,6 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  print(friendExcludes[index]);
                 },
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(

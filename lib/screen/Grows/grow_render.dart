@@ -4,6 +4,7 @@ import 'package:social_network_app_mobile/screen/Grows/grow_card.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_donated.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_host.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_owner.dart';
+import 'package:social_network_app_mobile/screen/Grows/grow_owner_past.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
@@ -15,7 +16,7 @@ class GrowRender extends StatefulWidget {
 }
 
 class _GrowRenderState extends State<GrowRender> {
-  String menuSelected = 'grow_hosting';
+  String menuSelected = 'grow_interesting';
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +42,11 @@ class _GrowRenderState extends State<GrowRender> {
         ),
         const CrossBar(),
         menuSelected == 'grow_interesting' ?  const GrowCard() : const SizedBox(),
-        // menuSelected == 'grow_for_u' ? const GrowOwner() : const SizedBox(),
-        // menuSelected == 'grow_donated' ? const GrowDonated() : const SizedBox(),
+        menuSelected == 'grow_following' ? const GrowOwner() : const SizedBox(),
+        menuSelected == 'grow_donated' ? const GrowDonated() : const SizedBox(),
         menuSelected == 'grow_hosting' ? const GrowHost() : const SizedBox(),
+        menuSelected == 'grow_past' ? const GrowPast() : const SizedBox(),
+
       ],
     );
   }
