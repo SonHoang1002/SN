@@ -76,9 +76,12 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
                                         )));
                           },
                           child: checkIsImage(medias[index])
-                              ? ImageCacheRender(
-                                  key: Key(medias[index]['id'].toString()),
-                                  path: medias[index]['url'])
+                              ? Hero(
+                                  tag: medias[index]['id'],
+                                  child: ImageCacheRender(
+                                      key: Key(medias[index]['id'].toString()),
+                                      path: medias[index]['url']),
+                                )
                               : FeedVideo(
                                   key: Key(medias[index]['id'].toString()),
                                   flickMultiManager: flickMultiManager,

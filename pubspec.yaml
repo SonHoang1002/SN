@@ -92,6 +92,7 @@ dependencies:
   flutter_page_indicator: ^0.0.3
   marquee: ^2.2.3
   image_picker: ^0.8.7
+  full_screen_image: ^2.0.0
 
 dev_dependencies:
   flutter_test:
