@@ -8,23 +8,27 @@ class UserInformationState {
   final dynamic userInfor;
   final dynamic userMoreInfor;
   final List friends;
+  final List friendsNear;
   final List featureContent;
 
   const UserInformationState(
       {this.userInfor = const {},
       this.userMoreInfor = const {},
       this.friends = const [],
+      this.friendsNear = const [],
       this.featureContent = const []});
 
   UserInformationState copyWith(
       {dynamic userInfor = const {},
       dynamic userMoreInfor = const {},
       List friends = const [],
+      List friendsNear = const [],
       List featureContent = const []}) {
     return UserInformationState(
         userInfor: userInfor,
         userMoreInfor: userMoreInfor,
         friends: friends,
+        friendsNear: friendsNear,
         featureContent: featureContent);
   }
 }
@@ -47,6 +51,7 @@ class UserInformationController extends StateNotifier<UserInformationState> {
           userInfor: response,
           userMoreInfor: state.userMoreInfor,
           friends: state.friends,
+          friendsNear: state.friendsNear,
           featureContent: state.featureContent);
     }
   }
@@ -59,6 +64,7 @@ class UserInformationController extends StateNotifier<UserInformationState> {
           userInfor: state.userInfor,
           userMoreInfor: response,
           friends: state.friends,
+          friendsNear: state.friendsNear,
           featureContent: state.featureContent);
     }
   }
@@ -70,7 +76,12 @@ class UserInformationController extends StateNotifier<UserInformationState> {
       state = state.copyWith(
           userInfor: state.userInfor,
           userMoreInfor: state.userMoreInfor,
-          friends: response,
+          friends: params['order_by_column'] != null
+              ? state.friends
+              : state.friends + response,
+          friendsNear: params['order_by_column'] != null
+              ? state.friendsNear + response
+              : state.friendsNear,
           featureContent: state.featureContent);
     }
   }
@@ -83,6 +94,7 @@ class UserInformationController extends StateNotifier<UserInformationState> {
           userInfor: state.userInfor,
           userMoreInfor: state.userMoreInfor,
           friends: state.friends,
+          friendsNear: state.friendsNear,
           featureContent: response);
     }
   }

@@ -197,12 +197,16 @@ class _BannerBaseState extends State<BannerBase> {
                                       width: 32,
                                       height: 32,
                                       decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.6),
+                                          color:
+                                              Theme.of(context).backgroundColor,
                                           shape: BoxShape.circle),
                                       child: Icon(
                                         listMenu[index]['icon'],
                                         size: 16,
-                                        color: white,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .displayLarge!
+                                            .color,
                                       ),
                                     ),
                                     const SizedBox(
@@ -210,7 +214,9 @@ class _BannerBaseState extends State<BannerBase> {
                                     ),
                                     Text(
                                       listMenu[index]['label'],
-                                      style: const TextStyle(fontSize: 14),
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
                                     )
                                   ],
                                 ),

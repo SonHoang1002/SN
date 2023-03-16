@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
+import 'package:social_network_app_mobile/screen/UserPage/page_friend_user.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
@@ -24,7 +26,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
     Future.delayed(Duration.zero, () {
       ref
           .read(userInformationProvider.notifier)
-          .getUserFriend(widget.user['id'], {"limit": 6});
+          .getUserFriend(widget.user['id'], {"limit": 20});
     });
   }
 
@@ -37,7 +39,9 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     final size = MediaQuery.of(context).size;
-    List friends = ref.watch(userInformationProvider).friends;
+    List friends = ref.watch(userInformationProvider).friends.length >= 6
+        ? ref.watch(userInformationProvider).friends.sublist(0, 6)
+        : ref.watch(userInformationProvider).friends;
 
     return friends.isEmpty
         ? const SizedBox()
@@ -70,7 +74,13 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                         TextAction(
                           title: "Xem tất cả bạn bè",
                           fontSize: 15,
-                          action: () {},
+                          action: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) =>
+                                        PageFriendUser(user: widget.user)));
+                          },
                         )
                       ],
                     ),
