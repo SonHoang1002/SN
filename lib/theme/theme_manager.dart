@@ -42,7 +42,8 @@ class MyThemes {
       textTheme: const TextTheme(displayLarge: TextStyle(color: white)),
       colorScheme:
           const ColorScheme.dark().copyWith(background: Colors.grey.shade800),
-      canvasColor: Colors.black);
+      canvasColor: Colors.black,
+      backgroundColor: Colors.white.withOpacity(0.1));
 
   static final lightTheme = ThemeData(
       scaffoldBackgroundColor: white,
@@ -52,5 +53,6 @@ class MyThemes {
       textTheme: const TextTheme(displayLarge: TextStyle(color: Colors.black)),
       colorScheme: const ColorScheme.light()
           .copyWith(background: const Color(0xfff1f2f5)),
-      canvasColor: const Color(0xfff1f2f5));
+      canvasColor: const Color(0xfff1f2f5),
+      backgroundColor: Colors.black.withOpacity(0.1));
 }

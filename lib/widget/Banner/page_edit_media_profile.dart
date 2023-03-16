@@ -277,6 +277,9 @@ class _AvatarWigetState extends State<AvatarWiget> {
 
     if (widget.widget.entityType == 'frame' && widget.widget.file != null) {
       widget.handleUpdateData('frame_id', widget.widget.file['id']);
+      widget.handleUpdateData(
+          'id', widget.widget.entityObj['avatar_media']?['id']);
+
       setState(() {
         frameSelected = widget.widget.file;
       });

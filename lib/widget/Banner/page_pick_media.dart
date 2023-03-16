@@ -45,7 +45,7 @@ class _PagePickMediaState extends State<PagePickMedia> {
       isLoading = true;
     });
     var response = await UserPageApi().getUserMedia(widget.user['id'], params);
-    if (response != null) {
+    if (response != null && mounted) {
       setState(() {
         isMore = response.length < params['limit'] ? false : true;
         isLoading = false;
