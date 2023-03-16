@@ -11,14 +11,23 @@ class MomentVideo extends StatefulWidget {
   _MomentVideoState createState() => _MomentVideoState();
 }
 
-class _MomentVideoState extends State<MomentVideo> {
+class _MomentVideoState extends State<MomentVideo>
+    with TickerProviderStateMixin {
   late VideoPlayerController videoPlayerController;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  double _xPosition = 0;
+  double _yPosition = 0;
   bool isShowPlaying = true;
   bool isVisible = false;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _animation =
+        CurvedAnimation(parent: _animationController, curve: Curves.easeOut);
     videoPlayerController = VideoPlayerController.network(
         widget.moment['media_attachments'][0]['url'])
       ..initialize().then((value) {
@@ -36,7 +45,19 @@ class _MomentVideoState extends State<MomentVideo> {
   @override
   void dispose() {
     super.dispose();
+    _animationController.dispose();
     videoPlayerController.dispose();
+  }
+
+  _handleOnDoubleTap(TapDownDetails tapDetails) {
+    setState(() {
+      _xPosition = tapDetails.globalPosition.dx;
+      _yPosition = tapDetails.globalPosition.dy;
+    });
+
+    _animationController
+        .forward()
+        .then((value) => _animationController.reverse());
   }
 
   Widget isPlaying() {
@@ -73,15 +94,35 @@ class _MomentVideoState extends State<MomentVideo> {
                 : videoPlayerController.play();
           });
         },
+        onTapDown: _handleOnDoubleTap,
         child: Stack(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                color: Colors.black,
-              ),
-              child: VideoPlayer(
-                videoPlayerController,
-              ),
+            Stack(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                  ),
+                  child: VideoPlayer(
+                    videoPlayerController,
+                  ),
+                ),
+                if (_xPosition != 0 && _yPosition != 0)
+                  Positioned(
+                    left: _xPosition - 50,
+                    top: _yPosition - 50,
+                    child: AnimatedBuilder(
+                      animation: _animation,
+                      builder: (context, child) {
+                        return Opacity(
+                          opacity: _animation.value,
+                          child: const Icon(Icons.favorite,
+                              size: 100, color: Colors.red),
+                        );
+                      },
+                    ),
+                  )
+              ],
             ),
             Center(
               child: Container(

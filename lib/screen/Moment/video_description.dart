@@ -170,7 +170,7 @@ class _VideoDescriptionState extends State<VideoDescription>
                               height: 20,
                               width: size.width - 120,
                               child: Marquee(
-                                text: 'Đi đu đưa đi   ·   ',
+                                text: 'Âm thanh   ·   ',
                                 velocity: 30,
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 13),

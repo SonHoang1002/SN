@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -21,6 +23,8 @@ class _MomentState extends ConsumerState<Moment>
   late TabController _tabController;
   PageController controller =
       PageController(viewportFraction: 1, keepPage: true);
+  int _currentPageIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -68,6 +72,9 @@ class _MomentState extends ConsumerState<Moment>
                 scrollDirection: Axis.vertical,
                 preloadPagesCount: 5,
                 onPageChanged: (value) {
+                  setState(() {
+                    _currentPageIndex = value;
+                  });
                   if (value == momentFollow.length - 5) {
                     ref
                         .read(momentControllerProvider.notifier)
@@ -84,7 +91,20 @@ class _MomentState extends ConsumerState<Moment>
                       Positioned(
                           bottom: 15,
                           left: 15,
-                          child: VideoDescription(moment: momentFollow[index]))
+                          child: VideoDescription(moment: momentFollow[index])),
+                      AnimatedOpacity(
+                        duration: const Duration(milliseconds: 250),
+                        opacity: _currentPageIndex == index ? 0.0 : 1.0,
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                          child: Transform.scale(
+                            scale: 1.1,
+                            child: Container(
+                              color: Colors.black.withOpacity(0.5),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   );
                 },
@@ -113,7 +133,7 @@ class _MomentState extends ConsumerState<Moment>
                     Positioned(
                         bottom: 15,
                         left: 15,
-                        child: VideoDescription(moment: momentSuggests[index]))
+                        child: VideoDescription(moment: momentSuggests[index])),
                   ],
                 );
               },
