@@ -62,67 +62,61 @@ class _MomentState extends ConsumerState<Moment>
         body: Stack(children: <Widget>[
           TabBarView(controller: _tabController, children: [
             if (mounted)
-              AutomaticKeepAlive(
-                child: PreloadPageView.builder(
-                  controller: PreloadPageController(initialPage: 0),
-                  itemCount: momentFollow.length,
-                  scrollDirection: Axis.vertical,
-                  preloadPagesCount: 5,
-                  onPageChanged: (value) {
-                    if (value == momentFollow.length - 5) {
-                      ref
-                          .read(momentControllerProvider.notifier)
-                          .getListMomentFollow({
-                        "limit": 10,
-                        "max_id": momentFollow.last['score']
-                      });
-                    }
-                  },
-                  itemBuilder: (context, index) {
-                    return Stack(
-                      children: [
-                        MomentVideo(moment: momentFollow[index]),
-                        Positioned(
-                            bottom: 15,
-                            left: 15,
-                            child:
-                                VideoDescription(moment: momentFollow[index]))
-                      ],
-                    );
-                  },
-                ),
-              )
-            else
-              Container(),
-            AutomaticKeepAlive(
-              child: PreloadPageView.builder(
+              PreloadPageView.builder(
                 controller: PreloadPageController(initialPage: 0),
-                itemCount: momentSuggests.length,
+                itemCount: momentFollow.length,
                 scrollDirection: Axis.vertical,
                 preloadPagesCount: 5,
                 onPageChanged: (value) {
-                  if (value == momentSuggests.length - 5) {
+                  if (value == momentFollow.length - 5) {
                     ref
                         .read(momentControllerProvider.notifier)
-                        .getListMomentSuggest({
+                        .getListMomentFollow({
                       "limit": 10,
-                      "max_id": momentSuggests.last['score']
+                      "max_id": momentFollow.last['score']
                     });
                   }
                 },
                 itemBuilder: (context, index) {
                   return Stack(
                     children: [
-                      MomentVideo(moment: momentSuggests[index]),
+                      MomentVideo(moment: momentFollow[index]),
                       Positioned(
                           bottom: 15,
                           left: 15,
-                          child:
-                              VideoDescription(moment: momentSuggests[index]))
+                          child: VideoDescription(moment: momentFollow[index]))
                     ],
                   );
                 },
-              ),
+              )
+            else
+              Container(),
+            PreloadPageView.builder(
+              controller: PreloadPageController(initialPage: 0),
+              itemCount: momentSuggests.length,
+              scrollDirection: Axis.vertical,
+              preloadPagesCount: 5,
+              onPageChanged: (value) {
+                if (value == momentSuggests.length - 5) {
+                  ref
+                      .read(momentControllerProvider.notifier)
+                      .getListMomentSuggest({
+                    "limit": 10,
+                    "max_id": momentSuggests.last['score']
+                  });
+                }
+              },
+              itemBuilder: (context, index) {
+                return Stack(
+                  children: [
+                    MomentVideo(moment: momentSuggests[index]),
+                    Positioned(
+                        bottom: 15,
+                        left: 15,
+                        child: VideoDescription(moment: momentSuggests[index]))
+                  ],
+                );
+              },
             ),
           ]),
           Positioned(
