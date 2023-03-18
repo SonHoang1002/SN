@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -20,6 +22,9 @@ class _MomentVideoState extends State<MomentVideo>
   double _yPosition = 0;
   bool isShowPlaying = true;
   bool isVisible = false;
+  bool isDrag = false;
+  double position = 0;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -28,6 +33,7 @@ class _MomentVideoState extends State<MomentVideo>
         vsync: this, duration: const Duration(milliseconds: 500));
     _animation =
         CurvedAnimation(parent: _animationController, curve: Curves.easeOut);
+
     videoPlayerController = VideoPlayerController.network(
         widget.moment['media_attachments'][0]['url'])
       ..initialize().then((value) {
@@ -39,14 +45,37 @@ class _MomentVideoState extends State<MomentVideo>
         setState(() {
           isShowPlaying = false;
         });
+      })
+      ..addListener(() {
+        final bool isPlaying = videoPlayerController.value.isPlaying;
+        final bool isEndOfVideo = videoPlayerController.value.position ==
+            videoPlayerController.value.duration;
+        if (isPlaying && !isEndOfVideo) {
+          setState(() {
+            position = videoPlayerController.value.position.inMilliseconds
+                    .toDouble() /
+                videoPlayerController.value.duration.inMilliseconds.toDouble();
+          });
+        }
       });
+
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
+      if (videoPlayerController.value.isPlaying) {
+        setState(() {
+          position = videoPlayerController.value.position.inMilliseconds
+                  .toDouble() /
+              videoPlayerController.value.duration.inMilliseconds.toDouble();
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
-    super.dispose();
     _animationController.dispose();
     videoPlayerController.dispose();
+    _timer.cancel();
+    super.dispose();
   }
 
   _handleOnDoubleTap(TapDownDetails tapDetails) {
@@ -57,7 +86,7 @@ class _MomentVideoState extends State<MomentVideo>
 
     _animationController
         .forward()
-        .then((value) => _animationController.reverse());
+        .then((value) => _animationController.repeat(max: 0));
   }
 
   Widget isPlaying() {
@@ -72,6 +101,10 @@ class _MomentVideoState extends State<MomentVideo>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    // print('response $position');
+
     return VisibilityDetector(
       key: Key('moment_video_${widget.moment['id']}'),
       onVisibilityChanged: (visibilityInfo) {
@@ -86,7 +119,7 @@ class _MomentVideoState extends State<MomentVideo>
           });
         }
       },
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           setState(() {
             videoPlayerController.value.isPlaying
@@ -94,19 +127,20 @@ class _MomentVideoState extends State<MomentVideo>
                 : videoPlayerController.play();
           });
         },
-        onTapDown: _handleOnDoubleTap,
+        onDoubleTapDown: (TapDownDetails tapDetails) {
+          _handleOnDoubleTap(tapDetails);
+        },
         child: Stack(
           children: [
             Stack(
               children: [
                 Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                  ),
-                  child: VideoPlayer(
-                    videoPlayerController,
-                  ),
-                ),
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                    ),
+                    child: VideoPlayer(
+                      videoPlayerController,
+                    )),
                 if (_xPosition != 0 && _yPosition != 0)
                   Positioned(
                     left: _xPosition - 50,
@@ -115,13 +149,20 @@ class _MomentVideoState extends State<MomentVideo>
                       animation: _animation,
                       builder: (context, child) {
                         return Opacity(
-                          opacity: _animation.value,
-                          child: const Icon(Icons.favorite,
-                              size: 100, color: Colors.red),
-                        );
+                            opacity: 1 - _animation.value == 1
+                                ? 0
+                                : 1 - _animation.value,
+                            child: Transform.scale(
+                              scale: 1 + 2 * _animation.value,
+                              child: const Icon(
+                                Icons.favorite,
+                                size: 100,
+                                color: Colors.pink,
+                              ),
+                            ));
                       },
                     ),
-                  )
+                  ),
               ],
             ),
             Center(
@@ -129,7 +170,42 @@ class _MomentVideoState extends State<MomentVideo>
                 decoration: const BoxDecoration(),
                 child: isPlaying(),
               ),
-            )
+            ),
+            // Positioned(
+            //   bottom: -9,
+            //   child: SliderTheme(
+            //       data: const SliderThemeData(
+            //         trackHeight: 2.0,
+            //         thumbShape: RoundSliderThumbShape(
+            //           enabledThumbRadius: 0,
+            //         ),
+            //       ),
+            //       child: SizedBox(
+            //         width: size.width,
+            //         height: 20.0,
+            //         child: Expanded(
+            //           child: Slider(
+            //             activeColor: Colors.white,
+            //             inactiveColor: Colors.white.withOpacity(0.5),
+            //             value: position,
+            //             min: 0.0,
+            //             max: videoPlayerController.value.duration.inMilliseconds
+            //                 .toDouble(),
+            //             onChanged: (double value) {
+            //               setState(() {
+            //                 position = value;
+            //                 final Duration duration =
+            //                     videoPlayerController.value.duration;
+            //                 final newPosition =
+            //                     duration.inMilliseconds * value.toInt();
+            //                 videoPlayerController
+            //                     .seekTo(Duration(milliseconds: newPosition));
+            //               });
+            //             },
+            //           ),
+            //         ),
+            //       )),
+            // ),
           ],
         ),
       ),

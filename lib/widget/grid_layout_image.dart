@@ -229,7 +229,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 shrinkWrap: true,
                 crossAxisCount: 4,
                 crossAxisSpacing: 3,
-                childAspectRatio: 0.315,
+                childAspectRatio: 0.337,
                 children: List.generate(
                     medias.length,
                     (index) => Column(
@@ -243,7 +243,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                                   handlePress: widget.handlePress,
                                   flickMultiManager: flickMultiManager,
                                   crossAxisCount: 1,
-                                  aspectRatio: 0.35,
+                                  aspectRatio: 0.37,
                                   medias: [medias[index]]),
                             ),
                           ],

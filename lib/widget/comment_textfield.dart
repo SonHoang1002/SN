@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -462,10 +463,12 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                               handleActionComment();
                             }
                           : null,
-                      child: const Icon(
-                        Icons.send,
-                        color: secondaryColor,
-                        size: 20,
+                      child: Transform.rotate(
+                        angle: pi / 4,
+                        child: const Icon(
+                          CupertinoIcons.paperplane_fill,
+                          color: secondaryColor,
+                        ),
                       ),
                     )
                   : const SizedBox(),

@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/screen/Moment/moment_page_profile.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -113,14 +114,26 @@ class _VideoDescriptionState extends State<VideoDescription>
                       children: [
                         Row(
                           children: [
-                            Text(
-                              page != null
-                                  ? page['title']
-                                  : account['display_name'],
-                              style: const TextStyle(
-                                  color: white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => MomentPageProfile(
+                                            object: page ?? account,
+                                            objectType: page != null
+                                                ? 'page'
+                                                : 'account')));
+                              },
+                              child: Text(
+                                page != null
+                                    ? page['title']
+                                    : account['display_name'],
+                                style: const TextStyle(
+                                    color: white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14),
+                              ),
                             )
                           ],
                         ),

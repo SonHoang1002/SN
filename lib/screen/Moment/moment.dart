@@ -59,7 +59,6 @@ class _MomentState extends ConsumerState<Moment>
     List momentFollow = ref.watch(momentControllerProvider).momentFollow;
 
     return Scaffold(
-        drawerEnableOpenDragGesture: false,
         drawer: const Drawer(
           child: DrawerMoment(),
         ),
@@ -92,19 +91,6 @@ class _MomentState extends ConsumerState<Moment>
                           bottom: 15,
                           left: 15,
                           child: VideoDescription(moment: momentFollow[index])),
-                      AnimatedOpacity(
-                        duration: const Duration(milliseconds: 250),
-                        opacity: _currentPageIndex == index ? 0.0 : 1.0,
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                          child: Transform.scale(
-                            scale: 1.1,
-                            child: Container(
-                              color: Colors.black.withOpacity(0.5),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   );
                 },
