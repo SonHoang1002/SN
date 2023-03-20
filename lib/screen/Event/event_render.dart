@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/screen/Event/event_card.dart';
+import 'package:social_network_app_mobile/screen/Event/event_going.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
@@ -37,7 +38,9 @@ class _EventRenderState extends State<EventRender> {
           ),
         ),
         const CrossBar(),
-        const EventCard()
+        menuSelected == 'event_for_you' ?  const EventCard() : const SizedBox(),
+        menuSelected == 'event_going' ?  const EventGoing() : const SizedBox(),
+
       ],
     );
   }

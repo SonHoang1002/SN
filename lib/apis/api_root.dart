@@ -42,14 +42,14 @@ class Api {
   Future postRequestBase(String path, data) async {
     try {
       var userToken = await SecureStorage().getKeyStorage("token");
-
       Dio dio = await getDio(userToken);
       var response = await dio.post(path, data: data);
       return response.data;
-    } catch (e) {
-      print(e.toString());
+    } on DioError catch (e) {
+      print(e.response?.data);
     }
   }
+
 
   Future patchRequestBase(String path, data) async {
     try {
