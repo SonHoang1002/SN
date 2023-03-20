@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_video.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -184,15 +185,15 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                         : null
                         : 200,
                     width: 500,
-                    child:  UsingVideoControllerExample(path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : ""),
-                    // child: FeedVideo(
-                    //     type: 'showFullScreen',
-                    //     path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : "",
-                    //     flickMultiManager: flickMultiManager,
-                    //     image: growDetail['introduction_video'] != null &&  growDetail['introduction_video']
-                    //     ['preview_url'] != null ? growDetail['introduction_video']
-                    //             ['preview_url'] :
-                    //         ""),
+                    // child:  UsingVideoControllerExample(path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : ""),
+                     child: FeedVideo(
+                        type: 'showFullScreen',
+                        path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : "",
+                         flickMultiManager: flickMultiManager,
+                        image: growDetail['introduction_video'] != null &&  growDetail['introduction_video']
+                        ['preview_url'] != null ? growDetail['introduction_video']
+                                ['preview_url'] :
+                            ""),
                   ),
                 ),
               ],

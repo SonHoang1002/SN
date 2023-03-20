@@ -155,5 +155,11 @@ List listSocial = [
     "label": 'Giỏ hàng',
     "subLabel": 'Thông tin đặt hàng của bạn.',
     "icon": "assets/Maket.svg"
+  },
+  {
+    "key": 'payment',
+    "label": 'Số dư',
+    "subLabel": 'Số dư và lịch sử thanh toán.',
+    "icon": "assets/Payment.svg"
   }
 ];

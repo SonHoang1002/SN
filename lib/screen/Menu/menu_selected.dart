@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
+import 'package:social_network_app_mobile/screen/Payment/payment.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
@@ -142,28 +143,19 @@ class MenuSelected extends StatelessWidget {
           ],
         );
         break;
-      case 'eventSocial':
-        // body = CreateEventBody();
+      case 'payment':
+        body = const Payment();
         buttonAppbar = Row(
           children: [
             GestureDetector(
               onTap: () {
-                pushToNextScreen(context, const CreateEventPage());
               },
               child: Icon(
-                FontAwesomeIcons.cartArrowDown,
+                FontAwesomeIcons.plus,
                 size: 20,
                 color: colorWord,
               ),
             ),
-            const SizedBox(
-              width: 12.0,
-            ),
-            Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              size: 18,
-              color: colorWord,
-            )
           ],
         );
         break;
