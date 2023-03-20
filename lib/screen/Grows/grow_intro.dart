@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
+import 'package:social_network_app_mobile/screen/Grows/grow_video.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -155,45 +155,50 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
               height: 20,
               thickness: 1,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 5, 16, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:  [
+                Container(
+                  padding: const EdgeInsets.only(left: 16.0, right: 16.0) ,
+                  child: const Text(
                     'Video giới thiệu',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: SizedBox(
-                      height:
-    growDetail['introduction_video'] != null &&  growDetail['introduction_video']['meta'] != null &&
-                                  growDetail['introduction_video']['meta']
-                                          ['small'] !=
-                                      null
-                              ? growDetail['introduction_video']['meta']
-                                          ['small']['aspect'] <
-                                      0.58
-                                  ? MediaQuery.of(context).size.height - 66
-                                  : null
-                              : 200,
-                      child: FeedVideo(
-                          type: 'showFullScreen',
-                          path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : "",
-                          flickMultiManager: flickMultiManager,
-                          image: growDetail['introduction_video'] != null &&  growDetail['introduction_video']
-                          ['preview_url'] != null ? growDetail['introduction_video']
-                                  ['preview_url'] :
-                              ""),
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: SizedBox(
+                    height: growDetail['introduction_video'] != null &&
+                        growDetail['introduction_video']['meta'] !=
+                            null &&
+                        growDetail['introduction_video']['meta']
+                        ['small'] !=
+                            null
+                        ? growDetail['introduction_video']['meta']['small']
+                    ['aspect'] <
+                        0.58
+                        ? MediaQuery.of(context).size.height - 66
+                        : null
+                        : 200,
+                    width: 500,
+                    child:  UsingVideoControllerExample(path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : ""),
+                    // child: FeedVideo(
+                    //     type: 'showFullScreen',
+                    //     path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : "",
+                    //     flickMultiManager: flickMultiManager,
+                    //     image: growDetail['introduction_video'] != null &&  growDetail['introduction_video']
+                    //     ['preview_url'] != null ? growDetail['introduction_video']
+                    //             ['preview_url'] :
+                    //         ""),
                   ),
-                ],
-              ),
+                ),
+              ],
+
             ),
+
             const Divider(
               height: 20,
               thickness: 1,
@@ -306,13 +311,13 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                 padding: const EdgeInsets.only(top: 35.0),
                                 child: Column(
                                   children: [
-                                    Container(
-                                      child: Text(
-                                        hosts[index]['account']['description'] ?? "",
-                                        style: const TextStyle(
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                    Text(
+                                      hosts[index]['account']
+                                              ['description'] ??
+                                          "",
+                                      style: const TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                   ],
@@ -409,8 +414,8 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                 Navigator.push(
                                     context,
                                     CupertinoPageRoute(
-                                        builder: (context) =>
-                                            GrowDetail(data: grows[indexSuggest])));
+                                        builder: (context) => GrowDetail(
+                                            data: grows[indexSuggest])));
                               },
                               textCard: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,8 +438,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                   SizedBox(
                                     height: 30,
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: 4.0),
+                                      padding: const EdgeInsets.only(top: 4.0),
                                       child: Text(
                                         'Cam kết mục tiêu ${convertNumberToVND(grows[indexSuggest]['target_value'] ~/ 1)} VNĐ',
                                         maxLines: 2,
@@ -449,8 +453,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                   SizedBox(
                                     height: 40,
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: 10.0),
+                                      padding: const EdgeInsets.only(top: 10.0),
                                       child: Text(
                                         '${grows[indexSuggest]['followers_count'].toString()} người quan tâm · ${grows[indexSuggest]['backers_count'].toString()} người ủng hộ',
                                         maxLines: 2,

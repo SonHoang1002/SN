@@ -27,7 +27,7 @@ class MenuUser extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-            color: theme.themeMode == ThemeMode.dark
+            color: theme.isDarkMode
                 ? Theme.of(context).cardColor
                 : const Color(0xfff1f2f5),
             borderRadius: BorderRadius.circular(10)),

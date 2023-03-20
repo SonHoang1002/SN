@@ -12,6 +12,7 @@ import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_disscussion.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/Payment/modal_donate.dart';
 import 'package:social_network_app_mobile/widget/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
@@ -84,6 +85,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
   @override
   Widget build(BuildContext context) {
     var growDetail = ref.watch(growControllerProvider).detailGrow;
+    bool due_date = (DateTime.parse(growDetail['due_date'] ?? "").isBefore(DateTime.parse(DateTime.now().toString())));
     var valueLinearProgressBar = ((growDetail['real_value'] ?? 0 - 0) * 100) / (growDetail['target_value'] ?? 0 - 0);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -154,9 +156,9 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    GetTimeAgo.parse(
+                                    due_date == false ? GetTimeAgo.parse(
                                       DateTime.parse(growDetail['due_date']),
-                                    ),
+                                    ) : 'Dự án đã kết thúc',
                                     style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
@@ -171,12 +173,12 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                     style: const TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black),
+                                    ),
                                   ),
                                   const SizedBox(
                                     height: 5,
                                   ),
-                                  !growDetail['project_relationship']['host_project'] ?  Row(
+                                  growDetail['project_relationship']['host_project'] == false ? Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment:
@@ -193,7 +195,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                 ),
                                               ),
                                               context: context,
-                                              builder: (context) => SizedBox(
+                                              builder: (context) =>    due_date == false ? SizedBox(
                                                     height: 250,
                                                     child: ListView.builder(
                                                       itemCount:
@@ -232,17 +234,30 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                         true,
                                                                     builder:
                                                                         (context) =>
-                                                                            SingleChildScrollView(
+
+                                                              SingleChildScrollView(
                                                                               primary: true,
                                                                               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                                                              child: ModalDonate(data: growDetail, dataModal: growPriceTitle[indexTitle]),
-                                                                            ))
+                                                                              child:ModalPayment(title: 'Tặng xu để ủng hộ ${growPriceTitle[indexTitle]['title'].toString().toLowerCase()} ${growDetail['title']}', buttonTitle: growPriceTitle[indexTitle]['title'], updateApi: (params) {
+                                                                                  if(params.isNotEmpty) {
+                                                                                    ref
+                                                                                        .read(growControllerProvider.notifier)
+                                                                                        .updateTransactionDonate({
+                                                                                      "amount": params['amount'],
+                                                                                      "detail_type": growPriceTitle[indexTitle]['type'].toString()
+                                                                                    }, growDetail['id']);
+                                                                                  }
+                                                                              },),
+                                                                            ) )
                                                                 : null;
                                                           },
                                                         );
                                                       },
                                                     ),
-                                                  ));
+                                                  ): const SizedBox(
+                                                  height: 50,
+                                                  child: Text('Dự án đã kết thúc'),
+                                              ));
                                         },
                                         child: Container(
                                             height: 32,
@@ -717,7 +732,6 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                           children: [
                                             const Icon(
                                                 FontAwesomeIcons.stopwatch,
-                                                color: Colors.black,
                                                 size: 20),
                                             const SizedBox(
                                               width: 9.0,
@@ -726,10 +740,10 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                               padding: const EdgeInsets.only(
                                                   top: 4.0),
                                               child: Text(
-                                                GetTimeAgo.parse(
+                                              due_date == false ?  GetTimeAgo.parse(
                                                   DateTime.parse(
                                                       growDetail['due_date']),
-                                                ),
+                                                ): 'Dự án đã kết thúc',
                                                 textAlign: TextAlign.center,
                                                 style: const TextStyle(
                                                   fontSize: 12.0,
@@ -749,7 +763,6 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                           children: [
                                             const Icon(
                                                 FontAwesomeIcons.solidUser,
-                                                color: Colors.black,
                                                 size: 20),
                                             const SizedBox(
                                               width: 9.0,
@@ -760,22 +773,21 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                               child: RichText(
                                                 text: TextSpan(
                                                   text: 'Dự án của ',
-                                                  style: const TextStyle(
+                                                  style:  TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.w500,
-                                                      color: Colors.black),
+                                                    color: colorWord(context)),
                                                   children: <TextSpan>[
                                                     TextSpan(
                                                         text: growDetail[
                                                                 'account']
                                                             ['display_name'],
-                                                        style: const TextStyle(
+                                                        style:  TextStyle(
                                                             fontSize: 12,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color:
-                                                                Colors.black)),
+                                                            color: colorWord(context))),
                                                   ],
                                                 ),
                                               ),
@@ -792,7 +804,6 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                           children: [
                                             const Icon(
                                                 FontAwesomeIcons.clipboardCheck,
-                                                color: Colors.black,
                                                 size: 20),
                                             const SizedBox(
                                               width: 9.0,
@@ -819,8 +830,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: const [
-                                            Icon(FontAwesomeIcons.earthAmericas,
-                                                color: Colors.black, size: 20),
+                                            Icon(FontAwesomeIcons.earthAmericas, size: 20),
                                             SizedBox(
                                               width: 9.0,
                                             ),
@@ -844,7 +854,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(FontAwesomeIcons.bullseye,
-                                              color: Colors.black, size: 20),
+                                              size: 20),
                                           const SizedBox(
                                             width: 9.0,
                                           ),
@@ -854,19 +864,19 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                             child: RichText(
                                               text: TextSpan(
                                                 text: 'Số vốn cần gọi ',
-                                                style: const TextStyle(
+                                                style:  TextStyle(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.w500,
-                                                    color: Colors.black),
+                                                    color: colorWord(context)),
                                                 children: <TextSpan>[
                                                   TextSpan(
                                                       text:
                                                           '${convertNumberToVND(growDetail['target_value'] ~/ 1)} VNĐ',
-                                                      style: const TextStyle(
+                                                      style:  TextStyle(
                                                           fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Colors.black)),
+                                                          color: colorWord(context))),
                                                 ],
                                               ),
                                             ),
@@ -908,26 +918,25 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                     RichText(
                                                       text: TextSpan(
                                                         text: 'Đã ủng hộ được ',
-                                                        style: const TextStyle(
+                                                        style:  TextStyle(
                                                             fontSize: 12,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                             color:
-                                                                Colors.black),
+                                                            colorWord(context)),
                                                         children: <TextSpan>[
                                                           TextSpan(
                                                               text: '${convertNumberToVND(growDetail['real_value'] ~/ 1)} VNĐ',
-                                                              style: const TextStyle(
+                                                              style: TextStyle(
                                                                   fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
-                                                                  color: Colors
-                                                                      .black)),
+                                                                  color: colorWord(context))),
                                                         ],
                                                       ),
                                                     ),
-                                                    Text(' ${valueLinearProgressBar ~/ 1}%')
+                                                    Text('${valueLinearProgressBar == 0 ? 0 : valueLinearProgressBar.toStringAsFixed(2)}%')
                                                   ],
                                                 ),
                                               )
@@ -1028,7 +1037,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                     ],
                   ),
                 ),
-                !growDetail['project_relationship']['host_project']  ? Visibility(
+                !growDetail['project_relationship']['host_project'] && due_date == false ? Visibility(
                   visible: _isVisible,
                   child: Positioned(
                     bottom: 0,
@@ -1074,10 +1083,15 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                   bottom: MediaQuery.of(context)
                                                       .viewInsets
                                                       .bottom),
-                                              child: ModalDonate(
-                                                  data: growDetail,
-                                                  dataModal: button),
-                                            ));
+                                              child: ModalPayment(title: growPriceTitle[indexButton]['title'], buttonTitle: growPriceTitle[indexButton]['title'], updateApi: (params) {
+                                                ref
+                                                    .read(growControllerProvider.notifier)
+                                                    .updateTransactionDonate({
+                                                  "amount": params['amount'],
+                                                  "detail_type": growPriceTitle[indexButton]['type'].toString()
+                                                }, growDetail['id']);
+                                              },),
+                                            )) ;
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1142,7 +1156,6 @@ class ModalDonate extends ConsumerStatefulWidget {
 class _ModalDonateState extends ConsumerState<ModalDonate> {
   int selectedItemIndex = -1;
   bool _isCustomize = false;
-  String valueGrowPrice = "";
   TextEditingController controller = TextEditingController(text: "");
   @override
   void initState() {
@@ -1168,7 +1181,8 @@ class _ModalDonateState extends ConsumerState<ModalDonate> {
         });
       },
       behavior: HitTestBehavior.opaque,
-      child: SizedBox(
+      child: Container(
+        color: Colors.white,
         height: MediaQuery.of(context).size.height * 0.4,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1341,9 +1355,10 @@ class _ModalDonateState extends ConsumerState<ModalDonate> {
                 ),
               ),
             ),
-            const Divider(
+             Divider(
               height: 20,
               thickness: 1,
+              color: Colors.grey[300]
             ),
             Padding(
               padding: const EdgeInsets.only(

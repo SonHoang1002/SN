@@ -6,7 +6,6 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 @immutable
 class GrowState {
   final List grows;
-  final List growsOwner;
   final List hosts;
   final List posts;
   final List growsSuggest;
@@ -18,7 +17,6 @@ class GrowState {
   const GrowState({
     this.grows = const [],
     this.posts = const [],
-    this.growsOwner = const [],
     this.hosts = const [],
     this.growsSuggest = const [],
     this.detailGrow = const {},
@@ -30,7 +28,6 @@ class GrowState {
   GrowState copyWith({
     List grows = const [],
     List posts = const [],
-    List growsOwner = const [],
     List hosts = const [],
     List growsSuggest = const [],
     dynamic detailGrow = const {},
@@ -41,7 +38,6 @@ class GrowState {
     return GrowState(
       grows: grows,
       posts: posts,
-      growsOwner: growsOwner,
       hosts: hosts,
       growsSuggest: growsSuggest,
       detailGrow: detailGrow,
@@ -53,7 +49,7 @@ class GrowState {
 }
 
 final growControllerProvider =
-StateNotifierProvider.autoDispose<GrowController, GrowState>((ref) {
+    StateNotifierProvider.autoDispose<GrowController, GrowState>((ref) {
   ref.read(meControllerProvider);
   return GrowController();
 });
@@ -72,10 +68,13 @@ class GrowController extends StateNotifier<GrowState> {
               : newGrows,
           hosts: state.hosts,
           posts: state.posts,
-          growsOwner: state.growsOwner,
           detailGrow: state.detailGrow,
           growTransactions: state.growTransactions,
-          isMore: params['limit'] != null ? response.length < params['limit'] ? false : true : false,
+          isMore: params['limit'] != null
+              ? response.length < params['limit']
+                  ? false
+                  : true
+              : false,
           growsSuggest: state.growsSuggest);
     } else {
       final newGrows =
@@ -86,25 +85,9 @@ class GrowController extends StateNotifier<GrowState> {
               ? [...state.grows, ...newGrows]
               : newGrows,
           posts: state.posts,
-          growsOwner: state.growsOwner,
           detailGrow: state.detailGrow,
           growTransactions: state.growTransactions,
           isMore: false,
-          growsSuggest: state.growsSuggest);
-    }
-  }
-
-  getListOwnerGrow(params) async {
-    List response = await GrowApi().getListGrowApi(params);
-    if (response.isNotEmpty) {
-      state = state.copyWith(
-          growsOwner: [...response],
-          grows: state.grows,
-          posts: state.posts,
-          hosts: state.hosts,
-          detailGrow: state.detailGrow,
-          growTransactions: state.growTransactions,
-          isMore: state.isMore,
           growsSuggest: state.growsSuggest);
     }
   }
@@ -115,7 +98,6 @@ class GrowController extends StateNotifier<GrowState> {
       state = state.copyWith(
           growsSuggest: [...response],
           posts: state.posts,
-          growsOwner: state.growsOwner,
           grows: state.grows,
           hosts: state.hosts,
           growTransactions: state.growTransactions,
@@ -131,7 +113,6 @@ class GrowController extends StateNotifier<GrowState> {
           grows: state.grows,
           detailGrow: response,
           posts: state.posts,
-          growsOwner: state.growsOwner,
           hosts: state.hosts,
           isMore: state.isMore,
           growTransactions: state.growTransactions,
@@ -139,24 +120,24 @@ class GrowController extends StateNotifier<GrowState> {
     }
   }
 
-  updateStatusGrow(id, data) async {
-    if (data) {
-      var res = await GrowApi().statusGrowApi(id);
-    } else {
-      var res = await GrowApi().deleteStatusGrowApi(id);
-    }
-    var indexEventUpdate =
+  void updateStatusGrow(id, data) {
+    final growApi = GrowApi();
+    data ? growApi.statusGrowApi(id) : growApi.deleteStatusGrowApi(id);
+    final indexEventUpdate =
         state.grows.indexWhere((element) => element['id'] == id.toString());
-    var eventUpdate = state.grows[indexEventUpdate];
-    eventUpdate['project_relationship']['follow_project'] = data;
+    final eventUpdate = {
+      ...state.grows[indexEventUpdate],
+      'project_relationship': {
+        ...state.grows[indexEventUpdate]['project_relationship'],
+        'follow_project': data
+      }
+    };
+
     state = state.copyWith(
-        grows: state.grows.sublist(0, indexEventUpdate) +
-            [eventUpdate] +
-            state.grows.sublist(indexEventUpdate + 1),
+        grows: [...state.grows]..[indexEventUpdate] = eventUpdate,
         hosts: state.hosts,
         detailGrow: state.detailGrow,
         posts: state.posts,
-        growsOwner: state.growsOwner,
         isMore: state.isMore,
         growTransactions: state.growTransactions,
         growsSuggest: state.growsSuggest);
@@ -166,7 +147,7 @@ class GrowController extends StateNotifier<GrowState> {
     if (data) {
       await GrowApi().statusGrowApi(id);
     } else {
-     await GrowApi().deleteStatusGrowApi(id);
+      await GrowApi().deleteStatusGrowApi(id);
     }
     var indexEventUpdate = state.growsSuggest
         .indexWhere((element) => element['id'] == id.toString());
@@ -179,7 +160,6 @@ class GrowController extends StateNotifier<GrowState> {
         grows: state.grows,
         detailGrow: state.detailGrow,
         posts: state.posts,
-        growsOwner: state.growsOwner,
         isMore: state.isMore,
         growTransactions: state.growTransactions,
         hosts: state.hosts);
@@ -193,7 +173,6 @@ class GrowController extends StateNotifier<GrowState> {
           posts: state.posts,
           grows: state.grows,
           detailGrow: state.detailGrow,
-          growsOwner: state.growsOwner,
           isMore: state.isMore,
           growTransactions: state.growTransactions,
           growsSuggest: state.growsSuggest);
@@ -206,7 +185,6 @@ class GrowController extends StateNotifier<GrowState> {
       state = state.copyWith(
           growTransactions: response,
           hosts: state.hosts,
-          growsOwner: state.growsOwner,
           posts: state.posts,
           grows: state.grows,
           detailGrow: state.detailGrow,
@@ -222,7 +200,6 @@ class GrowController extends StateNotifier<GrowState> {
           posts: [...response],
           growTransactions: response,
           hosts: state.hosts,
-          growsOwner: state.growsOwner,
           grows: state.grows,
           detailGrow: state.detailGrow,
           isMore: state.isMore,
@@ -232,17 +209,18 @@ class GrowController extends StateNotifier<GrowState> {
 
   updateTransactionDonate(data, id) async {
     var response = await GrowApi().transactionDonateApi(id, data);
-    if (response.isNotEmpty) {
+    if (response != null) {
+      // Success
       state = state.copyWith(
-          updateGrowTransactions: response,
-          growTransactions: state.growTransactions,
-          hosts: state.hosts,
-          grows: state.grows,
-          posts: state.posts,
-          growsOwner: state.growsOwner,
-          detailGrow: state.detailGrow,
-          isMore: state.isMore,
-          growsSuggest: state.growsSuggest);
+        updateGrowTransactions: response,
+        growTransactions: state.growTransactions,
+        hosts: state.hosts,
+        grows: state.grows,
+        posts: state.posts,
+        detailGrow: state.detailGrow,
+        isMore: state.isMore,
+        growsSuggest: state.growsSuggest,
+      );
     }
   }
 }

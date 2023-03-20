@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:provider/provider.dart' as pv;
 
 class CardComponents extends StatelessWidget {
   final dynamic buttonCard;
@@ -25,16 +27,19 @@ class CardComponents extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    final theme = pv.Provider.of<ThemeManager>(context);
+
     return SafeArea(
       top: false,
       bottom: false,
       child: Card(
-        shape: const RoundedRectangleBorder(
+        color: theme.isDarkMode ? Colors.grey.shade900 : Colors.white,
+        shape:  RoundedRectangleBorder(
             side: BorderSide(
-              color: Colors.grey,
+              color: theme.isDarkMode ? Colors.black.withOpacity(0.5): Colors.grey,
               width: 0.5,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(15))),
+            borderRadius: const BorderRadius.all(Radius.circular(15))),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,

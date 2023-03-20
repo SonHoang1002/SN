@@ -22,7 +22,7 @@ List eventMenu = [
     "label": "Khám phá",
   },
   {
-    "key": "event_will_join",
+    "key": "event_going",
     "label": "Sẽ tham gia",
   },
   {

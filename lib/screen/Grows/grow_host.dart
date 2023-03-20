@@ -86,8 +86,8 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                                   grows[indexOwner]['title'],
                                   maxLines: 2,
                                   style: const TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w800,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),

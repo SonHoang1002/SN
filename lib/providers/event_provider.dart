@@ -89,7 +89,6 @@ class EventController extends StateNotifier<EventState> {
   }
   getDetailEvent(id) async {
     var response = await EventApi().getEventDetailApi(id);
-    print(response);
     if (response.isNotEmpty) {
       state = state.copyWith(
           eventDetail: response,
@@ -136,37 +135,91 @@ class EventController extends StateNotifier<EventState> {
     }
   }
 
-  updateStatusEvent(id, data) async {
-    var res = await EventApi().statusEventApi(id, data);
-    var indexEventUpdate =
-        state.events.indexWhere((element) => element['id'] == id.toString());
-    var eventUpdate = state.events[indexEventUpdate];
-    eventUpdate['event_relationship']['status'] = res['status'] ?? '';
+  updateStatusEvent(id, data) {
+    EventApi().statusEventApi(id, data);
+    final index = state.events.indexWhere((element) => element['id'] == id.toString());
+    final event = state.events[index];
+    final updatedEvent = {
+      ...event,
+      'event_relationship': {
+        ...event['event_relationship'],
+        'status': data['status'] ?? '',
+      },
+    };
     state = state.copyWith(
-        events: state.events.sublist(0, indexEventUpdate) +
-            [eventUpdate] +
-            state.events.sublist(indexEventUpdate + 1),
+      events: [
+        ...state.events.sublist(0, index),
+        updatedEvent,
+        ...state.events.sublist(index + 1),
+      ],
+      hosts: state.hosts,
+      eventsOwner: state.eventsOwner,
+      eventDetail: state.eventDetail,
+      eventsSuggested: state.eventsSuggested,
+    );
+  }
+  void updateStatusEventDetail(id, data) {
+     EventApi().statusEventApi(id, data);
+    state = state.copyWith(
+        events: state.events,
         hosts: state.hosts,
         eventsOwner: state.eventsOwner,
-        eventDetail: state.eventDetail,
-        eventsSuggested: state.eventsSuggested);
-  }
-  updateOwnerStatusEvent(id, data) async {
-    var res = await EventApi().statusEventApi(id, data);
-    var indexEventUpdate =
-    state.eventsOwner.indexWhere((element) => element['id'] == id.toString());
-    var eventUpdate = state.eventsOwner[indexEventUpdate];
-    eventUpdate['event_relationship']['status'] = res['status'] ?? '';
-    state = state.copyWith(
-        eventsOwner: state.eventsOwner.sublist(0, indexEventUpdate) +
-            [eventUpdate] +
-            state.eventsOwner.sublist(indexEventUpdate + 1),
-        hosts: state.hosts,
-        events: state.events,
-        eventDetail: state.eventDetail,
+        eventDetail: {
+          ...state.eventDetail,
+          "event_relationship": {
+            ...state.eventDetail["event_relationship"],
+            "status": data["status"]
+          }
+        },
         eventsSuggested: state.eventsSuggested);
   }
 
+  void updateStatusEventSuggested(id, data) {
+    EventApi().statusEventApi(id, data);
+    final index = state.eventsSuggested.indexWhere((element) => element['id'] == id.toString());
+    final eventsSuggested = state.eventsSuggested[index];
+    final updatedEvent = {
+      ...eventsSuggested,
+      'event_relationship': {
+        ...eventsSuggested['event_relationship'],
+        'status': data['status'] ?? '',
+      },
+    };
+    state = state.copyWith(
+      eventsSuggested: [
+        ...state.eventsSuggested.sublist(0, index),
+        updatedEvent,
+        ...state.eventsSuggested.sublist(index + 1),
+      ],
+      hosts: state.hosts,
+      eventsOwner: state.eventsOwner,
+      eventDetail: state.eventDetail,
+      events: state.events,
+    );
+  }
+  void updateStatusEvents(id, data) {
+    EventApi().statusEventApi(id, data);
+    final index = state.eventsOwner.indexWhere((element) => element['id'] == id.toString());
+    final eventsOwner = state.eventsOwner[index];
+    final updatedEvent = {
+      ...eventsOwner,
+      'event_relationship': {
+        ...eventsOwner['event_relationship'],
+        'status': data['status'] ?? '',
+      },
+    };
+    state = state.copyWith(
+      eventsOwner: [
+        ...state.eventsOwner.sublist(0, index),
+        updatedEvent,
+        ...state.eventsOwner.sublist(index + 1),
+      ],
+      hosts: state.hosts,
+      eventsSuggested: state.eventsSuggested,
+      eventDetail: state.eventDetail,
+      events: state.events,
+    );
+  }
   refreshListEvent(params) async {
     List response = await EventApi().getListEventApi(params);
     if (response.isNotEmpty) {
