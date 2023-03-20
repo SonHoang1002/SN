@@ -101,16 +101,12 @@ class _MomentVideoState extends State<MomentVideo>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    // print('response $position');
-
     return VisibilityDetector(
       key: Key('moment_video_${widget.moment['id']}'),
       onVisibilityChanged: (visibilityInfo) {
         if (mounted) {
           setState(() {
-            isVisible = visibilityInfo.visibleFraction > 0;
+            isVisible = visibilityInfo.visibleFraction > 0.5;
             if (isVisible) {
               videoPlayerController.play();
             } else {

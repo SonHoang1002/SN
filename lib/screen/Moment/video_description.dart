@@ -1,19 +1,19 @@
 import 'dart:math';
 
-import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/screen/Moment/moment_page_hashtag.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_page_profile.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
+import 'package:social_network_app_mobile/widget/expandable_text.dart';
 import 'package:social_network_app_mobile/widget/screen_share.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class VideoDescription extends StatefulWidget {
   final dynamic moment;
@@ -45,6 +45,7 @@ class _VideoDescriptionState extends State<VideoDescription>
   Widget build(BuildContext context) {
     var account = widget.moment['account'];
     var page = widget.moment['page'];
+
     final size = MediaQuery.of(context).size;
     int reactionsCount = widget.moment['favourites_count'] ?? 0;
 
@@ -140,31 +141,20 @@ class _VideoDescriptionState extends State<VideoDescription>
                         const SizedBox(
                           height: 8,
                         ),
-                        ExpandableText(
-                          widget.moment['content'],
-                          expandText: 'Xem thêm',
-                          collapseText: 'Thu gọn',
-                          style: const TextStyle(
-                              fontSize: 13, color: white, height: 1.5),
-                          maxLines: 3,
+                        ExpandableTextContent(
+                          content: widget.moment['content'],
                           linkColor: Colors.white,
-                          animation: true,
-                          collapseOnTextTap: true,
-                          onHashtagTap: (name) => {},
+                          styleContent: const TextStyle(
+                              fontSize: 13, color: white, height: 1.5),
                           hashtagStyle: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.w600),
-                          onMentionTap: (username) => {},
-                          mentionStyle: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
-                          onUrlTap: (url) async {
-                            if (await canLaunchUrl(Uri.parse(url))) {
-                              await launchUrl(Uri.parse(url));
-                            } else {
-                              return;
-                            }
+                          handleHashtag: (name) {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) =>
+                                        MomentPageHashtag(hashtag: name)));
                           },
-                          urlStyle: const TextStyle(color: secondaryColor),
                         ),
                         const SizedBox(
                           height: 8,

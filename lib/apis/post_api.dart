@@ -75,4 +75,14 @@ class PostApi {
     return await Api()
         .getRequestBase('/api/v1/statuses/$idPost/reblog', params);
   }
+
+  Future getListMomentUser(idUser) async {
+    return await Api().getRequestBase(
+        '/api/v1/accounts/$idUser/statuses?post_type_moment=true', null);
+  }
+
+  Future getListMomentPage(idPage) async {
+    return await Api().getRequestBase(
+        '/api/v1/accounts/$idPage/statuses?post_type_moment=true', null);
+  }
 }

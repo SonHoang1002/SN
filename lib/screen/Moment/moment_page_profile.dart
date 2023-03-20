@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:social_network_app_mobile/apis/user_page_api.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -33,20 +33,13 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
     scrollController = ScrollController();
 
     fetchVideoMoment({
-      'media_type': 'video',
-      'post_type': 'moment',
       'limit': 18,
     });
 
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        fetchVideoMoment({
-          'media_type': 'video',
-          'post_type': 'moment',
-          'limit': 6,
-          'max_id': listVideos.last['id']
-        });
+        fetchVideoMoment({'limit': 6, 'max_id': listVideos.last['id']});
       }
     });
   }
@@ -58,15 +51,21 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
   }
 
   fetchVideoMoment(params) async {
+    if (isMore == false) return;
     setState(() {
       isLoading = true;
     });
-    var response =
-        await UserPageApi().getUserMedia(widget.object['id'], params);
+    dynamic response;
+    if (widget.objectType == 'page') {
+      response = await PostApi().getListMomentPage(widget.object['id']);
+    } else {
+      response = await PostApi().getListMomentUser(widget.object['id']);
+    }
     if (response != null) {
       setState(() {
         isLoading = false;
         listVideos = listVideos + response;
+        isMore = response.length < params['limit'] ? false : true;
       });
     }
   }
@@ -170,20 +169,20 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
                       Navigator.push(
                           context,
                           CupertinoPageRoute(
-                              builder: (context) => MomentPageview(
-                                    momentRender: listVideos,
-                                    handlePageChange: (value) {},
-                                    initialPage: index,
+                              builder: (context) => Material(
+                                    child: MomentPageview(
+                                      momentRender: listVideos,
+                                      handlePageChange: (value) {},
+                                      initialPage: index,
+                                    ),
                                   )));
                     },
                     child: Stack(
                       children: [
-                        Hero(
-                          tag: listVideos[index]['id'],
-                          child: ImageCacheRender(
-                            path: listVideos[index]['preview_url'],
-                            width: (MediaQuery.of(context).size.width - 4) / 3,
-                          ),
+                        ImageCacheRender(
+                          path: listVideos[index]['media_attachments'][0]
+                              ['preview_url'],
+                          width: (MediaQuery.of(context).size.width - 4) / 3,
                         ),
                         Positioned(
                             bottom: 5,

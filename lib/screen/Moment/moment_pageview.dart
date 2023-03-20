@@ -7,6 +7,7 @@ class MomentPageview extends StatelessWidget {
   final List momentRender;
   final Function handlePageChange;
   final int? initialPage;
+
   const MomentPageview(
       {Key? key,
       required this.momentRender,
@@ -17,6 +18,7 @@ class MomentPageview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PreloadPageView.builder(
+      physics: const CustomPageViewScrollPhysics(),
       controller: PreloadPageController(initialPage: initialPage ?? 0),
       itemCount: momentRender.length,
       scrollDirection: Axis.vertical,
@@ -37,4 +39,21 @@ class MomentPageview extends StatelessWidget {
       },
     );
   }
+}
+
+class CustomPageViewScrollPhysics extends ScrollPhysics {
+  const CustomPageViewScrollPhysics({ScrollPhysics? parent})
+      : super(parent: parent);
+
+  @override
+  CustomPageViewScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return CustomPageViewScrollPhysics(parent: buildParent(ancestor));
+  }
+
+  @override
+  SpringDescription get spring => const SpringDescription(
+        mass: 80,
+        stiffness: 100,
+        damping: 1,
+      );
 }
