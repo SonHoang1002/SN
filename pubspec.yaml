@@ -92,6 +92,15 @@ dependencies:
   flutter_video_newfeed: ^1.0.2
   flutter_page_indicator: ^0.0.3
   marquee: ^2.2.3
+  gesture_x_detector: ^1.0.0
+  helpers: ^1.1.4
+  http: ^0.13.4
+  path_provider: ^2.0.6
+  volume_watcher: ^2.0.1
+  wakelock: ^0.6.1+2
+  video_player_web_hls: ^0.1.11+2
+  native_device_orientation: ^1.1.4
+  step_progress_indicator: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -158,6 +167,7 @@ flutter:
     - assets/loading.gif
     - assets/IconCoin.svg
     - assets/disc.png
+    - assets/Payment.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
