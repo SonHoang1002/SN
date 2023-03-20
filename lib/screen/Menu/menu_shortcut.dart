@@ -33,6 +33,7 @@ class MenuShortcut extends StatelessWidget {
                                     width: 65,
                                     height: 65,
                                     isGroup: true,
+                                    object: drawers[index],
                                     path: drawers[index]['avatar_media'] != null
                                         ? drawers[index]['avatar_media']
                                             ['preview_url']

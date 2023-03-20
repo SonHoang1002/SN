@@ -57,7 +57,7 @@ class _PostContentState extends State<PostContent> {
                   widget.post['content'],
                   expandText: 'Xem thêm',
                   collapseText: 'Thu gọn',
-                  style: const TextStyle(fontSize: 13),
+                  style: const TextStyle(fontSize: 14),
                   maxLines: 5,
                   linkColor: Theme.of(context).textTheme.bodyLarge!.color,
                   linkStyle: const TextStyle(fontWeight: FontWeight.w500),

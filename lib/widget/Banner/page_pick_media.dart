@@ -45,7 +45,7 @@ class _PagePickMediaState extends State<PagePickMedia> {
       isLoading = true;
     });
     var response = await UserPageApi().getUserMedia(widget.user['id'], params);
-    if (response != null) {
+    if (response != null && mounted) {
       setState(() {
         isMore = response.length < params['limit'] ? false : true;
         isLoading = false;
@@ -82,9 +82,10 @@ class _PagePickMediaState extends State<PagePickMedia> {
               )
             : SingleChildScrollView(
                 controller: scrollController,
+                scrollDirection: Axis.vertical,
                 child: GridView.builder(
                     shrinkWrap: true,
-                    primary: true,
+                    primary: false,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisSpacing: 4,
@@ -99,10 +100,8 @@ class _PagePickMediaState extends State<PagePickMedia> {
                                 Navigator.pop(context);
                                 widget.handleAction('image', medias[index]);
                               },
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: ImageCacheRender(
-                                      path: medias[index]['url'])),
+                              child:
+                                  ImageCacheRender(path: medias[index]['url']),
                             )
                           : const Center(
                               child: CupertinoActivityIndicator(),

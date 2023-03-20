@@ -16,6 +16,7 @@ class UserItem extends StatelessWidget {
         AvatarSocial(
             width: 40,
             height: 40,
+            object: user,
             path: user['avatar_media'] != null
                 ? user['avatar_media']['preview_url']
                 : linkAvatarDefault),

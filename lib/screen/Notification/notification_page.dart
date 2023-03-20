@@ -189,6 +189,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                                 : AvatarSocial(
                                     width: 60,
                                     height: 60,
+                                    object: notifications[index]['account'],
                                     path:
                                         renderLinkAvatar(notifications[index])),
                             Positioned(

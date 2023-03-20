@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -132,15 +131,15 @@ class _VideoDescriptionState extends State<VideoDescription>
                           widget.moment['content'],
                           expandText: 'Xem thêm',
                           collapseText: 'Thu gọn',
-                          style: const TextStyle(fontSize: 13, color: white),
+                          style: const TextStyle(
+                              fontSize: 13, color: white, height: 1.5),
                           maxLines: 3,
                           linkColor: Colors.white,
                           animation: true,
                           collapseOnTextTap: true,
                           onHashtagTap: (name) => {},
                           hashtagStyle: const TextStyle(
-                            color: secondaryColor,
-                          ),
+                              color: Colors.white, fontWeight: FontWeight.w600),
                           onMentionTap: (username) => {},
                           mentionStyle: const TextStyle(
                             fontWeight: FontWeight.w500,
@@ -201,6 +200,7 @@ class _VideoDescriptionState extends State<VideoDescription>
                             child: AvatarSocial(
                                 width: 45,
                                 height: 45,
+                                object: page ?? account,
                                 path: page != null
                                     ? page['avatar_media'] != null
                                         ? page['avatar_media']['preview_url']
@@ -275,6 +275,7 @@ class _VideoDescriptionState extends State<VideoDescription>
                                 child: AvatarSocial(
                                     width: 20,
                                     height: 20,
+                                    object: page ?? account,
                                     path: page != null
                                         ? page['avatar_media'] != null
                                             ? page['avatar_media']

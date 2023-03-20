@@ -35,6 +35,7 @@ class SearchItem extends StatelessWidget {
                 AvatarSocial(
                     width: 40.0,
                     height: 40.0,
+                    object: item,
                     path: item['avatar_media']?['preview_url'] ??
                         item['banner']?['preview_url'] ??
                         linkAvatarDefault),

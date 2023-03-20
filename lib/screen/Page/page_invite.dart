@@ -31,6 +31,7 @@ class PageInvite extends StatelessWidget {
                         AvatarSocial(
                             width: 50,
                             height: 50,
+                            object: pagesLike[index]['page'],
                             path:
                                 pagesLike[index]['page']['avatar_media'] != null
                                     ? pagesLike[index]['page']['avatar_media']

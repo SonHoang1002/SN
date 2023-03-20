@@ -149,7 +149,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
             filesRender.isEmpty
                 ? Container(
                     margin: const EdgeInsets.all(15.0),
-                    child: const Text("Không có hình ảnh nào để hiện thị"),
+                    child: const Text("Không có hình ảnh nào để hiển thị"),
                   )
                 : Expanded(
                     child: ListView.builder(
