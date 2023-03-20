@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:preload_page_view/preload_page_view.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
-import 'package:social_network_app_mobile/screen/Moment/moment_video.dart';
+import 'package:social_network_app_mobile/screen/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import 'drawer_moment.dart';
-import 'video_description.dart';
 
 class Moment extends ConsumerStatefulWidget {
   final bool? isBack;
@@ -21,6 +19,9 @@ class _MomentState extends ConsumerState<Moment>
   late TabController _tabController;
   PageController controller =
       PageController(viewportFraction: 1, keepPage: true);
+  int _currentPageIndex = 0;
+  bool isPlay = false;
+
   @override
   void initState() {
     super.initState();
@@ -55,19 +56,18 @@ class _MomentState extends ConsumerState<Moment>
     List momentFollow = ref.watch(momentControllerProvider).momentFollow;
 
     return Scaffold(
-        drawerEnableOpenDragGesture: false,
         drawer: const Drawer(
           child: DrawerMoment(),
         ),
         body: Stack(children: <Widget>[
           TabBarView(controller: _tabController, children: [
             if (mounted)
-              PreloadPageView.builder(
-                controller: PreloadPageController(initialPage: 0),
-                itemCount: momentFollow.length,
-                scrollDirection: Axis.vertical,
-                preloadPagesCount: 5,
-                onPageChanged: (value) {
+              MomentPageview(
+                momentRender: momentFollow,
+                handlePageChange: (value) {
+                  setState(() {
+                    _currentPageIndex = value;
+                  });
                   if (value == momentFollow.length - 5) {
                     ref
                         .read(momentControllerProvider.notifier)
@@ -77,26 +77,12 @@ class _MomentState extends ConsumerState<Moment>
                     });
                   }
                 },
-                itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      MomentVideo(moment: momentFollow[index]),
-                      Positioned(
-                          bottom: 15,
-                          left: 15,
-                          child: VideoDescription(moment: momentFollow[index]))
-                    ],
-                  );
-                },
               )
             else
               Container(),
-            PreloadPageView.builder(
-              controller: PreloadPageController(initialPage: 0),
-              itemCount: momentSuggests.length,
-              scrollDirection: Axis.vertical,
-              preloadPagesCount: 5,
-              onPageChanged: (value) {
+            MomentPageview(
+              momentRender: momentSuggests,
+              handlePageChange: (value) {
                 if (value == momentSuggests.length - 5) {
                   ref
                       .read(momentControllerProvider.notifier)
@@ -106,18 +92,7 @@ class _MomentState extends ConsumerState<Moment>
                   });
                 }
               },
-              itemBuilder: (context, index) {
-                return Stack(
-                  children: [
-                    MomentVideo(moment: momentSuggests[index]),
-                    Positioned(
-                        bottom: 15,
-                        left: 15,
-                        child: VideoDescription(moment: momentSuggests[index]))
-                  ],
-                );
-              },
-            ),
+            )
           ]),
           Positioned(
               //Place it at the top, and not use the entire screen

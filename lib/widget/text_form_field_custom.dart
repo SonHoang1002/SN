@@ -47,38 +47,39 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      focusNode: widget.focusNode,
-      controller: widget.textController,
-      minLines: widget.minLines,
-      maxLines: widget.maxLines,
-      initialValue: widget.initialValue,
-      autofocus: widget.autofocus,
-      textAlignVertical: TextAlignVertical.center,
-      keyboardType: TextInputType.multiline,
-      cursorColor: Theme.of(context).textTheme.displayLarge?.color,
-      onChanged: (value) {
-        widget.handleGetValue!(value);
-      },
-      decoration: InputDecoration(
-        isDense: widget.isDense ?? false,
-        border: OutlineInputBorder(
-            borderSide: const BorderSide(width: 1, color: secondaryColor),
-            borderRadius: BorderRadius.circular(12.0)),
-        contentPadding:
-            const EdgeInsets.only(left: 5, bottom: 0, top: 0, right: 0),
-        suffixIcon: widget.suffixIcon,
-        fillColor: Colors.red,
-        hintText: widget.hintText,
-        hintStyle: const TextStyle(fontSize: 13),
-        labelText: widget.label,
-        focusColor: primaryColor,
-        helperText: widget.helperText,
-        errorText: widget.errorText,
-        focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 1, color: secondaryColor),
-            borderRadius: BorderRadius.circular(12.0)),
-      ),
-    );
+    return Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        color: Theme.of(context).colorScheme.background,
+        child: TextFormField(
+          focusNode: widget.focusNode,
+          controller: widget.textController,
+          minLines: widget.minLines,
+          maxLines: widget.maxLines,
+          initialValue: widget.initialValue,
+          autofocus: widget.autofocus,
+          textAlignVertical: TextAlignVertical.center,
+          keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
+          cursorColor: Theme.of(context).textTheme.displayLarge?.color,
+          onChanged: (value) {
+            widget.handleGetValue!(value);
+          },
+          decoration: InputDecoration(
+            isDense: widget.isDense ?? false,
+            border: InputBorder.none,
+            contentPadding:
+                const EdgeInsets.only(left: 5, bottom: 5, top: 5, right: 0),
+            suffixIcon: widget.suffixIcon,
+            hintText: widget.hintText,
+            hintStyle: const TextStyle(fontSize: 14),
+            labelText: widget.label,
+            focusColor: primaryColor,
+            helperText: widget.helperText,
+            errorText: widget.errorText,
+          ),
+        ));
   }
 }

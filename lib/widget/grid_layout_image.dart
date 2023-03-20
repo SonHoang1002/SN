@@ -68,11 +68,14 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                             medias[0]['file'],
                             fit: BoxFit.cover,
                           )
-                        : FadeInImage.memoryNetwork(
-                            placeholder: kTransparentImage,
-                            image: medias[0]['url'],
-                            imageErrorBuilder: (context, error, stackTrace) =>
-                                const SizedBox(),
+                        : Hero(
+                            tag: medias[0]['id'],
+                            child: FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: medias[0]['url'],
+                              imageErrorBuilder: (context, error, stackTrace) =>
+                                  const SizedBox(),
+                            ),
                           ),
                   ),
                 ),
@@ -226,7 +229,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 shrinkWrap: true,
                 crossAxisCount: 4,
                 crossAxisSpacing: 3,
-                childAspectRatio: 0.315,
+                childAspectRatio: 0.337,
                 children: List.generate(
                     medias.length,
                     (index) => Column(
@@ -240,7 +243,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                                   handlePress: widget.handlePress,
                                   flickMultiManager: flickMultiManager,
                                   crossAxisCount: 1,
-                                  aspectRatio: 0.35,
+                                  aspectRatio: 0.37,
                                   medias: [medias[index]]),
                             ),
                           ],

@@ -1,7 +1,6 @@
-import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:social_network_app_mobile/widget/expandable_text.dart';
 
 class PostContent extends StatefulWidget {
   final dynamic post;
@@ -53,33 +52,15 @@ class _PostContentState extends State<PostContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ExpandableText(
-                  widget.post['content'],
-                  expandText: 'Xem thêm',
-                  collapseText: 'Thu gọn',
-                  style: const TextStyle(fontSize: 14),
-                  maxLines: 5,
-                  linkColor: Theme.of(context).textTheme.bodyLarge!.color,
-                  linkStyle: const TextStyle(fontWeight: FontWeight.w500),
-                  animation: true,
-                  collapseOnTextTap: true,
-                  onHashtagTap: (name) => {},
+                ExpandableTextContent(
+                  content: widget.post['content'],
+                  linkColor:
+                      Theme.of(context).textTheme.bodyLarge!.color ?? white,
+                  styleContent: const TextStyle(fontSize: 14),
                   hashtagStyle: const TextStyle(
                     color: secondaryColor,
                   ),
-                  onMentionTap: (username) => {},
-                  mentionStyle: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
-                  onUrlTap: (url) async {
-                    if (await canLaunchUrl(Uri.parse(url))) {
-                      await launchUrl(Uri.parse(url));
-                    } else {
-                      return;
-                    }
-                  },
-                  urlStyle: const TextStyle(color: secondaryColor),
-                ),
+                )
               ],
             ));
       }

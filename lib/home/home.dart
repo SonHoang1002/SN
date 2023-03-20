@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
@@ -30,9 +31,16 @@ class _HomeState extends ConsumerState<Home>
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 2) {
+      showBarModalBottomSheet(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          context: context,
+          builder: (context) => const CreatePost());
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
@@ -46,18 +54,13 @@ class _HomeState extends ConsumerState<Home>
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    List<Widget> pages = const [
-      Feed(),
-      Moment(),
-      CreatePost(),
-      Watch(),
-      Menu()
+    List<Widget> pages = [
+      const Feed(),
+      const Moment(),
+      const SizedBox(),
+      const Watch(),
+      const Menu()
     ];
 
     var meData = ref.watch(meControllerProvider);
