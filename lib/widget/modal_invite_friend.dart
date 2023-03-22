@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/providers/event_provider.dart';
+import 'package:social_network_app_mobile/providers/friend_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 class InviteFriend extends ConsumerStatefulWidget {
   final dynamic inviteFriend;
@@ -20,7 +21,7 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
     Future.delayed(
         Duration.zero,
         () => ref
-            .read(eventControllerProvider.notifier)
+            .read(friendControllerProvider.notifier)
             .getListFriendExcludes(paramsConfig));
   }
 
@@ -31,7 +32,8 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
 
   @override
   Widget build(BuildContext context) {
-    List friendExcludes = ref.watch(eventControllerProvider).friendExcludes;
+    List friendExcludes = ref.watch(friendControllerProvider).friendExcludes;
+
     return SizedBox(
       width: double.infinity,
       child: Expanded(
@@ -42,7 +44,6 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  print(friendExcludes[index]);
                 },
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(
@@ -50,7 +51,7 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
                           ? friendExcludes[index]['avatar_media']['preview_url']
                           : friendExcludes[index]['avatar_static']),
                 ),
-                title: Text(friendExcludes[index]['display_name'], style: const TextStyle(color: Colors.black)),
+                title: Text(friendExcludes[index]['display_name'], style:  TextStyle(color: colorWord(context))),
                 trailing: Container(
                     width: 50,
                     height: 30,
