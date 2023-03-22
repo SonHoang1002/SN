@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_discuss.dart';
@@ -11,6 +12,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
   final dynamic eventDetail;
@@ -200,110 +202,156 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                         }
                                         setState(() {});
                                       },
-                                      child: Container(
-                                          height: 32,
-                                          width: MediaQuery.of(context)
+                                      child: Row(
+                                        children: !eventDetail['event_relationship']['host_event'] ? [
+                                          Container(
+                                              height: 32,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.47,
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                      eventDetail['event_relationship']
+                                                                  ['status'] !=
+                                                              'interested'
+                                                          ? const Color.fromARGB(
+                                                          189, 202, 202, 202)
+                                                          : secondaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  border: Border.all(
+                                                      width: 0.2,
+                                                      color: greyColor)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: const [
+                                                  Icon(FontAwesomeIcons.solidStar,
+                                                      size: 14),
+                                                   SizedBox(
+                                                    width: 5.0,
+                                                  ),
+                                                 Text(
+                                                    'Quan tâm',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 12.0,
+                                                      fontWeight: FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                          const SizedBox(width: 10),
+                                          InkWell(
+                                              onTap: () {
+                                                if (eventDetail['event_relationship']
+                                                ['status'] !=
+                                                    'going') {
+                                                  ref
+                                                      .read(eventControllerProvider
+                                                      .notifier)
+                                                      .updateStatusEventDetail(
+                                                      eventDetail['id'],
+                                                      {'status': 'going'});
+                                                } else {
+                                                  ref
+                                                      .read(eventControllerProvider
+                                                      .notifier)
+                                                      .updateStatusEventDetail(
+                                                      eventDetail['id'],
+                                                      {'status': ''});
+                                                }
+                                              },
+                                              child: Container(
+                                                height: 32,
+                                                width:
+                                                MediaQuery.of(context).size.width *
+                                                    0.3,
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                    eventDetail['event_relationship']
+                                                    ['status'] !=
+                                                        'going'
+                                                        ? const Color.fromARGB(
+                                                        189, 202, 202, 202)
+                                                        : secondaryColor
+                                                    ,
+                                                    borderRadius:
+                                                    BorderRadius.circular(4),
+                                                    border: Border.all(
+                                                        width: 0.2, color: greyColor)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                        eventDetail['event_relationship']
+                                                        ['status'] !=
+                                                            'going'
+                                                            ? FontAwesomeIcons
+                                                            .clipboardQuestion
+                                                            : FontAwesomeIcons
+                                                            .circleCheck,
+                                                        size: 14),
+                                                    const SizedBox(
+                                                      width: 3.0,
+                                                    ),
+                                                    const Text(
+                                                      'Sẽ tham gia',
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w700
+                                                        ,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )) ,
+                                        ] : [ InkWell(
+                                          onTap: () {
+                                            showBarModalBottomSheet(
+                                                context: context,
+                                                backgroundColor: theme.isDarkMode ? Colors.black : Colors.white,
+                                                builder: (context) => const InviteFriend());
+                                          },
+                                          child: Container(
+                                              height: 32,
+                                              width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.47,
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  eventDetail['event_relationship']
-                                                              ['status'] !=
-                                                          'interested'
-                                                      ? const Color.fromARGB(
+                                                  0.8,
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                       const Color.fromARGB(
                                                       189, 202, 202, 202)
-                                                      : secondaryColor,
-                                              borderRadius:
+                                                     ,
+                                                  borderRadius:
                                                   BorderRadius.circular(4),
-                                              border: Border.all(
-                                                  width: 0.2,
-                                                  color: greyColor)),
-                                          child: Row(
-                                            mainAxisAlignment:
+                                                  border: Border.all(
+                                                      width: 0.2,
+                                                      color: greyColor)),
+                                              child: Row(
+                                                mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
-                                              Icon(FontAwesomeIcons.solidStar,
-                                                  size: 14),
-                                               SizedBox(
-                                                width: 5.0,
-                                              ),
-                                             Text(
-                                                'Quan tâm',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                            ],
-                                          ))),
-                                  const SizedBox(width: 10),
-                                  InkWell(
-                                      onTap: () {
-                                        if (eventDetail['event_relationship']
-                                                ['status'] !=
-                                            'going') {
-                                          ref
-                                              .read(eventControllerProvider
-                                                  .notifier)
-                                              .updateStatusEventDetail(
-                                                  eventDetail['id'],
-                                                  {'status': 'going'});
-                                        } else {
-                                          ref
-                                              .read(eventControllerProvider
-                                                  .notifier)
-                                              .updateStatusEventDetail(
-                                                  eventDetail['id'],
-                                                  {'status': ''});
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 32,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                eventDetail['event_relationship']
-                                                            ['status'] !=
-                                                        'going'
-                                                    ? const Color.fromARGB(
-                                                        189, 202, 202, 202)
-                                                    : secondaryColor
-                                                       ,
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            border: Border.all(
-                                                width: 0.2, color: greyColor)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                                eventDetail['event_relationship']
-                                                            ['status'] !=
-                                                        'going'
-                                                    ? FontAwesomeIcons
-                                                        .clipboardQuestion
-                                                    : FontAwesomeIcons
-                                                        .circleCheck,
-                                                size: 14),
-                                            const SizedBox(
-                                              width: 3.0,
-                                            ),
-                                            const Text(
-                                              'Sẽ tham gia',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                fontWeight: FontWeight.w700
-                                                ,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                                children: const [
+                                                  Icon(FontAwesomeIcons.envelope,
+                                                      size: 14),
+                                                  SizedBox(
+                                                    width: 5.0,
+                                                  ),
+                                                  Text(
+                                                    'Mời',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 12.0,
+                                                      fontWeight: FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                        )],
                                       )),
                                   const SizedBox(width: 10),
                                   InkWell(
@@ -684,6 +732,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     ],
                   ),
                 ),
+                !eventDetail['event_relationship']['host_event'] ?
                 Visibility(
                   visible: _isVisible,
                   child: Positioned(
@@ -929,7 +978,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       ),
                     ),
                   ),
-                ),
+                ) : const SizedBox(),
               ],
             )
           : const SizedBox(),

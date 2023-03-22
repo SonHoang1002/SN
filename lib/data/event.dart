@@ -620,6 +620,17 @@ List iconEventCare = [
   },
   {"key": "", "label": "Không tham gia", "icon": FontAwesomeIcons.circleXmark},
 ];
+List iconEventHost = [
+  {
+    "key": "approved",
+    "label": "Chấp nhận",
+  },
+  {
+    "key": "rejected",
+    "label": "Từ chối",
+  },
+  {"key": "pending", "label": "Đang chờ"},
+];
 List iconActionEllipsis = [
   {"key": "share", "label": "Chia sẻ", "icon": FontAwesomeIcons.share},
   {"key": "save", "label": "Lưu", "icon": FontAwesomeIcons.bookmark},

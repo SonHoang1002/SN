@@ -46,7 +46,7 @@ class Api {
       var response = await dio.post(path, data: data);
       return response.data;
     } on DioError catch (e) {
-      print(e.response?.data);
+      print(e.error);
     }
   }
 

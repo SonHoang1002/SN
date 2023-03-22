@@ -14,19 +14,18 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:provider/provider.dart' as pv;
 
-class EventGoing extends ConsumerStatefulWidget {
+class EventInterested extends ConsumerStatefulWidget {
   final dynamic event;
-  const EventGoing({Key? key, this.event}) : super(key: key);
+  const EventInterested({Key? key, this.event}) : super(key: key);
   @override
   // ignore: library_private_types_in_public_api
-  ConsumerState<EventGoing> createState() => _EventGoingState();
+  ConsumerState<EventInterested> createState() => _EventInterestedState();
 }
 
-class _EventGoingState extends ConsumerState<EventGoing> {
+class _EventInterestedState extends ConsumerState<EventInterested> {
   late double width;
   late double height;
-  final scrollController = ScrollController();
-  var paramsConfigOwner = {"limit": 10, "event_account_status": "going"};
+  var paramsConfigOwner = {"limit": 10, "event_account_status": "interested"};
 
 
   @override
@@ -65,7 +64,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
               padding:
               EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
               child: Text(
-                'Sự kiện sẽ tham gia',
+                'Sự kiện đã quan tâm',
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -347,7 +346,6 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                             color: statusEvent !=
                                                 ""
                                                 ? secondaryColor
-                                                .withOpacity(0.45)
                                                 : const Color.fromARGB(
                                                 189, 202, 202, 202),
                                             borderRadius:
@@ -361,18 +359,18 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                           mainAxisAlignment:
                                           MainAxisAlignment
                                               .center,
-                                          children:  [
+                                          children:  const [
                                             Padding(
                                               padding:
-                                              const  EdgeInsets.only(
+                                                EdgeInsets.only(
                                                   bottom: 3.0),
                                               child: Icon(
                                                   FontAwesomeIcons
                                                       .solidStar,
-                                                  color: theme.isDarkMode ? Colors.white : secondaryColor,
+                                                  color: Colors.white,
                                                   size: 14),
                                             ),
-                                            const SizedBox(
+                                             SizedBox(
                                               width: 5.0,
                                             ),
                                             Text(
@@ -383,20 +381,20 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                   fontSize: 12.0,
                                                   fontWeight:
                                                   FontWeight.w700,
-                                                  color: theme.isDarkMode ? Colors.white : secondaryColor
+                                                  color: Colors.white
                                               ),
                                             ),
-                                            const SizedBox(
+                                             SizedBox(
                                               width: 5.0,
                                             ),
                                             Padding(
                                               padding:
-                                             const EdgeInsets.only(
+                                               EdgeInsets.only(
                                                   bottom: 5.0),
                                               child: Icon(
                                                   FontAwesomeIcons
                                                       .sortDown,
-                                                  color: theme.isDarkMode ? Colors.white : secondaryColor,
+                                                  color: Colors.white,
                                                   size: 14),
                                             ),
                                           ],
@@ -407,14 +405,14 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                           mainAxisAlignment:
                                           MainAxisAlignment
                                               .center,
-                                          children:  [
+                                          children:  const [
                                             Icon(
                                                 FontAwesomeIcons
                                                     .circleCheck,
                                                 color:
-                                                theme.isDarkMode ? Colors.white : secondaryColor,
+                                                Colors.white ,
                                                 size: 14),
-                                            const SizedBox(
+                                             SizedBox(
                                               width: 5.0,
                                             ),
                                             Text(
@@ -426,21 +424,21 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                   fontWeight:
                                                   FontWeight
                                                       .w700,
-                                                  color: theme.isDarkMode ? Colors.white : secondaryColor
+                                                  color:  Colors.white
                                               ),
                                             ),
-                                            const SizedBox(
+                                             SizedBox(
                                               width: 5.0,
                                             ),
                                             Padding(
                                               padding:
-                                              const EdgeInsets.only(
+                                               EdgeInsets.only(
                                                   bottom:
                                                   4.0),
                                               child: Icon(
                                                   FontAwesomeIcons
                                                       .sortDown,
-                                                  color: theme.isDarkMode ? Colors.white : secondaryColor,
+                                                  color:  Colors.white,
                                                   size: 14),
                                             )
                                           ],

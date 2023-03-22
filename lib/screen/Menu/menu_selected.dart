@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
 import 'package:social_network_app_mobile/screen/Payment/payment.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recruit_render.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
@@ -156,6 +157,42 @@ class MenuSelected extends StatelessWidget {
                 color: colorWord,
               ),
             ),
+          ],
+        );
+        break;
+      case "job":
+        body = const RecruitRender();
+        buttonAppbar = Row(
+          children: [
+            GestureDetector(
+              onTap: () {},
+              child: const Icon(
+                FontAwesomeIcons.calendarDay,
+                size: 18,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(
+              width: 7.0,
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: const Icon(
+                FontAwesomeIcons.plus,
+                size: 18,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(
+              width: 7.0,
+            ),
+            GestureDetector(
+                onTap: () {},
+                child: const Icon(
+                  FontAwesomeIcons.magnifyingGlass,
+                  size: 18,
+                  color: Colors.black,
+                ))
           ],
         );
         break;

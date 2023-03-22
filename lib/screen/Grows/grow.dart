@@ -14,7 +14,6 @@ class _GrowsState extends State<Grows>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final GlobalKey<ScaffoldState> key = GlobalKey();
 
     return const NotificationListener<ScrollNotification>(
       child: Scaffold(body: GrowRender()),

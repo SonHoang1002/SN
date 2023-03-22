@@ -546,7 +546,6 @@ class _EventCardState extends ConsumerState<EventCard> {
                                 child: CupertinoActivityIndicator())
                             : const SizedBox();
                       }
-                      return null;
                     },
                   )),
                   isMore == true

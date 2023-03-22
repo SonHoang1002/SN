@@ -6,7 +6,10 @@ import 'package:social_network_app_mobile/apis/events_api.dart';
 class EventState {
   final List events;
   final List eventsOwner;
+  final List eventHosts;
   final dynamic eventDetail;
+  final List eventsInvite;
+  final List eventsInviteHost;
   final bool isMore;
   final List hosts;
   final List eventsSuggested;
@@ -14,6 +17,9 @@ class EventState {
   const EventState({
     this.events = const [],
     this.eventDetail = const {},
+    this.eventsInvite = const [],
+    this.eventHosts = const [],
+    this.eventsInviteHost = const [],
     this.eventsOwner = const [],
     this.isMore = true,
     this.hosts = const [],
@@ -23,6 +29,9 @@ class EventState {
   EventState copyWith({
     List events = const [],
     List eventsOwner = const [],
+    List eventHosts = const [],
+    List eventsInvite = const [],
+    List eventsInviteHost = const [],
     dynamic eventDetail = const {},
     bool isMore = true,
     List hosts = const [],
@@ -31,6 +40,9 @@ class EventState {
     return EventState(
       events: events,
       eventDetail: eventDetail,
+      eventHosts: eventHosts,
+      eventsInvite: eventsInvite,
+      eventsInviteHost: eventsInviteHost,
       eventsOwner: eventsOwner,
       isMore: isMore,
       hosts: hosts,
@@ -39,10 +51,11 @@ class EventState {
   }
 }
 
-final eventControllerProvider =
-    StateNotifierProvider<EventController, EventState>(
-        (ref) => EventController());
 
+final eventControllerProvider =
+StateNotifierProvider.autoDispose<EventController, EventState>((ref) {
+  return EventController();
+});
 class EventController extends StateNotifier<EventState> {
   EventController() : super(const EventState());
 
@@ -50,7 +63,7 @@ class EventController extends StateNotifier<EventState> {
     List response = await EventApi().getEventSuggestedApi(params);
     if (response.isNotEmpty) {
       final newEvents =
-      response.where((item) => !state.events.contains(item)).toList();
+          response.where((item) => !state.events.contains(item)).toList();
       state = state.copyWith(
           events: params.containsKey('max_id')
               ? [...state.events, ...newEvents]
@@ -59,15 +72,21 @@ class EventController extends StateNotifier<EventState> {
           hosts: state.hosts,
           eventsOwner: state.eventsOwner,
           eventDetail: state.eventDetail,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventHosts: state.eventHosts,
           eventsSuggested: state.eventsSuggested);
     } else {
       final newEvents =
-      response.where((item) => !state.events.contains(item)).toList();
+          response.where((item) => !state.events.contains(item)).toList();
       state = state.copyWith(
           isMore: false,
           hosts: state.hosts,
           eventDetail: state.eventDetail,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
           eventsSuggested: state.eventsSuggested,
+          eventHosts: state.eventHosts,
           events: params.containsKey('max_id')
               ? [...state.events, ...newEvents]
               : newEvents,
@@ -81,19 +100,69 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           eventsOwner: [...response],
           events: state.events,
+          eventsInvite: state.eventsInvite,
+          eventHosts: state.eventHosts,
+          eventsInviteHost: state.eventsInviteHost,
           eventDetail: state.eventDetail,
           isMore: response.length < params['limit'] ? false : true,
           hosts: state.hosts,
           eventsSuggested: state.eventsSuggested);
+    } else {
+      state = state.copyWith(
+          eventsOwner: [...response],
+          events: state.events,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventDetail: state.eventDetail,
+          eventHosts: state.eventHosts,
+          isMore: false,
+          hosts: state.hosts,
+          eventsSuggested: state.eventsSuggested);
     }
   }
+
+  getListInvite(params) async {
+    var response = await EventApi().getListEventInviteApi(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          eventsInvite: [...response['data']],
+          eventsOwner: state.eventsOwner,
+          events: state.events,
+          eventsInviteHost: state.eventsInviteHost,
+          eventDetail: state.eventDetail,
+          eventHosts: state.eventHosts,
+          hosts: state.hosts,
+          isMore: state.isMore,
+          eventsSuggested: state.eventsSuggested);
+    }
+  }
+
+  getListInviteHost() async {
+    var response = await EventApi().getListEventInviteHostsApi();
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          eventsInviteHost: [...response['data']],
+          eventsOwner: state.eventsOwner,
+          events: state.events,
+          eventsInvite: state.eventsInvite,
+          eventHosts: state.eventHosts,
+          eventDetail: state.eventDetail,
+          isMore: state.isMore,
+          hosts: state.hosts,
+          eventsSuggested: state.eventsSuggested);
+    }
+  }
+
   getDetailEvent(id) async {
     var response = await EventApi().getEventDetailApi(id);
     if (response.isNotEmpty) {
       state = state.copyWith(
           eventDetail: response,
           events: state.events,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
           eventsOwner: state.eventsOwner,
+          eventHosts: state.eventHosts,
           hosts: state.hosts,
           isMore: state.isMore,
           eventsSuggested: state.eventsSuggested);
@@ -105,6 +174,7 @@ class EventController extends StateNotifier<EventState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
           events: state.events,
+          eventHosts: state.eventHosts,
           eventDetail: state.eventDetail,
           hosts: state.hosts,
           eventsSuggested: state.eventsSuggested);
@@ -117,6 +187,9 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           eventsSuggested: [...response],
           events: state.events,
+          eventsInvite: state.eventsInvite,
+          eventHosts: state.eventHosts,
+          eventsInviteHost: state.eventsInviteHost,
           eventDetail: state.eventDetail,
           eventsOwner: state.eventsOwner,
           hosts: state.hosts);
@@ -129,15 +202,54 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           hosts: [...response],
           events: state.events,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventHosts: state.eventHosts,
           eventDetail: state.eventDetail,
           eventsOwner: state.eventsOwner,
           eventsSuggested: state.eventsSuggested);
     }
   }
 
+  getListEventHosts(params) async {
+    List response = await EventApi().getListEventApi(params);
+    if (response.isNotEmpty) {
+      final newListEvent =
+          response.where((item) => !state.eventHosts.contains(item)).toList();
+      state = state.copyWith(
+          eventHosts: params.containsKey('max_id')
+              ? [...state.eventHosts, ...newListEvent]
+              : newListEvent,
+          eventsOwner: state.eventsOwner,
+          events: state.events,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventDetail: state.eventDetail,
+          isMore: response.length < params['limit'] ? false : true,
+          hosts: state.hosts,
+          eventsSuggested: state.eventsSuggested);
+    } else {
+      final newListEvent =
+      response.where((item) => !state.eventHosts.contains(item)).toList();
+      state = state.copyWith(
+          eventHosts: params.containsKey('max_id')
+              ? [...state.eventHosts, ...newListEvent]
+              : newListEvent,
+          eventsOwner: state.eventsOwner,
+          events: state.events,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventDetail: state.eventDetail,
+          isMore: false,
+          hosts: state.hosts,
+          eventsSuggested: state.eventsSuggested);
+    }
+  }
+
   updateStatusEvent(id, data) {
     EventApi().statusEventApi(id, data);
-    final index = state.events.indexWhere((element) => element['id'] == id.toString());
+    final index =
+        state.events.indexWhere((element) => element['id'] == id.toString());
     final event = state.events[index];
     final updatedEvent = {
       ...event,
@@ -154,16 +266,21 @@ class EventController extends StateNotifier<EventState> {
       ],
       hosts: state.hosts,
       eventsOwner: state.eventsOwner,
+      eventHosts: state.eventHosts,
       eventDetail: state.eventDetail,
+      eventsInvite: state.eventsInvite,
+      eventsInviteHost: state.eventsInviteHost,
       eventsSuggested: state.eventsSuggested,
     );
   }
+
   void updateStatusEventDetail(id, data) {
-     EventApi().statusEventApi(id, data);
+    EventApi().statusEventApi(id, data);
     state = state.copyWith(
         events: state.events,
         hosts: state.hosts,
         eventsOwner: state.eventsOwner,
+        eventHosts: state.eventHosts,
         eventDetail: {
           ...state.eventDetail,
           "event_relationship": {
@@ -176,7 +293,8 @@ class EventController extends StateNotifier<EventState> {
 
   void updateStatusEventSuggested(id, data) {
     EventApi().statusEventApi(id, data);
-    final index = state.eventsSuggested.indexWhere((element) => element['id'] == id.toString());
+    final index = state.eventsSuggested
+        .indexWhere((element) => element['id'] == id.toString());
     final eventsSuggested = state.eventsSuggested[index];
     final updatedEvent = {
       ...eventsSuggested,
@@ -192,14 +310,72 @@ class EventController extends StateNotifier<EventState> {
         ...state.eventsSuggested.sublist(index + 1),
       ],
       hosts: state.hosts,
+      eventsInvite: state.eventsInvite,
+      eventHosts: state.eventHosts,
+      eventsInviteHost: state.eventsInviteHost,
       eventsOwner: state.eventsOwner,
       eventDetail: state.eventDetail,
       events: state.events,
     );
   }
+
+  void updateStatusInviteHost(id, data) {
+    EventApi().statusEventHostInviteApi(id, data);
+    final index = state.eventsInviteHost
+        .indexWhere((element) => element['event']['id'] == id.toString());
+    final eventsInviteHost = state.eventsInviteHost[index];
+    final updatedEvent = {
+      ...eventsInviteHost,
+      'status': data['status'] ?? '',
+    };
+    state = state.copyWith(
+      eventsInviteHost: [
+        ...state.eventsInviteHost.sublist(0, index),
+        updatedEvent,
+        ...state.eventsInviteHost.sublist(index + 1),
+      ],
+      hosts: state.hosts,
+      eventsInvite: state.eventsInvite,
+      eventsSuggested: state.eventsSuggested,
+      eventHosts: state.eventHosts,
+      eventsOwner: state.eventsOwner,
+      eventDetail: state.eventDetail,
+      events: state.events,
+    );
+  }
+
+  void updateStatusInvite(id, data) {
+    EventApi().statusEventHostInviteApi(id, data);
+    final index = state.eventsInvite
+        .indexWhere((element) => element['event']['id'] == id.toString());
+    final eventsInvite = state.eventsInvite[index];
+    final updatedEvent = {
+      ...eventsInvite,
+      'event_relationship': {
+        ...eventsInvite['event_relationship'],
+        'status': data['status'] ?? '',
+      },
+    };
+    state = state.copyWith(
+      eventsInvite: [
+        ...state.eventsInvite.sublist(0, index),
+        updatedEvent,
+        ...state.eventsInvite.sublist(index + 1),
+      ],
+      hosts: state.hosts,
+      eventsInviteHost: state.eventsInviteHost,
+      eventHosts: state.eventHosts,
+      eventsSuggested: state.eventsSuggested,
+      eventsOwner: state.eventsOwner,
+      eventDetail: state.eventDetail,
+      events: state.events,
+    );
+  }
+
   void updateStatusEvents(id, data) {
     EventApi().statusEventApi(id, data);
-    final index = state.eventsOwner.indexWhere((element) => element['id'] == id.toString());
+    final index = state.eventsOwner
+        .indexWhere((element) => element['id'] == id.toString());
     final eventsOwner = state.eventsOwner[index];
     final updatedEvent = {
       ...eventsOwner,
@@ -216,10 +392,14 @@ class EventController extends StateNotifier<EventState> {
       ],
       hosts: state.hosts,
       eventsSuggested: state.eventsSuggested,
+      eventsInvite: state.eventsInvite,
+      eventHosts: state.eventHosts,
+      eventsInviteHost: state.eventsInviteHost,
       eventDetail: state.eventDetail,
       events: state.events,
     );
   }
+
   refreshListEvent(params) async {
     List response = await EventApi().getListEventApi(params);
     if (response.isNotEmpty) {
