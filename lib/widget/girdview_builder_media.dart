@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -46,13 +47,18 @@ class GirdviewBuilderMedia extends StatelessWidget {
                 ? Stack(
                     fit: StackFit.expand,
                     children: [
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: medias[indexBg]['url'],
-                        fit: BoxFit.cover,
-                        imageErrorBuilder: (context, error, stackTrace) =>
-                            const SizedBox(),
-                      ),
+                      medias[0]['subType'] == 'local'
+                          ? Image.file(
+                              medias[indexBg]['file'],
+                              fit: BoxFit.cover,
+                            )
+                          : FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: medias[indexBg]['url'],
+                              fit: BoxFit.cover,
+                              imageErrorBuilder: (context, error, stackTrace) =>
+                                  const SizedBox(),
+                            ),
                       imageRemain != null &&
                               imageRemain! > 0 &&
                               indexBg + 1 == medias.length
@@ -73,10 +79,12 @@ class GirdviewBuilderMedia extends StatelessWidget {
                     ],
                   )
                 : FeedVideo(
-                    path:
-                        medias[indexBg]['remote_url'] ?? medias[indexBg]['url'],
+                    path: medias[indexBg]['file']?.path ??
+                        medias[indexBg]['remote_url'] ??
+                        medias[indexBg]['url'],
                     flickMultiManager: flickMultiManager,
                     image: medias[indexBg]['preview_remote_url'] ??
-                        medias[indexBg]['preview_url'])));
+                        medias[indexBg]['preview_url'] ??
+                        '')));
   }
 }

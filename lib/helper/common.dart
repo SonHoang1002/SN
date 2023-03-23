@@ -13,6 +13,10 @@ Function(int num) shortenLargeNumber = (int num) {
   return num;
 };
 
+Function(int num) convertNumberToVND = (int num) {
+  return num.toString().replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
+};
+
 hiddenKeyboard(context) {
   FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -20,3 +24,18 @@ hiddenKeyboard(context) {
     currentFocus.unfocus();
   }
 }
+
+checkObjectUniqueInList(list, keyCheck) {
+  List newList = [];
+
+  for (var i = 0; i < list.length; i++) {
+    List keyOfNewList = newList.map((element) => element[keyCheck]).toList();
+
+    if (!keyOfNewList.contains(list[i][keyCheck])) {
+      newList.add(list[i]);
+    }
+  }
+
+  return newList;
+}
+

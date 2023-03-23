@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/me_data.dart';
-import 'package:social_network_app_mobile/data/post.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_friend_block.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_infomation_block.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page_pin_post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Banner/banner_base.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -18,13 +21,49 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
+import 'package:loader_skeleton/loader_skeleton.dart';
+import 'package:social_network_app_mobile/widget/skeleton.dart';
 
-class UserPage extends StatelessWidget {
+class UserPage extends ConsumerStatefulWidget {
   const UserPage({Key? key}) : super(key: key);
 
   @override
+  ConsumerState<UserPage> createState() => _UserPageState();
+}
+
+class _UserPageState extends ConsumerState<UserPage> {
+  final scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, () {
+      var meData = ref.watch(meControllerProvider)[0];
+      ref.read(postControllerProvider.notifier).getListPostUserPage(
+          meData['id'], {"limit": 3, "exclude_replies": true});
+    });
+
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
+        var meData = ref.watch(meControllerProvider)[0];
+
+        String maxId = ref.read(postControllerProvider).postUserPage.last['id'];
+        ref.read(postControllerProvider.notifier).getListPostUserPage(
+            meData['id'],
+            {"max_id": maxId, "limit": 3, "exclude_replies": true});
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var meData = ref.watch(meControllerProvider)[0];
     final size = MediaQuery.of(context).size;
+    final postUser = ref.watch(postControllerProvider).postUserPage;
+    final isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -56,6 +95,7 @@ class UserPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -130,6 +170,7 @@ class UserPage extends StatelessWidget {
               ),
             ),
             const CrossBar(),
+            const UserPagePinPost(),
             ListView.builder(
                 shrinkWrap: true,
                 primary: false,
@@ -137,7 +178,10 @@ class UserPage extends StatelessWidget {
                 itemBuilder: (context, index) => Post(
                       type: postPageUser,
                       post: postUser[index],
-                    ))
+                    )),
+            isMorePageUser
+                ? Center(child: SkeletonCustom().postSkeleton(context))
+                : const SizedBox()
           ],
         ),
       ),

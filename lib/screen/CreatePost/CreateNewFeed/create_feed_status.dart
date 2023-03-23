@@ -1,16 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import "package:collection/collection.dart";
 
 class CreateFeedStatus extends StatefulWidget {
-  const CreateFeedStatus({Key? key}) : super(key: key);
+  final String? content;
+  final bool isShowBackground;
+  final dynamic checkin;
+  final dynamic visibility;
+  final dynamic statusActivity;
+  final dynamic backgroundSelected;
+  final Function handleUpdateData;
+  final List friendSelected;
+
+  const CreateFeedStatus(
+      {Key? key,
+      required this.visibility,
+      this.backgroundSelected,
+      required this.handleUpdateData,
+      required this.isShowBackground,
+      this.statusActivity,
+      required this.friendSelected,
+      this.checkin,
+      this.content})
+      : super(key: key);
 
   @override
   State<CreateFeedStatus> createState() => _CreateFeedStatusState();
@@ -19,228 +35,212 @@ class CreateFeedStatus extends StatefulWidget {
 class _CreateFeedStatusState extends State<CreateFeedStatus> {
   final TextEditingController controller = TextEditingController();
   bool isActiveBackground = false;
-  dynamic backgroundSelected;
+
+  @override
+  void initState() {
+    if (!mounted) return;
+
+    if (widget.content!.trim().isNotEmpty) {
+      controller.text = widget.content ?? '';
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    String description = '';
+
+    if (widget.statusActivity == null) {
+      description = '';
+    } else if (widget.statusActivity['parent'] == null) {
+      description = ' đang cảm thấy ${widget.statusActivity['name']}';
+    } else {
+      description =
+          ' ${widget.statusActivity['parent']['name'].toLowerCase()} ${widget.statusActivity['name'].toLowerCase()}';
+    }
+
+    if (widget.friendSelected.isNotEmpty) {
+      description = '$description cùng với ';
+    }
+
+    if (widget.checkin != null) {
+      description = '$description đang ở ${widget.checkin['title']}';
+    }
+
+    double marginContainer = widget.backgroundSelected != null ? 0.0 : 8.0;
+    double paddingContainer = widget.backgroundSelected != null ? 8.0 : 0;
 
     return Container(
       decoration: BoxDecoration(
         border: const Border(top: BorderSide(width: 0.2, color: greyColor)),
         color: Theme.of(context).scaffoldBackgroundColor,
       ),
-      height: 310,
       width: size.width,
-      child: Stack(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    AvatarSocial(
-                        width: 36,
-                        height: 36,
-                        path: meData['avatar_media']['preview_url'] ??
-                            linkAvatarDefault),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          meData['display_name'],
-                          style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 0.2, color: greyColor),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(
-                                typeVisibility[0]['icon'],
-                                size: 14,
-                                color: greyColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                typeVisibility[0]['label'],
-                                style: const TextStyle(
-                                    fontSize: 12, color: greyColor),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                  width: size.width,
-                  height: 250,
-                  child: Stack(
-                    children: [
-                      backgroundSelected != null
-                          ? ImageCacheRender(
-                              path: backgroundSelected['url'],
-                              width: size.width,
-                            )
-                          : const SizedBox(),
-                      Container(
-                        height: 250,
-                        width: size.width,
-                        margin: const EdgeInsets.only(
-                            left: 8.0, right: 8.0, bottom: 8.0),
-                        child: Center(
-                          child: TextFormField(
-                            textAlign: backgroundSelected != null
-                                ? TextAlign.center
-                                : TextAlign.left,
-                            controller: controller,
-                            maxLines: 9,
-                            minLines: backgroundSelected != null ? 1 : 9,
-                            enabled: true,
-                            style: backgroundSelected != null
-                                ? TextStyle(
-                                    color: Color(int.parse(
-                                        '0xFF${backgroundSelected['style']['fontColor'].substring(1)}')),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22)
-                                : null,
-                            decoration: InputDecoration(
-                              hintText: "Bạn đang nghĩ gì?",
-                              hintStyle: TextStyle(
-                                  color: backgroundSelected != null
-                                      ? Color(int.parse(
-                                          '0xFF${backgroundSelected['style']['fontColor'].substring(1)}'))
-                                      : null,
-                                  fontSize:
-                                      backgroundSelected != null ? 22 : 15),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ))
-            ],
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            child: CreateFeedStatusHeader(
+              description: description,
+              friendSelected: widget.friendSelected,
+              statusActivity: widget.statusActivity,
+              visibility: widget.visibility,
+              handleUpdateData: widget.handleUpdateData,
+            ),
           ),
-          Positioned(
-            bottom: 8,
-            left: 8,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Container(
+            height: widget.backgroundSelected != null ? 230 : null,
+            width: size.width,
+            margin: EdgeInsets.only(
+                left: marginContainer, right: marginContainer, bottom: 8.0),
+            padding: EdgeInsets.symmetric(horizontal: paddingContainer),
+            decoration: BoxDecoration(
+              image: widget.backgroundSelected != null
+                  ? DecorationImage(
+                      image: NetworkImage(widget.backgroundSelected['url']),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isActiveBackground = !isActiveBackground;
-                    });
+                TextFormField(
+                  autofocus: true,
+                  onChanged: (value) {
+                    widget.handleUpdateData('update_content', value);
                   },
-                  child: isActiveBackground
-                      ? const WrapBackground(
-                          widgetChild: Icon(FontAwesomeIcons.chevronLeft,
-                              color: greyColor, size: 20),
-                        )
-                      : Image.asset(
-                          "assets/post_background.png",
-                          width: 28,
-                        ),
+                  maxLines: null,
+                  textAlign: widget.backgroundSelected != null
+                      ? TextAlign.center
+                      : TextAlign.left,
+                  controller: controller,
+                  style: widget.backgroundSelected != null
+                      ? TextStyle(
+                          color: Color(int.parse(
+                              '0xFF${widget.backgroundSelected['style']['fontColor'].substring(1)}')),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 22)
+                      : null,
+                  decoration: InputDecoration(
+                    hintText: "Bạn đang nghĩ gì?",
+                    hintStyle: TextStyle(
+                        color: widget.backgroundSelected != null
+                            ? Color(int.parse(
+                                '0xFF${widget.backgroundSelected['style']['fontColor'].substring(1)}'))
+                            : null,
+                        fontSize: widget.backgroundSelected != null ? 22 : 15),
+                    border: InputBorder.none,
+                  ),
                 ),
-                isActiveBackground
-                    ? SizedBox(
-                        width: size.width - 70,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    backgroundSelected = null;
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 5),
-                                  width: 26,
-                                  height: 26,
-                                  decoration: BoxDecoration(
-                                      color: white,
-                                      border: Border.all(
-                                          width: 0.1, color: greyColor),
-                                      borderRadius: BorderRadius.circular(5)),
-                                ),
-                              ),
-                              Row(
-                                children: List.generate(
-                                    backgroundPost.sublist(0, 15).length,
-                                    (index) => BackgroundItem(
-                                          updateBackgroundSelected:
-                                              (background) {
-                                            setState(() {
-                                              backgroundSelected = background;
-                                            });
-                                          },
-                                          backgroundSelected:
-                                              backgroundSelected,
-                                          background: backgroundPost[index],
-                                        )),
-                              ),
-                            ],
-                          ),
-                        ))
-                    : const SizedBox(),
-                isActiveBackground
-                    ? GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isActiveBackground = false;
-                          });
-                          showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              barrierColor: Colors.transparent,
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(10))),
-                              builder: (BuildContext context) {
-                                return PostBackground(
-                                  backgroundSelected: backgroundSelected,
-                                  updateBackgroundSelected: (background) {
-                                    setState(() {
-                                      backgroundSelected = background;
-                                    });
-                                  },
-                                );
-                              });
-                        },
-                        child: const WrapBackground(
-                          widgetChild: Icon(
-                            FontAwesomeIcons.box,
-                            size: 20,
-                            color: greyColor,
-                          ),
-                        ),
-                      )
-                    : const SizedBox()
               ],
             ),
           ),
+          !widget.isShowBackground
+              ? const SizedBox()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isActiveBackground = !isActiveBackground;
+                        });
+                      },
+                      child: isActiveBackground
+                          ? const WrapBackground(
+                              widgetChild: Icon(FontAwesomeIcons.chevronLeft,
+                                  color: greyColor, size: 20),
+                            )
+                          : Image.asset(
+                              "assets/post_background.png",
+                              width: 28,
+                            ),
+                    ),
+                    isActiveBackground
+                        ? SizedBox(
+                            width: size.width - 70,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      widget.handleUpdateData(
+                                          'update_background', null);
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(right: 5),
+                                      width: 26,
+                                      height: 26,
+                                      decoration: BoxDecoration(
+                                          color: white,
+                                          border: Border.all(
+                                              width: 0.1, color: greyColor),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: List.generate(
+                                        backgroundPost.sublist(0, 15).length,
+                                        (index) => BackgroundItem(
+                                              updateBackgroundSelected:
+                                                  (background) {
+                                                widget.handleUpdateData(
+                                                    'update_background',
+                                                    background);
+                                              },
+                                              backgroundSelected:
+                                                  widget.backgroundSelected,
+                                              background: backgroundPost[index],
+                                            )),
+                                  ),
+                                ],
+                              ),
+                            ))
+                        : const SizedBox(),
+                    isActiveBackground
+                        ? GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isActiveBackground = false;
+                              });
+                              showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  barrierColor: Colors.transparent,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(10))),
+                                  builder: (BuildContext context) {
+                                    return PostBackground(
+                                      backgroundSelected:
+                                          widget.backgroundSelected,
+                                      updateBackgroundSelected: (background) {
+                                        widget.handleUpdateData(
+                                            'update_background', background);
+                                      },
+                                    );
+                                  });
+                            },
+                            child: const WrapBackground(
+                              widgetChild: Icon(
+                                FontAwesomeIcons.box,
+                                size: 20,
+                                color: greyColor,
+                              ),
+                            ),
+                          )
+                        : const SizedBox()
+                  ],
+                ),
         ],
       ),
     );
@@ -290,15 +290,9 @@ class PostBackground extends StatelessWidget {
         groupBy(backgroundPost, (obj) => obj['category_name']);
     List<dynamic> listKeysBg = listGroupBg.keys.toList();
     return SizedBox(
-      height: size.height - 390,
+      height: size.height * 0.45,
       child: Scaffold(
         backgroundColor: Theme.of(context).canvasColor,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          backgroundColor: Theme.of(context).canvasColor,
-          title: const Center(child: AppBarTitle(title: "Chọn phông nền")),
-        ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(

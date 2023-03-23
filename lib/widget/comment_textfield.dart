@@ -1,19 +1,31 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
+import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/box_mention.dart';
 import 'package:social_network_app_mobile/widget/emoji_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:social_network_app_mobile/widget/text_action.dart';
+import 'package:social_network_app_mobile/widget/mentions/controller/social_text_editing_controller.dart';
+import 'package:social_network_app_mobile/widget/mentions/model/detected_type_enum.dart';
+import 'package:social_network_app_mobile/widget/mentions/model/social_content_detection_model.dart';
 import 'package:social_network_app_mobile/widget/text_form_field_custom.dart';
 
-class CommentTextfield extends StatefulWidget {
+class CommentTextfield extends StatefulHookConsumerWidget {
   final Function? handleComment;
   final FocusNode? commentNode;
   final dynamic commentSelected;
@@ -28,19 +40,128 @@ class CommentTextfield extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CommentTextfield> createState() => _CommentTextfieldState();
+  ConsumerState<CommentTextfield> createState() => _CommentTextfieldState();
 }
 
-class _CommentTextfieldState extends State<CommentTextfield> {
+class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   bool isShowEmoji = false;
+  bool isComment = false;
   double heightModal = 250;
+
   String content = '';
+  String flagContent = '';
+  String preMessage = '';
+
   String linkEmojiSticky = '';
-  TextEditingController textController = TextEditingController();
+  dynamic query;
+  late SocialTextEditingController textController;
   List listMentions = [];
+  List listMentionsSelected = [];
+  List files = [];
+
+  late StreamSubscription<SocialContentDetection> _streamSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    textController = SocialTextEditingController()
+      ..text = content
+      ..setTextStyle(
+          DetectedType.mention,
+          TextStyle(
+              color: secondaryColor, backgroundColor: secondaryColorSelected));
+
+    _streamSubscription = textController.subscribeToDetection(onDetectContent);
+  }
+
+  void onDetectContent(SocialContentDetection detection) async {
+    if (!detection.text.contains('@')) {
+      if (listMentions.isNotEmpty) {
+        setState(() {
+          listMentions = [];
+        });
+      }
+      return;
+    }
+    setState(() {
+      query = detection;
+    });
+
+    if (detection.text.substring(1).isEmpty) {
+      List newList = await FriendsApi().getListFriendApi(
+              ref.watch(meControllerProvider)[0]['id'], {"limit": 20}) ??
+          [];
+
+      setState(() {
+        listMentions = newList.length > 5 ? newList.sublist(0, 5) : newList;
+      });
+    } else {
+      var objectMentions = await SearchApi()
+          .getListSearchApi({"q": detection.text.substring(1), "limit": 5});
+      if (objectMentions != null) {
+        setState(() {
+          listMentions = objectMentions['accounts'] +
+              objectMentions['groups'] +
+              objectMentions['pages'];
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    useEffect(
+      () {
+        if (widget.commentSelected != null &&
+            ['editComment', 'editChild']
+                .contains(widget.commentSelected['typeStatus'])) {
+          String contentUpdate = widget.commentSelected['content'];
+
+          textController.text =
+              widget.commentSelected['typeStatus'] == 'editChild' &&
+                      contentUpdate.length >= 21
+                  ? contentUpdate.substring(21)
+                  : contentUpdate;
+          textController.selection = TextSelection.collapsed(
+              offset: widget.commentSelected['typeStatus'] == 'editChild' &&
+                      contentUpdate.length >= 21
+                  ? contentUpdate.substring(21).length
+                  : contentUpdate.length);
+          setState(() {
+            content = contentUpdate;
+          });
+          dynamic card = widget.commentSelected['card'];
+          dynamic medias = widget.commentSelected['media_attachments'] ?? [];
+
+          if (card != null && card['link'] != null) {
+            setState(() {
+              linkEmojiSticky = card['link'];
+            });
+          }
+
+          if (medias.isNotEmpty) {
+            setState(() {
+              files = medias;
+            });
+          }
+        } else {
+          textController.text = '';
+          setState(() {
+            linkEmojiSticky = '';
+            files = [];
+          });
+        }
+        return null;
+      },
+      [widget.commentSelected?['id']],
+    );
     handleClickIcon() {
       setState(() {
         isShowEmoji = !isShowEmoji;
@@ -50,6 +171,7 @@ class _CommentTextfieldState extends State<CommentTextfield> {
     functionGetEmoji(link) {
       setState(() {
         isShowEmoji = false;
+        files = [];
         linkEmojiSticky = link;
       });
       widget.commentNode!.requestFocus();
@@ -60,40 +182,130 @@ class _CommentTextfieldState extends State<CommentTextfield> {
         content = value;
       });
 
-      final tagRegex = RegExp(r"\B@", caseSensitive: false);
-      final sentences = value.split(' ');
-
-      for (var sentence in sentences) {
-        final words = sentence.split(' ');
-        String withat = words.last;
-
-        if (tagRegex.hasMatch(withat)) {
-          String withoutat = withat.substring(1);
-          if (withoutat.isEmpty) {
-            List newList = await FriendsApi()
-                .getListFriendApi(meData['id'], {"limit": 20});
-
-            setState(() {
-              listMentions =
-                  newList.length > 5 ? newList.sublist(0, 5) : newList;
-            });
-          } else {
-            var objectMentions = await SearchApi()
-                .getListSearchApi({"q": withoutat, "limit": 5});
-            if (objectMentions != null) {
-              setState(() {
-                listMentions = objectMentions['accounts'] +
-                    objectMentions['groups'] +
-                    objectMentions['pages'];
-              });
-            }
-          }
-        } else {
-          setState(() {
-            listMentions = [];
-          });
-        }
+      for (var mention in listMentionsSelected) {
+        preMessage = textController.text.replaceAll(
+            mention['display_name'] ?? mention['title'], '[${mention['id']}]');
       }
+
+      setState(() {
+        flagContent = preMessage;
+      });
+    }
+
+    handleClickMention(data) {
+      //Should show notification
+      if (listMentionsSelected.length > 30) return;
+
+      String message =
+          '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
+
+      textController.text = message;
+
+      setState(() {
+        listMentions = [];
+        content = message;
+      });
+
+      setState(() {
+        listMentionsSelected = [...listMentionsSelected, data];
+      });
+    }
+
+    handleGetFiles(file) async {
+      if (file.isEmpty) return;
+
+      if (file[0].pickedThumbData == null) {
+        Uint8List bytes = await file[0].thumbnailData;
+        file[0] = file[0].copyWith(pickedThumbData: bytes);
+      }
+      setState(() {
+        files = file;
+        isShowEmoji = false;
+        linkEmojiSticky = '';
+      });
+    }
+
+    checkHasMention(data) {
+      if (data == null) return false;
+      if (data['typeStatus'] == 'editComment') return false;
+
+      return true;
+    }
+
+    handleActionComment() async {
+      dynamic dataUploadFile;
+      if (files.isNotEmpty && files[0]['id'] == null) {
+        File? fileData = await files[0].file;
+        String fileName = fileData!.path.split('/').last;
+        FormData formData = FormData.fromMap({
+          "file":
+              await MultipartFile.fromFile(fileData.path, filename: fileName),
+        });
+
+        dataUploadFile = await MediaApi().uploadMediaEmso(formData);
+      }
+      widget.handleComment!({
+        "id": widget.commentSelected != null &&
+                ['editComment', 'editChild']
+                    .contains(widget.commentSelected['typeStatus'])
+            ? widget.commentSelected['id']
+            : '111111111111',
+        "status": checkHasMention(widget.commentSelected)
+            ? '[${widget.commentSelected['account']['id']}] $content'
+            : content,
+        "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : null,
+        "extra_body": linkEmojiSticky.isEmpty
+            ? null
+            : {
+                "description":
+                    linkEmojiSticky.contains('giphy') ? 'gif' : "sticky",
+                "link": linkEmojiSticky,
+                "title": ""
+              },
+        "tags": (checkHasMention(widget.commentSelected)
+                ? [...listMentionsSelected, widget.commentSelected['account']]
+                : listMentionsSelected)
+            // .where((element) => flagContent.contains(element['id']))
+            .map((e) => {
+                  "entity_id": e['id'],
+                  "entity_type": e['username'] != null
+                      ? 'Account'
+                      : e['page_relationship'] != null
+                          ? 'Page'
+                          : 'Group',
+                  "name": e['display_name'] ?? e['title']
+                })
+            .toList(),
+        "in_reply_to_id": widget.commentSelected != null
+            ? widget.commentSelected['in_reply_to_parent_id'] != null
+                ? widget.commentSelected['in_reply_to_id']
+                : widget.commentSelected['id']
+            : null,
+        "type": widget.commentSelected != null &&
+                widget.commentSelected['typeStatus'] != 'editComment'
+            ? "child"
+            : 'parent',
+        "typeStatus": widget.commentSelected?['typeStatus']
+      });
+      textController.clear();
+      setState(() {
+        files = [];
+        content = '';
+        isComment = false;
+        linkEmojiSticky = '';
+        listMentionsSelected = [];
+      });
+      widget.getCommentSelected!(null);
+      // ignore: use_build_context_synchronously
+      hiddenKeyboard(context);
+    }
+
+    checkVisibileSubmit() {
+      if (textController.text.trim().isNotEmpty) return true;
+      if (linkEmojiSticky.isNotEmpty) return true;
+      if (files.isNotEmpty) return true;
+
+      return false;
     }
 
     return Container(
@@ -109,10 +321,13 @@ class _CommentTextfieldState extends State<CommentTextfield> {
             listMentions.isNotEmpty && content.isNotEmpty
                 ? BoxMention(
                     listData: listMentions,
-                    getMention: () {},
+                    getMention: (mention) {
+                      handleClickMention(mention);
+                    },
                   )
                 : const SizedBox(),
-            widget.commentSelected != null
+            widget.commentSelected != null &&
+                    widget.commentSelected['typeStatus'] != 'editComment'
                 ? Container(
                     margin: const EdgeInsets.only(top: 4, bottom: 4, left: 30),
                     child: RichText(
@@ -143,27 +358,45 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                         ])),
                   )
                 : const SizedBox(),
-            linkEmojiSticky.isNotEmpty
+            (linkEmojiSticky.isNotEmpty || files.isNotEmpty)
                 ? Container(
                     margin: const EdgeInsets.only(top: 4, bottom: 4, left: 30),
                     child: Stack(
                       children: [
                         ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
-                            child: ImageCacheRender(
-                                height: 70.0, path: linkEmojiSticky)),
+                            child: files.isNotEmpty
+                                ? files[0]['id'] != null
+                                    ? ImageCacheRender(
+                                        path: files[0]['preview_url'],
+                                        height: 80.0,
+                                        width: 70.0,
+                                      )
+                                    : Image.memory(
+                                        files[0].pickedThumbData,
+                                        fit: BoxFit.cover,
+                                        height: 80,
+                                        width: 70,
+                                        errorBuilder: (context, error,
+                                                stackTrace) =>
+                                            const Text(
+                                                'Hình ảnh không được hiển thị'),
+                                      )
+                                : ImageCacheRender(
+                                    height: 70.0, path: linkEmojiSticky)),
                         Positioned(
                           top: 0,
                           right: 0,
                           child: GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  files = [];
                                   linkEmojiSticky = '';
                                 });
                               },
                               child: Container(
-                                  width: 14,
-                                  height: 14,
+                                  width: 20,
+                                  height: 20,
                                   decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.5),
                                       shape: BoxShape.circle),
@@ -178,9 +411,21 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                   )
                 : const SizedBox(),
             Row(children: [
-              const Icon(
-                FontAwesomeIcons.camera,
-                color: greyColor,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => Expanded(
+                              child: GalleryView(
+                                  filesSelected: files,
+                                  handleGetFiles: handleGetFiles))));
+                },
+                child: const Icon(
+                  FontAwesomeIcons.camera,
+                  color: secondaryColor,
+                  size: 20,
+                ),
               ),
               const SizedBox(
                 width: 8.0,
@@ -195,46 +440,54 @@ class _CommentTextfieldState extends State<CommentTextfield> {
                 focusNode: widget.commentNode,
                 handleGetValue: (value) => handleGetComment(value),
                 suffixIcon: InkWell(
-                  onTap: () {
-                    handleClickIcon();
-                  },
-                  child: content.trim().isEmpty && linkEmojiSticky.isEmpty
-                      ? Icon(
-                          FontAwesomeIcons.solidFaceSmile,
-                          color: isShowEmoji ? primaryColor : greyColor,
-                        )
-                      : SizedBox(
-                          width: 60,
-                          child: Center(
-                            child: TextAction(
-                              action: () {
-                                widget.handleComment!({
-                                  "status": content,
-                                  "extra_body": linkEmojiSticky.isEmpty
-                                      ? null
-                                      : {
-                                          "description":
-                                              linkEmojiSticky.contains('giphy')
-                                                  ? 'gif'
-                                                  : "sticky",
-                                          "link": linkEmojiSticky,
-                                          "title": ""
-                                        }
-                                });
-                                textController.clear();
-                                setState(() {
-                                  content = '';
-                                  linkEmojiSticky = '';
-                                });
-                                hiddenKeyboard(context);
-                              },
-                              title: "Đăng",
-                              fontSize: 15,
-                            ),
-                          ),
+                    onTap: () {
+                      handleClickIcon();
+                    },
+                    child: Icon(
+                      FontAwesomeIcons.solidFaceSmile,
+                      size: 20,
+                      color: isShowEmoji ? secondaryColor : greyColor,
+                    )),
+              )),
+              const SizedBox(
+                width: 8.0,
+              ),
+              checkVisibileSubmit()
+                  ? GestureDetector(
+                      onTap: !isComment
+                          ? () {
+                              setState(() {
+                                isComment = true;
+                              });
+                              handleActionComment();
+                            }
+                          : null,
+                      child: const Icon(
+                        Icons.send,
+                        color: secondaryColor,
+                        size: 20,
+                      ),
+                    )
+                  : const SizedBox(),
+              widget.commentSelected != null
+                  ? Row(
+                      children: [
+                        const SizedBox(
+                          width: 8.0,
                         ),
-                ),
-              ))
+                        GestureDetector(
+                          onTap: () {
+                            widget.getCommentSelected!(null);
+                          },
+                          child: const Icon(
+                            FontAwesomeIcons.xmark,
+                            color: secondaryColor,
+                            size: 20,
+                          ),
+                        )
+                      ],
+                    )
+                  : const SizedBox()
             ]),
             isShowEmoji
                 ? DraggableBottomSheet(

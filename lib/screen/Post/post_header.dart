@@ -4,11 +4,14 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
+import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import 'post_detail.dart';
 
@@ -37,6 +40,7 @@ class _PostHeaderState extends State<PostHeader> {
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
     String description = '';
+    var place = widget.post['place'];
 
     var postType = widget.post['post_type'];
 
@@ -50,8 +54,14 @@ class _PostHeaderState extends State<PostHeader> {
       } else {
         description = ' đã công bố mục tiêu mới';
       }
+    } else if (postType == postVisibleQuestion) {
+      description = ' đã đặt một câu hỏi';
     } else if (widget.post['post_type'] == postShareEvent) {
       description = ' đã chia sẻ một sự kiện';
+    }
+
+    if (place != null) {
+      description = ' đang ở ${place['title']}';
     }
 
     if (mentions.isNotEmpty) {
@@ -67,8 +77,7 @@ class _PostHeaderState extends State<PostHeader> {
     }
 
     if (widget.post['life_event'] != null) {
-      description =
-          ' đã thêm một ${widget.post['life_event']['name'].toLowerCase()}';
+      description = ' đã thêm một sự kiện trong đời';
     }
 
     if (widget.post['reblog'] != null) {
@@ -87,9 +96,9 @@ class _PostHeaderState extends State<PostHeader> {
     }
 
     return InkWell(
-      hoverColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
+      hoverColor: transparent,
+      highlightColor: transparent,
+      splashColor: transparent,
       onTap: () {
         if (widget.type != postDetail) {
           Navigator.push(
@@ -108,7 +117,11 @@ class _PostHeaderState extends State<PostHeader> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AvatarPost(group: group, page: page, account: account),
+                  AvatarPost(
+                      post: widget.post,
+                      group: group,
+                      page: page,
+                      account: account),
                   const SizedBox(
                     width: 5,
                   ),
@@ -118,9 +131,11 @@ class _PostHeaderState extends State<PostHeader> {
                       SizedBox(
                         width: size.width * 0.6,
                         child: BlockNamePost(
+                            post: widget.post,
                             account: account,
                             description: description,
                             mentions: mentions,
+                            statusActivity: statusActivity,
                             group: group,
                             page: page),
                       ),
@@ -168,7 +183,14 @@ class _PostHeaderState extends State<PostHeader> {
                   ? Row(
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            showBarModalBottomSheet(
+                                context: context,
+                                backgroundColor: Theme.of(context).canvasColor,
+                                barrierColor: Colors.transparent,
+                                builder: (context) => PostHeaderAction(
+                                    post: widget.post, type: widget.type));
+                          },
                           child: Icon(
                             FontAwesomeIcons.ellipsis,
                             size: 22,
@@ -176,18 +198,18 @@ class _PostHeaderState extends State<PostHeader> {
                                 Theme.of(context).textTheme.displayLarge!.color,
                           ),
                         ),
-                        SizedBox(
-                          width: widget.type != postDetail ? 10 : 0,
-                        ),
-                        ![postDetail, postPageUser].contains(widget.type)
-                            ? InkWell(
-                                onTap: () {},
-                                child: const Icon(
-                                  FontAwesomeIcons.xmark,
-                                  size: 22,
-                                ),
-                              )
-                            : const SizedBox()
+                        // SizedBox(
+                        //   width: widget.type != postDetail ? 10 : 0,
+                        // ),
+                        // ![postDetail, postPageUser].contains(widget.type)
+                        //     ? InkWell(
+                        //         onTap: () {},
+                        //         child: const Icon(
+                        //           FontAwesomeIcons.xmark,
+                        //           size: 22,
+                        //         ),
+                        //       )
+                        //     : const SizedBox()
                       ],
                     )
                   : const SizedBox()
@@ -210,28 +232,49 @@ class BlockNamePost extends StatelessWidget {
     required this.mentions,
     this.group,
     this.page,
+    this.statusActivity,
+    this.post,
   });
-
+  final dynamic post;
   final dynamic account;
   final String description;
   final dynamic mentions;
   final dynamic group;
   final dynamic page;
+  final dynamic statusActivity;
 
   @override
   Widget build(BuildContext context) {
+    renderDisplayName() {
+      if (group != null) {
+        return group['title'];
+      } else if (page != null) {
+        return post['place']?['id'] != page['id']
+            ? page['title']
+            : account['display_name'];
+      } else {
+        return account['display_name'];
+      }
+    }
+
     return RichText(
       text: TextSpan(
-        text: group != null
-            ? group['title']
-            : page != null
-                ? page['title']
-                : account['display_name'],
+        text: renderDisplayName(),
         style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: Theme.of(context).textTheme.displayLarge!.color),
         children: [
+          const TextSpan(text: ' '),
+          statusActivity.isNotEmpty
+              ? WidgetSpan(
+                  child: ImageCacheRender(
+                    path: statusActivity['url'],
+                    width: 18.0,
+                    height: 18.0,
+                  ),
+                )
+              : const TextSpan(text: ''),
           TextSpan(
               text: description,
               style: const TextStyle(fontWeight: FontWeight.normal)),
@@ -271,8 +314,10 @@ class AvatarPost extends StatelessWidget {
     required this.account,
     this.group,
     this.page,
+    this.post,
   });
 
+  final dynamic post;
   final dynamic group;
   final dynamic page;
   final dynamic account;
@@ -281,10 +326,10 @@ class AvatarPost extends StatelessWidget {
   Widget build(BuildContext context) {
     String accountLink = account['avatar_media'] != null
         ? account['avatar_media']['preview_url']
-        : '';
+        : linkAvatarDefault;
     String pageLink = page != null && page['avatar_media'] != null
         ? page['avatar_media']['preview_url']
-        : '';
+        : linkAvatarDefault;
     return group != null
         ? SizedBox(
             width: 50,
@@ -310,7 +355,10 @@ class AvatarPost extends StatelessWidget {
           )
         : Padding(
             padding: const EdgeInsets.only(top: 1),
-            child: Avatar(path: page != null ? pageLink : accountLink),
+            child: Avatar(
+                path: page != null && post['place']?['id'] != page['id']
+                    ? pageLink
+                    : accountLink),
           );
   }
 }

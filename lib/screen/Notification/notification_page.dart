@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/data/notification.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 
-class NotificationPage extends StatefulWidget {
+class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
 
   @override
-  State<NotificationPage> createState() => _NotificationPageState();
+  ConsumerState<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _NotificationPageState extends ConsumerState<NotificationPage> {
   @override
   void initState() {
     GetTimeAgo.setDefaultLocale('vi');
@@ -84,7 +85,7 @@ class _NotificationPageState extends State<NotificationPage> {
         return ' Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với';
       }
       if (type == 'favourite') {
-        return ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận:' : 'bài viết:'} ${status['page_owner'] == null && status['account']?['id'] == meData['id'] ? 'của bạn' : ''} ${status['content']}';
+        return ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận:' : 'bài viết:'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content']}';
       } else if (type == 'status') {
         if (status['reblog'] != null) {
           return ' đã chia sẻ một bài viết ${status['reblog']?['page'] != null || status['reblog']?['group'] != null ? 'trong' : ''}';

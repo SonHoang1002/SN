@@ -1,21 +1,63 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/friends.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
-class FriendTag extends StatefulWidget {
-  final Function handleUpdateSelectedFriend;
-  const FriendTag({Key? key, required this.handleUpdateSelectedFriend})
+class FriendTag extends ConsumerStatefulWidget {
+  final Function handleUpdateData;
+  final List friendsPrePage;
+  const FriendTag(
+      {Key? key, required this.handleUpdateData, required this.friendsPrePage})
       : super(key: key);
 
   @override
-  State<FriendTag> createState() => _FriendTagState();
+  ConsumerState<FriendTag> createState() => _FriendTagState();
 }
 
-class _FriendTagState extends State<FriendTag> {
+class _FriendTagState extends ConsumerState<FriendTag> {
   List friendSelected = [];
+  List friends = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (mounted) {
+      fetchFriends({"limit": 20});
+
+      if (widget.friendsPrePage.isNotEmpty) {
+        setState(() {
+          friendSelected = widget.friendsPrePage;
+        });
+      }
+    }
+  }
+
+  fetchFriends(params) async {
+    var response = await FriendsApi()
+        .getListFriendApi(ref.watch(meControllerProvider)[0]['id'], params);
+    if (response != null) {
+      setState(() {
+        friends = response;
+      });
+    }
+  }
+
+  handleSearch(value) {
+    if (value.isEmpty) {
+      fetchFriends({"limit": 20});
+      return;
+    }
+    EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 500),
+        () {
+      fetchFriends({"keyword": value});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List friendSelectedId = friendSelected.map((e) => e['id']).toList();
@@ -32,7 +74,7 @@ class _FriendTagState extends State<FriendTag> {
       setState(() {
         friendSelected = newList;
       });
-      widget.handleUpdateSelectedFriend(newList);
+      widget.handleUpdateData('update_friend', newList);
     }
 
     return Container(
@@ -40,7 +82,10 @@ class _FriendTagState extends State<FriendTag> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SearchInput(),
+           SearchInput(),
+          SearchInput(
+            handleSearch: handleSearch,
+          ),
           const SizedBox(
             height: 8.0,
           ),
@@ -56,6 +101,7 @@ class _FriendTagState extends State<FriendTag> {
                       width: double.infinity,
                       height: 60,
                       child: ListView.builder(
+                        shrinkWrap: true,
                           itemCount: friendSelected.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) => Container(
