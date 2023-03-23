@@ -16,8 +16,11 @@ import 'package:social_network_app_mobile/widget/expandable_text.dart';
 import 'package:social_network_app_mobile/widget/screen_share.dart';
 
 class VideoDescription extends StatefulWidget {
+  final String type;
   final dynamic moment;
-  const VideoDescription({super.key, this.moment});
+  final Function handleAction;
+  const VideoDescription(
+      {super.key, this.moment, required this.handleAction, required this.type});
 
   @override
   State<VideoDescription> createState() => _VideoDescriptionState();
@@ -245,7 +248,13 @@ class _VideoDescriptionState extends State<VideoDescription>
                                         child: Icon(
                                           iconsAction[index]['icon'],
                                           size: 30,
-                                          color: Colors.white.withOpacity(0.8),
+                                          color: iconsAction[index]['key'] ==
+                                                      'reaction' &&
+                                                  widget.moment[
+                                                          'viewer_reaction'] !=
+                                                      null
+                                              ? Colors.pink
+                                              : Colors.white.withOpacity(0.8),
                                         ),
                                       ),
                                       const SizedBox(

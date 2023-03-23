@@ -6,7 +6,6 @@ import 'package:helpers/helpers/print.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:social_network_app_mobile/widget/videoViewer/lib/domain/bloc/controller.dart';
 import 'package:social_network_app_mobile/widget/videoViewer/lib/domain/entities/styles/video_viewer.dart';
-import 'package:social_network_app_mobile/widget/videoViewer/lib/domain/entities/subtitle.dart';
 import 'package:social_network_app_mobile/widget/videoViewer/lib/domain/entities/video_source.dart';
 import 'package:social_network_app_mobile/widget/videoViewer/lib/video_viewer.dart';
 
@@ -37,7 +36,8 @@ class _UsingVideoControllerExampleState
           ),
         ),
         source: {
-          "1080p": VideoSource(video: VideoPlayerController.network(widget.path)),
+          "1080p":
+              VideoSource(video: VideoPlayerController.network(widget.path)),
         },
       ),
     );

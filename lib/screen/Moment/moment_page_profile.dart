@@ -171,6 +171,7 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
                           CupertinoPageRoute(
                               builder: (context) => Material(
                                     child: MomentPageview(
+                                      type: 'profile',
                                       momentRender: listVideos,
                                       handlePageChange: (value) {},
                                       initialPage: index,

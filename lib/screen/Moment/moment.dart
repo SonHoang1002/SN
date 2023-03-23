@@ -19,7 +19,6 @@ class _MomentState extends ConsumerState<Moment>
   late TabController _tabController;
   PageController controller =
       PageController(viewportFraction: 1, keepPage: true);
-  int _currentPageIndex = 0;
   bool isPlay = false;
 
   @override
@@ -42,7 +41,8 @@ class _MomentState extends ConsumerState<Moment>
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -63,11 +63,9 @@ class _MomentState extends ConsumerState<Moment>
           TabBarView(controller: _tabController, children: [
             if (mounted)
               MomentPageview(
+                type: 'follow',
                 momentRender: momentFollow,
                 handlePageChange: (value) {
-                  setState(() {
-                    _currentPageIndex = value;
-                  });
                   if (value == momentFollow.length - 5) {
                     ref
                         .read(momentControllerProvider.notifier)
@@ -81,6 +79,7 @@ class _MomentState extends ConsumerState<Moment>
             else
               Container(),
             MomentPageview(
+              type: 'suggest',
               momentRender: momentSuggests,
               handlePageChange: (value) {
                 if (value == momentSuggests.length - 5) {

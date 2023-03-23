@@ -158,9 +158,9 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:  [
+              children: [
                 Container(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0) ,
+                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                   child: const Text(
                     'Video giới thiệu',
                     style: TextStyle(
@@ -173,33 +173,35 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                   padding: const EdgeInsets.only(top: 10.0),
                   child: SizedBox(
                     height: growDetail['introduction_video'] != null &&
-                        growDetail['introduction_video']['meta'] !=
-                            null &&
-                        growDetail['introduction_video']['meta']
-                        ['small'] !=
-                            null
+                            growDetail['introduction_video']['meta'] != null &&
+                            growDetail['introduction_video']['meta']['small'] !=
+                                null
                         ? growDetail['introduction_video']['meta']['small']
-                    ['aspect'] <
-                        0.58
-                        ? MediaQuery.of(context).size.height - 66
-                        : null
+                                    ['aspect'] <
+                                0.58
+                            ? MediaQuery.of(context).size.height - 66
+                            : null
                         : 200,
                     width: 500,
-                    // child:  UsingVideoControllerExample(path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : ""),
-                     child: FeedVideo(
-                        type: 'showFullScreen',
-                        path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : "",
-                         flickMultiManager: flickMultiManager,
-                        image: growDetail['introduction_video'] != null &&  growDetail['introduction_video']
-                        ['preview_url'] != null ? growDetail['introduction_video']
-                                ['preview_url'] :
-                            ""),
+                    child: UsingVideoControllerExample(
+                        path: growDetail['introduction_video'] != null
+                            ? growDetail['introduction_video']['remote_url'] !=
+                                    "pending"
+                                ? growDetail['introduction_video']['remote_url']
+                                : ""
+                            : ""),
+                    //  child: FeedVideo(
+                    //     type: 'showFullScreen',
+                    //     path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : "",
+                    //      flickMultiManager: flickMultiManager,
+                    //     image: growDetail['introduction_video'] != null &&  growDetail['introduction_video']
+                    //     ['preview_url'] != null ? growDetail['introduction_video']
+                    //             ['preview_url'] :
+                    //         ""),
                   ),
                 ),
               ],
-
             ),
-
             const Divider(
               height: 20,
               thickness: 1,
@@ -313,8 +315,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      hosts[index]['account']
-                                              ['description'] ??
+                                      hosts[index]['account']['description'] ??
                                           "",
                                       style: const TextStyle(
                                         fontSize: 12.0,
