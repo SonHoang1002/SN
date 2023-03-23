@@ -26,9 +26,11 @@ class MeController extends StateNotifier<List> {
       var newAccount = {
         "id": response['id'],
         "name": response['display_name'],
-        "show_url": response['avatar_media']['show_url'],
+        "show_url": response['avatar_media']['show_url'] ??
+            response['avatar_media']['preview_url'],
         "token": token,
-        "username": response['username']
+        "username": response['username'],
+        "theme": response['theme']
       };
 
       await SecureStorage().saveKeyStorage(
