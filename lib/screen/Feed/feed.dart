@@ -41,7 +41,7 @@ class _FeedState extends ConsumerState<Feed> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        String maxId = ref.read(postControllerProvider).posts.last['id'];
+        String maxId = ref.read(postControllerProvider).posts.last['score'];
         ref
             .read(postControllerProvider.notifier)
             .getListPost({"max_id": maxId, ...paramsConfig});
