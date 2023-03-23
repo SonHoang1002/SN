@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class ThemeManager with ChangeNotifier {
@@ -24,6 +25,7 @@ class ThemeManager with ChangeNotifier {
   }
 
   void toggleTheme(type) {
+    SecureStorage().saveKeyStorage(type, 'theme');
     themeMode = type == 'dark'
         ? ThemeMode.dark
         : type == 'light'

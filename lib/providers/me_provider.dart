@@ -38,6 +38,7 @@ class MeController extends StateNotifier<List> {
           ], 'id')),
           'dataLogin');
       await SecureStorage().saveKeyStorage(response['id'], 'userId');
+      await SecureStorage().saveKeyStorage(response['theme'], 'theme');
 
       state = [response];
     }

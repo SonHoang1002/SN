@@ -13,10 +13,13 @@ import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import 'package:social_network_app_mobile/screen/Feed/feed.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
+import 'package:provider/provider.dart' as pv;
 
 class Home extends ConsumerStatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -46,11 +49,21 @@ class _HomeState extends ConsumerState<Home>
   @override
   void initState() {
     if (!mounted) return;
+    super.initState();
+    setTheme();
     Future.delayed(Duration.zero, () {
       ref.read(meControllerProvider.notifier).getMeData();
       setState(() {});
     });
-    super.initState();
+  }
+
+  void setTheme() async {
+    final theme = pv.Provider.of<ThemeManager>(context, listen: false);
+    SecureStorage().getKeyStorage('theme').then((value) {
+      if (value != 'noData') {
+        theme.getThemeInitial(value);
+      }
+    });
   }
 
   @override
