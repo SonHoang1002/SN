@@ -5,6 +5,7 @@ import 'package:social_network_app_mobile/apis/events_api.dart';
 @immutable
 class EventState {
   final List events;
+  final List posts;
   final List eventsOwner;
   final List eventHosts;
   final dynamic eventDetail;
@@ -16,6 +17,7 @@ class EventState {
 
   const EventState({
     this.events = const [],
+    this.posts = const [],
     this.eventDetail = const {},
     this.eventsInvite = const [],
     this.eventHosts = const [],
@@ -28,6 +30,7 @@ class EventState {
 
   EventState copyWith({
     List events = const [],
+    List posts = const [],
     List eventsOwner = const [],
     List eventHosts = const [],
     List eventsInvite = const [],
@@ -39,6 +42,7 @@ class EventState {
   }) {
     return EventState(
       events: events,
+      posts: posts,
       eventDetail: eventDetail,
       eventHosts: eventHosts,
       eventsInvite: eventsInvite,
@@ -70,6 +74,7 @@ class EventController extends StateNotifier<EventState> {
               : newEvents,
           isMore: response.length < params['limit'] ? false : true,
           hosts: state.hosts,
+          posts: state.posts,
           eventsOwner: state.eventsOwner,
           eventDetail: state.eventDetail,
           eventsInvite: state.eventsInvite,
@@ -82,6 +87,7 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           isMore: false,
           hosts: state.hosts,
+          posts: state.posts,
           eventDetail: state.eventDetail,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
@@ -100,6 +106,7 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           eventsOwner: [...response],
           events: state.events,
+          posts: state.posts,
           eventsInvite: state.eventsInvite,
           eventHosts: state.eventHosts,
           eventsInviteHost: state.eventsInviteHost,
@@ -112,6 +119,7 @@ class EventController extends StateNotifier<EventState> {
           eventsOwner: [...response],
           events: state.events,
           eventsInvite: state.eventsInvite,
+          posts: state.posts,
           eventsInviteHost: state.eventsInviteHost,
           eventDetail: state.eventDetail,
           eventHosts: state.eventHosts,
@@ -127,6 +135,7 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           eventsInvite: [...response['data']],
           eventsOwner: state.eventsOwner,
+          posts: state.posts,
           events: state.events,
           eventsInviteHost: state.eventsInviteHost,
           eventDetail: state.eventDetail,
@@ -144,6 +153,7 @@ class EventController extends StateNotifier<EventState> {
           eventsInviteHost: [...response['data']],
           eventsOwner: state.eventsOwner,
           events: state.events,
+          posts: state.posts,
           eventsInvite: state.eventsInvite,
           eventHosts: state.eventHosts,
           eventDetail: state.eventDetail,
@@ -158,6 +168,23 @@ class EventController extends StateNotifier<EventState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
           eventDetail: response,
+          events: state.events,
+          posts: state.posts,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventsOwner: state.eventsOwner,
+          eventHosts: state.eventHosts,
+          hosts: state.hosts,
+          isMore: state.isMore,
+          eventsSuggested: state.eventsSuggested);
+    }
+  }
+  getPostEvent(id, params) async {
+    var response = await EventApi().getListPostEventApi(id, params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          posts: response,
+          eventDetail: state.eventDetail,
           events: state.events,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
@@ -174,6 +201,7 @@ class EventController extends StateNotifier<EventState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
           events: state.events,
+          posts: state.posts,
           eventHosts: state.eventHosts,
           eventDetail: state.eventDetail,
           hosts: state.hosts,
@@ -187,6 +215,7 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           eventsSuggested: [...response],
           events: state.events,
+          posts: state.posts,
           eventsInvite: state.eventsInvite,
           eventHosts: state.eventHosts,
           eventsInviteHost: state.eventsInviteHost,
@@ -202,6 +231,7 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           hosts: [...response],
           events: state.events,
+          posts: state.posts,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
           eventHosts: state.eventHosts,
@@ -221,6 +251,7 @@ class EventController extends StateNotifier<EventState> {
               ? [...state.eventHosts, ...newListEvent]
               : newListEvent,
           eventsOwner: state.eventsOwner,
+          posts: state.posts,
           events: state.events,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
@@ -236,6 +267,7 @@ class EventController extends StateNotifier<EventState> {
               ? [...state.eventHosts, ...newListEvent]
               : newListEvent,
           eventsOwner: state.eventsOwner,
+          posts: state.posts,
           events: state.events,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
@@ -266,6 +298,7 @@ class EventController extends StateNotifier<EventState> {
       ],
       hosts: state.hosts,
       eventsOwner: state.eventsOwner,
+      posts: state.posts,
       eventHosts: state.eventHosts,
       eventDetail: state.eventDetail,
       eventsInvite: state.eventsInvite,
@@ -278,6 +311,7 @@ class EventController extends StateNotifier<EventState> {
     EventApi().statusEventApi(id, data);
     state = state.copyWith(
         events: state.events,
+        posts: state.posts,
         hosts: state.hosts,
         eventsOwner: state.eventsOwner,
         eventHosts: state.eventHosts,
@@ -310,6 +344,7 @@ class EventController extends StateNotifier<EventState> {
         ...state.eventsSuggested.sublist(index + 1),
       ],
       hosts: state.hosts,
+      posts: state.posts,
       eventsInvite: state.eventsInvite,
       eventHosts: state.eventHosts,
       eventsInviteHost: state.eventsInviteHost,
@@ -336,6 +371,7 @@ class EventController extends StateNotifier<EventState> {
       ],
       hosts: state.hosts,
       eventsInvite: state.eventsInvite,
+      posts: state.posts,
       eventsSuggested: state.eventsSuggested,
       eventHosts: state.eventHosts,
       eventsOwner: state.eventsOwner,
@@ -363,6 +399,7 @@ class EventController extends StateNotifier<EventState> {
         ...state.eventsInvite.sublist(index + 1),
       ],
       hosts: state.hosts,
+      posts: state.posts,
       eventsInviteHost: state.eventsInviteHost,
       eventHosts: state.eventHosts,
       eventsSuggested: state.eventsSuggested,
@@ -391,6 +428,7 @@ class EventController extends StateNotifier<EventState> {
         ...state.eventsOwner.sublist(index + 1),
       ],
       hosts: state.hosts,
+      posts: state.posts,
       eventsSuggested: state.eventsSuggested,
       eventsInvite: state.eventsInvite,
       eventHosts: state.eventHosts,

@@ -294,15 +294,6 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                       fontWeight: FontWeight.w900,
                     ),
                   ),
-                  Text(
-                    'Xem tất cả',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
                 ],
               ),
             ),

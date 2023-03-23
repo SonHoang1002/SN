@@ -9,6 +9,9 @@ class EventApi {
   Future getListEventApi(params) async {
     return await Api().getRequestBase('/api/v1/events', params);
   }
+  Future getListPostEventApi(id, params) async {
+    return await Api().getRequestBase('/api/v1/timelines/event/$id', params);
+  }
   Future getListEventInviteApi(params) async {
     return await Api().getRequestBase('/api/v1/event_invitations', params);
   }

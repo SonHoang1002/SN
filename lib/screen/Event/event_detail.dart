@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
@@ -23,11 +24,11 @@ class EventDetail extends ConsumerStatefulWidget {
   ConsumerState<EventDetail> createState() => _EventDetailState();
 }
 
-bool eventAction = true;
 
 class _EventDetailState extends ConsumerState<EventDetail> {
   final ScrollController _scrollController = ScrollController();
   bool _isVisible = false;
+  bool eventAction = true;
   late double width;
   late double height;
   var paramsConfig = {"limit": 4};
@@ -356,73 +357,70 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                   const SizedBox(width: 10),
                                   InkWell(
                                       onTap: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) => Container(
-                                            margin: const EdgeInsets.only(
-                                                left: 8.0, top: 15.0),
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.3 +
-                                                30,
-                                            child: Column(
-                                              children: [
-                                                ListView.builder(
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  shrinkWrap: true,
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
-                                                  itemCount:
-                                                      iconActionEllipsis.length,
-                                                  itemBuilder:
-                                                      ((context, index) {
-                                                    return Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 10.0),
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          showModalBottomSheet(
-                                                              context: context,
-                                                              isScrollControlled:
-                                                                  true,
-                                                              barrierColor: Colors
-                                                                  .transparent,
-                                                              clipBehavior: Clip
-                                                                  .antiAliasWithSaveLayer,
-                                                              shape: const RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.vertical(
-                                                                          top: Radius.circular(
-                                                                              10))),
-                                                              builder:
-                                                                  (context) =>
-                                                                      SizedBox(
-                                                                        height: height *
-                                                                            0.9,
-                                                                        width:
-                                                                            width,
-                                                                        child: ActionEllipsis(
-                                                                            menuSelected:
-                                                                                iconActionEllipsis[index]),
-                                                                      ));
-                                                        },
+                                        showBarModalBottomSheet(backgroundColor: Theme.of(context).scaffoldBackgroundColor,context: context, builder: (context) => Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 8.0, top: 15.0),
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
+                                          height: 250,
+                                          child: Column(
+                                            children: [
+                                              ListView.builder(
+                                                scrollDirection:
+                                                Axis.vertical,
+                                                shrinkWrap: true,
+                                                physics:
+                                                const NeverScrollableScrollPhysics(),
+                                                itemCount:
+                                                iconActionEllipsis.length,
+                                                itemBuilder:
+                                                ((context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                    const EdgeInsets.only(
+                                                        bottom: 10.0),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                        if(index != 1 && index != 2) {
+                                                          showBarModalBottomSheet(backgroundColor: Theme.of(context).scaffoldBackgroundColor,context: context, builder:   (context) =>
+                                                              SizedBox(
+                                                                height: height *
+                                                                    0.9,
+                                                                width:
+                                                                width,
+                                                                child: ActionEllipsis(
+                                                                    menuSelected:
+                                                                    iconActionEllipsis[index]),
+                                                              ));
+                                                        } else if (index == 2) {
+                                                          Clipboard.setData(ClipboardData(text: eventAction ? 'https://sn.emso.vn/event/${eventDetail['id']}/about' : 'https://sn.emso.vn/event/${eventDetail['id']}/discussion' ));
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                             const SnackBar(
+                                                                content: Text(
+                                                                    'Sao chép thành công'),
+                                                                duration: Duration(seconds: 3),
+                                                                backgroundColor: secondaryColor,
+                                                              ));
+                                                        } else {
+                                                          const SizedBox();
+                                                        }
+
+                                                      },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(top:4.0, bottom: 4.0),
                                                         child: Row(
                                                           children: [
                                                             CircleAvatar(
                                                               radius: 18.0,
                                                               backgroundColor:
-                                                                  greyColor[
-                                                                      350],
+                                                              greyColor[
+                                                              350],
                                                               child: Icon(
                                                                 iconActionEllipsis[
-                                                                        index]
-                                                                    ["icon"],
+                                                                index]
+                                                                ["icon"],
                                                                 size: 18.0,
                                                                 color: Colors
                                                                     .black,
@@ -430,31 +428,31 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                             ),
                                                             Container(
                                                               margin:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          10.0),
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left:
+                                                                  10.0),
                                                               child: Text(
                                                                   iconActionEllipsis[
-                                                                          index]
-                                                                      ["label"],
+                                                                  index]
+                                                                  ["label"],
                                                                   style: const TextStyle(
                                                                       fontSize:
-                                                                          14.0,
+                                                                      14.0,
                                                                       fontWeight:
-                                                                          FontWeight
-                                                                              .w500)),
+                                                                      FontWeight
+                                                                          .w500)),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                    );
-                                                  }),
-                                                )
-                                              ],
-                                            ),
+                                                    ),
+                                                  );
+                                                }),
+                                              )
+                                            ],
                                           ),
-                                        );
+                                        ),);
                                       },
                                       child: Container(
                                         height: 32,

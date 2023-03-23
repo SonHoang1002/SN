@@ -36,40 +36,38 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
 
     return SizedBox(
       width: double.infinity,
-      child: Expanded(
-        child: ListView.builder(
-            itemCount: friendExcludes.length,
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {
-                },
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      friendExcludes[index]['avatar_media'] != null
-                          ? friendExcludes[index]['avatar_media']['preview_url']
-                          : friendExcludes[index]['avatar_static']),
-                ),
-                title: Text(friendExcludes[index]['display_name'], style:  TextStyle(color: colorWord(context))),
-                trailing: Container(
-                    width: 50,
-                    height: 30,
-                    decoration: BoxDecoration(
-                        color: secondaryColor.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const Center(
-                      child: InkWell(
-                        child: Text('Mời',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: secondaryColor)),
-                      ),
-                    )),
-              );
-            }),
-      ),
+      child: ListView.builder(
+          itemCount: friendExcludes.length,
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return ListTile(
+              onTap: () {
+              },
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    friendExcludes[index]['avatar_media'] != null
+                        ? friendExcludes[index]['avatar_media']['preview_url']
+                        : friendExcludes[index]['avatar_static']),
+              ),
+              title: Text(friendExcludes[index]['display_name'], style:  TextStyle(color: colorWord(context))),
+              trailing: Container(
+                  width: 50,
+                  height: 30,
+                  decoration: BoxDecoration(
+                      color: secondaryColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: const Center(
+                    child: InkWell(
+                      child: Text('Mời',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: secondaryColor)),
+                    ),
+                  )),
+            );
+          }),
     );
   }
 }

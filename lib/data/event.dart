@@ -640,9 +640,4 @@ List iconActionEllipsis = [
     "label": "Tìm sự hỗ trợ hoặc báo cáo sự kiện",
     "icon": FontAwesomeIcons.circleXmark
   },
-  {
-    "key": "setting",
-    "label": "Cài đặt thông báo",
-    "icon": FontAwesomeIcons.circleXmark
-  },
 ];
