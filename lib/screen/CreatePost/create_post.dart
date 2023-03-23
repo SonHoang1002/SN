@@ -14,7 +14,7 @@ class CreatePost extends StatelessWidget {
       {"key": "post", "icon": "assets/story.svg", "title": "Post"},
       {
         "key": "moment",
-        "icon": "assets/moment_menu.svg",
+        "image": "assets/MomentMenu.png",
         "title": "Khoảnh khắc"
       },
       {"key": "live", "icon": "assets/Live.svg", "title": "Phát trực tiếp"}
@@ -57,8 +57,15 @@ class CreatePost extends StatelessWidget {
                                       Border.all(width: 0.2, color: greyColor)),
                               child: Row(
                                 children: [
-                                  SvgPicture.asset(
-                                      postTypeCreate[index]['icon']),
+                                  if (postTypeCreate[index]?['icon'] != null)
+                                    SvgPicture.asset(
+                                        postTypeCreate[index]['icon']),
+                                  if (postTypeCreate[index]?['image'] != null)
+                                    Image.asset(
+                                      postTypeCreate[index]?['image'],
+                                      width: 31,
+                                      height: 31,
+                                    ),
                                   const SizedBox(
                                     width: 8,
                                   ),

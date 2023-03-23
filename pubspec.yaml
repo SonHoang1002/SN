@@ -135,8 +135,6 @@ flutter:
     - assets/target.svg
     - assets/win.svg
     - assets/chat.svg
-    - assets/Moment.svg
-    - assets/MomentFc.svg
     - assets/Plus.svg
     - assets/Watch.svg
     - assets/WatchFC.svg
@@ -145,8 +143,6 @@ flutter:
     - assets/notification.svg
     - assets/blood.svg
     - assets/blood.png
-    - assets/Chat_1.svg
-    - assets/Chat_1.png
     - assets/event.svg
     - assets/friend.svg
     - assets/Groups_1.svg
@@ -154,7 +150,6 @@ flutter:
     - assets/job.svg
     - assets/learnspace.svg
     - assets/Maket.svg
-    - assets/moment_menu.svg
     - assets/moment_menu.png
     - assets/music.svg
     - assets/Page.svg
@@ -172,6 +167,14 @@ flutter:
     - assets/disc.png
     - assets/grey.png
     - assets/Payment.svg
+    - assets/MomentFC.png
+    - assets/MomentDM_1.png
+    - assets/MomentLM.png
+    - assets/MomentMenu.png
+    - assets/Chat_3.png
+
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

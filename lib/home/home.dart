@@ -132,15 +132,12 @@ class _HomeState extends ConsumerState<Home>
                     label: '',
                   ),
                   BottomNavigationBarItem(
-                      icon: Padding(
-                        padding: const EdgeInsets.only(top: 7.0),
-                        child: SvgPicture.asset(
-                          _selectedIndex == 1
-                              ? "assets/MomentFc.svg"
-                              : "assets/Moment.svg",
-                          width: 38,
-                          height: 38,
-                        ),
+                      icon: Image.asset(
+                        _selectedIndex == 1
+                            ? 'assets/MomentFC.png'
+                            : 'assets/MomentLM.png',
+                        width: 22,
+                        height: 22,
                       ),
                       label: ''),
                   BottomNavigationBarItem(
