@@ -16,10 +16,10 @@ import 'package:social_network_app_mobile/providers/setting/choose_object_provid
 import 'theme/theme_manager.dart';
 
 var routes = <String, WidgetBuilder>{
-  "/": (BuildContext context) => const Home(),
+  "/home": (BuildContext context) => const Home(),
   //  SaleInformationMarketPage
   // '/login': (BuildContext context) => const Auth()
-  '/preview': (BuildContext context) => const PreviewScreen()
+  '/': (BuildContext context) => const PreviewScreen()
 };
 
 class App extends StatefulWidget {
