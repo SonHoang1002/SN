@@ -85,6 +85,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
                       onTap: () {
                         if (meData[0]['username'] !=
                             dataLogin[index]['username']) {
+                          SecureStorage().deleteKeyStorage('theme');
                           handleLogin(dataLogin[index]['token']);
                         } else {
                           Navigator.pop(context);

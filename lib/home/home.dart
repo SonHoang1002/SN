@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -50,18 +51,27 @@ class _HomeState extends ConsumerState<Home>
   void initState() {
     if (!mounted) return;
     super.initState();
-    setTheme();
     Future.delayed(Duration.zero, () {
-      ref.read(meControllerProvider.notifier).getMeData();
-      setState(() {});
+      if (ref.watch(meControllerProvider).length > 0) {
+        ref.read(meControllerProvider.notifier).getMeData();
+      }
+      setTheme();
     });
   }
 
   void setTheme() async {
     final theme = pv.Provider.of<ThemeManager>(context, listen: false);
+    final token = await SecureStorage().getKeyStorage('token');
+    final dataLogin = await SecureStorage().getKeyStorage('dataLogin');
     SecureStorage().getKeyStorage('theme').then((value) {
       if (value != 'noData') {
         theme.getThemeInitial(value);
+      } else {
+        var currentTheme = jsonDecode(dataLogin)
+            .firstWhere((e) => e['token'] == token)['theme'];
+        if (currentTheme != null) {
+          theme.toggleTheme(currentTheme);
+        }
       }
     });
   }
@@ -109,97 +119,93 @@ class _HomeState extends ConsumerState<Home>
               index: _selectedIndex,
               children: pages,
             ),
-            bottomNavigationBar: SizedBox(
-              height: 65,
-              child: BottomNavigationBar(
-                selectedItemColor: primaryColor,
-                unselectedItemColor: greyColor,
-                showSelectedLabels: false,
-                elevation: 0,
-                backgroundColor: _selectedIndex == 1
-                    ? Colors.black
-                    : Theme.of(context).scaffoldBackgroundColor,
-                type: BottomNavigationBarType.fixed,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
+            bottomNavigationBar: BottomNavigationBar(
+              selectedItemColor: primaryColor,
+              unselectedItemColor: greyColor,
+              showSelectedLabels: false,
+              elevation: 0,
+              backgroundColor: _selectedIndex == 1
+                  ? Colors.black
+                  : Theme.of(context).scaffoldBackgroundColor,
+              type: BottomNavigationBarType.fixed,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    _selectedIndex == 0
+                        ? "assets/HomeFC.svg"
+                        : "assets/home.svg",
+                    width: 20,
+                    height: 20,
+                  ),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                    icon: Image.asset(
+                      _selectedIndex == 1
+                          ? 'assets/MomentFC.png'
+                          : 'assets/MomentLM.png',
+                      width: 22,
+                      height: 22,
+                    ),
+                    label: ''),
+                BottomNavigationBarItem(
                     icon: SvgPicture.asset(
-                      _selectedIndex == 0
-                          ? "assets/HomeFC.svg"
-                          : "assets/home.svg",
+                      "assets/Plus.svg",
+                      width: 20,
+                      height: 20,
+                      color: _selectedIndex == 2 ? primaryColor : greyColor,
+                    ),
+                    label: ''),
+                BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      _selectedIndex == 3
+                          ? "assets/WatchFC.svg"
+                          : "assets/Watch.svg",
                       width: 20,
                       height: 20,
                     ),
-                    label: '',
-                  ),
-                  BottomNavigationBarItem(
-                      icon: Image.asset(
-                        _selectedIndex == 1
-                            ? 'assets/MomentFC.png'
-                            : 'assets/MomentLM.png',
-                        width: 22,
-                        height: 22,
+                    label: ''),
+                BottomNavigationBarItem(
+                    icon: Container(
+                      decoration: BoxDecoration(
+                        color: _selectedIndex == 4 ? primaryColor : greyColor,
+                        shape: BoxShape.circle,
                       ),
-                      label: ''),
-                  BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        "assets/Plus.svg",
-                        width: 20,
-                        height: 20,
-                        color: _selectedIndex == 2 ? primaryColor : greyColor,
-                      ),
-                      label: ''),
-                  BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        _selectedIndex == 3
-                            ? "assets/WatchFC.svg"
-                            : "assets/Watch.svg",
-                        width: 20,
-                        height: 20,
-                      ),
-                      label: ''),
-                  BottomNavigationBarItem(
-                      icon: Container(
-                        decoration: BoxDecoration(
-                          color: _selectedIndex == 4 ? primaryColor : greyColor,
-                          shape: BoxShape.circle,
-                        ),
-                        width: 27,
-                        height: 27,
-                        child: Center(
-                          child: Stack(
-                            children: [
-                              AvatarSocial(
-                                  width: 23.0,
-                                  height: 23.0,
-                                  object: meData[0],
-                                  path: meData[0]['avatar_media']
-                                      ['preview_url']),
-                              Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    width: 10,
-                                    height: 10,
-                                    decoration: BoxDecoration(
-                                        color: _selectedIndex == 4
-                                            ? primaryColor
-                                            : greyColor,
-                                        shape: BoxShape.circle),
-                                    child: const Icon(
-                                      Icons.menu,
-                                      size: 6,
-                                      color: Colors.white,
-                                    ),
-                                  ))
-                            ],
-                          ),
+                      width: 27,
+                      height: 27,
+                      child: Center(
+                        child: Stack(
+                          children: [
+                            AvatarSocial(
+                                width: 23.0,
+                                height: 23.0,
+                                object: meData[0],
+                                path: meData[0]['avatar_media']['preview_url']),
+                            Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                      color: _selectedIndex == 4
+                                          ? primaryColor
+                                          : greyColor,
+                                      shape: BoxShape.circle),
+                                  child: const Icon(
+                                    Icons.menu,
+                                    size: 6,
+                                    color: Colors.white,
+                                  ),
+                                ))
+                          ],
                         ),
                       ),
-                      label: ''),
-                ],
-                currentIndex: _selectedIndex,
-                onTap: _onItemTapped,
-              ),
+                    ),
+                    label: ''),
+              ],
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
             ),
           );
   }

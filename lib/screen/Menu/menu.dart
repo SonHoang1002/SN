@@ -58,6 +58,7 @@ class _MenuState extends State<Menu> {
     logout() async {
       await SecureStorage().deleteKeyStorage("token");
       await SecureStorage().deleteKeyStorage("userId");
+      await SecureStorage().deleteKeyStorage('theme');
       if (mounted) {
         pushAndReplaceToNextScreen(context, const OnboardingLoginPage());
       }
