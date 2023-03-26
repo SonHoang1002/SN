@@ -32,7 +32,8 @@ import 'filter_categories_market_page.dart';
 import 'search_modules/category_search_page.dart';
 
 class MainMarketPage extends ConsumerStatefulWidget {
-  const MainMarketPage({super.key});
+  final bool? isBack;
+  const MainMarketPage(this.isBack, {super.key});
 
   @override
   ConsumerState<MainMarketPage> createState() => _MainMarketPageState();
@@ -165,9 +166,11 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 5, right: 5),
-                child: BackIconAppbar(),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: widget.isBack == true
+                    ? const BackIconAppbar()
+                    : const SizedBox(),
               ),
               Expanded(
                 child: Container(

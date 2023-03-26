@@ -66,10 +66,6 @@ class _MenuState extends State<Menu> {
 
     return Scaffold(
       key: key,
-      drawer: Drawer(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        child: const DrawerFeed(),
-      ),
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -81,21 +77,11 @@ class _MenuState extends State<Menu> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () => key.currentState!.openDrawer(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Theme.of(context).textTheme.displayLarge!.color,
-                      ),
-                    ),
+                children: const [
+                  SizedBox(
+                    width: 6,
                   ),
-                  const SizedBox(
-                    width: 7,
-                  ),
-                  const AppBarTitle(title: 'Menu'),
+                  AppBarTitle(title: 'Menu'),
                 ]),
             Row(
               children: List.generate(
