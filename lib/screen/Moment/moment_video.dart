@@ -1,19 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class MomentVideo extends StatefulWidget {
+class MomentVideo extends ConsumerStatefulWidget {
   const MomentVideo({Key? key, this.moment}) : super(key: key);
   final dynamic moment;
 
   @override
   // ignore: library_private_types_in_public_api
-  _MomentVideoState createState() => _MomentVideoState();
+  ConsumerState<MomentVideo> createState() => _MomentVideoState();
 }
 
-class _MomentVideoState extends State<MomentVideo>
+class _MomentVideoState extends ConsumerState<MomentVideo>
     with TickerProviderStateMixin {
   late VideoPlayerController videoPlayerController;
   late AnimationController _animationController;
@@ -87,6 +89,12 @@ class _MomentVideoState extends State<MomentVideo>
     _animationController
         .forward()
         .then((value) => _animationController.repeat(max: 0));
+    Future.delayed(Duration.zero, () {
+      ref.read(momentControllerProvider.notifier).updateReaction(
+            widget.moment['viewer_reaction'] == 'love' ? null : 'love',
+            widget.moment['id'],
+          );
+    });
   }
 
   Widget isPlaying() {
