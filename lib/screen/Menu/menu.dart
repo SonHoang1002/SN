@@ -140,9 +140,6 @@ class _MenuState extends State<Menu> {
                   height: 15,
                 ),
                 const MenuRender(),
-                const SizedBox(
-                  height: 15,
-                ),
                 Container(
                   height: 0.3,
                   decoration: const BoxDecoration(color: greyColor),

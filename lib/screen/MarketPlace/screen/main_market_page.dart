@@ -103,53 +103,50 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       all_data = demoProductCategories;
     }
     getCategoriesName();
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                buildBanner(context, width: width, height: 300),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: _buildCategoriesComponent(),
-                ),
-                const CrossBar(
-                  height: 10,
-                ),
-                // suggest product
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: _buildSuggestComponent(),
-                ),
-                buildSpacer(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: _buildLatestSearchComponent(),
-                ),
-                const CrossBar(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: _buildDiscoverComponent(),
-                )
-              ],
-            ),
-          ),
-          Column(
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
             children: [
-              Container(
-                height: 50,
-                color: _isScrolled ? secondaryColor : transparent,
+              buildBanner(context, width: width, height: 300),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _buildCategoriesComponent(),
               ),
-              _customAppBar(),
+              const CrossBar(
+                height: 10,
+              ),
+              // suggest product
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _buildSuggestComponent(),
+              ),
+              buildSpacer(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _buildLatestSearchComponent(),
+              ),
+              const CrossBar(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _buildDiscoverComponent(),
+              )
             ],
-          )
-        ],
-      ),
+          ),
+        ),
+        Column(
+          children: [
+            Container(
+              height: 50,
+              color: _isScrolled ? secondaryColor : transparent,
+            ),
+            _customAppBar(),
+          ],
+        )
+      ],
     );
   }
 

@@ -28,23 +28,21 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          hiddenKeyboard(context);
-        },
-        child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [const BackIconAppbar(), Container()],
-            ),
+    return GestureDetector(
+      onTap: () {
+        hiddenKeyboard(context);
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [const BackIconAppbar(), Container()],
           ),
-          body: getBody(context, size),
         ),
+        body: getBody(context, size),
       ),
     );
   }
