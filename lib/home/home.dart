@@ -54,7 +54,7 @@ class _HomeState extends ConsumerState<Home>
     if (!mounted) return;
     super.initState();
     Future.delayed(Duration.zero, () {
-      if (ref.watch(meControllerProvider).length > 0) {
+      if (ref.watch(meControllerProvider).isEmpty) {
         ref.read(meControllerProvider.notifier).getMeData();
       }
       setTheme();
@@ -266,6 +266,8 @@ class _HomeState extends ConsumerState<Home>
               selectedItemColor: primaryColor,
               unselectedItemColor: greyColor,
               showSelectedLabels: false,
+              selectedLabelStyle: const TextStyle(fontSize: 0),
+              unselectedLabelStyle: const TextStyle(fontSize: 0),
               elevation: 0,
               backgroundColor: _selectedIndex == 1
                   ? Colors.black
@@ -309,14 +311,14 @@ class _HomeState extends ConsumerState<Home>
                     ),
                     label: ''),
                 BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
+                    icon: Image.asset(
                       _selectedIndex == 4
-                          ? "assets/WatchFC.svg"
-                          : "assets/Watch.svg",
-                      width: 20,
-                      height: 20,
+                          ? 'assets/MarketFC.png'
+                          : 'assets/MarketLM.png',
+                      width: 22,
+                      height: 22,
                     ),
-                    label: ''),
+                    label: '')
               ],
               currentIndex: _selectedIndex,
               onTap: _onItemTapped,

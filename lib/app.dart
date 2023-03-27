@@ -71,7 +71,7 @@ class _MaterialAppWithThemeState extends State<MaterialAppWithTheme> {
       themeMode: theme.themeMode,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
-      initialRoute: '/preview',
+      initialRoute: '/',
       routes: routes,
     );
   }
