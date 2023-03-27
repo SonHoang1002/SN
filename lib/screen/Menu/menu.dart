@@ -147,7 +147,8 @@ class _MenuState extends State<Menu> {
                 const SizedBox(
                   height: 15,
                 ),
-                SizedBox(
+                Container(
+                  margin: const EdgeInsets.only(bottom: 30),
                   width: size.width - 40,
                   height: 40, // <-- match_parent
                   child: ElevatedButton(
