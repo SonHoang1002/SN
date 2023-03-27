@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -73,6 +74,7 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+
     return LoaderOverlay(
         useDefaultLoading: false,
         overlayWidget: const Center(

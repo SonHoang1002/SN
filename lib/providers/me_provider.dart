@@ -65,4 +65,10 @@ class MeController extends StateNotifier<List> {
       state = [data];
     }
   }
+
+  resetMeData() {
+    if (mounted) {
+      state = [];
+    }
+  }
 }
