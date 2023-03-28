@@ -67,8 +67,8 @@ class _EventCardState extends ConsumerState<EventCard> {
     return Expanded(
       child: SingleChildScrollView(
         controller: scrollController,
-        child: events.isNotEmpty
-            ? Column(
+        child:
+             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(
@@ -82,6 +82,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                       ),
                     ),
                   ),
+                  events.isNotEmpty ?
                   SizedBox(
                       child: ListView.builder(
                     shrinkWrap: true,
@@ -547,13 +548,12 @@ class _EventCardState extends ConsumerState<EventCard> {
                             : const SizedBox();
                       }
                     },
-                  )),
+                  )) : const SizedBox(),
                   isMore == true
                       ? const Center(child: CupertinoActivityIndicator())
                       : const SizedBox()
                 ],
-              )
-            : const SizedBox(),
+              ),
       ),
     );
   }

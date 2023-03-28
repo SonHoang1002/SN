@@ -51,6 +51,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
             () => ref
             .read(eventControllerProvider.notifier)
             .getEventHosts(widget.eventDetail['id']));
+    Future.delayed(
+        Duration.zero,
+            () => ref
+            .read(eventControllerProvider.notifier)
+            .getListGroupSuggested({"tab": 'join'}));
     _scrollController.addListener(() {
       if (_scrollController.offset > 200) {
         setState(() {

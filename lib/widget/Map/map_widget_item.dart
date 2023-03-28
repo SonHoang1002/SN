@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/map.dart';
+import 'package:social_network_app_mobile/widget/Map/map.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class MapWidgetItem extends StatelessWidget {

@@ -94,6 +94,8 @@ dependencies:
   image_picker: ^0.8.7
   full_screen_image: ^2.0.0
   step_progress_indicator: ^1.0.2
+  flutter_map_location_marker: ^5.2.1
+  image_crop: ^0.4.1
 
 dev_dependencies:
   flutter_test:

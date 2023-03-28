@@ -33,7 +33,7 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:social_network_app_mobile/widget/map_widget_item.dart';
+import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;

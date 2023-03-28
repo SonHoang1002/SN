@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/screen/Event/event_form_create.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
 import 'package:social_network_app_mobile/screen/Payment/payment.dart';
@@ -9,7 +11,6 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 import '../../helper/push_to_new_screen.dart';
-import '../EventScreen/screen/create_event_page.dart';
 import '../Group/GroupCreateModules/screen/create_group_page.dart';
 import '../MarketPlace/screen/personal_market_page.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
@@ -87,34 +88,39 @@ class MenuSelected extends StatelessWidget {
         body = const EventRender();
         buttonAppbar = Row(
           children: [
-            GestureDetector(
+            InkWell(
               onTap: () {},
-              child: const Icon(
+              child:  Icon(
                 FontAwesomeIcons.calendarDay,
                 size: 18,
-                color: Colors.black,
+                color: colorWord,
               ),
             ),
             const SizedBox(
-              width: 7.0,
+              width: 12.0,
             ),
-            GestureDetector(
-              onTap: () {},
-              child: const Icon(
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CreateEvent()),
+                );
+              },
+              child:  Icon(
                 FontAwesomeIcons.plus,
                 size: 18,
-                color: Colors.black,
+                color: colorWord
               ),
             ),
             const SizedBox(
-              width: 7.0,
+              width: 12.0,
             ),
-            GestureDetector(
+            InkWell(
                 onTap: () {},
-                child: const Icon(
+                child: Icon(
                   FontAwesomeIcons.magnifyingGlass,
                   size: 18,
-                  color: Colors.black,
+                  color: colorWord,
                 ))
           ],
         );
@@ -164,34 +170,34 @@ class MenuSelected extends StatelessWidget {
         body = const RecruitRender();
         buttonAppbar = Row(
           children: [
-            GestureDetector(
-              onTap: () {},
+            InkWell(
+              onTap: () {
+              },
               child: const Icon(
                 FontAwesomeIcons.calendarDay,
                 size: 18,
-                color: Colors.black,
               ),
             ),
             const SizedBox(
               width: 7.0,
             ),
-            GestureDetector(
-              onTap: () {},
+            InkWell(
+              onTap: () {
+
+              },
               child: const Icon(
                 FontAwesomeIcons.plus,
                 size: 18,
-                color: Colors.black,
               ),
             ),
             const SizedBox(
               width: 7.0,
             ),
-            GestureDetector(
+            InkWell(
                 onTap: () {},
                 child: const Icon(
                   FontAwesomeIcons.magnifyingGlass,
                   size: 18,
-                  color: Colors.black,
                 ))
           ],
         );

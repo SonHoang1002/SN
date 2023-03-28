@@ -7,6 +7,7 @@ class EventState {
   final List events;
   final List posts;
   final List eventsOwner;
+  final List groupSuggest;
   final List eventHosts;
   final dynamic eventDetail;
   final List eventsInvite;
@@ -18,6 +19,7 @@ class EventState {
   const EventState({
     this.events = const [],
     this.posts = const [],
+    this.groupSuggest = const [],
     this.eventDetail = const {},
     this.eventsInvite = const [],
     this.eventHosts = const [],
@@ -31,6 +33,7 @@ class EventState {
   EventState copyWith({
     List events = const [],
     List posts = const [],
+    List groupSuggest = const [],
     List eventsOwner = const [],
     List eventHosts = const [],
     List eventsInvite = const [],
@@ -44,6 +47,7 @@ class EventState {
       events: events,
       posts: posts,
       eventDetail: eventDetail,
+      groupSuggest: groupSuggest,
       eventHosts: eventHosts,
       eventsInvite: eventsInvite,
       eventsInviteHost: eventsInviteHost,
@@ -74,6 +78,7 @@ class EventController extends StateNotifier<EventState> {
               : newEvents,
           isMore: response.length < params['limit'] ? false : true,
           hosts: state.hosts,
+          groupSuggest: state.groupSuggest,
           posts: state.posts,
           eventsOwner: state.eventsOwner,
           eventDetail: state.eventDetail,
@@ -88,6 +93,7 @@ class EventController extends StateNotifier<EventState> {
           isMore: false,
           hosts: state.hosts,
           posts: state.posts,
+          groupSuggest: state.groupSuggest,
           eventDetail: state.eventDetail,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
@@ -107,6 +113,7 @@ class EventController extends StateNotifier<EventState> {
           eventsOwner: [...response],
           events: state.events,
           posts: state.posts,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           eventHosts: state.eventHosts,
           eventsInviteHost: state.eventsInviteHost,
@@ -118,6 +125,7 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           eventsOwner: [...response],
           events: state.events,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           posts: state.posts,
           eventsInviteHost: state.eventsInviteHost,
@@ -137,6 +145,7 @@ class EventController extends StateNotifier<EventState> {
           eventsOwner: state.eventsOwner,
           posts: state.posts,
           events: state.events,
+          groupSuggest: state.groupSuggest,
           eventsInviteHost: state.eventsInviteHost,
           eventDetail: state.eventDetail,
           eventHosts: state.eventHosts,
@@ -154,6 +163,7 @@ class EventController extends StateNotifier<EventState> {
           eventsOwner: state.eventsOwner,
           events: state.events,
           posts: state.posts,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           eventHosts: state.eventHosts,
           eventDetail: state.eventDetail,
@@ -170,6 +180,7 @@ class EventController extends StateNotifier<EventState> {
           eventDetail: response,
           events: state.events,
           posts: state.posts,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
           eventsOwner: state.eventsOwner,
@@ -186,6 +197,7 @@ class EventController extends StateNotifier<EventState> {
           posts: response,
           eventDetail: state.eventDetail,
           events: state.events,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
           eventsOwner: state.eventsOwner,
@@ -202,6 +214,7 @@ class EventController extends StateNotifier<EventState> {
       state = state.copyWith(
           events: state.events,
           posts: state.posts,
+          groupSuggest: state.groupSuggest,
           eventHosts: state.eventHosts,
           eventDetail: state.eventDetail,
           hosts: state.hosts,
@@ -216,6 +229,7 @@ class EventController extends StateNotifier<EventState> {
           eventsSuggested: [...response],
           events: state.events,
           posts: state.posts,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           eventHosts: state.eventHosts,
           eventsInviteHost: state.eventsInviteHost,
@@ -224,7 +238,22 @@ class EventController extends StateNotifier<EventState> {
           hosts: state.hosts);
     }
   }
-
+  getListGroupSuggested(params) async {
+    List response = await EventApi().getGroupSuggestedApi(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+          groupSuggest: [...response],
+          eventsSuggested: state.eventsSuggested,
+          events: state.events,
+          posts: state.posts,
+          eventsInvite: state.eventsInvite,
+          eventHosts: state.eventHosts,
+          eventsInviteHost: state.eventsInviteHost,
+          eventDetail: state.eventDetail,
+          eventsOwner: state.eventsOwner,
+          hosts: state.hosts);
+    }
+  }
   getEventHosts(id) async {
     List response = await EventApi().getEventHostApi(id);
     if (response.isNotEmpty) {
@@ -232,6 +261,7 @@ class EventController extends StateNotifier<EventState> {
           hosts: [...response],
           events: state.events,
           posts: state.posts,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
           eventHosts: state.eventHosts,
@@ -253,6 +283,7 @@ class EventController extends StateNotifier<EventState> {
           eventsOwner: state.eventsOwner,
           posts: state.posts,
           events: state.events,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
           eventDetail: state.eventDetail,
@@ -269,6 +300,7 @@ class EventController extends StateNotifier<EventState> {
           eventsOwner: state.eventsOwner,
           posts: state.posts,
           events: state.events,
+          groupSuggest: state.groupSuggest,
           eventsInvite: state.eventsInvite,
           eventsInviteHost: state.eventsInviteHost,
           eventDetail: state.eventDetail,
@@ -299,6 +331,7 @@ class EventController extends StateNotifier<EventState> {
       hosts: state.hosts,
       eventsOwner: state.eventsOwner,
       posts: state.posts,
+      groupSuggest: state.groupSuggest,
       eventHosts: state.eventHosts,
       eventDetail: state.eventDetail,
       eventsInvite: state.eventsInvite,
@@ -313,6 +346,7 @@ class EventController extends StateNotifier<EventState> {
         events: state.events,
         posts: state.posts,
         hosts: state.hosts,
+        groupSuggest: state.groupSuggest,
         eventsOwner: state.eventsOwner,
         eventHosts: state.eventHosts,
         eventDetail: {
@@ -345,6 +379,7 @@ class EventController extends StateNotifier<EventState> {
       ],
       hosts: state.hosts,
       posts: state.posts,
+      groupSuggest: state.groupSuggest,
       eventsInvite: state.eventsInvite,
       eventHosts: state.eventHosts,
       eventsInviteHost: state.eventsInviteHost,
@@ -372,6 +407,7 @@ class EventController extends StateNotifier<EventState> {
       hosts: state.hosts,
       eventsInvite: state.eventsInvite,
       posts: state.posts,
+      groupSuggest: state.groupSuggest,
       eventsSuggested: state.eventsSuggested,
       eventHosts: state.eventHosts,
       eventsOwner: state.eventsOwner,
@@ -402,6 +438,7 @@ class EventController extends StateNotifier<EventState> {
       posts: state.posts,
       eventsInviteHost: state.eventsInviteHost,
       eventHosts: state.eventHosts,
+      groupSuggest: state.groupSuggest,
       eventsSuggested: state.eventsSuggested,
       eventsOwner: state.eventsOwner,
       eventDetail: state.eventDetail,
@@ -431,6 +468,7 @@ class EventController extends StateNotifier<EventState> {
       posts: state.posts,
       eventsSuggested: state.eventsSuggested,
       eventsInvite: state.eventsInvite,
+      groupSuggest: state.groupSuggest,
       eventHosts: state.eventHosts,
       eventsInviteHost: state.eventsInviteHost,
       eventDetail: state.eventDetail,

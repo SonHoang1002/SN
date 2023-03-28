@@ -26,6 +26,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+	    <string>googlechromes</string>
+        <string>comgooglemaps</string>
 		<string>sms</string>
 		<string>tel</string>
 	</array>

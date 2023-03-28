@@ -25,7 +25,9 @@ class EventApi {
   Future getEventSuggestedApi(params) async {
     return await Api().getRequestBase('/api/v1/suggestions/event', params);
   }
-
+  Future getGroupSuggestedApi(params) async {
+    return await Api().getRequestBase('/api/v1/groups', params);
+  }
   Future getEventDetailApi(id) async {
     return await Api().getRequestBase('/api/v1/events/$id', {});
   }

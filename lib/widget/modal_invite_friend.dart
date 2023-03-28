@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/friend_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
 class InviteFriend extends ConsumerStatefulWidget {
   final dynamic inviteFriend;
@@ -34,40 +35,48 @@ class _InviteFriendState extends ConsumerState<InviteFriend> {
   Widget build(BuildContext context) {
     List friendExcludes = ref.watch(friendControllerProvider).friendExcludes;
 
-    return SizedBox(
-      width: double.infinity,
-      child: ListView.builder(
-          itemCount: friendExcludes.length,
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ListTile(
-              onTap: () {
-              },
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    friendExcludes[index]['avatar_media'] != null
-                        ? friendExcludes[index]['avatar_media']['preview_url']
-                        : friendExcludes[index]['avatar_static']),
-              ),
-              title: Text(friendExcludes[index]['display_name'], style:  TextStyle(color: colorWord(context))),
-              trailing: Container(
-                  width: 50,
-                  height: 30,
-                  decoration: BoxDecoration(
-                      color: secondaryColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: const Center(
-                    child: InkWell(
-                      child: Text('Mời',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: secondaryColor)),
-                    ),
-                  )),
-            );
-          }),
+    return Scaffold(
+        appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const AppBarTitle(title: "Mời"),
+    ),
+      body: SizedBox(
+        width: double.infinity,
+        child: ListView.builder(
+            itemCount: friendExcludes.length,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {
+                },
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      friendExcludes[index]['avatar_media'] != null
+                          ? friendExcludes[index]['avatar_media']['preview_url']
+                          : friendExcludes[index]['avatar_static']),
+                ),
+                title: Text(friendExcludes[index]['display_name'], style:  TextStyle(color: colorWord(context))),
+                trailing: Container(
+                    width: 50,
+                    height: 30,
+                    decoration: BoxDecoration(
+                        color: secondaryColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: const Center(
+                      child: InkWell(
+                        child: Text('Mời',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: secondaryColor)),
+                      ),
+                    )),
+              );
+            }),
+      ),
     );
   }
 }
