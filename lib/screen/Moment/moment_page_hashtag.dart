@@ -140,6 +140,7 @@ class _MomentPageHashtagState extends State<MomentPageHashtag> {
                             CupertinoPageRoute(
                                 builder: (context) => Material(
                                       child: MomentPageview(
+                                        type: 'hashtag',
                                         momentRender:
                                             momentHashtag?['data'] ?? [],
                                         handlePageChange: (value) {},

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/moment_api.dart';
+import 'package:social_network_app_mobile/data/suggest.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
@@ -91,6 +92,32 @@ class MomentController extends StateNotifier<MomentState> {
           momentSuggest: params.containsKey('max_id')
               ? [...state.momentSuggest, ...newMoment]
               : newMoment);
+    }
+  }
+
+  updateMomentDetail(type, newMoment) {
+    int index = -1;
+
+    if (type == 'follow') {
+      index = state.momentFollow
+          .indexWhere((element) => element['id'] == newMoment['id']);
+    } else if (type == 'suggest') {
+      index = state.momentSuggest
+          .indexWhere((element) => element['id'] == newMoment['id']);
+    }
+
+    if (mounted && index >= 0) {
+      state = state.copyWith(
+          momentFollow: type == 'follow'
+              ? state.momentFollow.sublist(0, index) +
+                  [newMoment] +
+                  state.momentFollow.sublist(index + 1)
+              : state.momentFollow,
+          momentSuggest: type == 'forget'
+              ? state.momentSuggest.sublist(0, index) +
+                  [newMoment] +
+                  state.momentSuggest.sublist(index + 1)
+              : state.momentSuggest);
     }
   }
 }

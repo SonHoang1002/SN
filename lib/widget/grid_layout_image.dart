@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/girdview_builder_media.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -82,30 +82,24 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               ),
             );
           } else {
-            return Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: SizedBox(
+            return SizedBox(
                 height: (medias[0]['aspect'] ??
                             medias[0]['meta']['original']['aspect'] ??
                             1) <
                         1
                     ? size.width
                     : null,
-                child: GestureDetector(
-                  onTap: () {
-                    widget.handlePress(medias[0]);
-                  },
-                  child: FeedVideo(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: VideoPlayerNoneController(
                       path: medias[0]['file']?.path ??
                           medias[0]['remote_url'] ??
                           medias[0]['url'],
-                      flickMultiManager: flickMultiManager,
-                      image: medias[0]['preview_remote_url'] ??
-                          medias[0]['preview_url'] ??
-                          ''),
-                ),
-              ),
-            );
+                      media: medias[0],
+                      type: medias[0]['file']?.path != null
+                          ? 'local'
+                          : 'network'),
+                ));
           }
         case 2:
           return GirdviewBuilderMedia(
