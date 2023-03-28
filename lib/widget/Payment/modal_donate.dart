@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 class ModalPayment extends ConsumerStatefulWidget {
   String title;
@@ -49,6 +51,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
   @override
   Widget build(BuildContext context) {
     var growTransactions = ref.watch(growControllerProvider).growTransactions;
+    final theme = pv.Provider.of<ThemeManager>(context);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -59,7 +62,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
       },
       behavior: HitTestBehavior.opaque,
       child: Container(
-        color: Colors.white,
+        color: theme.isDarkMode ? Colors.black : Colors.white,
         height: MediaQuery.of(context).size.height * 0.4,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -78,7 +81,6 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                         maxLines: 2,
                         style: const TextStyle(
                           fontSize: 16.0,
-                          color: Colors.black,
                           fontWeight: FontWeight.w700,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -119,7 +121,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                           height: 50,
                           width: 100,
                           decoration: BoxDecoration(
-                            color: secondaryColor.withOpacity(0.2),
+                            color: secondaryColor,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Padding(
@@ -131,12 +133,10 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                                 const Text('Nạp',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black)),
+                                        fontWeight: FontWeight.bold)),
                                 SvgPicture.asset('assets/IconCoin.svg',
                                     width: 22,
-                                    height: 22,
-                                    color: secondaryColor)
+                                    height: 22, color: Colors.white)
                               ],
                             ),
                           ),
@@ -161,7 +161,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                       decoration: BoxDecoration(
-                          color: secondaryColor.withOpacity(0.2),
+                          color: secondaryColor,
                           borderRadius: BorderRadius.circular(16),
                           border: selectedItemIndex == index
                               ? Border.all(width: 1, color: greyColor)
@@ -180,7 +180,6 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                             '${paymentValue[index]['value']}',
                             style: const TextStyle(
                               fontSize: 16.0,
-                              color: Colors.black,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -195,7 +194,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: secondaryColor.withOpacity(0.2),
+                  color: secondaryColor,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: InkWell(
@@ -212,7 +211,6 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                             'Tuỳ chỉnh',
                             style: TextStyle(
                               fontSize: 16.0,
-                              color: Colors.black,
                               fontWeight: FontWeight.w700,
                             ),
                           )
@@ -225,7 +223,21 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                             ],
                             maxLines: 1,
                             controller: controller,
+                            style: TextStyle(color: colorWord(context)),
                             onChanged: (value) {},
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter a number';
+                              }
+                              final number = int.tryParse(value);
+                              if (number == null) {
+                                return 'Please enter a valid number';
+                              }
+                              if (number > 0 ) {
+                                return 'Please enter a valid number';
+                              }
+                              return null;
+                            },
                             autofocus: true,
                             decoration: const InputDecoration(
                                 border: InputBorder.none, hintText: ''),
@@ -343,7 +355,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: secondaryColor.withOpacity(0.2),
+                    color: secondaryColor,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Align(
@@ -352,7 +364,6 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                       widget.buttonTitle,
                       style: const TextStyle(
                         fontSize: 16.0,
-                        color: Colors.black,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

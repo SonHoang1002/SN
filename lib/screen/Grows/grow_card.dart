@@ -57,7 +57,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
     return Expanded(
       child: SingleChildScrollView(
         controller: scrollController,
-        child: grows.isNotEmpty ?
+        child:
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -71,6 +71,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                 ),
               ),
             ),
+            grows.isNotEmpty ?
             SizedBox(
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -89,7 +90,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                 topLeft: Radius.circular(15),
                                 topRight: Radius.circular(15)),
                             child: ImageCacheRender(
-                              path: grows[indexInteresting]['banner']['url'],
+                              path: grows[indexInteresting]['banner'] != null ? grows[indexInteresting]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
                             ),
                           ),
                           onTap: () {
@@ -224,7 +225,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                             color: grows[indexInteresting]['project_relationship']
                                             ['follow_project'] ==
                                                 true
-                                                ? secondaryColor.withOpacity(0.45)
+                                                ? secondaryColor
                                                 : const Color.fromARGB(189, 202, 202, 202),
                                             borderRadius: BorderRadius.circular(6),
                                             border:
@@ -236,7 +237,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                                 color: grows[indexInteresting]['project_relationship']
                                                 ['follow_project'] ==
                                                     true
-                                                    ? secondaryColor
+                                                    ? Colors.white
                                                     : Colors.black,
                                                 size: 14),
                                             const SizedBox(
@@ -250,7 +251,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                                 color: grows[indexInteresting]['project_relationship']
                                                 ['follow_project'] ==
                                                     true
-                                                    ? secondaryColor
+                                                    ? Colors.white
                                                     : Colors.black,
                                                 fontWeight: FontWeight.w700,
                                               ),
@@ -306,10 +307,10 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                     } else {
                       isMore == true ? const Center(child:  CupertinoActivityIndicator()) : const SizedBox();
                     }},
-                )),
+                )) : const SizedBox(),
             isMore == true ? const Center(child:  CupertinoActivityIndicator()) : const SizedBox()
           ],
-        ) : const SizedBox(),
+        ),
       ),
     );
   }

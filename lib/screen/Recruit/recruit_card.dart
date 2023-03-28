@@ -3,74 +3,88 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
-import 'package:social_network_app_mobile/screen/Grows/grow_detail.dart';
+import 'package:social_network_app_mobile/providers/recruit/recruit_provider.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recuit_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 
-class GrowOwner extends ConsumerStatefulWidget {
-  const GrowOwner({Key? key}) : super(key: key);
+class RecruitCard extends ConsumerStatefulWidget {
+  const RecruitCard({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<GrowOwner> createState() => _GrowOwnerState();
+  ConsumerState<RecruitCard> createState() => _RecruitCardState();
 }
 
-class _GrowOwnerState extends ConsumerState<GrowOwner> {
-  var configParams = {
-    "limit": 10, "following": true
-  };
-
+class _RecruitCardState extends ConsumerState<RecruitCard> {
+  late double width;
+  late double height;
+  var paramsConfigList = {"limit": 10, "visibility": "public","exclude_current_user": true};
+  final scrollController = ScrollController();
   @override
   void initState() {
-    if (!mounted) return;
     super.initState();
-    Future.delayed(
-        Duration.zero,
-            () => ref
-            .read(growControllerProvider.notifier)
-            .getListGrow(configParams));
+    if (mounted) {
+      Future.delayed(
+          Duration.zero,
+              () => ref
+              .read(recruitControllerProvider.notifier)
+              .getListRecruit(paramsConfigList));
+    }
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent  ==
+          scrollController.offset) {
+        String maxId = ref.read(recruitControllerProvider).recruits.last['id'];
+        ref
+            .read(recruitControllerProvider.notifier)
+            .getListRecruit({"max_id": maxId, ...paramsConfigList});
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    List recruits = ref.watch(recruitControllerProvider).recruits;
+    bool isMore = ref.watch(recruitControllerProvider).isMore;
     final size = MediaQuery.of(context).size;
-    var width = size.width;
-    var height = size.height;
-    List grows = ref.watch(growControllerProvider).grows;
+    width = size.width;
+    height = size.height;
     return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
-              child: Text(
-                'Dự án bạn quan tâm',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
+        child: SingleChildScrollView(
+          controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+            child: Text(
+              'Khám phá tin tuyển dụng',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            grows.isNotEmpty ?
-            SizedBox(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: grows.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, indexOwner) {
+          ),
+          recruits.isNotEmpty ?
+          SizedBox(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: recruits.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  if(index < recruits.length) {
                     return Padding(
                       padding: const EdgeInsets.only(top:8.0, left: 8.0, right: 8.0, bottom: 8.0),
                       child: CardComponents(
+                        type: 'homeScreen',
                         imageCard: ClipRRect(
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(15),
                               topRight: Radius.circular(15)),
                           child: ImageCacheRender(
-                            path: grows[indexOwner]['banner']['url'],
+                            path: recruits[index]['banner'] != null ? recruits[index]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
                           ),
                         ),
                         onTap: () {
@@ -78,7 +92,7 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                               context,
                               CupertinoPageRoute(
                                   builder: (context) =>
-                                      GrowDetail(data: grows[indexOwner])));
+                                  RecruitDetail(data: recruits[index])));
                         },
                         textCard: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +100,7 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                             Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: Text(
-                                grows[indexOwner]['title'],
+                                recruits[index]['title'],
                                 maxLines: 2,
                                 style: const TextStyle(
                                   fontSize: 16.0,
@@ -98,7 +112,7 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                             Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: Text(
-                                'Cam kết mục tiêu ${convertNumberToVND(grows[indexOwner]['target_value'] ~/ 1)} VNĐ',
+                                recruits[index]['account']['display_name'],
                                 style: const TextStyle(
                                   fontSize: 12.0,
                                   color: greyColor,
@@ -109,7 +123,7 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                             Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: Text(
-                                '${grows[indexOwner]['followers_count'].toString()} người quan tâm · ${grows[indexOwner]['backers_count'].toString()} người ủng hộ',
+                                '${convertNumberToVND(recruits[index]['salary_min'] ~/ 1)}' ' - ' '${convertNumberToVND(recruits[index]['salary_max'] ~/ 1) } VNĐ',
                                 style: const TextStyle(
                                   fontSize: 12.0,
                                   color: greyColor,
@@ -127,17 +141,6 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                                 alignment: Alignment.bottomLeft,
                                 child: InkWell(
                                   onTap: () {
-                                    if (grows[indexOwner]['project_relationship']
-                                    ['follow_project'] ==
-                                        true) {
-                                      ref
-                                          .read(growControllerProvider.notifier)
-                                          .updateStatusGrow(grows[indexOwner]['id'], false);
-                                    } else {
-                                      ref
-                                          .read(growControllerProvider.notifier)
-                                          .updateStatusGrow(grows[indexOwner]['id'], true);
-                                    }
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 3.0),
@@ -145,25 +148,17 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                                       height: 32,
                                       width: width * 0.7,
                                       decoration: BoxDecoration(
-                                          color: grows[indexOwner]['project_relationship']
-                                          ['follow_project'] ==
-                                              true
-                                              ? secondaryColor.withOpacity(0.45)
-                                              : const Color.fromARGB(189, 202, 202, 202),
+                                          color: const Color.fromARGB(189, 202, 202, 202),
                                           borderRadius: BorderRadius.circular(6),
                                           border:
                                           Border.all(width: 0.2, color: greyColor)),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
+                                        children: const [
                                           Icon(FontAwesomeIcons.solidStar,
-                                              color: grows[indexOwner]['project_relationship']
-                                              ['follow_project'] ==
-                                                  true
-                                                  ? secondaryColor
-                                                  : Colors.black,
+                                              color: Colors.black,
                                               size: 14),
-                                          const SizedBox(
+                                           SizedBox(
                                             width: 5.0,
                                           ),
                                           Text(
@@ -171,15 +166,11 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontSize: 12.0,
-                                              color: grows[indexOwner]['project_relationship']
-                                              ['follow_project'] ==
-                                                  true
-                                                  ? secondaryColor
-                                                  : Colors.black,
+                                              color: Colors.black,
                                               fontWeight: FontWeight.w700,
                                             ),
                                           ),
-                                          const SizedBox(
+                                           SizedBox(
                                             width: 3.0,
                                           ),
                                         ],
@@ -227,15 +218,18 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                         ),
                       ),
                     );
-                  },
-                )) : const SizedBox(),
-          ],
-        ),
+                  } else {
+                    isMore == true ? const Center(child:  CupertinoActivityIndicator()) : const SizedBox();
+                  }},
+              )) : const SizedBox(),
+          isMore == true ? const Center(child:  CupertinoActivityIndicator()) : const SizedBox()
+        ],
       ),
-    );
+    ));
   }
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 }

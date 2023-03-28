@@ -30,7 +30,7 @@ List eventMenu = [
     "label": "Lời mời",
   },
   {
-    "key": "event_star",
+    "key": "event_interest",
     "label": "Quan tâm",
   },
   {
@@ -62,6 +62,32 @@ List growMenu = [
   {
     "key": "grow_past",
     "label": "Dự án đã gọi vốn",
+  },
+];
+List recruitMenu = [
+  {
+    "key": "recruit_interesting",
+    "label": "Khám phá",
+  },
+  {
+    "key": "recruit_following",
+    "label": "Quan tâm ",
+  },
+  {
+    "key": "recruit_going",
+    "label": "Sẽ tham gia",
+  },
+  {
+    "key": "recruit_news",
+    "label": "Tin đăng tuyển",
+  },
+  {
+    "key": "recruit_news_past",
+    "label": "Tin tuyển dụng đã đăng",
+  },
+  {
+    "key": "recruit_save",
+    "label": "CV đã lưu",
   },
 ];
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
+import 'package:social_network_app_mobile/widget/report_category.dart';
 
 class ActionEllipsis extends StatelessWidget {
   final dynamic menuSelected;
@@ -13,16 +14,13 @@ class ActionEllipsis extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget buttonAppbar = const SizedBox();
-    Widget body = const SizedBox();
     switch (menuSelected['key']) {
       case 'share':
-        body = const InviteFriend();
-        break;
+        return const InviteFriend();
+      case 'report':
+        return const  ReportCategory(entityReport: 'event', entityType: "event");
       default:
+        return const SizedBox();
     }
-
-    return CreateModalBaseMenu(
-        title: menuSelected['label'], body: body, buttonAppbar: buttonAppbar);
   }
 }

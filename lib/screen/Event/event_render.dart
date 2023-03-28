@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/screen/Event/event_card.dart';
 import 'package:social_network_app_mobile/screen/Event/event_going.dart';
+import 'package:social_network_app_mobile/screen/Event/event_host.dart';
+import 'package:social_network_app_mobile/screen/Event/event_interest.dart';
+import 'package:social_network_app_mobile/screen/Event/event_invite.dart';
+import 'package:social_network_app_mobile/screen/Event/event_past.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
@@ -40,6 +44,11 @@ class _EventRenderState extends State<EventRender> {
         const CrossBar(),
         menuSelected == 'event_for_you' ?  const EventCard() : const SizedBox(),
         menuSelected == 'event_going' ?  const EventGoing() : const SizedBox(),
+        menuSelected == 'event_invite' ?  const EventInvite() : const SizedBox(),
+        menuSelected == 'event_interest' ?  const EventInterested() : const SizedBox(),
+        menuSelected == 'event_host' ?  const EventHost() : const SizedBox(),
+        menuSelected == 'event_past' ?  const EventPast() : const SizedBox(),
+
 
       ],
     );
