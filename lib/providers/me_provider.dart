@@ -16,6 +16,7 @@ class MeController extends StateNotifier<List> {
 
     if (response != null) {
       var token = await SecureStorage().getKeyStorage("token");
+      var theme = await SecureStorage().getKeyStorage('theme');
       var newList = await SecureStorage().getKeyStorage('dataLogin');
       List listAccount = [];
 
@@ -23,12 +24,21 @@ class MeController extends StateNotifier<List> {
         listAccount = jsonDecode(newList) ?? [];
       }
 
+      var newTheme =
+          listAccount.map((e) => e['id']).toList().contains(response['id'])
+              ? (listAccount
+                      .firstWhere((e) => e['id'] == response['id'])!['theme'] ??
+                  response['theme'])
+              : response['theme'];
+
       var newAccount = {
         "id": response['id'],
         "name": response['display_name'],
-        "show_url": response['avatar_media']['show_url'],
+        "show_url": response['avatar_media']['show_url'] ??
+            response['avatar_media']['preview_url'],
         "token": token,
-        "username": response['username']
+        "username": response['username'],
+        "theme": newTheme
       };
 
       await SecureStorage().saveKeyStorage(
@@ -38,6 +48,13 @@ class MeController extends StateNotifier<List> {
           ], 'id')),
           'dataLogin');
       await SecureStorage().saveKeyStorage(response['id'], 'userId');
+      if (theme == 'noData') {
+        await SecureStorage().saveKeyStorage(
+            listAccount.map((e) => e['id']).toList().contains(response['id'])
+                ? newTheme
+                : response['theme'],
+            'theme');
+      }
 
       state = [response];
     }
@@ -46,6 +63,12 @@ class MeController extends StateNotifier<List> {
   updateMedata(data) async {
     if (data != null) {
       state = [data];
+    }
+  }
+
+  resetMeData() {
+    if (mounted) {
+      state = [];
     }
   }
 }

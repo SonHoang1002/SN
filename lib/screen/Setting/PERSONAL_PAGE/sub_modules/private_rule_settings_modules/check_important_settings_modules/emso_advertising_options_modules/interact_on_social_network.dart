@@ -32,7 +32,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
             BackIconAppbar(),
             AppBarTitle(
                 title: InteractOnSocialNetworksConstants
-                    .INFORMATION_ON_FACEBOOK_APPBAR_TITLE),
+                    .INFORMATION_ON_Emso_APPBAR_TITLE),
             SizedBox(),
           ],
         ),
@@ -215,7 +215,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
               3,
               "Tiếp",
               AllCompletedPage(
-                name: "advertisement_settings_on_facebook",
+                name: "advertisement_settings_on_Emso",
               )),
           buildBottomNavigatorBarWidget(context)
         ]),

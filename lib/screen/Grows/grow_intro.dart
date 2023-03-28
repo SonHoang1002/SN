@@ -182,21 +182,22 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                             : null
                         : 200,
                     width: 500,
-                    child: UsingVideoControllerExample(
+                    // child:  UsingVideoControllerExample(path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : ""),
+                    child: FeedVideo(
+                        type: 'showFullScreen',
                         path: growDetail['introduction_video'] != null
                             ? growDetail['introduction_video']['remote_url'] !=
                                     "pending"
                                 ? growDetail['introduction_video']['remote_url']
                                 : ""
+                            : "",
+                        flickMultiManager: flickMultiManager,
+                        image: growDetail['introduction_video'] != null &&
+                                growDetail['introduction_video']
+                                        ['preview_url'] !=
+                                    null
+                            ? growDetail['introduction_video']['preview_url']
                             : ""),
-                    //  child: FeedVideo(
-                    //     type: 'showFullScreen',
-                    //     path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : "",
-                    //      flickMultiManager: flickMultiManager,
-                    //     image: growDetail['introduction_video'] != null &&  growDetail['introduction_video']
-                    //     ['preview_url'] != null ? growDetail['introduction_video']
-                    //             ['preview_url'] :
-                    //         ""),
                   ),
                 ),
               ],

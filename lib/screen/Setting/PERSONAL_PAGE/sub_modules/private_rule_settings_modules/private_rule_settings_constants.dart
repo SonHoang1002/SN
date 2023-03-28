@@ -95,9 +95,9 @@ class PrivateRuleSettingsCommons {
       },
       {
         "key":
-            "would_you_like_a_search_engine_outside_of_facebook_to_link_to_your_profile?",
+            "would_you_like_a_search_engine_outside_of_Emso_to_link_to_your_profile?",
         "subTitle":
-            "Bạn có muốn công cụ tìm kiếm bên ngoài Facebook liên kết đến trang cá nhân của mình không ?",
+            "Bạn có muốn công cụ tìm kiếm bên ngoài Emso liên kết đến trang cá nhân của mình không ?",
         "content": "Mọi người",
         "icon": SettingConstants.NEXT_ICON_DATA,
       },
@@ -105,5 +105,5 @@ class PrivateRuleSettingsCommons {
   };
 
   static const String ADDTIONAL_FOR_WHO_CAN_SEE_FRIEND_LIST_OF_YOU =
-      "Lưu ý: Bạn bè của bạn kiểm soát ai có thể xem mối quan hệ bạn bè của họ trên Dòng thời gian của chính họ. Nếu mọi người có thể xem mối quan hệ bạn bè của bạn trên dòng thời gian khác, họ cũng có thể xem thông tin đó trên Bảng tin, phần tìm kiếm và những nơi khác trên Facebook. Nếu bạn đặt tùy chọn này thành Chỉ mình tôi, chỉ bạn mới có thể xem toàn bộ danh sách bạn bè của mình trên dòng thời gian. Còn người khác sẽ chỉ nhìn thấy nhưng người bạn chung.";
+      "Lưu ý: Bạn bè của bạn kiểm soát ai có thể xem mối quan hệ bạn bè của họ trên Dòng thời gian của chính họ. Nếu mọi người có thể xem mối quan hệ bạn bè của bạn trên dòng thời gian khác, họ cũng có thể xem thông tin đó trên Bảng tin, phần tìm kiếm và những nơi khác trên Emso. Nếu bạn đặt tùy chọn này thành Chỉ mình tôi, chỉ bạn mới có thể xem toàn bộ danh sách bạn bè của mình trên dòng thời gian. Còn người khác sẽ chỉ nhìn thấy nhưng người bạn chung.";
 }

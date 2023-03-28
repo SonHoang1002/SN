@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Feed/drawer.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu_user.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
 import '../../helper/push_to_new_screen.dart';
@@ -12,15 +15,16 @@ import '../Login/LoginCreateModules/onboarding_login_page.dart';
 import '../Setting/darkmode_setting.dart';
 import 'menu_render.dart';
 import 'menu_shortcut.dart';
+import 'package:provider/provider.dart' as pv;
 
-class Menu extends StatefulWidget {
+class Menu extends ConsumerStatefulWidget {
   const Menu({Key? key}) : super(key: key);
 
   @override
-  State<Menu> createState() => _MenuState();
+  ConsumerState<Menu> createState() => _MenuState();
 }
 
-class _MenuState extends State<Menu> {
+class _MenuState extends ConsumerState<Menu> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> key = GlobalKey();
@@ -56,8 +60,12 @@ class _MenuState extends State<Menu> {
     ];
 
     logout() async {
+      final theme = pv.Provider.of<ThemeManager>(context, listen: false);
+      theme.toggleTheme('system');
       await SecureStorage().deleteKeyStorage("token");
       await SecureStorage().deleteKeyStorage("userId");
+      await SecureStorage().deleteKeyStorage('theme');
+      ref.read(meControllerProvider.notifier).resetMeData();
       if (mounted) {
         pushAndReplaceToNextScreen(context, const OnboardingLoginPage());
       }
@@ -65,10 +73,6 @@ class _MenuState extends State<Menu> {
 
     return Scaffold(
       key: key,
-      drawer: Drawer(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        child: const DrawerFeed(),
-      ),
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -80,21 +84,11 @@ class _MenuState extends State<Menu> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () => key.currentState!.openDrawer(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Theme.of(context).textTheme.displayLarge!.color,
-                      ),
-                    ),
+                children: const [
+                  SizedBox(
+                    width: 6,
                   ),
-                  const SizedBox(
-                    width: 7,
-                  ),
-                  const AppBarTitle(title: 'Menu'),
+                  AppBarTitle(title: 'Menu'),
                 ]),
             Row(
               children: List.generate(
@@ -153,9 +147,6 @@ class _MenuState extends State<Menu> {
                   height: 15,
                 ),
                 const MenuRender(),
-                const SizedBox(
-                  height: 15,
-                ),
                 Container(
                   height: 0.3,
                   decoration: const BoxDecoration(color: greyColor),
@@ -163,7 +154,8 @@ class _MenuState extends State<Menu> {
                 const SizedBox(
                   height: 15,
                 ),
-                SizedBox(
+                Container(
+                  margin: const EdgeInsets.only(bottom: 30),
                   width: size.width - 40,
                   height: 40, // <-- match_parent
                   child: ElevatedButton(

@@ -11,10 +11,12 @@ class Api {
       baseUrl: baseRoot,
       connectTimeout: 30 * 1000,
       receiveTimeout: 30 * 1000,
-      headers: {
-        'authorization': 'Bearer $userToken',
-        "Content-Type": "application/json",
-      },
+      headers: userToken == null
+          ? {'Content-Type': "application/json"}
+          : {
+              'authorization': 'Bearer $userToken',
+              "Content-Type": "application/json",
+            },
     );
 
     Dio dio = Dio(options);
@@ -50,7 +52,6 @@ class Api {
     }
   }
 
-
   Future patchRequestBase(String path, data) async {
     try {
       var userToken = await SecureStorage().getKeyStorage("token");
@@ -72,6 +73,16 @@ class Api {
       return response.data;
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future postRequestBaseNoTokenDefault(String path, token, data) async {
+    try {
+      Dio dio = await getDio(token);
+      var response = await dio.post(path, data: data);
+      return response.data;
+    } on DioError catch (e) {
+      print(e.error);
     }
   }
 }

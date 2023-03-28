@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -70,8 +72,24 @@ class _DarkModeSettingState extends State<DarkModeSetting> {
                 children: List.generate(
                     options.length,
                     (index) => GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             // updateDart(options[index]['key']);
+                            var token =
+                                await SecureStorage().getKeyStorage("token");
+                            var newList = await SecureStorage()
+                                .getKeyStorage('dataLogin');
+                            await SecureStorage().saveKeyStorage(
+                                jsonEncode(jsonDecode(newList)
+                                    .toList()
+                                    .map((el) => el['token'] == token
+                                        ? {
+                                            ...el,
+                                            'theme': options[index]['key']
+                                          }
+                                        : el)
+                                    .toList()),
+                                'dataLogin');
+                            ;
                             themeManager.toggleTheme(options[index]['key']);
                           },
                           child: Padding(

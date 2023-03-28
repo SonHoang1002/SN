@@ -46,11 +46,13 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
 
     handleAction() async {
       if (_onPhoneScreen) {
-        pushAndReplaceToNextScreen(
+        pushToNextScreen(
             context,
             PasswordLoginPage(data: {
               ...widget.data,
-              "phone_number": _phoneController,
+              "phone_number": _phoneController.length < 10
+                  ? '0$_phoneController'
+                  : _phoneController,
               "email": _emailController
             }));
         setState(() {
@@ -61,7 +63,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
             await AuthenApi().validateEmail({"email": _emailController});
 
         if (response != null && mounted) {
-          pushAndReplaceToNextScreen(
+          pushToNextScreen(
               context,
               PasswordLoginPage(data: {
                 ...widget.data,
@@ -90,115 +92,103 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
         onTap: (() {
           FocusManager.instance.primaryFocus!.unfocus();
         }),
-        child: Column(children: [
-          // main content
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                        child: Column(
-                          children: [
-                            buildTextContent(
-                                _onPhoneScreen
-                                    ? PhoneLoginConstants.PHONE_LOGIN_TITLE[0]
-                                    : PhoneLoginConstants.PHONE_LOGIN_TITLE[1],
-                                true,
-                                fontSize: 17,
-                                isCenterLeft: false),
-                            buildSpacer(height: 15),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+          child: Column(
+            children: [
+              buildTextContent(
+                  _onPhoneScreen
+                      ? PhoneLoginConstants.PHONE_LOGIN_TITLE[0]
+                      : PhoneLoginConstants.PHONE_LOGIN_TITLE[1],
+                  true,
+                  fontSize: 17,
+                  isCenterLeft: false),
+              buildSpacer(height: 15),
 
-                            // input
+              // input
 
-                            _onPhoneScreen
-                                ? _buildTextFormField((value) {
-                                    setState(() {
-                                      _phoneController = value;
-                                    });
-                                  },
-                                    PhoneLoginConstants
-                                        .PHONE_LOGIN_PLACEHOLODER[0],
-                                    isHavePrefix: true,
-                                    numberType: true)
-                                : _buildTextFormField((value) {
-                                    setState(() {
-                                      _emailController = value;
-                                    });
-                                  },
-                                    PhoneLoginConstants
-                                        .PHONE_LOGIN_PLACEHOLODER[1]),
+              _onPhoneScreen
+                  ? _buildTextFormField((value) {
+                      setState(() {
+                        _phoneController = value;
 
-                            Text(
-                              textValidEmail,
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.red,
-                                  fontStyle: FontStyle.italic),
-                            ),
+                        textValidEmail = value.length < 9
+                            ? 'Số điện thoại quá ngắn(tối thiểu 10 ký tự).'
+                            : '';
+                      });
+                    }, PhoneLoginConstants.PHONE_LOGIN_PLACEHOLODER[0],
+                      isHavePrefix: true, numberType: true)
+                  : _buildTextFormField((value) {
+                      setState(() {
+                        if (!RegExp(
+                                r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
+                            .hasMatch(value)) {
+                          textValidEmail = 'Email không hợp lệ';
+                        } else {
+                          textValidEmail = '';
+                        }
+                        _emailController = value;
+                      });
+                    }, PhoneLoginConstants.PHONE_LOGIN_PLACEHOLODER[1]),
+              buildSpacer(height: 8),
 
-                            buildSpacer(height: 15),
-
-                            // description or navigator button
-
-                            Text(
-                              _onPhoneScreen
-                                  ? PhoneLoginConstants
-                                      .PHONE_LOGIN_DESCRIPTION[0]
-                                  : PhoneLoginConstants
-                                      .PHONE_LOGIN_DESCRIPTION[1],
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: greyColor,
-                              ),
-                            ),
-                            buildSpacer(height: 15),
-                            // change status button
-                            SizedBox(
-                              height: 36,
-                              child: ButtonPrimary(
-                                isPrimary: true,
-                                label: _onPhoneScreen
-                                    ? PhoneLoginConstants
-                                            .PHONE_LOGIN_CHANGE_SELECTION_TEXT_BUTTON[
-                                        0]
-                                    : PhoneLoginConstants
-                                        .PHONE_LOGIN_CHANGE_SELECTION_TEXT_BUTTON[1],
-                                handlePress: () {
-                                  setState(() {
-                                    _onPhoneScreen = !_onPhoneScreen;
-                                  });
-                                },
-                              ),
-                            ),
-
-                            buildSpacer(height: 15),
-                            // change status button
-                            checkIsValid()
-                                ? const SizedBox()
-                                : SizedBox(
-                                    height: 36,
-                                    child: ButtonPrimary(
-                                      label: "Tiếp tục",
-                                      handlePress: () {
-                                        handleAction();
-                                      },
-                                    ),
-                                  )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+              Text(
+                textValidEmail,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.red,
                 ),
-              ],
-            ),
+              ),
+
+              buildSpacer(height: 15),
+
+              // description or navigator button
+
+              Text(
+                _onPhoneScreen
+                    ? PhoneLoginConstants.PHONE_LOGIN_DESCRIPTION[0]
+                    : PhoneLoginConstants.PHONE_LOGIN_DESCRIPTION[1],
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: greyColor,
+                ),
+              ),
+              buildSpacer(height: 15),
+              // change status button
+              SizedBox(
+                height: 36,
+                child: ButtonPrimary(
+                  isPrimary: true,
+                  label: _onPhoneScreen
+                      ? PhoneLoginConstants
+                          .PHONE_LOGIN_CHANGE_SELECTION_TEXT_BUTTON[0]
+                      : PhoneLoginConstants
+                          .PHONE_LOGIN_CHANGE_SELECTION_TEXT_BUTTON[1],
+                  handlePress: () {
+                    setState(() {
+                      _onPhoneScreen = !_onPhoneScreen;
+                    });
+                  },
+                ),
+              ),
+
+              buildSpacer(height: 15),
+              // change status button
+              checkIsValid()
+                  ? const SizedBox()
+                  : SizedBox(
+                      height: 36,
+                      child: ButtonPrimary(
+                        label: "Tiếp tục",
+                        handlePress: () {
+                          handleAction();
+                        },
+                      ),
+                    )
+            ],
           ),
-        ]),
+        ),
       ),
     );
   }
@@ -206,7 +196,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   Widget _buildTextFormField(Function handleUpdate, String placeHolder,
       {double? borderRadius = 5,
       bool? isHavePrefix = false,
-      bool? numberType = false}) {
+      bool? numberType = false,
+      bool? emailType = false}) {
     return SizedBox(
       height: 40,
       child: TextFormField(
@@ -217,12 +208,13 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
           return null;
         },
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,
-        maxLength: numberType ? 10 : 100000,
+        maxLength: numberType ? 15 : 50,
         decoration: InputDecoration(
             counterText: "",
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
-              borderSide: const BorderSide(color: Colors.black, width: 0.4),
+              borderSide:
+                  BorderSide(color: Colors.grey.withOpacity(0.9), width: 0.4),
             ),
             hintText: placeHolder,
             hintStyle: const TextStyle(

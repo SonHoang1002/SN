@@ -1,5 +1,3 @@
-
-
 import '../../../../../../../setting_constants/general_settings_constants.dart';
 
 class SelectionPrivateRuleOfStoryConstants {
@@ -10,7 +8,7 @@ class SelectionPrivateRuleOfStoryConstants {
     "Cài đặt bình luận"
   ];
   static const SELECTION_PRIVATE_RULE_OF_STORY_DESCRIPTION =
-      "Tin của bạn sẽ hiển thị trên Facebook và Messenger trong 24 giờ.";
+      "Tin của bạn sẽ hiển thị trên Emso và Messenger trong 24 giờ.";
   static const Map<String, dynamic> SELECTION_PRIVATE_RULE_OF_STORY_CONTENT = {
     "key": "selection_private_rule_of_story",
     "data": [
@@ -21,14 +19,14 @@ class SelectionPrivateRuleOfStoryConstants {
             "key": "public",
             "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
             "title": "Công khai",
-            "subTitle": "Bất kỳ ai ở trên hoặc ngoài Facebook",
+            "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
             "iconNext": "",
           },
           {
             "key": "friend",
             "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
             "title": "Bạn bè",
-            "subTitle": "Bạn bè của bạn trên Facebook",
+            "subTitle": "Bạn bè của bạn trên Emso",
             "iconNext": "",
           },
           {
@@ -67,7 +65,7 @@ class SelectionPrivateRuleOfStoryConstants {
             "key": "always_share_on_instagram",
             "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
             "title": "Luôn chia sẻ lên Instagram",
-            "subTitle": "Tự động chia sẻ tin trên Facebook lên Instagram",
+            "subTitle": "Tự động chia sẻ tin trên Emso lên Instagram",
             "iconNext": ""
           },
         ]

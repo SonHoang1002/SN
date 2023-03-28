@@ -2,13 +2,13 @@
 
 import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
 
-class SetYourDataOnFacebookConstants {
-  static const SET_YOUR_DATA_ON_FACEBOOK_TITLE =
+class SetYourDataOnEmsoConstants {
+  static const SET_YOUR_DATA_ON_Emso_TITLE =
       "Cài đặt dữ liệu của bạn trên Fcebook";
-  static const SET_YOUR_DATA_ON_FACEBOOK_SUBTITLE =
+  static const SET_YOUR_DATA_ON_Emso_SUBTITLE =
       "Hãy cùng xem một vài bước hướng dẫn để bảo vệ tài khoản của bạn nhé.";
-  static const Map<String, dynamic> SET_YOUR_DATA_ON_FACEBOOK_CONTENTS = {
-    "key": "set_your_data_on_facebook",
+  static const Map<String, dynamic> SET_YOUR_DATA_ON_Emso_CONTENTS = {
+    "key": "set_your_data_on_Emso",
     "data": [
       {
         "key": "application_and_website",
@@ -28,7 +28,7 @@ class SetYourDataOnFacebookConstants {
 class ApplicationAndWebsiteConstants {
   static const APPLICATION_AND_WEBSITE_APPBAR_TITLE = "Ứng dụng và trang web";
   static const APPLICATION_AND_WEBSITE_TITLE =
-      "Dưới đây là các ứng dụng và trang web của công ty khác mà bạn đã dùng Facebook để đăng nhập và sử dụng gần đây. Bạn có I2 gỡ bất kỳ ứng dụng/trang web nào mình không muốn dùng nữa";
+      "Dưới đây là các ứng dụng và trang web của công ty khác mà bạn đã dùng Emso để đăng nhập và sử dụng gần đây. Bạn có I2 gỡ bất kỳ ứng dụng/trang web nào mình không muốn dùng nữa";
 
   static const Map<String, dynamic> APPLICATION_AND_WEBSITE_CONTENTS = {
     "key": "application_and_website",
@@ -86,18 +86,18 @@ class ApplicationAndWebsiteConstants {
 class LocationConstants {
   static const LOCATION_APPBAR_TITLE = "Vị trí";
   static const LOCATION_TITLE =
-      "Bạn kiểm soát những ai xem được vị trí của bạn trên các Sản phầm của Facebook. Bạn có thê tắt Dịch vụ vị trí bất cứ lúc nào trong phần cài đặt của thiết bị.";
+      "Bạn kiểm soát những ai xem được vị trí của bạn trên các Sản phầm của Emso. Bạn có thê tắt Dịch vụ vị trí bất cứ lúc nào trong phần cài đặt của thiết bị.";
   static const Map<String, dynamic> LOCATION_CONTENTS = {
     "data": [
       {
         "title": "Luôn luôn",
         "subTitle":
-            'Facebook sẽ không hỗ trợ cài đặt "Mọi lúc" nữa. Hãy cập nhật ứng dụng đê gỡ cài đặt này.'
+            'Emso sẽ không hỗ trợ cài đặt "Mọi lúc" nữa. Hãy cập nhật ứng dụng đê gỡ cài đặt này.'
       },
       {
         "title": "Khi đang sử dụng",
         "subTitle":
-            'Chúng tôi chỉ nhận vị trí chính xác của thiết bị này khi bạn sử dụng Facebook.'
+            'Chúng tôi chỉ nhận vị trí chính xác của thiết bị này khi bạn sử dụng Emso.'
       },
       {
         "title": "Không bao giờ",
@@ -118,9 +118,9 @@ class LocationConstants {
 class AllComplete4Constants {
   static const String ALL_COMPLETED_TITLE = "Tất cả đã xong";
   static const ALL_COMPLETED_SUBTITLE =
-      "Cảm ơn bạn đã xem lại các cài đặt dữ liệu trênFacebook. Bạn có thể thay đổi bất kỳ lúc nào trong phân cài đặt.";
+      "Cảm ơn bạn đã xem lại các cài đặt dữ liệu trênEmso. Bạn có thể thay đổi bất kỳ lúc nào trong phân cài đặt.";
   static const Map<String, dynamic> ALL_COMPLETED_CONTENTS = {
-    // "key": "set_your_data_on_facebook",
+    // "key": "set_your_data_on_Emso",
     "data": [
       {
         // "key": "application_and_website",

@@ -15,7 +15,7 @@ class PostShareGroup extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        ImageCacheRender(path: group['banner']['preview_url']),
+        ImageCacheRender(path: group['banner']?['preview_url'] ?? ''),
         Container(
           width: size.width,
           padding: const EdgeInsets.all(8),

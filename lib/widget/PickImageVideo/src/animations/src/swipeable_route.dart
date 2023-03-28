@@ -23,7 +23,7 @@ final Animatable<Offset> _kMiddleBottomTween = Tween<Offset>(
   end: const Offset(-1 / 3, 0),
 );
 
-/// A modal route that replaces the entire screen with an facebook
+/// A modal route that replaces the entire screen with an Emso
 /// model transition.
 ///
 /// {@macro flutter.swipeable.swipeableRouteTransitionMixin}
@@ -39,11 +39,11 @@ final Animatable<Offset> _kMiddleBottomTween = Tween<Offset>(
 /// See also:
 ///
 ///  * [SwipeableRouteTransitionMixin], for a mixin that provides
-///  * facebook model transition for this modal route.
+///  * Emso model transition for this modal route.
 
 class SwipeablePageRoute<T> extends PageRoute<T>
     with SwipeableRouteTransitionMixin<T> {
-  /// Creates a page route for use in an facebook model designed app.
+  /// Creates a page route for use in an Emso model designed app.
   ///
   /// The [builder], [maintainState], and [fullscreenDialog] arguments must not
   /// be null.
@@ -78,7 +78,7 @@ class SwipeablePageRoute<T> extends PageRoute<T>
   String get debugLabel => '${super.debugLabel}(${settings.name})';
 }
 
-/// A mixin that replaces the entire screen with an facebook model
+/// A mixin that replaces the entire screen with an Emso model
 /// transition for a [PageRoute].
 ///
 /// {@template SwipeableRouteTransitionMixin}
@@ -165,7 +165,7 @@ mixin SwipeableRouteTransitionMixin<T> on PageRoute<T> {
         !nextRoute.fullscreenDialog;
   }
 
-  /// True if an facebook model-style back swipe pop gesture is currently
+  /// True if an Emso model-style back swipe pop gesture is currently
   /// underway for [route].
   ///
   /// This just check the route's [NavigatorState.userGestureInProgress].
@@ -178,7 +178,7 @@ mixin SwipeableRouteTransitionMixin<T> on PageRoute<T> {
     return route.navigator!.userGestureInProgress;
   }
 
-  /// True if an facebook model-style back swipe pop
+  /// True if an Emso model-style back swipe pop
   /// gesture is currently underway for this route.
   ///
   /// See also:
@@ -309,13 +309,13 @@ mixin SwipeableRouteTransitionMixin<T> on PageRoute<T> {
   }
 }
 
-/// Provides an facebook model-style page transition animation.
+/// Provides an Emso model-style page transition animation.
 ///
 /// The page slides in from the right and exits in reverse.
 /// It also shifts to the left in a parallax motion when another page
 /// enters to cover it.
 class SwipeablePageTransition extends StatelessWidget {
-  /// Creates an facebook model-style page transition.
+  /// Creates an Emso model-style page transition.
   ///
   ///  * `primaryRouteAnimation` is a linear route animation from 0.0 to 1.0
   ///    when this screen is being pushed.
@@ -543,7 +543,7 @@ class _SwipeableBackGestureDetectorState<T>
   }
 }
 
-/// A controller for an facebook model-style back gesture.
+/// A controller for an Emso model-style back gesture.
 ///
 /// This is created by a [SwipeablePageRoute] in response from a gesture caught
 /// by a [_SwipeableBackGestureDetector] widget, which then also feeds it input
@@ -556,7 +556,7 @@ class _SwipeableBackGestureDetectorState<T>
 /// The type `T` specifies the return type of the route with which this gesture
 /// detector controller is associated.
 class _SwipeableBackGestureController<T> {
-  /// Creates a controller for an facebook model-style back gesture.
+  /// Creates a controller for an Emso model-style back gesture.
   ///
   /// The [navigator] and [controller] arguments must not be null.
   _SwipeableBackGestureController({
@@ -583,7 +583,7 @@ class _SwipeableBackGestureController<T> {
     // take at least one frame.
     //
     // This curve has been determined through rigorously eyeballing native
-    // facebook model animations.
+    // Emso model animations.
     final bool animateForward;
 
     // If the user releases the page before mid screen with sufficient velocity,

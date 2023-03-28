@@ -29,61 +29,63 @@ class BeginJoinEmsoLoginPage extends StatelessWidget {
       ),
       resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      bottomNavigationBar: SizedBox(
+        height: 80,
+        child: buildHaveAccountWidget(function: () {
+          pushToNextScreen(context, const MainLoginPage());
+        }),
+      ),
       body: GestureDetector(
         onTap: (() {
           hiddenKeyboard(context);
         }),
         child: Column(children: [
           // main content
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // img
-                Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                        child: Column(
-                          children: [
-                            buildTextContent(
-                                BeginJoinEmsoLoginConstants
-                                    .BEGIN_JOIN_EMSO_LOGIN_TITLE,
-                                true,
-                                fontSize: 17,
-                                colorWord: primaryColor,
-                                isCenterLeft: false),
-                            buildSpacer(height: 15),
-                            buildTextContent(
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // img
+              Center(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                      child: Column(
+                        children: [
+                          buildTextContent(
                               BeginJoinEmsoLoginConstants
-                                  .BEGIN_JOIN_EMSO_LOGIN_SUBTITLE,
-                              false,
-                              fontSize: 15,
-                              isCenterLeft: false,
-                            ),
-                            buildSpacer(height: 25),
-                            SizedBox(
-                              height: 36,
-                              child: ButtonPrimary(
-                                  label: "Bắt đầu",
-                                  handlePress: () {
-                                    pushToNextScreen(
-                                        context, const NameLoginPage());
-                                  }),
-                            ),
-                            buildSpacer(height: 15),
-                          ],
-                        ),
+                                  .BEGIN_JOIN_EMSO_LOGIN_TITLE,
+                              true,
+                              fontSize: 17,
+                              colorWord: primaryColor,
+                              isCenterLeft: false),
+                          buildSpacer(height: 15),
+                          buildTextContent(
+                            BeginJoinEmsoLoginConstants
+                                .BEGIN_JOIN_EMSO_LOGIN_SUBTITLE,
+                            false,
+                            fontSize: 15,
+                            isCenterLeft: false,
+                          ),
+                          buildSpacer(height: 25),
+                          SizedBox(
+                            height: 36,
+                            child: ButtonPrimary(
+                                label: "Bắt đầu",
+                                handlePress: () {
+                                  pushToNextScreen(
+                                      context, const NameLoginPage());
+                                }),
+                          ),
+                          buildSpacer(height: 15),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                buildHaveAccountWidget(function: () {
-                  pushToNextScreen(context, const MainLoginPage());
-                })
-              ],
-            ),
+              ),
+            ],
           ),
         ]),
       ),

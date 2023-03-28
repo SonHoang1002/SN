@@ -42,112 +42,98 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
       ),
       resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      bottomNavigationBar: SizedBox(
+        height: 80,
+        child: buildHaveAccountWidget(function: () {
+          pushToNextScreen(context, const MainLoginPage());
+        }),
+      ),
       body: GestureDetector(
         onTap: (() {
           hiddenKeyboard(context);
         }),
-        child: Column(children: [
-          // main content
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // img
-                Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                        child: Column(
-                          children: [
-                            buildTextContent(
-                                BirthDayLoginConstants.BIRTHDAY_LOGIN_TITLE,
-                                true,
-                                fontSize: 17,
-                                isCenterLeft: false),
-                            buildSpacer(height: 10),
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border:
-                                      Border.all(width: 0.2, color: greyColor)),
-                              child: GeneralComponent(
-                                [
-                                  buildTextContent(
-                                      _timeComponent.isEmpty
-                                          ? BirthDayLoginConstants
-                                              .BIRTHDAY_LOGIN_NAME_PLACEHOLODER
-                                          : "${_timeComponent[0]} tháng ${_timeComponent[1]}, ${_timeComponent[2]}",
-                                      false,
-                                      fontSize: 16,
-                                      colorWord: greyColor)
-                                ],
-                                suffixWidget: const Icon(
-                                  LoginConstants.DOWN_ICON_DATA,
-                                  color: greyColor,
-                                ),
-                                changeBackground: transparent,
-                                function: () {
-                                  _showPickerModalBottomSheet(context);
-                                },
-                              ),
-                            ),
-                            buildSpacer(height: 5),
-                            !_isValid
-                                ? buildTextContent(
-                                    BirthDayLoginConstants
-                                        .BIRTHDAY_LOGIN_WARNING,
-                                    true,
-                                    fontSize: 13,
-                                    colorWord: Colors.red,
-                                  )
-                                : const SizedBox(),
-                            buildSpacer(height: 10),
-                            Text(
-                              BirthDayLoginConstants.BIRTHDAY_LOGIN_SUBTITLE,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: greyColor,
-                              ),
-                            ),
-                            buildSpacer(height: 10),
-                            _isValid && _timeComponent.isNotEmpty
-                                ? SizedBox(
-                                    height: 36,
-                                    child: ButtonPrimary(
-                                      label: "Tiếp tục",
-                                      handlePress: () {
-                                        popToPreviousScreen(context);
-                                        pushAndReplaceToNextScreen(
-                                            context,
-                                            GenderLoginPage(data: {
-                                              ...widget.data,
-                                              "birth_date":
-                                                  '${_timeComponent[0]}',
-                                              "birth_month":
-                                                  '${_timeComponent[1]}',
-                                              "birth_year":
-                                                  "${_timeComponent[2]}",
-                                            }));
-                                        return;
-                                      },
-                                    ),
-                                  )
-                                : const SizedBox()
-                          ],
+        child: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                child: Column(
+                  children: [
+                    buildTextContent(
+                        BirthDayLoginConstants.BIRTHDAY_LOGIN_TITLE, true,
+                        fontSize: 17, isCenterLeft: false),
+                    buildSpacer(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(width: 0.2, color: greyColor)),
+                      child: GeneralComponent(
+                        [
+                          buildTextContent(
+                              _timeComponent.isEmpty
+                                  ? BirthDayLoginConstants
+                                      .BIRTHDAY_LOGIN_NAME_PLACEHOLODER
+                                  : "${_timeComponent[0]} tháng ${_timeComponent[1]}, ${_timeComponent[2]}",
+                              false,
+                              fontSize: 16,
+                              colorWord: greyColor)
+                        ],
+                        suffixWidget: const Icon(
+                          LoginConstants.DOWN_ICON_DATA,
+                          color: greyColor,
                         ),
+                        changeBackground: transparent,
+                        function: () {
+                          _showPickerModalBottomSheet(context);
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                    buildSpacer(height: 5),
+                    !_isValid
+                        ? buildTextContent(
+                            BirthDayLoginConstants.NOT_OLD_ENOUGH,
+                            true,
+                            fontSize: 13,
+                            isCenterLeft: false,
+                            colorWord: Colors.red,
+                          )
+                        : const SizedBox(),
+                    buildSpacer(height: 10),
+                    Text(
+                      BirthDayLoginConstants.BIRTHDAY_LOGIN_SUBTITLE,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: greyColor,
+                      ),
+                    ),
+                    buildSpacer(height: 10),
+                    _isValid && _timeComponent.isNotEmpty
+                        ? SizedBox(
+                            height: 36,
+                            child: ButtonPrimary(
+                              label: "Tiếp tục",
+                              handlePress: () {
+                                // popToPreviousScreen(context);
+                                pushToNextScreen(
+                                    context,
+                                    GenderLoginPage(data: {
+                                      ...widget.data,
+                                      "birth_date": '${_timeComponent[0]}',
+                                      "birth_month": '${_timeComponent[1]}',
+                                      "birth_year": "${_timeComponent[2]}",
+                                    }));
+                                return;
+                              },
+                            ),
+                          )
+                        : const SizedBox()
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          buildHaveAccountWidget(function: () {
-            pushToNextScreen(context, const MainLoginPage());
-          })
-        ]),
+        ),
       ),
     );
   }
@@ -156,11 +142,11 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
     final currentTime = DateTime.now();
 
     if (_timeComponent.isNotEmpty) {
-      if (_timeComponent[2] < currentTime.year) {
+      if (_timeComponent[2] < currentTime.year - 13) {
         setState(() {
           _isValid = true;
         });
-      } else if (_timeComponent[2] == currentTime.year) {
+      } else if (_timeComponent[2] == currentTime.year - 13) {
         if (_timeComponent[1] < currentTime.month) {
           setState(() {
             _isValid = true;
@@ -193,7 +179,8 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
   ) {
     showModalBottomSheet(
         context: context,
-        backgroundColor: greyColor[300],
+        backgroundColor:
+            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
         builder: (context) {

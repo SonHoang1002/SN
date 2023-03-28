@@ -58,6 +58,8 @@ class BirthDayLoginConstants {
       "Tại sao tôi cần cung cấp ngày sinh của mình ?";
   static String BIRTHDAY_LOGIN_WARNING =
       "Ngày sinh không hợp lệ. Hãy kiểm tra lại nhé !";
+  static String NOT_OLD_ENOUGH =
+      "Bạn chưa đủ 13 tuổi để đăng ký tài khoản. Vui lòng đề nghị người giám hộ của bạn đăng ký tài khoản!";
 }
 
 class GenderLoginConstants {
@@ -114,8 +116,8 @@ class PhoneLoginConstants {
     "Dùng số điện thoại của bạn"
   ];
   static List<String> PHONE_LOGIN_DESCRIPTION = [
-    "Bạn sẽ dùng số này khi đăng nhập và khi cần đặt lại mật khẩu",
-    "Bạn sẽ dùng email này khi đăng nhập và khi cần đặt lại mật khẩu."
+    "Bạn sẽ dùng số này khi đăng nhập hay cần đặt lại mật khẩu",
+    "Bạn sẽ dùng email này khi đăng nhập hay cần đặt lại mật khẩu."
   ];
   static const List<String> PHONE_LOGIN_LIST_PHONE = [
     'US +1',

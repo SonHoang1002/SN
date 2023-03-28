@@ -24,11 +24,12 @@ class MenuRender extends StatelessWidget {
               builder: (context) => menu['key'] == 'moment'
                   ? const Moment(isBack: true)
                   : menu["key"] == "marketPlace"
-                      ? const MainMarketPage()
+                      ? const MainMarketPage(true)
                       : MenuSelected(
                           menuSelected: menu,
                         )));
     }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -51,7 +52,7 @@ class MenuRender extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: theme.isDarkMode
                           ? Theme.of(context).cardColor
-                          : const Color(0xfff1f2f5) ,
+                          : const Color(0xfff1f2f5),
                       border: Border.all(width: 0.1, color: greyColor),
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(

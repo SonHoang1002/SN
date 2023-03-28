@@ -43,10 +43,10 @@ class LoginWarningConstants {
     "key": "login_warning",
     "data": [
       {
-        "key": "facebook",
+        "key": "Emso",
         "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
-        "title": "Facebook",
-        "subTitle": "Chúng tôi sẽ gửi cho bạn thông báo trên Facebook",
+        "title": "Emso",
+        "subTitle": "Chúng tôi sẽ gửi cho bạn thông báo trên Emso",
       },
       {
         "key": "email",
@@ -63,7 +63,7 @@ class PasswordConstants {
   static const PASSWORD_APPAR_TITLE = "Mật khẩu";
   static const PASSWORD_TITLE = "Có ai biết mật khẩu của bạn không ?";
   static const PASSWORD_SUBTITLE =
-      "Nếu bạn dùng mật khẩu Facebook ở cả nơi khác trên mạng thì tài khoản sẽ ít an toàn hơn. Hãy chọn mật khẩu mạnh hơn để bảo vệ chính mình và bạn bè trên Facebook.";
+      "Nếu bạn dùng mật khẩu Emso ở cả nơi khác trên mạng thì tài khoản sẽ ít an toàn hơn. Hãy chọn mật khẩu mạnh hơn để bảo vệ chính mình và bạn bè trên Emso.";
 
   static const Map<String, dynamic> PASSWORD_CONTENTS = {
     "key": "tip_for_choose_password",
@@ -127,7 +127,7 @@ class AuthenticateTwoFactorsConstants {
         "key": "security_lock",
         "title": "Khóa bảo mật",
         "subTitle":
-            "Sử dụng khóa bảo mật vật lý để không ai có thể truy cập trái phép vào tài khoản Facebook của bạn. Bạn sẽ không cần nhập mã nữa."
+            "Sử dụng khóa bảo mật vật lý để không ai có thể truy cập trái phép vào tài khoản Emso của bạn. Bạn sẽ không cần nhập mã nữa."
       },
     ]
   };

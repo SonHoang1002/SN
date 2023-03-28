@@ -102,7 +102,7 @@ List listSocial = [
     "key": 'chatSocial',
     "label": 'Tin nhắn',
     "subLabel": 'Trò chuyện cùng bạn bè trên EMSO.',
-    "icon": "assets/Chat_1.png"
+    "icon": "assets/Chat_3.png"
   },
   {
     "key": 'groupSocial',
@@ -132,7 +132,7 @@ List listSocial = [
     "key": 'moment',
     "subLabel": 'khoảnh khắc thú vị làm bạn yêu thích.',
     "label": 'Moment',
-    "icon": "assets/moment_menu.png"
+    "icon": "assets/MomentMenu.png"
   },
   {
     "key": 'watch',

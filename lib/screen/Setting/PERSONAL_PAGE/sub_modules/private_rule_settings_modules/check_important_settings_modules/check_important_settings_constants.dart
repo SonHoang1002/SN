@@ -21,24 +21,24 @@ class CheckImportantSettingsConstants {
         "img": SettingConstants.PATH_IMG + "example_cover_img_2.jpg",
       },
       {
-        "key": "how_people_can_find_you_on_facebook",
-        "content": "Cách mọi người có thể tìm bạn trên Facebook",
+        "key": "how_people_can_find_you_on_Emso",
+        "content": "Cách mọi người có thể tìm bạn trên Emso",
         "img": SettingConstants.PATH_IMG + "example_cover_img_3.jpg",
       },
       {
-        "key": "set_your_data_on_facebook",
-        "content": "Cài đặt dữ liệu của bạn trên Facebook",
+        "key": "set_your_data_on_Emso",
+        "content": "Cài đặt dữ liệu của bạn trên Emso",
         "img": SettingConstants.PATH_IMG + "example_cover_img_4.jpg",
       },
       {
-        "key": "facebook_advertising_options",
-        "content": "Tùy chọn quảng cáo trên Facebook",
+        "key": "Emso_advertising_options",
+        "content": "Tùy chọn quảng cáo trên Emso",
         "img": SettingConstants.PATH_IMG + "example_cover_img_5.jpg",
       },
     ]
   };
   static const CHECK_IMPORTANT_SETTINGS_ADDITINAL_INFORMATION =
-      "Bạn có thể  vào phần Cài đặt để xem các cài đặt quyền riêng tư khác trên Facebook";
+      "Bạn có thể  vào phần Cài đặt để xem các cài đặt quyền riêng tư khác trên Emso";
   static const Map<String, dynamic>
       CHECK_IMPORTANT_SETTINGS_BOTTOM_SHEET_CONTENTS = {
     "key": "check_important_settings_bottom_sheet",

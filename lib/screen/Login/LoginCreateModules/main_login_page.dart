@@ -5,11 +5,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/confirm_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  clientId:
+      '465933365763-5kq97dko2a2tq95vpb3gna47vm2svna1.apps.googleusercontent.com',
+  scopes: <String>[
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ],
+);
 
 class MainLoginPage extends ConsumerStatefulWidget {
   const MainLoginPage({Key? key}) : super(key: key);
@@ -25,26 +36,52 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      if (mounted) {
+        account?.authentication.then((value) {
+          handleLoginByGoogle(value.accessToken);
+        });
+      }
+    });
+    if (mounted) {
+      _googleSignIn.signInSilently();
+    }
+  }
+
+  Future<void> _handleSignIn() async {
+    try {
+      if (mounted) {
+        await _googleSignIn.signIn();
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> _handleSignOut() => _googleSignIn.disconnect();
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          hiddenKeyboard(context);
-        },
-        child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [const BackIconAppbar(), Container()],
-            ),
+    return GestureDetector(
+      onTap: () {
+        hiddenKeyboard(context);
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [const BackIconAppbar(), Container()],
           ),
-          body: getBody(context, size),
         ),
+        body: getBody(context, size),
       ),
     );
   }
@@ -86,6 +123,27 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  handleLoginByGoogle(token) async {
+    var response = await AuthenApi().loginByGoogle(token);
+    if (response != null && response['access_token'] != null) {
+      SecureStorage()
+          .saveKeyStorage(response['access_token'], 'token')
+          .then((value) async {
+        await _handleSignOut();
+        // completeLogin();
+        // if (mounted) {
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const PreviewScreen(),
+          ),
+        );
+        // }
+      });
+    }
   }
 
   getBody(context, size) {
@@ -141,9 +199,11 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                     padding: const EdgeInsets.only(left: 10, right: 5, top: 5),
                     child: TextField(
                       onChanged: (value) {
-                        setState(() {
-                          username = value;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            username = value;
+                          });
+                        }
                       },
                       cursorColor:
                           Theme.of(context).textTheme.displayLarge?.color,
@@ -173,9 +233,11 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                         children: <Widget>[
                           TextField(
                             onChanged: (value) {
-                              setState(() {
-                                password = value;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  password = value;
+                                });
+                              }
                             },
                             obscureText: !showPassword,
                             cursorColor:
@@ -192,9 +254,11 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             onPressed: () {
-                              setState(() {
-                                showPassword = !showPassword;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  showPassword = !showPassword;
+                                });
+                              }
                             },
                             icon: Icon(
                                 showPassword
@@ -257,7 +321,9 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                       backgroundColor: const Color(0xfff1f2f5),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
-                  onPressed: () {},
+                  onPressed: () {
+                    _handleSignIn();
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
@@ -298,5 +364,10 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
