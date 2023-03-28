@@ -64,17 +64,13 @@ class MomentPageview extends ConsumerWidget {
       itemBuilder: (context, index) {
         return Stack(
           children: [
-            MomentVideo(
-                type: type,
-                moment: momentRender[index],
-                handleAction: handleAction),
+            MomentVideo(moment: momentRender[index]),
             Positioned(
                 bottom: 15,
                 left: 15,
                 child: VideoDescription(
-                    type: type,
-                    moment: momentRender[index],
-                    handleAction: handleAction)),
+                  moment: momentRender[index],
+                )),
           ],
         );
       },

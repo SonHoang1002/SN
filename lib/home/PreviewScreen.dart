@@ -20,7 +20,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
   @override
   void initState() {
     if (mounted) {
-      SecureStorage().getKeyStorage("userId").then((value) {
+      SecureStorage().getKeyStorage("token").then((value) {
         if (value != 'noData') {
           Future.delayed(const Duration(seconds: 1), () {
             ref.read(meControllerProvider.notifier).getMeData();

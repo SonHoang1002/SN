@@ -53,15 +53,17 @@ class _HomeState extends ConsumerState<Home>
   void initState() {
     if (!mounted) return;
     super.initState();
-    Future.delayed(Duration.zero, () {
-      if (ref.watch(meControllerProvider).isEmpty) {
-        ref.read(meControllerProvider.notifier).getMeData();
-      }
-      setTheme();
-    });
+    if (mounted) {
+      Future.delayed(Duration.zero, () async {
+        if (ref.watch(meControllerProvider).isEmpty) {
+          await ref.read(meControllerProvider.notifier).getMeData();
+          await setTheme();
+        }
+      });
+    }
   }
 
-  void setTheme() async {
+  Future setTheme() async {
     final theme = pv.Provider.of<ThemeManager>(context, listen: false);
     final token = await SecureStorage().getKeyStorage('token');
     final dataLogin = await SecureStorage().getKeyStorage('dataLogin');

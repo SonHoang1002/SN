@@ -103,6 +103,7 @@ dependencies:
   native_device_orientation: ^1.1.4
   step_progress_indicator: ^1.0.2
   cached_video_player: ^2.0.4
+  google_sign_in: ^6.0.2
 
 dev_dependencies:
   flutter_test:
