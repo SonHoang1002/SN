@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/widget/map_widget_item.dart';
+import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
 
 import 'PostType/post_share_event.dart';
 import 'PostType/post_share_group.dart';

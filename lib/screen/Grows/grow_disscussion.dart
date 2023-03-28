@@ -35,6 +35,7 @@ class _GrowDiscussState extends ConsumerState<GrowDiscuss> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             ListView.builder(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 primary: false,

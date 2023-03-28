@@ -18,7 +18,7 @@ class GrowHost extends ConsumerStatefulWidget {
 }
 
 class _GrowHostState extends ConsumerState<GrowHost> {
-
+  String growHost = "now";
   @override
   void initState() {
     if (!mounted) return;
@@ -27,7 +27,17 @@ class _GrowHostState extends ConsumerState<GrowHost> {
         Duration.zero,
             () => ref
             .read(growControllerProvider.notifier)
-            .getListGrow({"only_current_user": true,"time": "past"}));
+            .getListGrow({"only_current_user": true,"time": "now"}));
+    Future.delayed(
+        Duration.zero,
+            () => ref
+            .read(growControllerProvider.notifier)
+            .getListGrowUpcoming({"only_current_user": true,"time": "upcoming"}));
+    Future.delayed(
+        Duration.zero,
+            () => ref
+            .read(growControllerProvider.notifier)
+            .getListGrowPast({"only_current_user": true,"time": "past"}));
   }
   @override
   Widget build(BuildContext context) {
@@ -35,200 +45,370 @@ class _GrowHostState extends ConsumerState<GrowHost> {
     var width = size.width;
     var height = size.height;
     List grows = ref.watch(growControllerProvider).grows;
+    List growsUpcoming = ref.watch(growControllerProvider).growsUpcoming;
+    List growsPast = ref.watch(growControllerProvider).growsPast;
+
     return Expanded(
       child: SingleChildScrollView(
-        child: Column(children: [
-          grows.isNotEmpty ?
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
-                child: Text(
-                  'Dự án bạn tổ chức',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+              child: Text(
+                'Dự án bạn tổ chức',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: grows.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, indexOwner) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top:8.0, left: 8.0, right: 8.0, bottom: 8.0),
-                        child: CardComponents(
-                          imageCard: ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15)),
-                            child: ImageCacheRender(
-                              path: grows[indexOwner]['banner'] != null ? grows[indexOwner]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) =>
-                                        GrowDetail(data: grows[indexOwner])));
-                          },
-                          textCard: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Padding(
+              padding:
+              const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+              child: Row(
+                children: [
+                  InkWell(
+                      onTap: () {
+                        setState(() {
+                          growHost = 'now';
+                        });
+                      },
+                      child: Container(
+                        height: 38,
+                        width: 120,
+                        decoration: BoxDecoration(
+                            color: growHost == 'now'
+                                ? secondaryColor
+                                : const Color.fromARGB(189, 202, 202, 202),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(width: 0.2, color: greyColor)),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Text(
-                                  grows[indexOwner]['title'],
-                                  maxLines: 2,
-                                  style: const TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w800,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                              Text(
+                                'Đang diễn ra',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: growHost == 'now'
+                                      ? Colors.white
+                                      : colorWord(context),
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Text(
-                                  'Cam kết mục tiêu ${convertNumberToVND(grows[indexOwner]['target_value'] ~/ 1)} VNĐ',
-                                  style: const TextStyle(
-                                    fontSize: 12.0,
-                                    color: greyColor,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
+                            ]),
+                      )),
+                  const SizedBox(width: 10),
+                  InkWell(
+                      onTap: () {
+                        setState(() {
+                          growHost = 'upcoming';
+                        });
+                      },
+                      child: Container(
+                        height: 38,
+                        width: 120,
+                        decoration: BoxDecoration(
+                            color: growHost == 'upcoming'
+                                ? secondaryColor
+                                : const Color.fromARGB(189, 202, 202, 202),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(width: 0.2, color: greyColor)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Sắp diễn ra',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w700,
+                                color: growHost == 'upcoming'
+                                    ? Colors.white
+                                    : colorWord(context),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Text(
-                                  '${grows[indexOwner]['followers_count'].toString()} người quan tâm · ${grows[indexOwner]['backers_count'].toString()} người ủng hộ',
-                                  style: const TextStyle(
-                                    fontSize: 12.0,
-                                    color: greyColor,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buttonCard: Container(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: Row(
-                              children: [
-                                Align(
-                                  alignment: Alignment.bottomLeft,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (grows[indexOwner]['project_relationship']
-                                      ['follow_project'] ==
-                                          true) {
-                                        ref
-                                            .read(growControllerProvider.notifier)
-                                            .updateStatusGrow(grows[indexOwner]['id'], false);
-                                      } else {
-                                        ref
-                                            .read(growControllerProvider.notifier)
-                                            .updateStatusGrow(grows[indexOwner]['id'], true);
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 3.0),
-                                      child: Container(
-                                        height: 32,
-                                        width: width * 0.7,
-                                        decoration: BoxDecoration(
-                                            color: grows[indexOwner]['project_relationship']
-                                            ['follow_project'] ==
-                                                true
-                                                ? secondaryColor.withOpacity(0.45)
-                                                : const Color.fromARGB(189, 202, 202, 202),
-                                            borderRadius: BorderRadius.circular(6),
-                                            border:
-                                            Border.all(width: 0.2, color: greyColor)),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(FontAwesomeIcons.solidStar,
-                                                color: grows[indexOwner]['project_relationship']
-                                                ['follow_project'] ==
-                                                    true
-                                                    ? secondaryColor
-                                                    : Colors.black,
-                                                size: 14),
-                                            const SizedBox(
-                                              width: 5.0,
-                                            ),
-                                            Text(
-                                              'Quan tâm',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: grows[indexOwner]['project_relationship']
-                                                ['follow_project'] ==
-                                                    true
-                                                    ? secondaryColor
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 3.0,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 11.0,
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: InkWell(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(10),
-                                            ),
-                                          ),
-                                          context: context,
-                                          builder: (context) => const ShareModalBottom());
-                                    },
-                                    child: Container(
-                                      height: 32,
-                                      width: width * 0.12,
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(189, 202, 202, 202),
-                                          borderRadius: BorderRadius.circular(6),
-                                          border:
-                                          Border.all(width: 0.2, color: greyColor)),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(FontAwesomeIcons.share,
-                                              color: Colors.black, size: 14),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
+                          ],
+                        ),
+                      )),
+                  const SizedBox(width: 10),
+                  InkWell(
+                      onTap: () {
+                        setState(() {
+                          growHost = 'past';
+                        });
+                      },
+                      child: Container(
+                        height: 38,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color:  growHost == 'past'
+                              ? secondaryColor
+                              : const Color.fromARGB(189, 202, 202, 202),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(width: 0.2, color: greyColor)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Trước đây',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w700,
+                                color: growHost == 'past'
+                                    ? Colors.white
+                                    : colorWord(context),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                ],
+              ),
+            ),
+            growHost == 'now' ?
+            grows.isNotEmpty ?
+            SizedBox(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: grows.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, indexOwner) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top:8.0, left: 8.0, right: 8.0, bottom: 8.0),
+                      child: CardComponents(
+                        imageCard: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15)),
+                          child: ImageCacheRender(
+                            path: grows[indexOwner]['banner'] != null ? grows[indexOwner]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
                           ),
                         ),
-                      );
-                    },
-                  )),
-            ],
-          ) : const SizedBox(),
-        ]),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      GrowDetail(data: grows[indexOwner])));
+                        },
+                        textCard: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                grows[indexOwner]['title'],
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w800,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                'Cam kết mục tiêu ${convertNumberToVND(grows[indexOwner]['target_value'] ~/ 1)} VNĐ',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: greyColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                '${grows[indexOwner]['followers_count'].toString()} người quan tâm · ${grows[indexOwner]['backers_count'].toString()} người ủng hộ',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: greyColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 2.0, right: 2.0, top: 8.0),
+                              child: Text(
+                                grows[indexOwner]['status'] == 'approved' ? 'Đã được duyệt' : grows[indexOwner]['status'] == 'rejected' ? 'Từ chối' : 'Đang chờ',
+                                style:  TextStyle(
+                                  fontSize: 12.0,
+                                  color: grows[indexOwner]['status'] == 'approved' ? Colors.green : Colors.red,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )) : const SizedBox() :  growHost == 'upcoming' ?  growsUpcoming.isNotEmpty ?
+            SizedBox(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: growsUpcoming.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, indexUpcoming) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top:8.0, left: 8.0, right: 8.0, bottom: 8.0),
+                      child: CardComponents(
+                        imageCard: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15)),
+                          child: ImageCacheRender(
+                            path: growsUpcoming[indexUpcoming]['banner'] != null ? growsUpcoming[indexUpcoming]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      GrowDetail(data: growsUpcoming[indexUpcoming])));
+                        },
+                        textCard: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                growsUpcoming[indexUpcoming]['title'],
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w800,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                'Cam kết mục tiêu ${convertNumberToVND(growsUpcoming[indexUpcoming]['target_value'] ~/ 1)} VNĐ',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: greyColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                '${growsUpcoming[indexUpcoming]['followers_count'].toString()} người quan tâm · ${growsUpcoming[indexUpcoming]['backers_count'].toString()} người ủng hộ',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: greyColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 2.0, right: 2.0, top: 8.0),
+                              child: Text(
+                                growsUpcoming[indexUpcoming]['status'] == 'approved' ? 'Đã được duyệt' : growsUpcoming[indexUpcoming]['status'] == 'rejected' ? 'Từ chối' : 'Đang chờ',
+                                style:  TextStyle(
+                                  fontSize: 12.0,
+                                  color: growsUpcoming[indexUpcoming]['status'] == 'approved' ? Colors.green : Colors.red,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )) : const SizedBox() : growsPast.isNotEmpty ?
+            SizedBox(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: growsPast.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, indexPast) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top:8.0, left: 8.0, right: 8.0, bottom: 8.0),
+                      child: CardComponents(
+                        imageCard: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15)),
+                          child: ImageCacheRender(
+                            path: growsPast[indexPast]['banner'] != null ? growsPast[indexPast]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      GrowDetail(data: growsPast[indexPast])));
+                        },
+                        textCard: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                growsPast[indexPast]['title'],
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w800,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                'Cam kết mục tiêu ${convertNumberToVND(growsPast[indexPast]['target_value'] ~/ 1)} VNĐ',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: greyColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                '${growsPast[indexPast]['followers_count'].toString()} người quan tâm · ${growsPast[indexPast]['backers_count'].toString()} người ủng hộ',
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: greyColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 2.0, right: 2.0, top: 8.0),
+                              child: Text(
+                                growsPast[indexPast]['status'] == 'approved' ? 'Đã được duyệt' : growsPast[indexPast]['status'] == 'rejected' ? 'Từ chối' : 'Đang chờ',
+                                style:  TextStyle(
+                                  fontSize: 12.0,
+                                  color: growsPast[indexPast]['status'] == 'approved' ? Colors.green : Colors.red,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )) : const SizedBox(),
+          ],
+        ),
       ),
     );
   }

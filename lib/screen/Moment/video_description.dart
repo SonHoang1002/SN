@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_page_hashtag.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_page_profile.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
@@ -14,19 +15,17 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/expandable_text.dart';
 import 'package:social_network_app_mobile/widget/screen_share.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class VideoDescription extends StatefulWidget {
-  final String type;
+class VideoDescription extends ConsumerStatefulWidget {
   final dynamic moment;
-  final Function handleAction;
-  const VideoDescription(
-      {super.key, this.moment, required this.handleAction, required this.type});
+  const VideoDescription({super.key, this.moment});
 
   @override
-  State<VideoDescription> createState() => _VideoDescriptionState();
+  ConsumerState<VideoDescription> createState() => _VideoDescriptionState();
 }
 
-class _VideoDescriptionState extends State<VideoDescription>
+class _VideoDescriptionState extends ConsumerState<VideoDescription>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
 
@@ -51,28 +50,44 @@ class _VideoDescriptionState extends State<VideoDescription>
 
     final size = MediaQuery.of(context).size;
     int reactionsCount = widget.moment['favourites_count'] ?? 0;
+    bool highLightIcon =
+        widget.moment['viewer_reaction'] == 'love' ? true : false;
 
     List iconsAction = [
       {
         "key": "reaction",
         "icon": FontAwesomeIcons.solidHeart,
-        "count": reactionsCount
+        "count": reactionsCount,
+        "iconHighlight": Colors.pink
       },
       {
         "key": "comment",
         "icon": FontAwesomeIcons.solidCommentDots,
-        "count": widget.moment['replies_total']
+        "count": widget.moment['replies_total'],
+        "iconHighlight": Colors.white.withOpacity(0.8)
       },
       {
         "key": "share",
         "icon": FontAwesomeIcons.share,
-        "count": widget.moment['reblogs_count']
+        "count": widget.moment['reblogs_count'],
+        "iconHighlight": Colors.white.withOpacity(0.8)
       },
-      {"key": "menu", "icon": FontAwesomeIcons.ellipsis},
+      {
+        "key": "menu",
+        "icon": FontAwesomeIcons.ellipsis,
+        "iconHighlight": Colors.white.withOpacity(0.8)
+      },
     ];
 
     handlePressMenu(key) {
-      if (key == 'menu') {
+      if (key == 'reaction') {
+        Future.delayed(Duration.zero, () {
+          ref.read(momentControllerProvider.notifier).updateReaction(
+                highLightIcon ? null : 'love',
+                widget.moment['id'],
+              );
+        });
+      } else if (key == 'menu') {
         showBarModalBottomSheet(
             context: context,
             backgroundColor: Theme.of(context).canvasColor,
@@ -248,12 +263,9 @@ class _VideoDescriptionState extends State<VideoDescription>
                                         child: Icon(
                                           iconsAction[index]['icon'],
                                           size: 30,
-                                          color: iconsAction[index]['key'] ==
-                                                      'reaction' &&
-                                                  widget.moment[
-                                                          'viewer_reaction'] !=
-                                                      null
-                                              ? Colors.pink
+                                          color: highLightIcon
+                                              ? iconsAction[index]
+                                                  ['iconHighlight']
                                               : Colors.white.withOpacity(0.8),
                                         ),
                                       ),

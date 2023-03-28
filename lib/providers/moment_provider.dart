@@ -43,6 +43,44 @@ class MomentController extends StateNotifier<MomentState> {
     }
   }
 
+  updateReaction(reaction, id) async {
+    var response;
+    if (reaction == 'love') {
+      response = await MomentApi().favoriteReactionMoment(id);
+    } else if (reaction == null) {
+      response = await MomentApi().unfavoriteReactionMoment(id);
+    }
+    if (response['id'] == id) {
+      if (mounted) {
+        var tempDataFollow = state.momentFollow
+            .map((e) => e['id'] == id
+                ? {
+                    ...e,
+                    'viewer_reaction': reaction,
+                    'favourites_count': reaction == 'love'
+                        ? e['favourites_count'] + 1
+                        : e['favourites_count'] - 1
+                  }
+                : e)
+            .toList();
+        var tempDataSuggest = state.momentSuggest
+            .map((e) => e['id'] == id
+                ? {
+                    ...e,
+                    'viewer_reaction': reaction,
+                    'favourites_count': reaction == 'love'
+                        ? e['favourites_count'] + 1
+                        : e['favourites_count'] - 1
+                  }
+                : e)
+            .toList();
+
+        state = state.copyWith(
+            momentFollow: tempDataFollow, momentSuggest: tempDataSuggest);
+      }
+    }
+  }
+
   getListMomentSuggest(params) async {
     List response = await MomentApi().getListMomentSuggest(params) ?? [];
     if (mounted) {
