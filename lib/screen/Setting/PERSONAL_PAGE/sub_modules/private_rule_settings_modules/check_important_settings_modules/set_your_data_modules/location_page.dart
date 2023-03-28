@@ -150,7 +150,7 @@ class LocationPage extends StatelessWidget {
               2,
               2,
               LocationConstants.LOCATION_NEXT,
-              AllCompletedPage(name: "how_people_can_find_you_on_facebook")),
+              AllCompletedPage(name: "how_people_can_find_you_on_Emso")),
           buildBottomNavigatorBarWidget(context)
         ]),
       ),

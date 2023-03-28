@@ -23,7 +23,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
   bool isOutsideLink = false;
   bool isDifferent = false;
   bool isLiveMeetingRoomSelection = false;
-  bool isFacebookLiveSelection = false;
+  bool isEmsoLiveSelection = false;
   late double width = 0;
   late double height = 0;
   late TextEditingController _urlController = TextEditingController(text: "");
@@ -150,7 +150,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
                     setState(() {
                       isDifferent = isOutsideLink = false;
                       isLiveMeetingRoomSelection = true;
-                      isFacebookLiveSelection = false;
+                      isEmsoLiveSelection = false;
                     });
                   },
                   child: Container(
@@ -220,7 +220,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
                   ),
                 ),
                 buildSpacer(height: 15),
-                // facebook live
+                // Emso live
                 GestureDetector(
                   onTap: () {
                     // Navigator.of(context)
@@ -228,15 +228,15 @@ class _LocationEventPageState extends State<LocationEventPage> {
                     setState(() {
                       isDifferent = isOutsideLink = false;
                       isLiveMeetingRoomSelection = false;
-                      isFacebookLiveSelection = true;
+                      isEmsoLiveSelection = true;
                     });
-                    showBottomSheetEventWithFacebookLive(context, width);
+                    showBottomSheetEventWithEmsoLive(context, width);
                   },
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         border: Border.all(
-                            color: isFacebookLiveSelection
+                            color: isEmsoLiveSelection
                                 ? Colors.blue
                                 : transparent)),
                     child: GeneralComponent(
@@ -246,8 +246,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
                           child: Row(
                             children: [
                               Text(
-                                  LocationEventConstants
-                                      .FACEBOOK_LIVE_COMPONENT[1],
+                                  LocationEventConstants.Emso_LIVE_COMPONENT[1],
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -261,8 +260,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
                           child: Wrap(
                             children: [
                               Text(
-                                  LocationEventConstants
-                                      .FACEBOOK_LIVE_COMPONENT[2],
+                                  LocationEventConstants.Emso_LIVE_COMPONENT[2],
                                   style: TextStyle(
                                     fontSize: 15,
                                     // color: Colors.grey
@@ -276,18 +274,16 @@ class _LocationEventPageState extends State<LocationEventPage> {
                         width: 40,
                         padding: EdgeInsets.all(10),
                         margin: EdgeInsets.only(left: 10),
-                        child: LocationEventConstants.FACEBOOK_LIVE_COMPONENT[0]
+                        child: LocationEventConstants.Emso_LIVE_COMPONENT[0]
                                 is String
                             ? SvgPicture.asset(
-                                LocationEventConstants
-                                    .FACEBOOK_LIVE_COMPONENT[0],
+                                LocationEventConstants.Emso_LIVE_COMPONENT[0],
                                 color: white,
                                 height: 5,
                                 width: 5,
                                 fit: BoxFit.scaleDown)
                             : Icon(
-                                LocationEventConstants
-                                    .FACEBOOK_LIVE_COMPONENT[0],
+                                LocationEventConstants.Emso_LIVE_COMPONENT[0],
                                 size: 15,
                                 color: white,
                               ),
@@ -382,13 +378,13 @@ class _LocationEventPageState extends State<LocationEventPage> {
                 width: width,
                 currentPage: 2,
                 isPassCondition: (isDifferent ||
-                    isFacebookLiveSelection ||
+                    isEmsoLiveSelection ||
                     isLiveMeetingRoomSelection ||
                     (isOutsideLink && _urlController.text.trim() != "")),
                 title: EventConstants.NEXT,
                 function: () {
                   if (isDifferent ||
-                      isFacebookLiveSelection ||
+                      isEmsoLiveSelection ||
                       isLiveMeetingRoomSelection ||
                       (isOutsideLink && _urlController.text.trim() != "")) {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -464,7 +460,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
                             setState(() {
                               isDifferent = true;
                               isOutsideLink = false;
-                              isFacebookLiveSelection =
+                              isEmsoLiveSelection =
                                   isLiveMeetingRoomSelection = false;
                             });
                             return;
@@ -472,7 +468,7 @@ class _LocationEventPageState extends State<LocationEventPage> {
                           setState(() {
                             isDifferent = false;
                             isOutsideLink = true;
-                            isFacebookLiveSelection =
+                            isEmsoLiveSelection =
                                 isLiveMeetingRoomSelection = false;
                           });
                           // Navigator.of(context).pop();

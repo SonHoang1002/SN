@@ -38,7 +38,7 @@ class SettingConstants {
   // account
   static const ACCOUNT_TITLE = "Tài khoản";
   static const ACCOUNT_DESCRIPTION =
-      "Quản lý phần cài đặt liên quan đến quyền, quảng cáo, hoạt động bên ngoài Facebook và thông tin khác về tài khoản.";
+      "Quản lý phần cài đặt liên quan đến quyền, quảng cáo, hoạt động bên ngoài Emso và thông tin khác về tài khoản.";
 
   static List<Map<String, dynamic>> ACCOUNT_INFORMATION_LIST = [
     {
@@ -47,7 +47,7 @@ class SettingConstants {
         "icon": PATH_ICON + "bell_icon.svg",
         "title": "Thông tin cá nhân",
         "subTitle":
-            "Cập nhật tên và thông tin liên hệ mà bạn kết nối với tài khoản Facebook của mình"
+            "Cập nhật tên và thông tin liên hệ mà bạn kết nối với tài khoản Emso của mình"
       }
     },
     {
@@ -71,7 +71,7 @@ class SettingConstants {
       "key": "pay_advertisement",
       "data": {
         "icon": PATH_ICON + "bell_icon.svg",
-        "title": "Facebook Pay",
+        "title": "Emso Pay",
         "subTitle":
             "Quản lý cài đạt thanh toán, xem lịch sử thanh toán và nhận hỗ trợ qua tính năng chat trực tiếp"
       }
@@ -116,16 +116,16 @@ class SettingConstants {
         "icon": PATH_ICON + "bell_icon.svg",
         "title": "Ứng dụng và trang web",
         "subTitle":
-            "Quản lý thông tin bạn chia sẻ với các ứng dụng và trang web bạn đã đăng nhập bằng Facebook"
+            "Quản lý thông tin bạn chia sẻ với các ứng dụng và trang web bạn đã đăng nhập bằng Emso"
       }
     },
     {
-      "key": "outside_activity_facebook",
+      "key": "outside_activity_Emso",
       "data": {
         "icon": PATH_ICON + "bell_icon.svg",
-        "title": "Hoạt động bên ngoài Facebook",
+        "title": "Hoạt động bên ngoài Emso",
         "subTitle":
-            "Xem hoặc xóa hoạt động từ các doanh nghiệp và tổ chức mà bạn truy cập ngoài Facebook"
+            "Xem hoặc xóa hoạt động từ các doanh nghiệp và tổ chức mà bạn truy cập ngoài Emso"
       }
     },
     {

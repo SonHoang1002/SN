@@ -85,14 +85,14 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
                       case "how_to_protect_your_account":
                         nextRoute = LoginWarningPage();
                         break;
-                      case "how_people_can_find_you_on_facebook":
+                      case "how_people_can_find_you_on_Emso":
                         nextRoute = AddFriendRequestPage();
                         break;
-                      case "set_your_data_on_facebook":
+                      case "set_your_data_on_Emso":
                         nextRoute = ApplicationAndWebsitePage();
                         break;
                       default:
-                        nextRoute = RecommendAdvertisementOnFacebookPage();
+                        nextRoute = RecommendAdvertisementOnEmsoPage();
                         break;
                     }
                     pushToNextScreen(context, nextRoute);
@@ -130,29 +130,27 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
             .HOW_TO_PROTECT_YOUR_ACCOUNT_CONTENTS;
         break;
 
-      case "how_people_can_find_you_on_facebook":
-        title = HowPeopleCanFindYouOnFacebookConstants
-            .HOW_PEOPLE_CAN_FIND_YOU_ON_FACEBOOK_TITLE;
-        subTitle = HowPeopleCanFindYouOnFacebookConstants
-            .HOW_PEOPLE_CAN_FIND_YOU_ON_FACEBOOK_SUBTITLE;
-        contents = HowPeopleCanFindYouOnFacebookConstants
-            .HOW_PEOPLE_CAN_FIND_YOU_ON_FACEBOOK_CONTENTS;
+      case "how_people_can_find_you_on_Emso":
+        title = HowPeopleCanFindYouOnEmsoConstants
+            .HOW_PEOPLE_CAN_FIND_YOU_ON_Emso_TITLE;
+        subTitle = HowPeopleCanFindYouOnEmsoConstants
+            .HOW_PEOPLE_CAN_FIND_YOU_ON_Emso_SUBTITLE;
+        contents = HowPeopleCanFindYouOnEmsoConstants
+            .HOW_PEOPLE_CAN_FIND_YOU_ON_Emso_CONTENTS;
         break;
 
-      case "set_your_data_on_facebook":
-        title = SetYourDataOnFacebookConstants.SET_YOUR_DATA_ON_FACEBOOK_TITLE;
-        subTitle =
-            SetYourDataOnFacebookConstants.SET_YOUR_DATA_ON_FACEBOOK_SUBTITLE;
-        contents =
-            SetYourDataOnFacebookConstants.SET_YOUR_DATA_ON_FACEBOOK_CONTENTS;
+      case "set_your_data_on_Emso":
+        title = SetYourDataOnEmsoConstants.SET_YOUR_DATA_ON_Emso_TITLE;
+        subTitle = SetYourDataOnEmsoConstants.SET_YOUR_DATA_ON_Emso_SUBTITLE;
+        contents = SetYourDataOnEmsoConstants.SET_YOUR_DATA_ON_Emso_CONTENTS;
         break;
       default:
-        title = FacebookAdvertisementOptionsConstants
-            .FACEBOOK_ADVERTISEMENT_OPTIONS_TITLE;
-        subTitle = FacebookAdvertisementOptionsConstants
-            .FACEBOOK_ADVERTISEMENT_OPTIONS_SUBTITLE;
-        contents = FacebookAdvertisementOptionsConstants
-            .FACEBOOK_ADVERTISEMENT_OPTIONS_CONTENTS;
+        title =
+            EmsoAdvertisementOptionsConstants.Emso_ADVERTISEMENT_OPTIONS_TITLE;
+        subTitle = EmsoAdvertisementOptionsConstants
+            .Emso_ADVERTISEMENT_OPTIONS_SUBTITLE;
+        contents = EmsoAdvertisementOptionsConstants
+            .Emso_ADVERTISEMENT_OPTIONS_CONTENTS;
         break;
     }
     return Column(

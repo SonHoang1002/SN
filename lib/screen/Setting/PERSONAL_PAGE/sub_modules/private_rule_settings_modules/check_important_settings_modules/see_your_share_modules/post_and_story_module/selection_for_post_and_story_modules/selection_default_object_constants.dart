@@ -12,14 +12,14 @@ class SelectionDefaultObjectConstants {
         "key": "public",
         "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
         "title": "Công khai",
-        "subTitle": "Bất kỳ ai ở trên hoặc ngoài Facebook",
+        "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
         // "iconNext": SettingConstants.NEXT_ICON_DATA,
       },
       {
         "key": "friend",
         "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
         "title": "Bạn bè",
-        "subTitle": "Bạn bè của bạn trên Facebook",
+        "subTitle": "Bạn bè của bạn trên Emso",
         // "iconNext": "",
       },
       {

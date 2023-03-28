@@ -107,14 +107,14 @@ class InformationOnPersonalPageConstants {
       "key": "public",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Công khai",
-      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Facebook",
+      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Bạn bè",
-      "subTitle": "Bạn bè của bạn trên Facebook",
+      "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
@@ -131,14 +131,14 @@ class InformationOnPersonalPageConstants {
       "key": "public",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Công khai",
-      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Facebook",
+      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Bạn bè",
-      "subTitle": "Bạn bè của bạn trên Facebook",
+      "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
@@ -155,7 +155,7 @@ class InformationOnPersonalPageConstants {
       "key": "public",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Công khai",
-      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Facebook",
+      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
@@ -169,7 +169,7 @@ class InformationOnPersonalPageConstants {
       "key": "friend",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Bạn bè",
-      "subTitle": "Bạn bè của bạn trên Facebook",
+      "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
@@ -186,14 +186,14 @@ class InformationOnPersonalPageConstants {
       "key": "public",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Công khai",
-      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Facebook",
+      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Bạn bè",
-      "subTitle": "Bạn bè của bạn trên Facebook",
+      "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
@@ -204,20 +204,20 @@ class InformationOnPersonalPageConstants {
       "isCheck": false
     },
   ];
- static const List<Map<String, dynamic>>
+  static const List<Map<String, dynamic>>
       INFORMATION_ON_PERSONAL_PAGE_CHOOSE_RELATIONSHIP_STATUS = [
     {
       "key": "public",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Công khai",
-      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Facebook",
+      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Bạn bè",
-      "subTitle": "Bạn bè của bạn trên Facebook",
+      "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
@@ -229,30 +229,30 @@ class InformationOnPersonalPageConstants {
     },
   ];
 
- static const List<Map<String, dynamic>>
+  static const List<Map<String, dynamic>>
       INFORMATION_ON_PERSONAL_PAGE_CHOOSE_FRIEND_AND_FOLLOW_STATUS = [
     {
       "key": "public",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Công khai",
-      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Facebook",
+      "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Bạn bè",
-      "subTitle": "Bạn bè của bạn trên Facebook",
+      "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
-      {
+    {
       "key": "friends_except",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Bạn bè ngoại trừ",
       "subTitle": "Không hiển thị với một số bạn bè",
       "isCheck": false
     },
-      {
+    {
       "key": "specific_friends",
       "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
       "title": "Bạn bè cụ thể",
@@ -267,8 +267,6 @@ class InformationOnPersonalPageConstants {
       "isCheck": false
     },
   ];
-
-
 }
 
 class BlockConstants {
@@ -278,7 +276,7 @@ class BlockConstants {
   static const String BLOCK_TIP =
       "Mẹo: Khi bạn chặn ai đó, chúng tôi sẽ không cho họ biết đâu";
 
-static const Map<String, dynamic> BLOCK_ADD_TO_BLOCK_LIST = {
+  static const Map<String, dynamic> BLOCK_ADD_TO_BLOCK_LIST = {
     "key": "add_to_block_list",
     "title": "Thêm vào danh sách chặn",
     "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
@@ -323,7 +321,7 @@ class PostAndStoryConstants {
     "data": [
       {
         "content":
-            "Kiểm soát ai có thể xem tin. Tin hiển thị trên Facebook và Messenger trong 24 giờ",
+            "Kiểm soát ai có thể xem tin. Tin hiển thị trên Emso và Messenger trong 24 giờ",
         "status": "Chỉ mình tôi"
       },
     ]

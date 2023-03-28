@@ -31,7 +31,7 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
             BackIconAppbar(),
             AppBarTitle(
                 title: InformationOnPersonalAdverConstants
-                    .INFORMATION_ON_FACEBOOK_ADVER_APPBAR_TITLE),
+                    .INFORMATION_ON_Emso_ADVER_APPBAR_TITLE),
             SizedBox(),
           ],
         ),
@@ -55,7 +55,7 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
                   // title
                   buildTextContent(
                     InformationOnPersonalAdverConstants
-                        .INFORMATION_ON_FACEBOOK_ADVER_TITLE,
+                        .INFORMATION_ON_Emso_ADVER_TITLE,
                     false,
                     fontSize: 16,
                     // colorWord: Colors.grey[300]
@@ -65,10 +65,10 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     itemCount: InformationOnPersonalAdverConstants
-                        .INFORMATION_ON_FACEBOOK_ADVER_CONTENTS["data"].length,
+                        .INFORMATION_ON_Emso_ADVER_CONTENTS["data"].length,
                     itemBuilder: ((context, index) {
                       final data = InformationOnPersonalAdverConstants
-                          .INFORMATION_ON_FACEBOOK_ADVER_CONTENTS["data"];
+                          .INFORMATION_ON_Emso_ADVER_CONTENTS["data"];
                       return Column(
                         children: [
                           Container(
@@ -115,7 +115,7 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
                       [
                         buildTextContent(
                           InformationOnPersonalAdverConstants
-                              .INFORMATION_ON_FACEBOOK_TIP,
+                              .INFORMATION_ON_Emso_TIP,
                           false,
                           fontSize: 16,
                           // colorWord: Colors.grey[300]

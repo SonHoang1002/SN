@@ -21,7 +21,7 @@ class CreateEventConstants {
   static const List<dynamic> ONLINE_COMPONENT = [
     FontAwesomeIcons.globe,
     "Online",
-    "Chat video bằng Phòng họp mặt trên Messenger, phát trực tiếp bằng Facebook Live hoặc thê liên kết ngoài",
+    "Chat video bằng Phòng họp mặt trên Messenger, phát trực tiếp bằng Emso Live hoặc thê liên kết ngoài",
   ];
   static const List<dynamic> LIVE_MEETING_COMPONENT = [
     FontAwesomeIcons.userGroup,
@@ -44,7 +44,7 @@ class DetailEventConstants {
   static const List<dynamic> ONLINE_COMPONENT = [
     Icon(FontAwesomeIcons.globe),
     "Online",
-    "Chat video bằng Phòng họp mặt trên Messenger, phát trực tiếp bằng Facebook Live hoặc thê liên kết ngoài",
+    "Chat video bằng Phòng họp mặt trên Messenger, phát trực tiếp bằng Emso Live hoặc thê liên kết ngoài",
   ];
 
   static List<dynamic> PRIVATE_RULE_COMPONENT = [
@@ -60,9 +60,9 @@ class DetailEventConstants {
     [
       FontAwesomeIcons.earthAmericas,
       "Công khai",
-      "Bất kỳ ai ở trên hoặc ngoài Facebook"
+      "Bất kỳ ai ở trên hoặc ngoài Emso"
     ],
-    [FontAwesomeIcons.userGroup, "Bạn bè", "Bạn bè trên Facebook"],
+    [FontAwesomeIcons.userGroup, "Bạn bè", "Bạn bè trên Emso"],
     [
       FontAwesomeIcons.peopleGroup,
       "Nhóm",
@@ -126,10 +126,10 @@ class LocationEventConstants {
     "Phòng họp mặt trên Messenger",
     "Họp mặt qua tính năng chat video. Mọi người có thể tham gia phòng họp mặt ngay tạitrang sự kiện",
   ];
-  static List<dynamic> FACEBOOK_LIVE_COMPONENT = [
+  static List<dynamic> Emso_LIVE_COMPONENT = [
     EventConstants.PATH_ICON + "camera_eye_icon.svg",
-    "Facebook Live",
-    "Lên lịch phát trực tiếp sự kiện của bạn bằng Facebook Live để mọi người cùng xem",
+    "Emso Live",
+    "Lên lịch phát trực tiếp sự kiện của bạn bằng Emso Live để mọi người cùng xem",
   ];
   static const String ADD_PRIVATE_LINK = "Thêm liên kết riêng";
   static const String DIFFERENT_SELECTION = "Lựa chọn khác";
@@ -148,9 +148,8 @@ class LocationEventConstants {
     ],
   ];
 
-  static const String EVENT_WITH_FACEBOOK_LIVE_TITLE =
-      "Sự kiện với Facebook Live";
-  static List<dynamic> EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST = [
+  static const String EVENT_WITH_Emso_LIVE_TITLE = "Sự kiện với Emso Live";
+  static List<dynamic> EVENT_WITH_Emso_LIVE_CONTENT_LIST = [
     [
       EventConstants.PATH_ICON + "camera_eye_icon.svg",
       "Phát trực tiếp ngay trong sự kiện",
@@ -225,5 +224,5 @@ class SettingEventConstants {
   static const String SHARE_LINK_CONTENT =
       "Khách mời có thể chia sẻ liên kết của phòng họp mặt";
   static const String DESCRIPTION_FOR_SHARE_LINK_CONTENT =
-      "Cho phép mọi người mời bạn bè tham gia sự kiện và chia sẻ liên kết của phòng họp mặt với người khác, bao gồm cả những ai không có tài khoản Facebook hoặc Messenger";
+      "Cho phép mọi người mời bạn bè tham gia sự kiện và chia sẻ liên kết của phòng họp mặt với người khác, bao gồm cả những ai không có tài khoản Emso hoặc Messenger";
 }

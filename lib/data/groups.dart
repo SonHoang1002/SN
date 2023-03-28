@@ -144,9 +144,9 @@ List postDiscoverGroup = [
       "title": "Cộng đồng Designer Việt Nam",
       "username": "congdongdesigner",
       "description":
-          "Vào group tuyệt đối phải đọc hết nội quy tại link này: www.facebook.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.",
+          "Vào group tuyệt đối phải đọc hết nội quy tại link này: www.Emso.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.",
       "description_html":
-          "&lt;p&gt;Vào group tuyệt đối phải đọc hết nội quy tại link này: www.facebook.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.&lt;/p&gt;",
+          "&lt;p&gt;Vào group tuyệt đối phải đọc hết nội quy tại link này: www.Emso.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.&lt;/p&gt;",
       "cover_image_url":
           "https://snapi.emso.asia/cover_images/original/missing.png",
       "is_archived": false,
@@ -832,9 +832,9 @@ List groupMember = [
     "title": "Cộng đồng Designer Việt Nam",
     "username": "congdongdesigner",
     "description":
-        "Vào group tuyệt đối phải đọc hết nội quy tại link này: www.facebook.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.",
+        "Vào group tuyệt đối phải đọc hết nội quy tại link này: www.Emso.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.",
     "description_html":
-        "&lt;p&gt;Vào group tuyệt đối phải đọc hết nội quy tại link này: www.facebook.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.&lt;/p&gt;",
+        "&lt;p&gt;Vào group tuyệt đối phải đọc hết nội quy tại link này: www.Emso.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.&lt;/p&gt;",
     "cover_image_url":
         "https://snapi.emso.asia/cover_images/original/missing.png",
     "is_archived": false,
@@ -2224,9 +2224,9 @@ dynamic groupJoinRequests = {
       "title": "ASEAN FOOTBALL OFFICIAL",
       "username": null,
       "description":
-          "Lets Share about ASEAN FOOTBALL in this group!\r\nPlease! NO POLITICS. NO EXCESSIVE FLAMING. NO RACISM. NO SEXISM. NO ADVERTISING.\r\nDeleted post non ASEAN FOOTBALL and ASEAN SPORTS.\r\nBan the members who violates the rule and virus post.\r\nThank you for helping to make this the best group of ASEAN FOOTBALL fans on Facebook!\r\nThank you :)\r\n- admin ASEAN FOOTBALL OFFICIAL",
+          "Lets Share about ASEAN FOOTBALL in this group!\r\nPlease! NO POLITICS. NO EXCESSIVE FLAMING. NO RACISM. NO SEXISM. NO ADVERTISING.\r\nDeleted post non ASEAN FOOTBALL and ASEAN SPORTS.\r\nBan the members who violates the rule and virus post.\r\nThank you for helping to make this the best group of ASEAN FOOTBALL fans on Emso!\r\nThank you :)\r\n- admin ASEAN FOOTBALL OFFICIAL",
       "description_html":
-          "&lt;p&gt;Lets Share about ASEAN FOOTBALL in this group!&lt;br /&gt;Please! NO POLITICS. NO EXCESSIVE FLAMING. NO RACISM. NO SEXISM. NO ADVERTISING.&lt;br /&gt;Deleted post non ASEAN FOOTBALL and ASEAN SPORTS.&lt;br /&gt;Ban the members who violates the rule and virus post.&lt;br /&gt;Thank you for helping to make this the best group of ASEAN FOOTBALL fans on Facebook!&lt;br /&gt;Thank you :)&lt;/p&gt;&lt;ul&gt;&lt;li&gt;admin ASEAN FOOTBALL OFFICIAL&lt;br /&gt;&lt;/li&gt;&lt;/ul&gt;",
+          "&lt;p&gt;Lets Share about ASEAN FOOTBALL in this group!&lt;br /&gt;Please! NO POLITICS. NO EXCESSIVE FLAMING. NO RACISM. NO SEXISM. NO ADVERTISING.&lt;br /&gt;Deleted post non ASEAN FOOTBALL and ASEAN SPORTS.&lt;br /&gt;Ban the members who violates the rule and virus post.&lt;br /&gt;Thank you for helping to make this the best group of ASEAN FOOTBALL fans on Emso!&lt;br /&gt;Thank you :)&lt;/p&gt;&lt;ul&gt;&lt;li&gt;admin ASEAN FOOTBALL OFFICIAL&lt;br /&gt;&lt;/li&gt;&lt;/ul&gt;",
       "cover_image_url":
           "https://snapi.emso.asia/cover_images/original/missing.png",
       "is_archived": false,

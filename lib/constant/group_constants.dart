@@ -125,7 +125,7 @@ class RequestFriendsGroupConstants {
   static const String PRIVATE_LINK_EXAMPLE =
       "https://www.freecodecamp.org/learn/front-end-development-libraries/#redux";
   static const String PRIVATE_DESCRIPTION_FOR_LINK_EXAMPLE =
-      "Bất kỳ ai trên Facebook có liên kết này đều có thể xem thông tin Giới thiệu về nhóm cũng như yếu cầu tham gia";
+      "Bất kỳ ai trên Emso có liên kết này đều có thể xem thông tin Giới thiệu về nhóm cũng như yếu cầu tham gia";
 }
 
 class CoverImageGroupConstants {

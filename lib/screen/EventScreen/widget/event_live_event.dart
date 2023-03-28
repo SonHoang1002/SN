@@ -6,7 +6,7 @@ import '../../../theme/colors.dart';
 import '../../../widget/GeneralWidget/information_component_widget.dart';
 
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
+showBottomSheetEventWithEmsoLive(BuildContext context, double width) {
   showModalBottomSheet(
       backgroundColor: transparent,
       context: context,
@@ -32,7 +32,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                         topLeft: Radius.circular(15))),
               ),
             ),
-            // event with facebook live title
+            // event with Emso live title
             Container(
               margin: EdgeInsets.fromLTRB(10, 10, 10, 5),
               child: Row(
@@ -41,7 +41,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                   Container(
                       child: Center(
                     child: Text(
-                      LocationEventConstants.EVENT_WITH_FACEBOOK_LIVE_TITLE,
+                      LocationEventConstants.EVENT_WITH_Emso_LIVE_TITLE,
                       style: TextStyle(color: white, fontSize: 18),
                     ),
                   )),
@@ -61,7 +61,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
               height: 235,
               child: ListView.builder(
                   itemCount: LocationEventConstants
-                      .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST.length,
+                      .EVENT_WITH_Emso_LIVE_CONTENT_LIST.length,
                   itemBuilder: ((context1, index) {
                     return GeneralComponent(
                       [
@@ -69,8 +69,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                           margin: EdgeInsets.only(left: 10),
                           child: Text(
                             LocationEventConstants
-                                    .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[
-                                index][1],
+                                .EVENT_WITH_Emso_LIVE_CONTENT_LIST[index][1],
                             style: TextStyle(
                                 color: white,
                                 fontSize: 15,
@@ -81,8 +80,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                           margin: EdgeInsets.only(left: 10),
                           child: Text(
                             LocationEventConstants
-                                    .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[
-                                index][2],
+                                .EVENT_WITH_Emso_LIVE_CONTENT_LIST[index][2],
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 15,
@@ -96,8 +94,7 @@ showBottomSheetEventWithFacebookLive(BuildContext context, double width) {
                         width: 20,
                         child: SvgPicture.asset(
                             LocationEventConstants
-                                    .EVENT_WITH_FACEBOOK_LIVE_CONTENT_LIST[
-                                index][0],
+                                .EVENT_WITH_Emso_LIVE_CONTENT_LIST[index][0],
                             color: white,
                             fit: BoxFit.scaleDown),
                       ),

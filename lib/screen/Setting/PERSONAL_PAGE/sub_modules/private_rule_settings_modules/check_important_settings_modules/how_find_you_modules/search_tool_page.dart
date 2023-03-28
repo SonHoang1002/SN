@@ -98,7 +98,7 @@ class SearchToolPage extends StatelessWidget {
               3,
               3,
               PhoneAndEmailConstants.ADD_FRIEND_REQUEST_NEXT,
-              AllCompletedPage(name: "how_people_can_find_you_on_facebook")),
+              AllCompletedPage(name: "how_people_can_find_you_on_Emso")),
           buildBottomNavigatorBarWidget(context)
         ]),
       ),

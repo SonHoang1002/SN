@@ -11,7 +11,7 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 import 'emso_advertising_options_constants.dart';
 
-class RecommendAdvertisementOnFacebookPage extends StatelessWidget {
+class RecommendAdvertisementOnEmsoPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
   @override
@@ -28,8 +28,8 @@ class RecommendAdvertisementOnFacebookPage extends StatelessWidget {
           children: const [
             BackIconAppbar(),
             AppBarTitle(
-                title: RecommendAdvertisementOnFacebookConstants
-                    .RECOMMEND_ADVERTISEMENT_ON_FACEBOOK_APPBAR_TITLE),
+                title: RecommendAdvertisementOnEmsoConstants
+                    .RECOMMEND_ADVERTISEMENT_ON_Emso_APPBAR_TITLE),
             SizedBox(),
           ],
         ),
@@ -51,8 +51,8 @@ class RecommendAdvertisementOnFacebookPage extends StatelessWidget {
                 children: [
                   // title
                   buildTextContent(
-                    RecommendAdvertisementOnFacebookConstants
-                        .RECOMMEND_ADVERTISEMENT_ON_FACEBOOK_ADVERTISEMENT_YOU_SEE_ON_FACEBOOK,
+                    RecommendAdvertisementOnEmsoConstants
+                        .RECOMMEND_ADVERTISEMENT_ON_Emso_ADVERTISEMENT_YOU_SEE_ON_Emso,
                     false,
                     fontSize: 16,
                     // colorWord: Colors.grey[300]
@@ -66,23 +66,23 @@ class RecommendAdvertisementOnFacebookPage extends StatelessWidget {
                   ),
                   _buildSpacer(height: 5),
                   buildTextContent(
-                      RecommendAdvertisementOnFacebookConstants
-                          .RECOMMEND_ADVERTISEMENT_ON_FACEBOOK_EXAMPLE_IF_YOU_EXCITED_TO_SPORT,
+                      RecommendAdvertisementOnEmsoConstants
+                          .RECOMMEND_ADVERTISEMENT_ON_Emso_EXAMPLE_IF_YOU_EXCITED_TO_SPORT,
                       false,
                       fontSize: 14,
                       colorWord: Colors.grey[600]),
                   _buildSpacer(height: 10),
                   buildTextContent(
-                    RecommendAdvertisementOnFacebookConstants
-                        .RECOMMEND_ADVERTISEMENT_ON_FACEBOOK_TO_DETERMINE_ADVERTISEMENTS_YOU_CAN_CONCERN_WITH,
+                    RecommendAdvertisementOnEmsoConstants
+                        .RECOMMEND_ADVERTISEMENT_ON_Emso_TO_DETERMINE_ADVERTISEMENTS_YOU_CAN_CONCERN_WITH,
                     false,
                     fontSize: 16,
                     // colorWord: Colors.grey[300]
                   ),
                   _buildSpacer(height: 10),
                   buildTextContent(
-                    RecommendAdvertisementOnFacebookConstants
-                        .RECOMMEND_ADVERTISEMENT_ON_FACEBOOK_WE_MAY_ALSO_CONSIDER_YOUR_ACTIVITY_OUTSIDE_OF_FACEBOOK,
+                    RecommendAdvertisementOnEmsoConstants
+                        .RECOMMEND_ADVERTISEMENT_ON_Emso_WE_MAY_ALSO_CONSIDER_YOUR_ACTIVITY_OUTSIDE_OF_Emso,
                     false,
                     fontSize: 16,
                     // colorWord: Colors.grey[300]
@@ -96,8 +96,8 @@ class RecommendAdvertisementOnFacebookPage extends StatelessWidget {
                   ),
                   _buildSpacer(height: 5),
                   buildTextContent(
-                      RecommendAdvertisementOnFacebookConstants
-                          .RECOMMEND_ADVERTISEMENT_ON_FACEBOOK_EXAMPLE_IF_YOU_ACCESS_TO_ONLINE_SHOPPING_WEBSITE,
+                      RecommendAdvertisementOnEmsoConstants
+                          .RECOMMEND_ADVERTISEMENT_ON_Emso_EXAMPLE_IF_YOU_ACCESS_TO_ONLINE_SHOPPING_WEBSITE,
                       false,
                       fontSize: 14,
                       colorWord: Colors.grey[600]),
@@ -105,8 +105,8 @@ class RecommendAdvertisementOnFacebookPage extends StatelessWidget {
                   GeneralComponent(
                     [
                       buildTextContent(
-                        RecommendAdvertisementOnFacebookConstants
-                            .RECOMMEND_ADVERTISEMENT_ON_FACEBOOK_TIP,
+                        RecommendAdvertisementOnEmsoConstants
+                            .RECOMMEND_ADVERTISEMENT_ON_Emso_TIP,
                         false,
                         fontSize: 16,
                         // colorWord: Colors.grey[200]
@@ -127,8 +127,8 @@ class RecommendAdvertisementOnFacebookPage extends StatelessWidget {
                   ),
                   _buildSpacer(height: 10),
                   buildTextContent(
-                    RecommendAdvertisementOnFacebookConstants
-                        .RECOMMEND_ADVERTISEMENT_ON_FACEBOOK_NEXT_WE_WILL_SHOW_HOW_TO_USE_A_FEW_OPTIONS,
+                    RecommendAdvertisementOnEmsoConstants
+                        .RECOMMEND_ADVERTISEMENT_ON_Emso_NEXT_WE_WILL_SHOW_HOW_TO_USE_A_FEW_OPTIONS,
                     false,
                     fontSize: 16,
                     // colorWord: Colors.grey[300]

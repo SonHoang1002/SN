@@ -176,12 +176,12 @@ class AllCompletedPage extends StatelessWidget {
             HowToProtectYourAccountConstants.ALL_COMPLETED_TITLE,
             HowToProtectYourAccountConstants.ALL_COMPLETED_SUBTITLE,
             HowToProtectYourAccountConstants.ALL_COMPLETED_CONTENTS);
-      case "how_people_can_find_you_on_facebook":
+      case "how_people_can_find_you_on_Emso":
         return _buildContent(
-            HowPeopleCanFindYouOnFacebookConstants.ALL_COMPLETED_TITLE,
-            HowPeopleCanFindYouOnFacebookConstants.ALL_COMPLETED_SUBTITLE,
-            HowPeopleCanFindYouOnFacebookConstants.ALL_COMPLETED_CONTENTS);
-      case "set_your_data_on_facebook":
+            HowPeopleCanFindYouOnEmsoConstants.ALL_COMPLETED_TITLE,
+            HowPeopleCanFindYouOnEmsoConstants.ALL_COMPLETED_SUBTITLE,
+            HowPeopleCanFindYouOnEmsoConstants.ALL_COMPLETED_CONTENTS);
+      case "set_your_data_on_Emso":
         return _buildContent(
             AllComplete4Constants.ALL_COMPLETED_TITLE,
             AllComplete4Constants.ALL_COMPLETED_SUBTITLE,
