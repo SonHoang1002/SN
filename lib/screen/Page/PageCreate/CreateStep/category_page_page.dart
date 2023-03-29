@@ -1,5 +1,6 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/providers/page/search_category_provider.dart';
 import '../../../../constant/page_constants.dart';
@@ -12,6 +13,9 @@ import '../../../../widget/back_icon_appbar.dart';
 import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 
 class CategoryPage extends StatefulWidget {
+  final dataCreate;
+  const CategoryPage({super.key, this.dataCreate});
+
   @override
   State<CategoryPage> createState() => _CategoryPageState();
 }
@@ -19,8 +23,17 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   late double width = 0;
   late double height = 0;
-  late TextEditingController _categoryController =
-      TextEditingController(text: "");
+  final TextEditingController _categoryController = TextEditingController();
+  List categorySelected = [];
+  FocusNode focus = FocusNode();
+
+  @override
+  void dispose() {
+    focus.dispose();
+    _categoryController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -47,334 +60,250 @@ class _CategoryPageState extends State<CategoryPage> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                SizedBox(
                   height: height * 0.78055,
-                  // color: Colors.black87,
+                  width: size.width - 18,
                   child: ListView(
                     children: [
                       Container(
-                          // color: Colors.black87,
-                          child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                              child: Column(children: [
-                                //question
-                                Wrap(
-                                  children: [
-                                    Text(
-                                      CategoryPageConstants.QUESTION_NAME[0],
-                                      style: const TextStyle(
-                                          // color:  white,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          child: Column(children: [
+                            //question
+                            Wrap(
+                              children: [
+                                Text(
+                                  'Hạng mục nào mô tả chính xác nhất về ${widget.dataCreate['title']}?',
+                                  style: const TextStyle(
+                                      // color:  white,
+                                      fontSize: 21,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            // description for question
+                            const Text(
+                                'Nhờ hạng mục, mọi người sẽ tìm thấy Trang này trong kết quả tìm kiếm. Bạn có thể thêm đến 3 hạng mục.',
+                                style: TextStyle(
+                                    // color:  white,
+                                    fontSize: 16)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(0, 3, 0, 6),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: focus.hasFocus
+                                          ? secondaryColor
+                                          : greyColor,
+                                      width: focus.hasFocus ? 2 : 1),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8))),
+                              child: Column(
+                                children: [
+                                  if (categorySelected.isNotEmpty)
+                                    Container(
+                                      width: width,
+                                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                      child: Wrap(
+                                          children: List.generate(
+                                              categorySelected.length,
+                                              (index) => selectedArea(context,
+                                                  categorySelected[index]))),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                // description for question
-                                Text(CategoryPageConstants.QUESTION_NAME[1],
-                                    style: const TextStyle(
-                                        // color:  white,
-                                        fontSize: 20)),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(7)),
-                                    border: Border.all(color: Colors.black),
-                                    // color: Colors.red
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Flexible(
-                                        flex: 10,
-                                        child: Column(
-                                          children: [
-                                            Wrap(
-                                                direction: Axis.horizontal,
-                                                children: Provider.of<
-                                                            CategoryProvider>(
-                                                        context)
-                                                    .model
-                                                    .listCate
-                                                    .map((valueOfCategory) {
-                                                  return selectedArea(context,
-                                                      true, valueOfCategory);
-                                                }).toList()),
-                                            Provider.of<CategoryProvider>(
-                                                            context)
-                                                        .model
-                                                        .listCate
-                                                        .length >
-                                                    2
-                                                ? Container()
-                                                : TextFormField(
-                                                    style: TextStyle(
-                                                        // color:  white
-                                                        ),
-                                                    controller:
-                                                        _categoryController,
-                                                    onChanged: (value) {
-                                                      context
-                                                          .read<
-                                                              SearchCategoryProvider>()
-                                                          .setSearchCategoryProvider(
-                                                              (value));
-                                                      setState(() {});
-                                                    },
-                                                    decoration: InputDecoration(
-                                                        border:
-                                                            InputBorder.none,
-                                                        hintText:
-                                                            CategoryPageConstants
-                                                                .PLACEHOLDER_CATEGORY,
-                                                        hintStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 20),
-                                                        contentPadding:
-                                                            EdgeInsets.only(
-                                                                left: 10)),
-                                                  )
-                                          ],
+                                  if (categorySelected.length < 3)
+                                    TextFormField(
+                                      focusNode: focus,
+                                      controller: _categoryController,
+                                      onChanged: (value) {
+                                        context
+                                            .read<SearchCategoryProvider>()
+                                            .setSearchCategoryProvider(
+                                                value, categorySelected);
+                                        setState(() {});
+                                      },
+                                      decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          suffixIcon: Icon(Icons.search),
+                                          hintText: CategoryPageConstants
+                                              .PLACEHOLDER_CATEGORY,
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey, fontSize: 20),
+                                          contentPadding: EdgeInsets.fromLTRB(
+                                              10, 12, 0, 0)),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            _categoryController.text.trim().isNotEmpty
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: greyColor,
                                         ),
-                                      ),
-                                      Flexible(
-                                          child: Icon(
-                                        Icons.search,
-                                        // color:  white,
-                                      )),
-                                    ],
-                                  ),
-                                ),
-                                _categoryController.text.trim().length > 0
-                                    ? Container(
-                                        height: 200,
-                                        child: ListView.builder(
-                                          itemBuilder: (context, index) {
-                                            return suggestComponent(Provider.of<
-                                                        SearchCategoryProvider>(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(5))),
+                                    height: 238,
+                                    child: ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        return suggestComponent(
+                                            Provider.of<SearchCategoryProvider>(
                                                     context)
                                                 .searchList[index]);
-                                          },
-                                          itemCount: Provider.of<
-                                                      SearchCategoryProvider>(
+                                      },
+                                      itemCount:
+                                          Provider.of<SearchCategoryProvider>(
                                                   context,
                                                   listen: false)
                                               .searchList
                                               .length,
-                                        ),
-                                      )
-                                    : Container(),
-                                // hang muc pho bien
-                                Container(
-                                  padding: EdgeInsets.only(left: 10, top: 10),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        CategoryPageConstants.TITLE,
-                                        style: TextStyle(
-                                            // color:  white,
-                                            fontSize: 15),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  )
+                                : Container(),
+                            // hang muc pho bien
+                            if (categorySelected.length < 3)
+                              Container(
+                                padding: EdgeInsets.only(left: 10, top: 10),
+                                child: Row(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    const Text(
+                                      CategoryPageConstants.TITLE,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ],
                                 ),
-                                selectedArea(context, false,
-                                    CategoryPageConstants.POPULAR_CATEGORY[0]),
-                                selectedArea(context, false,
-                                    CategoryPageConstants.POPULAR_CATEGORY[1]),
-                                selectedArea(context, false,
-                                    CategoryPageConstants.POPULAR_CATEGORY[2]),
-                                selectedArea(context, false,
-                                    CategoryPageConstants.POPULAR_CATEGORY[3]),
-                              ]))),
+                              ),
+                            if (categorySelected.length < 3)
+                              SizedBox(
+                                width: width,
+                                child: Wrap(
+                                    children: List.generate(
+                                        CategoryPageConstants
+                                            .POPULAR_CATEGORY.length,
+                                        (index) => selectedArea(
+                                            context,
+                                            CategoryPageConstants
+                                                .POPULAR_CATEGORY[index]))),
+                              ),
+                          ])),
                     ],
                   ),
                 ),
-                buildBottomNavigatorWithButtonAndChipWidget(
-                    context: context,
-                    width: width,
-                    isPassCondition: true,
-                    newScreen: InformationPagePage(),
-                    title: "Tiếp",
-                    currentPage: 2)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: buildBottomNavigatorWithButtonAndChipWidget(
+                      context: context,
+                      width: width,
+                      isPassCondition: categorySelected.isNotEmpty,
+                      newScreen: InformationPagePage(),
+                      title: "Tiếp",
+                      currentPage: 2),
+                )
               ]),
         ));
   }
 
-  Widget selectedArea(BuildContext context, bool hasIcon, String value) {
-    return GestureDetector(
-      onTap: (() {
-        if (hasIcon == false) {
-          CategoryModel model =
-              Provider.of<CategoryProvider>(context, listen: false).model;
-          bool hasValue = false;
-          for (int i = 0; i < model.listCate.length; i++) {
-            if (model.listCate[i].contains(value)) {
-              hasValue = true;
-            }
-          }
-          if (hasValue) {
-            showDialog(
-                context: context,
-                builder: ((context) {
-                  return AlertDialog(
-                    title: Text(CategoryPageConstants.WARNING_MESSAGE[0]),
-                    actions: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            "OK",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ))
-                    ],
-                  );
-                }));
-          } else {
-            if (model.listCate.length > 2) {
-              showDialog(
-                  context: context,
-                  builder: ((context) {
-                    return AlertDialog(
-                      title: Text(CategoryPageConstants.WARNING_MESSAGE[1]),
-                      actions: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              "OK",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ))
-                      ],
-                    );
-                  }));
-            } else {
-              Provider.of<CategoryProvider>(context, listen: false)
-                  .setAddCategoryProvider(value);
-              setState(() {});
-            }
-          }
-        }
-      }),
-      child: Flex(
-        direction: Axis.horizontal,
-        children: [
-          Container(
-            margin: EdgeInsets.fromLTRB(10, 5, 5, 5),
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(7)),
-                color: Colors.grey[700]),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                hasIcon
-                    ? Row(
-                        children: [
-                          GestureDetector(
-                            onTap: (() {
-                              Provider.of<CategoryProvider>(context,
-                                      listen: false)
-                                  .setDeleteCategoryProvider(value);
-                              setState(() {});
-                            }),
-                            child: Container(
-                              height: 18,
-                              width: 18,
-                              child: Center(
-                                  child: Icon(
-                                Icons.close_outlined,
-                                size: 13,
-                              )),
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                  color: white),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                        ],
-                      )
-                    : Container(),
-                Text(
-                  value,
-                  style: TextStyle(
-                      color: white, fontSize: 20, fontWeight: FontWeight.bold),
-                )
-              ],
+  Widget selectedArea(BuildContext context, String value) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 5, 5, 0),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          color: Colors.grey),
+      child: Wrap(
+          direction: Axis.horizontal,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            InkWell(
+              onTap: (() {
+                print(1);
+                if (categorySelected.contains(value)) {
+                  showDialog(
+                      context: context,
+                      builder: ((context) {
+                        return AlertDialog(
+                          title: Text(CategoryPageConstants.WARNING_MESSAGE[0]),
+                          actions: [
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  "OK",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ))
+                          ],
+                        );
+                      }));
+                } else {
+                  setState(() {
+                    categorySelected.add(value);
+                  });
+                }
+              }),
+              child: Text(
+                value,
+                style: const TextStyle(
+                    color: white, fontSize: 16, fontWeight: FontWeight.w500),
+              ),
             ),
-          )
-        ],
-      ),
+            InkWell(
+              onTap: () {
+                if (mounted) {
+                  setState(() {
+                    List tempCategory = categorySelected;
+                    categorySelected = tempCategory
+                        .where(
+                          (e) => e != value,
+                        )
+                        .toList();
+                  });
+                  focus.requestFocus();
+                }
+              },
+              child: const Padding(
+                padding: EdgeInsets.fromLTRB(8, 3, 5, 3),
+                child: Icon(
+                  FontAwesomeIcons.solidCircleXmark,
+                  size: 16,
+                  color: white,
+                ),
+              ),
+            )
+          ]),
     );
   }
 
   Widget suggestComponent(String value) {
     return GestureDetector(
       onTap: (() {
-        CategoryModel model =
-            Provider.of<CategoryProvider>(context, listen: false).model;
-        if (model.listCate.length < 4) {
-          bool hasValue = false;
-          for (int i = 0; i < model.listCate.length; i++) {
-            if (model.listCate[i].contains(value)) {
-              hasValue = true;
-            }
-          }
-          if (hasValue) {
-            showDialog(
-                context: context,
-                builder: ((context) {
-                  return AlertDialog(
-                    title: Text(CategoryPageConstants.WARNING_MESSAGE[0]),
-                  );
-                }));
-          } else {
-            Provider.of<CategoryProvider>(context, listen: false)
-                .setAddCategoryProvider(value);
-            _categoryController.text = "";
-            setState(() {});
-          }
-        }
+        setState(() {
+          categorySelected.add(value);
+          _categoryController.text = '';
+        });
       }),
       child: Container(
-        padding: EdgeInsets.only(left: 10),
-        height: 40,
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        decoration: BoxDecoration(
+            border:
+                Border(bottom: BorderSide(color: greyColor.withOpacity(0.6)))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(
-                child: Flex(
-              direction: Axis.horizontal,
-              children: [
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: white,
-                    fontSize: 20,
-                  ),
-                )
-              ],
-            )),
-            Divider(
-              height: 2,
-              color: white,
-            )
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
           ],
         ),
       ),

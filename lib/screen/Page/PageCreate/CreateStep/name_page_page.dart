@@ -21,6 +21,12 @@ class _NamePagePageState extends State<NamePagePage> {
   final _nameFormKey = GlobalKey<FormState>();
   late TextEditingController nameController = TextEditingController(text: "");
   bool _ischeckValitdator = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -60,7 +66,7 @@ class _NamePagePageState extends State<NamePagePage> {
                   ),
                   Form(
                     key: _nameFormKey,
-                    child: Container(
+                    child: SizedBox(
                       height: 80,
                       child: TextFormField(
                         validator: ((value) {
@@ -107,7 +113,7 @@ class _NamePagePageState extends State<NamePagePage> {
             ),
 
             // bottom
-            Container(
+            Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: buildBottomNavigatorWithButtonAndChipWidget(
                   context: context,
@@ -116,7 +122,9 @@ class _NamePagePageState extends State<NamePagePage> {
                           : _nameFormKey.currentState!.validate()) &&
                       nameController.text.length > 2,
                   width: width,
-                  newScreen: CategoryPage(),
+                  newScreen: CategoryPage(
+                    dataCreate: {'title': nameController.text},
+                  ),
                   title: next,
                   currentPage: 1),
             )
