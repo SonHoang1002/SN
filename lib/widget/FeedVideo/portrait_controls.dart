@@ -53,61 +53,59 @@ class FeedPlayerPortraitControls extends StatelessWidget {
               ),
             ),
           ),
-          type == postMoment
-              ? const SizedBox()
-              : type == 'showFullScreen'
-                  ? FlickAutoHideChild(
-                      autoHide: false,
-                      showIfVideoNotInitialized: false,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.black38,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: FlickSoundToggle(
-                              toggleMute: () => flickMultiManager?.toggleMute(),
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.black38,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const FlickFullScreenToggle(),
-                          ),
-                        ],
+          type == 'showFullScreen'
+              ? FlickAutoHideChild(
+                  autoHide: false,
+                  showIfVideoNotInitialized: false,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: FlickSoundToggle(
+                          toggleMute: () => flickMultiManager?.toggleMute(),
+                          color: Colors.white,
+                        ),
                       ),
-                    )
-                  : FlickAutoHideChild(
-                      autoHide: false,
-                      showIfVideoNotInitialized: false,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.black38,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: FlickSoundToggle(
-                              toggleMute: () => flickMultiManager?.toggleMute(),
-                              color: Colors.white,
-                            ),
-                          ),
-                          // const FlickFullScreenToggle(),
-                        ],
+                      const SizedBox(
+                        width: 5,
                       ),
-                    ),
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const FlickFullScreenToggle(),
+                      ),
+                    ],
+                  ),
+                )
+              : FlickAutoHideChild(
+                  autoHide: false,
+                  showIfVideoNotInitialized: false,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: FlickSoundToggle(
+                          toggleMute: () => flickMultiManager?.toggleMute(),
+                          color: Colors.white,
+                        ),
+                      ),
+                      // const FlickFullScreenToggle(),
+                    ],
+                  ),
+                ),
         ],
       ),
     );

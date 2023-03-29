@@ -110,6 +110,11 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
@@ -867,7 +872,8 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage> {
     // goi api
     final response =
         await ProductsApi().updateProductApi(_oldData!["id"], updateBodyData);
-    final reset = await ref.read(productsProvider.notifier).updateProductData([]);
+    final reset =
+        await ref.read(productsProvider.notifier).updateProductData([]);
     buildMessageDialog(
         context,
         response != null && response.isNotEmpty

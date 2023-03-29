@@ -19,10 +19,14 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
   dynamic postRender;
   bool isShowAction = false;
   int indexRender = 0;
+  late double _scale;
+  late double _previousScale;
 
   @override
   void initState() {
     super.initState();
+    _scale = 1.0;
+    _previousScale = 1.0;
     if (mounted && widget.postMedia != null) {
       setState(() {
         postRender = widget.postMedia;
@@ -34,6 +38,11 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
         indexRender = widget.currentIndex ?? 0;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -92,17 +101,49 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
             isShowAction = !isShowAction;
           });
         },
-        onHorizontalDragEnd: (dragDetail) {
-          if (dragDetail.velocity.pixelsPerSecond.dx < 1) {
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity! > 0) {
             handleUpdateData('prev');
-          } else {
+          } else if (details.primaryVelocity! < 0) {
             handleUpdateData('next');
           }
         },
         child: Stack(
           children: [
-            PhotoView(
-              imageProvider: NetworkImage(path),
+            GestureDetector(
+              onScaleStart: (ScaleStartDetails details) {
+                _previousScale = _scale;
+              },
+              onScaleUpdate: (ScaleUpdateDetails details) {
+                setState(() {
+                  _scale = _previousScale * details.scale;
+                });
+              },
+              onScaleEnd: (ScaleEndDetails details) {
+                _previousScale = 1.0;
+              },
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                color: Colors.black,
+                child: PhotoView(
+                  imageProvider: NetworkImage(path),
+                  heroAttributes:
+                      PhotoViewHeroAttributes(tag: widget.postMedia['id']),
+                  backgroundDecoration:
+                      const BoxDecoration(color: Colors.black),
+                  initialScale: PhotoViewComputedScale.contained * 1.0,
+                  minScale: PhotoViewComputedScale.contained * 1.0,
+                  maxScale: PhotoViewComputedScale.covered * 2.0,
+                  // scaleStateChangedCallback: (scaleState) {
+                  //   if (scaleState == PhotoViewScaleState.initial) {
+                  //     Navigator.pop(context);
+                  //   }
+                  // },
+                  scaleStateController: PhotoViewScaleStateController(),
+                ),
+              ),
             ),
             isShowAction
                 ? Positioned(

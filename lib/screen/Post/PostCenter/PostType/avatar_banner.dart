@@ -28,6 +28,7 @@ class AvatarBanner extends StatelessWidget {
               child: AvatarSocial(
                   width: size.width * 0.7,
                   height: size.width * 0.7,
+                  object: {'avatar_media': post['media_attachments'][0]},
                   path: path),
             ),
           )

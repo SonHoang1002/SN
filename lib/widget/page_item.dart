@@ -16,6 +16,7 @@ class PageItem extends StatelessWidget {
         AvatarSocial(
             width: 40,
             height: 40,
+            object: page,
             path: page['avatar_media'] != null
                 ? page['avatar_media']['preview_url']
                 : linkAvatarDefault),

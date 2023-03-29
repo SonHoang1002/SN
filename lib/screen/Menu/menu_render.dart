@@ -29,7 +29,6 @@ class MenuRender extends StatelessWidget {
                           menuSelected: menu,
                         )));
     }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,9 +49,9 @@ class MenuRender extends StatelessWidget {
             itemBuilder: (context, index) => Container(
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                      color: theme.themeMode == ThemeMode.dark
+                      color: theme.isDarkMode
                           ? Theme.of(context).cardColor
-                          : const Color(0xfff1f2f5),
+                          : const Color(0xfff1f2f5) ,
                       border: Border.all(width: 0.1, color: greyColor),
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
@@ -63,10 +62,16 @@ class MenuRender extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                          listSocial[index]['icon'],
-                          width: 20,
-                        ),
+                        listSocial[index]['icon'].contains('svg')
+                            ? SvgPicture.asset(
+                                listSocial[index]['icon'],
+                                width: 20,
+                              )
+                            : Image.asset(
+                                listSocial[index]['icon'],
+                                width: 22,
+                                height: 22,
+                              ),
                         const SizedBox(
                           width: 12,
                         ),

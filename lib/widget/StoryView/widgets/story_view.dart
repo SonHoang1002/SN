@@ -751,6 +751,7 @@ class StoryViewState extends ConsumerState<StoryView>
                       AvatarSocial(
                           width: 36,
                           height: 36,
+                          object: meData,
                           path: meData['avatar_media']?['preview_url'] ??
                               linkAvatarDefault),
                       const SizedBox(
@@ -848,6 +849,11 @@ class PageBarState extends State<PageBar> {
     if (mounted) {
       super.setState(fn);
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   bool isPlaying(PageData page) {

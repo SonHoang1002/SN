@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/girdview_builder_media.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -21,6 +21,11 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
   void initState() {
     super.initState();
     flickMultiManager = FlickMultiManager();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -63,41 +68,38 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                             medias[0]['file'],
                             fit: BoxFit.cover,
                           )
-                        : FadeInImage.memoryNetwork(
-                            placeholder: kTransparentImage,
-                            image: medias[0]['url'],
-                            imageErrorBuilder: (context, error, stackTrace) =>
-                                const SizedBox(),
+                        : Hero(
+                            tag: medias[0]['id'],
+                            child: FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: medias[0]['url'],
+                              imageErrorBuilder: (context, error, stackTrace) =>
+                                  const SizedBox(),
+                            ),
                           ),
                   ),
                 ),
               ),
             );
           } else {
-            return Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: SizedBox(
+            return SizedBox(
                 height: (medias[0]['aspect'] ??
                             medias[0]['meta']['original']['aspect'] ??
                             1) <
                         1
                     ? size.width
                     : null,
-                child: GestureDetector(
-                  onTap: () {
-                    widget.handlePress(medias[0]);
-                  },
-                  child: FeedVideo(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: VideoPlayerNoneController(
                       path: medias[0]['file']?.path ??
                           medias[0]['remote_url'] ??
                           medias[0]['url'],
-                      flickMultiManager: flickMultiManager,
-                      image: medias[0]['preview_remote_url'] ??
-                          medias[0]['preview_url'] ??
-                          ''),
-                ),
-              ),
-            );
+                      media: medias[0],
+                      type: medias[0]['file']?.path != null
+                          ? 'local'
+                          : 'network'),
+                ));
           }
         case 2:
           return GirdviewBuilderMedia(
@@ -108,27 +110,25 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               medias: medias);
         case 3:
           if (getAspectMedia(medias[0]) > 1) {
-            return Expanded(
-              child: Column(
-                children: [
-                  GirdviewBuilderMedia(
-                      handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
-                      crossAxisCount: 1,
-                      aspectRatio:
-                          double.parse(getAspectMedia(medias[0]).toString()),
-                      medias: medias.sublist(0, 1)),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  GirdviewBuilderMedia(
-                      handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
-                      crossAxisCount: 2,
-                      aspectRatio: 1,
-                      medias: medias.sublist(1, 3)),
-                ],
-              ),
+            return Column(
+              children: [
+                GirdviewBuilderMedia(
+                    handlePress: widget.handlePress,
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 1,
+                    aspectRatio:
+                        double.parse(getAspectMedia(medias[0]).toString()),
+                    medias: medias.sublist(0, 1)),
+                const SizedBox(
+                  height: 3,
+                ),
+                GirdviewBuilderMedia(
+                    handlePress: widget.handlePress,
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 2,
+                    aspectRatio: 1,
+                    medias: medias.sublist(1, 3)),
+              ],
             );
           } else {
             return Row(
@@ -195,8 +195,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               ],
             );
           } else if (getAspectMedia(medias[0]) > 1) {
-            return Expanded(
-                child: Column(
+            return Column(
               children: [
                 GirdviewBuilderMedia(
                     handlePress: widget.handlePress,
@@ -215,7 +214,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     aspectRatio: 1,
                     medias: medias.sublist(1)),
               ],
-            ));
+            );
           } else {
             return Padding(
               padding: const EdgeInsets.only(left: 2, right: 2),
@@ -224,26 +223,24 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 shrinkWrap: true,
                 crossAxisCount: 4,
                 crossAxisSpacing: 3,
-                childAspectRatio: 0.315,
+                childAspectRatio: 0.337,
                 children: List.generate(
                     medias.length,
-                    (index) => Expanded(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: (index == 1 || index == 3) ? 25 : 0,
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: GirdviewBuilderMedia(
-                                    handlePress: widget.handlePress,
-                                    flickMultiManager: flickMultiManager,
-                                    crossAxisCount: 1,
-                                    aspectRatio: 0.35,
-                                    medias: [medias[index]]),
-                              ),
-                            ],
-                          ),
+                    (index) => Column(
+                          children: [
+                            SizedBox(
+                              height: (index == 1 || index == 3) ? 25 : 0,
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: GirdviewBuilderMedia(
+                                  handlePress: widget.handlePress,
+                                  flickMultiManager: flickMultiManager,
+                                  crossAxisCount: 1,
+                                  aspectRatio: 0.37,
+                                  medias: [medias[index]]),
+                            ),
+                          ],
                         )),
               ),
             );
@@ -251,27 +248,25 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
 
         default:
           if (getAspectMedia(medias[0]) < 1) {
-            return Expanded(
-              child: Column(
-                children: [
-                  GirdviewBuilderMedia(
-                      handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
-                      crossAxisCount: 2,
-                      aspectRatio: 1,
-                      medias: medias.sublist(0, 2)),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  GirdviewBuilderMedia(
-                      handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
-                      crossAxisCount: 3,
-                      aspectRatio: 1,
-                      imageRemain: medias.length - 5,
-                      medias: medias.sublist(2, 5)),
-                ],
-              ),
+            return Column(
+              children: [
+                GirdviewBuilderMedia(
+                    handlePress: widget.handlePress,
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 2,
+                    aspectRatio: 1,
+                    medias: medias.sublist(0, 2)),
+                const SizedBox(
+                  height: 3,
+                ),
+                GirdviewBuilderMedia(
+                    handlePress: widget.handlePress,
+                    flickMultiManager: flickMultiManager,
+                    crossAxisCount: 3,
+                    aspectRatio: 1,
+                    imageRemain: medias.length - 5,
+                    medias: medias.sublist(2, 5)),
+              ],
             );
           } else {
             return Row(

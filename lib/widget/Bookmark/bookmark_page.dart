@@ -32,6 +32,11 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
     fetchBookmarkCollection();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   fetchBookmarkCollection() async {
     List response = await BookmarkApi().fetchBookmarkCollection();
 

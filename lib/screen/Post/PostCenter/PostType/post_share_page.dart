@@ -36,6 +36,7 @@ class PostSharePage extends StatelessWidget {
                     AvatarSocial(
                         width: 50,
                         height: 50,
+                        object: page,
                         path: page['avatar_media']['preview_url']),
                     const SizedBox(
                       width: 10,

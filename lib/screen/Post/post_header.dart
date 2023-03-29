@@ -342,23 +342,30 @@ class AvatarPost extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       image: DecorationImage(
-                          image: NetworkImage(group['banner']['preview_url']),
+                          image: NetworkImage(group['banner']?['preview_url'] ??
+                              linkBannerDefault),
                           onError: (exception, stackTrace) => const SizedBox(),
                           fit: BoxFit.cover)),
                 ),
                 Positioned(
                     bottom: 7,
                     right: 7,
-                    child: Avatar(type: 'group', path: accountLink))
+                    child: Avatar(
+                      type: 'group',
+                      path: accountLink,
+                      object: account,
+                    ))
               ],
             ),
           )
         : Padding(
             padding: const EdgeInsets.only(top: 1),
             child: Avatar(
-                path: page != null && post['place']?['id'] != page['id']
-                    ? pageLink
-                    : accountLink),
+              path: page != null && post['place']?['id'] != page['id']
+                  ? pageLink
+                  : accountLink,
+              object: page,
+            ),
           );
   }
 }
@@ -368,10 +375,12 @@ class Avatar extends StatelessWidget {
     super.key,
     required this.path,
     this.type,
+    this.object,
   });
 
   final String path;
   final dynamic type;
+  final dynamic object;
 
   @override
   Widget build(BuildContext context) {
@@ -379,6 +388,7 @@ class Avatar extends StatelessWidget {
       width: type != null ? 25 : 36,
       height: type != null ? 25 : 36,
       path: path,
+      object: object,
     );
   }
 }

@@ -42,6 +42,7 @@ class PostTarget extends ConsumerWidget {
                   : AvatarSocial(
                       width: size.width * 0.35,
                       height: size.width * 0.35,
+                      object: ref.watch(meControllerProvider)[0],
                       path: (post?['account'] ??
                               ref.watch(
                                   meControllerProvider)[0])['avatar_media']

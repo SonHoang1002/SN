@@ -31,6 +31,11 @@ class _StickersViewState extends State<StickersView> {
     _controller = widget.controller;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   // On tap outside of the stickers
   void _onTapOutside() {
     _controller.stickerController.unselectSticker();

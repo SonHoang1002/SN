@@ -22,6 +22,11 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     renderName(noti) {
       dynamic status = noti['status'];
@@ -184,6 +189,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                                 : AvatarSocial(
                                     width: 60,
                                     height: 60,
+                                    object: notifications[index]['account'],
                                     path:
                                         renderLinkAvatar(notifications[index])),
                             Positioned(

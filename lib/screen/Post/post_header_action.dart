@@ -43,12 +43,17 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "isShow": meData['id'] == widget.post['account']['id'],
       },
       {
-        "key": widget.post['bookmarked'] ? 'unsave_post' : "save_post",
-        "label": widget.post['bookmarked'] ? "Bỏ lưu bài viết" : "Lưu bài viết",
+        "key": widget.post['bookmarked'] != null && widget.post['bookmarked']
+            ? 'unsave_post'
+            : "save_post",
+        "label": widget.post['bookmarked'] != null && widget.post['bookmarked']
+            ? "Bỏ lưu bài viết"
+            : "Lưu bài viết",
         "icon": FontAwesomeIcons.solidBookmark,
-        "description": widget.post['bookmarked']
-            ? "Loại khỏi danh sách mục đã lưu"
-            : "Thêm vào danh sách mục đã lưu",
+        "description":
+            widget.post['bookmarked'] != null && widget.post['bookmarked']
+                ? "Loại khỏi danh sách mục đã lưu"
+                : "Thêm vào danh sách mục đã lưu",
         "isShow": true
       },
       {

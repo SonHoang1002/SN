@@ -1,7 +1,6 @@
-import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:detectable_text_field/detectable_text_field.dart';
+import 'package:social_network_app_mobile/widget/expandable_text.dart';
 
 class PostContent extends StatefulWidget {
   final dynamic post;
@@ -53,38 +52,15 @@ class _PostContentState extends State<PostContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRect(
-                    child: Align(
-                        alignment: Alignment.topLeft,
-                        heightFactor: isMore
-                            ? 1
-                            : widget.post['content'].length > 200
-                                ? 0.35
-                                : 1,
-                        child: DetectableText(
-                          text: widget.post['content'] ?? '',
-                          detectionRegExp: detectionRegExp()!,
-                          detectedStyle: const TextStyle(
-                              color: secondaryColor,
-                              fontWeight: FontWeight.w500),
-                          onTap: (tappedText) {
-                            // print(tappedText);
-                          },
-                        ))),
-                widget.post['content'].length > 200
-                    ? GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isMore = !isMore;
-                          });
-                        },
-                        child: Text(
-                          isMore ? "Thu gọn" : "Xem thêm",
-                          style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
-                        ),
-                      )
-                    : const SizedBox()
+                ExpandableTextContent(
+                  content: widget.post['content'],
+                  linkColor:
+                      Theme.of(context).textTheme.bodyLarge!.color ?? white,
+                  styleContent: const TextStyle(fontSize: 14),
+                  hashtagStyle: const TextStyle(
+                    color: secondaryColor,
+                  ),
+                )
               ],
             ));
       }

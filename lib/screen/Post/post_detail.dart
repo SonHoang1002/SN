@@ -225,6 +225,11 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final commentCount = widget.post['replies_count'] ?? 0;
 

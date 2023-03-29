@@ -1,6 +1,6 @@
 import 'dart:typed_data';
-import 'package:dio/dio.dart';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,6 +78,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         //     widget.post['status_question'] ?? widget.post['status_target'];
       });
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   functionConvertFile(file) async {
@@ -619,14 +624,13 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                               context,
                                               CupertinoPageRoute(
                                                   builder: (context) =>
-                                                      Expanded(
-                                                          child: GalleryView(
+                                                      GalleryView(
                                                         typePage: 'page_edit',
                                                         isMutipleFile: true,
                                                         handleGetFiles:
                                                             handleUpdateData,
                                                         filesSelected: files,
-                                                      ))));
+                                                      )));
                                         },
                                   icon: SvgPicture.asset(
                                     listMenuPost[index]['image'],

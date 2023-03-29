@@ -34,6 +34,11 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   fetchDataPostDetail() async {
     dynamic response;
     if (['video', 'image'].contains(widget.post['type'])) {

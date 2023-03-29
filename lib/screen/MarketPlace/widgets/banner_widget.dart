@@ -1,4 +1,4 @@
- import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
@@ -12,20 +12,16 @@ final images = [
 ];
 Widget buildBanner(BuildContext context,
     {double? height = 100, double? width}) {
-
-
   return CarouselSlider(
     items: images.map((url) {
-      return Expanded(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 100,
-          margin: const EdgeInsets.all(5.0),
-          child: ImageCacheRender(
-            path: url,
-            width: width,
-            height: 200.0,
-          ),
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 100,
+        margin: const EdgeInsets.all(5.0),
+        child: ImageCacheRender(
+          path: url,
+          width: width,
+          height: 200.0,
         ),
       );
     }).toList(),

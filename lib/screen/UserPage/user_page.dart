@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
+import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
@@ -21,7 +21,6 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
-import 'package:loader_skeleton/loader_skeleton.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 
 class UserPage extends ConsumerStatefulWidget {
@@ -36,12 +35,22 @@ class _UserPageState extends ConsumerState<UserPage> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(Duration.zero, () {
-      var meData = ref.watch(meControllerProvider)[0];
-      ref.read(postControllerProvider.notifier).getListPostUserPage(
-          meData['id'], {"limit": 3, "exclude_replies": true});
-    });
+    if (mounted) {
+      Future.delayed(Duration.zero, () {
+        var meData = ref.watch(meControllerProvider)[0];
+        ref.read(postControllerProvider.notifier).getListPostUserPage(
+            meData['id'], {"limit": 3, "exclude_replies": true});
+        ref
+            .read(userInformationProvider.notifier)
+            .getUserInformation(meData['id']);
+        ref
+            .read(userInformationProvider.notifier)
+            .getUserMoreInformation(meData['id']);
+        ref
+            .read(userInformationProvider.notifier)
+            .getUserFeatureContent(meData['id']);
+      });
+    }
 
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
@@ -58,11 +67,19 @@ class _UserPageState extends ConsumerState<UserPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var meData = ref.watch(meControllerProvider)[0];
     final size = MediaQuery.of(context).size;
     final postUser = ref.watch(postControllerProvider).postUserPage;
     final isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
+    var userData = ref.watch(userInformationProvider).userInfor;
+    var userAbout = ref.watch(userInformationProvider).userMoreInfor;
+    List featureContents = ref.watch(userInformationProvider).featureContent;
 
     return Scaffold(
       appBar: AppBar(
@@ -137,7 +154,10 @@ class _UserPageState extends ConsumerState<UserPage> {
               ),
             ),
             const CrossBar(),
-            UserPageInfomationBlock(user: meData, userAbout: userAbout),
+            UserPageInfomationBlock(
+                user: meData,
+                userAbout: userAbout,
+                featureContents: featureContents),
             const CrossBar(),
             UserPageFriendBlock(user: meData),
             const SizedBox(

@@ -26,6 +26,11 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List medias = widget.post['media_attachments'];
 
@@ -71,9 +76,12 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
                                         )));
                           },
                           child: checkIsImage(medias[index])
-                              ? ImageCacheRender(
-                                  key: Key(medias[index]['id'].toString()),
-                                  path: medias[index]['url'])
+                              ? Hero(
+                                  tag: medias[index]['id'],
+                                  child: ImageCacheRender(
+                                      key: Key(medias[index]['id'].toString()),
+                                      path: medias[index]['url']),
+                                )
                               : FeedVideo(
                                   key: Key(medias[index]['id'].toString()),
                                   flickMultiManager: flickMultiManager,

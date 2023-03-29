@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 const white = Color(0xFFFFFFFF);
 const online = Color(0xFF66BB6A);
@@ -13,6 +15,15 @@ const red = Colors.red;
 const blueColor = Colors.blue;
 const blackColor = Colors.black;
 const transparent = Colors.transparent;
+
+Color colorWord(BuildContext context) {
+  final theme = pv.Provider.of<ThemeManager>(context);
+  if (theme.isDarkMode) {
+    return Colors.white;
+  } else {
+    return Colors.black;
+  }
+}
 
 List colorsGradient = [
   {

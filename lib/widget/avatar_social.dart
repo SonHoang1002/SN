@@ -6,21 +6,38 @@ class AvatarSocial extends StatelessWidget {
   final double height;
   final String path;
   final bool? isGroup;
+  final dynamic object;
 
   const AvatarSocial(
       {Key? key,
       required this.width,
       required this.height,
       required this.path,
-      this.isGroup})
+      this.isGroup,
+      this.object})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(
-          isGroup != null && isGroup == true ? 10 : width / 2),
-      child: ImageCacheRender(path: path, width: width, height: height),
+    dynamic frame = object?['avatar_media']?['frame'];
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(
+              isGroup != null && isGroup == true ? 10 : width / 2),
+          child: ImageCacheRender(path: path, width: width, height: height),
+        ),
+        frame != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(width / 2),
+                child: ImageCacheRender(
+                  path: frame['url'],
+                  width: width,
+                  height: width,
+                ),
+              )
+            : const SizedBox()
+      ],
     );
   }
 }

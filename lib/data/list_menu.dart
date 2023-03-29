@@ -19,36 +19,50 @@ List watchMenu = [
 List eventMenu = [
   {
     "key": "event_for_you",
-    "label": "Dành cho bạn",
+    "label": "Khám phá",
   },
   {
-    "key": "event_local",
-    "label": "Địa phương",
+    "key": "event_going",
+    "label": "Sẽ tham gia",
   },
   {
-    "key": "event_this_week",
-    "label": "Tuần này",
+    "key": "event_invite",
+    "label": "Lời mời",
   },
   {
-    "key": "event_group",
-    "label": "Nhóm",
+    "key": "event_star",
+    "label": "Quan tâm",
   },
   {
-    "key": "event_online",
-    "label": "Online",
+    "key": "event_host",
+    "label": "Tổ chức",
   },
   {
-    "key": "event_following",
-    "label": "Đang theo dõi",
+    "key": "event_past",
+    "label": "Sự kiện đã qua",
+  },
+];
+List growMenu = [
+  {
+    "key": "grow_interesting",
+    "label": "Khám phá",
   },
   {
-    "key": "event_class",
-    "label": "Lớp học",
+    "key": "grow_donated",
+    "label": "Đã ủng hộ",
   },
   {
-    "key": "event_art",
-    "label": "Nghệ thuật",
-  }
+    "key": "grow_following",
+    "label": "Quan tâm",
+  },
+  {
+    "key": "grow_hosting",
+    "label": "Tổ chức",
+  },
+  {
+    "key": "grow_past",
+    "label": "Dự án đã gọi vốn",
+  },
 ];
 
 List listSocial = [
@@ -62,7 +76,7 @@ List listSocial = [
     "key": 'chatSocial',
     "label": 'Tin nhắn',
     "subLabel": 'Trò chuyện cùng bạn bè trên EMSO.',
-    "icon": "assets/Chat_1.svg"
+    "icon": "assets/Chat_1.png"
   },
   {
     "key": 'groupSocial',
@@ -86,13 +100,13 @@ List listSocial = [
     "key": 'blood',
     "label": 'Hiến máu',
     "subLabel": 'Hiến máu thiện nguyện vì cộng đồng.',
-    "icon": "assets/blood.svg"
+    "icon": "assets/blood.png"
   },
   {
     "key": 'moment',
     "subLabel": 'khoảnh khắc thú vị làm bạn yêu thích.',
     "label": 'Moment',
-    "icon": "assets/moment_menu.svg"
+    "icon": "assets/moment_menu.png"
   },
   {
     "key": 'watch',
@@ -141,5 +155,11 @@ List listSocial = [
     "label": 'Giỏ hàng',
     "subLabel": 'Thông tin đặt hàng của bạn.',
     "icon": "assets/Maket.svg"
+  },
+  {
+    "key": 'payment',
+    "label": 'Số dư',
+    "subLabel": 'Số dư và lịch sử thanh toán.',
+    "icon": "assets/Payment.svg"
   }
 ];

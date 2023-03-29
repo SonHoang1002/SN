@@ -16,7 +16,6 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
-import 'package:loader_skeleton/loader_skeleton.dart';
 
 class Feed extends ConsumerStatefulWidget {
   const Feed({Key? key}) : super(key: key);
@@ -42,12 +41,18 @@ class _FeedState extends ConsumerState<Feed> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        String maxId = ref.read(postControllerProvider).posts.last['id'];
+        String maxId = ref.read(postControllerProvider).posts.last['score'];
         ref
             .read(postControllerProvider.notifier)
             .getListPost({"max_id": maxId, ...paramsConfig});
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
   }
 
   @override

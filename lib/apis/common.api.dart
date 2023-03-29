@@ -16,4 +16,8 @@ class CommonApi {
   Future fetchDataLocation(params) async {
     return await Api().getRequestBase('/api/v1/places', params);
   }
+
+  Future fetchDataFrames(params) async {
+    return await Api().getRequestBase('/api/v1/frames', params);
+  }
 }

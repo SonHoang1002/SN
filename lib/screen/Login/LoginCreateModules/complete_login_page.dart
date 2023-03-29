@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
-import 'package:social_network_app_mobile/screen/Login/widgets/build_elevate_button_widget.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -39,91 +38,66 @@ class CompleteLoginPage extends StatelessWidget {
       context.loaderOverlay.hide();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: GestureDetector(
-        onTap: (() {
-          FocusManager.instance.primaryFocus!.unfocus();
-        }),
-        child: Column(children: [
-          Expanded(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                          child: Column(
-                            children: [
-                              buildTextContent(
-                                  CompleteLoginConstants.COMPLETE_LOGIN_TITLE,
-                                  true,
-                                  fontSize: 16,
-                                  colorWord: blackColor,
-                                  isCenterLeft: false),
-                              buildSpacer(height: 10),
-                              _buildDescription(),
-                              buildSpacer(height: 10),
-                              // button
-                              buildButtonForLoginWidget(
-                                  title: CompleteLoginConstants
-                                      .COMPLETE_LOGIN_NAME_PLACEHOLODER,
-                                
-                                  function: () {
-                                    pushAndReplaceToNextScreen(
-                                        context, MainLoginPage());
-                                  })
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    return LoaderOverlay(
+        useDefaultLoading: false,
+        overlayWidget: const Center(
+          child: CupertinoActivityIndicator(),
+        ),
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            automaticallyImplyLeading: false,
           ),
-        ]),
-      ),
-    );
-  }
+          resizeToAvoidBottomInset: true,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: GestureDetector(
+            onTap: (() {
+              FocusManager.instance.primaryFocus!.unfocus();
+            }),
+            child: Column(children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                            child: Column(
+                              children: [
+                                buildTextContent(
+                                    CompleteLoginConstants.COMPLETE_LOGIN_TITLE,
+                                    true,
+                                    fontSize: 17,
+                                    colorWord: blackColor,
+                                    isCenterLeft: false),
+                                buildSpacer(height: 10),
+                                _buildDescription(),
+                                buildSpacer(height: 10),
+                                // button
 
-  Widget _buildTextFormField(
-      TextEditingController controller, String placeHolder,
-      {double? borderRadius = 5,
-      bool? isHavePrefix = false,
-      bool? numberType = false}) {
-    return Container(
-      height: 40,
-      child: TextFormField(
-        controller: controller,
-        onChanged: ((value) {}),
-        validator: (value) {},
-        keyboardType: numberType! ? TextInputType.number : TextInputType.text,
-        maxLength: numberType ? 10 : 100000,
-        decoration: InputDecoration(
-            counterText: "",
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
-              borderSide: const BorderSide(color: greyColor, width: 0.2),
-            ),
-            hintText: placeHolder,
-            hintStyle: const TextStyle(
-              color: greyColor,
-            ),
-            contentPadding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)))),
-      ),
-    );
+                                SizedBox(
+                                  height: 36,
+                                  child: ButtonPrimary(
+                                    label: "Hoàn tất",
+                                    handlePress: () {
+                                      handleRegistration();
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+        ));
   }
 
   Widget _buildDescription() {
@@ -136,36 +110,22 @@ class CompleteLoginPage extends StatelessWidget {
         children: <TextSpan>[
           TextSpan(
             text: subTitle[1],
-            style: TextStyle(color: primaryColor),
-            recognizer: new TapGestureRecognizer()
-              ..onTap = () {
-                ////////////////////////////////////////////////////////////
-                // chuyen den trang dieu khoan cho nguoi dung nghien cuu
-                ////////////////////////////////////////////////////////////
-                print("trang dieu khoan");
-              },
+            style: const TextStyle(color: primaryColor),
+            recognizer: TapGestureRecognizer()..onTap = () {},
           ),
           TextSpan(text: subTitle[2]),
           TextSpan(
             text: subTitle[3],
-            style: TextStyle(color: primaryColor),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                // chuyen den trang chinh sach du lieu cho nguoi dung nghien cuu
-                print("trang chinh sach du lieu");
-              },
+            style: const TextStyle(color: primaryColor),
+            recognizer: TapGestureRecognizer()..onTap = () {},
           ),
           TextSpan(
             text: subTitle[4],
           ),
           TextSpan(
             text: subTitle[5],
-            style: TextStyle(color: primaryColor),
-            recognizer: new TapGestureRecognizer()
-              ..onTap = () {
-                // chuyen den trang chinh sach cookie cho nguoi dung nghien cuu
-                print("trang chinh sach cookie");
-              },
+            style: const TextStyle(color: primaryColor),
+            recognizer: TapGestureRecognizer()..onTap = () {},
           ),
           TextSpan(
             text: subTitle[6],

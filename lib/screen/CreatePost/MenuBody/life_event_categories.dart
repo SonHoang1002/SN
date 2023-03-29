@@ -3,18 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../constant/common.dart';
 import '../../../data/life_event_categories.dart';
 import '../../../theme/colors.dart';
 import '../../../widget/button_primary.dart';
-import '../../../widget/image_cache.dart';
 import '../create_modal_base_menu.dart';
 import 'life_event_detail.dart';
-import 'package:social_network_app_mobile/data/life_event_categories.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_detail.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/button_primary.dart';
 
 class LifeEventCategories extends StatefulWidget {
   final List? listLifeEvent;
@@ -182,42 +175,41 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
                 ],
               ),
         const SizedBox(height: 8.0),
-        Expanded(
-            child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                    crossAxisCount: widget.listLifeEvent != null ? 1 : 3,
-                    childAspectRatio: widget.listLifeEvent != null ? 5 : 1),
-                itemCount: listData.length,
-                itemBuilder: (context, index) => InkWell(
-                      onTap: () {
-                        handlePress(listData[index]);
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          listData[index]['url'] != null
-                              ? SvgPicture.network(
-                                  listData[index]['url'],
-                                  width: 24.0,
-                                  color: secondaryColor,
-                                )
-                              : const SizedBox(),
-                          Container(
-                            margin: const EdgeInsets.only(
-                                top: 4.0, left: 4.0, right: 4.0),
-                            child: Text(
-                              listData[index]['name'],
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          )
-                        ],
-                      ),
-                    )))
+        GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 4,
+                mainAxisSpacing: 4,
+                crossAxisCount: widget.listLifeEvent != null ? 1 : 3,
+                childAspectRatio: widget.listLifeEvent != null ? 5 : 1),
+            itemCount: listData.length,
+            itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    handlePress(listData[index]);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      listData[index]['url'] != null
+                          ? SvgPicture.network(
+                              listData[index]['url'],
+                              width: 24.0,
+                              color: secondaryColor,
+                            )
+                          : const SizedBox(),
+                      Container(
+                        margin: const EdgeInsets.only(
+                            top: 4.0, left: 4.0, right: 4.0),
+                        child: Text(
+                          listData[index]['name'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      )
+                    ],
+                  ),
+                ))
       ],
     );
   }

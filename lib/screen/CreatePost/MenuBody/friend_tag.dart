@@ -37,6 +37,11 @@ class _FriendTagState extends ConsumerState<FriendTag> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   fetchFriends(params) async {
     var response = await FriendsApi()
         .getListFriendApi(ref.watch(meControllerProvider)[0]['id'], params);
@@ -82,7 +87,6 @@ class _FriendTagState extends ConsumerState<FriendTag> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           SearchInput(),
           SearchInput(
             handleSearch: handleSearch,
           ),
@@ -101,7 +105,7 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                       width: double.infinity,
                       height: 60,
                       child: ListView.builder(
-                        shrinkWrap: true,
+                          shrinkWrap: true,
                           itemCount: friendSelected.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) => Container(
@@ -112,6 +116,7 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                                   AvatarSocial(
                                     width: 56,
                                     height: 56,
+                                    object: friendSelected[index],
                                     path: friendSelected[index]
                                                 ['avatar_media'] !=
                                             null
@@ -171,6 +176,7 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                                 AvatarSocial(
                                     width: 40,
                                     height: 40,
+                                    object: friends[index],
                                     path: friends[index]['avatar_media'] != null
                                         ? friends[index]['avatar_media']
                                             ['preview_url']

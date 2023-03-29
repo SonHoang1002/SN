@@ -7,6 +7,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -61,6 +62,11 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
             .getListGroupAdminMember({'tab': 'member', 'limit': 20});
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -204,164 +210,171 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         overlayWidget: const Center(
           child: CupertinoActivityIndicator(),
         ),
-        child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
-            elevation: 0,
-            centerTitle: true,
-            automaticallyImplyLeading: false,
-            title: const AppBarTitle(title: "Chia sẻ"),
-          ),
-          body: Container(
-            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-            child: ['groups', 'pages'].contains(renderType)
-                ? Column(
-                    children: [
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                renderType = 'root';
-                              });
+        child: GestureDetector(
+          onTap: () {
+            hiddenKeyboard(context);
+          },
+          child: Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            appBar: AppBar(
+              elevation: 0,
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              title: const AppBarTitle(title: "Chia sẻ"),
+            ),
+            body: Container(
+              margin:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+              child: ['groups', 'pages'].contains(renderType)
+                  ? Column(
+                      children: [
+                        Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  renderType = 'root';
+                                });
+                              },
+                              child: Icon(
+                                FontAwesomeIcons.chevronLeft,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .color,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8.0,
+                            ),
+                            Expanded(
+                                child: SearchInput(
+                              handleSearch: handleSearch,
+                            ))
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
+                        isSearch
+                            ? const Center(
+                                child: CupertinoActivityIndicator(),
+                              )
+                            : Expanded(
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: (renderType == 'groups'
+                                            ? groupsRender
+                                            : pagesRender)
+                                        .length,
+                                    itemBuilder: (context, index) => InkWell(
+                                          onTap: () {
+                                            handleChooseEntity(
+                                                (renderType == 'groups'
+                                                    ? groupsRender
+                                                    : pagesRender)[index]);
+                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: Container(
+                                            margin: const EdgeInsets.all(6.0),
+                                            child: renderType == 'groups'
+                                                ? GroupItem(
+                                                    group: groupsRender[index],
+                                                  )
+                                                : PageItem(
+                                                    page: pagesRender[index],
+                                                  ),
+                                          ),
+                                        )),
+                              )
+                      ],
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        CreateFeedStatusHeader(
+                          entity: groupShareSelected ?? pageShareSelected,
+                          visibility: visibility,
+                          handleUpdateData: handleUpdateData,
+                          friendSelected: const [],
+                        ),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
+                        SizedBox(
+                          height: 100,
+                          child: TextFormField(
+                            autofocus: true,
+                            onChanged: (value) {
+                              handleUpdateData('update_content', value);
                             },
-                            child: Icon(
-                              FontAwesomeIcons.chevronLeft,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .displayLarge!
-                                  .color,
+                            textAlign: TextAlign.left,
+                            maxLines: 4,
+                            minLines: 1,
+                            enabled: true,
+                            decoration: const InputDecoration(
+                              hintText: "Nói gì đó về nội dung này...",
+                              hintStyle: TextStyle(fontSize: 15),
+                              border: InputBorder.none,
                             ),
                           ),
-                          const SizedBox(
-                            width: 8.0,
-                          ),
-                          Expanded(
-                              child: SearchInput(
-                            handleSearch: handleSearch,
-                          ))
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8.0,
-                      ),
-                      isSearch
-                          ? const Center(
-                              child: CupertinoActivityIndicator(),
-                            )
-                          : Expanded(
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: (renderType == 'groups'
-                                          ? groupsRender
-                                          : pagesRender)
-                                      .length,
-                                  itemBuilder: (context, index) => InkWell(
-                                        onTap: () {
-                                          handleChooseEntity(
-                                              (renderType == 'groups'
-                                                  ? groupsRender
-                                                  : pagesRender)[index]);
-                                        },
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        child: Container(
-                                          margin: const EdgeInsets.all(6.0),
-                                          child: renderType == 'groups'
-                                              ? GroupItem(
-                                                  group: groupsRender[index],
-                                                )
-                                              : PageItem(
-                                                  page: pagesRender[index],
-                                                ),
-                                        ),
-                                      )),
-                            )
-                    ],
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      CreateFeedStatusHeader(
-                        entity: groupShareSelected ?? pageShareSelected,
-                        visibility: visibility,
-                        handleUpdateData: handleUpdateData,
-                        friendSelected: const [],
-                      ),
-                      const SizedBox(
-                        height: 8.0,
-                      ),
-                      SizedBox(
-                        height: 100,
-                        child: TextFormField(
-                          autofocus: true,
-                          onChanged: (value) {
-                            handleUpdateData('update_content', value);
-                          },
-                          textAlign: TextAlign.left,
-                          maxLines: 4,
-                          minLines: 1,
-                          enabled: true,
-                          decoration: const InputDecoration(
-                            hintText: "Nói gì đó về nội dung này...",
-                            hintStyle: TextStyle(fontSize: 15),
-                            border: InputBorder.none,
-                          ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(),
-                          ButtonPrimary(
-                            label: "Chia sẻ",
-                            handlePress: handleShare,
-                          )
-                        ],
-                      ),
-                      const CrossBar(
-                        height: 0.5,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: menuShare.length,
-                            itemBuilder: (context, index) => InkWell(
-                                  onTap: () {
-                                    handlePress(menuShare[index]['key']);
-                                  },
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4.0),
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 4.0),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 34,
-                                          height: 34,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: secondaryColorSelected),
-                                          child: Icon(
-                                            menuShare[index]['icon'],
-                                            size: 16,
-                                            color: secondaryColor,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(),
+                            ButtonPrimary(
+                              label: "Chia sẻ",
+                              handlePress: handleShare,
+                            )
+                          ],
+                        ),
+                        const CrossBar(
+                          height: 0.5,
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: menuShare.length,
+                              itemBuilder: (context, index) => InkWell(
+                                    onTap: () {
+                                      handlePress(menuShare[index]['key']);
+                                    },
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4.0),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 34,
+                                            height: 34,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: secondaryColorSelected),
+                                            child: Icon(
+                                              menuShare[index]['icon'],
+                                              size: 16,
+                                              color: secondaryColor,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        Text(
-                                          menuShare[index]['label'],
-                                          style: const TextStyle(fontSize: 15),
-                                        )
-                                      ],
+                                          const SizedBox(
+                                            width: 10.0,
+                                          ),
+                                          Text(
+                                            menuShare[index]['label'],
+                                            style:
+                                                const TextStyle(fontSize: 15),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                )),
-                      )
-                    ],
-                  ),
+                                  )),
+                        )
+                      ],
+                    ),
+            ),
           ),
         ));
   }

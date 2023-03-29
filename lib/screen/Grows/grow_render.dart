@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_card.dart';
+import 'package:social_network_app_mobile/screen/Grows/grow_donated.dart';
+import 'package:social_network_app_mobile/screen/Grows/grow_host.dart';
+import 'package:social_network_app_mobile/screen/Grows/grow_owner.dart';
+import 'package:social_network_app_mobile/screen/Grows/grow_owner_past.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
@@ -12,7 +16,7 @@ class GrowRender extends StatefulWidget {
 }
 
 class _GrowRenderState extends State<GrowRender> {
-  String menuSelected = 'event_for_you';
+  String menuSelected = 'grow_interesting';
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +27,25 @@ class _GrowRenderState extends State<GrowRender> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: List.generate(
-                eventMenu.length,
+                growMenu.length,
                 (index) => InkWell(
                       onTap: () {
                         setState(() {
-                          menuSelected = eventMenu[index]['key'];
+                          menuSelected = growMenu[index]['key'];
                         });
                       },
                       child: ChipMenu(
-                          isSelected: menuSelected == eventMenu[index]['key'],
-                          label: eventMenu[index]['label']),
+                          isSelected: menuSelected == growMenu[index]['key'],
+                          label: growMenu[index]['label']),
                     )),
           ),
         ),
         const CrossBar(),
-        const GrowCard()
+        menuSelected == 'grow_interesting' ?  const GrowCard() : const SizedBox(),
+        menuSelected == 'grow_following' ? const GrowOwner() : const SizedBox(),
+        menuSelected == 'grow_donated' ? const GrowDonated() : const SizedBox(),
+        menuSelected == 'grow_hosting' ? const GrowHost() : const SizedBox(),
+        menuSelected == 'grow_past' ? const GrowPast() : const SizedBox(),
       ],
     );
   }

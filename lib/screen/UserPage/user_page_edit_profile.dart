@@ -32,6 +32,7 @@ class UserPageEditProfile extends ConsumerWidget {
                   child: AvatarSocial(
                       width: 150,
                       height: 150,
+                      object: meData,
                       path: meData['avatar_media']?['preview_url'] ??
                           linkAvatarDefault),
                 )),

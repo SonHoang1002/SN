@@ -43,6 +43,11 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     checkIsImage(media) {
@@ -144,7 +149,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
             filesRender.isEmpty
                 ? Container(
                     margin: const EdgeInsets.all(15.0),
-                    child: const Text("Không có hình ảnh nào để hiện thị"),
+                    child: const Text("Không có hình ảnh nào để hiển thị"),
                   )
                 : Expanded(
                     child: ListView.builder(

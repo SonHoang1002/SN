@@ -52,6 +52,7 @@ class _QuestionAnwerState extends ConsumerState<QuestionAnwer> {
                         : AvatarSocial(
                             width: size.width * 0.35,
                             height: size.width * 0.35,
+                            object: ref.watch(meControllerProvider)[0],
                             path: ref.watch(meControllerProvider)[0]
                                 ['avatar_media']['preview_url']),
                     const SizedBox(

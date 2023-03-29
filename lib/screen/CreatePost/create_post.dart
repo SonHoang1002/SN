@@ -20,20 +20,19 @@ class CreatePost extends StatelessWidget {
       {"key": "live", "icon": "assets/Live.svg", "title": "Phát trực tiếp"}
     ];
 
-    return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          title: const AppBarTitle(title: "Tạo bài viết"),
-        ),
-        body: Container(
-          margin: const EdgeInsets.all(15.0),
+    return Container(
+        margin: const EdgeInsets.all(15.0),
+        child: SingleChildScrollView(
           child: Column(
             children: [
+              const AppBarTitle(title: "Tạo bài viết"),
+              const SizedBox(
+                height: 12,
+              ),
               const Text(
                   "Bạn muốn tạo bài viết gì? Hãy chọn loại bài viết muốn tạo."),
               const SizedBox(
-                height: 8,
+                height: 12,
               ),
               Column(
                   children: List.generate(
