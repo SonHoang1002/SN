@@ -25,7 +25,6 @@ class CartProductsController extends StateNotifier<CartProductsState> {
 
   updateCartQuantity(dynamic data) async {
     final response = await CartProductApi().updateQuantityProductApi(data);
-    print("cart:updateCartQuantity: ${response}");
   }
 
   deleteCartProduct(dynamic id, dynamic data) async {
@@ -53,8 +52,7 @@ class CartProductsState {
 //     state = state.copyWith([]);
 //   }
 
-//   updateCheckBoxCartProductList(List<dynamic> newCheckBoxList) async {
-//     print("cart newCheckBoxList :${newCheckBoxList}");
+//   updateCheckBoxCartProductList(List<dynamic> newCheckBoxList) async { 
 //     state = state.copyWith(newCheckBoxList);
 //   }
 

@@ -545,8 +545,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     setState(() {});
   }
 
-  void _filterDiscover(String sortedTitle) {
-    print("main :$sortedTitle");
+  void _filterDiscover(String sortedTitle) { 
     List<dynamic> filterDiscoverList = _discoverProduct!;
     const String newTitle = "Mới nhất";
     const String soldRun = "Bán chạy";

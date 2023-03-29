@@ -20,20 +20,18 @@ class ReviewProductController extends StateNotifier<ReviewProductState> {
     final response = await ReviewProductApi().getReviewProductApi(id);
     final data = List.from(response);
     state = state.copyWith(response);
-
-    print("review get $response");
+ 
   }
 
   createReviewProduct(dynamic id, dynamic data) async {
     final response = await ReviewProductApi().createReviewProductApi(id, data);
     // state = state.copyWith(response);
-    print("review create $response");
+ 
   }
 
   deleteReviewproduct(dynamic productId, dynamic reviewId) async {
     final response =
         await ReviewProductApi().deleteReviewProductApi(productId, reviewId);
-    // state = state.copyWith(response);
-    print("review delete $response");
+    // state = state.copyWith(response); 
   }
 }

@@ -22,8 +22,7 @@ class ProductsController extends StateNotifier<ProductsState> {
   }
 
   deleteProduct(dynamic id) {
-    final response = ProductsApi().deleteProductApi(id);
-    print("product: $response");
+    final response = ProductsApi().deleteProductApi(id); 
   }
 
   updateProductData(List<dynamic> newData) {

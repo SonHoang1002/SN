@@ -17,8 +17,7 @@ class ProductRatingController extends StateNotifier<ProductRatingState> {
   ProductRatingController() : super(ProductRatingState());
 
   getProductRatingDetailList(dynamic id) async {
-    final response = await ProductRatingApis().getDeliveryAddressApi(id);
-    print("productRating getProductRatingDetailList: $response");
+    final response = await ProductRatingApis().getDeliveryAddressApi(id); 
     state = state.copyWith(response);
   }
 }

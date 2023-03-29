@@ -8,6 +8,7 @@ import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer_inf
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/post_list_share.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/reaction_list.dart';
 
 class PostFooter extends StatelessWidget {
@@ -33,7 +34,9 @@ class PostFooter extends StatelessWidget {
                 child: PostFooterInformation(post: post, type: type)),
         Container(
           height: 1,
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          margin: type == postDetail
+              ? const EdgeInsets.fromLTRB(12, 5, 12, 4)
+              : const EdgeInsets.fromLTRB(12, 0, 12, 4),
           decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3)),
         ),
         PostFooterButton(
@@ -91,7 +94,7 @@ class PostFooter extends StatelessWidget {
                             ),
                           ],
                         )
-                      : const SizedBox()
+                      : const SizedBox(),
                 ],
               ),
       ],
