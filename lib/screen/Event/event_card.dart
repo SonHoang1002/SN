@@ -543,14 +543,18 @@ class _EventCardState extends ConsumerState<EventCard> {
                         );
                       } else {
                         isMore == true
-                            ? const Center(
-                                child: CupertinoActivityIndicator())
+                            ? Center(
+                                child: CupertinoActivityIndicator(
+                                    color: theme.isDarkMode ? Colors.white : Colors.black
+                                ))
                             : const SizedBox();
                       }
                     },
                   )) : const SizedBox(),
                   isMore == true
-                      ? const Center(child: CupertinoActivityIndicator())
+                      ?  Center(child: CupertinoActivityIndicator(
+                    color: theme.isDarkMode ? Colors.white : Colors.black
+                  ))
                       : const SizedBox()
                 ],
               ),

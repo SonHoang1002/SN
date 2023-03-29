@@ -104,6 +104,7 @@ dependencies:
   step_progress_indicator: ^1.0.2
   cached_video_player: ^2.0.4
   google_sign_in: ^6.0.2
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:
