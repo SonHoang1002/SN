@@ -5,7 +5,7 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widg
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
-import 'selection_default_object_constants.dart';
+import 'selection_default_constants.dart';
 
 class SelectionDefaultObjectPage extends StatelessWidget {
   late double width = 0;
