@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_detail.dart';
-// import 'package:video_player/video_player.dart';
-import 'package:cached_video_player/cached_video_player.dart';
+import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPlayerNoneController extends StatefulWidget {
@@ -20,7 +19,7 @@ class VideoPlayerNoneController extends StatefulWidget {
 }
 
 class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
-  late CachedVideoPlayerController videoPlayerController;
+  late VideoPlayerController videoPlayerController;
   bool isVisible = false;
   bool _isMuted = false;
 
@@ -29,8 +28,8 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
     super.initState();
 
     videoPlayerController = (widget.path.startsWith('http')
-        ? CachedVideoPlayerController.network(widget.path)
-        : CachedVideoPlayerController.asset(widget.path))
+        ? VideoPlayerController.network(widget.path)
+        : VideoPlayerController.asset(widget.path))
       ..initialize().then((value) {
         if (isVisible) {
           videoPlayerController.play();
@@ -72,7 +71,7 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
                     tag: widget.media['id'],
                     child: AspectRatio(
                         aspectRatio: videoPlayerController.value.aspectRatio,
-                        child: CachedVideoPlayer(videoPlayerController)))),
+                        child: VideoPlayer(videoPlayerController)))),
             Positioned(
                 bottom: 10,
                 right: 10,
