@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapExpanded extends StatefulWidget {
@@ -25,8 +24,7 @@ class _MapExpanded extends State<MapExpanded> {
   void _launchMapsApp() async {
     final latitude = widget.checkin['location']['lat'];
     final longitude = widget.checkin['location']['lng'];
-    final url =
-        'comgooglemaps://?q=${latitude},${longitude}&zoom=13';
+    final url = 'comgooglemaps://?q=$latitude,$longitude&zoom=13';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -43,8 +41,19 @@ class _MapExpanded extends State<MapExpanded> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.checkin['address'] ?? ''}'),
-      ),
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const BackIconAppbar(),
+              AppBarTitle(
+                title: '${widget.checkin['address'] ?? ''}',
+              ),
+              Container(),
+            ],
+          )),
       body: FlutterMap(
         options: MapOptions(
           center: LatLng(widget.checkin['location']['lat'],
@@ -60,13 +69,13 @@ class _MapExpanded extends State<MapExpanded> {
         children: [
           TileLayer(
             urlTemplate:
-                "https://api.mapbox.com/styles/v1/thanghoa1420/cl8dw369f000114pdxdhvyrf3/tiles/512/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGhhbmdob2ExNDIwIiwiYSI6ImNsOGNzaGNraTBvaXozcW9mOTZvemlxM3QifQ.amy7PdzwTqaolJMVQzpGSg",
+                "https://api.mapbox.com/styles/v1/thanghoa1420/cl8dw369f000114pdxdhvyrf3/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGhhbmdob2ExNDIwIiwiYSI6ImNsOGNzaGNraTBvaXozcW9mOTZvemlxM3QifQ.amy7PdzwTqaolJMVQzpGSg",
             subdomains: const ['a', 'b', 'c'],
             additionalOptions: const {
               "access_token":
                   "pk.eyJ1IjoidGhhbmdob2ExNDIwIiwiYSI6ImNsOGNzaGNraTBvaXozcW9mOTZvemlxM3QifQ.amy7PdzwTqaolJMVQzpGSg",
             },
-            maxZoom: 19,
+            maxZoom: 25,
           ),
           MarkerLayer(
             markers: [
@@ -89,13 +98,13 @@ class _MapExpanded extends State<MapExpanded> {
             child: Container(
               margin: const EdgeInsets.only(bottom: 30),
               width: 115,
-              height: 35 ,
+              height: 35,
               child: ElevatedButton(
                 onPressed: () {
                   _launchMapsApp();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
+                  backgroundColor: Colors.blue,
                   // padding: const EdgeInsets.symmetric(
                   //   horizontal: 16.0,
                   //   vertical: 12.0,
