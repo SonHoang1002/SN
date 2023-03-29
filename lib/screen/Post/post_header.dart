@@ -191,25 +191,25 @@ class _PostHeaderState extends State<PostHeader> {
                                 builder: (context) => PostHeaderAction(
                                     post: widget.post, type: widget.type));
                           },
-                          child: Icon(
+                          child: const Icon(
                             FontAwesomeIcons.ellipsis,
-                            size: 22,
-                            color:
-                                Theme.of(context).textTheme.displayLarge!.color,
+                            size: 20,
+                            color: greyColor,
                           ),
                         ),
-                        // SizedBox(
-                        //   width: widget.type != postDetail ? 10 : 0,
-                        // ),
-                        // ![postDetail, postPageUser].contains(widget.type)
-                        //     ? InkWell(
-                        //         onTap: () {},
-                        //         child: const Icon(
-                        //           FontAwesomeIcons.xmark,
-                        //           size: 22,
-                        //         ),
-                        //       )
-                        //     : const SizedBox()
+                        SizedBox(
+                          width: widget.type != postDetail ? 10 : 0,
+                        ),
+                        ![postDetail, postPageUser].contains(widget.type)
+                            ? InkWell(
+                                onTap: () {},
+                                child: const Icon(
+                                  FontAwesomeIcons.xmark,
+                                  size: 20,
+                                  color: greyColor,
+                                ),
+                              )
+                            : const SizedBox()
                       ],
                     )
                   : const SizedBox()

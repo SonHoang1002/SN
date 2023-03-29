@@ -84,9 +84,7 @@ class _SeeReviewShopMarketPageComsumerState
           await Future.wait(widget.reviewData!.map((element) async {
         List<dynamic> response = await ReviewProductApi()
             .getReviewProductApi(element["product_variant"]["product_id"]);
-        print(
-            "----------------- review productid --------------------------${widget.reviewId}-${element["product_variant"]["product_id"]}");
-        return response;
+          return response;
       }).toList());
       List<dynamic> filterReviewList = [];
       for (var reviewItem in newList) {
@@ -193,9 +191,7 @@ class _SeeReviewShopMarketPageComsumerState
                                                                       [
                                                                       childIndex]
                                                                   ["id"]);
-                                                  print(
-                                                      "----------------- review delete response --------------------------$response}");
-                                                },
+                                                    },
                                               ),
                                             ],
                                           ),

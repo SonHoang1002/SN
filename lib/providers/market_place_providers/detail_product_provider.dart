@@ -22,7 +22,6 @@ class DetailProductController extends StateNotifier<DetailProductState> {
       state = state.copyWith({});
       return;
     }
-    print("detailData: ${response}");
     state = state.copyWith(response);
   }
 }

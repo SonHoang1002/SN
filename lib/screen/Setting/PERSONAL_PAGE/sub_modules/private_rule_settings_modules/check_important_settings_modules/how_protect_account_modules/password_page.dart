@@ -193,9 +193,7 @@ class _PasswordPageState extends State<PasswordPage> {
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Center(
                                   child: GestureDetector(
-                                onTap: (() {
-                                  print(PasswordConstants
-                                      .PASSWORD_FORGOT_PASSWORD);
+                                onTap: (() { 
                                 }),
                                 child: buildTextContent(
                                     PasswordConstants.PASSWORD_FORGOT_PASSWORD,

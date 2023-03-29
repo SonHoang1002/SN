@@ -88,11 +88,9 @@ class _VideoViewerOrientationState extends State<VideoViewerOrientation> {
     final bool isLandscape =
         orientation == NativeDeviceOrientation.landscapeLeft ||
             orientation == NativeDeviceOrientation.landscapeRight;
-    if (!isFullScreen && isLandscape) {
-      printGreen("OPEN FULLSCREEN");
+    if (!isFullScreen && isLandscape) { 
       widget.controller.openFullScreen();
-    } else if (isFullScreen && !isLandscape) {
-      printRed("CLOSING FULLSCREEN");
+    } else if (isFullScreen && !isLandscape) { 
       widget.controller.closeFullScreen();
       Misc.delayed(300, () {
         Misc.setSystemOverlay(SystemOverlay.values);

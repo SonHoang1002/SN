@@ -567,14 +567,11 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
     setState(() {});
   }
 
-  _callDeleteProductApi(dynamic id, dynamic data) async {
-    print("_callDeleteProductApi $id - $data");
-    final response = await CartProductApi().deleteCartProductApi(id, data);
-    print("_callDeleteProductApi $response");
+  _callDeleteProductApi(dynamic id, dynamic data) async {  
+    final response = await CartProductApi().deleteCartProductApi(id, data); 
   }
 
-  _callUpdateQuantityApi(dynamic data) async {
-    print("cart _callUpdateQuantityApi");
+  _callUpdateQuantityApi(dynamic data) async { 
     final response =
         await ref.read(cartProductsProvider.notifier).updateCartQuantity(data);
   }

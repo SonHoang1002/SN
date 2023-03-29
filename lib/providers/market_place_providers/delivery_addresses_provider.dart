@@ -18,25 +18,21 @@ class DeliveryAddressController extends StateNotifier<DeliveryAddressState> {
 
   createDeliveryAddress(dynamic data) async {
     final response = await DeliveryAddressApis().postDeliveryAddressApi(data);
-    print("delivaryAddress createDeliveryAddress: $response");
     state = state.copyWith(response);
   }
 
   getDeliveryAddressList() async {
     final response = await DeliveryAddressApis().getDeliveryAddressApi();
-    print("delivaryAddress getDeliveryAddressList: $response");
     state = state.copyWith(response);
   }
 
   updateDeliveryAddress(dynamic data) async {
     final response = await DeliveryAddressApis().updateDeliveryAddressApi(data);
-    print("delivaryAddress updateDeliveryAddress: $response");
     state = state.copyWith(response);
   }
 
   deleteDeliveryAddress(dynamic data) async {
     final response = await DeliveryAddressApis().deleteDeliveryAddressApi(data);
-    print("delivaryAddress deleteDeliveryAddress: $response");
     state = state.copyWith(response);
   }
 }

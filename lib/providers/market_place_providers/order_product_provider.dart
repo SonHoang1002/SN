@@ -21,7 +21,6 @@ class OrderController extends StateNotifier<OrderState> {
       state = state.copyWith([]);
       return;
     }
-    state = state.copyWith(response);
-    print("order: $response");
+    state = state.copyWith(response); 
   }
 }

@@ -29,7 +29,7 @@ class _PostCenterState extends State<PostCenter> {
   Widget build(BuildContext context) {
     String postType = widget.post['post_type'] ?? '';
     return Container(
-        margin: const EdgeInsets.only(top: 10, bottom: 20),
+        margin: const EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

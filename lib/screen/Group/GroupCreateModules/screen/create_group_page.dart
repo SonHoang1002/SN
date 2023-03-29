@@ -82,14 +82,14 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                               // color:  white
                               ),
                           decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
+                              enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
                                     // color: Colors.grey,
                                     width: 0.2),
                               ),
                               hintText:
                                   CreateGroupConstants.PLACEHOLDER_LIST[0],
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                   // color: Colors.grey
                                   ),
                               border: OutlineInputBorder(
@@ -162,7 +162,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                                   contentWidget: [
                                   Text(
                                     CreateGroupConstants.DEFEND_PUBLIC_RULE[0],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         // color: Colors.grey[400],
                                         fontSize: 16),
                                   ),
@@ -182,14 +182,14 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                                     TextSpan(
                                         text: CreateGroupConstants
                                             .DEFEND_PRIVATE_RULE[0],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 16,
                                         )),
                                     TextSpan(
                                         text: CreateGroupConstants
                                             .DEFEND_PRIVATE_RULE[1],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.blue,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold)),
@@ -197,7 +197,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                                 ]),
                                 buildSpacer(height: 20),
                                 //divider
-                                Divider(
+                                const Divider(
                                   height: 3,
                                   color: Colors.black,
                                 ),
@@ -317,17 +317,17 @@ class CreateGroupPageState extends State<CreateGroupPage> {
           },
           child: Container(
             // height: 60,
-            padding: EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             child: Row(
               children: [
                 Flexible(
                   flex: 2,
                   child: Container(
-                    margin: EdgeInsets.only(right: 5),
+                    margin: const EdgeInsets.only(right: 5),
                     height: 40,
                     width: 40,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                           Radius.circular(20),
                         ),
                         color: Colors.grey[700]),
@@ -350,17 +350,17 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(top: 5),
+                              margin: const EdgeInsets.only(top: 5),
                               child: Text(title,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: white,
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
                             ),
                             Container(
-                              margin: EdgeInsets.only(bottom: 5),
+                              margin: const EdgeInsets.only(bottom: 5),
                               child: Text(content,
-                                  style: TextStyle(color: white, fontSize: 13)),
+                                  style: const TextStyle(color: white, fontSize: 13)),
                             ),
                           ],
                         ),
@@ -396,7 +396,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
       child: Container(
         height: iconData == null ? 60 : null,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(5),
             ),
             border: Border.all(color: Colors.purple, width: 0.2)),
@@ -418,11 +418,11 @@ class CreateGroupPageState extends State<CreateGroupPage> {
               ),
               prefixWidget: iconData != null
                   ? Container(
-                      margin: EdgeInsets.only(right: 10),
+                      margin: const EdgeInsets.only(right: 10),
                       height: 40,
                       width: 40,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(20),
                           ),
                           color: Colors.grey[800]),
@@ -446,27 +446,26 @@ class CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   bottomSheetPrivateRule(context) {
-    print("bottomSheetPrivateRule");
     showModalBottomSheet(
         backgroundColor: transparent,
         context: context,
         builder: (context) {
           return Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             height: 220,
             decoration: BoxDecoration(
                 color: Colors.grey[800],
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(15),
                     topLeft: Radius.circular(15))),
             child: Column(children: [
               // drag and drop navbar
               Container(
-                padding: EdgeInsets.only(top: 5),
+                padding: const EdgeInsets.only(top: 5),
                 child: Container(
                   height: 4,
                   width: 40,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(15),
@@ -475,7 +474,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
               ),
               // title
               Container(
-                margin: EdgeInsets.fromLTRB(10, 10, 10, 5),
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
                 child: Row(
                   children: [
                     Flexible(
@@ -484,7 +483,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           Navigator.of(context).pop();
                           FocusManager.instance.primaryFocus!.unfocus();
                         }),
-                        child: Icon(
+                        child: const Icon(
                           Icons.close,
                           color: white,
                         ),
@@ -494,7 +493,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                     Flexible(
                       flex: 10,
                       child: Container(
-                          child: Center(
+                          child: const Center(
                         child: Text(
                           "Chọn quyền riêng tư",
                           style: TextStyle(color: white, fontSize: 18),
@@ -505,7 +504,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                 ),
               ),
               // divider
-              Divider(
+              const Divider(
                 height: 4,
                 color: white,
               ),
@@ -543,20 +542,20 @@ class CreateGroupPageState extends State<CreateGroupPage> {
         context: context,
         builder: (context) {
           return Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             height: 220,
             decoration: BoxDecoration(
                 color: Colors.grey[800],
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(15),
                     topLeft: Radius.circular(15))),
             child: Column(children: [
               Container(
-                padding: EdgeInsets.only(top: 5),
+                padding: const EdgeInsets.only(top: 5),
                 child: Container(
                   height: 4,
                   width: 40,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(15),
@@ -564,7 +563,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(10, 10, 10, 5),
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
                 child: Row(
                   children: [
                     Flexible(
@@ -573,7 +572,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                           Navigator.of(context).pop();
                           FocusManager.instance.primaryFocus!.unfocus();
                         }),
-                        child: Icon(
+                        child: const Icon(
                           Icons.close,
                           color: white,
                         ),
@@ -583,7 +582,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                     Flexible(
                       flex: 10,
                       child: Container(
-                          child: Center(
+                          child: const Center(
                         child: Text(
                           "Ẩn nhóm",
                           style: TextStyle(color: white, fontSize: 18),
@@ -593,7 +592,7 @@ class CreateGroupPageState extends State<CreateGroupPage> {
                   ],
                 ),
               ),
-              Divider(
+              const Divider(
                 height: 4,
                 color: white,
               ),

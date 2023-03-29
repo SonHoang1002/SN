@@ -16,7 +16,7 @@ class PostFooterInformation extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     dynamic meData = ref.read(meControllerProvider)[0];
 
-    const style = TextStyle(color: greyColor, fontSize: 14);
+    const style = TextStyle(color: greyColor, fontSize: 15);
     dynamic favourites = post['favourites'];
     String viewerReaction = post['viewer_reaction'] ?? '';
     String textRender = '${shortenLargeNumber(post?['favourites_count'] ?? 0)}';
@@ -73,7 +73,10 @@ class PostFooterInformation extends ConsumerWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: (post['favourites_count'] ?? 0) > 0 ||
+              (post['replies_total'] ?? 0) > 0
+          ? const EdgeInsets.fromLTRB(8, 9, 8, 7)
+          : const EdgeInsets.fromLTRB(8, 5, 8, 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

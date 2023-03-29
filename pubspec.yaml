@@ -102,7 +102,7 @@ dependencies:
   native_device_orientation: ^1.1.4
   step_progress_indicator: ^1.0.2
   cached_video_player: ^2.0.4
-
+  persistent_bottom_nav_bar: ^5.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

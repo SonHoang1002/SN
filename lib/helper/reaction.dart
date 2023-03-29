@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
-renderImage(link, type) {
-  double size = type == 'gif' ? 40 : 20;
+renderImage(link, type, size) {
+  // double iconSize = type == 'gif' ? size ?? 40 : 25;
+  double iconSize = size;
   return Image.asset(
     link,
-    width: size,
-    height: size,
+    width:  iconSize,
+    height: iconSize,
     errorBuilder: (context, error, stackTrace) =>
         const Icon(FontAwesomeIcons.faceAngry),
   );
@@ -44,11 +45,16 @@ renderText(key) {
   );
 }
 
-renderGif(type, key, {double size = 30}) {
-  return Row(
-    children: [
-      renderImage('assets/reaction/$key.$type', type),
-      type == 'png' ? renderText(key) : const SizedBox()
-    ],
+Widget renderGif(type, key, {double size = 35}) {
+  return Padding(
+    padding: EdgeInsets.zero,
+    child: Row(
+      // crossAxisAlignment: CrossAxisAlignment.center,
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        renderImage('assets/reaction/$key.$type', type, size),
+        type == 'png' ? renderText(key) : const SizedBox()
+      ],
+    ),
   );
 }
