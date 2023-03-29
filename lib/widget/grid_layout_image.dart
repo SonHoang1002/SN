@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/girdview_builder_media.dart';
 import 'package:transparent_image/transparent_image.dart';
+
+import '../theme/colors.dart';
 
 class GridLayoutImage extends StatefulWidget {
   final List medias;
@@ -62,21 +65,26 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     widget.handlePress(medias[0]);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: medias[0]['subType'] == 'local'
-                        ? Image.file(
-                            medias[0]['file'],
-                            fit: BoxFit.cover,
-                          )
-                        : Hero(
-                            tag: medias[0]['id'],
-                            child: FadeInImage.memoryNetwork(
-                              placeholder: kTransparentImage,
-                              image: medias[0]['url'],
-                              imageErrorBuilder: (context, error, stackTrace) =>
-                                  const SizedBox(),
-                            ),
-                          ),
+                    padding: const EdgeInsets.only(top:8.0),
+                    child: Column(
+                      children: [buildDivider(color: greyColor),
+                        medias[0]['subType'] == 'local'
+                            ? Image.file(
+                                medias[0]['file'],
+                                fit: BoxFit.cover,
+                              )
+                            : Hero(
+                                tag: medias[0]['id'],
+                                child: FadeInImage.memoryNetwork(
+                                  placeholder: kTransparentImage,
+                                  image: medias[0]['url'],
+                                  imageErrorBuilder: (context, error, stackTrace) =>
+                                      const SizedBox(),
+                                ),
+                              ),
+                        buildDivider(color: greyColor),
+                      ],
+                    ),
                   ),
                 ),
               ),

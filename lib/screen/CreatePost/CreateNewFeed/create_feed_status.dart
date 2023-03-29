@@ -3,8 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import "package:collection/collection.dart";
+import 'package:social_network_app_mobile/widget/text_description.dart';
 
 class CreateFeedStatus extends StatefulWidget {
   final String? content;
@@ -15,12 +17,13 @@ class CreateFeedStatus extends StatefulWidget {
   final dynamic backgroundSelected;
   final Function handleUpdateData;
   final List friendSelected;
-
+  final Function handleGetPreviewUrl;
   const CreateFeedStatus(
       {Key? key,
       required this.visibility,
       this.backgroundSelected,
       required this.handleUpdateData,
+      required this.handleGetPreviewUrl,
       required this.isShowBackground,
       this.statusActivity,
       required this.friendSelected,
@@ -108,9 +111,10 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextFormField(
-                  autofocus: true,
+                  autofocus: false,
                   onChanged: (value) {
                     widget.handleUpdateData('update_content', value);
+                    widget.handleGetPreviewUrl(value);
                   },
                   maxLines: null,
                   textAlign: widget.backgroundSelected != null
@@ -138,109 +142,6 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
               ],
             ),
           ),
-          !widget.isShowBackground
-              ? const SizedBox()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isActiveBackground = !isActiveBackground;
-                        });
-                      },
-                      child: isActiveBackground
-                          ? const WrapBackground(
-                              widgetChild: Icon(FontAwesomeIcons.chevronLeft,
-                                  color: greyColor, size: 20),
-                            )
-                          : Image.asset(
-                              "assets/post_background.png",
-                              width: 28,
-                            ),
-                    ),
-                    isActiveBackground
-                        ? SizedBox(
-                            width: size.width - 70,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      widget.handleUpdateData(
-                                          'update_background', null);
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.only(right: 5),
-                                      width: 26,
-                                      height: 26,
-                                      decoration: BoxDecoration(
-                                          color: white,
-                                          border: Border.all(
-                                              width: 0.1, color: greyColor),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                    ),
-                                  ),
-                                  Row(
-                                    children: List.generate(
-                                        backgroundPost.sublist(0, 15).length,
-                                        (index) => BackgroundItem(
-                                              updateBackgroundSelected:
-                                                  (background) {
-                                                widget.handleUpdateData(
-                                                    'update_background',
-                                                    background);
-                                              },
-                                              backgroundSelected:
-                                                  widget.backgroundSelected,
-                                              background: backgroundPost[index],
-                                            )),
-                                  ),
-                                ],
-                              ),
-                            ))
-                        : const SizedBox(),
-                    isActiveBackground
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isActiveBackground = false;
-                              });
-                              showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  barrierColor: Colors.transparent,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(10))),
-                                  builder: (BuildContext context) {
-                                    return PostBackground(
-                                      backgroundSelected:
-                                          widget.backgroundSelected,
-                                      updateBackgroundSelected: (background) {
-                                        widget.handleUpdateData(
-                                            'update_background', background);
-                                      },
-                                    );
-                                  });
-                            },
-                            child: const WrapBackground(
-                              widgetChild: Icon(
-                                FontAwesomeIcons.box,
-                                size: 20,
-                                color: greyColor,
-                              ),
-                            ),
-                          )
-                        : const SizedBox()
-                  ],
-                ),
         ],
       ),
     );

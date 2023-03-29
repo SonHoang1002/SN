@@ -29,7 +29,7 @@ Widget _buildAddtionalInformation(BuildContext context, List<String> message) {
             ? TextSpan(
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    print("go to new page");
+                 
                   },
                 text: message[1],
                 style: TextStyle(

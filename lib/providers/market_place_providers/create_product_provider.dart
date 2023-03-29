@@ -7,8 +7,7 @@ final newProductDataProvider =
 class NewProductDataController extends StateNotifier<NewProductDataState> {
   NewProductDataController() : super(NewProductDataState());
   updateNewProductData(Map<String, dynamic> newData) {
-    state = state.copyWith(newData);
-    print("state: ${state.data}");
+    state = state.copyWith(newData); 
   }
 
 

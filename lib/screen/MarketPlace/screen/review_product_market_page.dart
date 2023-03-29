@@ -211,10 +211,6 @@ class _ReviewProductMarketPageState
         return "";
       }).toList()));
     }
-
-    print("------------------review imgIdList--------------------: $imgIdList");
-    print("------------------review videoIdList----------------: $videoIdList");
-
     List<Map<String, dynamic>> reviewProductData = [];
 
     for (int i = 0; i < reviewControllerList!.length; i++) {
@@ -233,8 +229,6 @@ class _ReviewProductMarketPageState
         "rating_point": _starQualityList![i]
       });
     }
-    print(
-        "--------------review---------------${widget.reviewId} ${json.encode(reviewProductData)}");
     var response;
     Future.delayed(Duration.zero, () async {
       response = ReviewProductApi()
@@ -741,9 +735,7 @@ class _ReviewProductMarketPageState
       _imgFileList![index]
           .add(File(selectedImage.path != null ? selectedImage.path : ""));
     });
-    print(
-        "--------------------------------------------------------------_imgFileList $_imgFileList ");
-  }
+       }
 
   Future getVideo(int index, ImageSource src) async {
     XFile selectedVideo = XFile("");

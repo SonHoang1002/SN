@@ -27,8 +27,7 @@ class InterestProductsController extends StateNotifier<InterestProductsState> {
     }
     interestList1.whereNot((element) {
       return element["id"] == id;
-    });
-    print("interestList1: $interestList1");
+    }); 
     state = state.copyWith(interestList);
   }
 }
