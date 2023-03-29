@@ -8,7 +8,7 @@ import '../../../widget/GeneralWidget/title_description_content_list.dart';
 import '../../../widget/back_icon_appbar.dart';
 import '../../../widget/search_input.dart';
 import 'personal_page_constants.dart';
-import 'sub_modules/private_rule_settings_modules/private_rule_settings_page.dart';
+import 'sub_modules/private_rule_settings/private_rule_settings_page.dart';
 
 class PersonalSettingsPage extends StatelessWidget {
   late double width = 0;
