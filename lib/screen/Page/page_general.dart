@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/watch.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/screen/Page/page_create.dart';
+import 'package:social_network_app_mobile/screen/Page/PageCreate/page_create.dart';
 import 'package:social_network_app_mobile/screen/Page/page_invite.dart';
 import 'package:social_network_app_mobile/screen/Page/page_liked.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';

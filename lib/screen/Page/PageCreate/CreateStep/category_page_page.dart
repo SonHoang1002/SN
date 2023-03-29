@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/providers/page/search_category_provider.dart';
