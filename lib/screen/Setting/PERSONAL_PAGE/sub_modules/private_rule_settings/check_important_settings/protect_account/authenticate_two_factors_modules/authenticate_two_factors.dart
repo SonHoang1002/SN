@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/all_completed_page.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/how_protect_account_modules/protect_your_account_constants.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/all_completed_page.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/protect_account/protect_your_account_constants.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_bar_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_dot_widget.dart';

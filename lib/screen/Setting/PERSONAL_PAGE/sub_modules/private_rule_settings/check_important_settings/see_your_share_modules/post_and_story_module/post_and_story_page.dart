@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/see_your_share_modules/block_page.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/see_your_share_modules/block_page.dart';
 
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/see_your_share_modules/who_see_share_constants.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/see_your_share_modules/who_see_share_constants.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_dot_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -12,8 +12,8 @@ import '../../../../../../../../widget/GeneralWidget/content_and_status_widget.d
 import '../../../../../../../../widget/GeneralWidget/show_bottom_sheet_widget.dart';
 import '../../../../../../../../widget/GeneralWidget/text_content_widget.dart';
 
-import 'selection_for_post_and_story_modules/selection_default_object_page.dart';
-import 'selection_for_post_and_story_modules/rule_of_story_page.dart';
+import 'selection_post_story/selection_default_object_page.dart';
+import 'selection_post_story/rule_of_story_page.dart';
 
 class PostAndStoryPage extends StatelessWidget {
   late double width = 0;
