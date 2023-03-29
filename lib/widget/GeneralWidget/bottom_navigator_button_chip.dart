@@ -16,10 +16,13 @@ buildBottomNavigatorWithButtonAndChipWidget(
       Center(
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                fixedSize: Size(width * 0.9, 40), backgroundColor:isPassCondition ? Colors.blue : Colors.grey),
+                fixedSize: Size(width * 0.9, 40),
+                backgroundColor: isPassCondition ? Colors.blue : Colors.grey),
             onPressed: () {
               // function != null ? function() : null;
-              newScreen != null ? pushToNextScreen(context, newScreen) : null;
+              if (isPassCondition) {
+                newScreen != null ? pushToNextScreen(context, newScreen) : null;
+              }
             },
             child: Text(title)),
       ),
