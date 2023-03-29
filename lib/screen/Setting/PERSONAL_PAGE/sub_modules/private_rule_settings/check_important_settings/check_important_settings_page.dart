@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/check_important_settings_constants.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/check_private_rule_component.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/check_important_settings_constants.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/check_private_rule_component.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 import '../../../../../../widget/GeneralWidget/text_content_widget.dart';

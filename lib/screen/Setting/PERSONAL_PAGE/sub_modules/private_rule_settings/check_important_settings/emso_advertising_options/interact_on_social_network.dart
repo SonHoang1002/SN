@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/all_completed_page.dart';
-import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings_modules/check_important_settings_modules/emso_advertising_options_modules/emso_advertising_options_constants.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/all_completed_page.dart';
+import 'package:social_network_app_mobile/screen/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/emso_advertising_options/emso_advertising_options_constants.dart';
 import 'package:social_network_app_mobile/screen/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_bar_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_dot_widget.dart';
