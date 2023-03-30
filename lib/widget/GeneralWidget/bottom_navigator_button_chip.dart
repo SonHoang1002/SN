@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 buildBottomNavigatorWithButtonAndChipWidget(
     {required BuildContext context,
@@ -17,7 +18,8 @@ buildBottomNavigatorWithButtonAndChipWidget(
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 fixedSize: Size(width * 0.9, 40),
-                backgroundColor: isPassCondition ? Colors.blue : Colors.grey),
+                backgroundColor:
+                    isPassCondition ? secondaryColor : Colors.grey),
             onPressed: () {
               // function != null ? function() : null;
               if (isPassCondition) {
@@ -44,7 +46,8 @@ buildBottomNavigatorWithButtonAndChipWidget(
                 // height: 2,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(3),
-                  color: index < currentPage ? Colors.blue : Colors.grey[800],
+                  color:
+                      index < currentPage ? secondaryColor : Colors.grey[800],
                 ),
               );
             })),

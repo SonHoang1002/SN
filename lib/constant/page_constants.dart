@@ -171,7 +171,6 @@ class CategoryPageConstants {
 class InformationPageConstants {
   static const List<String> TITLE_INFO = [
     "Hoàn tất thiết lập Trang của bạn",
-    "Thành công rồi! Bạn đã tạo được NAME_OF_PAGE. Hãy bổ sung thông tin chi tiết để mọi người dễ dàng kết nối với bạn nhé",
     "Chung",
     "Thông tin liên hệ",
     "Vị trí",
