@@ -103,7 +103,7 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CreateEvent()),
+                  MaterialPageRoute(builder: (context) => const CreateEvent(title: 'Crop Ảnh',)),
                 );
               },
               child:  Icon(
