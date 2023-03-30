@@ -26,6 +26,12 @@ class _InformationPagePageState extends State<InformationPagePage> {
 
   List infoField = [
     {
+      'type': 'title',
+      'title': 'Hoàn tất thiết lập Trang của bạn',
+      'description':
+          'Thành công rồi! Bạn đã tạo trang thành công. Hãy bổ sung thông tin chi tiết để mọi người dễ dàng kết nối với bạn nhé.'
+    },
+    {
       'title': 'Chung',
       'iconTitle': Icons.info,
       'description': 'Mô tả về Trang của bạn',
@@ -54,6 +60,10 @@ class _InformationPagePageState extends State<InformationPagePage> {
       'iconTitle': Icons.location_history,
       'description': null,
       'placeholder': 'Địa chỉ'
+    },
+    {
+      'type': 'autocomplete',
+      'title': 'Tỉnh/Thành phố/Thị xã/Thị trấn',
     },
     {
       'title': null,
@@ -108,132 +118,77 @@ class _InformationPagePageState extends State<InformationPagePage> {
           onTap: (() {
             FocusManager.instance.primaryFocus!.unfocus();
           }),
-          child: Column(children: [
-            Container(
-              height: height * 0.78055,
-              // margin: EdgeInsets.only(bottom: 50),
-              // color: Colors.black87,
-              child: ListView(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 100),
-                    child: Form(
-                      key: _informationKey,
-                      child: Column(
+          child: Stack(alignment: Alignment.bottomCenter, children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: infoField.length,
+                itemBuilder: (context, index) {
+                  switch (infoField[index]['type']) {
+                    case 'blank':
+                      return const SizedBox(
+                        height: 50,
+                      );
+                    case 'title':
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          // set up page title
-                          Row(
-                            children: [
-                              Text(
-                                InformationPageConstants.TITLE_INFO[0],
-                                style: const TextStyle(
-                                    // color:  white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                          Text(
+                            InformationPageConstants.TITLE_INFO[0],
+                            style: const TextStyle(
+                                // color:  white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
                           ),
                           buildSpacer(
                             height: 10,
                           ),
-                          // congratulation subtitle
                           const Text(
                               'Thành công rồi! Bạn đã tạo trang thành công. Hãy bổ sung thông tin chi tiết để mọi người dễ dàng kết nối với bạn nhé.',
                               style: TextStyle(fontSize: 17)),
                           buildSpacer(
                             height: 10,
                           ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: infoField.length,
-                            itemBuilder: (context, index) =>
-                                infoField[index]['type'] == 'blank'
-                                    ? const SizedBox(
-                                        height: 50,
-                                      )
-                                    : infoField[index]['type'] == 'radio'
-                                        ? _buildRadioWorkTime(
-                                            infoField[index]['title'],
-                                            infoField[index]['iconTitle'],
-                                            infoField[index]['description'],
-                                            infoField[index]['options'])
-                                        : _buildTextFormField(
-                                            infoField[index]['title'],
-                                            infoField[index]['iconTitle'],
-                                            infoField[index]['description'],
-                                            infoField[index]['placeholder']),
-                          ),
-
-                          // // gio lam viec
-                          // _buildTitlePart(Icons.timelapse_rounded, [
-                          //   InformationPageConstants.TITLE_INFO[4],
-                          //   InformationPageConstants.SUB_TITLE_WORK_TIME
-                          // ]),
-                          // // ko co gio lam viec
-                          // _buildRadioWorkTime(0),
-                          // // luon mo cua
-                          // _buildRadioWorkTime(1),
-                          // // gio lam viec tieu chuan
-                          // _buildRadioWorkTime(2),
                         ],
-                      ),
-                    ),
-                  ),
-                ],
+                      );
+
+                    case 'radio':
+                      return _buildRadioWorkTime(
+                          infoField[index]['title'],
+                          infoField[index]['iconTitle'],
+                          infoField[index]['description'],
+                          infoField[index]['options']);
+                    case 'autocomplete':
+                      return _buildProviceInput(
+                          context, infoField[index]['title']);
+                    default:
+                      return _buildTextFormField(
+                          infoField[index]['title'],
+                          infoField[index]['iconTitle'],
+                          infoField[index]['description'],
+                          infoField[index]['placeholder']);
+                  }
+                },
               ),
             ),
-            buildBottomNavigatorWithButtonAndChipWidget(
-                context: context,
-                width: width,
-                newScreen: AvatarPage(),
-                isPassCondition: _informationKey.currentState == null
-                    ? true
-                    : _informationKey.currentState!.validate(),
-                title: "Tiếp",
-                currentPage: 3)
+            Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              padding: EdgeInsets.only(bottom: 20),
+              child: buildBottomNavigatorWithButtonAndChipWidget(
+                  context: context,
+                  width: width,
+                  newScreen: AvatarPage(),
+                  isPassCondition: _informationKey.currentState == null
+                      ? true
+                      : _informationKey.currentState!.validate(),
+                  title: "Tiếp",
+                  currentPage: 3),
+            )
           ]),
         ));
   }
-
-  // Widget _buildProviceInput(BuildContext context, String title) {
-  //   return GestureDetector(
-  //     onTap: (() {
-  //       _showBottomSheetForSelectProvince(context);
-  //     }),
-  //     child: Container(
-  //         height: 60,
-  //         decoration: BoxDecoration(
-  //             borderRadius: const BorderRadius.all(
-  //               Radius.circular(5),
-  //             ),
-  //             border: Border.all(color: Colors.black)),
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Row(
-  //               children: [
-  //                 buildSpacer(
-  //                   width: 10,
-  //                 ),
-  //                 Text(title,
-  //                     style: TextStyle(color: Colors.grey, fontSize: 16)),
-  //               ],
-  //             ),
-  //             Row(
-  //               children: [
-  //                 Icon(
-  //                   FontAwesomeIcons.caretDown,
-  //                   color: Colors.grey[800],
-  //                 ),
-  //                 buildSpacer(
-  //                   width: 10,
-  //                 ),
-  //               ],
-  //             ),
-  //           ],
-  //         )),
-  //   );
-  // }
 
   Widget _buildTextFormField(
       // TextEditingController controller,
@@ -314,23 +269,23 @@ class _InformationPagePageState extends State<InformationPagePage> {
             decoration: InputDecoration(
                 suffix:
                     placeholder == InformationPageConstants.PLACEHOLDER_INFO[5]
-                        ? Icon(
+                        ? const Icon(
                             // Icons.next_plan,
                             CupertinoIcons.greaterthan,
                             color: white,
                           )
                         : null,
                 counterText: "",
-                enabledBorder: OutlineInputBorder(
+                enabledBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   borderSide: BorderSide(color: Colors.grey, width: 2),
                 ),
                 hintText: placeholder,
-                hintStyle: TextStyle(
+                hintStyle: const TextStyle(
                   color: Colors.grey,
                 ),
-                contentPadding: EdgeInsets.fromLTRB(10, 5, 0, 30),
-                border: OutlineInputBorder(
+                contentPadding: const EdgeInsets.fromLTRB(10, 5, 0, 30),
+                border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)))),
           ),
         ],
@@ -376,33 +331,66 @@ class _InformationPagePageState extends State<InformationPagePage> {
               )
             ],
           ),
-          // if (options.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 100),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index) => RadioListTile(
-                groupValue: currentValue,
-                title: Text(
-                  options[index]['title'],
-                  style: const TextStyle(fontSize: 17),
-                ),
-                subtitle: Text(
-                  options[index]['description'],
-                  style: const TextStyle(fontSize: 15),
-                ),
-                onChanged: ((value) {
-                  setState(() {
-                    currentValue = value as int;
-                  });
-                }),
-                value: radioGroupWorkTime[1],
-              ),
-              itemCount: options.length,
-            ),
-          ),
+          Column(
+            children: List.generate(
+                options.length,
+                (index) => RadioListTile(
+                      groupValue: currentValue,
+                      title: Text(
+                        options[0]['title'],
+                        style: const TextStyle(fontSize: 17),
+                      ),
+                      subtitle: Text(
+                        options[0]['description'],
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                      onChanged: ((value) {
+                        setState(() {
+                          currentValue = value as int;
+                        });
+                      }),
+                      value: radioGroupWorkTime[index],
+                    )),
+          )
         ],
       ),
+    );
+  }
+
+  Widget _buildProviceInput(BuildContext context, String title) {
+    return GestureDetector(
+      onTap: (() {
+        _showBottomSheetForSelectProvince(context);
+      }),
+      child: Container(
+          height: 56,
+          margin: const EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(5),
+              ),
+              border: Border.all(color: Colors.grey, width: 2)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  buildSpacer(
+                    width: 10,
+                  ),
+                  Text(title,
+                      style: const TextStyle(color: Colors.grey, fontSize: 16)),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.all(6.0),
+                child: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          )),
     );
   }
 
@@ -413,22 +401,22 @@ class _InformationPagePageState extends State<InformationPagePage> {
         builder: (context) {
           return StatefulBuilder(builder: (context, setStateFull) {
             return Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               height: height * 0.8,
               decoration: BoxDecoration(
                   color: Colors.grey[800],
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(15),
                       topLeft: Radius.circular(15))),
               child: Column(children: [
                 // drag and drop navbar
                 Container(
-                  padding: EdgeInsets.only(top: 5),
-                  margin: EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(top: 5),
+                  margin: const EdgeInsets.only(bottom: 10),
                   child: Container(
                     height: 4,
                     width: 40,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(15),
@@ -437,7 +425,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                 ),
                 // province input
 
-                Container(
+                SizedBox(
                   height: 80,
                   child: TextFormField(
                     // controller: controller,
@@ -447,7 +435,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                           .setSelectProvinceProvider(value);
                     }),
                     style: const TextStyle(color: white),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide: BorderSide(color: Colors.grey, width: 2),
@@ -462,7 +450,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                                 BorderRadius.all(Radius.circular(10)))),
                   ),
                 ),
-                Container(
+                SizedBox(
                     height: 250,
                     child: ListView.builder(
                         itemCount: Provider.of<SelectProvinceProvider>(context)
@@ -470,9 +458,8 @@ class _InformationPagePageState extends State<InformationPagePage> {
                             .length,
                         itemBuilder: ((context, index) {
                           if (Provider.of<SelectProvinceProvider>(context)
-                                  .selectList
-                                  .length !=
-                              0) {
+                              .selectList
+                              .isNotEmpty) {
                             return Container(
                               padding: EdgeInsets.only(left: 10),
                               height: 40,
@@ -488,14 +475,14 @@ class _InformationPagePageState extends State<InformationPagePage> {
                                         Provider.of<SelectProvinceProvider>(
                                                 context)
                                             .selectList[index],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: white,
                                           fontSize: 20,
                                         ),
                                       )
                                     ],
                                   )),
-                                  Divider(
+                                  const Divider(
                                     height: 2,
                                     color: white,
                                   )
@@ -503,7 +490,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
                               ),
                             );
                           }
-                          return Center(
+                          return const Center(
                               child: Text(" Không có dữ liệu",
                                   style: TextStyle(color: white)));
                         }))),
