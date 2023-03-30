@@ -26,6 +26,7 @@ class _CategoryPageState extends State<CategoryPage> {
   final TextEditingController _categoryController = TextEditingController();
   List categorySelected = [];
   FocusNode focus = FocusNode();
+  List categoryPopular = CategoryPageConstants.POPULAR_CATEGORY;
 
   @override
   void dispose() {
@@ -107,7 +108,8 @@ class _CategoryPageState extends State<CategoryPage> {
                                   if (categorySelected.isNotEmpty)
                                     Container(
                                       width: width,
-                                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(5, 0, 5, 0),
                                       child: Wrap(
                                           children: List.generate(
                                               categorySelected.length,
@@ -166,7 +168,8 @@ class _CategoryPageState extends State<CategoryPage> {
                             // hang muc pho bien
                             if (categorySelected.length < 3)
                               Container(
-                                padding: EdgeInsets.only(left: 10, top: 10),
+                                padding:
+                                    const EdgeInsets.only(left: 10, top: 10),
                                 child: Row(
                                   // ignore: prefer_const_literals_to_create_immutables
                                   children: [
@@ -182,12 +185,18 @@ class _CategoryPageState extends State<CategoryPage> {
                                 width: width,
                                 child: Wrap(
                                     children: List.generate(
-                                        CategoryPageConstants
-                                            .POPULAR_CATEGORY.length,
+                                        categoryPopular
+                                            .where((element) =>
+                                                !(categorySelected
+                                                    .contains(element)))
+                                            .length,
                                         (index) => selectedArea(
                                             context,
-                                            CategoryPageConstants
-                                                .POPULAR_CATEGORY[index]))),
+                                            categoryPopular
+                                                .where((element) =>
+                                                    !(categorySelected
+                                                        .contains(element)))
+                                                .toList()[index]))),
                               ),
                           ])),
                     ],
@@ -220,32 +229,42 @@ class _CategoryPageState extends State<CategoryPage> {
           children: [
             InkWell(
               onTap: (() {
-                print(1);
                 if (categorySelected.contains(value)) {
                   showDialog(
                       context: context,
                       builder: ((context) {
                         return AlertDialog(
-                          title: Text(CategoryPageConstants.WARNING_MESSAGE[0]),
+                          title: Text(
+                            CategoryPageConstants.WARNING_MESSAGE[0],
+                            style: TextStyle(fontSize: 17),
+                          ),
                           actions: [
                             GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text(
-                                  "OK",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Đồng ý",
+                                    style: TextStyle(
+                                        color: secondaryColor,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ))
                           ],
                         );
                       }));
                 } else {
-                  setState(() {
-                    categorySelected.add(value);
-                  });
+                  if (mounted) {
+                    setState(() {
+                      categorySelected.add(value);
+                    });
+                    if (categorySelected.length < 3) {
+                      focus.requestFocus();
+                    }
+                  }
                 }
               }),
               child: Text(
