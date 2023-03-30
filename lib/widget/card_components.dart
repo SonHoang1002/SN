@@ -13,15 +13,16 @@ class CardComponents extends StatelessWidget {
   final dynamic onTap;
   final dynamic type;
 
-  const CardComponents(
-      {super.key,
-      this.buttonCard,
-      this.imageCard,
-      this.imageHeight,
-      this.buttonHeight,
-      this.textCard,
-      this.onTap,
-      this.type});
+  const CardComponents({
+    Key? key,
+    this.buttonCard,
+    this.imageCard,
+    this.imageHeight,
+    this.buttonHeight,
+    this.textCard,
+    this.onTap,
+    this.type,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,14 +116,12 @@ class CardComponents extends StatelessWidget {
               SizedBox(
                 child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: Column(
-                      children: [textCard],
-                    )),
+                    child: textCard ?? const SizedBox()),
               ),
               SizedBox(
                 child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                    child: buttonCard),
+                    child:  buttonCard ?? const SizedBox()),
               )
             ],
           ),

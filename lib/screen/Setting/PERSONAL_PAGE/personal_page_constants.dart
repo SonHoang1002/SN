@@ -1,11 +1,10 @@
-
 import '../setting_constants/general_settings_constants.dart';
 
 class PersonalPageConstants {
   static const PRIVATE_APPBAR_TITLE = "Cài đặt quyền riêng tư";
   static const PRIVATE_TITLE = "Quyền riêng tư";
   static const PRIVATE_DESCRIPTION =
-      "Kiểm soát người nhìn thấy hoạt động của bạn trên Facebook và cách chúng tôi dùng dữ liệu để cá nhân hóa trải nghiệm";
+      "Kiểm soát người nhìn thấy hoạt động của bạn trên Emso và cách chúng tôi dùng dữ liệu để cá nhân hóa trải nghiệm";
   static List<Map<String, dynamic>> PRIVATE_INFORMATION_LIST = [
     {
       "key": "private_rule",
@@ -22,7 +21,7 @@ class PersonalPageConstants {
         "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
         "title": "Trang cá nhân và gắn thẻ",
         "subTitle":
-            "Quyết định người có thể tương tác với trang cá nhân và các bài viết của bạn trên Facebook"
+            "Quyết định người có thể tương tác với trang cá nhân và các bài viết của bạn trên Emso"
       }
     },
     {
@@ -55,7 +54,7 @@ class PersonalPageConstants {
   // notification
   static const NOTIFICATION_TITLE = "Thông báo";
   static const NOTIFICATION_DESCRIPTION =
-      "Quyết định cách bạn muốn giao tiếp trên Facebook và chúng tôi nên thông báo cho bạn bằng cách nào";
+      "Quyết định cách bạn muốn giao tiếp trên Emso và chúng tôi nên thông báo cho bạn bằng cách nào";
   static List<Map<String, dynamic>> NOTIFICATION_INFORMATION_LIST = [
     {
       "key": "notification_setting",
@@ -101,15 +100,14 @@ class PersonalPageConstants {
     },
   ];
 
-  // your informationin facebook
-  static const YOUR_INFORMATION_IN_FACEBOOK_TITLE =
-      "Thông tin của bạn trên Facebook";
-  static const YOUR_INFORMATION_IN_FACEBOOK_DESCRIPTION =
+  // your informationin Emso
+  static const YOUR_INFORMATION_IN_Emso_TITLE = "Thông tin của bạn trên Emso";
+  static const YOUR_INFORMATION_IN_Emso_DESCRIPTION =
       "Xem hoặc tải xuống thông tin trang cá nhân và quản lý hoạt động trên trang cá nhân của bạn";
-  static List<Map<String, dynamic>>
-      YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST = [
+  static List<Map<String, dynamic>> YOUR_INFORMATION_IN_Emso_INFORMATION_LIST =
+      [
     {
-      "key": "access_information_on_facebook",
+      "key": "access_information_on_Emso",
       "data": {
         "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
         "title": "Truy cập thông tin trên trang cá nhân",
@@ -144,7 +142,7 @@ class PersonalPageConstants {
     },
   ];
 
-  // your informationin facebook
+  // your informationin Emso
   static const FILE_AND_CONTACT_TITLE = "File phương tiện và danh bạ";
   static const FILE_AND_CONTACT_DESCRIPTION =
       "Quản lý ảnh, video và âm thanh, đồng bộ danh bạ liên tục cũng như xóa dữ liệu lướt xem trên điện thoại của bạn.";
@@ -172,7 +170,7 @@ class PersonalPageConstants {
         "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
         "title": "Trình duyệt",
         "subTitle":
-            "Ngắt lịch sử trang web mà bạn đã truy cập khi lướt xem trên Facebook bằng điện thoại.  "
+            "Ngắt lịch sử trang web mà bạn đã truy cập khi lướt xem trên Emso bằng điện thoại.  "
       }
     },
     {
@@ -204,7 +202,7 @@ class PersonalPageConstants {
         "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
         "title": "Tùy chọn về cảm xúc",
         "subTitle":
-            "Kiểm soát xem có hiển thị tổng số cảm xúc về bài viết trên Facebook hay không."
+            "Kiểm soát xem có hiển thị tổng số cảm xúc về bài viết trên Emso hay không."
       }
     },
   ];
@@ -226,7 +224,7 @@ class PersonalPageConstants {
   // ShortCut
   static const SHORTCUT_TITLE = "Lối tắt";
   static const String SHORTCUT_DESCRIPTION =
-      "Truy cập dễ dàng hơn vào các dịch vụ trên Facebook mà bạn hay dùng nhất.";
+      "Truy cập dễ dàng hơn vào các dịch vụ trên Emso mà bạn hay dùng nhất.";
   static List<Map<String, dynamic>> SHORTCUT_INFORMATION_LIST = [
     {
       "key": "shortCut_bar",
@@ -234,7 +232,7 @@ class PersonalPageConstants {
         "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
         "title": "Thanh lối tắt",
         "subTitle":
-            "Quyết định xem Facebook có thể thêm lối tắt nào vào thanh lối tắt của bạn."
+            "Quyết định xem Emso có thể thêm lối tắt nào vào thanh lối tắt của bạn."
       }
     },
   ];

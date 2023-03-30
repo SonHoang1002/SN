@@ -22,22 +22,37 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.465933365763-5kq97dko2a2tq95vpb3gna47vm2svna1</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>googlechromes</string>
+		<string>comgooglemaps</string>
 		<string>sms</string>
 		<string>tel</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-       	<key>NSAppTransportSecurity</key>
-<dict>
-   <key>NSAllowsArbitraryLoads</key>
-   <true/>
-</dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Replace with your permission description</string>
+	<string>App requires access to your camera to allow you to take a photo of your ID to process your request</string>
+	<key>NSLocationWhenUseUsageDescription </key>
+	<string>Your location allows you to view restaurants in delivery range of your address</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Replace with your permission description</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/screen/Page/page_detail.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 import 'text_description.dart';
@@ -11,42 +13,48 @@ class PageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Row(
-      children: [
-        AvatarSocial(
-            width: 40,
-            height: 40,
-            object: page,
-            path: page['avatar_media'] != null
-                ? page['avatar_media']['preview_url']
-                : linkAvatarDefault),
-        const SizedBox(
-          width: 10,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: size.width - 180,
-              child: Text(
-                page['title'],
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13,
-                    overflow: TextOverflow.ellipsis),
+    return InkWell(
+      onTap: () {
+        Navigator.push(context,
+            CupertinoPageRoute(builder: (context) => const PageDetail()));
+      },
+      child: Row(
+        children: [
+          AvatarSocial(
+              width: 40,
+              height: 40,
+              object: page,
+              path: page['avatar_media'] != null
+                  ? page['avatar_media']['preview_url']
+                  : linkAvatarDefault),
+          const SizedBox(
+            width: 10,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: size.width - 180,
+                child: Text(
+                  page['title'],
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                      overflow: TextOverflow.ellipsis),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 4.0,
-            ),
-            page['page_categories'].isNotEmpty
-                ? TextDescription(
-                    description: page['page_categories'][0]['text'],
-                  )
-                : const SizedBox()
-          ],
-        )
-      ],
+              const SizedBox(
+                height: 4.0,
+              ),
+              page['page_categories'].isNotEmpty
+                  ? TextDescription(
+                      description: page['page_categories'][0]['text'],
+                    )
+                  : const SizedBox()
+            ],
+          )
+        ],
+      ),
     );
   }
 }

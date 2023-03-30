@@ -5,6 +5,11 @@ class AuthenApi {
     return await Api().postRequestBase('/oauth/token', data);
   }
 
+  loginByGoogle(token) async {
+    return await Api().postRequestBaseNoTokenDefault(
+        '/api/v1/authorization', null, {"access_token": token});
+  }
+
   registrationAccount(data) async {
     return await Api().postRequestBase('/api/v1/registrations', data);
   }

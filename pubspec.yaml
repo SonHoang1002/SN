@@ -92,6 +92,8 @@ dependencies:
   marquee: ^2.2.3
   image_picker: ^0.8.7
   full_screen_image: ^2.0.0
+  flutter_map_location_marker: ^5.2.1
+  image_crop: ^0.4.1
   gesture_x_detector: ^1.0.0
   helpers: ^1.1.4
   http: ^0.13.4
@@ -101,7 +103,7 @@ dependencies:
   video_player_web_hls: ^0.1.11+2
   native_device_orientation: ^1.1.4
   step_progress_indicator: ^1.0.2
-  cached_video_player: ^2.0.4
+  google_sign_in: ^6.0.2
   persistent_bottom_nav_bar: ^5.0.2
 dev_dependencies:
   flutter_test:
@@ -113,14 +115,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: "^0.12.0"
   very_good_analysis: ^3.0.1
   build_runner: ^2.3.3
   freezed: ^2.3.2
-
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/icons/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -141,8 +139,6 @@ flutter:
     - assets/target.svg
     - assets/win.svg
     - assets/chat.svg
-    - assets/Moment.svg
-    - assets/MomentFc.svg
     - assets/Plus.svg
     - assets/Watch.svg
     - assets/WatchFC.svg
@@ -151,8 +147,6 @@ flutter:
     - assets/notification.svg
     - assets/blood.svg
     - assets/blood.png
-    - assets/Chat_1.svg
-    - assets/Chat_1.png
     - assets/event.svg
     - assets/friend.svg
     - assets/Groups_1.svg
@@ -160,7 +154,6 @@ flutter:
     - assets/job.svg
     - assets/learnspace.svg
     - assets/Maket.svg
-    - assets/moment_menu.svg
     - assets/moment_menu.png
     - assets/music.svg
     - assets/Page.svg
@@ -178,6 +171,15 @@ flutter:
     - assets/disc.png
     - assets/grey.png
     - assets/Payment.svg
+    - assets/MomentFC.png
+    - assets/MomentDM_1.png
+    - assets/MomentLM.png
+    - assets/MomentMenu.png
+    - assets/Chat_3.png
+    - assets/MarketLM.png
+    - assets/MarketDM.png
+    - assets/MarketFC.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

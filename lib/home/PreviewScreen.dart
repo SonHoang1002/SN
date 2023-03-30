@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
 import '../theme/colors.dart';
 import 'home.dart';
 
-class PreviewScreen extends StatefulWidget {
+class PreviewScreen extends ConsumerStatefulWidget {
   const PreviewScreen({Key? key}) : super(key: key);
 
   @override
@@ -13,14 +15,18 @@ class PreviewScreen extends StatefulWidget {
   _PreviewScreenState createState() => _PreviewScreenState();
 }
 
-class _PreviewScreenState extends State<PreviewScreen> {
+class _PreviewScreenState extends ConsumerState<PreviewScreen>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     if (mounted) {
-      SecureStorage().getKeyStorage("userId").then((value) {
+      SecureStorage().getKeyStorage("token").then((value) {
         if (value != 'noData') {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: ((context) => const Home())));
+          Future.delayed(const Duration(seconds: 1), () {
+            ref.read(meControllerProvider.notifier).getMeData();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: ((context) => const Home())));
+          });
         } else {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: ((context) => OnboardingLoginPage())));

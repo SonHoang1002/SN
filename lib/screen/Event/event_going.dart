@@ -57,8 +57,8 @@ class _EventGoingState extends ConsumerState<EventGoing> {
 
     return Expanded(
       child: SingleChildScrollView(
-        child: events.isNotEmpty
-            ? Column(
+        child:
+             Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
@@ -72,6 +72,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                 ),
               ),
             ),
+            events.isNotEmpty ?
             SizedBox(
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -390,7 +391,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                             ),
                                             Padding(
                                               padding:
-                                              EdgeInsets.only(
+                                             const EdgeInsets.only(
                                                   bottom: 5.0),
                                               child: Icon(
                                                   FontAwesomeIcons
@@ -538,15 +539,13 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                           child: CupertinoActivityIndicator())
                           : const SizedBox();
                     }
-                    return null;
                   },
-                )),
+                )) : const SizedBox(),
             isMore == true
                 ? const Center(child: CupertinoActivityIndicator())
                 : const SizedBox()
           ],
-        )
-            : const SizedBox(),
+        ),
       ),
     );
   }

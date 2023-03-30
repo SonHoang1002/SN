@@ -30,7 +30,7 @@ List eventMenu = [
     "label": "Lời mời",
   },
   {
-    "key": "event_star",
+    "key": "event_interest",
     "label": "Quan tâm",
   },
   {
@@ -64,6 +64,32 @@ List growMenu = [
     "label": "Dự án đã gọi vốn",
   },
 ];
+List recruitMenu = [
+  {
+    "key": "recruit_interesting",
+    "label": "Khám phá",
+  },
+  {
+    "key": "recruit_following",
+    "label": "Quan tâm ",
+  },
+  {
+    "key": "recruit_going",
+    "label": "Sẽ tham gia",
+  },
+  {
+    "key": "recruit_news",
+    "label": "Tin đăng tuyển",
+  },
+  {
+    "key": "recruit_news_past",
+    "label": "Tin tuyển dụng đã đăng",
+  },
+  {
+    "key": "recruit_save",
+    "label": "CV đã lưu",
+  },
+];
 
 List listSocial = [
   {
@@ -76,7 +102,7 @@ List listSocial = [
     "key": 'chatSocial',
     "label": 'Tin nhắn',
     "subLabel": 'Trò chuyện cùng bạn bè trên EMSO.',
-    "icon": "assets/Chat_1.png"
+    "icon": "assets/Chat_3.png"
   },
   {
     "key": 'groupSocial',
@@ -106,7 +132,7 @@ List listSocial = [
     "key": 'moment',
     "subLabel": 'khoảnh khắc thú vị làm bạn yêu thích.',
     "label": 'Moment',
-    "icon": "assets/moment_menu.png"
+    "icon": "assets/MomentMenu.png"
   },
   {
     "key": 'watch',

@@ -8,7 +8,7 @@ import '../../../widget/GeneralWidget/title_description_content_list.dart';
 import '../../../widget/back_icon_appbar.dart';
 import '../../../widget/search_input.dart';
 import 'personal_page_constants.dart';
-import 'sub_modules/private_rule_settings_modules/private_rule_settings_page.dart';
+import 'sub_modules/private_rule_settings/private_rule_settings_page.dart';
 
 class PersonalSettingsPage extends StatelessWidget {
   late double width = 0;
@@ -219,18 +219,18 @@ class PersonalSettingsPage extends StatelessWidget {
                               })),
                         ),
                       ),
-                      // your information in facebook
+                      // your information in Emso
                       TitleDescriptionAndContentListWidget(
                         title: PersonalPageConstants
-                            .YOUR_INFORMATION_IN_FACEBOOK_TITLE,
+                            .YOUR_INFORMATION_IN_Emso_TITLE,
                         subTitle: PersonalPageConstants
-                            .YOUR_INFORMATION_IN_FACEBOOK_DESCRIPTION,
+                            .YOUR_INFORMATION_IN_Emso_DESCRIPTION,
                         listView: Container(
                           height: 290,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
                               itemCount: PersonalPageConstants
-                                  .YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST
+                                  .YOUR_INFORMATION_IN_Emso_INFORMATION_LIST
                                   .length,
                               itemBuilder: ((context, index) {
                                 return GestureDetector(
@@ -241,7 +241,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                     [
                                       Text(
                                           PersonalPageConstants
-                                                  .YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST[
+                                                  .YOUR_INFORMATION_IN_Emso_INFORMATION_LIST[
                                               index]["data"]["title"],
                                           style: TextStyle(
                                             fontSize: 15,
@@ -250,7 +250,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           )),
                                       Text(
                                           PersonalPageConstants
-                                                  .YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST[
+                                                  .YOUR_INFORMATION_IN_Emso_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
                                           style: TextStyle(
                                             fontSize: 15,
@@ -267,7 +267,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
                                         PersonalPageConstants
-                                                .YOUR_INFORMATION_IN_FACEBOOK_INFORMATION_LIST[
+                                                .YOUR_INFORMATION_IN_Emso_INFORMATION_LIST[
                                             index]["data"]["icon"],
                                         // color:  white,
                                       ),

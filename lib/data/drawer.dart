@@ -545,9 +545,9 @@ List drawers = [
     "title": "Cộng đồng Designer Việt Nam",
     "username": "congdongdesigner",
     "description":
-        "Vào group tuyệt đối phải đọc hết nội quy tại link này: www.facebook.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.",
+        "Vào group tuyệt đối phải đọc hết nội quy tại link này: www.Emso.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.",
     "description_html":
-        "&lt;p&gt;Vào group tuyệt đối phải đọc hết nội quy tại link này: www.facebook.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.&lt;/p&gt;",
+        "&lt;p&gt;Vào group tuyệt đối phải đọc hết nội quy tại link này: www.Emso.com/groups/VietDesigner.Net/permalink/2708592882560541/ để không bị BAN NICK.&lt;/p&gt;",
     "cover_image_url":
         "https://snapi.emso.asia/cover_images/original/missing.png",
     "is_archived": false,

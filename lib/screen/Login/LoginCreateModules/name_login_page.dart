@@ -57,7 +57,10 @@ class _NameLoginPageState extends State<NameLoginPage> {
                             buildTextContent(
                                 NameLoginConstants.NAME_LOGIN_TITLE, true,
                                 fontSize: 17,
-                                colorWord: blackColor,
+                                colorWord: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color,
                                 isCenterLeft: false),
                             buildSpacer(height: 25),
                             SizedBox(
@@ -79,7 +82,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
                                     child: ButtonPrimary(
                                       label: "Tiếp tục",
                                       handlePress: () {
-                                        pushAndReplaceToNextScreen(
+                                        pushToNextScreen(
                                             context,
                                             BirthdayLoginPage(
                                                 data: {"display_name": name}));

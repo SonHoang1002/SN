@@ -70,7 +70,10 @@ class CompleteLoginPage extends StatelessWidget {
                                     CompleteLoginConstants.COMPLETE_LOGIN_TITLE,
                                     true,
                                     fontSize: 17,
-                                    colorWord: blackColor,
+                                    colorWord: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color,
                                     isCenterLeft: false),
                                 buildSpacer(height: 10),
                                 _buildDescription(),

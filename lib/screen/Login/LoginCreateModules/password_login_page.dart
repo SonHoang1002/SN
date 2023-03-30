@@ -21,7 +21,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
   late double width = 0;
 
   late double height = 0;
-  bool _iShowPassword = false;
+  bool _iShowPassword = true;
   String _passwordController = '';
   String _passwordConfirm = '';
 
@@ -68,14 +68,16 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                             },
                                 EmailLoginConstants
                                     .EMAIL_LOGIN_NAME_PLACEHOLODER),
-                            _passwordController.trim().isEmpty ||
-                                    _passwordController.length < 9
+                            (_passwordController.trim().isEmpty ||
+                                        _passwordController.length < 9) &&
+                                    _passwordController.isNotEmpty
                                 ? const Text(
                                     "Mật khẩu phải lớn hơn 9 kí tự",
                                     style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.red,
-                                        fontStyle: FontStyle.italic),
+                                      height: 2,
+                                      fontSize: 12,
+                                      color: Colors.red,
+                                    ),
                                   )
                                 : const SizedBox(),
 
@@ -88,13 +90,12 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                               });
                             }, "Xác nhận mật khẩu"),
 
-                            _passwordConfirm != _passwordController
+                            _passwordConfirm != _passwordController &&
+                                    _passwordConfirm.isNotEmpty
                                 ? const Text(
                                     "Mật khẩu không trùng khớp",
                                     style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.red,
-                                        fontStyle: FontStyle.italic),
+                                        fontSize: 12, color: Colors.red),
                                   )
                                 : const SizedBox(),
 
@@ -153,12 +154,13 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
         validator: (value) {},
         obscureText: _iShowPassword,
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,
-        maxLength: numberType ? 10 : 100000,
+        maxLength: numberType ? 10 : 100,
         decoration: InputDecoration(
             counterText: "",
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(borderRadius!)),
-              borderSide: const BorderSide(color: Colors.black, width: 0.4),
+              borderSide:
+                  BorderSide(color: Colors.grey.withOpacity(0.9), width: 0.4),
             ),
             hintText: placeHolder,
             hintStyle: const TextStyle(

@@ -1,8 +1,18 @@
 PODS:
+  - AppAuth (1.6.0):
+    - AppAuth/Core (= 1.6.0)
+    - AppAuth/ExternalUserAgent (= 1.6.0)
+  - AppAuth/Core (1.6.0)
+  - AppAuth/ExternalUserAgent (1.6.0):
+    - AppAuth/Core
   - audioplayers_darwin (0.0.1):
     - Flutter
+  - cached_video_player (0.0.2):
+    - Flutter
+    - KTVHTTPCache (~> 2.0.0)
   - camera_avfoundation (0.0.1):
     - Flutter
+  - CocoaAsyncSocket (7.6.5)
   - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -70,6 +80,8 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
   - Flutter (1.0.0)
+  - flutter_compass (0.0.1):
+    - Flutter
   - flutter_secure_storage (6.0.0):
     - Flutter
   - flutter_video_info (1.1.0):
@@ -79,10 +91,19 @@ PODS:
   - FMDB/standard (2.7.5)
   - gallery_saver (0.0.1):
     - Flutter
+  - geolocator_apple (1.2.0):
+    - Flutter
+  - google_sign_in_ios (0.0.1):
+    - Flutter
+    - GoogleSignIn (~> 6.2)
   - GoogleDataTransport (9.2.1):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleSignIn (6.2.4):
+    - AppAuth (~> 1.5)
+    - GTMAppAuth (~> 1.3)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
   - GoogleUtilities/AppDelegateSwizzler (7.11.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -100,8 +121,18 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.11.0):
     - GoogleUtilities/Logger
+  - GTMAppAuth (1.3.1):
+    - AppAuth/Core (~> 1.6)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
+  - GTMSessionFetcher/Core (2.3.0)
+  - image_crop (0.0.1):
+    - Flutter
   - image_picker_ios (0.0.1):
     - Flutter
+  - KTVCocoaHTTPServer (1.0.0):
+    - CocoaAsyncSocket
+  - KTVHTTPCache (2.0.1):
+    - KTVCocoaHTTPServer
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -134,14 +165,19 @@ PODS:
 
 DEPENDENCIES:
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
+  - cached_video_player (from `.symlinks/plugins/cached_video_player/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_compass (from `.symlinks/plugins/flutter_compass/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_video_info (from `.symlinks/plugins/flutter_video_info/ios`)
   - gallery_saver (from `.symlinks/plugins/gallery_saver/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
+  - image_crop (from `.symlinks/plugins/image_crop/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
@@ -154,6 +190,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppAuth
+    - CocoaAsyncSocket
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -163,7 +201,12 @@ SPEC REPOS:
     - FirebaseMessaging
     - FMDB
     - GoogleDataTransport
+    - GoogleSignIn
     - GoogleUtilities
+    - GTMAppAuth
+    - GTMSessionFetcher
+    - KTVCocoaHTTPServer
+    - KTVHTTPCache
     - nanopb
     - PromisesObjC
     - SDWebImage
@@ -172,6 +215,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/ios"
+  cached_video_player:
+    :path: ".symlinks/plugins/cached_video_player/ios"
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   file_picker:
@@ -182,12 +227,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_compass:
+    :path: ".symlinks/plugins/flutter_compass/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_video_info:
     :path: ".symlinks/plugins/flutter_video_info/ios"
   gallery_saver:
     :path: ".symlinks/plugins/gallery_saver/ios"
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/ios"
+  google_sign_in_ios:
+    :path: ".symlinks/plugins/google_sign_in_ios/ios"
+  image_crop:
+    :path: ".symlinks/plugins/image_crop/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   native_device_orientation:
@@ -208,8 +261,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wakelock/ios"
 
 SPEC CHECKSUMS:
+  AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
+  cached_video_player: 9f225ed1c46bda0fe287b8288742329d441e2cc5
   camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
@@ -221,13 +277,22 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 36b38c733fd37e50857e5e8d74138648f466f18c
   FirebaseMessaging: e345b219fd15d325f0cf2fef28cb8ce00d851b3f
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_compass: cbbd285cea1584c7ac9c4e0c3e1f17cbea55e855
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   flutter_video_info: a932e1b0da369bba95c3a14b7f61d5f8b0d03280
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
+  geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
+  google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
   GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
+  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
+  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
+  GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
+  image_crop: e0a67085d3ebf3cf46ca46d61c53a082507b0bc3
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
+  KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
+  KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9

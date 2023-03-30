@@ -32,7 +32,8 @@ import 'filter_categories_market_page.dart';
 import 'search_modules/category_search_page.dart';
 
 class MainMarketPage extends ConsumerStatefulWidget {
-  const MainMarketPage({super.key});
+  final bool? isBack;
+  const MainMarketPage(this.isBack, {super.key});
 
   @override
   ConsumerState<MainMarketPage> createState() => _MainMarketPageState();
@@ -102,53 +103,50 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       all_data = demoProductCategories;
     }
     getCategoriesName();
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                buildBanner(context, width: width, height: 300),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: _buildCategoriesComponent(),
-                ),
-                const CrossBar(
-                  height: 10,
-                ),
-                // suggest product
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: _buildSuggestComponent(),
-                ),
-                buildSpacer(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: _buildLatestSearchComponent(),
-                ),
-                const CrossBar(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: _buildDiscoverComponent(),
-                )
-              ],
-            ),
-          ),
-          Column(
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
             children: [
-              Container(
-                height: 50,
-                color: _isScrolled ? secondaryColor : transparent,
+              buildBanner(context, width: width, height: 300),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _buildCategoriesComponent(),
               ),
-              _customAppBar(),
+              const CrossBar(
+                height: 10,
+              ),
+              // suggest product
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _buildSuggestComponent(),
+              ),
+              buildSpacer(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _buildLatestSearchComponent(),
+              ),
+              const CrossBar(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _buildDiscoverComponent(),
+              )
             ],
-          )
-        ],
-      ),
+          ),
+        ),
+        Column(
+          children: [
+            Container(
+              height: 50,
+              color: _isScrolled ? secondaryColor : transparent,
+            ),
+            _customAppBar(),
+          ],
+        )
+      ],
     );
   }
 
@@ -165,9 +163,11 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 5, right: 5),
-                child: BackIconAppbar(),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: widget.isBack == true
+                    ? const BackIconAppbar()
+                    : const SizedBox(),
               ),
               Expanded(
                 child: Container(

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
@@ -12,6 +13,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/Map/map.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:provider/provider.dart' as pv;
 
@@ -53,6 +55,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
   Widget build(BuildContext context) {
     List hosts = ref.watch(eventControllerProvider).hosts;
     List eventsSuggested = ref.watch(eventControllerProvider).eventsSuggested;
+    List groupSuggest = ref.watch(eventControllerProvider).groupSuggest;
     final theme = pv.Provider.of<ThemeManager>(context);
 
     final size = MediaQuery.of(context).size;
@@ -277,6 +280,42 @@ class _EventIntroState extends ConsumerState<EventIntro> {
           height: 20,
           thickness: 1,
         ),
+        widget.eventDetail['location'] != null ?
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding:
+              const EdgeInsets.only(left: 4.0, bottom: 8.0, right: 4.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    'Thông tin về địa điểm',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 380,
+              child: Column(
+                children: [
+                  SizedBox(height: 180,
+                    child: MapWidget(type: 'custom_map',checkin: widget.eventDetail, zoom: 10.0, interactiveFlags: InteractiveFlag.none)),
+                ],
+              ),
+            ),
+          ],
+        ): const SizedBox(),
+        const Divider(
+          height: 20,
+          thickness: 1,
+        ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -292,15 +331,6 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     style: TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  Text(
-                    'Xem tất cả',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
@@ -733,6 +763,173 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: const [
                                       Icon(FontAwesomeIcons.share, size: 14),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        ),
+        const Divider(
+          height: 20,
+          thickness: 1,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding:
+              const EdgeInsets.only(left: 4.0, bottom: 8.0, right: 4.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    'Nhóm liên quan',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 380,
+              child: ListView.builder(
+                  itemCount: groupSuggest.length,
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemBuilder: (context, indexGroup) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      margin: const EdgeInsets.only(top: 10),
+                      child: CardComponents(
+                        imageCard: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15)),
+                              child: ImageCacheRender(
+                                path:  groupSuggest[indexGroup]['banner'] != null ? groupSuggest[indexGroup]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png" ,
+                                height: 180.0,
+                                width: MediaQuery.of(context).size.width * 0.6,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                        // join group detail
+                        },
+                        textCard: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 30,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: Text(
+                                  groupSuggest[indexGroup]['title'],
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Text(
+                                  groupSuggest[indexGroup]['description'],
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w700,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 40,
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                        FontAwesomeIcons
+                                            .userGroup,
+                                        size: 12),
+                                    const SizedBox(width: 15),
+                                    Text(
+                                      '${groupSuggest[indexGroup]['member_count'].toString()} thành viên',
+                                      maxLines: 2,
+                                      style: const TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buttonCard: Row(
+                          children: [
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: InkWell(
+                                onTap: () {
+                                },
+                                child: Container(
+                                  height: 33,
+                                  width:
+                                  MediaQuery.of(context).size.width * 0.5,
+                                  decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          189, 202, 202, 202),
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(
+                                          width: 0.2, color: greyColor)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: const [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: 3.0),
+                                        child: Icon(
+                                            FontAwesomeIcons
+                                                .userGroup,
+                                            size: 12),
+                                      ),
+                                      SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      Text(
+                                        'Tham gia nhóm',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 3.0,
+                                      ),
                                     ],
                                   ),
                                 ),
