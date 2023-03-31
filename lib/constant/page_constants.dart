@@ -12,11 +12,11 @@ class CategoryPageConstants {
   ];
   static const String PLACEHOLDER_CATEGORY = "Tìm kiếm hạng mục";
   static const String TITLE = "Hạng mục phổ biến";
-  static const List<String> POPULAR_CATEGORY = [
-    "Blog cá nhân",
-    "Sản phẩm/ Dịch vụ",
-    "Nghệ thuật",
-    "Nhạc sỹ/ Ban nhạc"
+  static const List POPULAR_CATEGORY = [
+    {'id': '43', 'text': "Trang web tin tức & truyền thông"},
+    {'id': '179', 'text': "Mục đích và xã hội"},
+    {'id': '541', 'text': "Bán buôn"},
+    {'id': '259', 'text': "Tổ chức giáo dục tư nhân"}
   ];
   static const List<String> WARNING_MESSAGE = [
     "Bạn đã chọn hạng mục này !!",
@@ -209,7 +209,7 @@ class InformationPageConstants {
 class AvatarPageConstants {
   static const List<String> TITLE_AVATAR = [
     "Tùy chỉnh trang",
-    "Ảnh đại diện của bạn là một trong những thứ đầu tiên mọi người nhìn thấy. Hãy thử dùng logo hoặc hình ảnh đơn giản khiến họ dễ liên tưởng dến bạn",
+    "Ảnh đại diện của bạn là một trong những thứ đầu tiên mọi người nhìn thấy. Hãy thử dùng logo hoặc hình ảnh đơn giản khiến họ dễ liên tưởng đến bạn.",
     "Chỉnh sửa nút hành động",
   ];
 }
