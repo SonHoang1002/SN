@@ -233,12 +233,10 @@ class _ItemState extends State<Item> {
           if (widget.subType == 'child') {
             if (widget.typePage == 'menu_out') {
               Navigator.of(context)
-                ..pop()
-                ..pop();
+                 .pop();
             } else {
               Navigator.of(context)
-                ..pop()
-                ..pop()
+                 ..pop()
                 ..pop();
             }
           } else {
@@ -246,8 +244,7 @@ class _ItemState extends State<Item> {
               Navigator.of(context).pop();
             } else {
               Navigator.of(context)
-                ..pop()
-                ..pop();
+                .pop();
             }
           }
         }

@@ -232,9 +232,7 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      widget.backFunction == null
-                          ? popToPreviousScreen(context)
-                          : widget.backFunction!();
+                      popToPreviousScreen(context);
                     },
                     child: Container(
                       width: 30,

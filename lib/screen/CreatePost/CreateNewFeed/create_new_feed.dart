@@ -76,6 +76,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   dynamic previewUrlData;
   bool showPreviewImage = true;
+  ScrollController menuController = ScrollController();
+  bool isMenuMinExtent = true;
   @override
   void initState() {
     super.initState();
@@ -93,6 +95,17 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         //     widget.post['status_question'] ?? widget.post['status_target'];
       });
     }
+    menuController.addListener(() {
+      if (menuController.offset <= menuController.position.minScrollExtent) {
+        setState(() {
+          isMenuMinExtent = true;
+        });
+      } else {
+        setState(() {
+          isMenuMinExtent = false;
+        });
+      }
+    });
   }
 
   @override
@@ -454,9 +467,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             if (subType == 'menu_out') {
               Navigator.of(context).pop();
             } else {
-              Navigator.of(context)
-                ..pop()
-                ..pop();
+              Navigator.of(context).pop();
             }
           },
         );
@@ -531,7 +542,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                       height: 200,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7),
-                                        color: greyColor[300],
                                       ),
                                       child: Column(children: [
                                         CupertinoButton(
@@ -601,18 +611,31 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
               body: _isShow
                   ? CustomDraggableBottomSheet(
                       previewWidget: _menuOptions(),
-                      endWidget: getBottomSheet(),
                       backgroundWidget: mainBody(),
                       expandedWidget: _menuOptions(),
                       onDragging: (pos) {},
                       maxExtent: MediaQuery.of(context).size.height * 0.8,
-                      minExtent: 250,
-                      endExtent: 110,
+                      minExtent: height / 2,
+                      // endExtent: 110,
                       useSafeArea: false,
                       curve: Curves.easeIn,
                       duration: const Duration(milliseconds: 300),
-                    )
-                  : mainBody()),
+                      onClose: () {
+                        // showCustomBottomSheet(context, 80, "",
+                        //     widget: getBottomSheet());
+                        setState(() {
+                          _isShow = false;
+                        });
+                      })
+                  : Stack(
+                      children: [
+                        mainBody(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [const SizedBox(), getBottomSheet()],
+                        )
+                      ],
+                    )),
         ));
   }
 
@@ -748,11 +771,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                             });
                           },
                           child: isActiveBackground
-                              ? const WrapBackground(
-                                  widgetChild: Icon(
-                                      FontAwesomeIcons.chevronLeft,
-                                      color: greyColor,
-                                      size: 20),
+                              ? const Padding(
+                                  padding: EdgeInsets.only(left: 7),
+                                  child: WrapBackground(
+                                    widgetChild: Icon(
+                                        FontAwesomeIcons.chevronLeft,
+                                        color: greyColor,
+                                        size: 20),
+                                  ),
                                 )
                               : Padding(
                                   padding: const EdgeInsets.only(left: 7),
@@ -764,7 +790,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                         ),
                         isActiveBackground
                             ? SizedBox(
-                                width: width - 70,
+                                width: width - 75,
                                 child: SingleChildScrollView(
                                   physics: const BouncingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
@@ -781,8 +807,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                         child: Container(
                                           margin:
                                               const EdgeInsets.only(right: 5),
-                                          width: 26,
-                                          height: 26,
+                                          width: 27,
+                                          height: 27,
                                           decoration: BoxDecoration(
                                               color: white,
                                               border: Border.all(
@@ -814,37 +840,41 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                 ))
                             : const SizedBox(),
                         isActiveBackground
-                            ? GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isActiveBackground = false;
-                                  });
-                                  showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      barrierColor: Colors.transparent,
-                                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(10))),
-                                      builder: (BuildContext context) {
-                                        return PostBackground(
-                                          backgroundSelected:
-                                              backgroundSelected,
-                                          updateBackgroundSelected:
-                                              (background) {
-                                            handleUpdateData(
-                                                'update_background',
-                                                background);
-                                          },
-                                        );
-                                      });
-                                },
-                                child: const WrapBackground(
-                                  widgetChild: Icon(
-                                    FontAwesomeIcons.box,
-                                    size: 20,
-                                    color: greyColor,
+                            ? Padding(
+                                padding: const EdgeInsets.only(right: 7),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isActiveBackground = false;
+                                    });
+                                    showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        barrierColor: Colors.transparent,
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(10))),
+                                        builder: (BuildContext context) {
+                                          return PostBackground(
+                                            backgroundSelected:
+                                                backgroundSelected,
+                                            updateBackgroundSelected:
+                                                (background) {
+                                              handleUpdateData(
+                                                  'update_background',
+                                                  background);
+                                            },
+                                          );
+                                        });
+                                  },
+                                  child: const WrapBackground(
+                                    widgetChild: Icon(
+                                      FontAwesomeIcons.box,
+                                      size: 20,
+                                      color: greyColor,
+                                    ),
                                   ),
                                 ),
                               )
@@ -980,7 +1010,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
+              controller: menuController,
+              physics: MediaQuery.of(context).size.height * 0.8 > 550
+                  ? const NeverScrollableScrollPhysics()
+                  : const BouncingScrollPhysics(),
               shrinkWrap: true,
               itemCount: listMenuPost.length,
               itemBuilder: (context, index) {
@@ -1004,11 +1037,19 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                         listMenuPost[index]['image'] != null
                             ? Container(
                                 // padding: const EdgeInsets.only(left: 10),
-                                child: SvgPicture.asset(
-                                  listMenuPost[index]['image'],
-                                  width: 20,
-                                  color: isDisabled ? greyColor : null,
-                                ),
+                                child: listMenuPost[index]['image']
+                                        .endsWith(".svg")
+                                    ? SvgPicture.asset(
+                                        listMenuPost[index]['image'],
+                                        width: 20,
+                                        color: isDisabled ? greyColor : null,
+                                      )
+                                    : Image.asset(
+                                        listMenuPost[index]['image'],
+                                        height: 20,
+                                        width: 20,
+                                        color: isDisabled ? greyColor : null,
+                                      ),
                               )
                             : const SizedBox(),
                         listMenuPost[index]['icon'] != null
@@ -1043,7 +1084,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     );
   }
 }
-
 // https://vnexpress.net/de-xuat-thue-nha-tu-15-m2-moi-duoc-dang-ky-thuong-tru-ha-noi-4585797.html
 
 // ignore: must_be_immutable

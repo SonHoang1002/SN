@@ -71,9 +71,7 @@ class _GifState extends State<Gif> {
                           onTap: () {
                             widget.handleUpdateData('update_gif',
                                 gifs[index]['images']['original']['url']);
-                            Navigator.of(context)
-                              ..pop()
-                              ..pop();
+                            Navigator.of(context).pop();
                           },
                           child: ImageCacheRender(
                               path: gifs[index]['images']['original']['url']),
