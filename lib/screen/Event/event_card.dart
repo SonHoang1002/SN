@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_detail.dart';
@@ -12,7 +13,6 @@ import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
-import 'package:provider/provider.dart' as pv;
 
 class EventCard extends ConsumerStatefulWidget {
   final dynamic event;
@@ -27,7 +27,6 @@ class _EventCardState extends ConsumerState<EventCard> {
   late double height;
   var paramsConfig = {"limit": 10};
   final scrollController = ScrollController();
-
 
   @override
   void initState() {
@@ -67,32 +66,29 @@ class _EventCardState extends ConsumerState<EventCard> {
     return Expanded(
       child: SingleChildScrollView(
         controller: scrollController,
-        child:
-             Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding:
-                        EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
-                    child: Text(
-                      'Khám phá sự kiện',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  events.isNotEmpty ?
-                  SizedBox(
-                      child: ListView.builder(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+              child: Text(
+                'Khám phá sự kiện',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            events.isNotEmpty
+                ? SizedBox(
+                    child: ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: events.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, indexInteresting) {
                       String statusEvent = events[indexInteresting]
-                      ['event_relationship']
-                      ['status'] ??
+                              ['event_relationship']['status'] ??
                           '';
                       if (indexInteresting < events.length) {
                         return Padding(
@@ -105,8 +101,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15)),
                               child: ImageCacheRender(
-                                path: events[indexInteresting]['banner']
-                                    ['url'],
+                                path: events[indexInteresting]['banner']['url'],
                               ),
                             ),
                             onTap: () {
@@ -165,12 +160,10 @@ class _EventCardState extends ConsumerState<EventCard> {
                                     alignment: Alignment.bottomLeft,
                                     child: InkWell(
                                       onTap: () {
-
                                         if (statusEvent != '') {
                                           showModalBottomSheet(
                                             isScrollControlled: true,
-                                            shape:
-                                                const RoundedRectangleBorder(
+                                            shape: const RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.vertical(
                                                 top: Radius.circular(10),
@@ -207,8 +200,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                     const CrossBar(),
                                                     Column(
                                                       children: List.generate(
-                                                          iconEventCare
-                                                              .length,
+                                                          iconEventCare.length,
                                                           (indexGes) =>
                                                               GestureDetector(
                                                                 onTap: () {
@@ -216,7 +208,8 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                                       .read(eventControllerProvider
                                                                           .notifier)
                                                                       .updateStatusEvent(
-                                                                          events[indexInteresting]['id'],
+                                                                          events[indexInteresting]
+                                                                              ['id'],
                                                                           {
                                                                         'status':
                                                                             iconEventCare[indexGes]['key']
@@ -224,8 +217,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                                   Navigator.pop(
                                                                       context);
                                                                 },
-                                                                child:
-                                                                    ListTile(
+                                                                child: ListTile(
                                                                   dense: true,
                                                                   contentPadding: const EdgeInsets
                                                                           .symmetric(
@@ -233,19 +225,22 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                                           8.0,
                                                                       vertical:
                                                                           0.0),
-                                                                  visualDensity: const VisualDensity(
-                                                                      horizontal:
-                                                                          -4,
-                                                                      vertical:
-                                                                          -1),
+                                                                  visualDensity:
+                                                                      const VisualDensity(
+                                                                          horizontal:
+                                                                              -4,
+                                                                          vertical:
+                                                                              -1),
                                                                   leading: Icon(
-                                                                      iconEventCare[indexGes]
+                                                                      iconEventCare[
+                                                                              indexGes]
                                                                           [
                                                                           'icon'],
                                                                       color: Colors
                                                                           .black),
                                                                   title: Text(
-                                                                      iconEventCare[indexGes]
+                                                                      iconEventCare[
+                                                                              indexGes]
                                                                           [
                                                                           'label'],
                                                                       style: const TextStyle(
@@ -262,8 +257,10 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                                             {
                                                                               'status': value
                                                                             });
-                                                                        setState(() {
-                                                                          statusEvent = value;
+                                                                        setState(
+                                                                            () {
+                                                                          statusEvent =
+                                                                              value;
                                                                         });
                                                                         Navigator.pop(
                                                                             context);
@@ -275,12 +272,9 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                     const ListTile(
                                                       dense: true,
                                                       contentPadding:
-                                                          EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      8.0,
-                                                                  vertical:
-                                                                      0.0),
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8.0,
+                                                              vertical: 0.0),
                                                       visualDensity:
                                                           VisualDensity(
                                                               horizontal: -4,
@@ -305,8 +299,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                             TextSpan(
                                                               text: ' Bạn bè',
                                                               style: TextStyle(
-                                                                  fontSize:
-                                                                      12,
+                                                                  fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w900),
@@ -332,8 +325,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                             }),
                                           );
                                         }
-                                        if (statusEvent ==
-                                            '') {
+                                        if (statusEvent == '') {
                                           ref
                                               .read(eventControllerProvider
                                                   .notifier)
@@ -353,8 +345,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                           height: 32,
                                           width: width * 0.7,
                                           decoration: BoxDecoration(
-                                              color: statusEvent !=
-                                                      ""
+                                              color: statusEvent != ""
                                                   ? secondaryColor
                                                   : const Color.fromARGB(
                                                       189, 202, 202, 202),
@@ -363,24 +354,21 @@ class _EventCardState extends ConsumerState<EventCard> {
                                               border: Border.all(
                                                   width: 0.2,
                                                   color: greyColor)),
-                                          child: statusEvent ==
-                                                  'interested'
+                                          child: statusEvent == 'interested'
                                               ? Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .center,
-                                                  children:  [
+                                                      MainAxisAlignment.center,
+                                                  children: const [
                                                     Padding(
-                                                      padding:
-                                                        const  EdgeInsets.only(
-                                                              bottom: 3.0),
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 3.0),
                                                       child: Icon(
                                                           FontAwesomeIcons
                                                               .solidStar,
-                                                          color: theme.isDarkMode ? Colors.white : secondaryColor,
+                                                          color: Colors.white,
                                                           size: 14),
                                                     ),
-                                                    const SizedBox(
+                                                    SizedBox(
                                                       width: 5.0,
                                                     ),
                                                     Text(
@@ -388,67 +376,63 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
-                                                        fontSize: 12.0,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: theme.isDarkMode ? Colors.white : secondaryColor
-                                                      ),
+                                                          fontSize: 12.0,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: Colors.white),
                                                     ),
-                                                    const SizedBox(
+                                                    SizedBox(
                                                       width: 5.0,
                                                     ),
                                                     Padding(
-                                                      padding:
-                                                        const EdgeInsets.only(
-                                                              bottom: 5.0),
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 5.0),
                                                       child: Icon(
                                                           FontAwesomeIcons
                                                               .sortDown,
-                                                          color: theme.isDarkMode ? Colors.white : secondaryColor,
+                                                          color: Colors.white,
                                                           size: 14),
                                                     ),
                                                   ],
                                                 )
-                                              : statusEvent ==
-                                                      'going'
+                                              : statusEvent == 'going'
                                                   ? Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children:  [
+                                                      children: const [
                                                         Icon(
                                                             FontAwesomeIcons
                                                                 .circleCheck,
-                                                            color:
-                                                            theme.isDarkMode ? Colors.white : secondaryColor,
+                                                            color: Colors.white,
                                                             size: 14),
-                                                        const SizedBox(
+                                                        SizedBox(
                                                           width: 5.0,
                                                         ),
                                                         Text(
                                                           'Sẽ tham gia',
-                                                          textAlign: TextAlign
-                                                              .center,
+                                                          textAlign:
+                                                              TextAlign.center,
                                                           style: TextStyle(
-                                                            fontSize: 12.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700,
-                                                            color: theme.isDarkMode ? Colors.white : secondaryColor
-                                                          ),
+                                                              fontSize: 12.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color:
+                                                                  Colors.white),
                                                         ),
-                                                       const SizedBox(
+                                                        SizedBox(
                                                           width: 5.0,
                                                         ),
                                                         Padding(
                                                           padding:
-                                                             const EdgeInsets.only(
-                                                                  bottom:
-                                                                      4.0),
+                                                              EdgeInsets.only(
+                                                                  bottom: 4.0),
                                                           child: Icon(
                                                               FontAwesomeIcons
                                                                   .sortDown,
-                                                              color: theme.isDarkMode ? Colors.white : secondaryColor,
+                                                              color:
+                                                                  Colors.white,
                                                               size: 14),
                                                         )
                                                       ],
@@ -461,13 +445,12 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                         Padding(
                                                           padding:
                                                               EdgeInsets.only(
-                                                                  bottom:
-                                                                      3.0),
+                                                                  bottom: 3.0),
                                                           child: Icon(
                                                               FontAwesomeIcons
                                                                   .solidStar,
-                                                              color: Colors
-                                                                  .black,
+                                                              color:
+                                                                  Colors.black,
                                                               size: 14),
                                                         ),
                                                         SizedBox(
@@ -475,15 +458,15 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                         ),
                                                         Text(
                                                           'Quan tâm',
-                                                          textAlign: TextAlign
-                                                              .center,
+                                                          textAlign:
+                                                              TextAlign.center,
                                                           style: TextStyle(
-                                                            fontSize: 12.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700,
-                                                            color: Colors.black
-                                                          ),
+                                                              fontSize: 12.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color:
+                                                                  Colors.black),
                                                         ),
                                                         SizedBox(
                                                           width: 3.0,
@@ -502,8 +485,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                     child: InkWell(
                                       onTap: () {
                                         showModalBottomSheet(
-                                            shape:
-                                                const RoundedRectangleBorder(
+                                            shape: const RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.vertical(
                                                 top: Radius.circular(10),
@@ -522,15 +504,13 @@ class _EventCardState extends ConsumerState<EventCard> {
                                             borderRadius:
                                                 BorderRadius.circular(6),
                                             border: Border.all(
-                                                width: 0.2,
-                                                color: greyColor)),
+                                                width: 0.2, color: greyColor)),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: const [
                                             Icon(FontAwesomeIcons.share,
-                                                color: Colors.black,
-                                                size: 14),
+                                                color: Colors.black, size: 14),
                                           ],
                                         ),
                                       ),
@@ -545,19 +525,22 @@ class _EventCardState extends ConsumerState<EventCard> {
                         isMore == true
                             ? Center(
                                 child: CupertinoActivityIndicator(
-                                    color: theme.isDarkMode ? Colors.white : Colors.black
-                                ))
+                                    color: theme.isDarkMode
+                                        ? Colors.white
+                                        : Colors.black))
                             : const SizedBox();
                       }
+                      return null;
                     },
-                  )) : const SizedBox(),
-                  isMore == true
-                      ?  Center(child: CupertinoActivityIndicator(
-                    color: theme.isDarkMode ? Colors.white : Colors.black
                   ))
-                      : const SizedBox()
-                ],
-              ),
+                : const SizedBox(),
+            isMore == true
+                ? Center(
+                    child: CupertinoActivityIndicator(
+                        color: theme.isDarkMode ? Colors.white : Colors.black))
+                : const SizedBox()
+          ],
+        ),
       ),
     );
   }

@@ -93,7 +93,6 @@ dependencies:
   image_picker: ^0.8.7
   full_screen_image: ^2.0.0
   flutter_map_location_marker: ^5.2.1
-  image_crop: ^0.4.1
   gesture_x_detector: ^1.0.0
   helpers: ^1.1.4
   http: ^0.13.4
@@ -106,6 +105,7 @@ dependencies:
   google_sign_in: ^6.0.2
   cached_network_image: ^3.2.3
   persistent_bottom_nav_bar: ^5.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -186,6 +186,7 @@ flutter:
     - assets/MarketLM.png
     - assets/MarketDM.png
     - assets/MarketFC.png
+    - assets/Plus_2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
