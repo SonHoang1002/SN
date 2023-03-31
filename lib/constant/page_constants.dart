@@ -283,11 +283,11 @@ class SettingsPageConstants {
   ];
 
   static const List<String> TITLE_CONTENT = [
-    "Thông báo về Trang trên trang cá nhân",
-    "Email marketing và email quảng cáo về Trang của bạn",
+    "Cho phép thông báo toàn cầu",
+    "Cho phép thông báo khi có tương tác với Trang",
   ];
   static const List<String> SUBTITLE_CONTENT = [
-    "Không bỏ lỡ bất kỳ thông tin mới nào về Trang NAME_OF_PAGE khi chuyển sang trang cá nhân NAME_OF_USER.",
-    "Tìm hiểu về các sản phẩm và dịch vụ của Meta để giúp NAME_OF_PAGE gặt hái thành công."
+    "Bạn sẽ nhận được mọi thông báo về hoạt động của Trang ở thông báo cá nhân của bạn.",
+    "Đây là thông báo bạn nhận được khi có người tương tác với Trang của bạn."
   ];
 }

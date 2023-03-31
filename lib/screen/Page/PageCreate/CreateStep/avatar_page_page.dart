@@ -7,7 +7,7 @@ import '../../../../constant/page_constants.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
-import 'phone_page_page.dart';
+import 'invite_friend_page.dart';
 
 class AvatarPage extends StatefulWidget {
   @override
@@ -212,7 +212,7 @@ class _AvatarPageState extends State<AvatarPage> {
               child: buildBottomNavigatorWithButtonAndChipWidget(
                   context: context,
                   width: width,
-                  newScreen: PhonePage(),
+                  newScreen: InviteFriendPage(),
                   title: "Tiếp",
                   isPassCondition: true,
                   currentPage: 4),

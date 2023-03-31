@@ -5,7 +5,8 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
 
 class PageDetail extends StatefulWidget {
-  const PageDetail({super.key});
+  final pageData;
+  const PageDetail({super.key, this.pageData});
 
   @override
   State<PageDetail> createState() => _PageDetailState();
@@ -34,7 +35,7 @@ class _PageDetailState extends State<PageDetail> {
               Icon(FontAwesomeIcons.angleLeft, color: Colors.green, size: 18),
         ),
         title: Text(
-          'Không có việc gì khó',
+          widget.pageData['title'],
           style: TextStyle(
               color: Theme.of(context).textTheme.bodyLarge?.color,
               fontSize: 15),
