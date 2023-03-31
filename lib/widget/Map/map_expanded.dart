@@ -25,8 +25,7 @@ class _MapExpanded extends State<MapExpanded> {
   void _launchMapsApp() async {
     final latitude = widget.checkin['location']['lat'];
     final longitude = widget.checkin['location']['lng'];
-    final url =
-        'comgooglemaps://?q=${latitude},${longitude}&zoom=13';
+    final url = 'comgooglemaps://?q=${latitude},${longitude}&zoom=13';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -89,7 +88,7 @@ class _MapExpanded extends State<MapExpanded> {
             child: Container(
               margin: const EdgeInsets.only(bottom: 30),
               width: 115,
-              height: 35 ,
+              height: 35,
               child: ElevatedButton(
                 onPressed: () {
                   _launchMapsApp();

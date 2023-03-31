@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_crop/image_crop.dart';
+// import 'package:image_crop/image_crop.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
@@ -48,18 +48,18 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
             onPressed: _getImage,
             child: Text('Chọn ảnh'),
           ),
-          _image == null
-              ? Text('Không có ảnh được chọn')
-              : Container(
-            width: 300,
-            height: 300,
-            child: Crop(
-              key: cropKey,
-              image: FileImage(_image!),
-              aspectRatio: 16 / 9,
-              alwaysShowGrid: false,
-            ),
-          ),
+          // _image == null
+          //     ? Text('Không có ảnh được chọn')
+          //     : Container(
+          //   width: 300,
+          //   height: 300,
+          //   child: Crop(
+          //     key: cropKey,
+          //     image: FileImage(_image!),
+          //     aspectRatio: 16 / 9,
+          //     alwaysShowGrid: false,
+          //   ),
+          // ),
         ],
       ),
     );

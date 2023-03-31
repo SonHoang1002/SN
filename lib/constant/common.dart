@@ -31,7 +31,7 @@ List listMenuPost = [
   {
     "key": 'media',
     "label": 'Ảnh/Video',
-    "image": "assets/post_media.svg",
+    "image": "assets/images_and_video.png",
     "disabled": [
       'life-event',
       'gif',
@@ -101,92 +101,92 @@ List listMenuPost = [
       'answer-learn'
     ]
   },
-  {
-    "key": 'poll',
-    "label": 'Thăm dò ý kiến',
-    "icon": FontAwesomeIcons.poll,
-    "color": 0xFFf7923b,
-    "display": 'group',
-    "disabled": [
-      'media',
-      'life-event',
-      'gif',
-      'file',
-      'write-suggest',
-      'event-group',
-      'answer-learn',
-      'answer'
-    ]
-  },
-  {
-    "key": 'event-group',
-    "label": 'Tạo sự kiện',
-    "icon": FontAwesomeIcons.calendarAlt,
-    "color": 0xFFF35369,
-    "display": 'group'
-  },
-  {
-    "key": 'tag-event-group',
-    "label": 'Gắn thẻ sự kiện',
-    "icon": FontAwesomeIcons.calendarDay,
-    "color": 0xFFF35369,
-    "display": 'group',
-    "disabled": []
-  },
-  {
-    "key": 'write-suggest',
-    "label": 'Viết gợi ý',
-    "icon": FontAwesomeIcons.notesMedical,
-    "color": 0xFF9360f7,
-    "display": 'group',
-    "disabled": [
-      'media',
-      'life-event',
-      'gif',
-      'file',
-      'event-group',
-      'answer-learn',
-      'answer'
-    ]
-  },
-  {
-    "key": 'file',
-    "label": 'Thêm file',
-    "icon": FontAwesomeIcons.file,
-    "color": 0xFF3578E5,
-    "display": 'group',
-    "disabled": [
-      'media',
-      'life-event',
-      'gif',
-      'poll',
-      'write-suggest',
-      'event-group',
-      'answer-learn',
-      'answer'
-    ]
-  },
-  {
-    "key": 'gifts',
-    "label": 'Quà tặng',
-    "icon": FontAwesomeIcons.gifts,
-    "color": 0xFFdb1a8b,
-    "disabled": []
-  },
-  {
-    "key": 'call',
-    "label": 'Nhận cuộc gọi',
-    "icon": FontAwesomeIcons.phone,
-    "color": 0xFF1877f2,
-    "disabled": []
-  },
-  {
-    "key": 'message',
-    "label": 'Thu hút tin nhắn',
-    "icon": FontAwesomeIcons.commentSms,
-    "color": 0xFF0099ff,
-    "disabled": []
-  },
+  // {
+  //   "key": 'poll',
+  //   "label": 'Thăm dò ý kiến',
+  //   "icon": FontAwesomeIcons.poll,
+  //   "color": 0xFFf7923b,
+  //   "display": 'group',
+  //   "disabled": [
+  //     'media',
+  //     'life-event',
+  //     'gif',
+  //     'file',
+  //     'write-suggest',
+  //     'event-group',
+  //     'answer-learn',
+  //     'answer'
+  //   ]
+  // },
+  // {
+  //   "key": 'event-group',
+  //   "label": 'Tạo sự kiện',
+  //   "icon": FontAwesomeIcons.calendarAlt,
+  //   "color": 0xFFF35369,
+  //   "display": 'group'
+  // },
+  // {
+  //   "key": 'tag-event-group',
+  //   "label": 'Gắn thẻ sự kiện',
+  //   "icon": FontAwesomeIcons.calendarDay,
+  //   "color": 0xFFF35369,
+  //   "display": 'group',
+  //   "disabled": []
+  // },
+  // {
+  //   "key": 'write-suggest',
+  //   "label": 'Viết gợi ý',
+  //   "icon": FontAwesomeIcons.notesMedical,
+  //   "color": 0xFF9360f7,
+  //   "display": 'group',
+  //   "disabled": [
+  //     'media',
+  //     'life-event',
+  //     'gif',
+  //     'file',
+  //     'event-group',
+  //     'answer-learn',
+  //     'answer'
+  //   ]
+  // },
+  // {
+  //   "key": 'file',
+  //   "label": 'Thêm file',
+  //   "icon": FontAwesomeIcons.file,
+  //   "color": 0xFF3578E5,
+  //   "display": 'group',
+  //   "disabled": [
+  //     'media',
+  //     'life-event',
+  //     'gif',
+  //     'poll',
+  //     'write-suggest',
+  //     'event-group',
+  //     'answer-learn',
+  //     'answer'
+  //   ]
+  // },
+  // {
+  //   "key": 'gifts',
+  //   "label": 'Quà tặng',
+  //   "icon": FontAwesomeIcons.gifts,
+  //   "color": 0xFFdb1a8b,
+  //   "disabled": []
+  // },
+  // {
+  //   "key": 'call',
+  //   "label": 'Nhận cuộc gọi',
+  //   "icon": FontAwesomeIcons.phone,
+  //   "color": 0xFF1877f2,
+  //   "disabled": []
+  // },
+  // {
+  //   "key": 'message',
+  //   "label": 'Thu hút tin nhắn',
+  //   "icon": FontAwesomeIcons.commentSms,
+  //   "color": 0xFF0099ff,
+  //   "disabled": []
+  // },
   {
     "key": 'target',
     "label": 'Công bố mục tiêu',

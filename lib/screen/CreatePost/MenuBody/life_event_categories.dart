@@ -78,11 +78,9 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
                           Navigator.of(context)
                             ..pop()
                             ..pop()
-                            ..pop()
                             ..pop();
                         } else {
                           Navigator.of(context)
-                            ..pop()
                             ..pop()
                             ..pop();
                         }
