@@ -103,7 +103,9 @@ dependencies:
   native_device_orientation: ^1.1.4
   step_progress_indicator: ^1.0.2
   google_sign_in: ^6.0.2
+
   cached_network_image: ^3.2.3
+
   persistent_bottom_nav_bar: ^5.0.2
 
 dev_dependencies:
@@ -121,12 +123,6 @@ dev_dependencies:
   build_runner: ^2.3.3
   freezed: ^2.3.2
 
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/icon/icon.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -140,6 +136,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images_and_video.png
     - assets/icons/
     - assets/reaction/
     - assets/post_media.svg

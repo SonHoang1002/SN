@@ -11,6 +11,8 @@ import 'package:social_network_app_mobile/providers/page/category_provider.dart'
 import 'package:social_network_app_mobile/providers/page/route_provider.dart';
 import 'package:social_network_app_mobile/providers/page/search_category_provider.dart';
 import 'package:social_network_app_mobile/providers/page/select_province_page_provider.dart';
+import 'package:social_network_app_mobile/providers/posts/reaction_message_content.dart';
+import 'package:social_network_app_mobile/providers/posts/reaction_message_status.dart';
 import 'package:social_network_app_mobile/providers/setting/choose_object_provider.dart';
 
 import 'theme/theme_manager.dart';
@@ -44,7 +46,8 @@ class _AppState extends State<App> {
         ChangeNotifierProvider(create: (_) => HideGroupProvider()),
         ChangeNotifierProvider(create: (_) => SelectTargetGroupProvider()),
         ChangeNotifierProvider(create: (_) => SelectionPrivateEventProvider()),
-        ChangeNotifierProvider(create: (_) => SelectionPrivateGroupProvider()),
+        ChangeNotifierProvider(create: (_) => ReactionMessageContent()), 
+        ChangeNotifierProvider(create: (_) => ReactionMessageStatus()), 
       ],
       child: const MaterialAppWithTheme(),
     );
