@@ -7,7 +7,6 @@ class PageCreate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InviteFriendPage();
-    return NamePagePage();
+    return const NamePagePage();
   }
 }
