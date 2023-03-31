@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/screen/Event/create_event.dart';
 import 'package:social_network_app_mobile/screen/Event/event_form_create.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
@@ -103,7 +104,7 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CreateEvent(title: 'Crop Ảnh',)),
+                  MaterialPageRoute(builder: (context) => const CreateEvents()),
                 );
               },
               child:  Icon(

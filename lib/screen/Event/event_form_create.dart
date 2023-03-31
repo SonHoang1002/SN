@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -34,8 +35,9 @@ class _MyHomePageState extends State<CreateEvent> {
   Future<void> _getImage() async {
     final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery, imageQuality: 100);
     if (pickedFile != null) {
+      final imageFile = File(pickedFile.path);
       setState(() {
-        _image = File(pickedFile.path);
+        _image = imageFile;
       });
     }
   }
@@ -59,9 +61,8 @@ class _MyHomePageState extends State<CreateEvent> {
               ? const Text('Không có ảnh được chọn')
               : Expanded(
                   child: CustomImageCrop(
-                    backgroundColor: Colors.redAccent,
                     cropController: controller,
-                    shape: CustomCropShape.Circle,
+                    shape: CustomCropShape.Square,
                     canRotate: false,
                     canMove: true,
                     canScale: false,
