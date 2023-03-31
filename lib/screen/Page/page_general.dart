@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/watch.dart';
+import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Page/PageCreate/page_create.dart';
 import 'package:social_network_app_mobile/screen/Page/page_invite.dart';
@@ -9,13 +11,34 @@ import 'package:social_network_app_mobile/screen/Page/page_liked.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/page_item.dart';
 
-class PageGeneral extends StatelessWidget {
+class PageGeneral extends ConsumerStatefulWidget {
   const PageGeneral({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<PageGeneral> createState() => _PageGeneralState();
+}
+
+class _PageGeneralState extends ConsumerState<PageGeneral> {
+  List pagesAdmin = [];
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      if (ref.read(pageListControllerProvider).pageAdmin.isEmpty) {
+        await ref
+            .read(pageListControllerProvider.notifier)
+            .getListPageAdmin({'limit': 20});
+      }
+      if (!mounted) return;
+      setState(() {
+        pagesAdmin = ref.read(pageListControllerProvider).pageAdmin;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     handlePressMenu(menu) {
       Widget body = const SizedBox();
       switch (menu['key']) {
@@ -98,14 +121,11 @@ class PageGeneral extends StatelessWidget {
         ),
         Expanded(
             child: ListView.builder(
-          itemCount: pagesLike.length,
+          itemCount: pagesAdmin.length,
           itemBuilder: (context, i) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [PageItem(page: pagesLike[i]['page'])],
-              ),
+              child: PageItem(page: pagesAdmin[i]),
             );
           },
         ))

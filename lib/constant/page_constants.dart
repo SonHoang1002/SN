@@ -12,11 +12,11 @@ class CategoryPageConstants {
   ];
   static const String PLACEHOLDER_CATEGORY = "Tìm kiếm hạng mục";
   static const String TITLE = "Hạng mục phổ biến";
-  static const List<String> POPULAR_CATEGORY = [
-    "Blog cá nhân",
-    "Sản phẩm/ Dịch vụ",
-    "Nghệ thuật",
-    "Nhạc sỹ/ Ban nhạc"
+  static const List POPULAR_CATEGORY = [
+    {'id': '43', 'text': "Trang web tin tức & truyền thông"},
+    {'id': '179', 'text': "Mục đích và xã hội"},
+    {'id': '541', 'text': "Bán buôn"},
+    {'id': '259', 'text': "Tổ chức giáo dục tư nhân"}
   ];
   static const List<String> WARNING_MESSAGE = [
     "Bạn đã chọn hạng mục này !!",
@@ -209,7 +209,7 @@ class InformationPageConstants {
 class AvatarPageConstants {
   static const List<String> TITLE_AVATAR = [
     "Tùy chỉnh trang",
-    "Ảnh đại diện của bạn là một trong những thứ đầu tiên mọi người nhìn thấy. Hãy thử dùng logo hoặc hình ảnh đơn giản khiến họ dễ liên tưởng dến bạn",
+    "Ảnh đại diện của bạn là một trong những thứ đầu tiên mọi người nhìn thấy. Hãy thử dùng logo hoặc hình ảnh đơn giản khiến họ dễ liên tưởng đến bạn.",
     "Chỉnh sửa nút hành động",
   ];
 }
@@ -283,11 +283,11 @@ class SettingsPageConstants {
   ];
 
   static const List<String> TITLE_CONTENT = [
-    "Thông báo về Trang trên trang cá nhân",
-    "Email marketing và email quảng cáo về Trang của bạn",
+    "Cho phép thông báo toàn cầu",
+    "Cho phép thông báo khi có tương tác với Trang",
   ];
   static const List<String> SUBTITLE_CONTENT = [
-    "Không bỏ lỡ bất kỳ thông tin mới nào về Trang NAME_OF_PAGE khi chuyển sang trang cá nhân NAME_OF_USER.",
-    "Tìm hiểu về các sản phẩm và dịch vụ của Meta để giúp NAME_OF_PAGE gặt hái thành công."
+    "Bạn sẽ nhận được mọi thông báo về hoạt động của Trang ở thông báo cá nhân của bạn.",
+    "Đây là thông báo bạn nhận được khi có người tương tác với Trang của bạn."
   ];
 }

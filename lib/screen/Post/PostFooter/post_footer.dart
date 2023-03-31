@@ -33,7 +33,9 @@ class PostFooter extends StatelessWidget {
                 child: PostFooterInformation(post: post, type: type)),
         Container(
           height: 1,
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          margin: type == postDetail
+              ? const EdgeInsets.fromLTRB(12, 5, 12, 4)
+              : const EdgeInsets.fromLTRB(12, 0, 12, 4),
           decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3)),
         ),
         PostFooterButton(
@@ -91,7 +93,7 @@ class PostFooter extends StatelessWidget {
                             ),
                           ],
                         )
-                      : const SizedBox()
+                      : const SizedBox(),
                 ],
               ),
       ],

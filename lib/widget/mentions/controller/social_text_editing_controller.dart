@@ -52,12 +52,10 @@ class SocialTextEditingController extends TextEditingController {
     _regularExpressions[type] = regExp;
   }
 
-  void replaceRange(String newValue, TextRange range) {
-    // print("newValue: $newValue, range: $range: ${range.textInside(text)}");
+  void replaceRange(String newValue, TextRange range) { 
     var newText = text.replaceRange(range.start, range.end, newValue);
     var newRange =
-        TextRange(start: range.start, end: range.start + newValue.length);
-    // print("Updated Range Content: [${newRange.textAfter(newText)}], text length: ${newText.length}, ${newRange.end}");
+        TextRange(start: range.start, end: range.start + newValue.length); 
     bool isAtTheEndOfText = (newRange.textAfter(newText) == " " &&
         newRange.end == newText.length - 1);
     if (isAtTheEndOfText) {

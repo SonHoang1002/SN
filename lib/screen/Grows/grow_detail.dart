@@ -94,25 +94,26 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          alignment: Alignment.centerLeft,
-          icon: Container(
-            height: 32,
-            width: 32,
+        leading: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            height: 26,
+            width: 26,
+            margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(16),
+                color: Colors.black.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(width: 0.2, color: greyColor)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                Icon(FontAwesomeIcons.angleLeft, color: Colors.white, size: 18),
+                Icon(FontAwesomeIcons.angleLeft, color: Colors.white, size: 16),
               ],
             ),
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
         ),
         elevation: 0.0,
       ),
@@ -187,20 +188,20 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                   const SizedBox(
                                     height: 5,
                                   ),
-                                       Row(
-                                         crossAxisAlignment:
-                                         CrossAxisAlignment.start,
-                                         mainAxisAlignment:
-                                         MainAxisAlignment.spaceAround,
-                                         children: [
-                                           growDetail['project_relationship']
-                                           ['host_project'] ==
-                                               false ?
-                                           Row(
-                                             crossAxisAlignment:
-                                             CrossAxisAlignment.start,
-                                             mainAxisAlignment:
-                                             MainAxisAlignment.spaceAround,
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      growDetail['project_relationship']
+                                                  ['host_project'] ==
+                                              false
+                                          ? Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
                                                 InkWell(
                                                   onTap: () {
@@ -208,18 +209,19 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                         shape:
                                                             const RoundedRectangleBorder(
                                                           borderRadius:
-                                                              BorderRadius.vertical(
+                                                              BorderRadius
+                                                                  .vertical(
                                                             top:
-                                                                Radius.circular(15),
+                                                                Radius.circular(
+                                                                    15),
                                                           ),
                                                         ),
                                                         context: context,
-                                                        builder: (context) => (DateTime
-                                                                        .parse(growDetail[
+                                                        builder: (context) => (DateTime.parse(
+                                                                        growDetail[
                                                                             'due_date'])
-                                                                    .isBefore(DateTime
-                                                                        .parse(DateTime
-                                                                                .now()
+                                                                    .isBefore(DateTime.parse(
+                                                                        DateTime.now()
                                                                             .toString()))) ==
                                                                 false
                                                             ? SizedBox(
@@ -236,31 +238,27 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                     return ListTile(
                                                                       title: Text(
                                                                           '${growPriceTitle[indexTitle]['title']}',
-                                                                          style: const TextStyle(
-                                                                              fontWeight:
-                                                                                  FontWeight.w700)),
-                                                                      subtitle: Text(
-                                                                          '${growPriceTitle[indexTitle]['subTitle']}'),
-                                                                      onTap: () {
+                                                                          style:
+                                                                              const TextStyle(fontWeight: FontWeight.w700)),
+                                                                      subtitle:
+                                                                          Text(
+                                                                              '${growPriceTitle[indexTitle]['subTitle']}'),
+                                                                      onTap:
+                                                                          () {
                                                                         Navigator.pop(
                                                                             context);
                                                                         indexTitle !=
                                                                                 2
                                                                             ? showModalBottomSheet(
-                                                                                shape:
-                                                                                    const RoundedRectangleBorder(
+                                                                                shape: const RoundedRectangleBorder(
                                                                                   borderRadius: BorderRadius.vertical(
                                                                                     top: Radius.circular(15),
                                                                                   ),
                                                                                 ),
-                                                                                context:
-                                                                                    context,
-                                                                                isScrollControlled:
-                                                                                    true,
-                                                                                isDismissible:
-                                                                                    true,
-                                                                                builder: (context) =>
-                                                                                    SingleChildScrollView(
+                                                                                context: context,
+                                                                                isScrollControlled: true,
+                                                                                isDismissible: true,
+                                                                                builder: (context) => SingleChildScrollView(
                                                                                       primary: true,
                                                                                       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                                                                                       child: ModalPayment(
@@ -290,18 +288,20 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                   },
                                                   child: Container(
                                                       height: 32,
-                                                      width: MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.4,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.4,
                                                       decoration: BoxDecoration(
                                                           color: secondaryColor,
                                                           borderRadius:
-                                                              BorderRadius.circular(
-                                                                  4),
+                                                              BorderRadius
+                                                                  .circular(4),
                                                           border: Border.all(
                                                               width: 0.2,
-                                                              color: greyColor)),
+                                                              color:
+                                                                  greyColor)),
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -310,20 +310,23 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                           Icon(
                                                               FontAwesomeIcons
                                                                   .circleDollarToSlot,
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               size: 14),
                                                           SizedBox(
                                                             width: 5.0,
                                                           ),
                                                           Text(
                                                             'Ủng hộ',
-                                                            textAlign:
-                                                                TextAlign.center,
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style: TextStyle(
                                                               fontSize: 12.0,
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               fontWeight:
-                                                                  FontWeight.w700,
+                                                                  FontWeight
+                                                                      .w700,
                                                             ),
                                                           ),
                                                         ],
@@ -356,21 +359,25 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                   },
                                                   child: Container(
                                                       height: 32,
-                                                      width: MediaQuery.of(context)
-                                                              .size
-                                                              .width *
-                                                          0.36,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.36,
                                                       decoration: BoxDecoration(
                                                           color: growButtonFollower ==
                                                                   true
                                                               ? secondaryColor
-                                                                  .withOpacity(0.45)
-                                                              : const Color
-                                                                      .fromARGB(189,
-                                                                  202, 202, 202),
+                                                                  .withOpacity(
+                                                                      0.45)
+                                                              : const Color.fromARGB(
+                                                                  189,
+                                                                  202,
+                                                                  202,
+                                                                  202),
                                                           borderRadius:
-                                                              BorderRadius.circular(
-                                                                  4),
+                                                              BorderRadius
+                                                                  .circular(4),
                                                           border: Border.all(
                                                               width: 0.2,
                                                               color: greyColor)),
@@ -382,30 +389,29 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                           Icon(
                                                               FontAwesomeIcons
                                                                   .solidStar,
-                                                              color:
-                                                                  growButtonFollower ==
-                                                                          true
-                                                                      ? secondaryColor
-                                                                      : Colors
-                                                                          .black,
+                                                              color: growButtonFollower ==
+                                                                      true
+                                                                  ? secondaryColor
+                                                                  : Colors
+                                                                      .black,
                                                               size: 14),
                                                           const SizedBox(
                                                             width: 5.0,
                                                           ),
                                                           Text(
                                                             'Quan tâm',
-                                                            textAlign:
-                                                                TextAlign.center,
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style: TextStyle(
                                                               fontSize: 12.0,
-                                                              color:
-                                                                  growButtonFollower ==
-                                                                          true
-                                                                      ? secondaryColor
-                                                                      : Colors
-                                                                          .black,
+                                                              color: growButtonFollower ==
+                                                                      true
+                                                                  ? secondaryColor
+                                                                  : Colors
+                                                                      .black,
                                                               fontWeight:
-                                                                  FontWeight.w700,
+                                                                  FontWeight
+                                                                      .w700,
                                                             ),
                                                           ),
                                                         ],
@@ -413,66 +419,71 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                 ),
                                                 const SizedBox(width: 5),
                                               ],
-                                            ) : Row(
-                                             crossAxisAlignment:
-                                             CrossAxisAlignment.start,
-                                             mainAxisAlignment:
-                                             MainAxisAlignment.spaceAround,
+                                            )
+                                          : Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
                                                 InkWell(
                                                   onTap: () {
                                                     showBarModalBottomSheet(
                                                         context: context,
                                                         backgroundColor:
-                                                        Colors.white,
+                                                            Colors.white,
                                                         builder: (context) => SizedBox(
                                                             height: MediaQuery.of(
-                                                                context)
-                                                                .size
-                                                                .height *
+                                                                        context)
+                                                                    .size
+                                                                    .height *
                                                                 0.9,
                                                             child:
-                                                            const InviteFriend()));
+                                                                const InviteFriend()));
                                                   },
                                                   child: Container(
                                                       height: 32,
                                                       width:
-                                                      MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                          0.4,
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.4,
                                                       decoration: BoxDecoration(
                                                           color: const Color
-                                                              .fromARGB(
-                                                              189, 202, 202, 202),
+                                                                  .fromARGB(189,
+                                                              202, 202, 202),
                                                           borderRadius:
-                                                          BorderRadius
-                                                              .circular(4),
+                                                              BorderRadius
+                                                                  .circular(4),
                                                           border: Border.all(
                                                               width: 0.2,
-                                                              color: greyColor)),
+                                                              color:
+                                                                  greyColor)),
                                                       child: Row(
                                                         mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: const [
                                                           Icon(
                                                               FontAwesomeIcons
                                                                   .solidEnvelope,
-                                                              color: Colors.black,
+                                                              color:
+                                                                  Colors.black,
                                                               size: 14),
                                                           SizedBox(
                                                             width: 5.0,
                                                           ),
                                                           Text(
                                                             'Mời',
-                                                            textAlign:
-                                                            TextAlign.center,
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style: TextStyle(
                                                               fontSize: 12.0,
-                                                              color: Colors.black,
+                                                              color:
+                                                                  Colors.black,
                                                               fontWeight:
-                                                              FontWeight.w700,
+                                                                  FontWeight
+                                                                      .w700,
                                                             ),
                                                           ),
                                                         ],
@@ -484,34 +495,37 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                   child: Container(
                                                       height: 32,
                                                       width:
-                                                      MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                          0.36,
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.36,
                                                       decoration: BoxDecoration(
                                                           color: const Color
-                                                              .fromARGB(
-                                                              189, 202, 202, 202),
+                                                                  .fromARGB(189,
+                                                              202, 202, 202),
                                                           borderRadius:
-                                                          BorderRadius
-                                                              .circular(4),
+                                                              BorderRadius
+                                                                  .circular(4),
                                                           border: Border.all(
                                                               width: 0.2,
-                                                              color: greyColor)),
+                                                              color:
+                                                                  greyColor)),
                                                       child: Row(
                                                         mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: const [
                                                           Text(
                                                             'Dự án',
-                                                            textAlign:
-                                                            TextAlign.center,
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style: TextStyle(
                                                               fontSize: 12.0,
-                                                              color: Colors.black,
+                                                              color:
+                                                                  Colors.black,
                                                               fontWeight:
-                                                              FontWeight.w700,
+                                                                  FontWeight
+                                                                      .w700,
                                                             ),
                                                           ),
                                                         ],
@@ -520,127 +534,158 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                 const SizedBox(width: 5),
                                               ],
                                             ),
-                                           InkWell(
-                                               onTap: () {
-                                                 showBarModalBottomSheet(backgroundColor: Theme.of(context).scaffoldBackgroundColor,context: context, builder: (context) => Container(
-                                                   margin: const EdgeInsets.only(
-                                                       left: 8.0, top: 15.0),
-                                                   width: MediaQuery.of(context)
-                                                       .size
-                                                       .width,
-                                                   height: 250,
-                                                   child: Column(
-                                                     children: [
-                                                       ListView.builder(
-                                                         scrollDirection:
-                                                         Axis.vertical,
-                                                         shrinkWrap: true,
-                                                         physics:
-                                                         const NeverScrollableScrollPhysics(),
-                                                         itemCount:
-                                                         iconActionEllipsis.length,
-                                                         itemBuilder:
-                                                         ((context, index) {
-                                                           return Padding(
-                                                             padding:
-                                                             const EdgeInsets.only(
-                                                                 bottom: 10.0),
-                                                             child: InkWell(
-                                                               onTap: () {
-                                                                 Navigator.pop(context);
-                                                                 if(index != 1 && index != 2) {
-                                                                   showBarModalBottomSheet(backgroundColor: Theme.of(context).scaffoldBackgroundColor,context: context, builder:   (context) =>
-                                                                       SizedBox(
-                                                                         height: height *
-                                                                             0.9,
-                                                                         width:
-                                                                         width,
-                                                                         child: ActionEllipsis(
-                                                                             menuSelected:
-                                                                             iconActionEllipsis[index]),
-                                                                       ));
-                                                                 } else if (index == 2) {
-                                                                   Clipboard.setData(ClipboardData(text: growStatus ? 'https://sn.emso.vn/event/${growDetail['id']}/about' : 'https://sn.emso.vn/event/${growDetail['id']}/discussion' ));
-                                                                   ScaffoldMessenger.of(context).showSnackBar(
-                                                                       const SnackBar(
-                                                                         content: Text(
-                                                                             'Sao chép thành công'),
-                                                                         duration: Duration(seconds: 3),
-                                                                         backgroundColor: secondaryColor,
-                                                                       ));
-                                                                 } else {
-                                                                   const SizedBox();
-                                                                 }
-
-                                                               },
-                                                               child: Padding(
-                                                                 padding: const EdgeInsets.only(top:4.0, bottom: 4.0),
-                                                                 child: Row(
-                                                                   children: [
-                                                                     CircleAvatar(
-                                                                       radius: 18.0,
-                                                                       backgroundColor:
-                                                                       greyColor[
-                                                                       350],
-                                                                       child: Icon(
-                                                                         iconActionEllipsis[
-                                                                         index]
-                                                                         ["icon"],
-                                                                         size: 18.0,
-                                                                         color: Colors
-                                                                             .black,
-                                                                       ),
-                                                                     ),
-                                                                     Container(
-                                                                       margin:
-                                                                       const EdgeInsets
-                                                                           .only(
-                                                                           left:
-                                                                           10.0),
-                                                                       child: Text(
-                                                                           iconActionEllipsis[
-                                                                           index]
-                                                                           ["label"],
-                                                                           style: const TextStyle(
-                                                                               fontSize:
-                                                                               14.0,
-                                                                               fontWeight:
-                                                                               FontWeight
-                                                                                   .w500)),
-                                                                     ),
-                                                                   ],
-                                                                 ),
-                                                               ),
-                                                             ),
-                                                           );
-                                                         }),
-                                                       )
-                                                     ],
-                                                   ),
-                                                 ),);
-                                               },
-                                               child: Container(
-                                                 height: 32,
-                                                 width:
-                                                 MediaQuery.of(context).size.width *
-                                                     0.1,
-                                                 decoration: BoxDecoration(
-                                                     color: const Color.fromARGB(
-                                                         189, 202, 202, 202),
-                                                     borderRadius:
-                                                     BorderRadius.circular(4),
-                                                     border: Border.all(
-                                                         width: 0.2, color: greyColor)),
-                                                 child: Column(
-                                                   mainAxisAlignment:
-                                                   MainAxisAlignment.center,
-                                                   children: const [
-                                                     Icon(FontAwesomeIcons.ellipsis, size: 14, color: Colors.black),
-                                                   ],
-                                                 ),
-                                               )),
-                                         ],
-                                       ),
+                                      InkWell(
+                                          onTap: () {
+                                            showBarModalBottomSheet(
+                                              backgroundColor: Theme.of(context)
+                                                  .scaffoldBackgroundColor,
+                                              context: context,
+                                              builder: (context) => Container(
+                                                margin: const EdgeInsets.only(
+                                                    left: 8.0, top: 15.0),
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 250,
+                                                child: Column(
+                                                  children: [
+                                                    ListView.builder(
+                                                      scrollDirection:
+                                                          Axis.vertical,
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          const NeverScrollableScrollPhysics(),
+                                                      itemCount:
+                                                          iconActionEllipsis
+                                                              .length,
+                                                      itemBuilder:
+                                                          ((context, index) {
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 10.0),
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              if (index != 1 &&
+                                                                  index != 2) {
+                                                                showBarModalBottomSheet(
+                                                                    backgroundColor:
+                                                                        Theme.of(context)
+                                                                            .scaffoldBackgroundColor,
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) =>
+                                                                            SizedBox(
+                                                                              height: height * 0.9,
+                                                                              width: width,
+                                                                              child: ActionEllipsis(menuSelected: iconActionEllipsis[index]),
+                                                                            ));
+                                                              } else if (index ==
+                                                                  2) {
+                                                                Clipboard.setData(ClipboardData(
+                                                                    text: growStatus
+                                                                        ? 'https://sn.emso.vn/event/${growDetail['id']}/about'
+                                                                        : 'https://sn.emso.vn/event/${growDetail['id']}/discussion'));
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                        const SnackBar(
+                                                                  content: Text(
+                                                                      'Sao chép thành công'),
+                                                                  duration:
+                                                                      Duration(
+                                                                          seconds:
+                                                                              3),
+                                                                  backgroundColor:
+                                                                      secondaryColor,
+                                                                ));
+                                                              } else {
+                                                                const SizedBox();
+                                                              }
+                                                            },
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 4.0,
+                                                                      bottom:
+                                                                          4.0),
+                                                              child: Row(
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    radius:
+                                                                        18.0,
+                                                                    backgroundColor:
+                                                                        greyColor[
+                                                                            350],
+                                                                    child: Icon(
+                                                                      iconActionEllipsis[
+                                                                              index]
+                                                                          [
+                                                                          "icon"],
+                                                                      size:
+                                                                          18.0,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
+                                                                  Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            10.0),
+                                                                    child: Text(
+                                                                        iconActionEllipsis[index]
+                                                                            [
+                                                                            "label"],
+                                                                        style: const TextStyle(
+                                                                            fontSize:
+                                                                                14.0,
+                                                                            fontWeight:
+                                                                                FontWeight.w500)),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 32,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.1,
+                                            decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                    189, 202, 202, 202),
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: greyColor)),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const [
+                                                Icon(FontAwesomeIcons.ellipsis,
+                                                    size: 14,
+                                                    color: Colors.black),
+                                              ],
+                                            ),
+                                          )),
+                                    ],
+                                  ),
                                   const SizedBox(
                                     height: 10,
                                   ),

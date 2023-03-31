@@ -45,7 +45,7 @@ class _QuestionAnwerState extends ConsumerState<QuestionAnwer> {
                   children: [
                     widget.type == 'target'
                         ? SvgPicture.asset(
-                            "assets/target.svg",
+                            "assets/target.png",
                             width: size.width * 0.35,
                             height: size.width * 0.35,
                           )
@@ -132,9 +132,7 @@ class _QuestionAnwerState extends ConsumerState<QuestionAnwer> {
                             "content": question,
                             'postType': widget.type
                           });
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop();
+                          Navigator.of(context).pop();
                         }
                       : null,
                 ),

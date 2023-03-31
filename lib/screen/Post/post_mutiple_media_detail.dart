@@ -3,7 +3,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
-import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart'; 
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -18,7 +18,8 @@ class PostMutipleMediaDetail extends StatefulWidget {
 
 class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
   late FlickMultiManager flickMultiManager;
-
+  bool isShowImage = false;
+  int? imgIndex;
   @override
   void initState() {
     super.initState();
@@ -38,66 +39,93 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
       return media['type'] == 'image' ? true : false;
     }
 
-    return SingleChildScrollView(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const SizedBox(
-          height: 12.0,
-        ),
-        PostHeader(post: widget.post, type: postMultipleMedia),
-        const SizedBox(
-          height: 12.0,
-        ),
-        PostContent(post: widget.post),
-        const SizedBox(
-          height: 12.0,
-        ),
-        PostFooter(
-          post: widget.post,
-          type: postMultipleMedia,
-        ),
-        const SizedBox(
-          height: 12.0,
-        ),
-        Column(
-          children: List.generate(
-              medias.length,
-              (index) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PostOneMediaDetail(
-                                          currentIndex: index,
-                                          medias: medias,
-                                          postMedia: medias[index],
-                                        )));
-                          },
-                          child: checkIsImage(medias[index])
-                              ? Hero(
-                                  tag: medias[index]['id'],
-                                  child: ImageCacheRender(
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(
+              height: 12.0,
+            ),
+            PostHeader(post: widget.post, type: postMultipleMedia),
+            const SizedBox(
+              height: 12.0,
+            ),
+            PostContent(post: widget.post),
+            const SizedBox(
+              height: 12.0,
+            ),
+            PostFooter(
+              post: widget.post,
+              type: postMultipleMedia,
+            ),
+            const SizedBox(
+              height: 12.0,
+            ),
+            Column(
+              children: List.generate(
+                  medias.length,
+                  (index) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return PostOneMediaDetail(
+                                    currentIndex: index,
+                                    medias: medias,
+                                    postMedia: medias[index],
+                                    backFunction: () {
+                                      setState(() {
+                                        isShowImage = false;
+                                      });
+                                    }
+                                  );
+                                }));
+
+                                // setState(() {
+                                //   imgIndex = index;
+                                //   isShowImage = true;
+                                // });
+                              },
+                              child: checkIsImage(medias[index])
+                                  ? Hero(
+                                      tag: medias[index]['id'],
+                                      child: ImageCacheRender(
+                                          key: Key(
+                                              medias[index]['id'].toString()),
+                                          path: medias[index]['url']),
+                                    )
+                                  : FeedVideo(
                                       key: Key(medias[index]['id'].toString()),
-                                      path: medias[index]['url']),
-                                )
-                              : FeedVideo(
-                                  key: Key(medias[index]['id'].toString()),
-                                  flickMultiManager: flickMultiManager,
-                                  path: medias[index]['url'],
-                                  image: medias[index]['preview_url'])),
-                      PostFooter(
-                        post: medias[index],
-                        type: postMultipleMedia,
-                      ),
-                      const SizedBox(
-                        height: 12.0,
-                      ),
-                    ],
-                  )),
-        )
-      ]),
+                                      flickMultiManager: flickMultiManager,
+                                      path: medias[index]['url'],
+                                      image: medias[index]['preview_url'])),
+                          PostFooter(
+                            post: medias[index],
+                            type: postMultipleMedia,
+                          ),
+                          const SizedBox(
+                            height: 12.0,
+                          ),
+                        ],
+                      )),
+            )
+          ]),
+        ),
+        // isShowImage
+        //     ? PostOneMediaDetail(
+        //         currentIndex: imgIndex,
+        //         medias: medias,
+        //         postMedia: medias[imgIndex!],
+        //         backFunction: () {
+        //           setState(() {
+        //             isShowImage = false;
+        //           });
+        //         })
+        //     : SizedBox()
+      ],
     );
   }
 }

@@ -1,18 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/providers/page/search_category_provider.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/Page/PageCreate/CreateStep/information_page_page.dart';
 import '../../../../constant/page_constants.dart';
-import '../../../../providers/page/category_provider.dart';
-
-import 'information_page_page.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/back_icon_appbar.dart';
 
 import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 
 class CategoryPage extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final dataCreate;
   const CategoryPage({super.key, this.dataCreate});
 
@@ -26,13 +25,62 @@ class _CategoryPageState extends State<CategoryPage> {
   final TextEditingController _categoryController = TextEditingController();
   List categorySelected = [];
   FocusNode focus = FocusNode();
-  List categoryPopular = CategoryPageConstants.POPULAR_CATEGORY;
+  List categorySearch = [];
 
+  List categoryPopular = CategoryPageConstants.POPULAR_CATEGORY;
+  bool loadingCreate = false;
   @override
   void dispose() {
     focus.dispose();
     _categoryController.dispose();
     super.dispose();
+  }
+
+  Future handleSearch(value) async {
+    var response = await PageApi().searchCategoryPage({'keyword': value});
+    if (response != null) {
+      if (!mounted) return;
+      setState(() {
+        categorySearch = response.toList();
+      });
+    }
+  }
+
+  Future handleCreatePage(data) async {
+    var response = await PageApi().createPage(data);
+    if (!mounted) return;
+    setState(() {
+      loadingCreate = false;
+    });
+    if (response.statusCode == 200) {
+      // ignore: use_build_context_synchronously
+      pushToNextScreen(
+          context,
+          InformationPagePage(
+              {...widget.dataCreate, 'category': categorySelected}));
+    } else {
+      // ignore: use_build_context_synchronously
+      _showAlertDialog(
+          context, 'Tạo trang không thành công, vui lòng thử lại!');
+    }
+  }
+
+  void _showAlertDialog(BuildContext context, String errorLogin) {
+    showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+              title: const Text('Thất bại'),
+              content: Text(errorLogin),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Đồng ý'),
+                ),
+              ],
+            ));
   }
 
   @override
@@ -94,7 +142,7 @@ class _CategoryPageState extends State<CategoryPage> {
                               height: 10,
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(0, 3, 0, 6),
+                              padding: const EdgeInsets.fromLTRB(0, 3, 0, 6),
                               decoration: BoxDecoration(
                                   border: Border.all(
                                       color: focus.hasFocus
@@ -121,11 +169,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                       focusNode: focus,
                                       controller: _categoryController,
                                       onChanged: (value) {
-                                        context
-                                            .read<SearchCategoryProvider>()
-                                            .setSearchCategoryProvider(
-                                                value, categorySelected);
-                                        setState(() {});
+                                        handleSearch(value);
                                       },
                                       decoration: const InputDecoration(
                                           border: InputBorder.none,
@@ -152,16 +196,9 @@ class _CategoryPageState extends State<CategoryPage> {
                                     child: ListView.builder(
                                       itemBuilder: (context, index) {
                                         return suggestComponent(
-                                            Provider.of<SearchCategoryProvider>(
-                                                    context)
-                                                .searchList[index]);
+                                            categorySearch[index]);
                                       },
-                                      itemCount:
-                                          Provider.of<SearchCategoryProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .searchList
-                                              .length,
+                                      itemCount: categorySearch.length,
                                     ),
                                   )
                                 : Container(),
@@ -208,7 +245,18 @@ class _CategoryPageState extends State<CategoryPage> {
                       context: context,
                       width: width,
                       isPassCondition: categorySelected.isNotEmpty,
-                      newScreen: InformationPagePage(),
+                      function: () {
+                        if (!mounted) return;
+                        setState(() {
+                          loadingCreate = true;
+                        });
+                        handleCreatePage({
+                          ...widget.dataCreate,
+                          'page_category':
+                              categorySelected.map((e) => e['id']).toList()
+                        });
+                      },
+                      loading: loadingCreate,
                       title: "Tiếp",
                       currentPage: 2),
                 )
@@ -216,7 +264,7 @@ class _CategoryPageState extends State<CategoryPage> {
         ));
   }
 
-  Widget selectedArea(BuildContext context, String value) {
+  Widget selectedArea(BuildContext context, dynamic value) {
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 5, 5, 0),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -229,7 +277,9 @@ class _CategoryPageState extends State<CategoryPage> {
           children: [
             InkWell(
               onTap: (() {
-                if (categorySelected.contains(value)) {
+                if (categorySelected
+                    .map((el) => el['id'])
+                    .contains(value['id'])) {
                   showDialog(
                       context: context,
                       builder: ((context) {
@@ -268,7 +318,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 }
               }),
               child: Text(
-                value,
+                value['text'],
                 style: const TextStyle(
                     color: white, fontSize: 16, fontWeight: FontWeight.w500),
               ),
@@ -276,11 +326,12 @@ class _CategoryPageState extends State<CategoryPage> {
             InkWell(
               onTap: () {
                 if (mounted) {
+                  if (!mounted) return;
                   setState(() {
                     List tempCategory = categorySelected;
                     categorySelected = tempCategory
                         .where(
-                          (e) => e != value,
+                          (e) => e['id'] != value['id'],
                         )
                         .toList();
                   });
@@ -300,16 +351,17 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  Widget suggestComponent(String value) {
+  Widget suggestComponent(dynamic value) {
     return GestureDetector(
       onTap: (() {
+        if (!mounted) return;
         setState(() {
           categorySelected.add(value);
           _categoryController.text = '';
         });
       }),
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
         decoration: BoxDecoration(
             border:
                 Border(bottom: BorderSide(color: greyColor.withOpacity(0.6)))),
@@ -318,7 +370,7 @@ class _CategoryPageState extends State<CategoryPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              value,
+              value?['text'] ?? '',
               style: const TextStyle(
                 fontSize: 18,
               ),

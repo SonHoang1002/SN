@@ -29,8 +29,7 @@ class InformationOnPersonalPagePage extends StatelessWidget {
     width = size.width;
     height = size.height;
     // listChooseObject.forEach(
-    //   (element) {
-    //     print(element);
+    //   (element) { 
     //   },
     // );
     return Scaffold(

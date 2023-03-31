@@ -54,6 +54,7 @@ class PostController extends StateNotifier<PostState> {
           postsPin: state.postsPin,
           postUserPage: state.postUserPage,
           isMore: response.length < params['limit'] ? false : true,
+          // isMore: true,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
@@ -68,6 +69,7 @@ class PostController extends StateNotifier<PostState> {
               checkObjectUniqueInList(state.postUserPage + response, 'id'),
           isMore: state.isMore,
           isMoreUserPage: response.length < params['limit'] ? false : true);
+      // isMoreUserPage: true);
     }
   }
 
