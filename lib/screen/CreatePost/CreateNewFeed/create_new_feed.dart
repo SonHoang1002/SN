@@ -78,6 +78,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool showPreviewImage = true;
   ScrollController menuController = ScrollController();
   bool isMenuMinExtent = true;
+
   @override
   void initState() {
     super.initState();
@@ -542,6 +543,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                       height: 200,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7),
+
                                       ),
                                       child: Column(children: [
                                         CupertinoButton(
@@ -636,6 +638,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                         )
                       ],
                     )),
+
         ));
   }
 
@@ -1051,6 +1054,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                         color: isDisabled ? greyColor : null,
                                       ),
                               )
+
                             : const SizedBox(),
                         listMenuPost[index]['icon'] != null
                             ? Icon(
@@ -1084,6 +1088,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     );
   }
 }
+
 // https://vnexpress.net/de-xuat-thue-nha-tu-15-m2-moi-duoc-dang-ky-thuong-tru-ha-noi-4585797.html
 
 // ignore: must_be_immutable

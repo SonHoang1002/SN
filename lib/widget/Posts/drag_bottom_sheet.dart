@@ -1,4 +1,6 @@
+
 import 'package:flutter/gestures.dart';
+
 import 'package:flutter/material.dart';
 
 // Partially visible bottom sheet that can be dragged into the screen. Provides different views for expanded and collapsed states
@@ -31,6 +33,7 @@ class CustomDraggableBottomSheet extends StatefulWidget {
   /// Widget to show on expended sheet
   // final Widget endWidget;
 
+
   /// Increment [expansionExtent] on [minExtent] to change from [previewWidget] to [expandedWidget]
   final double expansionExtent;
 
@@ -55,24 +58,31 @@ class CustomDraggableBottomSheet extends StatefulWidget {
 
   final Function? onClose;
 
+
   const CustomDraggableBottomSheet({
     Key? key,
     required this.previewWidget,
     required this.backgroundWidget,
     required this.expandedWidget,
+
     // required this.endWidget,
+
     required this.onDragging,
     this.minExtent = 50.0,
     this.collapsed = true,
     this.useSafeArea = true,
+
     // this.endExtent = 30.0,
+
     this.curve = Curves.linear,
     this.expansionExtent = 10.0,
     this.barrierDismissible = true,
     this.maxExtent = double.infinity,
     this.barrierColor = Colors.black54,
     this.alignment = Alignment.bottomCenter,
+
     this.onClose,
+
     this.duration = const Duration(milliseconds: 0),
   })  : assert(minExtent > 0.0),
         assert(expansionExtent > 0.0),
@@ -87,12 +97,15 @@ class CustomDraggableBottomSheet extends StatefulWidget {
 class CustomDraggableBottomSheetState
     extends State<CustomDraggableBottomSheet> {
   double _currentExtent = 0.0;
+
   bool? isDragToTop;
   int step = 0;
+
   @override
   void initState() {
     super.initState();
     _currentExtent = widget.collapsed ? widget.minExtent : widget.maxExtent;
+
   }
 
   @override
@@ -115,7 +128,9 @@ class CustomDraggableBottomSheetState
 
   /// barrier film between sheet & background widget
   Widget _barrier() {
+
     return _currentExtent.roundToDouble() >= widget.maxExtent - 10
+
         ? Positioned.fill(
             child: GestureDetector(
             onTap: widget.barrierDismissible
@@ -132,9 +147,11 @@ class CustomDraggableBottomSheetState
                 onTap: widget.barrierDismissible
                     ? () {
                         setState(() {
+
                           _currentExtent = _currentExtent - 10;
                         });
                         widget.onClose != null ? widget.onClose!() : null;
+
                       }
                     : null,
               )
@@ -151,6 +168,7 @@ class CustomDraggableBottomSheetState
             onVerticalDragEnd: (details) {
               _onVerticalDragEnd(details);
             },
+
             child: AnimatedContainer(
                 curve: widget.curve,
                 duration: widget.duration,
@@ -159,9 +177,11 @@ class CustomDraggableBottomSheetState
                 child:
                     _currentExtent >= widget.minExtent + widget.expansionExtent
                         ? widget.expandedWidget
+
                         // : _currentExtent <= widget.endExtent
                         //     ? widget.endWidget
                         : widget.previewWidget),
+
           )
         : const SizedBox();
   }
@@ -195,6 +215,7 @@ class CustomDraggableBottomSheetState
   /// callback function when sheet is dragged vertically
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     if (_axis() == Axis.horizontal) return;
+
     if (details.primaryDelta! > 0) {
       setState(() {
         isDragToTop = false;
@@ -210,10 +231,12 @@ class CustomDraggableBottomSheetState
     }
     setState(() =>
         _currentExtent = (_currentExtent - details.delta.dy).roundToDouble());
+
   }
 
   void _onVerticalDragEnd(dynamic details) {
     if (_axis() == Axis.horizontal) return;
+
     if (isDragToTop == true) {
       if (_currentExtent > widget.minExtent) {
         setState(() {
@@ -267,5 +290,6 @@ class CustomDraggableBottomSheetState
     //   });
     //   widget.onClose != null ? widget.onClose!() : null;
     // } else {}
+
   }
 }
