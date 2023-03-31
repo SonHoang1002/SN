@@ -7,7 +7,7 @@ import '../../../../constant/page_constants.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
-import 'phone_page_page.dart';
+import 'invite_friend_page.dart';
 
 class AvatarPage extends StatefulWidget {
   @override
@@ -36,13 +36,7 @@ class _AvatarPageState extends State<AvatarPage> {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              BackIconAppbar(),
-              SizedBox(),
-            ],
-          ),
+          leading: const BackIconAppbar(),
         ),
         resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -51,39 +45,36 @@ class _AvatarPageState extends State<AvatarPage> {
             FocusManager.instance.primaryFocus!.unfocus();
           }),
           child: Column(children: [
-            Container(
+            SizedBox(
               height: height * 0.78055,
-              // color: Colors.black87,
               child: ListView(
                 children: [
                   Container(
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                AvatarPageConstants.TITLE_AVATAR[0],
-                                style: const TextStyle(
-                                    // color:  white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(AvatarPageConstants.TITLE_AVATAR[1],
+                    padding: const EdgeInsets.fromLTRB(18, 10, 18, 8),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              AvatarPageConstants.TITLE_AVATAR[0],
                               style: const TextStyle(
                                   // color:  white,
-                                  fontSize: 18)),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      ),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(AvatarPageConstants.TITLE_AVATAR[1],
+                            style: const TextStyle(
+                                // color:  white,
+                                fontSize: 16)),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
                     ),
                   ),
                   Stack(
@@ -200,14 +191,12 @@ class _AvatarPageState extends State<AvatarPage> {
                       )
                     ],
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Center(
+                  const Center(
+                    heightFactor: 2,
                     child: Text(
                       "NAME OF PAGE",
                       style:
-                          TextStyle(color: white, fontWeight: FontWeight.bold),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                     ),
                   ),
                   Center(
@@ -218,13 +207,16 @@ class _AvatarPageState extends State<AvatarPage> {
                 ],
               ),
             ),
-            buildBottomNavigatorWithButtonAndChipWidget(
-                context: context,
-                width: width,
-                newScreen: PhonePage(),
-                title: "Tiếp",
-                isPassCondition: true,
-                currentPage: 4)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: buildBottomNavigatorWithButtonAndChipWidget(
+                  context: context,
+                  width: width,
+                  newScreen: InviteFriendPage(),
+                  title: "Tiếp",
+                  isPassCondition: true,
+                  currentPage: 4),
+            )
           ]),
         ));
   }
