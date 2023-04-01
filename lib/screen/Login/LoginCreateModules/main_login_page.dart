@@ -11,16 +11,16 @@ import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/confir
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-// GoogleSignIn _googleSignIn = GoogleSignIn(
-//   clientId:
-//       '465933365763-5kq97dko2a2tq95vpb3gna47vm2svna1.apps.googleusercontent.com',
-//   scopes: <String>[
-//     'email',
-//     'https://www.googleapis.com/auth/contacts.readonly',
-//   ],
-// );
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  clientId:
+      '465933365763-5kq97dko2a2tq95vpb3gna47vm2svna1.apps.googleusercontent.com',
+  scopes: <String>[
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ],
+);
 
 class MainLoginPage extends ConsumerStatefulWidget {
   const MainLoginPage({Key? key}) : super(key: key);
@@ -39,29 +39,29 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   void initState() {
     super.initState();
 
-    // _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-    //   if (mounted) {
-    //     account?.authentication.then((value) {
-    //       handleLoginByGoogle(value.accessToken);
-    //     });
-    //   }
-    // });
-    // if (mounted) {
-    //   _googleSignIn.signInSilently();
-    // }
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      if (mounted) {
+        account?.authentication.then((value) {
+          handleLoginByGoogle(value.accessToken);
+        });
+      }
+    });
+    if (mounted) {
+      _googleSignIn.signInSilently();
+    }
   }
 
   Future<void> _handleSignIn() async {
     try {
       if (mounted) {
-        // await _googleSignIn.signIn();
+        await _googleSignIn.signIn();
       }
     } catch (error) {
       print(error);
     }
   }
 
-  // Future<void> _handleSignOut() => _googleSignIn.disconnect();
+  Future<void> _handleSignOut() => _googleSignIn.disconnect();
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +131,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
       SecureStorage()
           .saveKeyStorage(response['access_token'], 'token')
           .then((value) async {
-        // await _handleSignOut();
+        await _handleSignOut();
         // completeLogin();
         // if (mounted) {
         // ignore: use_build_context_synchronously
