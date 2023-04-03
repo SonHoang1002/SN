@@ -32,7 +32,7 @@ class BeginJoinEmsoLoginPage extends StatelessWidget {
       bottomNavigationBar: SizedBox(
         height: 80,
         child: buildHaveAccountWidget(function: () {
-          pushToNextScreen(context, const MainLoginPage());
+          pushToNextScreen(context, const MainLoginPage(null));
         }),
       ),
       body: GestureDetector(

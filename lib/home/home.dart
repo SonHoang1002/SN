@@ -10,6 +10,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
+import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screen/Menu/menu.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
@@ -54,10 +55,19 @@ class _HomeState extends ConsumerState<Home>
     if (!mounted) return;
     super.initState();
     if (mounted) {
-      Future.delayed(Duration.zero, () async {
-        if (ref.watch(meControllerProvider).isEmpty) {
-          await ref.read(meControllerProvider.notifier).getMeData();
-          await setTheme();
+      SecureStorage().getKeyStorage("token").then((value) {
+        if (value != 'noData') {
+          Future.delayed(Duration.zero, () async {
+            if (ref.watch(meControllerProvider).isEmpty) {
+              await ref.read(meControllerProvider.notifier).getMeData();
+              await setTheme();
+            }
+          });
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: ((context) => const OnboardingLoginPage())));
         }
       });
     }

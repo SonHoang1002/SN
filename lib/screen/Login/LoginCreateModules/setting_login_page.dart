@@ -154,7 +154,7 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 10),
                             function: () {
-                              pushToNextScreen(context, MainLoginPage());
+                              pushToNextScreen(context, MainLoginPage(null));
                             },
                           ),
                         )

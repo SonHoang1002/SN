@@ -110,7 +110,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
             ),
           ),
           buildHaveAccountWidget(function: () {
-            pushToNextScreen(context, const MainLoginPage());
+            pushToNextScreen(context, const MainLoginPage(null));
           })
         ]),
       ),

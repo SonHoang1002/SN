@@ -28,7 +28,7 @@ class CompleteLoginPage extends StatelessWidget {
             content: Text(
                 "Đăng ký tài khoản thành công, đăng nhập lại để sử dụng")));
         // ignore: use_build_context_synchronously
-        pushAndReplaceToNextScreen(context, const MainLoginPage());
+        pushAndReplaceToNextScreen(context, const MainLoginPage(null));
       } else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

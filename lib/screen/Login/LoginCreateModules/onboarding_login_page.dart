@@ -125,10 +125,17 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                                     dataLogin.length,
                                     (index) => GestureDetector(
                                           onTap: () {
-                                            context.loaderOverlay.show();
-
-                                            handleLogin(
-                                                dataLogin[index]['token']);
+                                            if (dataLogin[index]['token'] !=
+                                                null) {
+                                              context.loaderOverlay.show();
+                                              handleLogin(
+                                                  dataLogin[index]['token']);
+                                            } else {
+                                              pushToNextScreen(
+                                                  context,
+                                                  MainLoginPage(
+                                                      dataLogin[index]));
+                                            }
                                           },
                                           child: Column(children: [
                                             Container(
@@ -174,7 +181,7 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                                 GestureDetector(
                                   onTap: () {
                                     pushToNextScreen(
-                                        context, const MainLoginPage());
+                                        context, const MainLoginPage(null));
                                   },
                                   child: const Text(
                                     OnboardingLoginConstants
