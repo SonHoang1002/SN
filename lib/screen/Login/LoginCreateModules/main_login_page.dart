@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/home/PreviewScreen.dart';
@@ -12,6 +13,7 @@ import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   clientId:
@@ -23,7 +25,8 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 );
 
 class MainLoginPage extends ConsumerStatefulWidget {
-  const MainLoginPage({Key? key}) : super(key: key);
+  final accountChoose;
+  const MainLoginPage(this.accountChoose, {Key? key}) : super(key: key);
 
   @override
   ConsumerState<MainLoginPage> createState() => _MainLoginPageState();
@@ -34,7 +37,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   String password = '';
   bool showPassword = false;
   bool isLoading = false;
-
+  dynamic currentAccount;
   @override
   void initState() {
     super.initState();
@@ -48,6 +51,13 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
     });
     if (mounted) {
       _googleSignIn.signInSilently();
+    }
+    if (widget.accountChoose != null) {
+      if (mounted) {
+        setState(() {
+          currentAccount = widget.accountChoose;
+        });
+      }
     }
   }
 
@@ -104,7 +114,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
       "client_secret": "f2PrtRsNb7scscIn_3R_cz6k_fzPUv1uj7ZollSWBBY",
       "grant_type": "password",
       "scope": "write read follow",
-      "username": username,
+      "username": currentAccount['username'] ?? username,
       "password": password,
     };
 
@@ -173,14 +183,15 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
           const SizedBox(
             height: 15,
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text(
-              "Sử dụng email/số điện thoại hoặc tài khoản Google",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-              textAlign: TextAlign.center,
+          if (currentAccount == null)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Text(
+                "Sử dụng email/số điện thoại hoặc tài khoản Google",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
           const SizedBox(
             height: 15,
           ),
@@ -188,33 +199,88 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Column(
               children: [
-                Container(
-                  height: 56,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(18),
-                          topRight: Radius.circular(18))),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 5, top: 5),
-                    child: TextField(
-                      onChanged: (value) {
-                        if (mounted) {
-                          setState(() {
-                            username = value;
-                          });
-                        }
-                      },
-                      cursorColor:
-                          Theme.of(context).textTheme.displayLarge?.color,
-                      decoration: const InputDecoration(
-                          hintText: "Email hoặc số điện thoại",
-                          hintStyle: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 17),
-                          border: InputBorder.none),
+                if (currentAccount == null)
+                  Container(
+                    height: 56,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15))),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 5, top: 5),
+                      child: TextField(
+                        onChanged: (value) {
+                          if (mounted) {
+                            setState(() {
+                              username = value;
+                            });
+                          }
+                        },
+                        cursorColor:
+                            Theme.of(context).textTheme.displayLarge?.color,
+                        decoration: const InputDecoration(
+                            hintText: "Email hoặc số điện thoại",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 17),
+                            border: InputBorder.none),
+                      ),
                     ),
-                  ),
-                ),
+                  )
+                else
+                  Column(children: [
+                    Stack(alignment: AlignmentDirectional.topEnd, children: [
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          margin: const EdgeInsets.only(
+                              bottom: 5, right: 5, left: 5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(width: 0.2, color: greyColor)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: ImageCacheRender(
+                              path: currentAccount?['show_url'] ??
+                                  linkAvatarDefault,
+                              width: 99.8,
+                              height: 99.8,
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          if (mounted) {
+                            setState(() {
+                              currentAccount = null;
+                            });
+                          }
+                        },
+                        icon: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.grey.withOpacity(0.9)),
+                          padding: const EdgeInsets.all(2),
+                          child: const Icon(
+                            FontAwesomeIcons.xmark,
+                            size: 18,
+                          ),
+                        ),
+                      )
+                    ]),
+                    SizedBox(
+                        width: 100,
+                        child: Text(
+                          currentAccount['name'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
+                        ))
+                  ]),
                 const SizedBox(
                   height: 3,
                 ),
@@ -222,9 +288,15 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                   height: 56,
                   decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.background,
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(18),
-                          bottomRight: Radius.circular(18))),
+                      borderRadius: BorderRadius.only(
+                          topLeft: currentAccount != null
+                              ? const Radius.circular(15)
+                              : Radius.zero,
+                          topRight: currentAccount != null
+                              ? const Radius.circular(15)
+                              : Radius.zero,
+                          bottomLeft: const Radius.circular(15),
+                          bottomRight: const Radius.circular(15))),
                   child: Padding(
                     padding:
                         const EdgeInsets.only(left: 10, right: 5, bottom: 5),
@@ -286,12 +358,13 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                       backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
-                  onPressed:
-                      username.trim().isNotEmpty && password.trim().isNotEmpty
-                          ? isLoading
-                              ? null
-                              : handleLogin
-                          : null,
+                  onPressed: (username.trim().isNotEmpty ||
+                              currentAccount?['username'] != null) &&
+                          password.trim().isNotEmpty
+                      ? isLoading
+                          ? null
+                          : handleLogin
+                      : null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
