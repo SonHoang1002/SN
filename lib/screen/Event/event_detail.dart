@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_discuss.dart';
@@ -12,7 +13,6 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
@@ -23,7 +23,6 @@ class EventDetail extends ConsumerStatefulWidget {
   // ignore: library_private_types_in_public_api
   ConsumerState<EventDetail> createState() => _EventDetailState();
 }
-
 
 class _EventDetailState extends ConsumerState<EventDetail> {
   final ScrollController _scrollController = ScrollController();
@@ -43,19 +42,19 @@ class _EventDetailState extends ConsumerState<EventDetail> {
             .getDetailEvent(widget.eventDetail['id']));
     Future.delayed(
         Duration.zero,
-            () => ref
+        () => ref
             .read(eventControllerProvider.notifier)
             .getListEventSuggested(paramsConfig));
     Future.delayed(
         Duration.zero,
-            () => ref
+        () => ref
             .read(eventControllerProvider.notifier)
             .getEventHosts(widget.eventDetail['id']));
     Future.delayed(
         Duration.zero,
-            () => ref
+        () => ref
             .read(eventControllerProvider.notifier)
-            .getListGroupSuggested({"tab": 'join'}));
+            .getListGroupSuggested({"tab": 'featured'}));
     _scrollController.addListener(() {
       if (_scrollController.offset > 200) {
         setState(() {
@@ -87,25 +86,26 @@ class _EventDetailState extends ConsumerState<EventDetail> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          alignment: Alignment.centerLeft,
-          icon: Container(
-            height: 32,
-            width: 32,
+        leading: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            height: 26,
+            width: 26,
+            margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(16),
+                color: Colors.black.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(width: 0.2, color: greyColor)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                Icon(FontAwesomeIcons.angleLeft, color: Colors.white, size: 18),
+                Icon(FontAwesomeIcons.angleLeft, color: Colors.white, size: 16),
               ],
             ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
         elevation: 0.0,
       ),
@@ -209,255 +209,325 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                         setState(() {});
                                       },
                                       child: Row(
-                                        children: !eventDetail['event_relationship']['host_event'] ? [
-                                          Container(
-                                              height: 32,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.47,
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                      eventDetail['event_relationship']
-                                                                  ['status'] !=
-                                                              'interested'
-                                                          ? const Color.fromARGB(
-                                                          189, 202, 202, 202)
-                                                          : secondaryColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: greyColor)),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: const [
-                                                  Icon(FontAwesomeIcons.solidStar,
-                                                      size: 14),
-                                                   SizedBox(
-                                                    width: 5.0,
-                                                  ),
-                                                 Text(
-                                                    'Quan tâm',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 12.0,
-                                                      fontWeight: FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          const SizedBox(width: 10),
-                                          InkWell(
-                                              onTap: () {
-                                                if (eventDetail['event_relationship']
-                                                ['status'] !=
-                                                    'going') {
-                                                  ref
-                                                      .read(eventControllerProvider
-                                                      .notifier)
-                                                      .updateStatusEventDetail(
-                                                      eventDetail['id'],
-                                                      {'status': 'going'});
-                                                } else {
-                                                  ref
-                                                      .read(eventControllerProvider
-                                                      .notifier)
-                                                      .updateStatusEventDetail(
-                                                      eventDetail['id'],
-                                                      {'status': ''});
-                                                }
-                                              },
-                                              child: Container(
-                                                height: 32,
-                                                width:
-                                                MediaQuery.of(context).size.width *
-                                                    0.3,
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                    eventDetail['event_relationship']
-                                                    ['status'] !=
-                                                        'going'
-                                                        ? const Color.fromARGB(
-                                                        189, 202, 202, 202)
-                                                        : secondaryColor
-                                                    ,
-                                                    borderRadius:
-                                                    BorderRadius.circular(4),
-                                                    border: Border.all(
-                                                        width: 0.2, color: greyColor)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                        eventDetail['event_relationship']
-                                                        ['status'] !=
-                                                            'going'
-                                                            ? FontAwesomeIcons
-                                                            .clipboardQuestion
-                                                            : FontAwesomeIcons
-                                                            .circleCheck,
-                                                        size: 14),
-                                                    const SizedBox(
-                                                      width: 3.0,
-                                                    ),
-                                                    const Text(
-                                                      'Sẽ tham gia',
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: 12.0,
-                                                        fontWeight: FontWeight.w700
-                                                        ,
+                                        children: !eventDetail[
+                                                    'event_relationship']
+                                                ['host_event']
+                                            ? [
+                                                Container(
+                                                    height: 32,
+                                                    width: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.47,
+                                                    decoration: BoxDecoration(
+                                                        color: eventDetail['event_relationship'][
+                                                                    'status'] !=
+                                                                'interested'
+                                                            ? const Color.fromARGB(
+                                                                189,
+                                                                202,
+                                                                202,
+                                                                202)
+                                                            : secondaryColor,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                4),
+                                                        border: Border.all(
+                                                            width: 0.2,
+                                                            color: greyColor)),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: const [
+                                                        Icon(
+                                                            FontAwesomeIcons
+                                                                .solidStar,
+                                                            size: 14),
+                                                        SizedBox(
+                                                          width: 5.0,
+                                                        ),
+                                                        Text(
+                                                          'Quan tâm',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontSize: 12.0,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                const SizedBox(width: 10),
+                                                InkWell(
+                                                    onTap: () {
+                                                      if (eventDetail[
+                                                                  'event_relationship']
+                                                              ['status'] !=
+                                                          'going') {
+                                                        ref
+                                                            .read(
+                                                                eventControllerProvider
+                                                                    .notifier)
+                                                            .updateStatusEventDetail(
+                                                                eventDetail[
+                                                                    'id'],
+                                                                {
+                                                              'status': 'going'
+                                                            });
+                                                      } else {
+                                                        ref
+                                                            .read(
+                                                                eventControllerProvider
+                                                                    .notifier)
+                                                            .updateStatusEventDetail(
+                                                                eventDetail[
+                                                                    'id'],
+                                                                {'status': ''});
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                      height: 32,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.3,
+                                                      decoration: BoxDecoration(
+                                                          color: eventDetail['event_relationship']
+                                                                      [
+                                                                      'status'] !=
+                                                                  'going'
+                                                              ? const Color
+                                                                      .fromARGB(
+                                                                  189,
+                                                                  202,
+                                                                  202,
+                                                                  202)
+                                                              : secondaryColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color:
+                                                                  greyColor)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                              eventDetail['event_relationship']
+                                                                          [
+                                                                          'status'] !=
+                                                                      'going'
+                                                                  ? FontAwesomeIcons
+                                                                      .clipboardQuestion
+                                                                  : FontAwesomeIcons
+                                                                      .circleCheck,
+                                                              size: 14),
+                                                          const SizedBox(
+                                                            width: 3.0,
+                                                          ),
+                                                          const Text(
+                                                            'Sẽ tham gia',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontSize: 12.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )) ,
-                                        ] : [ InkWell(
-                                          onTap: () {
-                                            showBarModalBottomSheet(
-                                                context: context,
-                                                backgroundColor: theme.isDarkMode ? Colors.black : Colors.white,
-                                                builder: (context) => const InviteFriend());
-                                          },
-                                          child: Container(
-                                              height: 32,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                                  0.8,
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                       const Color.fromARGB(
-                                                      189, 202, 202, 202)
-                                                     ,
-                                                  borderRadius:
-                                                  BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: greyColor)),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                                children: const [
-                                                  Icon(FontAwesomeIcons.envelope,
-                                                      size: 14),
-                                                  SizedBox(
-                                                    width: 5.0,
-                                                  ),
-                                                  Text(
-                                                    'Mời',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 12.0,
-                                                      fontWeight: FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                        )],
+                                                    )),
+                                              ]
+                                            : [
+                                                InkWell(
+                                                  onTap: () {
+                                                    showBarModalBottomSheet(
+                                                        context: context,
+                                                        backgroundColor:
+                                                            theme.isDarkMode
+                                                                ? Colors.black
+                                                                : Colors.white,
+                                                        builder: (context) =>
+                                                            const InviteFriend());
+                                                  },
+                                                  child: Container(
+                                                      height: 32,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.8,
+                                                      decoration: BoxDecoration(
+                                                          color: const Color
+                                                                  .fromARGB(189,
+                                                              202, 202, 202),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color:
+                                                                  greyColor)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: const [
+                                                          Icon(
+                                                              FontAwesomeIcons
+                                                                  .envelope,
+                                                              size: 14),
+                                                          SizedBox(
+                                                            width: 5.0,
+                                                          ),
+                                                          Text(
+                                                            'Mời',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontSize: 12.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )),
+                                                )
+                                              ],
                                       )),
                                   const SizedBox(width: 10),
                                   InkWell(
                                       onTap: () {
-                                        showBarModalBottomSheet(backgroundColor: Theme.of(context).scaffoldBackgroundColor,context: context, builder: (context) => Container(
-                                          margin: const EdgeInsets.only(
-                                              left: 8.0, top: 15.0),
-                                          width: MediaQuery.of(context)
-                                              .size
-                                              .width,
-                                          height: 250,
-                                          child: Column(
-                                            children: [
-                                              ListView.builder(
-                                                scrollDirection:
-                                                Axis.vertical,
-                                                shrinkWrap: true,
-                                                physics:
-                                                const NeverScrollableScrollPhysics(),
-                                                itemCount:
-                                                iconActionEllipsis.length,
-                                                itemBuilder:
-                                                ((context, index) {
-                                                  return Padding(
-                                                    padding:
-                                                    const EdgeInsets.only(
-                                                        bottom: 10.0),
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        Navigator.pop(context);
-                                                        if(index != 1 && index != 2) {
-                                                          showBarModalBottomSheet(backgroundColor: Theme.of(context).scaffoldBackgroundColor,context: context, builder:   (context) =>
-                                                              SizedBox(
-                                                                height: height *
-                                                                    0.9,
-                                                                width:
-                                                                width,
-                                                                child: ActionEllipsis(
-                                                                    menuSelected:
-                                                                    iconActionEllipsis[index]),
-                                                              ));
-                                                        } else if (index == 2) {
-                                                          Clipboard.setData(ClipboardData(text: eventAction ? 'https://sn.emso.vn/event/${eventDetail['id']}/about' : 'https://sn.emso.vn/event/${eventDetail['id']}/discussion' ));
-                                                          ScaffoldMessenger.of(context).showSnackBar(
-                                                             const SnackBar(
-                                                                content: Text(
-                                                                    'Sao chép thành công'),
-                                                                duration: Duration(seconds: 3),
-                                                                backgroundColor: secondaryColor,
-                                                              ));
-                                                        } else {
-                                                          const SizedBox();
-                                                        }
-
-                                                      },
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.only(top:4.0, bottom: 4.0),
-                                                        child: Row(
-                                                          children: [
-                                                            CircleAvatar(
-                                                              radius: 18.0,
+                                        showBarModalBottomSheet(
+                                          backgroundColor: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                          context: context,
+                                          builder: (context) => Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 8.0, top: 15.0),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 250,
+                                            child: Column(
+                                              children: [
+                                                ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  itemCount:
+                                                      iconActionEllipsis.length,
+                                                  itemBuilder:
+                                                      ((context, index) {
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10.0),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                          if (index != 1 &&
+                                                              index != 2) {
+                                                            showBarModalBottomSheet(
+                                                                backgroundColor:
+                                                                    Theme.of(
+                                                                            context)
+                                                                        .scaffoldBackgroundColor,
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        SizedBox(
+                                                                          height:
+                                                                              height * 0.9,
+                                                                          width:
+                                                                              width,
+                                                                          child:
+                                                                              ActionEllipsis(menuSelected: iconActionEllipsis[index]),
+                                                                        ));
+                                                          } else if (index ==
+                                                              2) {
+                                                            Clipboard.setData(ClipboardData(
+                                                                text: eventAction
+                                                                    ? 'https://sn.emso.vn/event/${eventDetail['id']}/about'
+                                                                    : 'https://sn.emso.vn/event/${eventDetail['id']}/discussion'));
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    const SnackBar(
+                                                              content: Text(
+                                                                  'Sao chép thành công'),
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          3),
                                                               backgroundColor:
-                                                              greyColor[
-                                                              350],
-                                                              child: Icon(
-                                                                iconActionEllipsis[
-                                                                index]
-                                                                ["icon"],
-                                                                size: 18.0,
-                                                                color: Colors
-                                                                    .black,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              margin:
+                                                                  secondaryColor,
+                                                            ));
+                                                          } else {
+                                                            const SizedBox();
+                                                          }
+                                                        },
+                                                        child: Padding(
+                                                          padding:
                                                               const EdgeInsets
-                                                                  .only(
-                                                                  left:
-                                                                  10.0),
-                                                              child: Text(
+                                                                      .only(
+                                                                  top: 4.0,
+                                                                  bottom: 4.0),
+                                                          child: Row(
+                                                            children: [
+                                                              CircleAvatar(
+                                                                radius: 18.0,
+                                                                backgroundColor:
+                                                                    greyColor[
+                                                                        350],
+                                                                child: Icon(
                                                                   iconActionEllipsis[
-                                                                  index]
-                                                                  ["label"],
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                      14.0,
-                                                                      fontWeight:
-                                                                      FontWeight
-                                                                          .w500)),
-                                                            ),
-                                                          ],
+                                                                          index]
+                                                                      ["icon"],
+                                                                  size: 18.0,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                margin: const EdgeInsets
+                                                                        .only(
+                                                                    left: 10.0),
+                                                                child: Text(
+                                                                    iconActionEllipsis[
+                                                                            index]
+                                                                        [
+                                                                        "label"],
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            14.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w500)),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  );
-                                                }),
-                                              )
-                                            ],
+                                                    );
+                                                  }),
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),);
+                                        );
                                       },
                                       child: Container(
                                         height: 32,
@@ -475,7 +545,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: const [
-                                            Icon(FontAwesomeIcons.ellipsis, size: 14),
+                                            Icon(FontAwesomeIcons.ellipsis,
+                                                size: 14),
                                           ],
                                         ),
                                       ))
@@ -645,9 +716,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                         .width *
                                                     0.44,
                                                 decoration: BoxDecoration(
-                                                    color: eventAction ? secondaryColor
+                                                    color: eventAction
+                                                        ? secondaryColor
                                                         : const Color.fromARGB(
-                                                        189, 202, 202, 202),
+                                                            189, 202, 202, 202),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             16),
@@ -665,7 +737,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                             TextAlign.center,
                                                         style: TextStyle(
                                                           fontSize: 12.0,
-                                                          color: eventAction ? Colors.white : colorWord(context),
+                                                          color: eventAction
+                                                              ? Colors.white
+                                                              : colorWord(
+                                                                  context),
                                                           fontWeight:
                                                               FontWeight.w700,
                                                         ),
@@ -686,9 +761,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                         .width *
                                                     0.44,
                                                 decoration: BoxDecoration(
-                                                    color: !eventAction ? secondaryColor
+                                                    color: !eventAction
+                                                        ? secondaryColor
                                                         : const Color.fromARGB(
-                                                        189, 202, 202, 202),
+                                                            189, 202, 202, 202),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             16),
@@ -698,7 +774,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children:  [
+                                                  children: [
                                                     Text(
                                                       'Cuộc thảo luận',
                                                       textAlign:
@@ -707,7 +783,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                         fontSize: 12.0,
                                                         fontWeight:
                                                             FontWeight.w700,
-                                                        color: !eventAction ? Colors.white : colorWord(context),
+                                                        color: !eventAction
+                                                            ? Colors.white
+                                                            : colorWord(
+                                                                context),
                                                       ),
                                                     ),
                                                   ],
@@ -735,253 +814,278 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     ],
                   ),
                 ),
-                !eventDetail['event_relationship']['host_event'] ?
-                Visibility(
-                  visible: _isVisible,
-                  child: Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: 60,
-                      color: theme.isDarkMode ? Colors.black : Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
-                            child: InkWell(
-                                onTap: () {
-                                  if (eventDetail['event_relationship']
-                                          ['status'] !=
-                                      'interested') {
-                                    ref
-                                        .read(eventControllerProvider.notifier)
-                                        .updateStatusEventDetail(eventDetail['id'],
-                                            {'status': 'interested'});
-                                  } else {
-                                    ref
-                                        .read(eventControllerProvider.notifier)
-                                        .updateStatusEventDetail(
-                                            eventDetail['id'], {'status': ''});
-                                  }
-                                  setState(() {});
-                                },
-                                child: Container(
-                                    height: 32,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    decoration: BoxDecoration(
-                                        color: eventDetail['event_relationship']
-                                                    ['status'] !=
-                                                'interested'
-                                            ? const Color.fromARGB(
-                                            189, 202, 202, 202)
-                                            : secondaryColor,
-                                        borderRadius: BorderRadius.circular(4),
-                                        border: Border.all(
-                                            width: 0.2, color: greyColor)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children:const [
-                                        Icon(FontAwesomeIcons.solidStar,
-                                            size: 14),
-                                         SizedBox(
-                                          width: 5.0,
-                                        ),
-                                        Text(
-                                          'Quan tâm',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ],
-                                    ))),
-                          ),
-                          InkWell(
-                              onTap: () {
-                                if (eventDetail['event_relationship']
-                                        ['status'] !=
-                                    'going') {
-                                  ref
-                                      .read(eventControllerProvider.notifier)
-                                      .updateStatusEventDetail(eventDetail['id'],
-                                          {'status': 'going'});
-                                } else {
-                                  ref
-                                      .read(eventControllerProvider.notifier)
-                                      .updateStatusEventDetail(
-                                          eventDetail['id'], {'status': ''});
-                                }
-                                setState(() {});
-                              },
-                              child: Container(
-                                height: 32,
-                                width: MediaQuery.of(context).size.width * 0.35,
-                                decoration: BoxDecoration(
-                                    color: eventDetail['event_relationship']
+                !eventDetail['event_relationship']['host_event']
+                    ? Visibility(
+                        visible: _isVisible,
+                        child: Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: 60,
+                            color:
+                                theme.isDarkMode ? Colors.black : Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: InkWell(
+                                      onTap: () {
+                                        if (eventDetail['event_relationship']
                                                 ['status'] !=
-                                            'going'
-                                        ? const Color.fromARGB(
-                                            189, 202, 202, 202)
-                                        : secondaryColor,
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                        width: 0.2, color: greyColor)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                        eventDetail['event_relationship']
-                                                    ['status'] !=
-                                                'going'
-                                            ? FontAwesomeIcons.clipboardQuestion
-                                            : FontAwesomeIcons.circleCheck,
-                                        size: 14),
-                                    const SizedBox(
-                                      width: 3.0,
-                                    ),
-                                    const Text(
-                                      'Sẽ tham gia',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: InkWell(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 8.0, top: 15.0),
-                                      width: MediaQuery.of(context)
-                                          .size
-                                          .width,
-                                      height: MediaQuery.of(context)
-                                          .size
-                                          .height *
-                                          0.3 +
-                                          30,
-                                      child: Column(
-                                        children: [
-                                          ListView.builder(
-                                            scrollDirection:
-                                            Axis.vertical,
-                                            shrinkWrap: true,
-                                            physics:
-                                            const NeverScrollableScrollPhysics(),
-                                            itemCount:
-                                            iconActionEllipsis.length,
-                                            itemBuilder:
-                                            ((context, index) {
-                                              return Padding(
-                                                padding:
-                                                const EdgeInsets.only(
-                                                    bottom: 10.0),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    showModalBottomSheet(
-                                                        context: context,
-                                                        isScrollControlled:
-                                                        true,
-                                                        barrierColor: Colors
-                                                            .transparent,
-                                                        clipBehavior: Clip
-                                                            .antiAliasWithSaveLayer,
-                                                        shape: const RoundedRectangleBorder(
-                                                            borderRadius:
-                                                            BorderRadius.vertical(
-                                                                top: Radius.circular(
-                                                                    10))),
-                                                        builder:
-                                                            (context) =>
-                                                            SizedBox(
-                                                              height: height *
-                                                                  0.9,
-                                                              width:
-                                                              width,
-                                                              child: ActionEllipsis(
-                                                                  menuSelected:
-                                                                  iconActionEllipsis[index]),
-                                                            ));
-                                                  },
-                                                  child: Row(
-                                                    children: [
-                                                      CircleAvatar(
-                                                        radius: 18.0,
-                                                        backgroundColor:
-                                                        greyColor[
-                                                        350],
-                                                        child: Icon(
-                                                          iconActionEllipsis[
-                                                          index]
-                                                          ["icon"],
-                                                          size: 18.0,
-                                                          color: Colors
-                                                              .black,
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        margin:
-                                                        const EdgeInsets
-                                                            .only(
-                                                            left:
-                                                            10.0),
-                                                        child: Text(
-                                                            iconActionEllipsis[
-                                                            index]
-                                                            ["label"],
-                                                            style: const TextStyle(
-                                                                fontSize:
-                                                                14.0,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w500)),
-                                                      ),
-                                                    ],
-                                                  ),
+                                            'interested') {
+                                          ref
+                                              .read(eventControllerProvider
+                                                  .notifier)
+                                              .updateStatusEventDetail(
+                                                  eventDetail['id'],
+                                                  {'status': 'interested'});
+                                        } else {
+                                          ref
+                                              .read(eventControllerProvider
+                                                  .notifier)
+                                              .updateStatusEventDetail(
+                                                  eventDetail['id'],
+                                                  {'status': ''});
+                                        }
+                                        setState(() {});
+                                      },
+                                      child: Container(
+                                          height: 32,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  eventDetail['event_relationship']
+                                                              ['status'] !=
+                                                          'interested'
+                                                      ? const Color.fromARGB(
+                                                          189, 202, 202, 202)
+                                                      : secondaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              border: Border.all(
+                                                  width: 0.2,
+                                                  color: greyColor)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const [
+                                              Icon(FontAwesomeIcons.solidStar,
+                                                  size: 14),
+                                              SizedBox(
+                                                width: 5.0,
+                                              ),
+                                              Text(
+                                                'Quan tâm',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  fontWeight: FontWeight.w700,
                                                 ),
-                                              );
-                                            }),
-                                          )
+                                              ),
+                                            ],
+                                          ))),
+                                ),
+                                InkWell(
+                                    onTap: () {
+                                      if (eventDetail['event_relationship']
+                                              ['status'] !=
+                                          'going') {
+                                        ref
+                                            .read(eventControllerProvider
+                                                .notifier)
+                                            .updateStatusEventDetail(
+                                                eventDetail['id'],
+                                                {'status': 'going'});
+                                      } else {
+                                        ref
+                                            .read(eventControllerProvider
+                                                .notifier)
+                                            .updateStatusEventDetail(
+                                                eventDetail['id'],
+                                                {'status': ''});
+                                      }
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      height: 32,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
+                                      decoration: BoxDecoration(
+                                          color:
+                                              eventDetail['event_relationship']
+                                                          ['status'] !=
+                                                      'going'
+                                                  ? const Color.fromARGB(
+                                                      189, 202, 202, 202)
+                                                  : secondaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          border: Border.all(
+                                              width: 0.2, color: greyColor)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                              eventDetail['event_relationship']
+                                                          ['status'] !=
+                                                      'going'
+                                                  ? FontAwesomeIcons
+                                                      .clipboardQuestion
+                                                  : FontAwesomeIcons
+                                                      .circleCheck,
+                                              size: 14),
+                                          const SizedBox(
+                                            width: 3.0,
+                                          ),
+                                          const Text(
+                                            'Sẽ tham gia',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  height: 32,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.1,
-                                  decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          189, 202, 202, 202),
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(
-                                          width: 0.2, color: greyColor)),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(FontAwesomeIcons.ellipsis, size: 14),
-                                    ],
-                                  ),
-                                )),
+                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: InkWell(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 8.0, top: 15.0),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.3 +
+                                                30,
+                                            child: Column(
+                                              children: [
+                                                ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  itemCount:
+                                                      iconActionEllipsis.length,
+                                                  itemBuilder:
+                                                      ((context, index) {
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10.0),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          showModalBottomSheet(
+                                                              context: context,
+                                                              isScrollControlled:
+                                                                  true,
+                                                              barrierColor: Colors
+                                                                  .transparent,
+                                                              clipBehavior: Clip
+                                                                  .antiAliasWithSaveLayer,
+                                                              shape: const RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.vertical(
+                                                                          top: Radius.circular(
+                                                                              10))),
+                                                              builder:
+                                                                  (context) =>
+                                                                      SizedBox(
+                                                                        height: height *
+                                                                            0.9,
+                                                                        width:
+                                                                            width,
+                                                                        child: ActionEllipsis(
+                                                                            menuSelected:
+                                                                                iconActionEllipsis[index]),
+                                                                      ));
+                                                        },
+                                                        child: Row(
+                                                          children: [
+                                                            CircleAvatar(
+                                                              radius: 18.0,
+                                                              backgroundColor:
+                                                                  greyColor[
+                                                                      350],
+                                                              child: Icon(
+                                                                iconActionEllipsis[
+                                                                        index]
+                                                                    ["icon"],
+                                                                size: 18.0,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          10.0),
+                                                              child: Text(
+                                                                  iconActionEllipsis[
+                                                                          index]
+                                                                      ["label"],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500)),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 32,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.1,
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                189, 202, 202, 202),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            border: Border.all(
+                                                width: 0.2, color: greyColor)),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(FontAwesomeIcons.ellipsis,
+                                                size: 14),
+                                          ],
+                                        ),
+                                      )),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ) : const SizedBox(),
+                        ),
+                      )
+                    : const SizedBox(),
               ],
             )
           : const SizedBox(),

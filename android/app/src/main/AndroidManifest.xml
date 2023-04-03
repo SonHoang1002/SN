@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:usesCleartextTraffic="true"
-        android:label="social_network_app_mobile"
+        android:label="Emso"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

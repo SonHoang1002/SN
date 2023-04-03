@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/screen/Event/event_form_create.dart';
+import 'package:social_network_app_mobile/screen/Event/create_event.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
 import 'package:social_network_app_mobile/screen/Payment/payment.dart';
@@ -90,7 +90,7 @@ class MenuSelected extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {},
-              child:  Icon(
+              child: Icon(
                 FontAwesomeIcons.calendarDay,
                 size: 18,
                 color: colorWord,
@@ -103,14 +103,10 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CreateEvent()),
+                  MaterialPageRoute(builder: (context) => const CreateEvents()),
                 );
               },
-              child:  Icon(
-                FontAwesomeIcons.plus,
-                size: 18,
-                color: colorWord
-              ),
+              child: Icon(FontAwesomeIcons.plus, size: 18, color: colorWord),
             ),
             const SizedBox(
               width: 12.0,
@@ -155,8 +151,7 @@ class MenuSelected extends StatelessWidget {
         buttonAppbar = Row(
           children: [
             GestureDetector(
-              onTap: () {
-              },
+              onTap: () {},
               child: Icon(
                 FontAwesomeIcons.plus,
                 size: 20,
@@ -171,8 +166,7 @@ class MenuSelected extends StatelessWidget {
         buttonAppbar = Row(
           children: [
             InkWell(
-              onTap: () {
-              },
+              onTap: () {},
               child: const Icon(
                 FontAwesomeIcons.calendarDay,
                 size: 18,
@@ -182,9 +176,7 @@ class MenuSelected extends StatelessWidget {
               width: 7.0,
             ),
             InkWell(
-              onTap: () {
-
-              },
+              onTap: () {},
               child: const Icon(
                 FontAwesomeIcons.plus,
                 size: 18,

@@ -14,13 +14,14 @@ import 'package:social_network_app_mobile/providers/page/select_province_page_pr
 import 'package:social_network_app_mobile/providers/posts/reaction_message_content.dart';
 import 'package:social_network_app_mobile/providers/posts/reaction_message_status.dart';
 import 'package:social_network_app_mobile/providers/setting/choose_object_provider.dart';
+import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/onboarding_login_page.dart';
 
 import 'theme/theme_manager.dart';
 
 var routes = <String, WidgetBuilder>{
   "/home": (BuildContext context) => const Home(),
   //  SaleInformationMarketPage
-  // '/login': (BuildContext context) => const Auth()
+  '/login': (BuildContext context) => const OnboardingLoginPage(),
   '/': (BuildContext context) => const PreviewScreen()
 };
 
@@ -46,8 +47,8 @@ class _AppState extends State<App> {
         ChangeNotifierProvider(create: (_) => HideGroupProvider()),
         ChangeNotifierProvider(create: (_) => SelectTargetGroupProvider()),
         ChangeNotifierProvider(create: (_) => SelectionPrivateEventProvider()),
-        ChangeNotifierProvider(create: (_) => ReactionMessageContent()), 
-        ChangeNotifierProvider(create: (_) => ReactionMessageStatus()), 
+        ChangeNotifierProvider(create: (_) => ReactionMessageContent()),
+        ChangeNotifierProvider(create: (_) => ReactionMessageStatus()),
       ],
       child: const MaterialAppWithTheme(),
     );
@@ -70,6 +71,7 @@ class _MaterialAppWithThemeState extends State<MaterialAppWithTheme> {
     final theme = Provider.of<ThemeManager>(context);
 
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       themeMode: theme.themeMode,
       theme: MyThemes.lightTheme,
@@ -78,4 +80,9 @@ class _MaterialAppWithThemeState extends State<MaterialAppWithTheme> {
       routes: routes,
     );
   }
+}
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+void navigateToSecondPageByNameWithoutContext(routeName) {
+  navigatorKey.currentState!.pushReplacementNamed(routeName);
 }

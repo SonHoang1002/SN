@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
+import 'package:social_network_app_mobile/app.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
 class Api {
@@ -35,9 +37,13 @@ class Api {
 
       Dio dio = await getDio(userToken);
       var response = await dio.get(path, queryParameters: params);
-      return response.data;
+      if (response.statusCode == 200) {
+        return response.data;
+      }
     } on DioError catch (e) {
-      print(e.toString());
+      if (e.response?.statusCode == 401) {
+        logOutWhenTokenError();
+      }
     }
   }
 
@@ -82,7 +88,31 @@ class Api {
       var response = await dio.post(path, data: data);
       return response.data;
     } on DioError catch (e) {
-      print(e.error);
+      if (e?.response?.statusCode == 401) {
+        logOutWhenTokenError();
+      }
     }
   }
+}
+
+void logOutWhenTokenError() async {
+  var newList = await SecureStorage().getKeyStorage('dataLogin');
+  var id = await SecureStorage().getKeyStorage("userId");
+
+  List listAccount = [];
+
+  if (newList != null && newList != 'noData') {
+    listAccount = jsonDecode(newList) ?? [];
+  }
+
+  if (id != null) {
+    await SecureStorage().saveKeyStorage(
+        jsonEncode(listAccount
+            .map((element) =>
+                element['id'] == id ? {...element, 'token': null} : element)
+            .toList()),
+        'dataLogin');
+  }
+  await SecureStorage().deleteKeyStorage('token');
+  navigateToSecondPageByNameWithoutContext('/login');
 }
