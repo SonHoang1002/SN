@@ -134,6 +134,11 @@ flutter:
   assets:
     - assets/images/
     - assets/images_and_video.png
+    - assets/camera_menu.png
+    - assets/target_menu.png
+    - assets/gif.png
+    - assets/live_video.png
+    - assets/bg_color.png
     - assets/icons/
     - assets/reaction/
     - assets/post_media.svg

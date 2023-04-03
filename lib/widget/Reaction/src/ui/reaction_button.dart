@@ -1,3 +1,183 @@
+import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widget/Reaction/src/ui/reaction_box_1.dart';
+
+import '../models/reaction.dart';
+import '../utils/extensions.dart';
+import '../utils/reactions_position.dart';
+import 'reactions_box.dart';
+
+typedef OnReactionChanged<T> = void Function(T?);
+
+class ReactionButton<T> extends StatefulWidget {
+  /// This triggers when reaction button value changed.
+  final OnReactionChanged<T> onReactionChanged;
+
+  /// Default reaction button widget
+  final Reaction<T>? initialReaction;
+
+  final List<Reaction<T>> reactions;
+
+  /// Offset to add to the placement of the box
+  final Offset boxOffset;
+
+  /// Vertical position of the reactions box relative to the button [default = VerticalPosition.TOP]
+  final VerticalPosition boxPosition;
+
+  /// Horizontal position of the reactions box relative to the button [default = HorizontalPosition.START]
+  final HorizontalPosition boxHorizontalPosition;
+
+  /// Reactions box color [default = white]
+  final Color boxColor;
+
+  /// Reactions box elevation [default = 5]
+  final double boxElevation;
+
+  /// Reactions box radius [default = 50]
+  final double boxRadius;
+
+  /// Reactions box show/hide duration [default = 200 milliseconds]
+  final Duration boxDuration;
+
+  /// Change initial reaction after selected one [default = true]
+  final bool shouldChangeReaction;
+
+  /// Reactions box padding [default = EdgeInsets.zero]
+  final EdgeInsetsGeometry boxPadding;
+
+  /// Spacing between the reaction icons in the box
+  final double boxReactionSpacing;
+
+  /// Scale ratio when item hovered [default = 0.3]
+  final double itemScale;
+
+  /// Scale duration while dragging [default = const Duration(milliseconds: 100)]
+  final Duration? itemScaleDuration;
+
+  final Function? handlePressButton;
+
+  final Function? onWaitingReaction;
+
+  final Function? onSelectedReaction;
+
+  final Function? onHoverReaction;
+
+  const ReactionButton(
+      {Key? key,
+      required this.onReactionChanged,
+      required this.reactions,
+      this.initialReaction,
+      this.boxOffset = Offset.zero,
+      this.boxPosition = VerticalPosition.top,
+      this.boxHorizontalPosition = HorizontalPosition.center,
+      this.boxColor = Colors.white,
+      this.boxElevation = 5,
+      this.boxRadius = 50,
+      this.boxDuration = const Duration(milliseconds: 200),
+      this.shouldChangeReaction = true,
+      this.boxPadding = EdgeInsets.zero,
+      this.boxReactionSpacing = 0,
+      this.itemScale = .3,
+      this.itemScaleDuration,
+      this.handlePressButton,
+      this.onWaitingReaction,
+      this.onSelectedReaction,
+      this.onHoverReaction})
+      : super(key: key);
+
+  @override
+  State<ReactionButton<T>> createState() => _ReactionButtonState<T>();
+}
+
+class _ReactionButtonState<T> extends State<ReactionButton<T>> {
+  final GlobalKey _buttonKey = GlobalKey();
+
+  Reaction? _selectedReaction;
+  Offset? offset;
+
+  void _init() {
+    _selectedReaction = widget.initialReaction;
+  }
+
+  @override
+  void didUpdateWidget(ReactionButton<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _init();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (mounted) {
+      widget.onSelectedReaction != null ? widget.onSelectedReaction!() : null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        key: _buttonKey,
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          widget.handlePressButton!();
+        },
+        onLongPressStart: (details) {
+          _showReactionsBox(details.globalPosition);
+          widget.onWaitingReaction != null ? widget.onWaitingReaction!() : null;
+        },
+        child: (_selectedReaction ?? widget.reactions.first).icon,
+      );
+
+  void _showReactionsBox(Offset buttonOffset) async {
+    final buttonSize = _buttonKey.widgetSize;
+    final reactionButton = await Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (_, __, ___) {
+          return ReactionsBox(
+            buttonOffset: buttonOffset,
+            buttonSize: buttonSize,
+            reactions: widget.reactions,
+            verticalPosition: widget.boxPosition,
+            horizontalPosition: widget.boxHorizontalPosition,
+            color: widget.boxColor,
+            elevation: widget.boxElevation,
+            radius: widget.boxRadius,
+            offset: widget.boxOffset,
+            duration: widget.boxDuration,
+            boxPadding: widget.boxPadding,
+            reactionSpacing: widget.boxReactionSpacing,
+            itemScale: widget.itemScale,
+            itemScaleDuration: widget.itemScaleDuration,
+            onWaitingReaction: widget.onWaitingReaction,
+            onSelectedReaction: widget.onSelectedReaction,
+            onHoverReaction: widget.onHoverReaction,
+          );
+        },
+      ),
+    );
+
+    if (reactionButton != null) _updateReaction(reactionButton);
+  }
+
+  void _updateReaction(Reaction<T> reaction) {
+    widget.onReactionChanged.call(reaction.value);
+    if (mounted && widget.shouldChangeReaction) {
+      setState(() {
+        _selectedReaction = reaction;
+      });
+    }
+  }
+}
+
+
+
 // import 'package:flutter/material.dart';
 
 // import '../models/reaction.dart';
@@ -158,179 +338,185 @@
 //   }
 // }
 
-import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 
-import '../models/reaction.dart';
-import '../utils/extensions.dart';
-import '../utils/reactions_position.dart';
-import 'reactions_box.dart';
 
-typedef OnReactionChanged<T> = void Function(T?);
 
-class ReactionButton<T> extends StatefulWidget {
-  /// This triggers when reaction button value changed.
-  final OnReactionChanged<T> onReactionChanged;
+//new 1
+// import 'package:flutter/material.dart';
+// import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 
-  /// Default reaction button widget
-  final Reaction<T>? initialReaction;
+// import '../models/reaction.dart';
+// import '../utils/extensions.dart';
+// import '../utils/reactions_position.dart';
+// import 'reactions_box.dart';
 
-  final List<Reaction<T>> reactions;
+// typedef OnReactionChanged<T> = void Function(T?);
 
-  /// Offset to add to the placement of the box
-  final Offset boxOffset;
+// class ReactionButton<T> extends StatefulWidget {
+//   /// This triggers when reaction button value changed.
+//   final OnReactionChanged<T> onReactionChanged;
 
-  /// Vertical position of the reactions box relative to the button [default = VerticalPosition.TOP]
-  final VerticalPosition boxPosition;
+//   /// Default reaction button widget
+//   final Reaction<T>? initialReaction;
 
-  /// Horizontal position of the reactions box relative to the button [default = HorizontalPosition.START]
-  final HorizontalPosition boxHorizontalPosition;
+//   final List<Reaction<T>> reactions;
 
-  /// Reactions box color [default = white]
-  final Color boxColor;
+//   /// Offset to add to the placement of the box
+//   final Offset boxOffset;
 
-  /// Reactions box elevation [default = 5]
-  final double boxElevation;
+//   /// Vertical position of the reactions box relative to the button [default = VerticalPosition.TOP]
+//   final VerticalPosition boxPosition;
 
-  /// Reactions box radius [default = 50]
-  final double boxRadius;
+//   /// Horizontal position of the reactions box relative to the button [default = HorizontalPosition.START]
+//   final HorizontalPosition boxHorizontalPosition;
 
-  /// Reactions box show/hide duration [default = 200 milliseconds]
-  final Duration boxDuration;
+//   /// Reactions box color [default = white]
+//   final Color boxColor;
 
-  /// Change initial reaction after selected one [default = true]
-  final bool shouldChangeReaction;
+//   /// Reactions box elevation [default = 5]
+//   final double boxElevation;
 
-  /// Reactions box padding [default = EdgeInsets.zero]
-  final EdgeInsetsGeometry boxPadding;
+//   /// Reactions box radius [default = 50]
+//   final double boxRadius;
 
-  /// Spacing between the reaction icons in the box
-  final double boxReactionSpacing;
+//   /// Reactions box show/hide duration [default = 200 milliseconds]
+//   final Duration boxDuration;
 
-  /// Scale ratio when item hovered [default = 0.3]
-  final double itemScale;
+//   /// Change initial reaction after selected one [default = true]
+//   final bool shouldChangeReaction;
 
-  /// Scale duration while dragging [default = const Duration(milliseconds: 100)]
-  final Duration? itemScaleDuration;
+//   /// Reactions box padding [default = EdgeInsets.zero]
+//   final EdgeInsetsGeometry boxPadding;
 
-  final Function? handlePressButton;
+//   /// Spacing between the reaction icons in the box
+//   final double boxReactionSpacing;
 
-  final Function? onWaitingReaction;
+//   /// Scale ratio when item hovered [default = 0.3]
+//   final double itemScale;
 
-  final Function? onSelectedReaction;
+//   /// Scale duration while dragging [default = const Duration(milliseconds: 100)]
+//   final Duration? itemScaleDuration;
 
-  final Function? onHoverReaction;
+//   final Function? handlePressButton;
 
-  const ReactionButton(
-      {Key? key,
-      required this.onReactionChanged,
-      required this.reactions,
-      this.initialReaction,
-      this.boxOffset = Offset.zero,
-      this.boxPosition = VerticalPosition.top,
-      this.boxHorizontalPosition = HorizontalPosition.start,
-      this.boxColor = Colors.white,
-      this.boxElevation = 5,
-      this.boxRadius = 50,
-      this.boxDuration = const Duration(milliseconds: 200),
-      this.shouldChangeReaction = true,
-      this.boxPadding = EdgeInsets.zero,
-      this.boxReactionSpacing = 0,
-      this.itemScale = .3,
-      this.itemScaleDuration,
-      this.handlePressButton,
-      this.onWaitingReaction,
-      this.onSelectedReaction,
-      this.onHoverReaction})
-      : super(key: key);
+//   final Function? onWaitingReaction;
 
-  @override
-  State<ReactionButton<T>> createState() => _ReactionButtonState<T>();
-}
+//   final Function? onSelectedReaction;
 
-class _ReactionButtonState<T> extends State<ReactionButton<T>> {
-  final GlobalKey _buttonKey = GlobalKey();
+//   final Function? onHoverReaction;
 
-  Reaction? _selectedReaction;
-  Offset? offset;
+//   const ReactionButton(
+//       {Key? key,
+//       required this.onReactionChanged,
+//       required this.reactions,
+//       this.initialReaction,
+//       this.boxOffset = Offset.zero,
+//       this.boxPosition = VerticalPosition.top,
+//       this.boxHorizontalPosition = HorizontalPosition.start,
+//       this.boxColor = Colors.white,
+//       this.boxElevation = 5,
+//       this.boxRadius = 50,
+//       this.boxDuration = const Duration(milliseconds: 200),
+//       this.shouldChangeReaction = true,
+//       this.boxPadding = EdgeInsets.zero,
+//       this.boxReactionSpacing = 0,
+//       this.itemScale = .3,
+//       this.itemScaleDuration,
+//       this.handlePressButton,
+//       this.onWaitingReaction,
+//       this.onSelectedReaction,
+//       this.onHoverReaction})
+//       : super(key: key);
 
-  void _init() {
-    _selectedReaction = widget.initialReaction;
-  }
+//   @override
+//   State<ReactionButton<T>> createState() => _ReactionButtonState<T>();
+// }
 
-  @override
-  void didUpdateWidget(ReactionButton<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _init();
-  }
+// class _ReactionButtonState<T> extends State<ReactionButton<T>> {
+//   final GlobalKey _buttonKey = GlobalKey();
 
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
+//   Reaction? _selectedReaction;
+//   Offset? offset;
 
-  @override
-  void dispose() {
-    super.dispose();
-    if (mounted) {
-      widget.onSelectedReaction != null ? widget.onSelectedReaction!() : null;
-    }
-  }
+//   void _init() {
+//     _selectedReaction = widget.initialReaction;
+//   }
 
-  @override
-  Widget build(BuildContext context) => GestureDetector(
-        key: _buttonKey,
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          widget.handlePressButton!();
-        },
-        onLongPressStart: (details) {
-          _showReactionsBox(details.globalPosition);
-          widget.onWaitingReaction != null ? widget.onWaitingReaction!() : null;
-        },
-        child: (_selectedReaction ?? widget.reactions.first).icon,
-      );
+//   @override
+//   void didUpdateWidget(ReactionButton<T> oldWidget) {
+//     super.didUpdateWidget(oldWidget);
+//     _init();
+//   }
 
-  void _showReactionsBox(Offset buttonOffset) async {
-    final buttonSize = _buttonKey.widgetSize;
-    final reactionButton = await Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        transitionDuration: const Duration(milliseconds: 200),
-        pageBuilder: (_, __, ___) {
-          return ReactionsBox(
-            buttonOffset: buttonOffset,
-            buttonSize: buttonSize,
-            reactions: widget.reactions,
-            verticalPosition: widget.boxPosition,
-            horizontalPosition: widget.boxHorizontalPosition,
-            color: widget.boxColor,
-            elevation: widget.boxElevation,
-            radius: widget.boxRadius,
-            offset: widget.boxOffset,
-            duration: widget.boxDuration,
-            boxPadding: widget.boxPadding,
-            reactionSpacing: widget.boxReactionSpacing,
-            itemScale: widget.itemScale,
-            itemScaleDuration: widget.itemScaleDuration,
-            onWaitingReaction: widget.onWaitingReaction,
-            onSelectedReaction: widget.onSelectedReaction,
-            onHoverReaction: widget.onHoverReaction,
-          );
-        },
-      ),
-    );
+//   @override
+//   void initState() {
+//     super.initState();
+//     _init();
+//   }
 
-    if (reactionButton != null) _updateReaction(reactionButton);
-  }
+//   @override
+//   void dispose() {
+//     super.dispose();
+//     if (mounted) {
+//       widget.onSelectedReaction != null ? widget.onSelectedReaction!() : null;
+//     }
+//   }
 
-  void _updateReaction(Reaction<T> reaction) {
-    widget.onReactionChanged.call(reaction.value);
-    if (mounted && widget.shouldChangeReaction) {
-      setState(() {
-        _selectedReaction = reaction;
-      });
-    }
-  }
-}
+//   @override
+//   Widget build(BuildContext context) => GestureDetector(
+//         key: _buttonKey,
+//         behavior: HitTestBehavior.translucent,
+//         onTap: () {
+//           widget.handlePressButton!();
+//         },
+//         onLongPressStart: (details) {
+//           _showReactionsBox(details.globalPosition);
+//           widget.onWaitingReaction != null ? widget.onWaitingReaction!() : null;
+//         },
+//         child: (_selectedReaction ?? widget.reactions.first).icon,
+//       );
+
+//   void _showReactionsBox(Offset buttonOffset) async {
+//     final buttonSize = _buttonKey.widgetSize;
+//     final reactionButton = await Navigator.of(context).push(
+//       PageRouteBuilder(
+//         opaque: false,
+//         transitionDuration: const Duration(milliseconds: 200),
+//         pageBuilder: (_, __, ___) {
+//           return ReactionsBox(
+//             buttonOffset: buttonOffset,
+//             buttonSize: buttonSize,
+//             reactions: widget.reactions,
+//             verticalPosition: widget.boxPosition,
+//             horizontalPosition: widget.boxHorizontalPosition,
+//             color: widget.boxColor,
+//             elevation: widget.boxElevation,
+//             radius: widget.boxRadius,
+//             offset: widget.boxOffset,
+//             duration: widget.boxDuration,
+//             boxPadding: widget.boxPadding,
+//             reactionSpacing: widget.boxReactionSpacing,
+//             itemScale: widget.itemScale,
+//             itemScaleDuration: widget.itemScaleDuration,
+//             onWaitingReaction: widget.onWaitingReaction,
+//             onSelectedReaction: widget.onSelectedReaction,
+//             onHoverReaction: widget.onHoverReaction,
+//           );
+//         },
+//       ),
+//     );
+
+//     if (reactionButton != null) _updateReaction(reactionButton);
+//   }
+
+//   void _updateReaction(Reaction<T> reaction) {
+//     widget.onReactionChanged.call(reaction.value);
+//     if (mounted && widget.shouldChangeReaction) {
+//       setState(() {
+//         _selectedReaction = reaction;
+//       });
+//     }
+//   }
+// }
+
+

@@ -454,31 +454,32 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
+                    
                     alignment: Alignment.centerRight,
                     child: ReactionButton(
                       onReactionChanged: (value) {
                         handleReaction(value);
                       },
                       onWaitingReaction: () {
-                        if (suggestReactionContent != suggestReaction) {
-                          setState(() {
-                            suggestReactionStatus = true;
-                            suggestReactionContent = suggestReaction;
-                          });
-                        }
+                        // if (suggestReactionContent != suggestReaction) {
+                        //   setState(() {
+                        //     suggestReactionStatus = true;
+                        //     suggestReactionContent = suggestReaction;
+                        //   });
+                        // }
                       },
                       onSelectedReaction: () {
-                        setState(() {
-                          suggestReactionStatus = false;
-                          suggestReactionContent = "";
-                        });
+                        // setState(() {
+                        //   suggestReactionStatus = false;
+                        //   suggestReactionContent = "";
+                        // });
                       },
                       onHoverReaction: () {
-                        if (suggestReactionContent != cancelReaction) {
-                          setState(() {
-                            suggestReactionContent = cancelReaction;
-                          });
-                        }
+                        // if (suggestReactionContent != cancelReaction) {
+                        //   setState(() {
+                        //     suggestReactionContent = cancelReaction;
+                        //   });
+                        // }
                       },
                       handlePressButton: handlePressButton,
                       reactions: <Reaction>[

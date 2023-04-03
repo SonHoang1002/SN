@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -113,6 +115,7 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
       }
     }
 
+    print("widget.medias: ${json.encode(widget.medias)}");
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
@@ -133,10 +136,29 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
                 child: Positioned(
                   top: _isDragging ? _dragOffset : 0,
                   child: Draggable(
-                      feedback: Image.network(
-                        path,
-                        fit: BoxFit.fitHeight,
+                      dragAnchorStrategy: (draggable, context, position) {
+                        return position -
+                            Offset(MediaQuery.of(context).size.width / 2,
+                                MediaQuery.of(context).size.height / 2);
+                      },
+                      feedbackOffset: Offset(0, 0),
+                      feedback: Container(
+                        // margin: EdgeInsets.only(
+                        //     top: MediaQuery.of(context).size.height / 4),
+                        height: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context).size.height,
+                        child: PhotoView(
+                          imageProvider: NetworkImage(path),
+                        ),
                       ),
+                      //  Container(
+                      //   margin: EdgeInsets.only(
+                      //       top: MediaQuery.of(context).size.height / 2),
+                      //   child: Image.network(
+                      //     path,
+                      //     fit: BoxFit.contain,
+                      //   ),
+                      // ),
                       onDragStarted: () {
                         setState(() {
                           _isDragging = true;
@@ -148,9 +170,7 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
                       },
                       onDragEnd: (details) {
                         if (_dragOffset.abs() > 60) {
-                          widget.backFunction == null
-                              ? popToPreviousScreen(context)
-                              : widget.backFunction!();
+                          popToPreviousScreen(context);
                         } else {
                           setState(() {
                             _isDragging = false;
@@ -167,57 +187,52 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
                           _dragOffset += details.delta.dy;
                         });
                       },
-                      child: _isDragging
-                          ? const SizedBox()
-                          : Container(
-                              color: Colors.black,
-                              child: GestureDetector(
-                                onScaleStart: (ScaleStartDetails details) {
-                                  setState(() {
-                                    _previousScale = _scale;
-                                  });
-                                },
-                                onScaleUpdate: (ScaleUpdateDetails details) {
-                                  setState(() {
-                                    _scale = _previousScale * details.scale;
-                                  });
-                                },
-                                onScaleEnd: (ScaleEndDetails details) {
-                                  setState(() {
-                                    _previousScale = 1.0;
-                                    _scale = 1.0;
-                                  });
-                                },
-                                onHorizontalDragEnd: (details) {
-                                  double velocity =
-                                      details.velocity.pixelsPerSecond.dx;
-                                  if (velocity > 0) {
-                                    handleUpdateData('prev');
-                                  } else if (velocity < 0) {
-                                    handleUpdateData('next');
-                                  }
-                                },
-                                child: PhotoView(
-                                  imageProvider: NetworkImage(path),
-                                  heroAttributes: PhotoViewHeroAttributes(
-                                      tag: widget.postMedia['id']),
-                                  backgroundDecoration:
-                                      const BoxDecoration(color: Colors.black),
-                                  initialScale:
-                                      PhotoViewComputedScale.contained * 1.0,
-                                  minScale:
-                                      PhotoViewComputedScale.contained * 1.0,
-                                  maxScale:
-                                      PhotoViewComputedScale.covered * 2.0,
-                                  enableRotation: true,
-                                  enablePanAlways: true,
-                                  onScaleEnd:
-                                      (context, details, controllerValue) {},
-                                  onTapUp:
-                                      (context, details, controllerValue) {},
-                                ),
-                              ),
-                            )),
+                      childWhenDragging: const SizedBox(),
+                      child: Container(
+                        color: Colors.black,
+                        child: GestureDetector(
+                          onScaleStart: (ScaleStartDetails details) {
+                            setState(() {
+                              _previousScale = _scale;
+                            });
+                          },
+                          onScaleUpdate: (ScaleUpdateDetails details) {
+                            setState(() {
+                              _scale = _previousScale * details.scale;
+                            });
+                          },
+                          onScaleEnd: (ScaleEndDetails details) {
+                            setState(() {
+                              _previousScale = 1.0;
+                              _scale = 1.0;
+                            });
+                          },
+                          onHorizontalDragEnd: (details) {
+                            double velocity =
+                                details.velocity.pixelsPerSecond.dx;
+                            if (velocity > 0) {
+                              handleUpdateData('prev');
+                            } else if (velocity < 0) {
+                              handleUpdateData('next');
+                            }
+                          },
+                          child: PhotoView(
+                            imageProvider: NetworkImage(path),
+                            heroAttributes: PhotoViewHeroAttributes(
+                                tag: widget.postMedia['id']),
+                            backgroundDecoration:
+                                const BoxDecoration(color: Colors.black),
+                            initialScale:
+                                PhotoViewComputedScale.contained * 1.0,
+                            minScale: PhotoViewComputedScale.contained * 1.0,
+                            maxScale: PhotoViewComputedScale.covered * 2.0,
+                            enableRotation: true,
+                            enablePanAlways: true,
+                            onScaleEnd: (context, details, controllerValue) {},
+                            onTapUp: (context, details, controllerValue) {},
+                          ),
+                        ),
+                      )),
                 ),
               );
             },
