@@ -1,14 +1,22 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class MomentVideo extends ConsumerStatefulWidget {
-  const MomentVideo({Key? key, this.moment}) : super(key: key);
+  const MomentVideo({
+    Key? key,
+    this.moment,
+    this.handleSlider,
+  }) : super(key: key);
   final dynamic moment;
+  final Function? handleSlider;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -24,9 +32,11 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
   double _yPosition = 0;
   bool isShowPlaying = true;
   bool isVisible = false;
-  bool isDrag = false;
-  double position = 0;
-  late Timer _timer;
+
+  bool _sliderChanging = false;
+  double _sliderValue = 0;
+
+  dynamic imageThumbnail;
 
   @override
   void initState() {
@@ -39,9 +49,6 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
     videoPlayerController = VideoPlayerController.network(
         widget.moment['media_attachments'][0]['url'])
       ..initialize().then((value) {
-        if (isVisible) {
-          videoPlayerController.play();
-        }
         videoPlayerController.setVolume(1);
         videoPlayerController.setLooping(true);
         setState(() {
@@ -49,34 +56,30 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         });
       })
       ..addListener(() {
-        final bool isPlaying = videoPlayerController.value.isPlaying;
-        final bool isEndOfVideo = videoPlayerController.value.position ==
-            videoPlayerController.value.duration;
-        if (isPlaying && !isEndOfVideo) {
+        if (!_sliderChanging) {
           setState(() {
-            position = videoPlayerController.value.position.inMilliseconds
-                    .toDouble() /
-                videoPlayerController.value.duration.inMilliseconds.toDouble();
+            _sliderValue =
+                videoPlayerController.value.position.inSeconds.toDouble();
           });
         }
       });
+  }
 
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
-      if (videoPlayerController.value.isPlaying) {
-        setState(() {
-          position = videoPlayerController.value.position.inMilliseconds
-                  .toDouble() /
-              videoPlayerController.value.duration.inMilliseconds.toDouble();
-        });
-      }
-    });
+  Future getThumbnail(String videoPath, Duration duration) async {
+    print('thumbnail, runnnnnnn');
+    final thumbnail = await VideoThumbnail.thumbnailData(
+      video: videoPath,
+      imageFormat: ImageFormat.JPEG,
+      timeMs: duration.inMilliseconds,
+    );
+    print('thumbnail, $thumbnail');
+    return thumbnail;
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     videoPlayerController.dispose();
-    _timer.cancel();
     super.dispose();
   }
 
@@ -109,6 +112,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return VisibilityDetector(
       key: Key('moment_video_${widget.moment['id']}'),
       onVisibilityChanged: (visibilityInfo) {
@@ -142,8 +146,16 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                     decoration: const BoxDecoration(
                       color: Colors.black,
                     ),
-                    child: VideoPlayer(
-                      videoPlayerController,
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio:
+                            videoPlayerController.value.aspectRatio < 0.6
+                                ? (size.width + 30) / size.height
+                                : videoPlayerController.value.aspectRatio,
+                        child: VideoPlayer(
+                          videoPlayerController,
+                        ),
+                      ),
                     )),
                 if (_xPosition != 0 && _yPosition != 0)
                   Positioned(
@@ -169,47 +181,88 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                   ),
               ],
             ),
-            Center(
-              child: Container(
-                decoration: const BoxDecoration(),
-                child: isPlaying(),
-              ),
-            ),
-            // Positioned(
-            //   bottom: -9,
-            //   child: SliderTheme(
-            //       data: const SliderThemeData(
-            //         trackHeight: 2.0,
-            //         thumbShape: RoundSliderThumbShape(
-            //           enabledThumbRadius: 0,
-            //         ),
-            //       ),
-            //       child: SizedBox(
-            //         width: size.width,
-            //         height: 20.0,
-            //         child: Expanded(
-            //           child: Slider(
-            //             activeColor: Colors.white,
-            //             inactiveColor: Colors.white.withOpacity(0.5),
-            //             value: position,
-            //             min: 0.0,
-            //             max: videoPlayerController.value.duration.inMilliseconds
-            //                 .toDouble(),
-            //             onChanged: (double value) {
-            //               setState(() {
-            //                 position = value;
-            //                 final Duration duration =
-            //                     videoPlayerController.value.duration;
-            //                 final newPosition =
-            //                     duration.inMilliseconds * value.toInt();
-            //                 videoPlayerController
-            //                     .seekTo(Duration(milliseconds: newPosition));
-            //               });
-            //             },
-            //           ),
-            //         ),
-            //       )),
-            // ),
+            _sliderChanging
+                ? Positioned(
+                    bottom: 30,
+                    child: SizedBox(
+                      width: size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            formatDuration(
+                                Duration(seconds: _sliderValue.round())),
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(
+                            width: 8.0,
+                          ),
+                          Text(
+                            '/',
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.5),
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(
+                            width: 8.0,
+                          ),
+                          Text(
+                            formatDuration(Duration(
+                                seconds: videoPlayerController
+                                    .value.duration.inSeconds)),
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.5),
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700),
+                          )
+                        ],
+                      ),
+                    ))
+                : const SizedBox(),
+            Positioned(
+                bottom: -20,
+                left: -23,
+                right: -23,
+                child: SliderTheme(
+                    data: SliderThemeData(
+                      trackHeight: _sliderChanging ? 2 : 0.3,
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 0,
+                      ),
+                    ),
+                    child: SizedBox(
+                      child: Slider(
+                        activeColor:
+                            Colors.white.withOpacity(_sliderChanging ? 1 : 0.6),
+                        inactiveColor: Colors.white.withOpacity(0.4),
+                        value: _sliderValue,
+                        min: 0,
+                        max: videoPlayerController.value.duration.inSeconds
+                            .toDouble(),
+                        onChanged: (value) {
+                          setState(() {
+                            _sliderChanging = true;
+                            _sliderValue = value;
+                          });
+                          widget.handleSlider!(true);
+                          getThumbnail(
+                              widget.moment['media_attachments'][0]['url'],
+                              Duration(seconds: _sliderValue.round()));
+                        },
+                        onChangeEnd: (value) {
+                          videoPlayerController
+                              .seekTo(Duration(seconds: value.toInt()));
+                          setState(() {
+                            _sliderChanging = false;
+                          });
+                          widget.handleSlider!(false);
+                        },
+                      ),
+                    )))
           ],
         ),
       ),

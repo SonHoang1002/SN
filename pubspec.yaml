@@ -78,7 +78,6 @@ dependencies:
   http_parser: ^4.0.2
   loader_skeleton: ^0.0.4
   shimmer: ^2.0.0
-  flutter_slidable: ^2.0.0
   modal_bottom_sheet: ^3.0.0-pre
   flutter_html: ^3.0.0-alpha.6
   flutter_secure_storage: ^8.0.0
@@ -106,6 +105,8 @@ dependencies:
   video_player: ^2.6.1
   flick_video_player: ^0.5.0
   persistent_bottom_nav_bar: ^5.0.2
+  flutter_slidable: ^2.0.0
+  video_thumbnail: ^0.5.3
 
 dev_dependencies:
   flutter_test:
