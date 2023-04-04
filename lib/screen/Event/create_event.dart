@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/screen/Event/date_picker.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/CropImage/src/controllers/controller.dart';
 import 'package:social_network_app_mobile/widget/CropImage/src/painters/solid_path_painter.dart';
@@ -19,6 +21,8 @@ class CreateEvents extends StatefulWidget {
 
 class _CreateEventsState extends State<CreateEvents> {
   File? _image;
+  DateTime selectedDateTime = DateTime(DateTime.now().year,
+      DateTime.now().month, DateTime.now().day, DateTime.now().hour + 1, 0);
   MemoryImage? _croppedImage;
   bool eventDateEnd = false;
   bool isCropping = false;
@@ -40,6 +44,36 @@ class _CreateEventsState extends State<CreateEvents> {
         });
       } else {}
     }
+  }
+
+  _onPressDatePicker() async {
+    final result = await Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            DatePickerCustom(
+          selectedDateTime: selectedDateTime,
+          onDateTimeChanged: (newDateTime, isDateTimeChanged) {
+            if (isDateTimeChanged == true) {
+              setState(() {
+                selectedDateTime = newDateTime;
+              });
+            } else {
+              selectedDateTime = selectedDateTime;
+            }
+          },
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -111,10 +145,17 @@ class _CreateEventsState extends State<CreateEvents> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  InkWell(
-                    onTap: () {},
-                    child: const TextField(
-                      decoration: InputDecoration(
+                  GestureDetector(
+                    onTap: () {
+                      _onPressDatePicker();
+                    },
+                    child: TextFormField(
+                      key: UniqueKey(),
+                      readOnly: true,
+                      enabled: false,
+                      initialValue: DateFormat('MMM d, y, h:mm a')
+                          .format(selectedDateTime),
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Ngày và giờ bắt đầu',
                       ),
