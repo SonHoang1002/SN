@@ -31,7 +31,8 @@ class _BannerBaseState extends State<BannerBase> {
     String path = widget.object['banner']?['preview_url'] ?? linkBannerDefault;
     String pathAvatar =
         widget.object['avatar_media']?['preview_url'] ?? linkAvatarDefault;
-    String title = widget.object['display_name'];
+    String title =
+        widget.object?['display_name'] ?? widget.object?['title'] ?? '';
     String subTitle =
         widget.objectMore?['general_information']?['other_name'] ?? '';
     final size = MediaQuery.of(context).size;
