@@ -24,7 +24,7 @@ class PostShareGroup extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-                '${group['is_private'] ? 'Nhóm riêng tư' : 'Nhóm công khai'} · ${group['member_count']} thành viên'),
+                '${group['is_private']!= null && group['is_private'] ? 'Nhóm riêng tư' : 'Nhóm công khai'} · ${group['member_count']} thành viên'),
             const SizedBox(
               height: 5,
             ),

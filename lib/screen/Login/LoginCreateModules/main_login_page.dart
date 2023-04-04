@@ -73,6 +73,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,

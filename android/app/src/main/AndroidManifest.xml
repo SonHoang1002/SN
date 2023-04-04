@@ -4,7 +4,7 @@
    <application
         android:usesCleartextTraffic="true"
         android:label="social_network_app_mobile"
-        android:name="${applicationName}"
+        android:name="io.flutter.app.FlutterMultiDexApplication"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

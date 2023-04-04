@@ -53,7 +53,7 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
             });
           }
         },
-        key: Key(widget.media['id']),
+        key: Key(widget.media['id'] ?? widget.path),
         child: Stack(
           children: [
             GestureDetector(
@@ -68,7 +68,7 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
                                     )));
                       },
                 child: Hero(
-                    tag: widget.media['id'],
+                    tag: widget.media['id'] ?? widget.path,
                     child: AspectRatio(
                         aspectRatio: videoPlayerController.value.aspectRatio,
                         child: VideoPlayer(videoPlayerController)))),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -21,7 +22,7 @@ class PostSharePage extends StatelessWidget {
           decoration: const BoxDecoration(
               border: Border(top: BorderSide(width: 0.2, color: greyColor))),
           child: ImageCacheRender(
-            path: page['banner']['preview_url'],
+            path: page['banner']?['preview_url'] ?? linkBannerDefault,
           ),
         ),
         Container(

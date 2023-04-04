@@ -1,6 +1,5 @@
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 
 class WatchDetail extends StatefulWidget {
   final dynamic media;
@@ -11,16 +10,31 @@ class WatchDetail extends StatefulWidget {
 }
 
 class _WatchDetailState extends State<WatchDetail> {
-  late FlickMultiManager flickMultiManager;
+  late BetterPlayerController betterPlayerController;
 
   @override
   void initState() {
     super.initState();
-    flickMultiManager = FlickMultiManager();
+    if (mounted) {
+      BetterPlayerConfiguration betterPlayerConfiguration =
+          BetterPlayerConfiguration(
+              aspectRatio: betterPlayerController.getAspectRatio(),
+              autoPlay: true,
+              autoDispose: true);
+      BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network,
+        widget.media['remote_url'] ?? widget.media['url'],
+        useAsmsSubtitles: true,
+      );
+      betterPlayerController =
+          BetterPlayerController(betterPlayerConfiguration);
+      betterPlayerController.setupDataSource(dataSource);
+    }
   }
 
   @override
   void dispose() {
+    betterPlayerController.dispose();
     super.dispose();
   }
 
@@ -32,10 +46,8 @@ class _WatchDetailState extends State<WatchDetail> {
       body: Container(
         color: Color(int.parse('0xFF${averageColor.substring(1)}')),
         child: Center(
-            child: VideoPlayerNoneController(
-                media: widget.media,
-                path: widget.media['remote_url'] ?? widget.media['url'],
-                type: 'local')),
+          child: BetterPlayer(controller: betterPlayerController),
+        ),
       ),
     );
   }
