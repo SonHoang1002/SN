@@ -41,7 +41,9 @@ class MyThemes {
       cardColor: Colors.grey.shade800,
       primaryColor: Colors.grey.withOpacity(0.6),
       appBarTheme: AppBarTheme(backgroundColor: Colors.grey.shade900),
-      textTheme: const TextTheme(displayLarge: TextStyle(color: white)),
+      textTheme: TextTheme(
+          displayLarge: const TextStyle(color: white),
+          bodySmall: TextStyle(color: Colors.grey.shade300)),
       colorScheme:
           const ColorScheme.dark().copyWith(background: Colors.grey.shade800),
       canvasColor: Colors.black,
@@ -56,7 +58,9 @@ class MyThemes {
       cardColor: white,
       primaryColor: white,
       appBarTheme: const AppBarTheme(backgroundColor: white),
-      textTheme: const TextTheme(displayLarge: TextStyle(color: Colors.black)),
+      textTheme: TextTheme(
+          displayLarge: const TextStyle(color: Colors.black),
+          bodySmall: TextStyle(color: Colors.grey.shade800)),
       colorScheme: const ColorScheme.light()
           .copyWith(background: const Color(0xfff1f2f5)),
       canvasColor: const Color(0xfff1f2f5),
