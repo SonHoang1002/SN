@@ -1,5 +1,7 @@
 import 'package:better_player/better_player.dart';
+import 'package:better_player/src/video_player/video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class WatchDetail extends StatefulWidget {
   final dynamic media;
@@ -11,6 +13,7 @@ class WatchDetail extends StatefulWidget {
 
 class _WatchDetailState extends State<WatchDetail> {
   late BetterPlayerController betterPlayerController;
+  double aspectRatio = 1;
 
   @override
   void initState() {
@@ -18,9 +21,7 @@ class _WatchDetailState extends State<WatchDetail> {
     if (mounted) {
       BetterPlayerConfiguration betterPlayerConfiguration =
           BetterPlayerConfiguration(
-              aspectRatio: betterPlayerController.getAspectRatio(),
-              autoPlay: true,
-              autoDispose: true);
+              autoPlay: true, autoDispose: true, aspectRatio: aspectRatio);
       BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network,
         widget.media['remote_url'] ?? widget.media['url'],
@@ -28,8 +29,25 @@ class _WatchDetailState extends State<WatchDetail> {
       );
       betterPlayerController =
           BetterPlayerController(betterPlayerConfiguration);
+
+      betterPlayerController.addEventsListener((event) {
+        if (event.betterPlayerEventType == BetterPlayerEventType.initialized) {
+          onVideoInitialized();
+        }
+      });
+
       betterPlayerController.setupDataSource(dataSource);
     }
+  }
+
+  void onVideoInitialized() {
+    var videoPlayerController = betterPlayerController.videoPlayerController;
+    Size? videoDimensions = videoPlayerController!.value.size;
+    double aspectRatio = videoDimensions!.width / videoDimensions.height;
+    print('aspectRatio, $aspectRatio');
+    setState(() {
+      aspectRatio = aspectRatio;
+    });
   }
 
   @override
