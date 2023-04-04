@@ -162,20 +162,13 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                     ],
                   );
                 },
-
-                /// customize the month header look by adding a week indicator
                 monthBuilder: (context, month, year) {
                   return Column(
                     children: [
-                      /// create a customized header displaying the month and year
                       Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 20),
                         margin: const EdgeInsets.all(20),
-                        // decoration: const BoxDecoration(
-                        //   color: secondaryColor,
-                        //   borderRadius: BorderRadius.all(Radius.circular(50)),
-                        // ),
                         child: Text(
                           _dateFormat.format(DateTime(year, month)),
                           style:

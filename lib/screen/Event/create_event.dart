@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/screen/Event/date_picker.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widget/CropImage/src/controllers/controller.dart';
-import 'package:social_network_app_mobile/widget/CropImage/src/painters/solid_path_painter.dart';
-import 'package:social_network_app_mobile/widget/CropImage/src/widgets/custom_image_crop_widget.dart';
+import 'package:social_network_app_mobile/widget/CustomCropImage/crop_your_image.dart';
 
 class CreateEvents extends StatefulWidget {
   const CreateEvents({Key? key}) : super(key: key);
@@ -20,29 +19,35 @@ class CreateEvents extends StatefulWidget {
 }
 
 class _CreateEventsState extends State<CreateEvents> {
-  File? _image;
+  final _imageDataList = <Uint8List>[];
   DateTime selectedDateTime = DateTime(DateTime.now().year,
       DateTime.now().month, DateTime.now().day, DateTime.now().hour + 1, 0);
-  MemoryImage? _croppedImage;
+  Uint8List? _croppedImage;
   bool eventDateEnd = false;
   bool isCropping = false;
+  Future<Uint8List> _load(File imageFile) async {
+    final bytes = await imageFile.readAsBytes();
+    return Uint8List.fromList(bytes);
+  }
+
   Future<void> _getImage() async {
     final pickedFile = await ImagePicker()
         // ignore: deprecated_member_use
         .getImage(source: ImageSource.gallery, imageQuality: 100);
     if (pickedFile != null) {
-      final imageFile = File(pickedFile.path);
+      final imageData = await _load(File(pickedFile.path));
+
       final croppedImage = await Navigator.push(
         context,
         CupertinoPageRoute(
-          builder: (context) => CropImageScreen(image: imageFile),
+          builder: (context) => CropImageScreen(image: imageData),
         ),
       );
-      if (croppedImage != null) {
+      if (croppedImage != null && mounted) {
         setState(() {
           _croppedImage = croppedImage;
         });
-      } else {}
+      }
     }
   }
 
@@ -93,10 +98,9 @@ class _CreateEventsState extends State<CreateEvents> {
                     SizedBox(
                         height: 200,
                         width: MediaQuery.of(context).size.width,
-                        child: Image.memory(
-                          _croppedImage!.bytes,
-                          fit: BoxFit.cover,
-                        )),
+                        child: _croppedImage == null
+                            ? const SizedBox.shrink()
+                            : Image.memory(_croppedImage!)),
                   Positioned(
                     bottom: 8,
                     right: 12,
@@ -217,7 +221,7 @@ class _CreateEventsState extends State<CreateEvents> {
 }
 
 class CropImageScreen extends StatefulWidget {
-  final File? image;
+  final Uint8List? image;
 
   const CropImageScreen({
     required this.image,
@@ -229,61 +233,88 @@ class CropImageScreen extends StatefulWidget {
 }
 
 class _CropImageScreenState extends State<CropImageScreen> {
-  late CustomImageCropController controller;
+  final _cropController = CropController();
   late BuildContext _context;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = CustomImageCropController();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
+  final _loadingImage = false;
+  var _isCropping = false;
+  Uint8List? _croppedData;
   @override
   Widget build(BuildContext context) {
     _context = context;
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: CustomImageCrop(
-              cropController: controller,
-              shape: CustomCropShape.Square,
-              canRotate: false,
-              canMove: true,
-              canScale: false,
-              drawPath: SolidCropPathPainter.drawPath,
-              image: FileImage(widget.image!),
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Center(
+          child: Visibility(
+            visible: !_loadingImage && !_isCropping,
+            replacement: const CircularProgressIndicator(),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Visibility(
+                    visible: _croppedData == null,
+                    replacement: const Center(child: SizedBox.shrink()),
+                    child: Stack(
+                      children: [
+                        if (widget.image != null) ...[
+                          Crop(
+                            controller: _cropController,
+                            image: widget.image!,
+                            onCropped: (croppedData) {
+                              Navigator.pop(_context, croppedData);
+                              setState(() {
+                                _croppedData = croppedData;
+                                _isCropping = false;
+                              });
+                            },
+                            aspectRatio: 16 / 9,
+                            withCircleUi: false,
+                            initialSize: null,
+                            cornerDotBuilder: (size, edgeAlignment) =>
+                                const SizedBox.shrink(),
+                            interactive: false,
+                            fixArea: false,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                if (_croppedData == null)
+                  Material(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                setState(() {
+                                  _isCropping = true;
+                                });
+                                _cropController.crop();
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Text('CROP IT!'),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                const SizedBox(height: 16),
+              ],
             ),
           ),
-          Row(
-            children: [
-              InkWell(
-                onTap: _onCropImage,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.crop),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: MediaQuery.of(_context).padding.bottom),
-        ],
+        ),
       ),
     );
-  }
-
-  void _onCropImage() {
-    final image = controller.onCropImage();
-    Navigator.pop(_context, image);
   }
 }
