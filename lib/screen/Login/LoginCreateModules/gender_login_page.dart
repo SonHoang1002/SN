@@ -42,7 +42,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
       bottomNavigationBar: SizedBox(
         height: 80,
         child: buildHaveAccountWidget(function: () {
-          pushToNextScreen(context, const MainLoginPage());
+          pushToNextScreen(context, const MainLoginPage(null));
         }),
       ),
       body: GestureDetector(

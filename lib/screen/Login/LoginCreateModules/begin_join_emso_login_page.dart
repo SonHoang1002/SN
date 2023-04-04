@@ -78,7 +78,7 @@ class BeginJoinEmsoLoginPage extends StatelessWidget {
                     ),
                   ),
                   buildHaveAccountWidget(function: () {
-                    pushToNextScreen(context, MainLoginPage());
+                    pushToNextScreen(context, MainLoginPage(null));
                   })
                 ],
               ),

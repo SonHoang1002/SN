@@ -29,12 +29,12 @@
 //     List buttonAction = [
 //       {
 //         "key": "comment",
-//         "icon": "assets/reaction/img_comment.png",
+//         "icon": "assets/reaction/comment_light.png",
 //         "label": "Bình luận"
 //       },
 //       {
 //         "key": "share",
-//         "icon": "assets/reaction/img_share.png",
+//         "icon": "assets/reaction/share_light.png",
 //         "label": "Chia sẻ"
 //       }
 //     ];
@@ -329,12 +329,12 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     List buttonAction = [
       {
         "key": "comment",
-        "icon": "assets/reaction/img_comment.png",
+        "icon": "assets/reaction/comment_light.png",
         "label": "Bình luận"
       },
       {
         "key": "share",
-        "icon": "assets/reaction/img_share.png",
+        "icon": "assets/reaction/share_light.png",
         "label": "Chia sẻ"
       }
     ];
@@ -564,7 +564,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                                   child: ButtonLayout(
                                     button: {
                                       "key": "reaction",
-                                      "icon": "assets/reaction/img_like.png",
+                                      "icon": "assets/reaction/like_light.png",
                                       "label": "Thích"
                                     },
                                   ),

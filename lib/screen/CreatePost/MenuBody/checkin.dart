@@ -123,9 +123,7 @@ class _CheckinState extends State<Checkin> {
                         if (widget.type == 'menu_out') {
                           Navigator.of(context).pop();
                         } else {
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop();
+                          Navigator.of(context).pop();
                         }
                       });
                     },

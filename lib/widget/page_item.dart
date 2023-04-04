@@ -15,8 +15,12 @@ class PageItem extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return InkWell(
       onTap: () {
-        Navigator.push(context,
-            CupertinoPageRoute(builder: (context) => const PageDetail()));
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => PageDetail(
+                      pageData: page,
+                    )));
       },
       child: Row(
         children: [

@@ -40,8 +40,8 @@ class CreatePostButton extends ConsumerWidget {
                   ),
                 ],
               ),
-              SvgPicture.asset(
-                "assets/post_media.svg",
+              Image.asset(
+                "assets/images_and_video.png",
                 width: 30,
               )
             ]),

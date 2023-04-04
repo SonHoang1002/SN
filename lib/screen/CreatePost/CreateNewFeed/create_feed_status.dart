@@ -164,8 +164,8 @@ class WrapBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 26,
-      height: 26,
+      width: 30,
+      height: 30,
       decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.2),
           borderRadius: BorderRadius.circular(5),

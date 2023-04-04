@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 buildBottomNavigatorWithButtonAndChipWidget(
     {required BuildContext context,
@@ -7,9 +9,10 @@ buildBottomNavigatorWithButtonAndChipWidget(
     required int currentPage,
     required String title,
     required bool isPassCondition,
+    dynamic loading,
     Widget? newScreen,
     Function? function}) {
-  return Container(
+  return SizedBox(
     height: 70,
     // color: Colors.black87,
     child: Column(children: [
@@ -17,20 +20,24 @@ buildBottomNavigatorWithButtonAndChipWidget(
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 fixedSize: Size(width * 0.9, 40),
-                backgroundColor: isPassCondition ? Colors.blue : Colors.grey),
+                backgroundColor:
+                    isPassCondition ? secondaryColor : Colors.grey),
             onPressed: () {
-              // function != null ? function() : null;
-              if (isPassCondition) {
-                newScreen != null ? pushToNextScreen(context, newScreen) : null;
+              if (function != null && isPassCondition) {
+                function();
+              } else if (isPassCondition && newScreen != null) {
+                pushToNextScreen(context, newScreen);
               }
             },
-            child: Text(title)),
+            child: loading == true
+                ? const CupertinoActivityIndicator()
+                : Text(title)),
       ),
       const SizedBox(
         height: 5,
       ),
       Center(
-          child: Container(
+          child: SizedBox(
         height: 6,
         width: width * 0.9,
         child: ListView.builder(
@@ -44,7 +51,8 @@ buildBottomNavigatorWithButtonAndChipWidget(
                 // height: 2,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(3),
-                  color: index < currentPage ? Colors.blue : Colors.grey[800],
+                  color:
+                      index < currentPage ? secondaryColor : Colors.grey[800],
                 ),
               );
             })),

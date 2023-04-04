@@ -24,7 +24,9 @@ class _MapExpanded extends State<MapExpanded> {
   void _launchMapsApp() async {
     final latitude = widget.checkin['location']['lat'];
     final longitude = widget.checkin['location']['lng'];
+
     final url = 'comgooglemaps://?q=$latitude,$longitude&zoom=13';
+
     if (await canLaunch(url)) {
       await launch(url);
     } else {

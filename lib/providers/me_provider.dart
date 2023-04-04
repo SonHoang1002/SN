@@ -57,6 +57,25 @@ class MeController extends StateNotifier<List> {
       }
 
       state = [response];
+    } else {
+      var newList = await SecureStorage().getKeyStorage('dataLogin');
+      var token = await SecureStorage().getKeyStorage("token");
+
+      List listAccount = [];
+
+      if (newList != null && newList != 'noData') {
+        listAccount = jsonDecode(newList) ?? [];
+      }
+      await SecureStorage().saveKeyStorage(
+          jsonEncode(listAccount
+              .map((element) => element['token'] == token
+                  ? {...element, token: null}
+                  : element)
+              .toList()),
+          'dataLogin');
+      resetMeData();
+      SecureStorage().deleteKeyStorage('token');
+      SecureStorage().deleteKeyStorage('userId');
     }
   }
 
