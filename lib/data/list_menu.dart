@@ -189,3 +189,39 @@ List listSocial = [
     "icon": "assets/Payment.svg"
   }
 ];
+
+List pageMenu = [
+  {
+    "key": "home_page",
+    "label": "Trang chủ",
+  },
+  {
+    "key": "photo_page",
+    "label": "Ảnh",
+  },
+  {
+    "key": "video_page",
+    "label": "Video",
+  },
+  {
+    "key": "group_page",
+    "label": "Nhóm",
+  },
+  {
+    "key": "event_page",
+    "label": "Sự kiện",
+  },
+  {
+    "key": "review_page",
+    "label": "Đánh giá",
+  },
+  {
+    "key": "about_page",
+    "label": "Giới thiệu",
+  },
+  {"key": "community_page", "label": "Cộng đồng"},
+  {
+    "key": "deal_page",
+    "label": "Ưu đãi",
+  },
+];
