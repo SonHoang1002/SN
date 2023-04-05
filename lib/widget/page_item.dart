@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/screen/Page/page_detail.dart';
+import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 import 'text_description.dart';
@@ -15,12 +15,7 @@ class PageItem extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => PageDetail(
-                      pageData: page,
-                    )));
+        Navigator.pushNamed(context, '/page', arguments: page);
       },
       child: Row(
         children: [

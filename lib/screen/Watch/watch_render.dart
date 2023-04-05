@@ -3,6 +3,7 @@ import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_home.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
+import 'package:social_network_app_mobile/widget/header_tabs.dart';
 
 import 'watch_saved.dart';
 
@@ -25,19 +26,16 @@ class _WatchRenderState extends State<WatchRender> {
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(
-                watchMenu.length,
-                (index) => InkWell(
-                      onTap: () {
-                        setState(() {
-                          menuSelected = watchMenu[index]['key'];
-                        });
-                      },
-                      child: ChipMenu(
-                          isSelected: menuSelected == watchMenu[index]['key'],
-                          label: watchMenu[index]['label']),
-                    )),
+          child: HeaderTabs(
+            chooseTab: (tab) {
+              if (mounted) {
+                setState(() {
+                  menuSelected = tab;
+                });
+              }
+            },
+            listTabs: watchMenu,
+            tabCurrent: menuSelected,
           ),
         ),
         const CrossBar(

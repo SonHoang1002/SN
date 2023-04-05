@@ -39,6 +39,31 @@ checkObjectUniqueInList(list, keyCheck) {
   return newList;
 }
 
+convertTimeIsoToTimeShow(String value, dynamic type, bool? checkThisDay) {
+  var timeNow = DateTime.now();
+  var dayNow = timeNow.day;
+
+  var year = value.substring(0, 4);
+  var month = value.substring(5, 7);
+  var day = value.substring(8, 10);
+  var hour = value.substring(11, 13);
+  var min = value.substring(14, 16);
+
+  switch (type) {
+    case 'dMy':
+      if (dayNow.toString() == '${int.parse(day)}/${int.parse(month)}/$year' &&
+          checkThisDay == true) {
+        return '$hour/$min';
+      } else {
+        return '$day/$month/$year';
+      }
+    case 'hM':
+      return '$hour/$min';
+    default:
+      break;
+  }
+}
+
 String formatDuration(Duration duration) {
   String twoDigits(int n) => n >= 10 ? "$n" : "0$n";
   String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));

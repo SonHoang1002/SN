@@ -10,6 +10,9 @@ import '../../../../widget/back_icon_appbar.dart';
 import 'invite_friend_page.dart';
 
 class AvatarPage extends StatefulWidget {
+  final dataCreate;
+
+  const AvatarPage({super.key, this.dataCreate});
   @override
   State<AvatarPage> createState() => _AvatarPageState();
 }
@@ -212,7 +215,7 @@ class _AvatarPageState extends State<AvatarPage> {
               child: buildBottomNavigatorWithButtonAndChipWidget(
                   context: context,
                   width: width,
-                  newScreen: InviteFriendPage(),
+                  newScreen: InviteFriendPage(dataCreate: widget.dataCreate),
                   title: "Tiếp",
                   isPassCondition: true,
                   currentPage: 4),

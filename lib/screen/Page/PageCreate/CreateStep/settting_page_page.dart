@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:social_network_app_mobile/constant/page_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/Page/page_detail.dart';
+import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class SettingsPage extends StatefulWidget {
+  final dataCreate;
+  const SettingsPage({super.key, this.dataCreate});
+
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
@@ -33,7 +36,6 @@ class _SettingsPageState extends State<SettingsPage> {
           }),
           child: Stack(alignment: Alignment.bottomCenter, children: [
             Container(
-              // color: Colors.black87,
               padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
               child: Column(
                 children: [
@@ -42,11 +44,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-
                   const SizedBox(
                     height: 10,
                   ),
-                  //description
                   const Text(
                       'Hãy bật những tính năng này để khai thác tối đa Trang của bạn. Bạn có thể vào phần cài đặt để thay đổi bất cứ lúc nào.',
                       style: TextStyle(fontSize: 17)),
@@ -115,7 +115,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   width: width,
                   function: () {
-                    pushAndReplaceToNextScreen(context, const PageDetail());
+                    Navigator.pushReplacementNamed(context, '/page',
+                        arguments: widget.dataCreate);
                   },
                   isPassCondition: true,
                   title: "Xong",

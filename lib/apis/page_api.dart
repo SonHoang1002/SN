@@ -15,6 +15,37 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/page_categories", params);
   }
 
+  Future getListPostPageApi(params, id) async {
+    return await Api().getRequestBase('/api/v1/timelines/page/$id', params);
+  }
+
+  Future getListPostPagePinedApi(id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/pins', null);
+  }
+
+  Future getListReviewPageApi(params, id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/feedbacks', params);
+  }
+
+  Future getListMediaPageApi(params, id) async {
+    return await Api()
+        .getRequestBase('/api/v1/pages/$id/media_attachments', params);
+  }
+
+  Future getListAlbumPageApi(params, id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/albums', params);
+  }
+
+  Future handleDeleteReviewPageApi(idPage, idFeedback) async {
+    return await Api()
+        .deleteRequestBase('/api/v1/pages/$idPage/feedbacks/$idFeedback', null);
+  }
+
+  Future handleReviewPageApi(idPage, params) async {
+    return await Api()
+        .postRequestBase('/api/v1/pages/$idPage/feedbacks', params);
+  }
+
   Future<http.Response> createPage(data) async {
     // return await Api().postRequestBase("/api/v1/pages", params);
     var token = await SecureStorage().getKeyStorage("token");
