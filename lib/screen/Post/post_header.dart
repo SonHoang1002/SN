@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -245,6 +246,8 @@ class BlockNamePost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentRouter = ModalRoute.of(context)?.settings.name;
+
     renderDisplayName() {
       if (group != null) {
         return group['title'];
@@ -257,52 +260,64 @@ class BlockNamePost extends StatelessWidget {
       }
     }
 
-    return RichText(
-      text: TextSpan(
-        text: renderDisplayName(),
-        style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.displayLarge!.color),
-        children: [
-          const TextSpan(text: ' '),
-          statusActivity.isNotEmpty
-              ? WidgetSpan(
-                  child: ImageCacheRender(
-                    path: statusActivity['url'],
-                    width: 18.0,
-                    height: 18.0,
-                  ),
-                )
-              : const TextSpan(text: ''),
-          TextSpan(
-              text: description,
-              style: const TextStyle(fontWeight: FontWeight.normal)),
-          mentions.isNotEmpty
-              ? TextSpan(text: mentions[0]['display_name'])
-              : const TextSpan(),
-          mentions.isNotEmpty && mentions.length >= 2
-              ? const TextSpan(
-                  text: ' và ', style: TextStyle(fontWeight: FontWeight.normal))
-              : const TextSpan(),
-          mentions.isNotEmpty && mentions.length == 2
-              ? TextSpan(
-                  text: mentions[1]['display_name'],
-                )
-              : const TextSpan(),
-          mentions.isNotEmpty && mentions.length > 2
-              ? TextSpan(
-                  text: '${mentions.length - 1} người khác',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) =>
-                                  PageMention(mentions: mentions)));
-                    })
-              : const TextSpan(),
-        ],
+    void pushToScreen() {
+      if (post['place']?['id'] != page['id'] && currentRouter != '/page') {
+        Navigator.pushNamed(context, '/page', arguments: page);
+      }
+    }
+
+    return InkWell(
+      onTap: () {
+        pushToScreen();
+      },
+      child: RichText(
+        text: TextSpan(
+          text: renderDisplayName(),
+          style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).textTheme.displayLarge!.color),
+          children: [
+            const TextSpan(text: ' '),
+            statusActivity.isNotEmpty
+                ? WidgetSpan(
+                    child: ImageCacheRender(
+                      path: statusActivity['url'],
+                      width: 18.0,
+                      height: 18.0,
+                    ),
+                  )
+                : const TextSpan(text: ''),
+            TextSpan(
+                text: description,
+                style: const TextStyle(fontWeight: FontWeight.normal)),
+            mentions.isNotEmpty
+                ? TextSpan(text: mentions[0]['display_name'])
+                : const TextSpan(),
+            mentions.isNotEmpty && mentions.length >= 2
+                ? const TextSpan(
+                    text: ' và ',
+                    style: TextStyle(fontWeight: FontWeight.normal))
+                : const TextSpan(),
+            mentions.isNotEmpty && mentions.length == 2
+                ? TextSpan(
+                    text: mentions[1]['display_name'],
+                  )
+                : const TextSpan(),
+            mentions.isNotEmpty && mentions.length > 2
+                ? TextSpan(
+                    text: '${mentions.length - 1} người khác',
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) =>
+                                    PageMention(mentions: mentions)));
+                      })
+                : const TextSpan(),
+          ],
+        ),
       ),
     );
   }
@@ -324,6 +339,14 @@ class AvatarPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentRouter = ModalRoute.of(context)?.settings.name;
+
+    void pushToScreen() {
+      if (post['place']?['id'] != page['id'] && currentRouter != '/page') {
+        Navigator.pushNamed(context, '/page', arguments: page);
+      }
+    }
+
     String accountLink = account['avatar_media'] != null
         ? account['avatar_media']['preview_url']
         : linkAvatarDefault;
@@ -358,13 +381,18 @@ class AvatarPost extends StatelessWidget {
               ],
             ),
           )
-        : Padding(
-            padding: const EdgeInsets.only(top: 1),
-            child: Avatar(
-              path: page != null && post['place']?['id'] != page['id']
-                  ? pageLink
-                  : accountLink,
-              object: page,
+        : InkWell(
+            onTap: () {
+              pushToScreen();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 1),
+              child: Avatar(
+                path: page != null && post['place']?['id'] != page['id']
+                    ? pageLink
+                    : accountLink,
+                object: page,
+              ),
             ),
           );
   }

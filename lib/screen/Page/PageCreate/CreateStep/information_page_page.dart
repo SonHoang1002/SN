@@ -143,7 +143,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
               child: buildBottomNavigatorWithButtonAndChipWidget(
                   context: context,
                   width: width,
-                  newScreen: AvatarPage(),
+                  newScreen: AvatarPage(dataCreate: widget.dataCreate),
                   isPassCondition: _informationKey.currentState == null
                       ? true
                       : _informationKey.currentState!.validate(),

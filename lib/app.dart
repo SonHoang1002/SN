@@ -15,11 +15,13 @@ import 'package:social_network_app_mobile/providers/posts/reaction_message_conte
 import 'package:social_network_app_mobile/providers/posts/reaction_message_status.dart';
 import 'package:social_network_app_mobile/providers/setting/choose_object_provider.dart';
 import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/onboarding_login_page.dart';
+import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 
 import 'theme/theme_manager.dart';
 
 var routes = <String, WidgetBuilder>{
   "/home": (BuildContext context) => const Home(),
+  '/page': (BuildContext context) => const PageDetail(),
   //  SaleInformationMarketPage
   '/login': (BuildContext context) => const OnboardingLoginPage(),
   '/': (BuildContext context) => const PreviewScreen()

@@ -14,6 +14,12 @@ import '../../../../widget/back_icon_appbar.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class InviteFriendPage extends ConsumerStatefulWidget {
+  final dataCreate;
+  const InviteFriendPage({
+    super.key,
+    this.dataCreate,
+  });
+
   @override
   ConsumerState<InviteFriendPage> createState() => _InviteFriendPageState();
 }
@@ -93,7 +99,7 @@ class _InviteFriendPageState extends ConsumerState<InviteFriendPage> {
                 context: context,
                 width: width,
                 isPassCondition: true,
-                newScreen: SettingsPage(),
+                newScreen: SettingsPage(dataCreate: widget.dataCreate),
                 title: "Tiếp",
                 currentPage: 5),
           )

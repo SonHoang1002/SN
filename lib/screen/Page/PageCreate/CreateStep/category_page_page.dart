@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -48,6 +50,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
   Future handleCreatePage(data) async {
     var response = await PageApi().createPage(data);
+
     if (!mounted) return;
     setState(() {
       loadingCreate = false;
@@ -56,8 +59,11 @@ class _CategoryPageState extends State<CategoryPage> {
       // ignore: use_build_context_synchronously
       pushToNextScreen(
           context,
-          InformationPagePage(
-              {...widget.dataCreate, 'category': categorySelected}));
+          InformationPagePage({
+            ...widget.dataCreate,
+            'category': categorySelected,
+            ...jsonDecode(response.body)
+          }));
     } else {
       // ignore: use_build_context_synchronously
       _showAlertDialog(

@@ -8,7 +8,8 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final dataCreate;
+  const SettingsPage({super.key, this.dataCreate});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -114,7 +115,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   width: width,
                   function: () {
-                    pushAndReplaceToNextScreen(context, const PageDetail());
+                    Navigator.pushReplacementNamed(context, '/page',
+                        arguments: widget.dataCreate);
                   },
                   isPassCondition: true,
                   title: "Xong",
