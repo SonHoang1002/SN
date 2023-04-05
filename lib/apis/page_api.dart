@@ -19,8 +19,21 @@ class PageApi {
     return await Api().getRequestBase('/api/v1/timelines/page/$id', params);
   }
 
+  Future getListPostPagePinedApi(id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/pins', null);
+  }
+
   Future getListReviewPageApi(params, id) async {
     return await Api().getRequestBase('/api/v1/pages/$id/feedbacks', params);
+  }
+
+  Future getListMediaPageApi(params, id) async {
+    return await Api()
+        .getRequestBase('/api/v1/pages/$id/media_attachments', params);
+  }
+
+  Future getListAlbumPageApi(params, id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/albums', params);
   }
 
   Future handleDeleteReviewPageApi(idPage, idFeedback) async {

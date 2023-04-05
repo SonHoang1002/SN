@@ -1,4 +1,6 @@
 // ignore: implementation_imports
+import 'package:flutter/src/widgets/basic.dart';
+// ignore: implementation_imports
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_network_app_mobile/widget/box-quick-update.dart';
 
@@ -40,12 +42,15 @@ class _BoxQuickUpdatePageState extends State<BoxQuickUpdatePage> {
   ];
   @override
   Widget build(BuildContext context) {
-    return BoxQuickUpdate(
-      title: 'Thiết lập trang nhanh',
-      description:
-          'Hãy hoàn tất bước thiết lập Trang để mọi người trên EMSO biết doanh nghiệp của bạn đáng tin cậy.',
-      valueLinearProgress: 0.7,
-      listActions: listActionsQuickUpdate,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: BoxQuickUpdate(
+        title: 'Thiết lập trang nhanh',
+        description:
+            'Hãy hoàn tất bước thiết lập Trang để mọi người trên EMSO biết doanh nghiệp của bạn đáng tin cậy.',
+        valueLinearProgress: 0.7,
+        listActions: listActionsQuickUpdate,
+      ),
     );
   }
 }

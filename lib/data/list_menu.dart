@@ -208,16 +208,16 @@ List pageMenu = [
     "label": "Nhóm",
   },
   {
+    "key": "about_page",
+    "label": "Giới thiệu",
+  },
+  {
     "key": "event_page",
     "label": "Sự kiện",
   },
   {
     "key": "review_page",
     "label": "Đánh giá",
-  },
-  {
-    "key": "about_page",
-    "label": "Giới thiệu",
   },
   {"key": "community_page", "label": "Cộng đồng"},
   {

@@ -10,23 +10,51 @@ class PageState {
   final bool isMoreFeed;
   final List pageReview;
   final bool isMoreReview;
+  final List pagePined;
+  final List pagePhoto;
+  final bool isMorePhoto;
+  final List pageAlbum;
+  final bool isMoreAlbum;
+  final List pageVideo;
+  final bool isMoreVideo;
 
   const PageState(
       {this.pageFeed = const [],
       this.isMoreFeed = true,
       this.pageReview = const [],
-      this.isMoreReview = true});
+      this.isMoreReview = true,
+      this.pagePined = const [],
+      this.pagePhoto = const [],
+      this.isMorePhoto = true,
+      this.pageAlbum = const [],
+      this.isMoreAlbum = true,
+      this.pageVideo = const [],
+      this.isMoreVideo = true});
 
   PageState copyWith(
       {List pageFeed = const [],
       bool isMoreFeed = true,
       List pageReview = const [],
-      bool isMoreReview = true}) {
+      bool isMoreReview = true,
+      List pagePined = const [],
+      List pagePhoto = const [],
+      bool isMorePhoto = true,
+      List pageAlbum = const [],
+      bool isMoreAlbum = true,
+      List pageVideo = const [],
+      bool isMoreVideo = true}) {
     return PageState(
         pageFeed: pageFeed,
         isMoreFeed: isMoreFeed,
         pageReview: pageReview,
-        isMoreReview: isMoreReview);
+        isMoreReview: isMoreReview,
+        pagePined: pagePined,
+        pagePhoto: pagePhoto,
+        isMorePhoto: isMorePhoto,
+        pageAlbum: pageAlbum,
+        isMoreAlbum: isMoreAlbum,
+        pageVideo: pageVideo,
+        isMoreVideo: isMoreVideo);
   }
 }
 
@@ -51,7 +79,14 @@ class PageController extends StateNotifier<PageState> {
                     ? response + state.pageReview
                     : state.pageReview + response,
                 'id'),
-            isMoreReview: response.isEmpty ? false : true);
+            isMoreReview: response.isEmpty ? false : true,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo);
       }
     }
   }
@@ -64,7 +99,85 @@ class PageController extends StateNotifier<PageState> {
             pageFeed: checkObjectUniqueInList(state.pageFeed + response, 'id'),
             isMoreFeed: response.length < params['limit'] ? false : true,
             pageReview: state.pageReview,
-            isMoreReview: state.isMoreReview);
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo);
+      }
+    }
+  }
+
+  getListPagePined(id) async {
+    var response = await PageApi().getListPostPagePinedApi(id);
+    if (response != null) {
+      if (mounted) {
+        state = state.copyWith(
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: response,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo);
+      }
+    }
+  }
+
+  getListPageMedia(params, id) async {
+    var response = await PageApi().getListMediaPageApi(params, id);
+    if (response != null) {
+      if (mounted) {
+        state = state.copyWith(
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto +
+              (params['media_type'] == 'image' ? response : []),
+          isMorePhoto: params['media_type'] == 'image'
+              ? response.length < params['limit']
+                  ? false
+                  : true
+              : state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo +
+              (params['media_type'] == 'video' ? response : []),
+          isMoreVideo: params['media_type'] == 'video'
+              ? response.length < params['limit']
+                  ? false
+                  : true
+              : state.isMoreVideo,
+        );
+      }
+    }
+  }
+
+  getListPageAlbum(params, id) async {
+    var response = await PageApi().getListAlbumPageApi(params, id);
+    if (response != null) {
+      if (mounted) {
+        state = state.copyWith(
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum + response,
+            isMoreAlbum: response.length < params['limit'] ? false : true,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo);
       }
     }
   }
@@ -76,7 +189,14 @@ class PageController extends StateNotifier<PageState> {
           isMoreFeed: state.isMoreFeed,
           pageReview:
               state.pageReview.where((element) => element['id'] != id).toList(),
-          isMoreReview: state.isMoreReview);
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo);
     }
   }
 }
