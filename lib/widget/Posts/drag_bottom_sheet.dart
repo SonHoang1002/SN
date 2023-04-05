@@ -70,7 +70,7 @@ class CustomDraggableBottomSheet extends StatefulWidget {
     this.expansionExtent = 10.0,
     this.barrierDismissible = true,
     this.maxExtent = double.infinity,
-    this.barrierColor = Colors.black54,
+    this.barrierColor = Colors.black26,
     this.alignment = Alignment.bottomCenter,
     this.onClose,
     this.duration = const Duration(milliseconds: 0),

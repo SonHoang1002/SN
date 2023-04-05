@@ -72,9 +72,30 @@ List listMenuPost = [
     "disabled": ['media', 'gif', 'answer', 'answer-learn']
   },
   {
+    "key": 'live-video',
+    "label": 'Video trực tiếp',
+    "image": "assets/live_video.png",
+    "color": 0xFFFA383E,
+    "disabled": []
+  },
+  {
+    "key": 'bg-color',
+    "label": 'Màu nền',
+    "image": "assets/bg_color.png",
+    "color": 0xFFFA383E,
+    "disabled": []
+  },
+  {
+    "key": 'camera',
+    "label": 'Camera',
+    "image": "assets/camera_menu.png",
+    "color": 0xFFFA383E,
+    "disabled": []
+  },
+  {
     "key": 'gif',
     "label": 'File GIF',
-    "icon": FontAwesomeIcons.squareParking,
+    "image": "assets/gif.png",
     "color": 0xFF2abba7,
     "disabled": [
       'media',
@@ -190,7 +211,7 @@ List listMenuPost = [
   {
     "key": 'target',
     "label": 'Công bố mục tiêu',
-    "icon": FontAwesomeIcons.bullseye,
+    "image": "assets/target_menu.png",
     "color": 0xFFFA383E,
     "disabled": [
       'media',

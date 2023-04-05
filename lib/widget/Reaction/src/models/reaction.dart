@@ -21,6 +21,8 @@ class Reaction<T> {
 
   final T? value;
 
+  final bool needBottomPadding;
+
   Reaction({
     this.id,
     required this.icon,
@@ -28,6 +30,7 @@ class Reaction<T> {
     Widget? previewIcon,
     this.title,
     this.enabled = true,
+    this.needBottomPadding = false
   }) : previewIcon = previewIcon ?? icon;
 
   @override
