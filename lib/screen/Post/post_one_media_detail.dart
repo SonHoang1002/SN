@@ -115,8 +115,7 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
       }
     }
 
-    print("widget.medias: ${json.encode(widget.medias)}");
-    return Scaffold(
+     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
