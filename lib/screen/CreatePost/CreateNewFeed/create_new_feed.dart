@@ -78,6 +78,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool showPreviewImage = true;
   ScrollController menuController = ScrollController();
   bool isMenuMinExtent = true;
+
   @override
   void initState() {
     super.initState();
@@ -458,6 +459,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             checkin: checkin,
             handleUpdateData: handleUpdateData);
         break;
+      case 'live-video':
+        break;
+      case 'bg-color':
+        break;
+      case 'camera':
+        break;
       case 'tag-people':
         body = FriendTag(
             friendsPrePage: friendSelected, handleUpdateData: handleUpdateData);
@@ -643,106 +650,105 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     final size = MediaQuery.of(context).size;
     return Container(
       decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
-      child: Column(
-        children: [
-          SingleChildScrollView(
-            child: Column(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            CreateFeedStatus(
+                content: content,
+                checkin: checkin,
+                friendSelected: friendSelected,
+                statusActivity: statusActivity,
+                isShowBackground: checkisShowBackground(),
+                visibility: visibility,
+                backgroundSelected: backgroundSelected,
+                handleUpdateData: handleUpdateData,
+                handleGetPreviewUrl: handleGetPreviewUrl),
+            previewUrlData != null
+                ? PreviewUrlPost(
+                    detailData: previewUrlData,
+                    resetPreview: handleResetPreviewUrl,
+                    deleteImagePreview: handleHidePreviewUrl,
+                    showImage: showPreviewImage,
+                  )
+                : const SizedBox(),
+            Stack(
               children: [
-                CreateFeedStatus(
-                    content: content,
-                    checkin: checkin,
-                    friendSelected: friendSelected,
-                    statusActivity: statusActivity,
-                    isShowBackground: checkisShowBackground(),
-                    visibility: visibility,
-                    backgroundSelected: backgroundSelected,
-                    handleUpdateData: handleUpdateData,
-                    handleGetPreviewUrl: handleGetPreviewUrl),
-                previewUrlData != null
-                    ? PreviewUrlPost(
-                        detailData: previewUrlData,
-                        resetPreview: handleResetPreviewUrl,
-                        deleteImagePreview: handleHidePreviewUrl,
-                        showImage: showPreviewImage,
+                files.isNotEmpty
+                    ? GridLayoutImage(medias: files, handlePress: (media) {})
+                    : const SizedBox(),
+                gifLink.isNotEmpty
+                    ? ImageCacheRender(
+                        path: gifLink,
+                        width: size.width,
                       )
                     : const SizedBox(),
-                Stack(
-                  children: [
-                    files.isNotEmpty
-                        ? GridLayoutImage(
-                            medias: files, handlePress: (media) {})
-                        : const SizedBox(),
-                    gifLink.isNotEmpty
-                        ? ImageCacheRender(
-                            path: gifLink,
-                            width: size.width,
-                          )
-                        : const SizedBox(),
-                    statusQuestion != null
-                        ? PostTarget(
-                            type: statusQuestion['postType'] == 'target'
-                                ? 'target_create'
-                                : postCreateQuestionAnwer,
-                            statusQuestion: statusQuestion,
-                          )
-                        : const SizedBox(),
-                    checkin != null
-                        ? MapWidgetItem(checkin: checkin)
-                        : const SizedBox(),
-                    lifeEvent != null
-                        ? PostLifeEvent(
-                            post: {'life_event': lifeEvent},
-                          )
-                        : const SizedBox(),
-                    if (gifLink.isNotEmpty ||
-                        files.isNotEmpty ||
-                        statusQuestion != null ||
-                        checkin != null)
-                      Positioned(
-                          top: statusQuestion != null ? 20 : 10,
-                          right: statusQuestion != null ? 20 : 10,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                files = [];
-                                gifLink = '';
-                                statusQuestion = null;
-                                checkin = null;
-                                lifeEvent = null;
-                                menuSelected = null;
-                              });
-                            },
-                            child: Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.black.withOpacity(0.5)),
-                              child: const Icon(
-                                FontAwesomeIcons.xmark,
-                                color: white,
-                                size: 20,
-                              ),
-                            ),
-                          )),
-                    if (files.isNotEmpty)
-                      Positioned(
-                          top: 2,
-                          left: 10,
-                          child: SizedBox(
-                            width: 100,
-                            child: ButtonPrimary(
-                              isPrimary: true,
-                              label: "Chỉnh sửa",
-                              handlePress: handlePress,
-                            ),
-                          ))
-                  ],
-                ),
+                statusQuestion != null
+                    ? PostTarget(
+                        type: statusQuestion['postType'] == 'target'
+                            ? 'target_create'
+                            : postCreateQuestionAnwer,
+                        statusQuestion: statusQuestion,
+                      )
+                    : const SizedBox(),
+                checkin != null
+                    ? MapWidgetItem(checkin: checkin)
+                    : const SizedBox(),
+                lifeEvent != null
+                    ? PostLifeEvent(
+                        post: {'life_event': lifeEvent},
+                      )
+                    : const SizedBox(),
+                if (gifLink.isNotEmpty ||
+                    files.isNotEmpty ||
+                    statusQuestion != null ||
+                    checkin != null)
+                  Positioned(
+                      top: statusQuestion != null ? 20 : 10,
+                      right: statusQuestion != null ? 20 : 10,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            files = [];
+                            gifLink = '';
+                            statusQuestion = null;
+                            checkin = null;
+                            lifeEvent = null;
+                            menuSelected = null;
+                          });
+                        },
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.black.withOpacity(0.5)),
+                          child: const Icon(
+                            FontAwesomeIcons.xmark,
+                            color: white,
+                            size: 20,
+                          ),
+                        ),
+                      )),
+                if (files.isNotEmpty)
+                  Positioned(
+                      top: 2,
+                      left: 10,
+                      child: SizedBox(
+                        width: 100,
+                        child: ButtonPrimary(
+                          isPrimary: true,
+                          label: "Chỉnh sửa",
+                          handlePress: handlePress,
+                        ),
+                      ))
               ],
             ),
-          ),
-        ],
+            Container(
+              height: 80,
+              color: transparent,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -933,16 +939,32 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                                                 files,
                                                           )));
                                             },
-                                      icon: SvgPicture.asset(
-                                        listMenuPost[index]['image'],
-                                        height: 28,
-                                        width: 28,
-                                        fit: BoxFit.scaleDown,
-                                        color: (menuSelected?['disabled'] ?? [])
-                                                ?.contains('media')
-                                            ? greyColor
-                                            : null,
-                                      ),
+                                      icon: listMenuPost[index]['image']
+                                              .endsWith(".svg")
+                                          ? SvgPicture.asset(
+                                              listMenuPost[index]['image'],
+                                              height: 28,
+                                              width: 28,
+                                              fit: BoxFit.scaleDown,
+                                              color:
+                                                  (menuSelected?['disabled'] ??
+                                                              [])
+                                                          ?.contains('media')
+                                                      ? greyColor
+                                                      : null,
+                                            )
+                                          : Image.asset(
+                                              listMenuPost[index]['image'],
+                                              height: 28,
+                                              width: 28,
+                                              fit: BoxFit.scaleDown,
+                                              color:
+                                                  (menuSelected?['disabled'] ??
+                                                              [])
+                                                          ?.contains('media')
+                                                      ? greyColor
+                                                      : null,
+                                            ),
                                     )
                                   : GestureDetector(
                                       onTap: (menuSelected?['disabled'] ?? [])
@@ -1011,9 +1033,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             margin: const EdgeInsets.only(top: 10),
             child: ListView.builder(
               controller: menuController,
-              physics: MediaQuery.of(context).size.height * 0.8 > 550
-                  ? const NeverScrollableScrollPhysics()
-                  : const BouncingScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
+              //  MediaQuery.of(context).size.height * 0.8 > 550
+              //     ? const NeverScrollableScrollPhysics()
+              //     : const BouncingScrollPhysics(),
               shrinkWrap: true,
               itemCount: listMenuPost.length,
               itemBuilder: (context, index) {
@@ -1084,6 +1107,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     );
   }
 }
+
 // https://vnexpress.net/de-xuat-thue-nha-tu-15-m2-moi-duoc-dang-ky-thuong-tru-ha-noi-4585797.html
 
 // ignore: must_be_immutable

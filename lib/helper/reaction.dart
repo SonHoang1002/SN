@@ -7,7 +7,7 @@ renderImage(link, type, size) {
   double iconSize = size;
   return Image.asset(
     link,
-    width:  iconSize,
+    width: iconSize,
     height: iconSize,
     errorBuilder: (context, error, stackTrace) =>
         const Icon(FontAwesomeIcons.faceAngry),
@@ -45,14 +45,17 @@ renderText(key) {
   );
 }
 
-Widget renderGif(type, key, {double size = 35}) {
+Widget renderGif(type, key, {double size = 35, double? iconPadding = 0}) {
   return Padding(
     padding: EdgeInsets.zero,
     child: Row(
-      // crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       // mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        renderImage('assets/reaction/$key.$type', type, size),
+        Padding(
+          padding: EdgeInsets.only(top: iconPadding!),
+          child: renderImage('assets/reaction/$key.$type', type, size),
+        ),
         type == 'png' ? renderText(key) : const SizedBox()
       ],
     ),
