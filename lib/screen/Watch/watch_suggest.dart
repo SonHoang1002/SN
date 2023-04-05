@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
+import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
+import 'package:social_network_app_mobile/screen/Post/post_header.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
@@ -7,7 +11,8 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class WatchSuggest extends StatefulWidget {
   final dynamic media;
-  const WatchSuggest({Key? key, this.media}) : super(key: key);
+  final dynamic post;
+  const WatchSuggest({Key? key, this.media, this.post}) : super(key: key);
 
   @override
   State<WatchSuggest> createState() => _WatchSuggestState();
@@ -16,7 +21,6 @@ class WatchSuggest extends StatefulWidget {
 class _WatchSuggestState extends State<WatchSuggest> {
   List listPostMedia = [];
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,20 +41,39 @@ class _WatchSuggestState extends State<WatchSuggest> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Hero(
-              tag: widget.media['remote_url'] ?? widget.media['url'],
-              child: GestureDetector(
-                onDoubleTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WatchDetail(
-                                media: widget.media,
-                              )));
-                },
-                child: VideoPlayerHasController(
-                  media: widget.media,
-                ),
+            GestureDetector(
+              onDoubleTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => WatchDetail(
+                              media: widget.media,
+                            )));
+              },
+              child: Column(
+                children: [
+                  PostHeader(
+                      post: widget.post, textColor: white, type: postDetail),
+                  const SizedBox(
+                    height: 12.0,
+                  ),
+                  PostContent(
+                    post: widget.post,
+                    textColor: white,
+                  ),
+                  const SizedBox(
+                    height: 12.0,
+                  ),
+                  Hero(
+                    tag: widget.media['remote_url'] ?? widget.media['url'],
+                    child: VideoPlayerHasController(
+                      media: widget.media,
+                    ),
+                  ),
+                  PostFooter(
+                    post: widget.post,
+                  ),
+                ],
               ),
             )
           ],

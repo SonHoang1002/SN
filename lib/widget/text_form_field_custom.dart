@@ -70,7 +70,7 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
           decoration: InputDecoration(
             isDense: widget.isDense ?? false,
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.only(left: 12, bottom: 12),
+            contentPadding: const EdgeInsets.only(left: 12),
             suffixIcon: widget.suffixIcon,
             hintText: widget.hintText,
             hintStyle: const TextStyle(fontSize: 14),

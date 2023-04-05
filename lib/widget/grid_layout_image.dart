@@ -4,7 +4,6 @@ import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_con
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/girdview_builder_media.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 import '../theme/colors.dart';
 
@@ -100,6 +99,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   child: VideoPlayerNoneController(
                       path: path,
                       media: medias[0],
+                      post: widget.post,
                       type: medias[0]['file']?.path != null
                           ? 'local'
                           : 'network'),

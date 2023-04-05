@@ -8,13 +8,15 @@ class VideoPlayerNoneController extends StatefulWidget {
   final String path;
   final String type;
   final dynamic media;
+  final dynamic post;
   final double? aspectRatio;
   const VideoPlayerNoneController(
       {Key? key,
       required this.path,
       required this.type,
       this.media,
-      this.aspectRatio})
+      this.aspectRatio,
+      this.post})
       : super(key: key);
 
   @override
@@ -36,9 +38,6 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
         ? VideoPlayerController.network(widget.path)
         : VideoPlayerController.asset(widget.path))
       ..initialize().then((value) {
-        if (isVisible) {
-          videoPlayerController.play();
-        }
         videoPlayerController.setLooping(true);
       });
   }
@@ -69,6 +68,7 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => WatchSuggest(
+                                      post: widget.post,
                                       media: widget.media,
                                     )));
                       },
