@@ -247,6 +247,8 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
             Expanded(
               child: PagedVerticalCalendar(
                 startWeekWithSunday: false,
+                minDate: DateTime.now().subtract(const Duration(days: 365)),
+                maxDate: DateTime.now().add(const Duration(days: 365)),
                 addAutomaticKeepAlives: true,
                 invisibleMonthsThreshold: 5,
                 initialDate: _selectedDateTime.removeTime(),
