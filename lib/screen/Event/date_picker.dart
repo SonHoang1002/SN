@@ -32,7 +32,6 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
   late DateFormat _dateFormat;
   late DateTime _selectedDateTime;
   late DateTime _selectedEndDate;
-  bool isMinimunDate = false;
   bool isEndDate = false;
   @override
   void initState() {
@@ -50,21 +49,36 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
       setState(() {
         _selectedEndDate = endDate;
       });
-      if (endDate.removeTime().isSameDay(startDate.removeTime())) {
-        setState(() {
-          isMinimunDate = true;
-        });
-      } else {
-        setState(() {
-          isMinimunDate = false;
-        });
-      }
     } else {
       widget.onDateTimeChanged(startDate, null, false);
       setState(() {
         _selectedDateTime = startDate;
       });
     }
+    // if (isEndDate && endDate!.removeTime().isSameDay(startDate.removeTime())) {
+    //   setState(() {
+    //     _selectedEndDate = DateTime(
+    //       endDate.year,
+    //       endDate.month,
+    //       endDate.day,
+    //       _selectedDateTime.hour + 3,
+    //       0,
+    //     );
+    //   });
+    // }
+    // if (isEndDate &&
+    //     endDate!.removeTime().isSameDay(startDate.removeTime()) &&
+    //     DateFormat('HH').format(_selectedDateTime) == '23') {
+    //   setState(() {
+    //     _selectedEndDate = DateTime(
+    //       endDate.year,
+    //       endDate.month,
+    //       endDate.day,
+    //       _selectedDateTime.hour,
+    //       _selectedDateTime.minute + 55,
+    //     );
+    //   });
+    // }
   }
 
   void _handleCancel() {
@@ -423,7 +437,7 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
             SizedBox(
               height: 200, // fixed height
               child: CustomCupertinoDatePicker(
-                key: ValueKey(isMinimunDate ? 'min' : 'max'),
+                key: ValueKey(!isEndDate ? 'start' : 'end'),
                 initialDateTime:
                     !isEndDate ? _selectedDateTime : _selectedEndDate,
                 use24hFormat: true,
@@ -515,7 +529,7 @@ class _CustomCupertinoDatePickerState extends State<CustomCupertinoDatePicker> {
     return SizedBox(
       height: 200, // fixed height
       child: CupertinoDatePicker(
-        key: ValueKey(!widget.isEndDate ? 'start' : 'end'),
+        key: UniqueKey(),
         use24hFormat: widget.use24hFormat,
         minuteInterval: widget.minuteInterval,
         initialDateTime: widget.initialDateTime,
