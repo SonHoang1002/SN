@@ -124,7 +124,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
                                     ? FontAwesomeIcons.circleDot
                                     : FontAwesomeIcons.circle,
                                 size: 16,
-                                color: Colors.green,
+                                color: secondaryColor,
                               ),
                             )
                           ],

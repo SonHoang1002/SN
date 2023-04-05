@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class PageState {
+  final bool rolePage;
   final List pageFeed;
   final bool isMoreFeed;
   final List pageReview;
@@ -19,7 +20,8 @@ class PageState {
   final bool isMoreVideo;
 
   const PageState(
-      {this.pageFeed = const [],
+      {this.rolePage = true,
+      this.pageFeed = const [],
       this.isMoreFeed = true,
       this.pageReview = const [],
       this.isMoreReview = true,
@@ -32,7 +34,8 @@ class PageState {
       this.isMoreVideo = true});
 
   PageState copyWith(
-      {List pageFeed = const [],
+      {bool rolePage = true,
+      List pageFeed = const [],
       bool isMoreFeed = true,
       List pageReview = const [],
       bool isMoreReview = true,
@@ -44,6 +47,7 @@ class PageState {
       List pageVideo = const [],
       bool isMoreVideo = true}) {
     return PageState(
+        rolePage: rolePage,
         pageFeed: pageFeed,
         isMoreFeed: isMoreFeed,
         pageReview: pageReview,
@@ -72,6 +76,7 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
+            rolePage: state.rolePage,
             pageFeed: state.pageFeed,
             isMoreFeed: state.isMoreFeed,
             pageReview: checkObjectUniqueInList(
@@ -96,6 +101,7 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
+            rolePage: state.rolePage,
             pageFeed: checkObjectUniqueInList(state.pageFeed + response, 'id'),
             isMoreFeed: response.length < params['limit'] ? false : true,
             pageReview: state.pageReview,
@@ -116,6 +122,7 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
+            rolePage: state.rolePage,
             pageFeed: state.pageFeed,
             isMoreFeed: state.isMoreFeed,
             pageReview: state.pageReview,
@@ -136,6 +143,7 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
+          rolePage: state.rolePage,
           pageFeed: state.pageFeed,
           isMoreFeed: state.isMoreFeed,
           pageReview: state.pageReview,
@@ -167,6 +175,7 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
+            rolePage: state.rolePage,
             pageFeed: state.pageFeed,
             isMoreFeed: state.isMoreFeed,
             pageReview: state.pageReview,
@@ -185,10 +194,29 @@ class PageController extends StateNotifier<PageState> {
   deleteReviewPost(id) async {
     if (mounted) {
       state = state.copyWith(
+          rolePage: state.rolePage,
           pageFeed: state.pageFeed,
           isMoreFeed: state.isMoreFeed,
           pageReview:
               state.pageReview.where((element) => element['id'] != id).toList(),
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo);
+    }
+  }
+
+  switchToRolePage(role) async {
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: role,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
           isMoreReview: state.isMoreReview,
           pagePined: state.pagePined,
           pagePhoto: state.pagePhoto,

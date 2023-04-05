@@ -191,37 +191,13 @@ List listSocial = [
 ];
 
 List pageMenu = [
-  {
-    "key": "home_page",
-    "label": "Trang chủ",
-  },
-  {
-    "key": "photo_page",
-    "label": "Ảnh",
-  },
-  {
-    "key": "video_page",
-    "label": "Video",
-  },
-  {
-    "key": "group_page",
-    "label": "Nhóm",
-  },
-  {
-    "key": "about_page",
-    "label": "Giới thiệu",
-  },
-  {
-    "key": "event_page",
-    "label": "Sự kiện",
-  },
-  {
-    "key": "review_page",
-    "label": "Đánh giá",
-  },
-  {"key": "community_page", "label": "Cộng đồng"},
-  {
-    "key": "deal_page",
-    "label": "Ưu đãi",
-  },
+  {"key": "home_page", "label": "Trang chủ"},
+  {"key": "photo_page", "label": "Ảnh"},
+  {"key": "video_page", "label": "Video"},
+  // {"key": "group_page", "label": "Nhóm"},
+  {"key": "about_page", "label": "Giới thiệu"},
+  // {"key": "event_page", "label": "Sự kiện"},
+  {"key": "review_page", "label": "Đánh giá"},
+  // {"key": "community_page", "label": "Cộng đồng"},
+  // {"key": "deal_page", "label": "Ưu đãi"},
 ];
