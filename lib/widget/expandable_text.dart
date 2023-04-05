@@ -9,6 +9,7 @@ class ExpandableTextContent extends StatelessWidget {
   final dynamic linkColor;
   final dynamic hashtagStyle;
   final Function? handleHashtag;
+  final int? maxLines;
 
   const ExpandableTextContent(
       {Key? key,
@@ -16,7 +17,8 @@ class ExpandableTextContent extends StatelessWidget {
       this.styleContent,
       this.linkColor,
       this.hashtagStyle,
-      this.handleHashtag})
+      this.handleHashtag,
+      this.maxLines})
       : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class ExpandableTextContent extends StatelessWidget {
       collapseText: 'Thu gọn',
       style: styleContent,
       linkStyle: const TextStyle(fontWeight: FontWeight.w500),
-      maxLines: 3,
+      maxLines: maxLines ?? 3,
       linkColor: linkColor,
       animation: true,
       collapseOnTextTap: true,
