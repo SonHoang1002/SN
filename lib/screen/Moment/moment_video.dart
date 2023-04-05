@@ -42,7 +42,6 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         vsync: this, duration: const Duration(milliseconds: 500));
     _animation =
         CurvedAnimation(parent: _animationController, curve: Curves.easeOut);
-
     videoPlayerController = VideoPlayerController.network(
         widget.moment['media_attachments'][0]['url'])
       ..initialize().then((value) {
@@ -53,7 +52,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         });
       })
       ..addListener(() {
-        if (!_sliderChanging) {
+        if (!_sliderChanging && mounted) {
           setState(() {
             _sliderValue =
                 videoPlayerController.value.position.inSeconds.toDouble();
