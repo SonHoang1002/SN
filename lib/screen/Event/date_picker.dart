@@ -32,8 +32,7 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
   late DateFormat _dateFormat;
   late DateTime _selectedDateTime;
   late DateTime _selectedEndDate;
-  late DateTime _minimumDate;
-
+  bool isMinimunDate = false;
   bool isEndDate = false;
   @override
   void initState() {
@@ -43,17 +42,6 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
     _selectedDateTime = widget.selectedDateTime;
     _selectedEndDate = widget.selectedEndDate!;
     isEndDate = widget.isEndDate!;
-    if (mounted) {
-      setState(() {
-        _minimumDate = DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          DateTime.now().hour + 1,
-          0,
-        );
-      });
-    }
   }
 
   void _handleDateTimeChanged(DateTime startDate, DateTime? endDate) {
@@ -62,6 +50,15 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
       setState(() {
         _selectedEndDate = endDate;
       });
+      if (endDate.removeTime().isSameDay(startDate.removeTime())) {
+        setState(() {
+          isMinimunDate = true;
+        });
+      } else {
+        setState(() {
+          isMinimunDate = false;
+        });
+      }
     } else {
       widget.onDateTimeChanged(startDate, null, false);
       setState(() {
@@ -190,7 +187,6 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                key: UniqueKey(),
                                 _selectedEndDate.removeTime() ==
                                         DateTime.now().removeTime()
                                     ? 'Kết thúc hôm nay lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedEndDate)}'
@@ -426,13 +422,20 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
             ),
             SizedBox(
               height: 200, // fixed height
-              child: CupertinoDatePicker(
-                key: ValueKey(isEndDate ? 'end' : 'start'),
-                use24hFormat: true,
-                minuteInterval: 5,
+              child: CustomCupertinoDatePicker(
+                key: ValueKey(isMinimunDate ? 'min' : 'max'),
                 initialDateTime:
                     !isEndDate ? _selectedDateTime : _selectedEndDate,
-                minimumDate: _minimumDate,
+                use24hFormat: true,
+                minuteInterval: 5,
+                minimumDate: DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                  DateTime.now().hour + 1,
+                  0,
+                ),
+                isEndDate: isEndDate,
                 mode: CupertinoDatePickerMode.time,
                 onDateTimeChanged: (DateTime dateTime) {
                   EasyDebounce.debounce(
@@ -475,6 +478,52 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
       child: Text(
         text,
         style: const TextStyle(color: Colors.grey, fontSize: 12),
+      ),
+    );
+  }
+}
+
+class CustomCupertinoDatePicker extends StatefulWidget {
+  final DateTime initialDateTime;
+  final DateTime minimumDate;
+  final bool use24hFormat;
+  final int minuteInterval;
+  final bool isEndDate;
+  final CupertinoDatePickerMode mode;
+  final ValueChanged<DateTime> onDateTimeChanged;
+
+  const CustomCupertinoDatePicker({
+    super.key,
+    required this.initialDateTime,
+    required this.use24hFormat,
+    required this.minimumDate,
+    required this.minuteInterval,
+    required this.mode,
+    required this.isEndDate,
+    required this.onDateTimeChanged,
+  });
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _CustomCupertinoDatePickerState createState() =>
+      _CustomCupertinoDatePickerState();
+}
+
+class _CustomCupertinoDatePickerState extends State<CustomCupertinoDatePicker> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200, // fixed height
+      child: CupertinoDatePicker(
+        key: ValueKey(!widget.isEndDate ? 'start' : 'end'),
+        use24hFormat: widget.use24hFormat,
+        minuteInterval: widget.minuteInterval,
+        initialDateTime: widget.initialDateTime,
+        minimumDate: widget.minimumDate,
+        mode: widget.mode,
+        onDateTimeChanged: (DateTime dateTime) {
+          widget.onDateTimeChanged(dateTime);
+        },
       ),
     );
   }
