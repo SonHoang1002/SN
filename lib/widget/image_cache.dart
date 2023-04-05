@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class ImageCacheRender extends StatefulWidget {
   final String path;
@@ -15,6 +14,7 @@ class ImageCacheRender extends StatefulWidget {
   @override
   State<ImageCacheRender> createState() => _ImageCacheRenderState();
 }
+
 class _ImageCacheRenderState extends State<ImageCacheRender> {
   final cacheManager = DefaultCacheManager();
 
@@ -39,7 +39,7 @@ class _ImageCacheRenderState extends State<ImageCacheRender> {
           ),
         ),
       ),
-      fadeInDuration : Duration.zero,
+      fadeInDuration: Duration.zero,
       width: widget.width,
       height: widget.height,
       fit: BoxFit.cover,

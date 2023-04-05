@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:social_network_app_mobile/screen/Watch/watch_detail.dart';
+import 'package:social_network_app_mobile/screen/Watch/watch_suggest.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -8,8 +8,13 @@ class VideoPlayerNoneController extends StatefulWidget {
   final String path;
   final String type;
   final dynamic media;
+  final double? aspectRatio;
   const VideoPlayerNoneController(
-      {Key? key, required this.path, required this.type, this.media})
+      {Key? key,
+      required this.path,
+      required this.type,
+      this.media,
+      this.aspectRatio})
       : super(key: key);
 
   @override
@@ -63,14 +68,15 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WatchDetail(
+                                builder: (context) => WatchSuggest(
                                       media: widget.media,
                                     )));
                       },
                 child: Hero(
-                    tag: widget.media['id'] ?? widget.path,
+                    tag: widget.path,
                     child: AspectRatio(
-                        aspectRatio: videoPlayerController.value.aspectRatio,
+                        aspectRatio: widget.aspectRatio ??
+                            videoPlayerController.value.aspectRatio,
                         child: VideoPlayer(videoPlayerController)))),
             Positioned(
                 bottom: 10,

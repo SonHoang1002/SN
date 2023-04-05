@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BackIconAppbar extends StatelessWidget {
-  const BackIconAppbar({Key? key}) : super(key: key);
+  final Color? iconColor;
+  const BackIconAppbar({Key? key, this.iconColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class BackIconAppbar extends StatelessWidget {
       },
       child: Icon(
         FontAwesomeIcons.chevronLeft,
-        color: Theme.of(context).textTheme.displayLarge!.color,
+        color: iconColor ?? Theme.of(context).textTheme.displayLarge!.color,
       ),
     );
   }

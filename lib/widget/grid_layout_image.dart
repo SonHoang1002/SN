@@ -65,9 +65,10 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     widget.handlePress(medias[0]);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(top:8.0),
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: Column(
-                      children: [buildDivider(color: greyColor),
+                      children: [
+                        buildDivider(color: greyColor),
                         medias[0]['subType'] == 'local'
                             ? Image.file(
                                 medias[0]['file'],
@@ -78,8 +79,9 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                                 child: FadeInImage.memoryNetwork(
                                   placeholder: kTransparentImage,
                                   image: medias[0]['url'],
-                                  imageErrorBuilder: (context, error, stackTrace) =>
-                                      const SizedBox(),
+                                  imageErrorBuilder:
+                                      (context, error, stackTrace) =>
+                                          const SizedBox(),
                                 ),
                               ),
                         buildDivider(color: greyColor),
@@ -90,6 +92,9 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               ),
             );
           } else {
+            String path = medias[0]['file']?.path ??
+                medias[0]['remote_url'] ??
+                medias[0]['url'];
             return SizedBox(
                 height: (medias[0]['aspect'] ??
                             medias[0]['meta']['original']['aspect'] ??
@@ -100,9 +105,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: VideoPlayerNoneController(
-                      path: medias[0]['file']?.path ??
-                          medias[0]['remote_url'] ??
-                          medias[0]['url'],
+                      path: path,
                       media: medias[0],
                       type: medias[0]['file']?.path != null
                           ? 'local'

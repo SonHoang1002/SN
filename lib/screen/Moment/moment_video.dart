@@ -223,7 +223,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                     child: SizedBox(
                       child: Slider(
                         activeColor:
-                            Colors.white.withOpacity(_sliderChanging ? 1 : 0.6),
+                            Colors.white.withOpacity(_sliderChanging ? 1 : 0.8),
                         inactiveColor: Colors.white.withOpacity(0.4),
                         value: _sliderValue,
                         min: 0,
