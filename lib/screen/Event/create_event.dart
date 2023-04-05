@@ -11,6 +11,8 @@ import 'package:social_network_app_mobile/screen/Event/date_picker.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/CustomCropImage/crop_your_image.dart';
 
+import '../../widget/back_icon_appbar.dart';
+
 class CreateEvents extends StatefulWidget {
   const CreateEvents({Key? key}) : super(key: key);
 
@@ -98,7 +100,16 @@ class _CreateEventsState extends State<CreateEvents> {
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            BackIconAppbar(),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -31,6 +32,8 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
   late DateFormat _dateFormat;
   late DateTime _selectedDateTime;
   late DateTime _selectedEndDate;
+  late DateTime _minimumDate;
+
   bool isEndDate = false;
   @override
   void initState() {
@@ -40,6 +43,17 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
     _selectedDateTime = widget.selectedDateTime;
     _selectedEndDate = widget.selectedEndDate!;
     isEndDate = widget.isEndDate!;
+    if (mounted) {
+      setState(() {
+        _minimumDate = DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+          DateTime.now().hour + 1,
+          0,
+        );
+      });
+    }
   }
 
   void _handleDateTimeChanged(DateTime startDate, DateTime? endDate) {
@@ -113,103 +127,113 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
         child: Column(
           children: [
             SizedBox(
-              height: 40,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16.0, left: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      DateFormat('EEEE', 'vi_VN').format(_selectedDateTime) ==
-                              DateFormat('EEEE', 'vi_VN')
-                                  .format(_selectedDateTime)
-                          ? 'Hôm nay lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedDateTime)}'
-                          : DateFormat('EEEE', 'vi_VN')
-                              .format(_selectedDateTime),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: !isEndDate ? Colors.blue : Colors.grey,
+              height: 70,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 40,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _selectedDateTime.removeTime() ==
+                                    DateTime.now().removeTime()
+                                ? 'Hôm nay lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedDateTime)}'
+                                : '${DateFormat('EEEE', 'vi_VN').format(_selectedDateTime)} lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedDateTime)}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: !isEndDate ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                          const Expanded(child: SizedBox()),
+                          !isEndDate
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isEndDate = true;
+                                    });
+                                  },
+                                  child: Row(
+                                    children: const [
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 2.0),
+                                        child: Icon(
+                                          FontAwesomeIcons.plus,
+                                          size: 12,
+                                          color: greyColor,
+                                        ),
+                                      ),
+                                      SizedBox(width: 2),
+                                      Text(
+                                        'Thời gian kết thúc',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
                       ),
                     ),
-                    const Expanded(child: SizedBox()),
-                    !isEndDate
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isEndDate = true;
-                              });
-                            },
-                            child: Row(
-                              children: const [
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 2.0),
-                                  child: Icon(
-                                    FontAwesomeIcons.plus,
-                                    size: 12,
-                                    color: greyColor,
-                                  ),
-                                ),
-                                SizedBox(width: 2),
-                                Text(
-                                  'Thời gian kết thúc',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          )
-                        : const SizedBox(),
-                  ],
-                ),
-              ),
-            ),
-            isEndDate
-                ? Padding(
-                    padding: const EdgeInsets.only(right: 16.0, left: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          DateFormat('EEEE', 'vi_VN')
-                                      .format(_selectedEndDate) ==
-                                  DateFormat('EEEE', 'vi_VN')
-                                      .format(_selectedEndDate)
-                              ? 'Kết thúc hôm nay lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedEndDate)}'
-                              : DateFormat('EEEE', 'vi_VN')
-                                  .format(_selectedEndDate),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        const Expanded(child: SizedBox()),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isEndDate = false;
-                            });
-                          },
+                  ),
+                  isEndDate
+                      ? Padding(
+                          padding:
+                              const EdgeInsets.only(right: 16.0, left: 16.0),
                           child: Row(
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 2.0),
-                                child: Icon(
-                                  FontAwesomeIcons.xmark,
-                                  size: 20,
-                                  color: greyColor,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                key: UniqueKey(),
+                                _selectedEndDate.removeTime() ==
+                                        DateTime.now().removeTime()
+                                    ? 'Kết thúc hôm nay lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedEndDate)}'
+                                    : 'Kết thúc ${DateFormat('EEEE', 'vi_VN').format(_selectedEndDate)} lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedEndDate)}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
                                 ),
                               ),
+                              const Expanded(child: SizedBox()),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedEndDate = DateTime(
+                                        _selectedDateTime.year,
+                                        _selectedDateTime.month,
+                                        _selectedDateTime.day,
+                                        _selectedDateTime.hour + 3,
+                                        0);
+                                    isEndDate = false;
+                                  });
+                                },
+                                child: Row(
+                                  children: const [
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 2.0),
+                                      child: Icon(
+                                        FontAwesomeIcons.xmark,
+                                        size: 20,
+                                        color: greyColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         )
-                      ],
-                    ),
-                  )
-                : const SizedBox(),
+                      : const SizedBox(),
+                ],
+              ),
+            ),
             Expanded(
               child: PagedVerticalCalendar(
                 startWeekWithSunday: false,
@@ -217,8 +241,19 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                 invisibleMonthsThreshold: 5,
                 initialDate: _selectedDateTime.removeTime(),
                 onDayPressed: (day) {
-                  if (day.removeTime().isBefore(DateTime.now().removeTime())) {
-                    return;
+                  if (!isEndDate) {
+                    if (day
+                        .removeTime()
+                        .isBefore(DateTime.now().removeTime())) {
+                      return;
+                    }
+                  }
+                  if (isEndDate) {
+                    if (day
+                        .removeTime()
+                        .isBefore(_selectedDateTime.removeTime())) {
+                      return;
+                    }
                   }
                   if (!isEndDate) {
                     _handleDateTimeChanged(
@@ -312,7 +347,7 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                                 ),
                               ),
                               Positioned(
-                                bottom: 12,
+                                bottom: 9,
                                 right: 0,
                                 left: 0,
                                 child: Container(
@@ -332,10 +367,14 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                                                   isEndDate && isSelectedEndDate
                                               ? FontWeight.bold
                                               : null,
-                                          color: date.removeTime().isBefore(
-                                                  DateTime.now().removeTime())
-                                              ? Colors.grey
-                                              : null),
+                                          color: isSelected ||
+                                                  isEndDate && isSelectedEndDate
+                                              ? Colors.white
+                                              : date.removeTime().isBefore(
+                                                      DateTime.now()
+                                                          .removeTime())
+                                                  ? Colors.grey
+                                                  : null),
                                     ),
                                   ),
                                 ),
@@ -388,35 +427,39 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
             SizedBox(
               height: 200, // fixed height
               child: CupertinoDatePicker(
-                key: UniqueKey(),
+                key: ValueKey(isEndDate ? 'end' : 'start'),
                 use24hFormat: true,
                 minuteInterval: 5,
                 initialDateTime:
                     !isEndDate ? _selectedDateTime : _selectedEndDate,
+                minimumDate: _minimumDate,
                 mode: CupertinoDatePickerMode.time,
                 onDateTimeChanged: (DateTime dateTime) {
-                  if (!isEndDate) {
-                    _handleDateTimeChanged(
+                  EasyDebounce.debounce(
+                      'my-debouncer', const Duration(milliseconds: 500), () {
+                    if (!isEndDate) {
+                      _handleDateTimeChanged(
+                          DateTime(
+                            _selectedDateTime.year,
+                            _selectedDateTime.month,
+                            _selectedDateTime.day,
+                            dateTime.hour,
+                            dateTime.minute,
+                          ),
+                          null);
+                    } else {
+                      _handleDateTimeChanged(
+                        _selectedDateTime,
                         DateTime(
-                          _selectedDateTime.year,
-                          _selectedDateTime.month,
-                          _selectedDateTime.day,
+                          _selectedEndDate.year,
+                          _selectedEndDate.month,
+                          _selectedEndDate.day,
                           dateTime.hour,
                           dateTime.minute,
                         ),
-                        null);
-                  } else {
-                    _handleDateTimeChanged(
-                      _selectedDateTime,
-                      DateTime(
-                        _selectedEndDate.year,
-                        _selectedEndDate.month,
-                        _selectedEndDate.day,
-                        dateTime.hour,
-                        dateTime.minute,
-                      ),
-                    );
-                  }
+                      );
+                    }
+                  });
                 },
               ),
             ),
