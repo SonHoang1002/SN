@@ -10,8 +10,6 @@ import 'package:social_network_app_mobile/widget/CropImage/src/models/model.dart
 import 'package:social_network_app_mobile/widget/CropImage/src/painters/dotted_path_painter.dart';
 import 'package:vector_math/vector_math_64.dart' as vector_math;
 
-
-
 /// An image cropper that is customizable.
 /// You can rotate, scale and translate either
 /// through gestures or a controller
@@ -92,7 +90,7 @@ class CustomImageCrop extends StatefulWidget {
     this.customProgressIndicator,
     Paint? imagePaintDuringCrop,
     Key? key,
-  })  : this.imagePaintDuringCrop = imagePaintDuringCrop ??
+  })  : imagePaintDuringCrop = imagePaintDuringCrop ??
             (Paint()..filterQuality = FilterQuality.high),
         super(key: key);
 
@@ -154,7 +152,8 @@ class _CustomImageCropState extends State<CustomImageCrop>
     final image = _imageAsUIImage;
     if (image == null) {
       return Center(
-        child: widget.customProgressIndicator ?? const CircularProgressIndicator(),
+        child:
+            widget.customProgressIndicator ?? const CircularProgressIndicator(),
       );
     }
     return LayoutBuilder(
@@ -237,7 +236,7 @@ class _CustomImageCropState extends State<CustomImageCrop>
 
   void onMoveUpdate(MoveEvent event) {
     if (!widget.canMove) return;
-      addTransition(CropImageData(x: data.x, y: event.delta.dy));
+    addTransition(CropImageData(x: data.x, y: event.delta.dy));
   }
 
   Path _getPath(double cropWidth, double width, double height) {
