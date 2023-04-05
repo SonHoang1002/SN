@@ -22,9 +22,13 @@ class _CreateEventsState extends State<CreateEvents> {
   final _imageDataList = <Uint8List>[];
   DateTime selectedDateTime = DateTime(DateTime.now().year,
       DateTime.now().month, DateTime.now().day, DateTime.now().hour + 1, 0);
+  DateTime selectedEndDate = DateTime(DateTime.now().year, DateTime.now().month,
+      DateTime.now().day, DateTime.now().hour + 4, 0);
   Uint8List? _croppedImage;
   bool eventDateEnd = false;
+
   bool isCropping = false;
+
   Future<Uint8List> _load(File imageFile) async {
     final bytes = await imageFile.readAsBytes();
     return Uint8List.fromList(bytes);
@@ -57,14 +61,23 @@ class _CreateEventsState extends State<CreateEvents> {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             DatePickerCustom(
+          isEndDate: eventDateEnd,
           selectedDateTime: selectedDateTime,
-          onDateTimeChanged: (newDateTime, isDateTimeChanged) {
-            if (isDateTimeChanged == true) {
+          selectedEndDate: selectedEndDate,
+          onDateTimeChanged: (startDate, endDate, isDateTimeChanged) {
+            if (isDateTimeChanged == true && mounted) {
               setState(() {
-                selectedDateTime = newDateTime;
+                selectedDateTime = startDate;
+                if (endDate != null) {
+                  selectedEndDate = endDate;
+                  eventDateEnd = true;
+                }
               });
-            } else {
-              selectedDateTime = selectedDateTime;
+            }
+            if (endDate == null && mounted) {
+              setState(() {
+                eventDateEnd = false;
+              });
             }
           },
         ),
@@ -167,14 +180,25 @@ class _CreateEventsState extends State<CreateEvents> {
                   ),
                   const SizedBox(height: 16),
                   eventDateEnd
-                      ? const TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Ngày và giờ kết thúc',
+                      ? InkWell(
+                          onTap: () {
+                            _onPressDatePicker();
+                          },
+                          child: TextFormField(
+                            key: UniqueKey(),
+                            readOnly: true,
+                            enabled: false,
+                            initialValue: DateFormat('MMM d, y, h:mm a')
+                                .format(selectedEndDate),
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Ngày và giờ kết thúc',
+                            ),
                           ),
                         )
                       : InkWell(
                           onTap: () {
+                            _onPressDatePicker();
                             setState(() {
                               eventDateEnd = true;
                             });

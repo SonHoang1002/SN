@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/DatePickerCustom/lib/paged_vertical_calendar.dart';
 import 'package:social_network_app_mobile/widget/DatePickerCustom/lib/utils/date_utils.dart';
@@ -10,11 +12,15 @@ import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
 class DatePickerCustom extends StatefulWidget {
   final DateTime selectedDateTime;
-  final Function(DateTime, bool) onDateTimeChanged;
+  final DateTime? selectedEndDate;
+  final bool? isEndDate;
+  final Function(DateTime, DateTime?, bool) onDateTimeChanged;
   const DatePickerCustom({
     Key? key,
     required this.selectedDateTime,
     required this.onDateTimeChanged,
+    this.selectedEndDate,
+    this.isEndDate,
   }) : super(key: key);
   @override
 // ignore: library_private_types_in_public_api
@@ -24,30 +30,47 @@ class DatePickerCustom extends StatefulWidget {
 class _DatePickerCustomState extends State<DatePickerCustom> {
   late DateFormat _dateFormat;
   late DateTime _selectedDateTime;
-  final bool _isDateTimeChanged = false;
-
+  late DateTime _selectedEndDate;
+  bool isEndDate = false;
   @override
   void initState() {
     super.initState();
     initializeDateFormatting('vi_VN');
     _dateFormat = DateFormat("'THÁNG' M 'NĂM' y", 'vi_VN');
     _selectedDateTime = widget.selectedDateTime;
+    _selectedEndDate = widget.selectedEndDate!;
+    isEndDate = widget.isEndDate!;
   }
 
-  void _handleDateTimeChanged(DateTime newDateTime) {
-    widget.onDateTimeChanged(newDateTime, false);
-    setState(() {
-      _selectedDateTime = newDateTime;
-    });
+  void _handleDateTimeChanged(DateTime startDate, DateTime? endDate) {
+    if (isEndDate && endDate != null) {
+      widget.onDateTimeChanged(_selectedDateTime, endDate, false);
+      setState(() {
+        _selectedEndDate = endDate;
+      });
+    } else {
+      widget.onDateTimeChanged(startDate, null, false);
+      setState(() {
+        _selectedDateTime = startDate;
+      });
+    }
   }
 
   void _handleCancel() {
-    widget.onDateTimeChanged(_selectedDateTime, false);
+    if (isEndDate) {
+      widget.onDateTimeChanged(_selectedDateTime, _selectedEndDate, false);
+    } else {
+      widget.onDateTimeChanged(_selectedDateTime, null, false);
+    }
     Navigator.pop(context);
   }
 
   void _handleOK() {
-    widget.onDateTimeChanged(_selectedDateTime, true);
+    if (isEndDate) {
+      widget.onDateTimeChanged(_selectedDateTime, _selectedEndDate, true);
+    } else {
+      widget.onDateTimeChanged(_selectedDateTime, null, true);
+    }
     Navigator.pop(context);
   }
 
@@ -89,34 +112,104 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
         height: 800,
         child: Column(
           children: [
-            Container(
-              color: Colors.black,
+            SizedBox(
               height: 40,
               child: Padding(
                 padding: const EdgeInsets.only(right: 16.0, left: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Text(
-                      'Ngày',
+                      DateFormat('EEEE', 'vi_VN').format(_selectedDateTime) ==
+                              DateFormat('EEEE', 'vi_VN')
+                                  .format(_selectedDateTime)
+                          ? 'Hôm nay lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedDateTime)}'
+                          : DateFormat('EEEE', 'vi_VN')
+                              .format(_selectedDateTime),
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: !isEndDate ? Colors.blue : Colors.grey,
                       ),
                     ),
-                    Expanded(child: SizedBox()),
-                    Text(
-                      'Giờ',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                    ),
+                    const Expanded(child: SizedBox()),
+                    !isEndDate
+                        ? GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isEndDate = true;
+                              });
+                            },
+                            child: Row(
+                              children: const [
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 2.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.plus,
+                                    size: 12,
+                                    color: greyColor,
+                                  ),
+                                ),
+                                SizedBox(width: 2),
+                                Text(
+                                  'Thời gian kết thúc',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
                   ],
                 ),
               ),
             ),
+            isEndDate
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateFormat('EEEE', 'vi_VN')
+                                      .format(_selectedEndDate) ==
+                                  DateFormat('EEEE', 'vi_VN')
+                                      .format(_selectedEndDate)
+                              ? 'Kết thúc hôm nay lúc ${DateFormat('HH : mm', 'vi_VN').format(_selectedEndDate)}'
+                              : DateFormat('EEEE', 'vi_VN')
+                                  .format(_selectedEndDate),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        const Expanded(child: SizedBox()),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isEndDate = false;
+                            });
+                          },
+                          child: Row(
+                            children: const [
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 2.0),
+                                child: Icon(
+                                  FontAwesomeIcons.xmark,
+                                  size: 20,
+                                  color: greyColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : const SizedBox(),
             Expanded(
               child: PagedVerticalCalendar(
                 startWeekWithSunday: false,
@@ -124,40 +217,132 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                 invisibleMonthsThreshold: 5,
                 initialDate: _selectedDateTime.removeTime(),
                 onDayPressed: (day) {
-                  _handleDateTimeChanged(DateTime(
-                    day.year,
-                    day.month,
-                    day.day,
-                    _selectedDateTime.hour,
-                    _selectedDateTime.minute,
-                  ));
+                  if (day.removeTime().isBefore(DateTime.now().removeTime())) {
+                    return;
+                  }
+                  if (!isEndDate) {
+                    _handleDateTimeChanged(
+                        DateTime(
+                          day.year,
+                          day.month,
+                          day.day,
+                          _selectedDateTime.hour,
+                          _selectedDateTime.minute,
+                        ),
+                        null);
+                  } else {
+                    _handleDateTimeChanged(
+                      _selectedDateTime,
+                      DateTime(
+                        day.year,
+                        day.month,
+                        day.day,
+                        _selectedEndDate.hour,
+                        _selectedEndDate.minute,
+                      ),
+                    );
+                  }
                 },
                 dayBuilder: (context, date) {
                   final isSelected = date.isSameDay(_selectedDateTime);
+
+                  final isSelectedEndDate =
+                      isEndDate && date.isSameDay(_selectedEndDate);
+
+                  bool isInRange(DateTime date) {
+                    if (_selectedDateTime == null) return false;
+                    if (isEndDate) {
+                      if (_selectedEndDate == null) {
+                        return date == _selectedDateTime;
+                      }
+                    }
+                    return ((date == _selectedDateTime ||
+                            date.isSameDayOrAfter(_selectedDateTime)) &&
+                        (date == _selectedEndDate ||
+                            date.isSameDayOrBefore(_selectedEndDate)));
+                  }
+
                   return Column(
                     children: [
-                      Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isSelected ? Colors.blue : null,
-                          border: isSelected
-                              ? const Border.fromBorderSide(BorderSide(
-                                  color: Colors.blue,
-                                  width: 2.0,
-                                ))
-                              : null,
-                        ),
-                        padding: isSelected ? const EdgeInsets.all(4.0) : null,
-                        child: Center(
-                          child: Text(
-                            DateFormat('d').format(date),
-                            style: TextStyle(
-                              fontWeight: isSelected ? FontWeight.bold : null,
-                            ),
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 1.0,
+                          child: Stack(
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 3, bottom: 3),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 2,
+                                        bottom: 2,
+                                        left: isSelected ? 4 : 0,
+                                        right: isEndDate && isSelectedEndDate
+                                            ? 4
+                                            : 0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: (isEndDate)
+                                            ? isInRange(date)
+                                                ? secondaryColor
+                                                    .withOpacity(0.4)
+                                                : Colors.transparent
+                                            : Colors.transparent,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: isSelected
+                                              ? const Radius.circular(24.0)
+                                              : const Radius.circular(0.0),
+                                          topLeft: isSelected
+                                              ? const Radius.circular(24.0)
+                                              : const Radius.circular(0.0),
+                                          topRight:
+                                              isEndDate && isSelectedEndDate
+                                                  ? const Radius.circular(24.0)
+                                                  : const Radius.circular(0.0),
+                                          bottomRight:
+                                              isEndDate && isSelectedEndDate
+                                                  ? const Radius.circular(24.0)
+                                                  : const Radius.circular(0.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 12,
+                                right: 0,
+                                left: 0,
+                                child: Container(
+                                  height: 35,
+                                  width: 35,
+                                  decoration: BoxDecoration(
+                                      color: isSelected ||
+                                              isEndDate && isSelectedEndDate
+                                          ? secondaryColor
+                                          : Colors.transparent,
+                                      shape: BoxShape.circle),
+                                  child: Center(
+                                    child: Text(
+                                      DateFormat('d').format(date),
+                                      style: TextStyle(
+                                          fontWeight: isSelected ||
+                                                  isEndDate && isSelectedEndDate
+                                              ? FontWeight.bold
+                                              : null,
+                                          color: date.removeTime().isBefore(
+                                                  DateTime.now().removeTime())
+                                              ? Colors.grey
+                                              : null),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ), // Thêm khoảng cách cho border
+                        ),
                       ),
                     ],
                   );
@@ -167,8 +352,8 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 20),
-                        margin: const EdgeInsets.all(20),
+                            vertical: 0, horizontal: 20),
+                        margin: const EdgeInsets.only(bottom: 20),
                         child: Text(
                           _dateFormat.format(DateTime(year, month)),
                           style:
@@ -203,18 +388,35 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
             SizedBox(
               height: 200, // fixed height
               child: CupertinoDatePicker(
+                key: UniqueKey(),
                 use24hFormat: true,
                 minuteInterval: 5,
-                initialDateTime: _selectedDateTime,
+                initialDateTime:
+                    !isEndDate ? _selectedDateTime : _selectedEndDate,
                 mode: CupertinoDatePickerMode.time,
                 onDateTimeChanged: (DateTime dateTime) {
-                  _handleDateTimeChanged(DateTime(
-                    _selectedDateTime.year,
-                    _selectedDateTime.month,
-                    _selectedDateTime.day,
-                    dateTime.hour,
-                    dateTime.minute,
-                  ));
+                  if (!isEndDate) {
+                    _handleDateTimeChanged(
+                        DateTime(
+                          _selectedDateTime.year,
+                          _selectedDateTime.month,
+                          _selectedDateTime.day,
+                          dateTime.hour,
+                          dateTime.minute,
+                        ),
+                        null);
+                  } else {
+                    _handleDateTimeChanged(
+                      _selectedDateTime,
+                      DateTime(
+                        _selectedEndDate.year,
+                        _selectedEndDate.month,
+                        _selectedEndDate.day,
+                        dateTime.hour,
+                        dateTime.minute,
+                      ),
+                    );
+                  }
                 },
               ),
             ),
@@ -226,10 +428,10 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
 
   Widget weekText(String text) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(2.0),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.grey, fontSize: 10),
+        style: const TextStyle(color: Colors.grey, fontSize: 12),
       ),
     );
   }
