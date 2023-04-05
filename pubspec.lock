@@ -121,6 +121,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  better_player:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: Issue1057
+      resolved-ref: e45f447b6d3ae6a3404ddfd9663f8aeae864ddec
+      url: "https://github.com/matthewrice345/betterplayer.git"
+    source: git
+    version: "0.0.83"
   boolean_selector:
     dependency: transitive
     description:
@@ -715,19 +724,19 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
-  flutter_video_newfeed:
-    dependency: "direct main"
-    description:
-      name: flutter_video_newfeed
-      sha256: fc6d956bab58e0f0b3084e6ef0255202a12f92cedce68ba41fbe328da0028310
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_widget_from_html_core:
+    dependency: "direct main"
+    description:
+      name: flutter_widget_from_html_core
+      sha256: e8f4f8b461a140ffb7c71f938bc76efc758893e7468843d9dbf70cb0b9e900cb
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.5+3"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -768,6 +777,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  fwfh_text_style:
+    dependency: transitive
+    description:
+      name: fwfh_text_style
+      sha256: "37806ee0222f79b6e8d4c698c322c897eae6a817258156f40aeece4e588fac60"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.22.08+1"
   gallery_saver:
     dependency: "direct main"
     description:
@@ -953,7 +970,7 @@ packages:
     source: hosted
     version: "4.0.2"
   image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image
       sha256: "483a389d6ccb292b570c31b3a193779b1b0178e7eb571986d9a49904b6861227"
@@ -1000,6 +1017,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.3"
+  infinite_scroll_pagination:
+    dependency: "direct main"
+    description:
+      name: infinite_scroll_pagination
+      sha256: "9517328f4e373f08f57dbb11c5aac5b05554142024d6b60c903f3b73476d52db"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   intl:
     dependency: "direct main"
     description:
@@ -1088,14 +1113,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  lottie:
-    dependency: transitive
-    description:
-      name: lottie
-      sha256: "893da7a0022ec2fcaa616f34529a081f617e86cc501105b856e5a3184c58c7c2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.3"
   marquee:
     dependency: "direct main"
     description:
@@ -1152,14 +1169,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0-pre"
-  native_device_orientation:
-    dependency: "direct main"
-    description:
-      name: native_device_orientation
-      sha256: "7d2fa1a1420b7b4ac3317760ffd063b86704679fb4f1796644581da4a6356ccc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.4"
   nested:
     dependency: transitive
     description:
@@ -1469,6 +1478,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliver_tools:
+    dependency: transitive
+    description:
+      name: sliver_tools
+      sha256: bfa69411ebb203cc1a115b1e8bc7935b893eb381fdcf8d453b40c0d4e1db3247
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.9"
   source_gen:
     dependency: transitive
     description:
@@ -1729,50 +1746,42 @@ packages:
     dependency: "direct main"
     description:
       name: video_player
-      sha256: "868a139229acb5018d22aded3eb9cb4767ff43a8216573c086b6c535a4957481"
+      sha256: de95f0e9405f29b5582573d4166132e71f83b3158aac14e8ee5767a54f4f1fbd
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.0"
+    version: "2.6.1"
   video_player_android:
     dependency: transitive
     description:
       name: video_player_android
-      sha256: dc31c60ae591aa3ccb2d460c3690ceceb86cbb826e73428d817a37650dc4e229
+      sha256: a592048a711d5739d9cea2255d425779f138d41095b9149bda60ce4bc1af8871
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.4"
   video_player_avfoundation:
     dependency: transitive
     description:
       name: video_player_avfoundation
-      sha256: "90468226c8687adf7b567d9bb42c25588783c4d30509af1fbd663b2dd049f700"
+      sha256: af308d08c672d5ff718c60127665249617c37a709cb8f0a18dd28a0360299b7c
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.3"
   video_player_platform_interface:
     dependency: transitive
     description:
       name: video_player_platform_interface
-      sha256: "318a6d20577e1c78cf0bf40670883cc571ea860c72a4f7426d7dacce4bdd4343"
+      sha256: a8c4dcae2a7a6e7cc1d7f9808294d968eca1993af34a98e95b9bdfa959bec684
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.4"
+    version: "6.1.0"
   video_player_web:
     dependency: transitive
     description:
       name: video_player_web
-      sha256: fb3bbeaf0302cb0c31340ebd6075487939aa1fe3b379d1a8784ef852b679940e
+      sha256: "44ce41424d104dfb7cf6982cc6b84af2b007a24d126406025bf40de5d481c74c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.15"
-  video_player_web_hls:
-    dependency: "direct main"
-    description:
-      name: video_player_web_hls
-      sha256: d63442f2ec975134436b707725c6ce8cd9488245533c75663596bca1e993c8e2
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.11+6"
+    version: "2.0.16"
   visibility_detector:
     dependency: "direct main"
     description:

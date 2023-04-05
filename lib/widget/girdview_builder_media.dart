@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class GirdviewBuilderMedia extends StatelessWidget {
   final List medias;
@@ -52,13 +51,7 @@ class GirdviewBuilderMedia extends StatelessWidget {
                               medias[indexBg]['file'],
                               fit: BoxFit.cover,
                             )
-                          : FadeInImage.memoryNetwork(
-                              placeholder: kTransparentImage,
-                              image: medias[indexBg]['url'],
-                              fit: BoxFit.cover,
-                              imageErrorBuilder: (context, error, stackTrace) =>
-                                  const SizedBox(),
-                            ),
+                          : ImageCacheRender(path: medias[indexBg]['url']),
                       imageRemain != null &&
                               imageRemain! > 0 &&
                               indexBg + 1 == medias.length
@@ -78,13 +71,18 @@ class GirdviewBuilderMedia extends StatelessWidget {
                           : const SizedBox()
                     ],
                   )
-                : FeedVideo(
-                    path: medias[indexBg]['file']?.path ??
-                        medias[indexBg]['remote_url'] ??
-                        medias[indexBg]['url'],
-                    flickMultiManager: flickMultiManager,
-                    image: medias[indexBg]['preview_remote_url'] ??
-                        medias[indexBg]['preview_url'] ??
-                        '')));
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                        VideoPlayerNoneController(
+                            aspectRatio: aspectRatio,
+                            path: medias[indexBg]['file']?.path ??
+                                medias[indexBg]['remote_url'] ??
+                                medias[indexBg]['url'],
+                            media: medias[indexBg],
+                            type: medias[indexBg]['file']?.path != null
+                                ? 'local'
+                                : 'network'),
+                      ])));
   }
 }

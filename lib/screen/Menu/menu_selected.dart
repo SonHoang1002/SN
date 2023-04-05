@@ -2,23 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Event/create_event.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/search_market_page.dart';
+import 'package:social_network_app_mobile/screen/Event/event_render.dart';
+import 'package:social_network_app_mobile/screen/Group/group.dart';
+import 'package:social_network_app_mobile/screen/Grows/grow_render.dart';
+import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 import 'package:social_network_app_mobile/screen/Payment/payment.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recruit_render.dart';
+import 'package:social_network_app_mobile/screen/Watch/watch_render.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 import '../../helper/push_to_new_screen.dart';
 import '../Group/GroupCreateModules/screen/create_group_page.dart';
-import '../MarketPlace/screen/personal_market_page.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/screen/Event/event_render.dart';
-import 'package:social_network_app_mobile/screen/Group/group.dart';
-import 'package:social_network_app_mobile/screen/Grows/grow_render.dart';
-import 'package:social_network_app_mobile/screen/Page/page_general.dart';
-import 'package:social_network_app_mobile/screen/Watch/watch_render.dart';
 // import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 
 class MenuSelected extends StatelessWidget {
@@ -103,7 +100,8 @@ class MenuSelected extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CreateEvents()),
+                  CupertinoPageRoute(
+                      builder: (context) => const CreateEvents()),
                 );
               },
               child: Icon(FontAwesomeIcons.plus, size: 18, color: colorWord),

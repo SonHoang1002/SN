@@ -19,7 +19,9 @@ import 'post_detail.dart';
 class PostHeader extends StatefulWidget {
   final dynamic post;
   final dynamic type;
-  const PostHeader({Key? key, this.post, this.type}) : super(key: key);
+  final Color? textColor;
+  const PostHeader({Key? key, this.post, this.type, this.textColor})
+      : super(key: key);
 
   @override
   State<PostHeader> createState() => _PostHeaderState();
@@ -132,13 +134,15 @@ class _PostHeaderState extends State<PostHeader> {
                       SizedBox(
                         width: size.width * 0.6,
                         child: BlockNamePost(
-                            post: widget.post,
-                            account: account,
-                            description: description,
-                            mentions: mentions,
-                            statusActivity: statusActivity,
-                            group: group,
-                            page: page),
+                          post: widget.post,
+                          account: account,
+                          description: description,
+                          mentions: mentions,
+                          statusActivity: statusActivity,
+                          group: group,
+                          page: page,
+                          textColor: widget.textColor,
+                        ),
                       ),
                       Row(
                         children: [
@@ -235,6 +239,7 @@ class BlockNamePost extends StatelessWidget {
     this.page,
     this.statusActivity,
     this.post,
+    this.textColor,
   });
   final dynamic post;
   final dynamic account;
@@ -243,6 +248,7 @@ class BlockNamePost extends StatelessWidget {
   final dynamic group;
   final dynamic page;
   final dynamic statusActivity;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -267,59 +273,59 @@ class BlockNamePost extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () {
-        pushToScreen();
-      },
-      child: RichText(
-        text: TextSpan(
-          text: renderDisplayName(),
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).textTheme.displayLarge!.color),
-          children: [
-            const TextSpan(text: ' '),
-            statusActivity.isNotEmpty
-                ? WidgetSpan(
-                    child: ImageCacheRender(
-                      path: statusActivity['url'],
-                      width: 18.0,
-                      height: 18.0,
-                    ),
-                  )
-                : const TextSpan(text: ''),
-            TextSpan(
-                text: description,
-                style: const TextStyle(fontWeight: FontWeight.normal)),
-            mentions.isNotEmpty
-                ? TextSpan(text: mentions[0]['display_name'])
-                : const TextSpan(),
-            mentions.isNotEmpty && mentions.length >= 2
-                ? const TextSpan(
-                    text: ' và ',
-                    style: TextStyle(fontWeight: FontWeight.normal))
-                : const TextSpan(),
-            mentions.isNotEmpty && mentions.length == 2
-                ? TextSpan(
-                    text: mentions[1]['display_name'],
-                  )
-                : const TextSpan(),
-            mentions.isNotEmpty && mentions.length > 2
-                ? TextSpan(
-                    text: '${mentions.length - 1} người khác',
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) =>
-                                    PageMention(mentions: mentions)));
-                      })
-                : const TextSpan(),
-          ],
-        ),
-      ),
-    );
+        onTap: () {
+          pushToScreen();
+        },
+        child: RichText(
+          text: TextSpan(
+            text: renderDisplayName(),
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: textColor ??
+                    Theme.of(context).textTheme.displayLarge!.color),
+            children: [
+              const TextSpan(text: ' '),
+              statusActivity.isNotEmpty
+                  ? WidgetSpan(
+                      child: ImageCacheRender(
+                        path: statusActivity['url'],
+                        width: 18.0,
+                        height: 18.0,
+                      ),
+                    )
+                  : const TextSpan(text: ''),
+              TextSpan(
+                  text: description,
+                  style: const TextStyle(fontWeight: FontWeight.normal)),
+              mentions.isNotEmpty
+                  ? TextSpan(text: mentions[0]['display_name'])
+                  : const TextSpan(),
+              mentions.isNotEmpty && mentions.length >= 2
+                  ? const TextSpan(
+                      text: ' và ',
+                      style: TextStyle(fontWeight: FontWeight.normal))
+                  : const TextSpan(),
+              mentions.isNotEmpty && mentions.length == 2
+                  ? TextSpan(
+                      text: mentions[1]['display_name'],
+                    )
+                  : const TextSpan(),
+              mentions.isNotEmpty && mentions.length > 2
+                  ? TextSpan(
+                      text: '${mentions.length - 1} người khác',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      PageMention(mentions: mentions)));
+                        })
+                  : const TextSpan(),
+            ],
+          ),
+        ));
   }
 }
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
+import 'package:social_network_app_mobile/widget/skeleton.dart';
 
 class WatchHome extends ConsumerStatefulWidget {
   const WatchHome({Key? key}) : super(key: key);
@@ -51,11 +53,18 @@ class _WatchHomeState extends ConsumerState<WatchHome> {
         controller: scrollController,
         scrollDirection: Axis.vertical,
         child: Column(
-            children: List.generate(
-                watchSuggest.length,
-                (index) => Post(
-                    key: Key(watchSuggest[index]['id']),
-                    post: watchSuggest[index]))),
+          children: [
+            Column(
+                children: List.generate(
+                    watchSuggest.length,
+                    (index) => Post(
+                          key: Key(watchSuggest[index]['id']),
+                          post: watchSuggest[index],
+                          type: postWatch,
+                        ))),
+            SkeletonCustom().postSkeleton(context)
+          ],
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_tree.dart';
@@ -11,7 +12,8 @@ import 'package:social_network_app_mobile/widget/comment_textfield.dart';
 
 class CommentPostModal extends ConsumerStatefulWidget {
   final dynamic post;
-  const CommentPostModal({Key? key, this.post}) : super(key: key);
+  final String? type;
+  const CommentPostModal({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   ConsumerState<CommentPostModal> createState() => _CommentPostModalState();
@@ -254,12 +256,18 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
         hiddenKeyboard(context);
       },
       child: Scaffold(
+        backgroundColor: widget.type == postWatch ? Colors.grey.shade900 : null,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const AppBarTitle(title: 'Bình luận'),
+          backgroundColor:
+              widget.type == postWatch ? Colors.grey.shade900 : null,
+          title: AppBarTitle(
+            title: 'Bình luận',
+            textColor: widget.type == postWatch ? Colors.white : null,
+          ),
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -279,6 +287,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
                           itemCount: postComment.length,
                           itemBuilder: ((context, index) => CommentTree(
                               key: Key(postComment[index]['id']),
+                              type: widget.type,
                               commentChildCreate: postComment[index]['id'] ==
                                       commentChild?['in_reply_to_id']
                                   ? commentChild
@@ -331,6 +340,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: CommentTextfield(
+                    type: widget.type,
                     commentSelected: commentSelected,
                     getCommentSelected: getCommentSelected,
                     commentNode: commentNode,

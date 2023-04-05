@@ -3,8 +3,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:usesCleartextTraffic="true"
-        android:label="Emso"
-        android:name="${applicationName}"
+        android:label="EMSO"
+        android:name="io.flutter.app.FlutterMultiDexApplication"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

@@ -202,9 +202,7 @@ class GalleryAssetSelectorState extends State<GalleryAssetSelector>
                             if (widget.typePage == 'page_edit') {
                               Navigator.of(context).pop();
                             } else {
-                              Navigator.of(context)
-                                ..pop()
-                                ..pop();
+                              Navigator.of(context).pop();
                             }
                           },
                         ),

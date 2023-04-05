@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class AppBarTitle extends StatelessWidget {
   final String title;
-  const AppBarTitle({Key? key, required this.title}) : super(key: key);
+  final Color? textColor;
+  const AppBarTitle({Key? key, required this.title, this.textColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,7 @@ class AppBarTitle extends StatelessWidget {
           fontSize: 18,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w600,
-          color: Theme.of(context).textTheme.displayLarge!.color),
+          color: textColor ?? Theme.of(context).textTheme.displayLarge!.color),
     );
   }
 }

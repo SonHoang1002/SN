@@ -49,8 +49,6 @@ class _AppState extends State<App> {
         ChangeNotifierProvider(create: (_) => HideGroupProvider()),
         ChangeNotifierProvider(create: (_) => SelectTargetGroupProvider()),
         ChangeNotifierProvider(create: (_) => SelectionPrivateEventProvider()),
-        ChangeNotifierProvider(create: (_) => ReactionMessageContent()),
-        ChangeNotifierProvider(create: (_) => ReactionMessageStatus()),
       ],
       child: const MaterialAppWithTheme(),
     );
