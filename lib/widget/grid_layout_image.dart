@@ -3,15 +3,16 @@ import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manage
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/girdview_builder_media.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import '../theme/colors.dart';
 
 class GridLayoutImage extends StatefulWidget {
   final List medias;
   final Function handlePress;
+  final dynamic post;
   const GridLayoutImage(
-      {Key? key, required this.medias, required this.handlePress})
+      {Key? key, required this.medias, required this.handlePress, this.post})
       : super(key: key);
 
   @override
@@ -65,23 +66,16 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     widget.handlePress(medias[0]);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(top:8.0),
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: Column(
-                      children: [buildDivider(color: greyColor),
+                      children: [
+                        buildDivider(color: greyColor),
                         medias[0]['subType'] == 'local'
                             ? Image.file(
                                 medias[0]['file'],
                                 fit: BoxFit.cover,
                               )
-                            : Hero(
-                                tag: medias[0]['id'],
-                                child: FadeInImage.memoryNetwork(
-                                  placeholder: kTransparentImage,
-                                  image: medias[0]['url'],
-                                  imageErrorBuilder: (context, error, stackTrace) =>
-                                      const SizedBox(),
-                                ),
-                              ),
+                            : ImageCacheRender(path: medias[0]['url']),
                         buildDivider(color: greyColor),
                       ],
                     ),
@@ -90,6 +84,9 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               ),
             );
           } else {
+            String path = medias[0]['file']?.path ??
+                medias[0]['remote_url'] ??
+                medias[0]['url'];
             return SizedBox(
                 height: (medias[0]['aspect'] ??
                             medias[0]['meta']['original']['aspect'] ??
@@ -100,10 +97,9 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: VideoPlayerNoneController(
-                      path: medias[0]['file']?.path ??
-                          medias[0]['remote_url'] ??
-                          medias[0]['url'],
+                      path: path,
                       media: medias[0],
+                      post: widget.post,
                       type: medias[0]['file']?.path != null
                           ? 'local'
                           : 'network'),

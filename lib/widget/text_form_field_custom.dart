@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class TextFormFieldCustom extends StatefulWidget {
@@ -9,6 +10,7 @@ class TextFormFieldCustom extends StatefulWidget {
   final String? hintText;
   final String? value;
   final bool? isDense;
+  final String? type;
 
   final Function? handleGetValue;
   final TextEditingController? textController;
@@ -22,6 +24,7 @@ class TextFormFieldCustom extends StatefulWidget {
 
   const TextFormFieldCustom(
       {Key? key,
+      this.type,
       this.initialValue,
       this.helperText,
       required this.autofocus,
@@ -52,7 +55,9 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        color: Theme.of(context).colorScheme.background,
+        color: widget.type == postWatch
+            ? Colors.grey.shade800
+            : Theme.of(context).colorScheme.background,
         child: TextFormField(
           focusNode: widget.focusNode,
           controller: widget.textController,
@@ -70,10 +75,12 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
           decoration: InputDecoration(
             isDense: widget.isDense ?? false,
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.only(left: 12, bottom: 12),
+            contentPadding: const EdgeInsets.only(left: 12),
             suffixIcon: widget.suffixIcon,
             hintText: widget.hintText,
-            hintStyle: const TextStyle(fontSize: 14),
+            hintStyle: TextStyle(
+                fontSize: 14,
+                color: widget.type == postWatch ? Colors.white : null),
             labelText: widget.label,
             focusColor: primaryColor,
             helperText: widget.helperText,

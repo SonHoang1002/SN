@@ -18,7 +18,9 @@ import 'post_detail.dart';
 class PostHeader extends StatefulWidget {
   final dynamic post;
   final dynamic type;
-  const PostHeader({Key? key, this.post, this.type}) : super(key: key);
+  final Color? textColor;
+  const PostHeader({Key? key, this.post, this.type, this.textColor})
+      : super(key: key);
 
   @override
   State<PostHeader> createState() => _PostHeaderState();
@@ -131,13 +133,15 @@ class _PostHeaderState extends State<PostHeader> {
                       SizedBox(
                         width: size.width * 0.6,
                         child: BlockNamePost(
-                            post: widget.post,
-                            account: account,
-                            description: description,
-                            mentions: mentions,
-                            statusActivity: statusActivity,
-                            group: group,
-                            page: page),
+                          post: widget.post,
+                          account: account,
+                          description: description,
+                          mentions: mentions,
+                          statusActivity: statusActivity,
+                          group: group,
+                          page: page,
+                          textColor: widget.textColor,
+                        ),
                       ),
                       Row(
                         children: [
@@ -234,6 +238,7 @@ class BlockNamePost extends StatelessWidget {
     this.page,
     this.statusActivity,
     this.post,
+    this.textColor,
   });
   final dynamic post;
   final dynamic account;
@@ -242,6 +247,7 @@ class BlockNamePost extends StatelessWidget {
   final dynamic group;
   final dynamic page;
   final dynamic statusActivity;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +269,8 @@ class BlockNamePost extends StatelessWidget {
         style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.displayLarge!.color),
+            color:
+                textColor ?? Theme.of(context).textTheme.displayLarge!.color),
         children: [
           const TextSpan(text: ' '),
           statusActivity.isNotEmpty

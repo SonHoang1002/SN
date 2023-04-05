@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/apis/emoji_sticky_api.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/gif.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -11,9 +12,13 @@ import 'package:social_network_app_mobile/widget/search_input.dart';
 
 class EmojiModalBottom extends StatefulWidget {
   final double height;
+  final String? type;
   final Function functionGetEmoji;
   const EmojiModalBottom(
-      {Key? key, required this.height, required this.functionGetEmoji})
+      {Key? key,
+      this.type,
+      required this.height,
+      required this.functionGetEmoji})
       : super(key: key);
 
   @override
@@ -120,13 +125,15 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: widget.type == postWatch
+          ? Colors.grey.shade900
+          : Theme.of(context).scaffoldBackgroundColor,
       child: Column(
         children: [
           const SizedBox(
             height: 8.0,
           ),
-          SearchInput(),
+          SearchInput(type: widget.type),
           SizedBox(
             height: 45,
             child: TabBar(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/watch_api.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
@@ -50,7 +51,8 @@ class WatchController extends StateNotifier<WatchState> {
       state = state.copyWith(
           watchFollow: state.watchFollow,
           watchSuggest: params.containsKey('max_id')
-              ? [...state.watchSuggest, ...newWatch]
+              ? checkObjectUniqueInList(
+                  [...state.watchSuggest, ...newWatch], 'id')
               : newWatch);
     }
   }

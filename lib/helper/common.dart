@@ -39,3 +39,9 @@ checkObjectUniqueInList(list, keyCheck) {
   return newList;
 }
 
+String formatDuration(Duration duration) {
+  String twoDigits(int n) => n >= 10 ? "$n" : "0$n";
+  String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+  String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+  return "$twoDigitMinutes:$twoDigitSeconds";
+}

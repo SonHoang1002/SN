@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:social_network_app_mobile/screen/Watch/watch_detail.dart';
+import 'package:social_network_app_mobile/screen/Watch/watch_suggest.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -8,8 +8,15 @@ class VideoPlayerNoneController extends StatefulWidget {
   final String path;
   final String type;
   final dynamic media;
+  final dynamic post;
+  final double? aspectRatio;
   const VideoPlayerNoneController(
-      {Key? key, required this.path, required this.type, this.media})
+      {Key? key,
+      required this.path,
+      required this.type,
+      this.media,
+      this.aspectRatio,
+      this.post})
       : super(key: key);
 
   @override
@@ -31,9 +38,6 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
         ? VideoPlayerController.network(widget.path)
         : VideoPlayerController.asset(widget.path))
       ..initialize().then((value) {
-        if (isVisible) {
-          videoPlayerController.play();
-        }
         videoPlayerController.setLooping(true);
       });
   }
@@ -53,7 +57,7 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
             });
           }
         },
-        key: Key(widget.media['id']),
+        key: Key(widget.media['id'] ?? widget.path),
         child: Stack(
           children: [
             GestureDetector(
@@ -63,14 +67,16 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WatchDetail(
+                                builder: (context) => WatchSuggest(
+                                      post: widget.post,
                                       media: widget.media,
                                     )));
                       },
                 child: Hero(
-                    tag: widget.media['id'],
+                    tag: widget.path,
                     child: AspectRatio(
-                        aspectRatio: videoPlayerController.value.aspectRatio,
+                        aspectRatio: widget.aspectRatio ??
+                            videoPlayerController.value.aspectRatio,
                         child: VideoPlayer(videoPlayerController)))),
             Positioned(
                 bottom: 10,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 
 import '../theme/colors.dart';
 
@@ -7,10 +8,12 @@ class SearchInput extends StatefulWidget {
   final Function? handleSearch;
   final Function? handleUpdateFocus;
   final Function? handleSearchClick;
+  final String? type;
   String? title = "Tìm kiếm";
 
   SearchInput(
       {super.key,
+      this.type,
       this.handleSearch,
       this.handleUpdateFocus,
       this.title,
@@ -36,7 +39,9 @@ class _SearchInputState extends State<SearchInput> {
         height: 40,
         padding: const EdgeInsets.only(top: 2, left: 5, bottom: 5),
         decoration: BoxDecoration(
-            color: Theme.of(context).canvasColor,
+            color: widget.type == postWatch
+                ? Colors.black
+                : Theme.of(context).canvasColor,
             border: Border.all(width: 0.2, color: greyColor),
             borderRadius: BorderRadius.circular(20)),
         child: TextFormField(
@@ -47,7 +52,9 @@ class _SearchInputState extends State<SearchInput> {
             cursorColor: Theme.of(context).textTheme.displayLarge?.color,
             decoration: InputDecoration(
                 hintText: widget.title ?? 'Tìm kiếm',
-                hintStyle: const TextStyle(fontSize: 13),
+                hintStyle: TextStyle(
+                    fontSize: 13,
+                    color: widget.type == postWatch ? Colors.white : null),
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
                 prefixIcon: InkWell(
@@ -58,7 +65,9 @@ class _SearchInputState extends State<SearchInput> {
                   },
                   child: Icon(
                     FontAwesomeIcons.magnifyingGlass,
-                    color: Theme.of(context).textTheme.displayLarge?.color,
+                    color: widget.type == postWatch
+                        ? Colors.white
+                        : Theme.of(context).textTheme.displayLarge?.color,
                     size: 17,
                   ),
                 ),

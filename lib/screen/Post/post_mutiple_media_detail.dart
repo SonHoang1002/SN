@@ -3,7 +3,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
-import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart'; 
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -73,15 +73,14 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return PostOneMediaDetail(
-                                    currentIndex: index,
-                                    medias: medias,
-                                    postMedia: medias[index],
-                                    backFunction: () {
-                                      setState(() {
-                                        isShowImage = false;
+                                      currentIndex: index,
+                                      medias: medias,
+                                      postMedia: medias[index],
+                                      backFunction: () {
+                                        setState(() {
+                                          isShowImage = false;
+                                        });
                                       });
-                                    }
-                                  );
                                 }));
 
                                 // setState(() {
@@ -90,13 +89,9 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
                                 // });
                               },
                               child: checkIsImage(medias[index])
-                                  ? Hero(
-                                      tag: medias[index]['id'],
-                                      child: ImageCacheRender(
-                                          key: Key(
-                                              medias[index]['id'].toString()),
-                                          path: medias[index]['url']),
-                                    )
+                                  ? ImageCacheRender(
+                                      key: Key(medias[index]['id'].toString()),
+                                      path: medias[index]['url'])
                                   : FeedVideo(
                                       key: Key(medias[index]['id'].toString()),
                                       flickMultiManager: flickMultiManager,

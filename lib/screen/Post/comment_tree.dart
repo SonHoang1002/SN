@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -27,6 +28,7 @@ import 'package:transparent_image/transparent_image.dart';
 class CommentTree extends StatefulHookConsumerWidget {
   const CommentTree(
       {Key? key,
+      this.type,
       this.commentParent,
       this.commentNode,
       this.getCommentSelected,
@@ -38,6 +40,7 @@ class CommentTree extends StatefulHookConsumerWidget {
   final dynamic commentChildCreate;
   final dynamic commentParent;
   final dynamic commentSelected;
+  final String? type;
 
   final FocusNode? commentNode;
   final Function? getCommentSelected;
@@ -478,19 +481,25 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 8),
                         decoration: BoxDecoration(
-                            color: widget.widget.commentSelected != null &&
-                                    widget.widget.commentSelected!['id'] ==
-                                        postRender['id']
-                                ? secondaryColorSelected
-                                : Theme.of(context).colorScheme.background,
+                            color: widget.widget.type == postWatch
+                                ? Colors.grey.shade800
+                                : widget.widget.commentSelected != null &&
+                                        widget.widget.commentSelected!['id'] ==
+                                            postRender['id']
+                                    ? secondaryColorSelected
+                                    : Theme.of(context).colorScheme.background,
                             borderRadius: BorderRadius.circular(15)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               '${widget.data.userName}',
-                              style: const TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color: widget.widget.type == postWatch
+                                      ? Colors.white
+                                      : null),
                             ),
                             const SizedBox(
                               height: 4,
@@ -501,10 +510,12 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                               children: handleGetComment(),
                               style: TextStyle(
                                   fontSize: 13,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color),
+                                  color: widget.widget.type == postWatch
+                                      ? Colors.white
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .color),
                             ))
                           ],
                         ),

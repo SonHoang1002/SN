@@ -18,7 +18,7 @@ class DiscoverProductsController extends StateNotifier<DiscoverProductsState> {
 
   getDiscoverProducts({int? count}) async {
     List<dynamic> response =
-        await DiscoverProductsApi().getListDiscoverProductsApi();
+        await DiscoverProductsApi().getListDiscoverProductsApi() ?? [];
     List<dynamic> data =
         count != null ? response.take(count).toList() : response;
     state = state.copyWith(data);

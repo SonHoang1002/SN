@@ -6,7 +6,7 @@ import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_video.dart';
 import 'package:social_network_app_mobile/screen/Moment/video_description.dart';
 
-class MomentPageview extends ConsumerWidget {
+class MomentPageview extends ConsumerStatefulWidget {
   final List momentRender;
   final Function handlePageChange;
   final int? initialPage;
@@ -21,7 +21,14 @@ class MomentPageview extends ConsumerWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MomentPageview> createState() => _MomentPageviewState();
+}
+
+class _MomentPageviewState extends ConsumerState<MomentPageview> {
+  bool isDragSlider = false;
+
+  @override
+  Widget build(BuildContext context) {
     handleAction(type, data) async {
       dynamic response;
       if (type == 'reaction') {
@@ -52,25 +59,34 @@ class MomentPageview extends ConsumerWidget {
           .updateMomentDetail(data['typeAction'], response);
     }
 
+    handleSlider(data) {
+      setState(() {
+        isDragSlider = data;
+      });
+    }
+
     return PreloadPageView.builder(
       physics: const CustomPageViewScrollPhysics(),
-      controller: PreloadPageController(initialPage: initialPage ?? 0),
-      itemCount: momentRender.length,
+      controller: PreloadPageController(initialPage: widget.initialPage ?? 0),
+      itemCount: widget.momentRender.length,
       scrollDirection: Axis.vertical,
       preloadPagesCount: 5,
       onPageChanged: (value) {
-        handlePageChange(value);
+        widget.handlePageChange(value);
       },
       itemBuilder: (context, index) {
         return Stack(
           children: [
-            MomentVideo(moment: momentRender[index]),
-            Positioned(
-                bottom: 15,
-                left: 15,
-                child: VideoDescription(
-                  moment: momentRender[index],
-                )),
+            MomentVideo(
+                moment: widget.momentRender[index], handleSlider: handleSlider),
+            isDragSlider
+                ? const SizedBox()
+                : Positioned(
+                    bottom: 15,
+                    left: 15,
+                    child: VideoDescription(
+                      moment: widget.momentRender[index],
+                    )),
           ],
         );
       },
