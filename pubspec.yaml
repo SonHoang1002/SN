@@ -107,7 +107,8 @@ dependencies:
   persistent_bottom_nav_bar: ^5.0.2
   flutter_slidable: ^2.0.0
   flutter_widget_from_html_core: ^0.8.5+3
-
+  infinite_scroll_pagination: ^3.2.0
+  image: ^4.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter
