@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -63,17 +60,6 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
           });
         }
       });
-  }
-
-  Future getThumbnail(String videoPath, Duration duration) async {
-    print('thumbnail, runnnnnnn');
-    final thumbnail = await VideoThumbnail.thumbnailData(
-      video: videoPath,
-      imageFormat: ImageFormat.JPEG,
-      timeMs: duration.inMilliseconds,
-    );
-    print('thumbnail, $thumbnail');
-    return thumbnail;
   }
 
   @override
@@ -224,14 +210,14 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                     ))
                 : const SizedBox(),
             Positioned(
-                bottom: -20,
+                bottom: -23,
                 left: -23,
                 right: -23,
                 child: SliderTheme(
                     data: SliderThemeData(
                       trackHeight: _sliderChanging ? 2 : 0.3,
                       thumbShape: const RoundSliderThumbShape(
-                        enabledThumbRadius: 0,
+                        enabledThumbRadius: 1.5,
                       ),
                     ),
                     child: SizedBox(
@@ -249,9 +235,6 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                             _sliderValue = value;
                           });
                           widget.handleSlider!(true);
-                          getThumbnail(
-                              widget.moment['media_attachments'][0]['url'],
-                              Duration(seconds: _sliderValue.round()));
                         },
                         onChangeEnd: (value) {
                           videoPlayerController

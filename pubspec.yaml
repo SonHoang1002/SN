@@ -106,7 +106,6 @@ dependencies:
   flick_video_player: ^0.5.0
   persistent_bottom_nav_bar: ^5.0.2
   flutter_slidable: ^2.0.0
-  video_thumbnail: ^0.5.3
 
 dev_dependencies:
   flutter_test:

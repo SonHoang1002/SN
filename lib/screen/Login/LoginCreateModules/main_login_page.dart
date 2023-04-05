@@ -115,7 +115,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
       "client_secret": "f2PrtRsNb7scscIn_3R_cz6k_fzPUv1uj7ZollSWBBY",
       "grant_type": "password",
       "scope": "write read follow",
-      "username": currentAccount['username'] ?? username,
+      "username": currentAccount?['username'] ?? username,
       "password": password,
     };
 
