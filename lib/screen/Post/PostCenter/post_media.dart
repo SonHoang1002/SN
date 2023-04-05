@@ -49,6 +49,7 @@ class PostMedia extends StatelessWidget {
         ? Container(
             margin: const EdgeInsets.only(top: 8.0),
             child: GridLayoutImage(
+              post: post,
               medias: medias,
               handlePress: handlePress,
             ),

@@ -125,7 +125,7 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
             },
             scrollDirection: Axis.horizontal,
             controller: pageController,
-            itemCount: widget.medias!.length,
+            itemCount: widget.medias != null ? widget.medias!.length : 1,
             itemBuilder: (context, index) {
               return Container(
                 color: Colors.black,

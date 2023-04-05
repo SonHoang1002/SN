@@ -22,8 +22,8 @@ class _ImageCacheRenderState extends State<ImageCacheRender> {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       key: UniqueKey(),
-      cacheManager: cacheManager,
-      cacheKey: widget.path,
+      // cacheManager: cacheManager,
+      // cacheKey: widget.path,
       placeholder: (context, url) => Image.asset(
         'assets/grey.png',
         width: widget.width,
@@ -31,20 +31,25 @@ class _ImageCacheRenderState extends State<ImageCacheRender> {
         fit: BoxFit.cover,
       ),
       imageUrl: widget.path,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(widget.path),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-      fadeInDuration: Duration.zero,
+      // imageBuilder: (context, imageProvider) => Container(
+      //   decoration: BoxDecoration(
+      //     image: DecorationImage(
+      //       image: CachedNetworkImageProvider(widget.path),
+      //       fit: BoxFit.cover,
+      //     ),
+      //   ),
+      // ),
+      // fadeInDuration: Duration.zero,
       width: widget.width,
       height: widget.height,
       fit: BoxFit.cover,
-      errorWidget: (context, url, error) => const SizedBox(
-        child: Text('Lỗi'),
+      errorWidget: (context, url, error) => SizedBox(
+        child: Image.asset(
+          'assets/grey.png',
+          width: widget.width,
+          height: widget.height,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
