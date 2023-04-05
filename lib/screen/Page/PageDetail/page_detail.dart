@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/about_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/box_quick_update_page.dart';
@@ -15,6 +17,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widget/Banner/banner_base.dart';
+import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/header_tabs.dart';
@@ -283,6 +286,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
+    var meData = ref.watch(meControllerProvider);
 
     String modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
@@ -299,10 +303,114 @@ class _PageDetailState extends ConsumerState<PageDetail> {
               Navigator.pop(context);
             },
             child: const Icon(FontAwesomeIcons.angleLeft, size: 18)),
-        title: Text(widget.pageData['title'],
-            style: TextStyle(
-                color: Theme.of(context).textTheme.bodyLarge?.color,
-                fontSize: 15)),
+        title: InkWell(
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(15))),
+                builder: (context) => Container(
+                      height: 300,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                      child: Column(children: [
+                        const Text('Chọn cách tương tác',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w500)),
+                        const SizedBox(height: 8),
+                        const Text(
+                            'Đăng bài, bình luận và bày tỏ cảm xúc dưới tên trang cá nhân hoặc Trang của bạn.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 13)),
+                        const SizedBox(height: 8),
+                        const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                          child: Divider(height: 2),
+                        ),
+                        Column(
+                          children: List.generate(
+                              [meData[0], widget.pageData].length,
+                              (index) => InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              AvatarSocial(
+                                                  width: 36,
+                                                  height: 36,
+                                                  path: [
+                                                        meData[0],
+                                                        widget.pageData
+                                                      ][index][
+                                                              'media_attachment']
+                                                          ?['show_url'] ??
+                                                      [
+                                                        meData[0],
+                                                        widget.pageData
+                                                      ][index][
+                                                              'media_attachment']
+                                                          ?['preview_url'] ??
+                                                      [
+                                                        meData[0],
+                                                        widget.pageData
+                                                      ][index][
+                                                              'media_attachment']
+                                                          ?['url'] ??
+                                                      linkAvatarDefault),
+                                              const SizedBox(
+                                                width: 7,
+                                              ),
+                                              Text(
+                                                [
+                                                      meData[0],
+                                                      widget.pageData
+                                                    ][index]?['display_name'] ??
+                                                    [
+                                                      meData[0],
+                                                      widget.pageData
+                                                    ][index]['title'],
+                                                style: const TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              )
+                                            ],
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: 5, right: 8),
+                                            child: Icon(
+                                              true
+                                                  ? FontAwesomeIcons.circleDot
+                                                  : FontAwesomeIcons.circle,
+                                              size: 16,
+                                              color: secondaryColor,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                        )
+                      ]),
+                    ));
+          },
+          child: Text(widget.pageData['title'],
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  fontSize: 15)),
+        ),
         centerTitle: true,
         actions: [
           SizedBox(
