@@ -41,41 +41,41 @@ class _WatchSuggestState extends State<WatchSuggest> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            GestureDetector(
-              onDoubleTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => WatchDetail(
-                              media: widget.media,
-                            )));
-              },
-              child: Column(
-                children: [
-                  PostHeader(
-                      post: widget.post, textColor: white, type: postDetail),
-                  const SizedBox(
-                    height: 12.0,
-                  ),
-                  PostContent(
-                    post: widget.post,
-                    textColor: white,
-                  ),
-                  const SizedBox(
-                    height: 12.0,
-                  ),
-                  Hero(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PostHeader(
+                    post: widget.post, textColor: white, type: postDetail),
+                const SizedBox(
+                  height: 12.0,
+                ),
+                PostContent(
+                  post: widget.post,
+                  textColor: white,
+                ),
+                const SizedBox(
+                  height: 12.0,
+                ),
+                Hero(
                     tag: widget.media['remote_url'] ?? widget.media['url'],
-                    child: VideoPlayerHasController(
-                      media: widget.media,
-                    ),
-                  ),
-                  PostFooter(
-                    post: widget.post,
-                  ),
-                ],
-              ),
-            )
+                    child: GestureDetector(
+                      onDoubleTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WatchDetail(
+                                      media: widget.media,
+                                    )));
+                      },
+                      child: VideoPlayerHasController(
+                        media: widget.media,
+                      ),
+                    )),
+                PostFooter(
+                  post: widget.post,
+                ),
+              ],
+            ),
           ],
         ),
       ),

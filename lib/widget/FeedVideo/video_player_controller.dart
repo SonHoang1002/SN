@@ -1,5 +1,7 @@
 import 'package:better_player/better_player.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class VideoPlayerHasController extends StatefulWidget {
   final dynamic media;
@@ -20,7 +22,36 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
     if (mounted) {
       BetterPlayerConfiguration betterPlayerConfiguration =
           BetterPlayerConfiguration(
-              autoPlay: true, autoDispose: true, aspectRatio: aspectRatio);
+              autoPlay: true,
+              autoDispose: true,
+              aspectRatio: aspectRatio,
+              controlsConfiguration: BetterPlayerControlsConfiguration(
+                  textColor: Colors.white,
+                  iconsColor: Colors.white,
+                  progressBarPlayedColor: secondaryColor,
+                  progressBarBufferedColor: Colors.white.withOpacity(0.5),
+                  progressBarBackgroundColor: Colors.grey,
+                  playIcon: CupertinoIcons.play_arrow_solid,
+                  pauseIcon: CupertinoIcons.pause_fill,
+                  fullscreenEnableIcon: CupertinoIcons.fullscreen,
+                  fullscreenDisableIcon: CupertinoIcons.fullscreen_exit,
+                  controlBarColor: Colors.black.withOpacity(0.3),
+                  unMuteIcon: CupertinoIcons.speaker_slash_fill,
+                  muteIcon: CupertinoIcons.speaker_2_fill,
+                  skipBackIcon: CupertinoIcons.gobackward_10,
+                  skipForwardIcon: CupertinoIcons.goforward_10,
+                  showControlsOnInitialize: false,
+                  overflowModalColor: Colors.grey.shade900,
+                  overflowModalTextColor: white,
+                  overflowMenuIconsColor: white),
+              translations: [
+            BetterPlayerTranslations(
+              overflowMenuPlaybackSpeed: 'Tốc độ phát',
+              overflowMenuSubtitles: 'Phụ đề',
+              overflowMenuQuality: 'Chất lượng',
+              overflowMenuAudioTracks: 'Âm thanh',
+            )
+          ]);
       BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network,
         widget.media['remote_url'] ?? widget.media['url'],
