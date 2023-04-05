@@ -21,3 +21,4 @@ String feedPost = 'feed_post_upload';
 String postPageUser = 'post_page_user';
 String postReblog = 'reblog';
 String postDetail = 'post_detail';
+String postWatch = 'post_watch';

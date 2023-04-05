@@ -295,7 +295,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -303,6 +302,7 @@ import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
+import 'package:social_network_app_mobile/screen/Watch/watch_comment.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/Reaction/flutter_reaction_button.dart';
@@ -341,7 +341,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     String viewerReaction = widget.post['viewer_reaction'] ?? '';
     handlePress(key) {
       if (key == 'comment') {
-        if (![postDetail, postMultipleMedia].contains(widget.type)) {
+        if (![postDetail, postMultipleMedia, postWatch].contains(widget.type)) {
           Navigator.push(
               context,
               CupertinoPageRoute(
@@ -351,6 +351,11 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
               context: context,
               backgroundColor: Colors.transparent,
               builder: (context) => CommentPostModal(post: widget.post));
+        } else if (widget.type == postWatch) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => WatchComment(post: widget.post)));
         }
       } else if (key == 'share') {
         showBarModalBottomSheet(

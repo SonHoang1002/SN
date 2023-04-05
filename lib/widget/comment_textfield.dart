@@ -14,6 +14,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -31,9 +32,11 @@ class CommentTextfield extends StatefulHookConsumerWidget {
   final FocusNode? commentNode;
   final dynamic commentSelected;
   final Function? getCommentSelected;
+  final String? type;
 
   const CommentTextfield(
       {Key? key,
+      this.type,
       this.handleComment,
       this.commentNode,
       this.commentSelected,
@@ -311,7 +314,9 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
     return Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
+            color: widget.type == postWatch
+                ? Colors.grey.shade900
+                : Theme.of(context).scaffoldBackgroundColor,
             border:
                 const Border(top: BorderSide(width: 0.3, color: greyColor))),
         padding: const EdgeInsets.only(
@@ -432,6 +437,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
               ),
               Expanded(
                   child: TextFormFieldCustom(
+                type: widget.type,
                 isDense: true,
                 minLines: 1,
                 maxLines: 5,
@@ -514,6 +520,8 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
   Widget contentEmoji(functionGetEmoji) {
     return EmojiModalBottom(
-        height: heightModal, functionGetEmoji: functionGetEmoji);
+        type: widget.type,
+        height: heightModal,
+        functionGetEmoji: functionGetEmoji);
   }
 }

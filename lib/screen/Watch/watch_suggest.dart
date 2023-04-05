@@ -73,6 +73,7 @@ class _WatchSuggestState extends State<WatchSuggest> {
                     )),
                 PostFooter(
                   post: widget.post,
+                  type: postWatch,
                 ),
               ],
             ),

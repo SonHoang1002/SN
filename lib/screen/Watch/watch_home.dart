@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
@@ -57,8 +58,10 @@ class _WatchHomeState extends ConsumerState<WatchHome> {
                 children: List.generate(
                     watchSuggest.length,
                     (index) => Post(
-                        key: Key(watchSuggest[index]['id']),
-                        post: watchSuggest[index]))),
+                          key: Key(watchSuggest[index]['id']),
+                          post: watchSuggest[index],
+                          type: postWatch,
+                        ))),
             SkeletonCustom().postSkeleton(context)
           ],
         ),

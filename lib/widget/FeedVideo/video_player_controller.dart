@@ -5,7 +5,9 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 
 class VideoPlayerHasController extends StatefulWidget {
   final dynamic media;
-  const VideoPlayerHasController({Key? key, this.media}) : super(key: key);
+  final double? aspectRatio;
+  const VideoPlayerHasController({Key? key, this.media, this.aspectRatio})
+      : super(key: key);
 
   @override
   State<VideoPlayerHasController> createState() =>
@@ -14,7 +16,6 @@ class VideoPlayerHasController extends StatefulWidget {
 
 class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
   late BetterPlayerController betterPlayerController;
-  double aspectRatio = 1;
 
   @override
   void initState() {
@@ -24,7 +25,6 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
           BetterPlayerConfiguration(
               autoPlay: true,
               autoDispose: true,
-              aspectRatio: aspectRatio,
               controlsConfiguration: BetterPlayerControlsConfiguration(
                   textColor: Colors.white,
                   iconsColor: Colors.white,
@@ -61,7 +61,8 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
           BetterPlayerController(betterPlayerConfiguration);
 
       betterPlayerController.addEventsListener((event) {
-        if (event.betterPlayerEventType == BetterPlayerEventType.initialized) {
+        if (event.betterPlayerEventType == BetterPlayerEventType.initialized &&
+            mounted) {
           onVideoInitialized();
         }
       });
@@ -74,9 +75,7 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
     var videoPlayerController = betterPlayerController.videoPlayerController;
     Size? videoDimensions = videoPlayerController!.value.size;
     double aspectRatio = videoDimensions!.width / videoDimensions.height;
-    setState(() {
-      aspectRatio = aspectRatio;
-    });
+    betterPlayerController.setOverriddenAspectRatio(aspectRatio);
   }
 
   @override
