@@ -459,7 +459,7 @@ class _CropEditorState extends State<_CropEditor> {
                   child: Container(
                     color: widget.baseColor,
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.8,
+                    height: MediaQuery.of(context).size.height,
                     child: Stack(
                       children: [
                         Positioned(
