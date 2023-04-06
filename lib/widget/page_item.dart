@@ -8,7 +8,18 @@ import 'text_description.dart';
 
 class PageItem extends StatelessWidget {
   final dynamic page;
-  const PageItem({Key? key, this.page}) : super(key: key);
+  final double? sizeAvatar;
+  final double? sizeTitle;
+  final double? sizeDesription;
+  final int? maxLinesTitle;
+  const PageItem(
+      {Key? key,
+      this.page,
+      this.sizeAvatar,
+      this.sizeTitle,
+      this.maxLinesTitle,
+      this.sizeDesription})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +31,8 @@ class PageItem extends StatelessWidget {
       child: Row(
         children: [
           AvatarSocial(
-              width: 40,
-              height: 40,
+              width: sizeAvatar ?? 40,
+              height: sizeAvatar ?? 40,
               object: page,
               path: page['avatar_media'] != null
                   ? page['avatar_media']['preview_url']
@@ -36,9 +47,10 @@ class PageItem extends StatelessWidget {
                 width: size.width - 180,
                 child: Text(
                   page['title'],
-                  style: const TextStyle(
+                  maxLines: maxLinesTitle ?? 1,
+                  style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 13,
+                      fontSize: sizeTitle ?? 13,
                       overflow: TextOverflow.ellipsis),
                 ),
               ),
@@ -48,6 +60,7 @@ class PageItem extends StatelessWidget {
               page['page_categories'].isNotEmpty
                   ? TextDescription(
                       description: page['page_categories'][0]['text'],
+                      size: sizeDesription,
                     )
                   : const SizedBox()
             ],
