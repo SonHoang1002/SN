@@ -19,7 +19,8 @@ class PageGeneral extends ConsumerStatefulWidget {
 }
 
 class _PageGeneralState extends ConsumerState<PageGeneral> {
-  List pagesAdmin = [];
+  final scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -29,15 +30,33 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
             .read(pageListControllerProvider.notifier)
             .getListPageAdmin({'limit': 20});
       }
+      if (ref.read(pageListControllerProvider).pageLiked.isEmpty) {
+        await ref
+            .read(pageListControllerProvider.notifier)
+            .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
+      }
       if (!mounted) return;
-      setState(() {
-        pagesAdmin = ref.read(pageListControllerProvider).pageAdmin;
-      });
+    });
+
+    scrollController.addListener(() {
+      if (scrollController.offset ==
+          scrollController.position.maxScrollExtent) {
+        if (ref.read(pageListControllerProvider).pageAdmin.isNotEmpty &&
+            ref.read(pageListControllerProvider).isMorePageAdmin) {
+          String maxId =
+              ref.read(pageListControllerProvider).pageAdmin.last['score'];
+          ref
+              .read(pageListControllerProvider.notifier)
+              .getListPageAdmin({'limit': 20, 'max_id': maxId});
+        }
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    List pagesAdmin = ref.watch(pageListControllerProvider).pageAdmin;
+
     final size = MediaQuery.of(context).size;
     handlePressMenu(menu) {
       Widget body = const SizedBox();
@@ -112,22 +131,31 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
             height: 2,
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(left: 10.0, bottom: 10.0),
-          child: Text(
-            'Trang bạn quản lý',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-          ),
-        ),
-        Expanded(
-            child: ListView.builder(
-          itemCount: pagesAdmin.length,
-          itemBuilder: (context, i) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: PageItem(page: pagesAdmin[i]),
-            );
-          },
+        SingleChildScrollView(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(12, 10, 12, 8),
+              child: Text(
+                'Trang bạn quản lý',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              ),
+            ),
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              controller: scrollController,
+              itemCount: pagesAdmin.length,
+              itemBuilder: (context, i) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: PageItem(page: pagesAdmin[i]),
+                );
+              },
+            ),
+          ],
         ))
       ],
     );

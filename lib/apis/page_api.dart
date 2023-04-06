@@ -11,6 +11,11 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/pages", params);
   }
 
+  fetchListPageLiked(params, id) async {
+    return await Api()
+        .getRequestBase("/api/v1/accounts/$id/page_likes", params);
+  }
+
   searchCategoryPage(params) async {
     return await Api().getRequestBase("/api/v1/page_categories", params);
   }

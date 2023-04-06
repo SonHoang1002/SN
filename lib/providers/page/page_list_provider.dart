@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 
 @immutable
 class PageListState {
@@ -47,6 +48,21 @@ class PageListController extends StateNotifier<PageListState> {
         isMorePageAdmin:
             response.length < params['limit'] ? false : state.isMorePageAdmin,
         isMorePageLiked: state.isMorePageLiked,
+      );
+    }
+  }
+
+  getListPageLiked(params) async {
+    var id = await SecureStorage().getKeyStorage('userId');
+    var response = await PageApi().fetchListPageLiked(params, id);
+
+    if (response != null) {
+      state = state.copyWith(
+        pageLiked: state.pageLiked + response['data'],
+        pageAdmin: state.pageAdmin,
+        isMorePageLiked:
+            response['data'].length < 10 ? false : state.isMorePageLiked,
+        isMorePageAdmin: state.isMorePageAdmin,
       );
     }
   }
