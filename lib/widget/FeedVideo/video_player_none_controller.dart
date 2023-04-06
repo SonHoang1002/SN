@@ -27,6 +27,7 @@ class VideoPlayerNoneController extends StatefulWidget {
 
 class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
   late VideoPlayerController videoPlayerController;
+  final ValueNotifier<int> videoPositionNotifier = ValueNotifier<int>(0);
   bool isVisible = false;
   bool _isMuted = false;
 
@@ -39,11 +40,17 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
         : VideoPlayerController.asset(widget.path))
       ..initialize().then((value) {
         videoPlayerController.setLooping(true);
+      })
+      ..addListener(() {
+        videoPositionNotifier.value =
+            videoPlayerController.value.position.inSeconds;
       });
   }
 
   @override
   Widget build(BuildContext context) {
+    print('videoPositionNotifier, ${videoPositionNotifier.value}');
+
     return VisibilityDetector(
         onVisibilityChanged: (visibilityInfo) {
           if (mounted) {
@@ -68,9 +75,10 @@ class _VideoPlayerNoneControllerState extends State<VideoPlayerNoneController> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => WatchSuggest(
-                                      post: widget.post,
-                                      media: widget.media,
-                                    )));
+                                    post: widget.post,
+                                    media: widget.media,
+                                    videoPositionNotifier:
+                                        videoPositionNotifier)));
                       },
                 child: Hero(
                     tag: widget.path,

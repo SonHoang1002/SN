@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/girdview_builder_media.dart';
@@ -20,11 +19,9 @@ class GridLayoutImage extends StatefulWidget {
 }
 
 class _GridLayoutImageState extends State<GridLayoutImage> {
-  late FlickMultiManager flickMultiManager;
   @override
   void initState() {
     super.initState();
-    flickMultiManager = FlickMultiManager();
   }
 
   @override
@@ -108,7 +105,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
         case 2:
           return GirdviewBuilderMedia(
               handlePress: widget.handlePress,
-              flickMultiManager: flickMultiManager,
               crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
               aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
               medias: medias);
@@ -118,7 +114,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               children: [
                 GirdviewBuilderMedia(
                     handlePress: widget.handlePress,
-                    flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
                     aspectRatio:
                         double.parse(getAspectMedia(medias[0]).toString()),
@@ -128,7 +123,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 ),
                 GirdviewBuilderMedia(
                     handlePress: widget.handlePress,
-                    flickMultiManager: flickMultiManager,
                     crossAxisCount: 2,
                     aspectRatio: 1,
                     medias: medias.sublist(1, 3)),
@@ -142,7 +136,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   width: size.width * 0.65 - 3,
                   child: GirdviewBuilderMedia(
                       handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
                       crossAxisCount: 1,
                       aspectRatio: 0.682,
                       medias: medias.sublist(0, 1)),
@@ -154,7 +147,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   width: size.width * 0.35,
                   child: GirdviewBuilderMedia(
                       handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
                       crossAxisCount: 1,
                       aspectRatio: 0.75,
                       medias: medias.sublist(1, 3)),
@@ -167,7 +159,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
           if (getAspectMedia(medias[0]) == 1) {
             return GirdviewBuilderMedia(
                 handlePress: widget.handlePress,
-                flickMultiManager: flickMultiManager,
                 crossAxisCount: 2,
                 aspectRatio: 1,
                 medias: medias);
@@ -179,7 +170,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   width: size.width * 0.65 - 3,
                   child: GirdviewBuilderMedia(
                       handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
                       crossAxisCount: 1,
                       aspectRatio: 0.639,
                       medias: medias.sublist(0, 1)),
@@ -191,7 +181,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   width: size.width * 0.35,
                   child: GirdviewBuilderMedia(
                       handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
                       crossAxisCount: 1,
                       aspectRatio: 1.06,
                       medias: medias.sublist(1)),
@@ -203,7 +192,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               children: [
                 GirdviewBuilderMedia(
                     handlePress: widget.handlePress,
-                    flickMultiManager: flickMultiManager,
                     crossAxisCount: 1,
                     aspectRatio:
                         double.parse(getAspectMedia(medias[0]).toString()),
@@ -213,7 +201,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 ),
                 GirdviewBuilderMedia(
                     handlePress: widget.handlePress,
-                    flickMultiManager: flickMultiManager,
                     crossAxisCount: 3,
                     aspectRatio: 1,
                     medias: medias.sublist(1)),
@@ -239,7 +226,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                               borderRadius: BorderRadius.circular(12),
                               child: GirdviewBuilderMedia(
                                   handlePress: widget.handlePress,
-                                  flickMultiManager: flickMultiManager,
                                   crossAxisCount: 1,
                                   aspectRatio: 0.37,
                                   medias: [medias[index]]),
@@ -256,7 +242,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               children: [
                 GirdviewBuilderMedia(
                     handlePress: widget.handlePress,
-                    flickMultiManager: flickMultiManager,
                     crossAxisCount: 2,
                     aspectRatio: 1,
                     medias: medias.sublist(0, 2)),
@@ -265,7 +250,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 ),
                 GirdviewBuilderMedia(
                     handlePress: widget.handlePress,
-                    flickMultiManager: flickMultiManager,
                     crossAxisCount: 3,
                     aspectRatio: 1,
                     imageRemain: medias.length - 5,
@@ -281,7 +265,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   width: size.width * 0.5 - 1.5,
                   child: GirdviewBuilderMedia(
                       handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
                       crossAxisCount: 1,
                       aspectRatio: 0.995,
                       medias: medias.sublist(0, 2)),
@@ -290,7 +273,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   width: size.width * 0.5 - 1.5,
                   child: GirdviewBuilderMedia(
                       handlePress: widget.handlePress,
-                      flickMultiManager: flickMultiManager,
                       crossAxisCount: 1,
                       aspectRatio: 1.503,
                       imageRemain: medias.length - 5,

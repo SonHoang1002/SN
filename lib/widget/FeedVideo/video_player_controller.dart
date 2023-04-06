@@ -6,7 +6,9 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 class VideoPlayerHasController extends StatefulWidget {
   final dynamic media;
   final double? aspectRatio;
-  const VideoPlayerHasController({Key? key, this.media, this.aspectRatio})
+  final ValueNotifier<int>? videoPositionNotifier;
+  const VideoPlayerHasController(
+      {Key? key, this.media, this.aspectRatio, this.videoPositionNotifier})
       : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
               autoPlay: true,
               autoDispose: true,
               controlsConfiguration: BetterPlayerControlsConfiguration(
+                  playerTheme: BetterPlayerTheme.material,
                   enableFullscreen: true,
                   enableMute: true,
                   enablePlaybackSpeed: true,
@@ -49,6 +52,7 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
                   showControlsOnInitialize: false,
                   overflowModalColor: Colors.grey.shade900,
                   overflowModalTextColor: white,
+                  overflowMenuIcon: CupertinoIcons.ellipsis_vertical,
                   overflowMenuIconsColor: white),
               translations: [
             BetterPlayerTranslations(
@@ -61,7 +65,14 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
       BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network,
         widget.media['remote_url'] ?? widget.media['url'],
-        useAsmsSubtitles: true,
+        cacheConfiguration: const BetterPlayerCacheConfiguration(
+          useCache: true,
+          maxCacheSize:
+              1000 * 1024 * 1024, // Kích thước tối đa lưu đệm (ví dụ: 200 MB)
+          maxCacheFileSize: 50 *
+              1024 *
+              1024, // Kích thước tối đa của mỗi tập tin (ví dụ: 20 MB)
+        ),
       );
       betterPlayerController =
           BetterPlayerController(betterPlayerConfiguration);
@@ -77,11 +88,14 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
     }
   }
 
-  void onVideoInitialized() {
+  void onVideoInitialized() async {
     var videoPlayerController = betterPlayerController.videoPlayerController;
     Size? videoDimensions = videoPlayerController!.value.size;
     double aspectRatio = videoDimensions!.width / videoDimensions.height;
     betterPlayerController.setOverriddenAspectRatio(aspectRatio);
+    await betterPlayerController
+        .seekTo(Duration(seconds: widget.videoPositionNotifier!.value));
+    await betterPlayerController.play();
   }
 
   @override
