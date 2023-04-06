@@ -25,12 +25,17 @@ class PostMedia extends StatelessWidget {
                         postMedia: post,
                       )));
         } else if (medias.length > 1) {
+          int initialIndex =
+              medias.indexWhere((element) => element['id'] == media['id']);
           Navigator.push(
               context,
               CupertinoPageRoute(
                   builder: (context) => CreateModalBaseMenu(
                       title: 'Bài viết',
-                      body: PostMutipleMediaDetail(post: post),
+                      body: PostMutipleMediaDetail(
+                        post: post,
+                        initialIndex: initialIndex,
+                      ),
                       buttonAppbar: const SizedBox())));
         } else {
           Navigator.push(

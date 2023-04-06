@@ -4,26 +4,36 @@ import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.da
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
 import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class PostMutipleMediaDetail extends StatefulWidget {
+  final int? initialIndex;
   final dynamic post;
-  const PostMutipleMediaDetail({Key? key, this.post}) : super(key: key);
+  const PostMutipleMediaDetail({Key? key, this.post, this.initialIndex})
+      : super(key: key);
 
   @override
   State<PostMutipleMediaDetail> createState() => _PostMutipleMediaDetailState();
 }
 
 class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
-  late FlickMultiManager flickMultiManager;
+  late ScrollController _scrollController;
   bool isShowImage = false;
   int? imgIndex;
   @override
   void initState() {
     super.initState();
-    flickMultiManager = FlickMultiManager();
+    _scrollController = ScrollController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        (widget.initialIndex ?? 0) *
+            _scrollController.position.viewportDimension,
+        duration: const Duration(milliseconds: 1),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   @override
@@ -42,6 +52,7 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
     return Stack(
       children: [
         SingleChildScrollView(
+          controller: _scrollController,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SizedBox(
@@ -92,11 +103,9 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
                                   ? ImageCacheRender(
                                       key: Key(medias[index]['id'].toString()),
                                       path: medias[index]['url'])
-                                  : FeedVideo(
-                                      key: Key(medias[index]['id'].toString()),
-                                      flickMultiManager: flickMultiManager,
+                                  : VideoPlayerNoneController(
                                       path: medias[index]['url'],
-                                      image: medias[index]['preview_url'])),
+                                      type: postDetail)),
                           PostFooter(
                             post: medias[index],
                             type: postMultipleMedia,
