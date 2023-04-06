@@ -110,7 +110,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   .read(pageControllerProvider.notifier)
                   .getListPageReview({'page': '$pageReview'}, pageData['id']);
               setState(() {
-                pageReview = pageReview + 1;
+                pageReview =
+                    ref.read(pageControllerProvider).pageReview.length ~/ 20 +
+                        1;
               });
             }
             break;
