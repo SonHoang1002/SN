@@ -26,6 +26,12 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
               autoPlay: true,
               autoDispose: true,
               controlsConfiguration: BetterPlayerControlsConfiguration(
+                  enableFullscreen: true,
+                  enableMute: true,
+                  enablePlaybackSpeed: true,
+                  enableProgressBar: true,
+                  enableSubtitles: true,
+                  enableQualities: true,
                   textColor: Colors.white,
                   iconsColor: Colors.white,
                   progressBarPlayedColor: secondaryColor,
