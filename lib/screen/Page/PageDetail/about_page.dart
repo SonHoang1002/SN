@@ -95,7 +95,7 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                   ),
                   minLeadingWidth: 30,
-                  contentPadding: const EdgeInsets.all(0),
+                  contentPadding: EdgeInsets.zero,
                   minVerticalPadding: 0,
                   horizontalTitleGap: 12,
                   title: Text(listAboutPage[index]['title']),
