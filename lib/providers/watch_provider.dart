@@ -8,20 +8,26 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 class WatchState {
   final List watchSuggest;
   final List watchFollow;
+  //Position video is playing
+  final int position;
+  final dynamic mediaSelected;
 
-  const WatchState({
-    this.watchSuggest = const [],
-    this.watchFollow = const [],
-  });
+  const WatchState(
+      {this.watchSuggest = const [],
+      this.watchFollow = const [],
+      this.position = 0,
+      this.mediaSelected});
 
-  WatchState copyWith({
-    List watchSuggest = const [],
-    List watchFollow = const [],
-  }) {
+  WatchState copyWith(
+      {List watchSuggest = const [],
+      List watchFollow = const [],
+      int position = 0,
+      dynamic mediaSelected}) {
     return WatchState(
-      watchSuggest: watchSuggest,
-      watchFollow: watchFollow,
-    );
+        watchSuggest: watchSuggest,
+        watchFollow: watchFollow,
+        position: position,
+        mediaSelected: mediaSelected);
   }
 }
 
@@ -38,6 +44,8 @@ class WatchController extends StateNotifier<WatchState> {
     List response = await WatchApi().getListWatchFollow(params) ?? [];
     if (mounted) {
       state = state.copyWith(
+          mediaSelected: state.mediaSelected,
+          position: state.position,
           watchFollow: state.watchFollow + response,
           watchSuggest: state.watchSuggest);
     }
@@ -49,6 +57,8 @@ class WatchController extends StateNotifier<WatchState> {
       final newWatch =
           response.where((item) => !state.watchSuggest.contains(item)).toList();
       state = state.copyWith(
+          mediaSelected: state.mediaSelected,
+          position: state.position,
           watchFollow: state.watchFollow,
           watchSuggest: params.containsKey('max_id')
               ? checkObjectUniqueInList(
@@ -70,6 +80,8 @@ class WatchController extends StateNotifier<WatchState> {
 
     if (mounted && index >= 0) {
       state = state.copyWith(
+          mediaSelected: state.mediaSelected,
+          position: state.position,
           watchFollow: type == 'follow'
               ? state.watchFollow.sublist(0, index) +
                   [newWatch] +
@@ -81,5 +93,28 @@ class WatchController extends StateNotifier<WatchState> {
                   state.watchSuggest.sublist(index + 1)
               : state.watchSuggest);
     }
+  }
+
+  updatePositonPlaying(positon) {
+    Future.delayed(Duration.zero, () {
+      if (mounted) {
+        state = state.copyWith(
+            watchSuggest: state.watchSuggest,
+            watchFollow: state.watchFollow,
+            position: positon);
+      }
+    });
+  }
+
+  updateMediaPlaying(media) {
+    Future.delayed(Duration.zero, () {
+      if (mounted) {
+        state = state.copyWith(
+            mediaSelected: media,
+            watchSuggest: state.watchSuggest,
+            watchFollow: state.watchFollow,
+            position: state.position);
+      }
+    });
   }
 }

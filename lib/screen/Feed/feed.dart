@@ -48,8 +48,6 @@ class _FeedState extends ConsumerState<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _key = GlobalKey();
-    final size = MediaQuery.of(context).size;
     List posts = ref.watch(postControllerProvider).posts;
     bool isMore = ref.watch(postControllerProvider).isMore;
 

@@ -1,9 +1,11 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
-class VideoPlayerHasController extends StatefulWidget {
+class VideoPlayerHasController extends ConsumerStatefulWidget {
   final dynamic media;
   final double? aspectRatio;
   final ValueNotifier<int>? videoPositionNotifier;
@@ -12,11 +14,12 @@ class VideoPlayerHasController extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<VideoPlayerHasController> createState() =>
+  ConsumerState<VideoPlayerHasController> createState() =>
       _VideoPlayerHasControllerState();
 }
 
-class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
+class _VideoPlayerHasControllerState
+    extends ConsumerState<VideoPlayerHasController> {
   late BetterPlayerController betterPlayerController;
 
   @override
@@ -94,8 +97,16 @@ class _VideoPlayerHasControllerState extends State<VideoPlayerHasController> {
     double aspectRatio = videoDimensions!.width / videoDimensions.height;
     betterPlayerController.setOverriddenAspectRatio(aspectRatio);
     await betterPlayerController
-        .seekTo(Duration(seconds: widget.videoPositionNotifier!.value));
+        .seekTo(Duration(seconds: ref.read(watchControllerProvider).position));
     await betterPlayerController.play();
+
+    betterPlayerController.addEventsListener((event) {
+      if (betterPlayerController.videoPlayerController != null && mounted) {
+        ref.read(watchControllerProvider.notifier).updatePositonPlaying(
+            betterPlayerController
+                .videoPlayerController!.value.position.inSeconds);
+      }
+    });
   }
 
   @override

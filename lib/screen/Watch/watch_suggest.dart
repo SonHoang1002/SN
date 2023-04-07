@@ -12,10 +12,7 @@ import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 class WatchSuggest extends StatefulWidget {
   final dynamic media;
   final dynamic post;
-  final ValueNotifier<int> videoPositionNotifier;
-  const WatchSuggest(
-      {Key? key, this.media, this.post, required this.videoPositionNotifier})
-      : super(key: key);
+  const WatchSuggest({Key? key, this.media, this.post}) : super(key: key);
 
   @override
   State<WatchSuggest> createState() => _WatchSuggestState();
@@ -59,9 +56,15 @@ class _WatchSuggestState extends State<WatchSuggest> {
                 const SizedBox(
                   height: 12.0,
                 ),
-                Hero(
-                    tag: widget.media['remote_url'] ?? widget.media['url'],
-                    child: GestureDetector(
+                Stack(
+                  children: [
+                    Hero(
+                      tag: widget.media['remote_url'] ?? widget.media['url'],
+                      child: VideoPlayerHasController(
+                        media: widget.media,
+                      ),
+                    ),
+                    Positioned.fill(child: GestureDetector(
                       onDoubleTap: () {
                         Navigator.push(
                             context,
@@ -70,10 +73,9 @@ class _WatchSuggestState extends State<WatchSuggest> {
                                       media: widget.media,
                                     )));
                       },
-                      child: VideoPlayerHasController(
-                          media: widget.media,
-                          videoPositionNotifier: widget.videoPositionNotifier),
-                    )),
+                    ))
+                  ],
+                ),
                 PostFooter(
                   post: widget.post,
                   type: postWatch,

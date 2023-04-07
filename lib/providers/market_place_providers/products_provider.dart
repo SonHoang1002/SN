@@ -17,12 +17,12 @@ class ProductsController extends StateNotifier<ProductsState> {
   ProductsController() : super(ProductsState());
 
   getProducts() async {
-    List<dynamic> response = await ProductsApi().getProductsApi();
+    List<dynamic> response = await ProductsApi().getProductsApi() ?? [];
     state = state.copyWith(response);
   }
 
   deleteProduct(dynamic id) {
-    final response = ProductsApi().deleteProductApi(id); 
+    final response = ProductsApi().deleteProductApi(id);
   }
 
   updateProductData(List<dynamic> newData) {

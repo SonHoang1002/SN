@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 
 class WatchComment extends StatefulWidget {
   final dynamic post;
@@ -23,7 +23,7 @@ class _WatchCommentState extends State<WatchComment> {
                 backgroundColor: Colors.transparent,
                 barrierColor: Colors.transparent,
                 builder: (context) => SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.66,
                     child:
                         CommentPostModal(post: widget.post, type: postWatch)))
             .whenComplete(() => Navigator.pop(context));
@@ -41,23 +41,20 @@ class _WatchCommentState extends State<WatchComment> {
     return Scaffold(
         backgroundColor: Colors.black,
         resizeToAvoidBottomInset: false,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: Transform.scale(
-                scale: 0.5,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: VideoPlayerHasController(
-                    media: widget.post['media_attachments'][0],
-                  ),
-                ),
-              ),
-            ),
-          ],
+        body: Container(
+          height: MediaQuery.of(context).size.height * 0.31,
+          margin: const EdgeInsets.all(8.0),
+          child: Center(
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: VideoPlayerNoneController(
+                  isShowVolumn: false,
+                  path: widget.post['media_attachments'][0]['remote_url'] ??
+                      widget.post['media_attachments'][0]['url'],
+                  type: 'local',
+                  media: widget.post['media_attachments'][0],
+                )),
+          ),
         ));
   }
 }
