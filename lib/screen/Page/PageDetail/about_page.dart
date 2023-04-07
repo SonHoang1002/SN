@@ -87,6 +87,10 @@ class _AboutPageState extends State<AboutPage> {
               shrinkWrap: true,
               itemCount: listAboutPage.length,
               itemBuilder: (context, index) => ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  visualDensity:
+                      const VisualDensity(horizontal: -4, vertical: -3),
                   leading: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(
@@ -95,10 +99,14 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                   ),
                   minLeadingWidth: 30,
-                  contentPadding: EdgeInsets.zero,
+                  // contentPadding: EdgeInsets.zero,
                   minVerticalPadding: 0,
                   horizontalTitleGap: 12,
-                  title: Text(listAboutPage[index]['title']),
+                  title: Text(
+                    listAboutPage[index]['title'],
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
                   subtitle: ExpandableTextContent(
                       content: listAboutPage[index]['subtitle'] == '' ||
                               listAboutPage[index]['subtitle'] == null
