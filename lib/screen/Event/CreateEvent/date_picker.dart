@@ -359,7 +359,7 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                                 ),
                               ),
                               Positioned(
-                                bottom: 9,
+                                bottom: 12,
                                 right: 0,
                                 left: 0,
                                 child: Container(
