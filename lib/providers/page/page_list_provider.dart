@@ -124,4 +124,54 @@ class PageListController extends StateNotifier<PageListState> {
       }
     }
   }
+
+  updateListPageLiked(id, updateLike, updateFollow) {
+    state = state.copyWith(
+      pageLiked: updateLike != null || updateFollow != null
+          ? state.pageLiked.map((e) {
+              return e['page']['id'] == id
+                  ? {
+                      ...e,
+                      'page': {
+                        ...e['page'],
+                        'page_relationship': {
+                          ...e['page']['page_relationship'],
+                          'like': updateLike == 'likes'
+                              ? true
+                              : updateLike == 'unlikes'
+                                  ? false
+                                  : e['page']['page_relationship']['like'],
+                          'following': updateFollow == 'follows'
+                              ? true
+                              : updateFollow == 'unfollows'
+                                  ? false
+                                  : e['page']['page_relationship']['following']
+                        }
+                      }
+                    }
+                  : e;
+            }).toList()
+          : state.pageLiked,
+      pageAdmin: state.pageAdmin,
+      isMorePageLiked: state.isMorePageLiked,
+      isMorePageAdmin: state.isMorePageAdmin,
+      pageInvitedLike: state.pageInvitedLike,
+      isMorePageInvitedLike: state.isMorePageInvitedLike,
+      pageInvitedManage: state.pageInvitedManage,
+      isMorePageInvitedManage: state.isMorePageInvitedManage,
+    );
+  }
+
+  deleteListPageLike() async {
+    state = state.copyWith(
+      pageLiked: [],
+      pageAdmin: state.pageAdmin,
+      isMorePageLiked: true,
+      isMorePageAdmin: state.isMorePageAdmin,
+      pageInvitedLike: state.pageInvitedLike,
+      isMorePageInvitedLike: state.isMorePageInvitedLike,
+      pageInvitedManage: state.pageInvitedManage,
+      isMorePageInvitedManage: state.isMorePageInvitedManage,
+    );
+  }
 }

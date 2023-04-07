@@ -59,6 +59,10 @@ class PageApi {
         .postRequestBase('/api/v1/pages/$idPage/feedbacks', params);
   }
 
+  Future handleLikeFollowPage(idPage, action) async {
+    return await Api().postRequestBase('/api/v1/pages/$idPage/$action', null);
+  }
+
   Future<http.Response> createPage(data) async {
     // return await Api().postRequestBase("/api/v1/pages", params);
     var token = await SecureStorage().getKeyStorage("token");
@@ -99,6 +103,9 @@ class PageApi {
       ..files.addAll(formdata.files);
 
     var response = await request.send();
+    if (response.statusCode == 401) {
+      logOutWhenTokenError();
+    }
     return http.Response.fromStream(response);
   }
 }
