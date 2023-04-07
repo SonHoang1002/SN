@@ -114,7 +114,7 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
       }
     }
 
-     return Scaffold(
+    return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
@@ -131,107 +131,101 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
             itemBuilder: (context, index) {
               return Container(
                 color: Colors.black,
-                child: Positioned(
-                  top: _isDragging ? _dragOffset : 0,
-                  child: Draggable(
-                      dragAnchorStrategy: (draggable, context, position) {
-                        return position -
-                            Offset(MediaQuery.of(context).size.width / 2,
-                                MediaQuery.of(context).size.height / 2);
-                      },
-                      feedbackOffset: Offset(0, 0),
-                      feedback: Container(
-                        // margin: EdgeInsets.only(
-                        //     top: MediaQuery.of(context).size.height / 4),
-                        height: MediaQuery.of(context).size.width,
-                        width: MediaQuery.of(context).size.height,
+                child: Draggable(
+                    dragAnchorStrategy: (draggable, context, position) {
+                      return position -
+                          Offset(MediaQuery.of(context).size.width / 2,
+                              MediaQuery.of(context).size.height / 2);
+                    },
+                    feedbackOffset: Offset(0, 0),
+                    feedback: Container(
+                      // margin: EdgeInsets.only(
+                      //     top: MediaQuery.of(context).size.height / 4),
+                      height: MediaQuery.of(context).size.width,
+                      width: MediaQuery.of(context).size.height,
+                      child: PhotoView(
+                        imageProvider: NetworkImage(path),
+                      ),
+                    ),
+                    //  Container(
+                    //   margin: EdgeInsets.only(
+                    //       top: MediaQuery.of(context).size.height / 2),
+                    //   child: Image.network(
+                    //     path,
+                    //     fit: BoxFit.contain,
+                    //   ),
+                    // ),
+                    onDragStarted: () {
+                      setState(() {
+                        _isDragging = true;
+                        _dragAnchor = Offset(
+                            MediaQuery.of(context).size.width / 2,
+                            MediaQuery.of(context).size.height / 2);
+                        _dragOffset = MediaQuery.of(context).size.height / 2;
+                      });
+                    },
+                    onDragEnd: (details) {
+                      if (_dragOffset.abs() > 60) {
+                        popToPreviousScreen(context);
+                      } else {
+                        setState(() {
+                          _isDragging = false;
+                        });
+                      }
+                    },
+                    onDragUpdate: (details) {
+                      _dragAnchor ??= Offset(
+                          details.globalPosition.dx, details.globalPosition.dy);
+                      _dragOffset = details.globalPosition.dy - _dragAnchor!.dy;
+                      setState(() {
+                        // _dragAnchor = _dragAnchor! - details.delta;
+                        _dragOffset += details.delta.dy;
+                      });
+                    },
+                    childWhenDragging: const SizedBox(),
+                    child: Container(
+                      color: Colors.black,
+                      child: GestureDetector(
+                        onScaleStart: (ScaleStartDetails details) {
+                          setState(() {
+                            _previousScale = _scale;
+                          });
+                        },
+                        onScaleUpdate: (ScaleUpdateDetails details) {
+                          setState(() {
+                            _scale = _previousScale * details.scale;
+                          });
+                        },
+                        onScaleEnd: (ScaleEndDetails details) {
+                          setState(() {
+                            _previousScale = 1.0;
+                            _scale = 1.0;
+                          });
+                        },
+                        onHorizontalDragEnd: (details) {
+                          double velocity = details.velocity.pixelsPerSecond.dx;
+                          if (velocity > 0) {
+                            handleUpdateData('prev');
+                          } else if (velocity < 0) {
+                            handleUpdateData('next');
+                          }
+                        },
                         child: PhotoView(
                           imageProvider: NetworkImage(path),
+                          heroAttributes: PhotoViewHeroAttributes(
+                              tag: widget.postMedia['id']),
+                          backgroundDecoration:
+                              const BoxDecoration(color: Colors.black),
+                          initialScale: PhotoViewComputedScale.contained * 1.0,
+                          minScale: PhotoViewComputedScale.contained * 1.0,
+                          maxScale: PhotoViewComputedScale.covered * 2.0,
+                          enableRotation: true,
+                          enablePanAlways: true,
+                          onScaleEnd: (context, details, controllerValue) {},
+                          onTapUp: (context, details, controllerValue) {},
                         ),
                       ),
-                      //  Container(
-                      //   margin: EdgeInsets.only(
-                      //       top: MediaQuery.of(context).size.height / 2),
-                      //   child: Image.network(
-                      //     path,
-                      //     fit: BoxFit.contain,
-                      //   ),
-                      // ),
-                      onDragStarted: () {
-                        setState(() {
-                          _isDragging = true;
-                          _dragAnchor = Offset(
-                              MediaQuery.of(context).size.width / 2,
-                              MediaQuery.of(context).size.height / 2);
-                          _dragOffset = MediaQuery.of(context).size.height / 2;
-                        });
-                      },
-                      onDragEnd: (details) {
-                        if (_dragOffset.abs() > 60) {
-                          popToPreviousScreen(context);
-                        } else {
-                          setState(() {
-                            _isDragging = false;
-                          });
-                        }
-                      },
-                      onDragUpdate: (details) {
-                        _dragAnchor ??= Offset(details.globalPosition.dx,
-                            details.globalPosition.dy);
-                        _dragOffset =
-                            details.globalPosition.dy - _dragAnchor!.dy;
-                        setState(() {
-                          // _dragAnchor = _dragAnchor! - details.delta;
-                          _dragOffset += details.delta.dy;
-                        });
-                      },
-                      childWhenDragging: const SizedBox(),
-                      child: Container(
-                        color: Colors.black,
-                        child: GestureDetector(
-                          onScaleStart: (ScaleStartDetails details) {
-                            setState(() {
-                              _previousScale = _scale;
-                            });
-                          },
-                          onScaleUpdate: (ScaleUpdateDetails details) {
-                            setState(() {
-                              _scale = _previousScale * details.scale;
-                            });
-                          },
-                          onScaleEnd: (ScaleEndDetails details) {
-                            setState(() {
-                              _previousScale = 1.0;
-                              _scale = 1.0;
-                            });
-                          },
-                          onHorizontalDragEnd: (details) {
-                            double velocity =
-                                details.velocity.pixelsPerSecond.dx;
-                            if (velocity > 0) {
-                              handleUpdateData('prev');
-                            } else if (velocity < 0) {
-                              handleUpdateData('next');
-                            }
-                          },
-                          child: PhotoView(
-                            imageProvider: NetworkImage(path),
-                            heroAttributes: PhotoViewHeroAttributes(
-                                tag: widget.postMedia['id']),
-                            backgroundDecoration:
-                                const BoxDecoration(color: Colors.black),
-                            initialScale:
-                                PhotoViewComputedScale.contained * 1.0,
-                            minScale: PhotoViewComputedScale.contained * 1.0,
-                            maxScale: PhotoViewComputedScale.covered * 2.0,
-                            enableRotation: true,
-                            enablePanAlways: true,
-                            onScaleEnd: (context, details, controllerValue) {},
-                            onTapUp: (context, details, controllerValue) {},
-                          ),
-                        ),
-                      )),
-                ),
+                    )),
               );
             },
           ),

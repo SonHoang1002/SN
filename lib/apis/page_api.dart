@@ -11,6 +11,19 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/pages", params);
   }
 
+  fetchListPageLiked(params, id) async {
+    return await Api()
+        .getRequestBase("/api/v1/accounts/$id/page_likes", params);
+  }
+
+  fetchListPageInvitedLike() async {
+    return await Api().getRequestBase("/api/v1/page_invitation_follows", null);
+  }
+
+  fetchListPageInvitedManage() async {
+    return await Api().getRequestBase("/api/v1/page_invitations", null);
+  }
+
   searchCategoryPage(params) async {
     return await Api().getRequestBase("/api/v1/page_categories", params);
   }
@@ -44,6 +57,14 @@ class PageApi {
   Future handleReviewPageApi(idPage, params) async {
     return await Api()
         .postRequestBase('/api/v1/pages/$idPage/feedbacks', params);
+  }
+
+  Future handleLikeFollowPage(idPage, action) async {
+    return await Api().postRequestBase('/api/v1/pages/$idPage/$action', null);
+  }
+
+  Future handleBlockPage(params) async {
+    return await Api().postRequestBase('/api/v1/block_pages', params);
   }
 
   Future<http.Response> createPage(data) async {
@@ -86,6 +107,9 @@ class PageApi {
       ..files.addAll(formdata.files);
 
     var response = await request.send();
+    if (response.statusCode == 401) {
+      logOutWhenTokenError();
+    }
     return http.Response.fromStream(response);
   }
 }

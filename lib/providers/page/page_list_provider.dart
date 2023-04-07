@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 
 @immutable
 class PageListState {
@@ -10,23 +11,40 @@ class PageListState {
   final List pageLiked;
   final bool isMorePageLiked;
 
+  final List pageInvitedLike;
+  final bool isMorePageInvitedLike;
+
+  final List pageInvitedManage;
+  final bool isMorePageInvitedManage;
+
   const PageListState(
       {this.pageAdmin = const [],
       this.pageLiked = const [],
+      this.pageInvitedLike = const [],
+      this.pageInvitedManage = const [],
       this.isMorePageAdmin = true,
-      this.isMorePageLiked = true});
+      this.isMorePageLiked = true,
+      this.isMorePageInvitedLike = true,
+      this.isMorePageInvitedManage = true});
 
   PageListState copyWith(
       {List pageAdmin = const [],
       List pageLiked = const [],
+      List pageInvitedLike = const [],
+      List pageInvitedManage = const [],
       bool isMorePageAdmin = true,
-      bool isMorePageLiked = true}) {
+      bool isMorePageLiked = true,
+      bool isMorePageInvitedLike = true,
+      bool isMorePageInvitedManage = true}) {
     return PageListState(
-      pageAdmin: pageAdmin,
-      pageLiked: pageLiked,
-      isMorePageAdmin: isMorePageAdmin,
-      isMorePageLiked: isMorePageLiked,
-    );
+        pageAdmin: pageAdmin,
+        pageLiked: pageLiked,
+        isMorePageAdmin: isMorePageAdmin,
+        isMorePageLiked: isMorePageLiked,
+        pageInvitedLike: pageInvitedLike,
+        isMorePageInvitedLike: isMorePageInvitedLike,
+        pageInvitedManage: pageInvitedManage,
+        isMorePageInvitedManage: isMorePageInvitedManage);
   }
 }
 
@@ -47,7 +65,115 @@ class PageListController extends StateNotifier<PageListState> {
         isMorePageAdmin:
             response.length < params['limit'] ? false : state.isMorePageAdmin,
         isMorePageLiked: state.isMorePageLiked,
+        pageInvitedLike: state.pageInvitedLike,
+        isMorePageInvitedLike: state.isMorePageInvitedLike,
+        pageInvitedManage: state.pageInvitedManage,
+        isMorePageInvitedManage: state.isMorePageInvitedManage,
       );
     }
+  }
+
+  getListPageLiked(params) async {
+    var id = await SecureStorage().getKeyStorage('userId');
+    var response = await PageApi().fetchListPageLiked(params, id);
+
+    if (response != null) {
+      state = state.copyWith(
+        pageLiked: state.pageLiked + response['data'],
+        pageAdmin: state.pageAdmin,
+        isMorePageLiked:
+            response['data'].length < 10 ? false : state.isMorePageLiked,
+        isMorePageAdmin: state.isMorePageAdmin,
+        pageInvitedLike: state.pageInvitedLike,
+        isMorePageInvitedLike: state.isMorePageInvitedLike,
+        pageInvitedManage: state.pageInvitedManage,
+        isMorePageInvitedManage: state.isMorePageInvitedManage,
+      );
+    }
+  }
+
+  getListPageInvited(String type) async {
+    if (type == 'like') {
+      var response = await PageApi().fetchListPageInvitedLike();
+
+      if (response != null) {
+        state = state.copyWith(
+          pageLiked: state.pageLiked,
+          pageAdmin: state.pageAdmin,
+          isMorePageLiked: state.isMorePageLiked,
+          isMorePageAdmin: state.isMorePageAdmin,
+          pageInvitedLike: state.pageInvitedLike + response['data'],
+          isMorePageInvitedLike: state.isMorePageInvitedLike,
+          pageInvitedManage: state.pageInvitedManage,
+          isMorePageInvitedManage: state.isMorePageInvitedManage,
+        );
+      }
+    } else if (type == 'manage') {
+      var response = await PageApi().fetchListPageInvitedManage();
+      if (response != null) {
+        state = state.copyWith(
+          pageLiked: state.pageLiked,
+          pageAdmin: state.pageAdmin,
+          isMorePageLiked: state.isMorePageLiked,
+          isMorePageAdmin: state.isMorePageAdmin,
+          pageInvitedLike: state.pageInvitedLike,
+          isMorePageInvitedLike: state.isMorePageInvitedLike,
+          pageInvitedManage: state.pageInvitedManage + response['data'],
+          isMorePageInvitedManage: state.isMorePageInvitedManage,
+        );
+      }
+    }
+  }
+
+  updateListPageLiked(id, updateLike, updateFollow) {
+    state = state.copyWith(
+      pageLiked: updateLike != null || updateFollow != null
+          ? state.pageLiked.map((e) {
+              return e['page']['id'] == id
+                  ? {
+                      ...e,
+                      'page': {
+                        ...e['page'],
+                        'page_relationship': {
+                          ...e['page']['page_relationship'],
+                          'like': updateLike == 'likes'
+                              ? true
+                              : updateLike == 'unlikes'
+                                  ? false
+                                  : e['page']['page_relationship']['like'],
+                          'following': updateFollow == 'follows'
+                              ? true
+                              : updateFollow == 'unfollows'
+                                  ? false
+                                  : e['page']['page_relationship']['following']
+                        }
+                      }
+                    }
+                  : e;
+            }).toList()
+          : state.pageLiked
+              .where((element) => element['page']['id'] != id)
+              .toList(),
+      pageAdmin: state.pageAdmin,
+      isMorePageLiked: state.isMorePageLiked,
+      isMorePageAdmin: state.isMorePageAdmin,
+      pageInvitedLike: state.pageInvitedLike,
+      isMorePageInvitedLike: state.isMorePageInvitedLike,
+      pageInvitedManage: state.pageInvitedManage,
+      isMorePageInvitedManage: state.isMorePageInvitedManage,
+    );
+  }
+
+  deleteListPageLike() async {
+    state = state.copyWith(
+      pageLiked: [],
+      pageAdmin: state.pageAdmin,
+      isMorePageLiked: true,
+      isMorePageAdmin: state.isMorePageAdmin,
+      pageInvitedLike: state.pageInvitedLike,
+      isMorePageInvitedLike: state.isMorePageInvitedLike,
+      pageInvitedManage: state.pageInvitedManage,
+      isMorePageInvitedManage: state.isMorePageInvitedManage,
+    );
   }
 }

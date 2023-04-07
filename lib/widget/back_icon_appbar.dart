@@ -14,6 +14,7 @@ class BackIconAppbar extends StatelessWidget {
       child: Icon(
         FontAwesomeIcons.chevronLeft,
         color: iconColor ?? Theme.of(context).textTheme.displayLarge!.color,
+        size: 18,
       ),
     );
   }

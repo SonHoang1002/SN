@@ -6,8 +6,10 @@ class ButtonPrimary extends StatelessWidget {
   final Icon? icon;
   final Function? handlePress;
   final bool? isPrimary;
+  final bool? isGrey;
   final EdgeInsetsGeometry? padding;
   final Color? colorButton;
+  final Color? colorText;
 
   const ButtonPrimary(
       {Key? key,
@@ -16,7 +18,9 @@ class ButtonPrimary extends StatelessWidget {
       this.icon,
       this.isPrimary,
       this.padding,
-      this.colorButton})
+      this.colorButton,
+      this.colorText,
+      this.isGrey})
       : super(key: key);
 
   @override
@@ -30,9 +34,11 @@ class ButtonPrimary extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           backgroundColor: colorButton ??
-              (![null, false].contains(isPrimary)
-                  ? primaryColor
-                  : secondaryColor),
+              (isGrey == true
+                  ? greyColorOutlined
+                  : ![null, false].contains(isPrimary)
+                      ? primaryColor
+                      : secondaryColor),
           elevation: 0),
       child: Padding(
         padding: padding ?? EdgeInsets.zero,
@@ -47,7 +53,14 @@ class ButtonPrimary extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                  color: handlePress != null ? white : null, fontSize: 14),
+                  color: colorText ??
+                      (isGrey == true
+                          ? Theme.of(context).textTheme.bodyLarge?.color
+                          : handlePress != null
+                              ? white
+                              : null),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
             ),
           ],
         ),
