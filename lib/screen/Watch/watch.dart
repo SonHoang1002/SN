@@ -9,9 +9,13 @@ class Watch extends StatefulWidget {
   _WatchState createState() => _WatchState();
 }
 
-class _WatchState extends State<Watch> {
+class _WatchState extends State<Watch> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return const WatchRender();
   }
 }

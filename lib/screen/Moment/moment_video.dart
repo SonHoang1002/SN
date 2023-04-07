@@ -132,15 +132,17 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                       color: Colors.black,
                     ),
                     child: Center(
-                      child: AspectRatio(
-                        aspectRatio:
-                            videoPlayerController.value.aspectRatio < 0.6
-                                ? (size.width + 30) / size.height
-                                : videoPlayerController.value.aspectRatio,
-                        child: VideoPlayer(
-                          videoPlayerController,
-                        ),
-                      ),
+                      child: videoPlayerController.value.aspectRatio >= 0.6
+                          ? AspectRatio(
+                              aspectRatio:
+                                  videoPlayerController.value.aspectRatio,
+                              child: VideoPlayer(
+                                videoPlayerController,
+                              ),
+                            )
+                          : VideoPlayer(
+                              videoPlayerController,
+                            ),
                     )),
                 if (_xPosition != 0 && _yPosition != 0)
                   Positioned(

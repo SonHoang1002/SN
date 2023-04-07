@@ -7,7 +7,6 @@ class GirdviewBuilderMedia extends StatelessWidget {
   final List medias;
   final double aspectRatio;
   final int crossAxisCount;
-  final dynamic flickMultiManager;
   final int? imageRemain;
   final Function? handlePress;
 
@@ -16,7 +15,6 @@ class GirdviewBuilderMedia extends StatelessWidget {
       required this.aspectRatio,
       required this.medias,
       required this.crossAxisCount,
-      this.flickMultiManager,
       this.imageRemain,
       this.handlePress})
       : super(key: key);

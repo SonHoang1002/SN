@@ -39,7 +39,11 @@ class MainMarketPage extends ConsumerStatefulWidget {
   ConsumerState<MainMarketPage> createState() => _MainMarketPageState();
 }
 
-class _MainMarketPageState extends ConsumerState<MainMarketPage> {
+class _MainMarketPageState extends ConsumerState<MainMarketPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   late double width = 0;
 
   late double height = 0;
@@ -95,6 +99,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
@@ -545,7 +550,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     setState(() {});
   }
 
-  void _filterDiscover(String sortedTitle) { 
+  void _filterDiscover(String sortedTitle) {
     List<dynamic> filterDiscoverList = _discoverProduct!;
     const String newTitle = "Mới nhất";
     const String soldRun = "Bán chạy";
