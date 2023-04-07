@@ -63,6 +63,10 @@ class PageApi {
     return await Api().postRequestBase('/api/v1/pages/$idPage/$action', null);
   }
 
+  Future handleBlockPage(params) async {
+    return await Api().postRequestBase('/api/v1/block_pages', params);
+  }
+
   Future<http.Response> createPage(data) async {
     // return await Api().postRequestBase("/api/v1/pages", params);
     var token = await SecureStorage().getKeyStorage("token");

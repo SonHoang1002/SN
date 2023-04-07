@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/page_item.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
@@ -51,7 +53,62 @@ class _PageLikedState extends ConsumerState<PageLiked> {
 
   handleInvite() async {}
   handleShare() async {}
-  handleBlock() async {}
+  handleBlock(id) {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: buildTextContent("Xác nhận chặn Trang này", false,
+                fontSize: 18, isCenterLeft: false),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                buildTextContent("Bạn có chắc chắn muốn chặn Trang này.", false,
+                    fontSize: 14, isCenterLeft: false),
+                buildTextContent(
+                    "Trang sẽ không thể tương tác, thích hoặc phản hồi với bài viết của bạn",
+                    false,
+                    fontSize: 14,
+                    isCenterLeft: false),
+                buildTextContent(
+                    "Bạn sẽ không thể nhắn tin hoặc đăng lên dòng thời gian của Trang",
+                    false,
+                    fontSize: 14,
+                    isCenterLeft: false),
+                buildTextContent("Bỏ thích và theo dõi Trang", false,
+                    fontSize: 14, isCenterLeft: false)
+              ],
+            ),
+            actions: [
+              ButtonPrimary(
+                isGrey: true,
+                label: 'Chặn',
+                handlePress: () async {
+                  var response =
+                      await PageApi().handleBlockPage({'page_id': id});
+                  if (response != null) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pop();
+                    ref
+                        .read(pageListControllerProvider.notifier)
+                        .updateListPageLiked(id, null, null);
+                  }
+                },
+              ),
+              ButtonPrimary(
+                isGrey: true,
+                label: 'Hủy',
+                handlePress: () {
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop();
+                },
+              )
+            ],
+          );
+        });
+  }
 
   void handleAction(type, pageCurrent) {
     switch (type) {
@@ -76,7 +133,7 @@ class _PageLikedState extends ConsumerState<PageLiked> {
         handleShare();
         break;
       case 'block':
-        handleBlock();
+        handleBlock(pageCurrent['id']);
         break;
       default:
         break;

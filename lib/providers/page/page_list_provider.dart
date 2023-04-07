@@ -151,7 +151,9 @@ class PageListController extends StateNotifier<PageListState> {
                     }
                   : e;
             }).toList()
-          : state.pageLiked,
+          : state.pageLiked
+              .where((element) => element['page']['id'] != id)
+              .toList(),
       pageAdmin: state.pageAdmin,
       isMorePageLiked: state.isMorePageLiked,
       isMorePageAdmin: state.isMorePageAdmin,
