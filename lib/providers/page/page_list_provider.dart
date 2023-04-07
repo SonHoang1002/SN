@@ -11,23 +11,40 @@ class PageListState {
   final List pageLiked;
   final bool isMorePageLiked;
 
+  final List pageInvitedLike;
+  final bool isMorePageInvitedLike;
+
+  final List pageInvitedManage;
+  final bool isMorePageInvitedManage;
+
   const PageListState(
       {this.pageAdmin = const [],
       this.pageLiked = const [],
+      this.pageInvitedLike = const [],
+      this.pageInvitedManage = const [],
       this.isMorePageAdmin = true,
-      this.isMorePageLiked = true});
+      this.isMorePageLiked = true,
+      this.isMorePageInvitedLike = true,
+      this.isMorePageInvitedManage = true});
 
   PageListState copyWith(
       {List pageAdmin = const [],
       List pageLiked = const [],
+      List pageInvitedLike = const [],
+      List pageInvitedManage = const [],
       bool isMorePageAdmin = true,
-      bool isMorePageLiked = true}) {
+      bool isMorePageLiked = true,
+      bool isMorePageInvitedLike = true,
+      bool isMorePageInvitedManage = true}) {
     return PageListState(
-      pageAdmin: pageAdmin,
-      pageLiked: pageLiked,
-      isMorePageAdmin: isMorePageAdmin,
-      isMorePageLiked: isMorePageLiked,
-    );
+        pageAdmin: pageAdmin,
+        pageLiked: pageLiked,
+        isMorePageAdmin: isMorePageAdmin,
+        isMorePageLiked: isMorePageLiked,
+        pageInvitedLike: pageInvitedLike,
+        isMorePageInvitedLike: isMorePageInvitedLike,
+        pageInvitedManage: pageInvitedManage,
+        isMorePageInvitedManage: isMorePageInvitedManage);
   }
 }
 
@@ -48,6 +65,10 @@ class PageListController extends StateNotifier<PageListState> {
         isMorePageAdmin:
             response.length < params['limit'] ? false : state.isMorePageAdmin,
         isMorePageLiked: state.isMorePageLiked,
+        pageInvitedLike: state.pageInvitedLike,
+        isMorePageInvitedLike: state.isMorePageInvitedLike,
+        pageInvitedManage: state.pageInvitedManage,
+        isMorePageInvitedManage: state.isMorePageInvitedManage,
       );
     }
   }
@@ -63,7 +84,44 @@ class PageListController extends StateNotifier<PageListState> {
         isMorePageLiked:
             response['data'].length < 10 ? false : state.isMorePageLiked,
         isMorePageAdmin: state.isMorePageAdmin,
+        pageInvitedLike: state.pageInvitedLike,
+        isMorePageInvitedLike: state.isMorePageInvitedLike,
+        pageInvitedManage: state.pageInvitedManage,
+        isMorePageInvitedManage: state.isMorePageInvitedManage,
       );
+    }
+  }
+
+  getListPageInvited(String type) async {
+    if (type == 'like') {
+      var response = await PageApi().fetchListPageInvitedLike();
+
+      if (response != null) {
+        state = state.copyWith(
+          pageLiked: state.pageLiked,
+          pageAdmin: state.pageAdmin,
+          isMorePageLiked: state.isMorePageLiked,
+          isMorePageAdmin: state.isMorePageAdmin,
+          pageInvitedLike: state.pageInvitedLike + response['data'],
+          isMorePageInvitedLike: state.isMorePageInvitedLike,
+          pageInvitedManage: state.pageInvitedManage,
+          isMorePageInvitedManage: state.isMorePageInvitedManage,
+        );
+      }
+    } else if (type == 'manage') {
+      var response = await PageApi().fetchListPageInvitedManage();
+      if (response != null) {
+        state = state.copyWith(
+          pageLiked: state.pageLiked,
+          pageAdmin: state.pageAdmin,
+          isMorePageLiked: state.isMorePageLiked,
+          isMorePageAdmin: state.isMorePageAdmin,
+          pageInvitedLike: state.pageInvitedLike,
+          isMorePageInvitedLike: state.isMorePageInvitedLike,
+          pageInvitedManage: state.pageInvitedManage + response['data'],
+          isMorePageInvitedManage: state.isMorePageInvitedManage,
+        );
+      }
     }
   }
 }

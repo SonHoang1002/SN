@@ -35,6 +35,16 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
             .read(pageListControllerProvider.notifier)
             .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
       }
+      if (ref.read(pageListControllerProvider).pageInvitedLike.isEmpty) {
+        await ref
+            .read(pageListControllerProvider.notifier)
+            .getListPageInvited('like');
+      }
+      if (ref.read(pageListControllerProvider).pageInvitedManage.isEmpty) {
+        await ref
+            .read(pageListControllerProvider.notifier)
+            .getListPageInvited('manage');
+      }
       if (!mounted) return;
     });
 
