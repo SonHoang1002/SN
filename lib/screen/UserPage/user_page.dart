@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -14,6 +15,7 @@ import 'package:social_network_app_mobile/screen/UserPage/user_page_edit_profile
 import 'package:social_network_app_mobile/screen/UserPage/user_page_friend_block.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_infomation_block.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_pin_post.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_photo_video.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Banner/banner_base.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -176,16 +178,20 @@ class _UserPageState extends ConsumerState<UserPage> {
             ),
             const CreatePostButton(),
             const CrossBar(),
-            Container(
-              width: 115,
-              margin: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: ChipMenu(
-                isSelected: false,
-                label: "Ảnh/video",
-                icon: SvgPicture.asset(
-                  "assets/post_media.svg",
-                  width: 18,
-                  height: 18,
+            InkWell(
+              onTap: () {
+                pushToNextScreen(context, const UserPhotoVideo());
+              },
+              child: SizedBox(
+                width: 115,
+                child: ChipMenu(
+                  isSelected: false,
+                  label: "Ảnh/video",
+                  icon: SvgPicture.asset(
+                    "assets/post_media.svg",
+                    width: 18,
+                    height: 18,
+                  ),
                 ),
               ),
             ),
