@@ -112,48 +112,59 @@ class _EventCardState extends ConsumerState<EventCard> {
                                           eventDetail:
                                               events[indexInteresting])));
                             },
-                            textCard: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Text(
-                                    GetTimeAgo.parse(DateTime.parse(
-                                        events[indexInteresting]
-                                            ['start_time'])),
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w700,
-                                      overflow: TextOverflow.ellipsis,
+                            textCard: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 16.0,
+                                  right: 16.0,
+                                  left: 16.0,
+                                  top: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text(
+                                      GetTimeAgo.parse(DateTime.parse(
+                                          events[indexInteresting]
+                                              ['start_time'])),
+                                      maxLines: 2,
+                                      style: const TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Text(
-                                    events[indexInteresting]['title'],
-                                    style: const TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w800,
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text(
+                                      events[indexInteresting]['title'],
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Text(
-                                    '${events[indexInteresting]['users_interested_count'].toString()} người quan tâm · ${events[indexInteresting]['users_going_count'].toString()} người tham gia ',
-                                    style: const TextStyle(
-                                      fontSize: 12.0,
-                                      color: greyColor,
-                                      fontWeight: FontWeight.w700,
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text(
+                                      '${events[indexInteresting]['users_interested_count'].toString()} người quan tâm · ${events[indexInteresting]['users_going_count'].toString()} người tham gia ',
+                                      style: const TextStyle(
+                                        fontSize: 12.0,
+                                        color: greyColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             buttonCard: Container(
-                              padding: const EdgeInsets.only(bottom: 5.0),
+                              padding: const EdgeInsets.only(
+                                bottom: 16.0,
+                                right: 16.0,
+                                left: 16.0,
+                              ),
                               child: Row(
                                 children: [
                                   Align(

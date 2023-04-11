@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -1088,7 +1089,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     : const SizedBox(),
               ],
             )
-          : const SizedBox(),
+          : const Center(
+              child: CupertinoActivityIndicator(),
+            ),
     );
   }
 }

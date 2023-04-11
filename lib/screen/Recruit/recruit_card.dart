@@ -20,7 +20,11 @@ class RecruitCard extends ConsumerStatefulWidget {
 class _RecruitCardState extends ConsumerState<RecruitCard> {
   late double width;
   late double height;
-  var paramsConfigList = {"limit": 10, "visibility": "public","exclude_current_user": true};
+  var paramsConfigList = {
+    "limit": 10,
+    "visibility": "public",
+    "exclude_current_user": true
+  };
   final scrollController = ScrollController();
   @override
   void initState() {
@@ -28,12 +32,12 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
     if (mounted) {
       Future.delayed(
           Duration.zero,
-              () => ref
+          () => ref
               .read(recruitControllerProvider.notifier)
               .getListRecruit(paramsConfigList));
     }
     scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent  ==
+      if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
         String maxId = ref.read(recruitControllerProvider).recruits.last['id'];
         ref
@@ -52,7 +56,7 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
     height = size.height;
     return Expanded(
         child: SingleChildScrollView(
-          controller: scrollController,
+      controller: scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -66,167 +70,190 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
               ),
             ),
           ),
-          recruits.isNotEmpty ?
-          SizedBox(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: recruits.length,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  if(index < recruits.length) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top:8.0, left: 8.0, right: 8.0, bottom: 8.0),
-                      child: CardComponents(
-                        type: 'homeScreen',
-                        imageCard: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15)),
-                          child: ImageCacheRender(
-                            path: recruits[index]['banner'] != null ? recruits[index]['banner']['url'] : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+          recruits.isNotEmpty
+              ? SizedBox(
+                  child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: recruits.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    if (index < recruits.length) {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
+                        child: CardComponents(
+                          type: 'homeScreen',
+                          imageCard: ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15)),
+                            child: ImageCacheRender(
+                              path: recruits[index]['banner'] != null
+                                  ? recruits[index]['banner']['url']
+                                  : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+                            ),
                           ),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) =>
-                                  RecruitDetail(data: recruits[index])));
-                        },
-                        textCard: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(
-                                recruits[index]['title'],
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w800,
-                                  overflow: TextOverflow.ellipsis,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) =>
+                                        RecruitDetail(data: recruits[index])));
+                          },
+                          textCard: Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 16.0, right: 16.0, left: 16.0, top: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Text(
+                                    recruits[index]['title'],
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w800,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(
-                                recruits[index]['account']['display_name'],
-                                style: const TextStyle(
-                                  fontSize: 12.0,
-                                  color: greyColor,
-                                  fontWeight: FontWeight.w700,
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Text(
+                                    recruits[index]['account']['display_name'],
+                                    style: const TextStyle(
+                                      fontSize: 12.0,
+                                      color: greyColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(
-                                '${convertNumberToVND(recruits[index]['salary_min'] ~/ 1)}' ' - ' '${convertNumberToVND(recruits[index]['salary_max'] ~/ 1) } VNĐ',
-                                style: const TextStyle(
-                                  fontSize: 12.0,
-                                  color: greyColor,
-                                  fontWeight: FontWeight.w700,
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Text(
+                                    '${convertNumberToVND(recruits[index]['salary_min'] ~/ 1)}'
+                                    ' - '
+                                    '${convertNumberToVND(recruits[index]['salary_max'] ~/ 1)} VNĐ',
+                                    style: const TextStyle(
+                                      fontSize: 12.0,
+                                      color: greyColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                        buttonCard: Container(
-                          padding: const EdgeInsets.only(bottom: 5.0),
-                          child: Row(
-                            children: [
-                              Align(
-                                alignment: Alignment.bottomLeft,
-                                child: InkWell(
-                                  onTap: () {
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 3.0),
-                                    child: Container(
-                                      height: 32,
-                                      width: width * 0.7,
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(189, 202, 202, 202),
-                                          borderRadius: BorderRadius.circular(6),
-                                          border:
-                                          Border.all(width: 0.2, color: greyColor)),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(FontAwesomeIcons.solidStar,
-                                              color: Colors.black,
-                                              size: 14),
-                                           SizedBox(
-                                            width: 5.0,
-                                          ),
-                                          Text(
-                                            'Quan tâm',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w700,
+                          ),
+                          buttonCard: Container(
+                            padding: const EdgeInsets.only(
+                                bottom: 16.0, left: 16.0, right: 16.0),
+                            child: Row(
+                              children: [
+                                Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 3.0),
+                                      child: Container(
+                                        height: 32,
+                                        width: width * 0.7,
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                189, 202, 202, 202),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            border: Border.all(
+                                                width: 0.2, color: greyColor)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(FontAwesomeIcons.solidStar,
+                                                color: Colors.black, size: 14),
+                                            SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Text(
+                                              'Quan tâm',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 3.0,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 11.0,
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(10),
                                             ),
                                           ),
-                                           SizedBox(
-                                            width: 3.0,
-                                          ),
+                                          context: context,
+                                          builder: (context) =>
+                                              const ShareModalBottom());
+                                    },
+                                    child: Container(
+                                      height: 32,
+                                      width: width * 0.12,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              189, 202, 202, 202),
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          border: Border.all(
+                                              width: 0.2, color: greyColor)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(FontAwesomeIcons.share,
+                                              color: Colors.black, size: 14),
                                         ],
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 11.0,
-                              ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(10),
-                                          ),
-                                        ),
-                                        context: context,
-                                        builder: (context) => const ShareModalBottom());
-                                  },
-                                  child: Container(
-                                    height: 32,
-                                    width: width * 0.12,
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(189, 202, 202, 202),
-                                        borderRadius: BorderRadius.circular(6),
-                                        border:
-                                        Border.all(width: 0.2, color: greyColor)),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(FontAwesomeIcons.share,
-                                            color: Colors.black, size: 14),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  } else {
-                    isMore == true ? const Center(child:  CupertinoActivityIndicator()) : const SizedBox();
-                  }},
-              )) : const SizedBox(),
-          isMore == true ? const Center(child:  CupertinoActivityIndicator()) : const SizedBox()
+                      );
+                    } else {
+                      isMore == true
+                          ? const Center(child: CupertinoActivityIndicator())
+                          : const SizedBox();
+                    }
+                    return null;
+                  },
+                ))
+              : const SizedBox(),
+          isMore == true
+              ? const Center(child: CupertinoActivityIndicator())
+              : const SizedBox()
         ],
       ),
     ));
   }
+
   @override
   void dispose() {
     scrollController.dispose();
