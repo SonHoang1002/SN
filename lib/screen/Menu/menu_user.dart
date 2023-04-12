@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as ChipNoti;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Menu/tranfer_account.dart';
@@ -9,7 +9,6 @@ import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/user_item.dart';
-import 'package:badges/badges.dart' as ChipNoti;
 
 class MenuUser extends ConsumerWidget {
   const MenuUser({Key? key}) : super(key: key);

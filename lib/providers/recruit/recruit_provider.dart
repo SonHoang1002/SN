@@ -121,4 +121,49 @@ class RecruitController extends StateNotifier<RecruitState> {
       );
     }
   }
+
+  refreshListRecruit(params) async {
+    List response = await RecruitApi().getListRecruitApi(params);
+    if (response.isNotEmpty) {
+      if (mounted) {
+        state = state.copyWith(
+            recruits: response,
+            detailRecruit: state.detailRecruit,
+            recruitsSimilar: state.recruitsSimilar,
+            recruitsPropose: state.recruitsPropose,
+            isMore: response.length < params['limit'] ? false : true);
+      }
+    } else {
+      if (mounted) {
+        state = state.copyWith(
+          isMore: false,
+          recruits: response,
+          detailRecruit: state.detailRecruit,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+        );
+      }
+    }
+  }
+
+  updateStatusRecruit(params, id) async {
+    params == true
+        ? await RecruitApi().recruitUpdateStatusApi(id)
+        : await RecruitApi().recruitDeleteStatusApi(id);
+    final indexRecruitUpdate =
+        state.recruits.indexWhere((element) => element['id'] == id.toString());
+    final eventUpdate = {
+      ...state.recruits[indexRecruitUpdate],
+      'recruit_relationships': {
+        ...state.recruits[indexRecruitUpdate]['recruit_relationships'],
+        'follow_recruit': params
+      }
+    };
+    state = state.copyWith(
+        recruits: [...state.recruits]..[indexRecruitUpdate] = eventUpdate,
+        detailRecruit: state.detailRecruit,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        isMore: state.isMore);
+  }
 }

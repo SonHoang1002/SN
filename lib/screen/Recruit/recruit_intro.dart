@@ -292,7 +292,8 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                               topRight: Radius.circular(15)),
                                           child: ImageCacheRender(
                                             path: recruitsPropose[indexPropose]
-                                                ['banner']['preview_url'],
+                                                    ['banner']['preview_url'] ??
+                                                'https://sn.emso.vn/static/media/group_cover.81acfb42.png',
                                             height: 180.0,
                                             width: MediaQuery.of(context)
                                                     .size
@@ -567,7 +568,8 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                               topRight: Radius.circular(15)),
                                           child: ImageCacheRender(
                                             path: recruitsSimilar[indexSimilar]
-                                                ['banner']['preview_url'],
+                                                    ['banner']['preview_url'] ??
+                                                'https://sn.emso.vn/static/media/group_cover.81acfb42.png',
                                             height: 180.0,
                                             width: MediaQuery.of(context)
                                                     .size

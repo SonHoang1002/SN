@@ -484,9 +484,29 @@ class EventController extends StateNotifier<EventState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
           events: response,
-          isMore: response.length < params['limit'] ? false : true);
+          isMore: response.length < params['limit'] ? false : true,
+          hosts: state.hosts,
+          groupSuggest: state.groupSuggest,
+          posts: state.posts,
+          eventsOwner: state.eventsOwner,
+          eventDetail: state.eventDetail,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventHosts: state.eventHosts,
+          eventsSuggested: state.eventsSuggested);
     } else {
-      state = state.copyWith(isMore: false);
+      state = state.copyWith(
+          isMore: false,
+          hosts: state.hosts,
+          posts: state.posts,
+          groupSuggest: state.groupSuggest,
+          eventDetail: state.eventDetail,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventsSuggested: state.eventsSuggested,
+          eventHosts: state.eventHosts,
+          events: response,
+          eventsOwner: state.eventsOwner);
     }
   }
 }
