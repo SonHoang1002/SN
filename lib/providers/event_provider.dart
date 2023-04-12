@@ -59,11 +59,11 @@ class EventState {
   }
 }
 
-
 final eventControllerProvider =
-StateNotifierProvider.autoDispose<EventController, EventState>((ref) {
+    StateNotifierProvider.autoDispose<EventController, EventState>((ref) {
   return EventController();
 });
+
 class EventController extends StateNotifier<EventState> {
   EventController() : super(const EventState());
 
@@ -190,6 +190,7 @@ class EventController extends StateNotifier<EventState> {
           eventsSuggested: state.eventsSuggested);
     }
   }
+
   getPostEvent(id, params) async {
     var response = await EventApi().getListPostEventApi(id, params);
     if (response.isNotEmpty) {
@@ -238,6 +239,7 @@ class EventController extends StateNotifier<EventState> {
           hosts: state.hosts);
     }
   }
+
   getListGroupSuggested(params) async {
     List response = await EventApi().getGroupSuggestedApi(params);
     if (response.isNotEmpty) {
@@ -254,6 +256,7 @@ class EventController extends StateNotifier<EventState> {
           hosts: state.hosts);
     }
   }
+
   getEventHosts(id) async {
     List response = await EventApi().getEventHostApi(id);
     if (response.isNotEmpty) {
@@ -292,7 +295,7 @@ class EventController extends StateNotifier<EventState> {
           eventsSuggested: state.eventsSuggested);
     } else {
       final newListEvent =
-      response.where((item) => !state.eventHosts.contains(item)).toList();
+          response.where((item) => !state.eventHosts.contains(item)).toList();
       state = state.copyWith(
           eventHosts: params.containsKey('max_id')
               ? [...state.eventHosts, ...newListEvent]
@@ -481,9 +484,29 @@ class EventController extends StateNotifier<EventState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
           events: response,
-          isMore: response.length < params['limit'] ? false : true);
+          isMore: response.length < params['limit'] ? false : true,
+          hosts: state.hosts,
+          groupSuggest: state.groupSuggest,
+          posts: state.posts,
+          eventsOwner: state.eventsOwner,
+          eventDetail: state.eventDetail,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventHosts: state.eventHosts,
+          eventsSuggested: state.eventsSuggested);
     } else {
-      state = state.copyWith(isMore: false);
+      state = state.copyWith(
+          isMore: false,
+          hosts: state.hosts,
+          posts: state.posts,
+          groupSuggest: state.groupSuggest,
+          eventDetail: state.eventDetail,
+          eventsInvite: state.eventsInvite,
+          eventsInviteHost: state.eventsInviteHost,
+          eventsSuggested: state.eventsSuggested,
+          eventHosts: state.eventHosts,
+          events: response,
+          eventsOwner: state.eventsOwner);
     }
   }
 }

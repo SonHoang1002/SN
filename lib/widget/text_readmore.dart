@@ -5,11 +5,13 @@ class TextReadMore extends StatefulWidget {
   final String description;
   final bool isReadMore;
   final dynamic onTap;
+  final fontSize;
 
   const TextReadMore(
       {Key? key,
       required this.description,
       required this.isReadMore,
+      this.fontSize,
       required this.onTap})
       : super(key: key);
   @override
@@ -50,9 +52,9 @@ class _TextReadMoreState extends State<TextReadMore> {
                       text: widget.isReadMore
                           ? ("$firstHalf...")
                           : (firstHalf + secondHalf),
-                      style: const TextStyle(
-                        fontSize: 12.0,
-                        color: Color(0xFF212121),
+                      style: TextStyle(
+                        fontSize: widget.fontSize ?? 12.0,
+                        color: const Color(0xFF212121),
                       ),
                       children: <InlineSpan>[
                         widget.isReadMore

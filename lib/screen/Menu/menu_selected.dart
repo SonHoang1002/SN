@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 import '../../helper/push_to_new_screen.dart';
 import '../Group/GroupCreateModules/screen/create_group_page.dart';
+import '../LearnSpace/learn_space.dart';
 // import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 
 class MenuSelected extends StatelessWidget {
@@ -47,76 +48,68 @@ class MenuSelected extends StatelessWidget {
         break;
       case 'grow':
         body = const GrowRender();
-        buttonAppbar = Row(
-          children: [
-            GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                FontAwesomeIcons.calendarDay,
-                size: 18,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(
-              width: 7.0,
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                FontAwesomeIcons.plus,
-                size: 18,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(
-              width: 7.0,
-            ),
-            GestureDetector(
-                onTap: () {},
-                child: const Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  size: 18,
-                  color: Colors.black,
-                ))
-          ],
-        );
+        // buttonAppbar = Row(
+        //   children: [
+        //     GestureDetector(
+        //       onTap: () {},
+        //       child: const Icon(
+        //         FontAwesomeIcons.calendarDay,
+        //         size: 18,
+        //         color: Colors.black,
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       width: 7.0,
+        //     ),
+        //     GestureDetector(
+        //       onTap: () {},
+        //       child: const Icon(
+        //         FontAwesomeIcons.plus,
+        //         size: 18,
+        //         color: Colors.black,
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       width: 7.0,
+        //     ),
+        //     GestureDetector(
+        //         onTap: () {},
+        //         child: const Icon(
+        //           FontAwesomeIcons.magnifyingGlass,
+        //           size: 18,
+        //           color: Colors.black,
+        //         ))
+        //   ],
+        // );
         break;
       case 'eventSocial':
         body = const EventRender();
-        buttonAppbar = Row(
-          children: [
-            InkWell(
-              onTap: () {},
-              child: Icon(
-                FontAwesomeIcons.calendarDay,
-                size: 18,
-                color: colorWord,
+        buttonAppbar = Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => const CreateEvents()),
+                  );
+                },
+                child: Icon(FontAwesomeIcons.plus, size: 18, color: colorWord),
               ),
-            ),
-            const SizedBox(
-              width: 12.0,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => const CreateEvents()),
-                );
-              },
-              child: Icon(FontAwesomeIcons.plus, size: 18, color: colorWord),
-            ),
-            const SizedBox(
-              width: 12.0,
-            ),
-            InkWell(
-                onTap: () {},
-                child: Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  size: 18,
-                  color: colorWord,
-                ))
-          ],
+              const SizedBox(
+                width: 10.0,
+              ),
+              InkWell(
+                  onTap: () {},
+                  child: Icon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    size: 18,
+                    color: colorWord,
+                  ))
+            ],
+          ),
         );
         break;
       case 'groupSocial':
@@ -161,47 +154,42 @@ class MenuSelected extends StatelessWidget {
         break;
       case "job":
         body = const RecruitRender();
-        buttonAppbar = Row(
-          children: [
-            InkWell(
-              onTap: () {},
-              child: const Icon(
-                FontAwesomeIcons.calendarDay,
-                size: 18,
-              ),
-            ),
-            const SizedBox(
-              width: 7.0,
-            ),
-            InkWell(
-              onTap: () {},
-              child: const Icon(
-                FontAwesomeIcons.plus,
-                size: 18,
-              ),
-            ),
-            const SizedBox(
-              width: 7.0,
-            ),
-            InkWell(
-                onTap: () {},
-                child: const Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  size: 18,
-                ))
-          ],
-        );
+        // buttonAppbar = Row(
+        //   children: [
+        //     InkWell(
+        //       onTap: () {},
+        //       child: const Icon(
+        //         FontAwesomeIcons.calendarDay,
+        //         size: 18,
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       width: 7.0,
+        //     ),
+        //     InkWell(
+        //       onTap: () {},
+        //       child: const Icon(
+        //         FontAwesomeIcons.plus,
+        //         size: 18,
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       width: 7.0,
+        //     ),
+        //     InkWell(
+        //         onTap: () {},
+        //         child: const Icon(
+        //           FontAwesomeIcons.magnifyingGlass,
+        //           size: 18,
+        //         ))
+        //   ],
+        // );
+        break;
+      case "lessonSocial":
+        body = const LearnSpace();
         break;
       case 'marketPlace':
         break;
-      // return CreateSearchBaseMenu(
-      //     placeHolder: "nhập sản phẩm",
-      //     body: body,
-      //     suffixWidget: buttonAppbar);
-
-      // case 'moment':
-      //   body = const Moment();
-      //   break;
       default:
     }
 
