@@ -38,7 +38,9 @@ class EventApi {
   Future statusEventHostInviteApi(id, data) async {
     return await Api().postRequestBase('/api/v1/events/$id/invitation_hosts/invitations_respond', data);
   }
-
+  Future createEventApi(data) async {
+    return await Api().postRequestBase('/api/v1/events', data);
+  }
   Future sendInvitationFriendEventApi(id, data) async {
     return await Api().postRequestBase('/api/v1/events/$id/invitations', data);
   }

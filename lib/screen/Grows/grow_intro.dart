@@ -188,7 +188,6 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                             : null
                         : 200,
                     width: 500,
-                    // child:  UsingVideoControllerExample(path: growDetail['introduction_video'] != null ? growDetail['introduction_video']['remote_url'] != "pending"  ? growDetail['introduction_video']['remote_url'] : "" : ""),
                     child: FeedVideo(
                         type: 'showFullScreen',
                         path: growDetail['introduction_video'] != null
