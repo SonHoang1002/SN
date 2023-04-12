@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
@@ -65,6 +66,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     List listMenu = [
       {"key": 'all', "label": "Tất cả"},
       {"key": 'new', "label": "Gần đây"}
@@ -93,20 +95,20 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const BackIconAppbar(),
-            const AppBarTitle(title: "Danh sách bạn bè"),
-            Icon(
-              CupertinoIcons.plus,
-              color: Theme.of(context).textTheme.displayLarge!.color,
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          leading: const BackIconAppbar(),
+          centerTitle: true,
+          title: const AppBarTitle(title: "Danh sách bạn bè"),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                CupertinoIcons.plus,
+                color: Theme.of(context).textTheme.displayLarge!.color,
+              ),
             )
-          ],
-        ),
-      ),
+          ]),
       body: Container(
         margin: const EdgeInsets.all(8.0),
         child: Column(
@@ -151,12 +153,30 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                             itemCount: friendsAll.length,
                             itemBuilder: (context, index) => Container(
                                   margin: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  child: Stack(
+                                    alignment: Alignment.centerRight,
                                     children: [
-                                      UserItem(
-                                        user: friendsAll[index],
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserPage(),
+                                                settings: RouteSettings(
+                                                  arguments: {
+                                                    'id': friendsAll[index]
+                                                        ['id']
+                                                  },
+                                                ),
+                                              ));
+                                        },
+                                        child: SizedBox(
+                                          width: size.width - 20,
+                                          child: UserItem(
+                                            user: friendsAll[index],
+                                          ),
+                                        ),
                                       ),
                                       GestureDetector(
                                         onTap: () {

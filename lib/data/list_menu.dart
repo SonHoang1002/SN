@@ -201,3 +201,10 @@ List pageMenu = [
   // {"key": "community_page", "label": "Cộng đồng"},
   // {"key": "deal_page", "label": "Ưu đãi"},
 ];
+
+List userMediaMenu = [
+  {"key": "photo", "label": "Ảnh"},
+  {"key": "album", "label": "Album"},
+  {"key": "video", "label": "Video"},
+  {"key": "moment", "label": "Khoảnh khắc"},
+];

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class PageState {
@@ -64,7 +63,6 @@ class PageState {
 
 final pageControllerProvider =
     StateNotifierProvider.autoDispose<PageController, PageState>((ref) {
-  ref.read(meControllerProvider);
   return PageController();
 });
 
@@ -143,29 +141,28 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
-          rolePage: state.rolePage,
-          pageFeed: state.pageFeed,
-          isMoreFeed: state.isMoreFeed,
-          pageReview: state.pageReview,
-          isMoreReview: state.isMoreReview,
-          pagePined: state.pagePined,
-          pagePhoto: state.pagePhoto +
-              (params['media_type'] == 'image' ? response : []),
-          isMorePhoto: params['media_type'] == 'image'
-              ? response.length < params['limit']
-                  ? false
-                  : true
-              : state.isMorePhoto,
-          pageAlbum: state.pageAlbum,
-          isMoreAlbum: state.isMoreAlbum,
-          pageVideo: state.pageVideo +
-              (params['media_type'] == 'video' ? response : []),
-          isMoreVideo: params['media_type'] == 'video'
-              ? response.length < params['limit']
-                  ? false
-                  : true
-              : state.isMoreVideo,
-        );
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto +
+                (params['media_type'] == 'image' ? response : []),
+            isMorePhoto: params['media_type'] == 'image'
+                ? response.length < params['limit']
+                    ? false
+                    : true
+                : state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo +
+                (params['media_type'] == 'video' ? response : []),
+            isMoreVideo: params['media_type'] == 'video'
+                ? response.length < params['limit']
+                    ? false
+                    : true
+                : state.isMoreVideo);
       }
     }
   }

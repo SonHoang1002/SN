@@ -16,15 +16,17 @@ import 'package:social_network_app_mobile/providers/posts/reaction_message_statu
 import 'package:social_network_app_mobile/providers/setting/choose_object_provider.dart';
 import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 
 import 'theme/theme_manager.dart';
 
 var routes = <String, WidgetBuilder>{
   "/home": (BuildContext context) => const Home(),
   '/page': (BuildContext context) => const PageDetail(),
+  '/user': (BuildContext context) => const UserPage(),
   //  SaleInformationMarketPage
   '/login': (BuildContext context) => const OnboardingLoginPage(),
-  '/': (BuildContext context) => const PreviewScreen()
+  '/': (BuildContext context) => const PreviewScreen(),
 };
 
 class App extends StatefulWidget {

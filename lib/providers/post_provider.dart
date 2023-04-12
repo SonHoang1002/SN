@@ -203,4 +203,15 @@ class PostController extends StateNotifier<PostState> {
       }
     }
   }
+
+  removeListPost(type) async {
+    if (mounted) {
+      state = state.copyWith(
+          isMore: true,
+          posts: type == 'post' ? [] : state.posts,
+          postsPin: type == 'user' ? [] : state.posts,
+          postUserPage: type == 'user' ? [] : state.posts,
+          isMoreUserPage: type == 'user' ? true : false);
+    }
+  }
 }

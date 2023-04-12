@@ -49,6 +49,11 @@ class PageApi {
     return await Api().getRequestBase('/api/v1/pages/$id/albums', params);
   }
 
+  Future getListPhotoAlbumPageApi(params, id) async {
+    return await Api()
+        .getRequestBase('/api/v1/albums/$id/media_attachments', params);
+  }
+
   Future handleDeleteReviewPageApi(idPage, idFeedback) async {
     return await Api()
         .deleteRequestBase('/api/v1/pages/$idPage/feedbacks/$idFeedback', null);

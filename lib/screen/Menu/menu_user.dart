@@ -16,12 +16,20 @@ class MenuUser extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = pv.Provider.of<ThemeManager>(context);
+    var meData = ref.read(meControllerProvider)[0];
 
     return InkWell(
       borderRadius: BorderRadius.circular(10.0),
       onTap: () {
-        Navigator.push(context,
-            CupertinoPageRoute(builder: ((context) => const UserPage())));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserPage(),
+            settings: RouteSettings(
+              arguments: {'id': meData['id']},
+            ),
+          ),
+        );
       },
       child: Container(
         padding: const EdgeInsets.all(10.0),

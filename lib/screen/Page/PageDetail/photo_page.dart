@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/header_tabs.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -95,7 +99,19 @@ class _PhotoPageState extends ConsumerState<PhotoPage> {
           ),
           const SizedBox(height: 8),
           RenderPhoto(
-              photoData: widget.typeMedia == 'image' ? photoPage : albumPage)
+              photoData: widget.typeMedia == 'image' ? photoPage : albumPage,
+              action: widget.typeMedia == 'image'
+                  ? null
+                  : (value) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RenderPageAlbum(
+                                    idAlbum: value['id'],
+                                    nameAlbum: value['title'],
+                                  )));
+                    },
+              hasTitle: widget.typeMedia == 'image' ? false : true)
         ],
       ),
     );
@@ -107,9 +123,34 @@ class _PhotoPageState extends ConsumerState<PhotoPage> {
   }
 }
 
-class RenderPhoto extends StatelessWidget {
+class RenderPhoto extends StatefulWidget {
   final List photoData;
-  const RenderPhoto({super.key, required this.photoData});
+  final Function? action;
+  final bool hasTitle;
+  const RenderPhoto(
+      {super.key,
+      required this.photoData,
+      this.action,
+      required this.hasTitle});
+
+  @override
+  State<RenderPhoto> createState() => _RenderPhotoState();
+}
+
+class _RenderPhotoState extends State<RenderPhoto> {
+  fetchApiPostMedia(id) async {
+    var response = await PostApi().getPostDetailMedia(id);
+    if (response != null) {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PostOneMediaDetail(
+                    postMedia: response,
+                    medias: widget.photoData,
+                  )));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,23 +165,146 @@ class RenderPhoto extends StatelessWidget {
             mainAxisSpacing: 7,
             crossAxisCount: 3,
             childAspectRatio: 0.8),
-        itemCount: photoData.length,
-        itemBuilder: (context, index) => Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: theme.themeMode == ThemeMode.dark
-                      ? Theme.of(context).cardColor
-                      : const Color(0xfff1f2f5)),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                child: ImageCacheRender(
-                    height: size.width / 3 - 20,
-                    width: size.width / 3 - 20,
-                    path: photoData[index]?['preview_url'] ??
-                        photoData[index]?['url'] ??
-                        photoData[index]?['media_attachment']['preview_url'] ??
-                        photoData[index]?['media_attachment']['url']),
+        itemCount: widget.photoData.length,
+        itemBuilder: (context, index) {
+          return Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: theme.themeMode == ThemeMode.dark
+                    ? Theme.of(context).cardColor
+                    : const Color(0xfff1f2f5)),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              child: InkWell(
+                onTap: () {
+                  if (widget.action != null) {
+                    widget.action!(widget.photoData[index]);
+                  } else {
+                    fetchApiPostMedia(widget.photoData[index]['id']);
+                  }
+                },
+                child: !widget.hasTitle
+                    ? ImageCacheRender(
+                        height: size.width / 3 - 20,
+                        width: size.width / 3 - 20,
+                        path: widget.photoData[index]?['preview_url'] ??
+                            widget.photoData[index]?['url'] ??
+                            widget.photoData[index]?['media_attachment']
+                                ['preview_url'] ??
+                            widget.photoData[index]?['media_attachment']['url'])
+                    : Stack(
+                        alignment: Alignment.bottomCenter,
+                        fit: StackFit.expand,
+                        children: [
+                          SizedBox(
+                            child: ImageCacheRender(
+                                height: size.width / 3 - 20,
+                                width: size.width / 3 - 20,
+                                path: widget.photoData[index]?['preview_url'] ??
+                                    widget.photoData[index]?['url'] ??
+                                    widget.photoData[index]?['media_attachment']
+                                        ['preview_url'] ??
+                                    widget.photoData[index]?['media_attachment']
+                                        ['url']),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                                width: size.width / 3 - 10,
+                                height: 33,
+                                padding: const EdgeInsets.fromLTRB(8, 11, 0, 2),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      const Color(0xFFFFFFFF).withOpacity(0.05),
+                                      const Color(0xFF000000).withOpacity(0.7)
+                                    ],
+                                  ),
+                                ),
+                                child: Text(
+                                  widget.photoData[index]['title'],
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .scaffoldBackgroundColor,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500),
+                                )),
+                          )
+                        ],
+                      ),
               ),
-            ));
+            ),
+          );
+        });
+  }
+}
+
+class RenderPageAlbum extends StatefulWidget {
+  final List? photoAlbum;
+  final int? idAlbum;
+  final String? nameAlbum;
+  const RenderPageAlbum(
+      {super.key, this.photoAlbum, this.idAlbum, this.nameAlbum});
+
+  @override
+  State<RenderPageAlbum> createState() => _RenderPageAlbumState();
+}
+
+class _RenderPageAlbumState extends State<RenderPageAlbum> {
+  List listPhoto = [];
+  @override
+  void initState() {
+    super.initState();
+    if (widget.photoAlbum == null && widget.idAlbum != null) {
+      fetchListPhotoAlbum();
+    }
+  }
+
+  fetchListPhotoAlbum() async {
+    var response =
+        await PageApi().getListPhotoAlbumPageApi({'limit': 25}, widget.idAlbum);
+    if (response != null && mounted) {
+      setState(() {
+        listPhoto = response;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              FontAwesomeIcons.angleLeft,
+              size: 18,
+              color: Theme.of(context).textTheme.titleLarge?.color,
+            )),
+        title: Text(
+          widget.nameAlbum ?? "Album của bạn",
+          style: TextStyle(
+              fontSize: 17,
+              color: Theme.of(context).textTheme.bodyMedium?.color),
+        ),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RenderPhoto(
+            photoData: widget.photoAlbum ?? listPhoto, hasTitle: false),
+      ),
+    );
   }
 }
