@@ -39,55 +39,52 @@ class UserPageInfomationBlock extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Column(
                     children: [
-                      generalInformation['description'] != null &&
-                              generalInformation['description'].isNotEmpty
-                          ? Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              child: ItemInformation(
-                                icon: FontAwesomeIcons.solidComment,
-                                text: generalInformation['description'],
-                              ),
-                            )
-                          : const SizedBox(),
-                      generalInformation['place_live'] == null
-                          ? const SizedBox()
-                          : Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              child: ItemInformation(
-                                icon: FontAwesomeIcons.house,
-                                text:
-                                    'Sống tại ${generalInformation['place_live']['name']}',
-                              ),
-                            ),
-                      generalInformation['hometown'] == null
-                          ? const SizedBox()
-                          : Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              child: ItemInformation(
-                                icon: FontAwesomeIcons.locationDot,
-                                text:
-                                    'Đến từ ${generalInformation['hometown']['name']}',
-                              )),
-                      generalInformation['phone_number'] != null
-                          ? Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              child: ItemInformation(
-                                icon: FontAwesomeIcons.phone,
-                                text: generalInformation['phone_number'],
-                              ))
-                          : const SizedBox(),
-                      Container(
+                      if (generalInformation['description'] != null &&
+                          generalInformation['description'].isNotEmpty)
+                        Container(
                           margin: const EdgeInsets.only(bottom: 16),
                           child: ItemInformation(
-                            iconOther: Transform.rotate(
-                              angle: pi / 4,
-                              child: const Icon(
-                                FontAwesomeIcons.wifi,
-                                size: 16,
+                            icon: FontAwesomeIcons.solidComment,
+                            text: generalInformation['description'],
+                          ),
+                        ),
+                      if (generalInformation['place_live'] != null)
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          child: ItemInformation(
+                            icon: FontAwesomeIcons.house,
+                            text:
+                                'Sống tại ${generalInformation['place_live']['title'] ?? generalInformation['place_live']['name']}',
+                          ),
+                        ),
+                      if (generalInformation['hometown'] != null)
+                        Container(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            child: ItemInformation(
+                              icon: FontAwesomeIcons.locationDot,
+                              text:
+                                  'Đến từ ${generalInformation['hometown']['title'] ?? generalInformation['hometown']['name']}',
+                            )),
+                      if (generalInformation['phone_number'] != null)
+                        Container(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            child: ItemInformation(
+                              icon: FontAwesomeIcons.phone,
+                              text: generalInformation['phone_number'],
+                            )),
+                      if (user['followers_count'] != null)
+                        Container(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            child: ItemInformation(
+                              iconOther: Transform.rotate(
+                                angle: pi / 4,
+                                child: const Icon(
+                                  FontAwesomeIcons.wifi,
+                                  size: 16,
+                                ),
                               ),
-                            ),
-                            text: '${user['followers_count']} người theo dõi',
-                          )),
+                              text: '${user['followers_count']} người theo dõi',
+                            )),
                     ],
                   ),
                 ),
@@ -119,114 +116,101 @@ class UserPageInfomationBlock extends StatelessWidget {
                 const SizedBox(
                   height: 12.0,
                 ),
-                featureContents.isEmpty
-                    ? const SizedBox()
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Đáng chú ý',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 17),
-                          ),
-                          const SizedBox(
-                            height: 8.0,
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: List.generate(
-                                  featureContents.length,
-                                  (index) => InkWell(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        onTap: () {
-                                          showModalBottomSheet(
-                                              context: context,
-                                              isScrollControlled: true,
-                                              barrierColor: transparent,
-                                              clipBehavior: Clip
-                                                  .antiAliasWithSaveLayer,
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.vertical(
-                                                              top: Radius
-                                                                  .circular(
-                                                                      20))),
-                                              builder: (BuildContext context) {
-                                                return StoryPage(
-                                                    user: user,
-                                                    story:
-                                                        featureContents[index]);
-                                              });
-                                        },
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              width: (size.width - 50) / 3,
-                                              height: 2 * (size.width - 70) / 3,
-                                              margin: const EdgeInsets.only(
-                                                  right: 10.0),
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0)),
-                                              child: Stack(
-                                                children: [
-                                                  ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                    child: ImageCacheRender(
-                                                        width: size.width / 3,
-                                                        height:
-                                                            2 * size.width / 3,
-                                                        path: featureContents[
-                                                                index]['banner']
-                                                            ['preview_url']),
-                                                  ),
-                                                  featureContents[index]
-                                                              ['media_count'] >
-                                                          1
-                                                      ? Positioned(
-                                                          bottom: 5,
-                                                          left: 5,
-                                                          child: Text(
-                                                            '+ ${featureContents[index]['media_count'] - 1}',
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                    color:
-                                                                        white),
-                                                          ))
-                                                      : const SizedBox()
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 8.0,
-                                            ),
-                                            SizedBox(
-                                                width: (size.width - 50) / 3,
-                                                child: Text(
-                                                  featureContents[index]
-                                                      ['title'],
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 13),
-                                                ))
-                                          ],
-                                        ),
-                                      )),
-                            ),
-                          )
-                        ],
+                if (featureContents.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Đáng chú ý',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 17),
                       ),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: List.generate(
+                              featureContents.length,
+                              (index) => InkWell(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          barrierColor: transparent,
+                                          clipBehavior:
+                                              Clip.antiAliasWithSaveLayer,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top:
+                                                          Radius.circular(20))),
+                                          builder: (BuildContext context) {
+                                            return StoryPage(
+                                                user: user,
+                                                story: featureContents[index]);
+                                          });
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: (size.width - 50) / 3,
+                                          height: 2 * (size.width - 70) / 3,
+                                          margin: const EdgeInsets.only(
+                                              right: 10.0),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          child: Stack(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                                child: ImageCacheRender(
+                                                    width: size.width / 3,
+                                                    height: 2 * size.width / 3,
+                                                    path: featureContents[index]
+                                                            ['banner']
+                                                        ['preview_url']),
+                                              ),
+                                              featureContents[index]
+                                                          ['media_count'] >
+                                                      1
+                                                  ? Positioned(
+                                                      bottom: 5,
+                                                      left: 5,
+                                                      child: Text(
+                                                        '+ ${featureContents[index]['media_count'] - 1}',
+                                                        style: const TextStyle(
+                                                            fontSize: 15,
+                                                            color: white),
+                                                      ))
+                                                  : const SizedBox()
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 8.0,
+                                        ),
+                                        SizedBox(
+                                            width: (size.width - 50) / 3,
+                                            child: Text(
+                                              featureContents[index]['title'],
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13),
+                                            ))
+                                      ],
+                                    ),
+                                  )),
+                        ),
+                      )
+                    ],
+                  ),
               ],
             ),
           );

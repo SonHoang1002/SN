@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
@@ -26,31 +28,57 @@ import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 
 class UserPage extends ConsumerStatefulWidget {
-  const UserPage({Key? key}) : super(key: key);
+  final dynamic user;
+  const UserPage({
+    Key? key,
+    this.user,
+  }) : super(key: key);
 
   @override
   ConsumerState<UserPage> createState() => _UserPageState();
 }
 
 class _UserPageState extends ConsumerState<UserPage> {
+  dynamic id;
   final scrollController = ScrollController();
+  dynamic userData = {};
+  List postUser = [];
+  bool isMorePageUser = true;
+  dynamic userAbout = {};
+  List featureContents = [];
+  List friend = [];
+  List pinPost = [];
+
   @override
   void initState() {
     super.initState();
     if (mounted) {
-      Future.delayed(Duration.zero, () {
-        var meData = ref.watch(meControllerProvider)[0];
-        ref.read(postControllerProvider.notifier).getListPostUserPage(
-            meData['id'], {"limit": 3, "exclude_replies": true});
-        ref
-            .read(userInformationProvider.notifier)
-            .getUserInformation(meData['id']);
-        ref
-            .read(userInformationProvider.notifier)
-            .getUserMoreInformation(meData['id']);
-        ref
-            .read(userInformationProvider.notifier)
-            .getUserFeatureContent(meData['id']);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final queryParams =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        setState(() {
+          id = queryParams['id'];
+        });
+      });
+      Future.delayed(Duration.zero, () async {
+        // ref.read(postControllerProvider.notifier).removeListPost('user');
+        // ref.read(userInformationProvider.notifier).removeUserInfo();
+
+        List postUserNew = await UserPageApi()
+                .getListPostApi(id, {"limit": 3, "exclude_replies": true}) ??
+            [];
+        dynamic userDataNew = await UserPageApi().getAccountInfor(id);
+        dynamic userAboutNew =
+            await UserPageApi().getAccountAboutInformation(id);
+        var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
+        var pinNew = await PostApi().getListPostPinApi(id) ?? [];
+        setState(() {
+          postUser = postUserNew;
+          userData = userDataNew;
+          userAbout = userAboutNew;
+          pinPost = pinNew;
+          friend = friendNew;
+        });
       });
     }
 
@@ -58,12 +86,12 @@ class _UserPageState extends ConsumerState<UserPage> {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
         if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
-        var meData = ref.watch(meControllerProvider)[0];
-
-        String maxId = ref.read(postControllerProvider).postUserPage.last['id'];
-        ref.read(postControllerProvider.notifier).getListPostUserPage(
-            meData['id'],
-            {"max_id": maxId, "limit": 3, "exclude_replies": true});
+        if (id != null) {
+          String maxId =
+              ref.read(postControllerProvider).postUserPage.last['id'];
+          ref.read(postControllerProvider.notifier).getListPostUserPage(
+              id, {"max_id": maxId, "limit": 3, "exclude_replies": true});
+        }
       }
     });
   }
@@ -75,13 +103,8 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    var meData = ref.watch(meControllerProvider)[0];
     final size = MediaQuery.of(context).size;
-    final postUser = ref.watch(postControllerProvider).postUserPage;
-    final isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
-    var userData = ref.watch(userInformationProvider).userInfor;
     var userAbout = ref.watch(userInformationProvider).userMoreInfor;
-    List featureContents = ref.watch(userInformationProvider).featureContent;
 
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +115,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const BackIconAppbar(),
-            AppBarTitle(title: meData['display_name']),
+            AppBarTitle(title: userData?['display_name'] ?? ''),
             Row(
               children: [
                 Icon(
@@ -118,7 +141,7 @@ class _UserPageState extends ConsumerState<UserPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BannerBase(object: meData, objectMore: userAbout),
+            BannerBase(object: userData, objectMore: userAbout),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
@@ -126,7 +149,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                 children: [
                   SizedBox(
                       height: 35,
-                      width: size.width - 80,
+                      width: size.width - 85,
                       child: ButtonPrimary(
                         icon: const Icon(
                           FontAwesomeIcons.pen,
@@ -147,7 +170,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                       )),
                   SizedBox(
                       height: 35,
-                      width: 45,
+                      width: 48,
                       child: ButtonPrimary(
                         label: "···",
                         handlePress: () {},
@@ -157,11 +180,11 @@ class _UserPageState extends ConsumerState<UserPage> {
             ),
             const CrossBar(),
             UserPageInfomationBlock(
-                user: meData,
+                user: userData,
                 userAbout: userAbout,
                 featureContents: featureContents),
             const CrossBar(),
-            UserPageFriendBlock(user: meData),
+            UserPageFriendBlock(user: userData, friends: friend),
             const SizedBox(
               height: 12.0,
             ),
@@ -183,7 +206,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                 pushToNextScreen(context, const UserPhotoVideo());
               },
               child: SizedBox(
-                width: 115,
+                width: 118,
                 child: ChipMenu(
                   isSelected: false,
                   label: "Ảnh/video",
@@ -196,7 +219,10 @@ class _UserPageState extends ConsumerState<UserPage> {
               ),
             ),
             const CrossBar(),
-            const UserPagePinPost(),
+            UserPagePinPost(
+              user: userData,
+              pinPosts: pinPost,
+            ),
             ListView.builder(
                 shrinkWrap: true,
                 primary: false,
