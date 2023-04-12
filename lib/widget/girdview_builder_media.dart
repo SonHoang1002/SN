@@ -28,6 +28,7 @@ class GirdviewBuilderMedia extends StatelessWidget {
     return GridView.builder(
         shrinkWrap: true,
         primary: false,
+        // padding: EdgeInsets.only(bottom: medias.length == 2 ? 6 : 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisSpacing: 3,
             mainAxisSpacing: 3,

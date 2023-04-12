@@ -29,12 +29,19 @@ class _PostCenterState extends State<PostCenter> {
   Widget build(BuildContext context) {
     String postType = widget.post['post_type'] ?? '';
     return Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(
+          top: 10,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PostContent(
-              post: widget.post,
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 6,
+              ),
+              child: PostContent(
+                post: widget.post,
+              ),
             ),
             (widget.post['card'] != null ||
                     widget.post['poll'] != null ||

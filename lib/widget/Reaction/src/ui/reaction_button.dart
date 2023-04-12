@@ -17,7 +17,6 @@ class ReactionButton<T> extends ConsumerStatefulWidget {
   final Reaction<T>? initialReaction;
 
   final List<Reaction<T>> reactions;
-  
 
   /// Offset to add to the placement of the box
   final Offset boxOffset;
@@ -144,7 +143,7 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
     final reactionButton = await Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
-        transitionDuration: const Duration(milliseconds: 200),
+        // transitionDuration: const Duration(milliseconds: 50),
         pageBuilder: (_, __, ___) {
           return ReactionsBox(
             buttonOffset: buttonOffset,
@@ -168,7 +167,6 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
         },
       ),
     );
-
     if (reactionButton != null) _updateReaction(reactionButton);
   }
 

@@ -155,7 +155,7 @@ class _ManageOrderMarketPageState extends ConsumerState<ManageOrderMarketPage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: const ImageCacheRender(
+                child: ImageCacheRender(
                   height: 30.0,
                   width: 30.0,
                   path:
@@ -292,14 +292,14 @@ class _ManageOrderMarketPageState extends ConsumerState<ManageOrderMarketPage> {
       _orderData![index]["status"] = nextStatus;
       setState(() {});
       final response = await OrderApis().updateStatusOrderApi(
-          _orderData![index]["id"], {"status": nextStatus}); 
+          _orderData![index]["id"], {"status": nextStatus});
     }
     if (key == "shipping") {
       nextStatus = "delivered";
       _orderData![index]["status"] = nextStatus;
       setState(() {});
       final response = await OrderApis().updateStatusOrderApi(
-          _orderData![index]["id"], {"status": nextStatus}); 
+          _orderData![index]["id"], {"status": nextStatus});
     }
     setState(() {});
   }

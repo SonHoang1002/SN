@@ -1,5 +1,7 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
@@ -30,12 +32,18 @@ class _FeedState extends ConsumerState<Feed> {
             .getListPost(paramsConfig));
 
     scrollController.addListener(() {
-      if ((scrollController.offset + 1600).toDouble() ==
-          scrollController.position.maxScrollExtent) {
-        String maxId = ref.read(postControllerProvider).posts.last['score'];
-        ref
-            .read(postControllerProvider.notifier)
-            .getListPost({"max_id": maxId, ...paramsConfig});
+      if (scrollController.position.maxScrollExtent < 2000 ||
+          (scrollController.offset).toDouble() <
+                  scrollController.position.maxScrollExtent &&
+              (scrollController.offset).toDouble() >
+                  scrollController.position.maxScrollExtent - 2000) {
+        EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 300),
+            () {
+          String maxId = ref.watch(postControllerProvider).posts.last['score'];
+          ref
+              .read(postControllerProvider.notifier)
+              .getListPost({"max_id": maxId, ...paramsConfig});
+        });
       }
     });
   }
