@@ -68,10 +68,22 @@ class _UserPhotoVideoState extends ConsumerState<UserPhotoVideo>
             body: TabBarView(
               controller: _tabController,
               children: const [
-                RenderPhoto(photoData: []),
-                RenderPhoto(photoData: []),
-                RenderPhoto(photoData: []),
-                RenderPhoto(photoData: []),
+                RenderPhoto(
+                  photoData: [],
+                  hasTitle: false,
+                ),
+                RenderPhoto(
+                  photoData: [],
+                  hasTitle: false,
+                ),
+                RenderPhoto(
+                  photoData: [],
+                  hasTitle: false,
+                ),
+                RenderPhoto(
+                  photoData: [],
+                  hasTitle: false,
+                ),
               ],
             )));
   }
