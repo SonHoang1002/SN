@@ -59,7 +59,7 @@ class _PostContentState extends State<PostContent> {
                       Theme.of(context).textTheme.bodyLarge!.color ??
                       white,
                   styleContent:
-                      TextStyle(fontSize: 14, color: widget.textColor),
+                      TextStyle(fontSize: 15, color: widget.textColor),
                   hashtagStyle: const TextStyle(
                     color: secondaryColor,
                   ),

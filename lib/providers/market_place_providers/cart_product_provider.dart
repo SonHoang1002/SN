@@ -9,7 +9,7 @@ class CartProductsController extends StateNotifier<CartProductsState> {
   CartProductsController() : super(CartProductsState());
 
   initCartProductList() async {
-    final response = await CartProductApi().getCartProductApi();
+    final response = await CartProductApi().getCartProductApi() ?? [];
     for (int i = 0; i < response.length; i++) {
       response[i]["check"] = false;
       for (int j = 0; j < response[i]["items"].length; j++) {
