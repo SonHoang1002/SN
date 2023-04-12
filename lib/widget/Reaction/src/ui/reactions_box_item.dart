@@ -59,11 +59,14 @@ class _ReactionsBoxItemState extends ConsumerState<ReactionsBoxItem>
     widget.onReactionSelected.call(widget.reaction);
   }
 
+  Future _onHovered() async {
+    await _scaleController.forward();
+  }
+
   bool _isWidgetHovered(DragData? dragData) {
+    // size: Size(392.7, 802.9)
     final widgetRect = _widgetKey.widgetPositionRect;
-
     _widgetSize ??= _widgetKey.widgetSize;
-
     return (widgetRect?.contains(dragData!.offset) ?? false) ||
         (widgetRect
                 ?.shift(Offset(0, _widgetSize!.height))
@@ -118,7 +121,7 @@ class _ReactionsBoxItemState extends ConsumerState<ReactionsBoxItem>
                 //     .setCommentMessageStatus(widget.index, isSelected);
                 _onSelected();
               } else {
-                _scaleController.forward();
+                _onHovered();
               }
             } else {
               _scaleController.reverse();
@@ -153,7 +156,7 @@ class _ReactionsBoxItemState extends ConsumerState<ReactionsBoxItem>
                   scale: isHovered
                       ? _scaleAnimation.value
                       : widget.isHaveFocus == true
-                          ? 0.8
+                          ? 0.9
                           : 1,
                   child: AnimatedContainer(
                     width: _widgetSize != null

@@ -53,7 +53,7 @@ class _UserPageState extends ConsumerState<UserPage> {
     }
 
     scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
+      if (scrollController.position.maxScrollExtent - 1000 ==
           scrollController.offset) {
         if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
         var meData = ref.watch(meControllerProvider)[0];

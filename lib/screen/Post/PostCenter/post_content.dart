@@ -29,7 +29,7 @@ class _PostContentState extends State<PostContent> {
                 onError: (exception, stackTrace) => const SizedBox(),
                 fit: BoxFit.cover),
           ),
-          child: Padding(
+          child: Container(
             padding: const EdgeInsets.all(15.0),
             child: Center(
               child: Text(
@@ -48,8 +48,10 @@ class _PostContentState extends State<PostContent> {
           ),
         );
       } else {
-        return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+        return Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+            ), 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

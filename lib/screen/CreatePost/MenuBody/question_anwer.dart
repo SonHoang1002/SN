@@ -44,7 +44,7 @@ class _QuestionAnwerState extends ConsumerState<QuestionAnwer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     widget.type == 'target'
-                        ? SvgPicture.asset(
+                        ? Image.asset(
                             "assets/target.png",
                             width: size.width * 0.35,
                             height: size.width * 0.35,
