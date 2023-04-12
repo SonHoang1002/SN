@@ -67,7 +67,7 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
                     (index) => Container(
                       width: size.width,
                       margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                      padding: const EdgeInsets.only(top: 15.0, bottom: 7.0),
                       decoration: BoxDecoration(
                           border: Border.all(width: 0.3, color: greyColor),
                           borderRadius: BorderRadius.circular(12.0)),

@@ -39,7 +39,7 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
     initializeDateFormatting('vi_VN');
     _dateFormat = DateFormat("'THÁNG' M 'NĂM' y", 'vi_VN');
     _selectedDateTime = widget.selectedDateTime;
-    _selectedEndDate = widget.selectedEndDate!;
+    _selectedEndDate = _selectedDateTime.add(const Duration(hours: 3));
     isEndDate = widget.isEndDate!;
   }
 
@@ -165,6 +165,12 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                                   onTap: () {
                                     setState(() {
                                       isEndDate = true;
+                                      _selectedEndDate = DateTime(
+                                          _selectedDateTime.year,
+                                          _selectedDateTime.month,
+                                          _selectedDateTime.day,
+                                          _selectedDateTime.hour + 3,
+                                          0);
                                     });
                                   },
                                   child: Row(
@@ -359,7 +365,7 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                                 ),
                               ),
                               Positioned(
-                                bottom: 9,
+                                bottom: 12,
                                 right: 0,
                                 left: 0,
                                 child: Container(

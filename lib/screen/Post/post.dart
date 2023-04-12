@@ -33,7 +33,8 @@ class Post extends StatelessWidget {
                   ? const SizedBox()
                   : const CrossBar(
                       height: 5,
-                      margin: 8,
+                      // margin: 8,
+                      onlyBottom: 12, onlyTop: 6,
                     ),
             ],
           )

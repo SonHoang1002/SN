@@ -62,8 +62,9 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   onTap: () {
                     widget.handlePress(medias[0]);
                   },
-                  child: Padding(
+                  child: Container(
                     padding: const EdgeInsets.only(top: 8.0),
+                    // margin: const EdgeInsets.only(bottom: 6.0),
                     child: Column(
                       children: [
                         buildDivider(color: greyColor),
@@ -72,7 +73,8 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                                 medias[0]['file'],
                                 fit: BoxFit.cover,
                               )
-                            : ImageCacheRender(path: medias[0]['url']),
+                            // : ImageCacheRender(path: medias[0]['url']),
+                            : Image.network(medias[0]['url']),
                         buildDivider(color: greyColor),
                       ],
                     ),
@@ -91,8 +93,8 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                         1
                     ? size.width
                     : null,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                child: Container(
+                  // padding: const EdgeInsets.only(top: 8),
                   child: VideoPlayerNoneController(
                       path: path,
                       media: medias[0],
@@ -103,11 +105,14 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 ));
           }
         case 2:
-          return GirdviewBuilderMedia(
-              handlePress: widget.handlePress,
-              crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
-              aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
-              medias: medias);
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: GirdviewBuilderMedia(
+                handlePress: widget.handlePress,
+                crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
+                aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
+                medias: medias),
+          );
         case 3:
           if (getAspectMedia(medias[0]) > 1) {
             return Column(

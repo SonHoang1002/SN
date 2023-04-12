@@ -623,13 +623,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       onDragging: (pos) {},
                       maxExtent: MediaQuery.of(context).size.height * 0.8,
                       minExtent: height / 2,
-                      // endExtent: 110,
                       useSafeArea: false,
                       curve: Curves.easeIn,
                       duration: const Duration(milliseconds: 300),
                       onClose: () {
-                        // showCustomBottomSheet(context, 80, "",
-                        //     widget: getBottomSheet());
                         setState(() {
                           _isShow = false;
                         });
@@ -649,7 +646,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   Widget mainBody() {
     final size = MediaQuery.of(context).size;
     return Container(
-      decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
+      // decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -671,7 +668,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     showImage: showPreviewImage,
                   )
                 : const SizedBox(),
-            Stack(
+            Column(
               children: [
                 files.isNotEmpty
                     ? GridLayoutImage(medias: files, handlePress: (media) {})
@@ -743,10 +740,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       ))
               ],
             ),
-            Container(
-              height: 80,
-              color: transparent,
-            )
+            // Container(
+            //   height: 80,
+            //   color: red,
+            // )
           ],
         ),
       ),
@@ -818,7 +815,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                           decoration: BoxDecoration(
                                               color: white,
                                               border: Border.all(
-                                                  width: 0.1, color: greyColor),
+                                                  width: 0.4, color: greyColor),
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                         ),
