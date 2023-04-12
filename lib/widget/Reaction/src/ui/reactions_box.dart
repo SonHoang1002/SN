@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
@@ -156,11 +156,11 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   bool isFirstDrag = true;
   double compareWidth = 360;
 
-  late AudioPlayer audioPlayer;
+  // late AudioPlayer audioPlayer;
   @override
   void initState() {
     super.initState();
-    audioPlayer = AudioPlayer();
+    // audioPlayer = AudioPlayer();
     holdTimer = Timer(durationLongPress, showBox);
     _boxSizeController =
         AnimationController(vsync: this, duration: widget.duration);
@@ -1009,13 +1009,13 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   }
 
   void onTapBtn() {
-    playSound('short_press_like.mp3');
+    // playSound('short_press_like.mp3');
     animControlBtnShortPress.forward();
     animControlBtnShortPress.reverse();
   }
 
   void showBox() {
-    playSound('box_up.mp3');
+    // playSound('box_up.mp3');
     isLongPress = true;
     animControlBtnLongPress.forward();
     setForwardValue();
@@ -1273,7 +1273,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   }
 
   void handleWhenDragBetweenIcon(int currentIcon) {
-    playSound('icon_focus.mp3');
+    // playSound('icon_focus.mp3');
     whichIconUserChoose = currentIcon;
     previousIconFocus = currentIconFocus;
     currentIconFocus = currentIcon;
@@ -1298,9 +1298,9 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   void onTapUpBtn(TapUpDetails? tapUpDetail) async {
     if (isLongPress) {
       if (whichIconUserChoose == 0) {
-        playSound('box_down.mp3');
+        // playSound('box_down.mp3');
       } else {
-        playSound('icon_choose.mp3');
+        // playSound('icon_choose.mp3');
       }
     }
 
@@ -1704,12 +1704,12 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
     });
   }
 
-  Future playSound(String nameSound) async {
-    await audioPlayer.stop();
-    final file = File('${(await getTemporaryDirectory()).path}/$nameSound');
-    await file.writeAsBytes((await loadAsset(nameSound)).buffer.asUint8List());
-    audioPlayer.play(UrlSource(file.path));
-  }
+  // Future playSound(String nameSound) async {
+  //   await audioPlayer.stop();
+  //   final file = File('${(await getTemporaryDirectory()).path}/$nameSound');
+  //   await file.writeAsBytes((await loadAsset(nameSound)).buffer.asUint8List());
+  //   audioPlayer.play(UrlSource(file.path));
+  // }
 
   Future loadAsset(String nameSound) async {
     return await rootBundle.load('assets/sounds/$nameSound');
