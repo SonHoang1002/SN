@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -579,7 +578,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                           ? pushIconLoveUp.value + 20
                           : pushIconLoveUp.value
                       : currentIconFocus == 2
-                          ? pushIconLoveUp.value -10
+                          ? pushIconLoveUp.value - 10
                           : pushIconLoveUp.value - 30),
               padding: EdgeInsets.only(
                 left: isSizeBig
@@ -1709,23 +1708,10 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
     await audioPlayer.stop();
     final file = File('${(await getTemporaryDirectory()).path}/$nameSound');
     await file.writeAsBytes((await loadAsset(nameSound)).buffer.asUint8List());
-    audioPlayer.play(file.path, isLocal: true);
+    audioPlayer.play(UrlSource(file.path));
   }
 
   Future loadAsset(String nameSound) async {
     return await rootBundle.load('assets/sounds/$nameSound');
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
