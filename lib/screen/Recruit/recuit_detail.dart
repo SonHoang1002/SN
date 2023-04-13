@@ -22,33 +22,13 @@ class RecruitDetail extends ConsumerStatefulWidget {
 
 class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   bool isRecruitInterested = false;
+  dynamic recruitDetail = {};
+
   @override
   void initState() {
     super.initState();
     if (mounted) {
-      Future.delayed(
-          Duration.zero,
-          () => ref
-              .read(recruitControllerProvider.notifier)
-              .getDetailRecruit(widget.data['id']));
-      Future.delayed(
-          Duration.zero,
-          () => ref
-              .read(recruitControllerProvider.notifier)
-              .getListRecruitPropose(
-                  {'exclude_current_user': true, 'limit': 5}));
-      Future.delayed(
-          Duration.zero,
-          () => ref
-                  .read(recruitControllerProvider.notifier)
-                  .getListRecruitSimilar({
-                'recruit_id': widget.data['id'],
-                'recruit_category_id': widget.data['recruit_category']['id'],
-                'limit': 5,
-                'time': 'upcoming'
-              }));
-      isRecruitInterested =
-          widget.data['recruit_relationships']['follow_recruit'];
+      loadData();
     }
   }
 
@@ -57,9 +37,34 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
     super.dispose();
   }
 
+  void loadData() async {
+    await ref
+        .read(recruitControllerProvider.notifier)
+        .getDetailRecruit(widget.data['id']);
+    await ref
+        .read(recruitControllerProvider.notifier)
+        .getListRecruitPropose({'exclude_current_user': true, 'limit': 5});
+    await ref.read(recruitControllerProvider.notifier).getListRecruitSimilar({
+      'recruit_id': widget.data['id'],
+      'recruit_category_id': widget.data['recruit_category']['id'],
+      'limit': 5,
+      'time': 'upcoming'
+    });
+    recruitDetail = ref.read(recruitControllerProvider).detailRecruit;
+    isRecruitInterested =
+        widget.data['recruit_relationships']['follow_recruit'];
+    setState(() {});
+  }
+
+  /// Re-render when component changed
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   recruitDetail = ref.watch(recruitControllerProvider).detailRecruit;
+  // }
+
   @override
   Widget build(BuildContext context) {
-    var recruitDetail = ref.watch(recruitControllerProvider).detailRecruit;
     final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -71,25 +76,28 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
           onTap: () {
             Navigator.pop(context);
           },
-          child: Container(
-            height: 26,
-            width: 26,
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(width: 0.2, color: greyColor)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(FontAwesomeIcons.angleLeft, color: Colors.white, size: 16),
-              ],
-            ),
-          ),
+          child: recruitDetail['title'] != null
+              ? Container(
+                  height: 26,
+                  width: 26,
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(width: 0.2, color: greyColor)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(FontAwesomeIcons.angleLeft,
+                          color: Colors.white, size: 16),
+                    ],
+                  ),
+                )
+              : const SizedBox.shrink(),
         ),
         elevation: 0.0,
       ),
-      body: recruitDetail.isNotEmpty
+      body: recruitDetail['title'] != null
           ? Stack(
               children: [
                 RefreshIndicator(

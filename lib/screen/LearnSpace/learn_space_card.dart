@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -18,23 +20,36 @@ class LearnSpaceCard extends ConsumerStatefulWidget {
 class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
   bool courseFee = false;
   bool courseNoFee = false;
+  final scrollController = ScrollController();
+
   late double width;
   late double height;
+  var paramsCourse = {
+    "exclude_current_user": true,
+    "visibility": "public",
+    'limit': 10,
+    'status': 'approved',
+  };
   @override
   void initState() {
     super.initState();
     if (mounted) {
-      _fetchCourseList();
+      _fetchCourseList(paramsCourse);
     }
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        if (ref.watch(learnSpaceStateControllerProvider).isMore == true) {
+          String maxId =
+              ref.read(learnSpaceStateControllerProvider).course.last['id'];
+          _fetchCourseList({'max_id': maxId, ...paramsCourse});
+        }
+      }
+    });
   }
 
-  void _fetchCourseList() {
-    ref.read(learnSpaceStateControllerProvider.notifier).getListCourses({
-      "exclude_current_user": true,
-      "visibility": "public",
-      'limit': 10,
-      'status': 'approved',
-    });
+  void _fetchCourseList(params) {
+    ref.read(learnSpaceStateControllerProvider.notifier).getListCourses(params);
   }
 
   void _fetchCourseFeeList() {
@@ -58,13 +73,21 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
   }
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List course = ref.watch(learnSpaceStateControllerProvider).course;
+    bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
     return Expanded(
       child: SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -92,7 +115,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                           }
                         });
                         if (!courseFee && !courseNoFee) {
-                          _fetchCourseList();
+                          _fetchCourseList(paramsCourse);
                         }
                         if (courseFee && !courseNoFee) {
                           _fetchCourseFeeList();
@@ -134,7 +157,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                       });
 
                       if (!courseFee && !courseNoFee) {
-                        _fetchCourseList();
+                        _fetchCourseList(paramsCourse);
                       }
                       if (!courseFee && courseNoFee) {
                         _fetchCourseNoFeeList();
@@ -194,7 +217,16 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                     : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
                               ),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LearnSpaceDetail(
+                                    data: course[index],
+                                  ),
+                                ),
+                              );
+                            },
                             textCard: Padding(
                               padding: const EdgeInsets.only(
                                   bottom: 16.0,
@@ -333,11 +365,17 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                           ),
                         );
                       } else {
-                        return const SizedBox();
+                        isMore == true
+                            ? const Center(child: CupertinoActivityIndicator())
+                            : const SizedBox();
                       }
+                      return null;
                     },
                   ))
                 : const SizedBox(),
+            isMore == true
+                ? const Center(child: CupertinoActivityIndicator())
+                : const SizedBox()
           ],
         ),
       ),

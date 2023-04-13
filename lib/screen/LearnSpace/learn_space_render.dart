@@ -13,7 +13,7 @@ class LearnSpaceRender extends StatefulWidget {
 }
 
 class _LearnSpaceRenderState extends State<LearnSpaceRender> {
-  String menuSelected = 'recruit_interesting';
+  String menuSelected = 'course_interesting';
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,16 +23,16 @@ class _LearnSpaceRenderState extends State<LearnSpaceRender> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: List.generate(
-                recruitMenu.length,
+                courseMenu.length,
                 (index) => InkWell(
                       onTap: () {
                         setState(() {
-                          menuSelected = recruitMenu[index]['key'];
+                          menuSelected = courseMenu[index]['key'];
                         });
                       },
                       child: ChipMenu(
-                          isSelected: menuSelected == recruitMenu[index]['key'],
-                          label: recruitMenu[index]['label']),
+                          isSelected: menuSelected == courseMenu[index]['key'],
+                          label: courseMenu[index]['label']),
                     )),
           ),
         ),

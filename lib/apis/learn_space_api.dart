@@ -4,4 +4,8 @@ class LearnSpaceApi {
   getListCoursesApi(params) async {
     return await Api().getRequestBase('/api/v1/courses', params);
   }
+
+  getDetailCoursesApi(id) async {
+    return await Api().getRequestBase('/api/v1/courses/$id', null);
+  }
 }

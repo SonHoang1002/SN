@@ -90,7 +90,32 @@ List recruitMenu = [
   //   "label": "CV đã lưu",
   // },
 ];
-
+List courseMenu = [
+  {
+    "key": "course_interesting",
+    "label": "Khám phá",
+  },
+  {
+    "key": "course_invite",
+    "label": "Lời mời ",
+  },
+  {
+    "key": "course_following",
+    "label": "Quan tâm ",
+  },
+  {
+    "key": "course_host",
+    "label": "Tổ chức",
+  },
+  {
+    "key": "course_learned",
+    "label": "Khoá học đã học",
+  },
+  {
+    "key": "course_save",
+    "label": "Thư viện nội dung",
+  },
+];
 List listSocial = [
   {
     "key": 'friendSocial',
