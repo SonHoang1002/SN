@@ -7,6 +7,7 @@ import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_discussion.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
@@ -677,6 +678,14 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                             ? LearnSpaceIntro(
                                 courseDetail: courseDetail,
                               )
+                            : const SizedBox.shrink(),
+                        courseMenu == 'discussion' &&
+                                (courseDetail['course_relationships']
+                                        ['host_course'] ||
+                                    courseDetail['course_relationships']
+                                        ['participant_course']) &&
+                                courseDetail['allow_discussion']
+                            ? const LearnSpaceDiscusstion()
                             : const SizedBox.shrink(),
                         const SizedBox(height: 70),
                       ],

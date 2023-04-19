@@ -3,6 +3,7 @@ import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_card.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_host.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_interested.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_invitations.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_learned.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_library.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
@@ -55,6 +56,9 @@ class _LearnSpaceRenderState extends State<LearnSpaceRender> {
             : const SizedBox(),
         menuSelected == 'course_save'
             ? const LearnSpaceLibrary()
+            : const SizedBox(),
+        menuSelected == 'course_invite'
+            ? const LearnSpaceInvitations()
             : const SizedBox(),
       ],
     );

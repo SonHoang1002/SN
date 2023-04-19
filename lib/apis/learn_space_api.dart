@@ -9,6 +9,10 @@ class LearnSpaceApi {
     return await Api().getRequestBase('/api/v1/course_content_library', null);
   }
 
+  Future getListCoursesInvitationsApi(params) async {
+    return await Api().getRequestBase('/api/v1/course_invitations', params);
+  }
+
   Future getDetailCoursesApi(id) async {
     return await Api().getRequestBase('/api/v1/courses/$id', null);
   }

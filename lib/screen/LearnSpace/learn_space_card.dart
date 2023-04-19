@@ -21,6 +21,8 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
   bool courseFee = false;
   bool courseNoFee = false;
   final scrollController = ScrollController();
+  final scrollControllerCourseFee = ScrollController();
+  final scrollControllerCourseNoFee = ScrollController();
 
   late double width;
   late double height;
@@ -30,12 +32,27 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
     'limit': 10,
     'status': 'approved',
   };
+  var paramsCourseFee = {
+    "exclude_current_user": true,
+    "visibility": "public",
+    'limit': 10,
+    'status': 'approved',
+    'free': false,
+  };
+  var paramsCourseNoFee = {
+    "exclude_current_user": true,
+    "visibility": "public",
+    'limit': 10,
+    'status': 'approved',
+    'free': true,
+  };
   @override
   void initState() {
     super.initState();
     if (mounted) {
       _fetchCourseList(paramsCourse);
     }
+
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -43,6 +60,26 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
           String maxId =
               ref.read(learnSpaceStateControllerProvider).course.last['id'];
           _fetchCourseList({'max_id': maxId, ...paramsCourse});
+        }
+      }
+    });
+    scrollControllerCourseFee.addListener(() {
+      if (scrollControllerCourseFee.position.maxScrollExtent ==
+          scrollControllerCourseFee.offset) {
+        if (ref.watch(learnSpaceStateControllerProvider).isMore == true) {
+          String maxId =
+              ref.read(learnSpaceStateControllerProvider).course.last['id'];
+          _fetchCourseList({'max_id': maxId, ...paramsCourseFee});
+        }
+      }
+    });
+    scrollControllerCourseNoFee.addListener(() {
+      if (scrollControllerCourseNoFee.position.maxScrollExtent ==
+          scrollControllerCourseNoFee.offset) {
+        if (ref.watch(learnSpaceStateControllerProvider).isMore == true) {
+          String maxId =
+              ref.read(learnSpaceStateControllerProvider).course.last['id'];
+          _fetchCourseList({'max_id': maxId, ...paramsCourseNoFee});
         }
       }
     });
@@ -75,6 +112,8 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
   @override
   void dispose() {
     scrollController.dispose();
+    scrollControllerCourseFee.dispose();
+    scrollControllerCourseNoFee.dispose();
     super.dispose();
   }
 
@@ -99,7 +138,11 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
           }
         },
         child: SingleChildScrollView(
-          controller: scrollController,
+          controller: !courseFee && !courseNoFee
+              ? scrollController
+              : courseFee && !courseNoFee
+                  ? scrollControllerCourseFee
+                  : scrollControllerCourseNoFee,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

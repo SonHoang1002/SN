@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/apis/learn_space_api.dart';
 @immutable
 class LearnSpaceState {
   final List course;
+  final List courseInvitations;
   final List coursePropose;
   final List courseSimilar;
   final bool isMore;
@@ -15,6 +16,7 @@ class LearnSpaceState {
   const LearnSpaceState({
     this.course = const [],
     this.isMore = true,
+    this.courseInvitations = const [],
     this.coursePropose = const [],
     this.detailCourse = const {},
     this.courseLibrary = const [],
@@ -24,6 +26,7 @@ class LearnSpaceState {
   LearnSpaceState copyWith({
     List course = const [],
     List coursePropose = const [],
+    List courseInvitations = const [],
     bool isMore = true,
     List courseLibrary = const [],
     dynamic detailCourse = const {},
@@ -32,6 +35,7 @@ class LearnSpaceState {
     return LearnSpaceState(
       course: course,
       isMore: isMore,
+      courseInvitations: courseInvitations,
       coursePropose: coursePropose,
       courseLibrary: courseLibrary,
       detailCourse: detailCourse,
@@ -64,6 +68,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
                 : false,
             detailCourse: state.detailCourse,
             courseLibrary: state.courseLibrary,
+            courseInvitations: state.courseInvitations,
             coursePropose: state.coursePropose,
             courseSimilar: state.courseSimilar);
       }
@@ -77,6 +82,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           isMore: false,
           detailCourse: state.detailCourse,
           courseLibrary: state.courseLibrary,
+          courseInvitations: state.courseInvitations,
           coursePropose: state.coursePropose,
           courseSimilar: state.courseSimilar);
     }
@@ -89,6 +95,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           course: state.course,
           isMore: state.isMore,
           detailCourse: response,
+          courseInvitations: state.courseInvitations,
           coursePropose: state.coursePropose,
           courseLibrary: state.courseLibrary,
           courseSimilar: state.courseSimilar);
@@ -97,14 +104,47 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
 
   getListCoursesLibraries() async {
     List response = await LearnSpaceApi().getListCoursesLibrariesApi();
-
     if (response.isNotEmpty) {
       state = state.copyWith(
           courseLibrary: response,
           course: state.course,
           detailCourse: state.detailCourse,
+          courseInvitations: state.courseInvitations,
           coursePropose: state.coursePropose,
           isMore: state.isMore,
+          courseSimilar: state.courseSimilar);
+    }
+  }
+
+  getListCoursesInvitations(params) async {
+    var response = await LearnSpaceApi().getListCoursesInvitationsApi(params);
+    if (response.isNotEmpty) {
+      if (mounted) {
+        var newGrows = response['data']
+            .where((item) => !state.courseInvitations
+                .map((inv) => inv['course']['id'])
+                .contains(item['course']['id']))
+            .toList();
+        state = state.copyWith(
+            courseInvitations: [...state.courseInvitations, ...newGrows],
+            courseLibrary: state.courseLibrary,
+            course: state.course,
+            detailCourse: state.detailCourse,
+            coursePropose: state.coursePropose,
+            isMore: newGrows.isEmpty ? false : state.isMore,
+            courseSimilar: state.courseSimilar);
+      }
+    } else {
+      var newGrows = response['data']
+          .where((item) => !state.courseInvitations.contains(item))
+          .toList();
+      state = state.copyWith(
+          courseInvitations: [...state.courseInvitations, ...newGrows],
+          courseLibrary: state.courseLibrary,
+          course: state.course,
+          detailCourse: state.detailCourse,
+          coursePropose: state.coursePropose,
+          isMore: false,
           courseSimilar: state.courseSimilar);
     }
   }
@@ -115,6 +155,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
       state = state.copyWith(
           course: state.course,
           detailCourse: state.detailCourse,
+          courseInvitations: state.courseInvitations,
           courseLibrary: state.courseLibrary,
           coursePropose: response,
           isMore: state.isMore,
@@ -127,6 +168,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
           course: state.course,
+          courseInvitations: state.courseInvitations,
           detailCourse: state.detailCourse,
           courseLibrary: state.courseLibrary,
           isMore: state.isMore,
@@ -151,6 +193,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
     state = state.copyWith(
       course: [...state.course]..[indexCourseUpdate] = courseUpdate,
       detailCourse: state.detailCourse,
+      courseInvitations: state.courseInvitations,
       isMore: state.isMore,
       courseLibrary: state.courseLibrary,
       coursePropose: state.coursePropose,
@@ -164,6 +207,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
       dynamic response = await LearnSpaceApi().getDetailCoursesApi(id);
       state = state.copyWith(
         course: state.course,
+        courseInvitations: state.courseInvitations,
         detailCourse: response,
         courseLibrary: state.courseLibrary,
         isMore: state.isMore,
