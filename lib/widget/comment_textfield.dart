@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:social_network_app_mobile/apis/create_post_apis/preview_url_post_api.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
@@ -96,7 +97,6 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       List newList = await FriendsApi().getListFriendApi(
               ref.watch(meControllerProvider)[0]['id'], {"limit": 20}) ??
           [];
-
       setState(() {
         listMentions = newList.length > 5 ? newList.sublist(0, 5) : newList;
       });
@@ -202,14 +202,16 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
 
       String message =
           '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
-
       textController.text = message;
-
+      if (textController.text.isNotEmpty) {
+        final selection = TextSelection.fromPosition(
+            TextPosition(offset: textController.text.length));
+        textController.selection = selection;
+      } 
       setState(() {
         listMentions = [];
         content = message;
       });
-
       setState(() {
         listMentionsSelected = [...listMentionsSelected, data];
       });
@@ -290,7 +292,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
             ? "child"
             : 'parent',
         "typeStatus": widget.commentSelected?['typeStatus']
-      });
+      }, textController.text.trim());
       textController.clear();
       setState(() {
         files = [];
@@ -416,7 +418,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     ),
                   )
                 : const SizedBox(),
-            Row(children: [
+            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
               GestureDetector(
                 onTap: () {
                   Navigator.push(

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:comment_tree/comment_tree.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,11 +10,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:path/path.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
+import 'package:social_network_app_mobile/helper/split_any.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_card.dart';
 import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
@@ -21,9 +26,11 @@ import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manage
 import 'package:social_network_app_mobile/widget/Reaction/flutter_reaction_button.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/widget/preview_link.dart';
 import 'package:social_network_app_mobile/widget/reaction_list.dart';
 import 'package:social_network_app_mobile/widget/report_category.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CommentTree extends StatefulHookConsumerWidget {
   const CommentTree(
@@ -88,7 +95,6 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
     commentChild = widget.commentParent['replies_total'] > 0
         ? [Comment(avatar: 'icon', userName: 'null', content: '')]
         : [];
-
     setState(() {
       replyCount = widget.commentParent?['replies_total'];
     });
@@ -100,7 +106,6 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
   @override
   Widget build(BuildContext context) {
     dynamic avatarMedia = widget.commentParent?['account']?['avatar_media'];
-
     checkElement() {
       int indexCommentChild = postChildComment.indexWhere(
           (element) => element['id'] == widget.commentChildCreate['id']);
@@ -251,7 +256,8 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
                   commentNode: widget.commentNode,
                   post: postChildComment.firstWhere(
                       (element) => element['id'] == data.content,
-                      orElse: () => null));
+                      orElse: () => null),
+                );
         },
         contentRoot: (context, data) {
           return BoxComment(
@@ -270,23 +276,21 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
 }
 
 class BoxComment extends StatefulHookConsumerWidget {
+  final CommentTree widget;
+  final dynamic data;
   final dynamic post;
   final Function? getCommentSelected;
   final FocusNode? commentNode;
   final Function? handleUpdatePost;
 
-  const BoxComment({
-    super.key,
-    required this.widget,
-    required this.data,
-    this.post,
-    this.getCommentSelected,
-    this.commentNode,
-    this.handleUpdatePost,
-  });
-
-  final CommentTree widget;
-  final dynamic data;
+  const BoxComment(
+      {super.key,
+      required this.widget,
+      required this.data,
+      this.post,
+      this.getCommentSelected,
+      this.commentNode,
+      this.handleUpdatePost});
 
   @override
   ConsumerState<BoxComment> createState() => _BoxCommentState();
@@ -295,7 +299,7 @@ class BoxComment extends StatefulHookConsumerWidget {
 class _BoxCommentState extends ConsumerState<BoxComment> {
   dynamic postRender;
   String textRender = '';
-
+  List oldTags = [];
   @override
   Widget build(BuildContext context) {
     useEffect(() {
@@ -304,13 +308,10 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
           postRender = widget.post;
         });
       }
-
       return null;
     }, [widget.post]);
-
     String viewerReaction = postRender?['viewer_reaction'] ?? '';
     List reactions = postRender?['reactions'] ?? [];
-
     List sortReactions = reactions
         .map((element) => {
               "type": element['type'],
@@ -322,46 +323,135 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
       ..sort(
         (a, b) => a['count'].compareTo(b['count']),
       );
-
     List renderListReactions = sortReactions.reversed.toList();
+
+    Color? getColorCommentText(List conditions, dynamic text) {
+      Color? color;
+      if (text.contains("https://") || text.contains("http://")) {
+        color = Colors.blue;
+      }
+      if (conditions.contains(text)) {
+        color = secondaryColor;
+      }
+      return color;
+    }
+
+    GestureRecognizer? getColorCommentGesture(List conditions, dynamic text) {
+      return TapGestureRecognizer()
+        ..onTap = () async {
+          if (text.contains("https://") || text.contains("http://")) {
+            if (await canLaunchUrl(Uri.parse(text))) {
+              await launchUrl(Uri.parse(text));
+            } else {
+              return;
+            }
+          }
+          if (conditions.contains(text)) {
+            // tags friends, group
+          }
+        };
+    }
+
+    List checkHasLink(List conditions, dynamic valueText) {
+      RegExp regExp = RegExp(r'https?:\/\/\S+');
+      List<String> results = [];
+      int lastIndex = 0;
+      Iterable<RegExpMatch> matcheLinks = regExp.allMatches(valueText);
+      for (RegExpMatch match in matcheLinks) {
+        if (match.start > lastIndex) {
+          results.add(valueText.substring(lastIndex, match.start).trim());
+        }
+        results.add(match.group(0)!);
+        lastIndex = match.end;
+      }
+
+      if (lastIndex < valueText.length) {
+        results.add(valueText.substring(lastIndex).trim());
+      }
+
+      if (conditions.isNotEmpty) {
+        List finalResults = [];
+        for (var element in results) {
+          finalResults.add(splitWithConditions(conditions, element));
+        }
+        return finalResults.expand((subArr) => subArr).toList();
+      }
+      return results;
+    }
 
     handleGetComment() {
       if (postRender == null) return const [TextSpan(text: '')];
       List tags = postRender['status_tags'] ?? [];
       String str = postRender['content'] ?? '';
-
       List<TextSpan> listRender = [];
-
       List matches = str.split(RegExp(r'\[|\]'));
+      // List listIdTags = tags.map((e) => e['entity_id']).toList();
+      // check tag friend, group,.. conditions
 
-      List listIdTags = tags.map((e) => e['entity_id']).toList();
-
-      for (final subStr in matches) {
-        listRender.add(
-          TextSpan(
-              text: listIdTags.contains(subStr)
-                  ? tags.firstWhere((element) => element['entity_id'] == subStr,
-                      orElse: () => {})['name']
-                  : subStr,
-              style: listIdTags.contains(subStr)
-                  ? const TextStyle(
-                      color: secondaryColor, fontWeight: FontWeight.w500)
-                  : null),
-        );
+      List conditions = tags.map((e) => e['name']).toList();
+      // trường hợp người dùng tags thêm mà api chưa cập nhật bổ sung
+      if (oldTags.isNotEmpty) {
+        for (var element in oldTags) {
+          if (!conditions.contains(element)) {
+            conditions.add(element);
+          }
+        }
       }
-
+      // lưu giữ các tags trước đó đã có
+      oldTags = conditions;
+      for (final subStr in matches) {
+        TextSpan textSpan = TextSpan(
+            text: "",
+            children: checkHasLink(conditions, subStr).map((e) {
+              return TextSpan(
+                  text: "$e ",
+                  recognizer: getColorCommentGesture(conditions, e),
+                  style: TextStyle(
+                      color: getColorCommentText(conditions, e),
+                      fontWeight: conditions.contains(e)
+                          ? FontWeight.bold
+                          : FontWeight.normal));
+            }).toList());
+        listRender.add(textSpan);
+      }
       String text = postRender['content'];
-
       for (var mention in tags) {
         text = text.replaceAll('[${mention['entity_id']}]', mention['name']);
       }
-
       setState(() {
         textRender = text;
       });
-
       return listRender;
     }
+    // handleGetComment() {
+    //   if (postRender == null) return const [TextSpan(text: '')];
+    //   List tags = postRender['status_tags'] ?? [];
+    //   String str = postRender['content'] ?? '';
+    //   List<TextSpan> listRender = [];
+    //   List matches = str.split(RegExp(r'\[|\]'));
+    //   List listIdTags = tags.map((e) => e['entity_id']).toList();
+    //   for (final subStr in matches) {
+    //     listRender.add(
+    //       TextSpan(
+    //           text: listIdTags.contains(subStr)
+    //               ? tags.firstWhere((element) => element['entity_id'] == subStr,
+    //                   orElse: () => {})['name']
+    //               : subStr,
+    //           style: listIdTags.contains(subStr)
+    //               ? const TextStyle(
+    //                   color: secondaryColor, fontWeight: FontWeight.w500)
+    //               : null),
+    //     );
+    //   }
+    //   String text = postRender['content'];
+    //   for (var mention in tags) {
+    //     text = text.replaceAll('[${mention['entity_id']}]', mention['name']);
+    //   }
+    //   setState(() {
+    //     textRender = text;
+    //   });
+    //   return listRender;
+    // }
 
     handleReaction(react) async {
       var newPost = postRender;
@@ -399,7 +489,6 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
           "viewer_reaction": react,
           "reactions": newFavourites
         };
-
         setState(() {
           postRender = newPost;
         });
@@ -414,11 +503,9 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
           "viewer_reaction": null,
           "reactions": newFavourites
         };
-
         setState(() {
           postRender = newPost;
         });
-
         await PostApi().unReactionPostApi(postRender['id']);
       }
     }
@@ -704,7 +791,7 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                             ],
                           ),
                   ),
-                )
+                ),
               ],
             ),
           )
@@ -717,9 +804,7 @@ class ActionComment extends ConsumerWidget {
   final String textRender;
   final FocusNode? commentNode;
   final Function? handleUpdatePost;
-
   final Function? getCommentSelected;
-
   const ActionComment({
     super.key,
     this.post,
@@ -852,11 +937,12 @@ class _PostMediaCommentState extends State<PostMediaComment> {
     List medias = widget.post['media_attachments'] ?? [];
     final size = MediaQuery.of(context).size;
     renderCard() {
-      if (card['link'] == null) return const SizedBox();
+      if (card['image'] == null) return const SizedBox();
       if (card['description'] == 'sticky') {
         return ImageCacheRender(
           path: card['link'],
           width: 90.0,
+          height: 90.0,
         );
       } else if (card['provider_name'] == 'GIPHY') {
         return Container(
@@ -869,7 +955,11 @@ class _PostMediaCommentState extends State<PostMediaComment> {
           ),
         );
       } else {
-        return PostCard(post: widget.post);
+        return PostCard(
+          post: widget.post,
+          axis: Axis.horizontal,
+          border: Border.all(color: greyColor, width: 0.4),
+        );
       }
     }
 
@@ -912,6 +1002,7 @@ class _PostMediaCommentState extends State<PostMediaComment> {
                         MaterialPageRoute(
                             builder: (context) => PostOneMediaDetail(
                                   postMedia: widget.post,
+                                  // post: widget.post,
                                 )));
                   },
                   child: Container(

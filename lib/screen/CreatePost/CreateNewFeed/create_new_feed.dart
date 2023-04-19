@@ -425,6 +425,18 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
   }
 
+  bool checkHasContent() {
+    if (gifLink.isNotEmpty ||
+        files.isNotEmpty ||
+        content.isNotEmpty ||
+        checkin != null ||
+        previewUrlData != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   handleChooseMenu(menu, subType) {
     if (menu == null) return;
 
@@ -528,8 +540,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        if (checkisShowBackground() == true) {
+                      onTap: () { 
+                        if (checkHasContent()) {
                           showCupertinoModalPopup(
                               context: context,
                               builder: (context) {
@@ -1104,8 +1116,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     );
   }
 }
-
-// https://vnexpress.net/de-xuat-thue-nha-tu-15-m2-moi-duoc-dang-ky-thuong-tru-ha-noi-4585797.html
 
 // ignore: must_be_immutable
 class PreviewUrlPost extends StatelessWidget {

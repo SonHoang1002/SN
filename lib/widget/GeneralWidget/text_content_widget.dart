@@ -7,7 +7,8 @@ Widget buildTextContent(String title, bool isBold,
     int? maxLines,
     bool? isItalic = false,
     TextOverflow? overflow,
-    IconData? iconData}) {
+    IconData? iconData,
+    FontWeight? fontWeight}) {
   return Container(
     alignment: isCenterLeft! ? Alignment.centerLeft : Alignment.center,
     child: Wrap(
@@ -30,7 +31,7 @@ Widget buildTextContent(String title, bool isBold,
               color: colorWord,
               fontStyle: isItalic! ? FontStyle.italic : FontStyle.normal,
               fontSize: fontSize ?? 17,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,),
         ),
       ],
     ),
