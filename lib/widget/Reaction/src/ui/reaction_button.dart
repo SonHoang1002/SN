@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+
+import 'package:social_network_app_mobile/widget/Reaction/src/ui/test/show_position_fill.dart';
 import '../../../../providers/posts/reaction_message_content.dart';
 import '../models/reaction.dart';
 import '../utils/extensions.dart';
@@ -61,6 +65,7 @@ class ReactionButton<T> extends ConsumerStatefulWidget {
   final Function? onIconFocus;
 
   final Function? onHoverReaction;
+  final Function? onCancelReaction;
 
   const ReactionButton(
       {Key? key,
@@ -82,7 +87,8 @@ class ReactionButton<T> extends ConsumerStatefulWidget {
       this.handlePressButton,
       this.onWaitingReaction,
       this.onIconFocus,
-      this.onHoverReaction})
+      this.onHoverReaction,
+      this.onCancelReaction})
       : super(key: key);
 
   @override
@@ -109,6 +115,11 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
   void initState() {
     super.initState();
     _init();
+    Future.delayed(Duration.zero, () async {
+      if (ref.watch(showPositionFillProvider).showPositionFillStatus == null) {
+        ref.read(showPositionFillProvider.notifier).setShowPositionFill(false);
+      }
+    });
   }
 
   @override
@@ -120,11 +131,25 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: (details) {},
+      onPointerMove: (details) {},
+      onPointerPanZoomUpdate: (details) {},
+      onPointerUp: (details) {},
+      child: GestureDetector(
         key: _buttonKey,
         behavior: HitTestBehavior.translucent,
         onTap: () {
           widget.handlePressButton!();
+        },
+        onTapDown: (details) {
+          // Timer(const Duration(milliseconds: 400), () {
+          //   _showReactionsBox(details.globalPosition);
+          //   widget.onWaitingReaction != null
+          //       ? widget.onWaitingReaction!()
+          //       : null;
+          // });
         },
         onLongPressStart: (details) {
           // ref
@@ -133,17 +158,23 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
           // ref
           //     .read(commentMessageContentProvider.notifier)
           //     .setCommentMessage("Trượt ngón tay để chọn");
+          // ref
+          //     .read(showPositionFillProvider.notifier)
+          //     .setShowPositionFill(false);
+
           _showReactionsBox(details.globalPosition);
-        },
+          widget.onWaitingReaction != null ? widget.onWaitingReaction!() : null;
+        }, 
         child: (_selectedReaction ?? widget.reactions.first).icon,
-      );
+      ),
+    );
+  }
 
   void _showReactionsBox(Offset buttonOffset) async {
     final buttonSize = _buttonKey.widgetSize;
     final reactionButton = await Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
-        // transitionDuration: const Duration(milliseconds: 50),
         pageBuilder: (_, __, ___) {
           return ReactionsBox(
             buttonOffset: buttonOffset,
@@ -163,6 +194,7 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
             onWaitingReaction: widget.onWaitingReaction,
             onIconFocus: widget.onIconFocus,
             onHoverReaction: widget.onHoverReaction,
+            onCancelReaction: widget.onCancelReaction,
           );
         },
       ),

@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
@@ -62,22 +63,20 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   onTap: () {
                     widget.handlePress(medias[0]);
                   },
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    // margin: const EdgeInsets.only(bottom: 6.0),
-                    child: Column(
-                      children: [
-                        buildDivider(color: greyColor),
-                        medias[0]['subType'] == 'local'
-                            ? Image.file(
-                                medias[0]['file'],
-                                fit: BoxFit.cover,
-                              )
-                            // : ImageCacheRender(path: medias[0]['url']),
-                            : Image.network(medias[0]['url']),
-                        buildDivider(color: greyColor),
-                      ],
-                    ),
+                  child: Column(
+                    children: [
+                      buildDivider(color: greyColor),
+                      medias[0]['subType'] == 'local'
+                          ? Image.file(
+                              medias[0]['file'],
+                              fit: BoxFit.cover,
+                            )
+                          // : ImageCacheRender(path: medias[0]['url']),
+                          : Hero(
+                              tag: medias[0]['id'],
+                              child: ExtendedImage.network(medias[0]['url'])),
+                      buildDivider(color: greyColor),
+                    ],
                   ),
                 ),
               ),
@@ -94,7 +93,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     ? size.width
                     : null,
                 child: Container(
-                  // padding: const EdgeInsets.only(top: 8),
                   child: VideoPlayerNoneController(
                       path: path,
                       media: medias[0],
@@ -105,14 +103,11 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 ));
           }
         case 2:
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: GirdviewBuilderMedia(
-                handlePress: widget.handlePress,
-                crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
-                aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
-                medias: medias),
-          );
+          return GirdviewBuilderMedia(
+              handlePress: widget.handlePress,
+              crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
+              aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
+              medias: medias);
         case 3:
           if (getAspectMedia(medias[0]) > 1) {
             return Column(

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
-// import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
+import 'package:social_network_app_mobile/providers/posts/reaction_message_content.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Reaction/src/models/reaction.dart';
+import 'package:social_network_app_mobile/widget/Reaction/src/ui/test/show_position_fill.dart';
 import 'package:social_network_app_mobile/widget/Reaction/src/utils/extensions.dart';
 import 'package:social_network_app_mobile/widget/Reaction/src/utils/reactions_position.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +49,8 @@ class ReactionsBox extends ConsumerStatefulWidget {
 
   final Function? onHoverReaction;
   final Function? onCancelReaction;
+  // final Function? onCancelReaction;
+
   const ReactionsBox(
       {Key? key,
       required this.buttonOffset,
@@ -156,11 +160,11 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   bool isFirstDrag = true;
   double compareWidth = 360;
 
-  // late AudioPlayer audioPlayer;
+  late AudioPlayer audioPlayer;
   @override
   void initState() {
     super.initState();
-    // audioPlayer = AudioPlayer();
+    audioPlayer = AudioPlayer();
     holdTimer = Timer(durationLongPress, showBox);
     _boxSizeController =
         AnimationController(vsync: this, duration: widget.duration);
@@ -186,6 +190,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
 
     // Icon when release
     initAnimationIconWhenRelease();
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   @override
@@ -202,14 +207,16 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                 onTapUpBtn(null);
                 Navigator.of(context).pop();
               },
-              child: Container(
-                color: Colors.transparent,
-              ),
+              onPointerUp: (_) { 
+              },
+              onPointerMove: (_) { 
+              },
+              child: Container(color: transparent),
             ),
           ),
           PositionedDirectional(
               top: _getVerticalPosition() - 100,
-              start: _getHorizontalPosition() - 45,
+              start: _getHorizontalPosition(),
               child: GestureDetector(
                 onTapUp: (details) {
                   onTapBtn();
@@ -370,7 +377,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
         ]));
   }
 
-  double setMarginForRenderBox() {
+  double setBottomMarginBox() {
     double margin = 0;
     bool isSizeBig = width > compareWidth;
     if (isSizeBig) {
@@ -380,7 +387,8 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
         if (currentIconFocus == 2) {
           margin = 98;
         } else if (currentIconFocus == 3) {
-          margin = 100;
+          // margin = 100;
+          margin = 90;
         }
       }
     } else {
@@ -388,10 +396,15 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
       if (whichIconUserChoose != 0 && isDragging) {
         margin = 75;
         if (currentIconFocus == 2) {
-          margin = 88;
-        } else if (currentIconFocus == 3) {
-          margin = 98;
+          margin = 83;
         }
+        if (currentIconFocus == 3) {
+          // margin = 98;
+          margin = 88;
+        }
+        // if (currentIconFocus == 4) {
+        //   margin = 70;
+        // }
       }
     }
     return margin;
@@ -402,7 +415,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
     return Opacity(
       opacity: fadeInBox.value,
       child: Container(
-        margin: EdgeInsets.only(bottom: setMarginForRenderBox()),
+        margin: EdgeInsets.only(bottom: setBottomMarginBox()),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(30.0),
@@ -427,7 +440,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
     );
   }
 
-  double setTopPaddingForRenderIcons() {
+  double setTopPaddingIcons() {
     //padding top
     bool isSizeBig = width > compareWidth;
     double padding = 0;
@@ -446,23 +459,26 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
         padding = 38;
         if (currentIconFocus == 2) {
           // padding = 15;
-          padding = 40;
+          padding = 25;
         } else if (currentIconFocus == 3) {
           padding = 21;
         } else if (currentIconFocus == 4) {
-          padding = 32;
+          padding = 35;
         }
       }
     }
     return padding;
   }
 
-  double setBottomMarginForRenderIcons() {
+  double setBottomMarginIcons() {
     bool isSizeBig = width > compareWidth;
     double bottomMargin = 0;
     if (isSizeBig) {
       if (whichIconUserChoose != 0 && isDragging) {
         bottomMargin = 10;
+        if (currentIconFocus == 3) {
+
+        }
       } else {
         bottomMargin = 0;
       }
@@ -470,7 +486,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
       if (whichIconUserChoose != 0 && isDragging) {
         bottomMargin = 15;
         if (currentIconFocus == 2) {
-          bottomMargin = 10;
+          bottomMargin = 20;
         }
       } else {
         bottomMargin = 0;
@@ -479,15 +495,30 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
     return bottomMargin;
   }
 
+  double setBottomPaddingIcons() {
+    bool isSizeBig = width > compareWidth;
+    double bottomPadding = 0;
+    if (isSizeBig) {
+    } else {
+      if (whichIconUserChoose != 0 && isDragging) {
+        // bottomPadding = 0;
+        if (currentIconFocus == 2) {
+          // bottomPadding = 40;
+        }
+      }
+    }
+    return bottomPadding;
+  }
+
   Widget renderIcons() {
     bool isSizeBig = width > compareWidth;
     return Container(
       alignment: Alignment.bottomCenter,
       width: width * 0.9,
-      margin: EdgeInsets.only(bottom: setBottomMarginForRenderIcons()),
+      margin: EdgeInsets.only(bottom: setBottomMarginIcons()),
       padding: EdgeInsets.only(
-        // top: setTopPaddingForRenderIcons(),
-        top: setTopPaddingForRenderIcons(),
+        top: setTopPaddingIcons(),
+        bottom: setBottomPaddingIcons(),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -511,10 +542,15 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                     : zoomIconLike.value,
             child: Container(
               margin: EdgeInsets.only(
+                  top: (currentIconFocus == 1) ? 4 : 0,
                   bottom: isSizeBig
-                      ? pushIconLikeUp.value
-                      : currentIconFocus == 1
+                      ? currentIconFocus == 1
                           ? pushIconLikeUp.value - 5
+                          : (currentIconFocus == 3)
+                              ? pushIconLikeUp.value - 10
+                              : pushIconLikeUp.value
+                      : currentIconFocus == 1
+                          ? pushIconLikeUp.value - 10
                           : pushIconLikeUp.value - 20),
               width: isSizeBig ? 38.0 : 30.0,
               height: isSizeBig
@@ -576,16 +612,28 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                   bottom: isSizeBig
                       ? currentIconFocus == 2
                           ? pushIconLoveUp.value + 20
-                          : pushIconLoveUp.value
+                          : (currentIconFocus == 3)
+                              ? pushIconLoveUp.value - 10
+                              : pushIconLoveUp.value
                       : currentIconFocus == 2
-                          ? pushIconLoveUp.value - 10
-                          : pushIconLoveUp.value - 30),
+                          ? pushIconLoveUp.value - 7
+                          : pushIconLoveUp.value - 20),
               padding: EdgeInsets.only(
                 left: isSizeBig
                     ? currentIconFocus == 2
-                        ? 10
+                        ? 7
                         : 0
                     : 0,
+                top: isSizeBig
+                    ? 0
+                    : currentIconFocus == 2
+                        ? 0
+                        : 5,
+                // bottom: isSizeBig
+                //     ? 0
+                //     : currentIconFocus == 2
+                //         ? 7
+                //         : 0,
               ),
               height: isSizeBig
                   ? currentIconFocus == 2
@@ -642,12 +690,15 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
               margin: EdgeInsets.only(
                   bottom: isSizeBig
                       ? currentIconFocus == 3
-                          ? pushIconYayUp.value + 20
+                          ? pushIconYayUp.value + 10
                           : pushIconYayUp.value
                       : currentIconFocus == 3
-                          ? pushIconYayUp.value + 10
+                          ? pushIconYayUp.value
                           : pushIconYayUp.value - 20),
-              padding: EdgeInsets.only(left: currentIconFocus == 3 ? 10.0 : 0),
+              padding: EdgeInsets.only(
+                left: currentIconFocus == 3 ? 10.0 : 0,
+                top: (currentIconFocus == 3) ? 4 : 0,
+              ),
               width: isSizeBig ? 50.0 : 40.0,
               height: isSizeBig
                   ? currentIconFocus == 3
@@ -704,23 +755,31 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
               margin: EdgeInsets.only(
                   bottom: isSizeBig
                       ? currentIconFocus == 4
-                          ? pushIconHahaUp.value + 10
-                          : pushIconHahaUp.value
+                          ? pushIconHahaUp.value + 8
+                          : (currentIconFocus == 3)
+                              ? pushIconHahaUp.value - 10
+                              : pushIconHahaUp.value
                       : currentIconFocus == 4
-                          ? pushIconHahaUp.value
+                          ? pushIconHahaUp.value - 5
                           : pushIconHahaUp.value - 15,
                   left: isSizeBig
                       ? currentIconFocus == 4
                           ? 7.0
                           : 0
                       : 0),
+              padding: EdgeInsets.only(
+                  top: isSizeBig
+                      ? 0
+                      : currentIconFocus == 4
+                          ? 2
+                          : 0),
               width: isSizeBig ? 55.0 : 45.0,
               height: isSizeBig
                   ? currentIconFocus == 4
                       ? 76.0
                       : 55.0
                   : currentIconFocus == 4
-                      ? 66.0
+                      ? 69.0
                       : 45.0,
               child: Column(
                 children: <Widget>[
@@ -769,16 +828,26 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
             child: Container(
               margin: EdgeInsets.only(
                   bottom: isSizeBig
-                      ? pushIconWowUp.value
+                      ? (currentIconFocus == 5)
+                          ? pushIconWowUp.value + 2
+                          : pushIconWowUp.value
                       : currentIconFocus == 5
                           ? pushIconWowUp.value - 5
                           : pushIconWowUp.value - 15,
+                  top: (currentIconFocus == 3) ? 7 : 0,
                   left: isSizeBig
                       ? currentIconFocus == 5
-                          ? 5.0
+                          ? 2
                           : 0
                       : 0),
-              width: isSizeBig ? 43.0 : 35.0,
+              padding: EdgeInsets.only(
+                top: isSizeBig
+                    ? 0
+                    : (currentIconFocus == 5)
+                        ? 0
+                        : 0,
+              ),
+              width: isSizeBig ? 43.0 : 37.0,
               height: isSizeBig
                   ? currentIconFocus == 5
                       ? 70.0
@@ -833,8 +902,11 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
             child: Container(
               margin: EdgeInsets.only(
                   bottom: isSizeBig
-                      ? pushIconSadUp.value
+                      ? currentIconFocus == 6
+                          ? pushIconSadUp.value + 3
+                          : pushIconSadUp.value
                       : pushIconSadUp.value - 15,
+                  top: (currentIconFocus == 3) ? 7 : 0,
                   left: currentIconFocus == 6 ? 5.0 : 0),
               width: isSizeBig ? 45.0 : 37.0,
               height: isSizeBig
@@ -891,10 +963,19 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                     : zoomIconAngry.value,
             child: Container(
               margin: EdgeInsets.only(
-                  bottom: isSizeBig
-                      ? pushIconAngryUp.value
-                      : pushIconAngryUp.value - 16,
-                  left: currentIconFocus == 5 ? 5.0 : 0),
+                // top: (currentIconFocus == 3) ? 3 : 0,
+                bottom: isSizeBig
+                    ? (currentIconFocus == 3)
+                        ? pushIconAngryUp.value - 10
+                        : pushIconAngryUp.value
+                    : (currentIconFocus == 7)
+                        ? pushIconAngryUp.value + 11
+                        : pushIconAngryUp.value - 16,
+                left: currentIconFocus == 7 ? 5.0 : 0,
+              ),
+              padding: EdgeInsets.only(
+                top: currentIconFocus == 7 ? 2 : 0,
+              ),
               width: isSizeBig ? 40.0 : 33.0,
               height: isSizeBig
                   ? currentIconFocus == 7
@@ -938,29 +1019,8 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   }
 
   double _getHorizontalPosition() {
-    final xOffset = widget.offset.dx;
-    final buttonX = widget.buttonOffset.dx;
-    final buttonRadius = (widget.buttonSize.width / 2);
     final screenWidth = MediaQuery.of(context).size.width;
-    final boxWidth = _boxSizeAnimation.value?.width ?? 0;
-
-    if (buttonX + boxWidth < screenWidth) {
-      switch (widget.horizontalPosition) {
-        case HorizontalPosition.start:
-          return buttonX - buttonRadius + xOffset;
-        case HorizontalPosition.center:
-          return buttonX - boxWidth / 2 + xOffset;
-      }
-    }
-
-    final value = buttonX + buttonRadius - boxWidth;
-
-    //add this below code.
-    if (value.isNegative) {
-      return 20 +
-          xOffset; // this is 20 horizontal width is fix you can play with it as you want.
-    }
-    return value + xOffset;
+    return screenWidth * .09 / 2;
   }
 
   double _getVerticalPosition() {
@@ -1009,13 +1069,13 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   }
 
   void onTapBtn() {
-    // playSound('short_press_like.mp3');
+    playSound('short_press_like.mp3');
     animControlBtnShortPress.forward();
     animControlBtnShortPress.reverse();
   }
 
   void showBox() {
-    // playSound('box_up.mp3');
+    playSound('box_up.mp3');
     isLongPress = true;
     animControlBtnLongPress.forward();
     setForwardValue();
@@ -1191,8 +1251,8 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   }
 
   onDragUpdateBoxIcon(details) {
-    double iconItemLength = width * 0.9 / 7;
-    double beginOffsetX = 20;
+    double iconItemLength = width * 0.91 / 7;
+    double beginOffsetX = width * (1 - 0.91) / 2;
     // 392.72727272727275 -  802.9090909090909
     if (!isLongPress) return;
 
@@ -1273,7 +1333,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   }
 
   void handleWhenDragBetweenIcon(int currentIcon) {
-    // playSound('icon_focus.mp3');
+    playSound('icon_focus.mp3');
     whichIconUserChoose = currentIcon;
     previousIconFocus = currentIconFocus;
     currentIconFocus = currentIcon;
@@ -1288,6 +1348,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
     previousIconFocus = 0;
     currentIconFocus = 0;
     onTapUpBtn(null);
+    widget.onCancelReaction != null ? widget.onCancelReaction!() : null;
     Navigator.of(context).pop(chooseReactionReturn());
   }
 
@@ -1298,12 +1359,11 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   void onTapUpBtn(TapUpDetails? tapUpDetail) async {
     if (isLongPress) {
       if (whichIconUserChoose == 0) {
-        // playSound('box_down.mp3');
+        playSound('box_down.mp3');
       } else {
-        // playSound('icon_choose.mp3');
+        playSound('icon_choose.mp3');
       }
     }
-
     Timer(Duration(milliseconds: durationAnimationBox), () {
       isLongPress = false;
     });
@@ -1704,12 +1764,12 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
     });
   }
 
-  // Future playSound(String nameSound) async {
-  //   await audioPlayer.stop();
-  //   final file = File('${(await getTemporaryDirectory()).path}/$nameSound');
-  //   await file.writeAsBytes((await loadAsset(nameSound)).buffer.asUint8List());
-  //   audioPlayer.play(UrlSource(file.path));
-  // }
+  Future playSound(String nameSound) async {
+    await audioPlayer.stop();
+    final file = File('${(await getTemporaryDirectory()).path}/$nameSound');
+    await file.writeAsBytes((await loadAsset(nameSound)).buffer.asUint8List());
+    audioPlayer.play(UrlSource(file.path));
+  }
 
   Future loadAsset(String nameSound) async {
     return await rootBundle.load('assets/sounds/$nameSound');

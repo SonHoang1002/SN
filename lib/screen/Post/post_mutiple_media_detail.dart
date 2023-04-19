@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/post_media.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
 import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -26,12 +29,11 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
   int? imgIndex;
   GlobalKey imageSingleKey = GlobalKey();
   double? imagSingleHeight;
-
+  bool isDragOutSide = false;
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
         (widget.initialIndex ?? 0) *
@@ -39,6 +41,20 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
         duration: const Duration(milliseconds: 1),
         curve: Curves.easeInOut,
       );
+    });
+    _scrollController.addListener(() {
+      if (double.parse(_scrollController.offset.toStringAsFixed(0)) ==
+              double.parse((_scrollController.position.maxScrollExtent)
+                      .toStringAsFixed(0)) +
+                  20.0 ||
+          double.parse(_scrollController.offset.toStringAsFixed(0)) < -10.0) {
+        if (isDragOutSide) {
+          Navigator.pop(context);
+        }
+        setState(() {
+          isDragOutSide = !isDragOutSide;
+        });
+      }
     });
   }
 
@@ -54,105 +70,107 @@ class _PostMutipleMediaDetailState extends State<PostMutipleMediaDetail> {
       return media['type'] == 'image' ? true : false;
     }
 
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          controller: _scrollController,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const SizedBox(
-              height: 12.0,
-            ),
-            PostHeader(post: widget.post, type: postMultipleMedia),
-            const SizedBox(
-              height: 12.0,
-            ),
-            PostContent(post: widget.post),
-            const SizedBox(
-              height: 12.0,
-            ),
-            PostFooter(
-              post: widget.post,
-              type: postMultipleMedia,
-            ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            Column(
-              children: List.generate(
-                  medias.length,
-                  (index) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                              onTap: () {
-                                // Navigator.push(context,
-                                //     MaterialPageRoute(builder: (context) {
-                                //   return PostOneMediaDetail(
-                                //       currentIndex: index,
-                                //       medias: medias,
-                                //       postMedia: medias[index],
-                                //       backFunction: () {
-                                //         setState(() {
-                                //           isShowImage = false;
-                                //         });
-                                //       });
-                                // }));
-                                // if (imageSingleKey.currentContext != null) {
-                                //   final RenderBox renderBox = imageSingleKey
-                                //       .currentContext!
-                                //       .findRenderObject() as RenderBox;
-                                //   imagSingleHeight = renderBox.size.height;
-                                // }else{
-                                //   imagSingleHeight = 300;
-                                // }
-
-                                setState(() {
-                                  imgIndex = index;
-                                  isShowImage = true;
-                                });
-                              },
-                              child: checkIsImage(medias[index])
-                                  ? isShowImage && imgIndex == index
-                                      ? SizedBox(
-                                          height: 400,
-                                          width:
-                                              MediaQuery.of(context).size.width)
-                                      : Image.network(
-                                          medias[index]['url'],
-                                          // key: imageSingleKey,
-                                        )
-
-                                  // ImageCacheRender(
-                                  //     key: Key(medias[index]['id'].toString()),
-                                  //     path: medias[index]['url'])
-                                  : VideoPlayerNoneController(
-                                      path: medias[index]['url'],
-                                      type: postDetail)),
-                          PostFooter(
-                            post: medias[index],
-                            type: postMultipleMedia,
-                          ),
-                          const SizedBox(
-                            height: 8.0,
-                          ),
-                        ],
-                      )),
-            )
-          ]),
-        ),
-        isShowImage
-            ? PostOneMediaDetail(
-                currentIndex: imgIndex,
-                medias: medias,
-                postMedia: medias[imgIndex!],
-                backFunction: () {
-                  setState(() {
-                    isShowImage = false;
-                  });
-                })
-            : const SizedBox()
-      ],
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.vertical,
+      onDismissed: (direction) {
+        // popToPreviousScreen(context);
+      },
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            controller: _scrollController,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const SizedBox(
+                height: 12.0,
+              ),
+              PostHeader(post: widget.post, type: postMultipleMedia),
+              const SizedBox(
+                height: 12.0,
+              ),
+              PostContent(post: widget.post),
+              const SizedBox(
+                height: 12.0,
+              ),
+              PostFooter(
+                post: widget.post,
+                type: postMultipleMedia,
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              Column(
+                children: List.generate(
+                    medias.length,
+                    (index) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  pushCustomPageRoute(
+                                      context,
+                                      PostOneMediaDetail(
+                                          currentIndex: index,
+                                          medias: medias, //list anh
+                                          post: widget.post,
+                                          postMedia: medias[
+                                              index], // anh hien tai dang duoc chon
+                                          backFunction: () {
+                                            popToPreviousScreen(context);
+                                          }),
+                                      opaque: false);
+                                },
+                                child: checkIsImage(medias[index])
+                                    ? isShowImage && imgIndex == index
+                                        ? SizedBox(
+                                            height: 400,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width)
+                                        : Hero(
+                                            tag: medias[index]['id'],
+                                            child: ImageCacheRender(
+                                                key: Key(medias[index]['id']
+                                                    .toString()),
+                                                path: medias[index]['url'],
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: double.parse(
+                                                    medias[index]['meta']
+                                                            ["small"]["height"]
+                                                        .toString())),
+                                          )
+                                    : VideoPlayerNoneController(
+                                        path: medias[index]['url'],
+                                        type: postDetail)),
+                            PostFooter(
+                              post: medias[index],
+                              type: postMultipleMedia,
+                            ),
+                            const SizedBox(
+                              height: 8.0,
+                            ),
+                          ],
+                        )),
+              )
+            ]),
+          ),
+          // isShowImage
+          //     ? PostOneMediaDetail(
+          //         currentIndex: imgIndex,
+          //         medias: medias,
+          //         postMedia: medias[imgIndex!],
+          //         backFunction: () {
+          //           setState(() {
+          //             isShowImage = false;
+          //           });
+          //         })
+          //     : const SizedBox()
+        ],
+      ),
     );
   }
 }

@@ -20,28 +20,28 @@ class PostMedia extends StatelessWidget {
     handlePress(media) {
       if (checkIsImage(media)) {
         if (medias.length == 1) {
-          Navigator.push(
+          pushCustomPageRoute(
               context,
-              MaterialPageRoute(
-                  builder: (context) => PostOneMediaDetail(
-                        postMedia: post,
-                        backFunction: () {
-                          popToPreviousScreen(context);
-                        },
-                      )));
+              PostOneMediaDetail(
+                postMedia: post,
+                backFunction: () {
+                  popToPreviousScreen(context);
+                },
+              ),
+              opaque: false);
         } else if (medias.length > 1) {
           int initialIndex =
               medias.indexWhere((element) => element['id'] == media['id']);
-          Navigator.push(
+          pushCustomPageRoute(
               context,
-              CupertinoPageRoute(
-                  builder: (context) => CreateModalBaseMenu(
-                      title: 'Bài viết',
-                      body: PostMutipleMediaDetail(
-                        post: post,
-                        initialIndex: initialIndex,
-                      ),
-                      buttonAppbar: const SizedBox())));
+              CreateModalBaseMenu(
+                  title: 'Bài viết',
+                  body: PostMutipleMediaDetail(
+                    post: post,
+                    initialIndex: initialIndex,
+                  ),
+                  buttonAppbar: const SizedBox()),
+              opaque: false);
         } else {
           Navigator.push(
               context,
