@@ -70,12 +70,12 @@ List recruitMenu = [
     "label": "Khám phá",
   },
   {
-    "key": "recruit_following",
-    "label": "Quan tâm ",
+    "key": "recruit_invite",
+    "label": "Lời mời",
   },
   {
-    "key": "recruit_going",
-    "label": "Sẽ tham gia",
+    "key": "recruit_following",
+    "label": "Quan tâm ",
   },
   {
     "key": "recruit_news",
@@ -85,12 +85,37 @@ List recruitMenu = [
     "key": "recruit_news_past",
     "label": "Tin tuyển dụng đã đăng",
   },
-  // {
-  //   "key": "recruit_save",
-  //   "label": "CV đã lưu",
-  // },
+  {
+    "key": "recruit_save",
+    "label": "CV đã lưu",
+  },
 ];
-
+List courseMenu = [
+  {
+    "key": "course_interesting",
+    "label": "Khám phá",
+  },
+  {
+    "key": "course_invite",
+    "label": "Lời mời ",
+  },
+  {
+    "key": "course_following",
+    "label": "Quan tâm ",
+  },
+  {
+    "key": "course_host",
+    "label": "Tổ chức",
+  },
+  {
+    "key": "course_learned",
+    "label": "Khoá học đã học",
+  },
+  {
+    "key": "course_save",
+    "label": "Thư viện nội dung",
+  },
+];
 List listSocial = [
   {
     "key": 'friendSocial',

@@ -74,7 +74,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                       },
                       child: Container(
                         height: 38,
-                        width: 120,
+                        width: size.width * 0.3,
                         decoration: BoxDecoration(
                             color: growHost == 'now'
                                 ? secondaryColor
@@ -97,7 +97,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                               ),
                             ]),
                       )),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 5),
                   InkWell(
                       onTap: () {
                         setState(() {
@@ -106,7 +106,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                       },
                       child: Container(
                         height: 38,
-                        width: 120,
+                        width: size.width * 0.3,
                         decoration: BoxDecoration(
                             color: growHost == 'upcoming'
                                 ? secondaryColor
@@ -130,7 +130,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                           ],
                         ),
                       )),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 5),
                   InkWell(
                       onTap: () {
                         setState(() {
@@ -139,7 +139,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                       },
                       child: Container(
                         height: 38,
-                        width: 120,
+                        width: size.width * 0.3 - 5,
                         decoration: BoxDecoration(
                             color: growHost == 'past'
                                 ? secondaryColor
