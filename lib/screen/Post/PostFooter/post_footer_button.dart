@@ -8,9 +8,11 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/providers/posts/reaction_message_content.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/Reaction/flutter_reaction_button.dart';
 import 'package:social_network_app_mobile/widget/screen_share.dart';
 
@@ -28,7 +30,7 @@ class PostFooterButton extends ConsumerStatefulWidget {
 
 class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     with TickerProviderStateMixin {
-  bool suggestReactionStatus = false;
+  // bool suggestReactionStatus = false;
   String suggestReactionContent = "";
 
   @override
@@ -143,91 +145,121 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     }
 
     return GestureDetector(
-      onTap: () {
-        // setState(() {
-        //   suggestReactionContent = "";
-        //   suggestReactionStatus = false;
-        // });
-      },
-      child: Container(
-        height: 30,
-        child: Flex(
-          direction: Axis.horizontal,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Flexible(
-              flex: 1,
-              child: ReactionButton(
-                onReactionChanged: (value) {
-                  handleReaction(value);
-                },
-                handlePressButton: handlePressButton,
-                reactions: const [],
-                initialReaction: Reaction(
-                    icon: viewerReaction.isNotEmpty
-                        ? viewerReaction != "like"
-                            ? renderGif(
-                                'png',
-                                viewerReaction,
-                                size: 20,
-                                iconPadding: 5,
-                              )
-                            : Container(
-                                padding: const EdgeInsets.only(
-                                    left: 8, right: 8, top: 4, bottom: 1),
-                                child: const ButtonLayout(
-                                  button: {
-                                    "key": "reaction",
-                                    "icon": "assets/reaction/img_like_fill.png",
-                                    "label": "Thích",
-                                    "textColor": secondaryColor,
-                                    "color": secondaryColor
-                                  },
-                                ),
-                              )
-                        : Container(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 6, bottom: 1),
-                            child: const ButtonLayout(
-                              button: {
-                                "key": "reaction",
-                                "icon": "assets/reaction/like_light.png",
-                                "label": "Thích"
-                              },
-                            ),
-                          ),
-                    value: 'kakakak'),
-              ),
-            ),
-            // ),
-            ...List.generate(
-                buttonAction.length,
-                (index) => Flexible(
+        onTap: () {
+          setState(() {
+            suggestReactionContent = "";
+            // suggestReactionStatus = false;
+          });
+        },
+        child: suggestReactionContent == ""
+            ? SizedBox(
+                height: 30,
+                child: Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Flexible(
                       flex: 1,
-                      child: InkWell(
-                        onTap: () {
-                          handlePress(buttonAction[index]['key']);
+                      child: ReactionButton(
+                        onReactionChanged: (value) {
+                          handleReaction(value);
                         },
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                            // left: 8,
-                            // right: 8,
-                            top: 6,
+                        handlePressButton: handlePressButton,
+                        onWaitingReaction: () {
+                          setState(() {
+                            suggestReactionContent = "Trượt để chọn";
+                            // suggestReactionStatus = false;
+                          });
+                        },
+                        // onHoverReaction: () {
+                        //   setState(() {
+                        //     suggestReactionContent = "";
+                        //     suggestReactionStatus = false;
+                        //   });
+                        // },
+                        onCancelReaction: () {
+                          setState(() {
+                            suggestReactionContent = "";
+                          });
+                        },
+                        reactions: <Reaction>[
+                          Reaction(
+                            previewIcon: renderGif('gif', 'like'),
+                            icon: renderGif('png', 'like', size: 20),
+                            value: 'like',
                           ),
-                          child: Container(
-                              margin: index == 1
-                                  ? const EdgeInsets.only(right: 20)
-                                  : null,
-                              child: ButtonLayout(button: buttonAction[index])),
-                        ),
+                        ],
+                        initialReaction: Reaction(
+                            icon: viewerReaction.isNotEmpty
+                                ? viewerReaction != "like"
+                                    ? renderGif(
+                                        'png',
+                                        viewerReaction,
+                                        size: 20,
+                                        iconPadding: 5,
+                                      )
+                                    : Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 8,
+                                            right: 8,
+                                            top: 4,
+                                            bottom: 1),
+                                        child: const ButtonLayout(
+                                          button: {
+                                            "key": "reaction",
+                                            "icon":
+                                                "assets/reaction/img_like_fill.png",
+                                            "label": "Thích",
+                                            "textColor": secondaryColor,
+                                            "color": secondaryColor
+                                          },
+                                        ),
+                                      )
+                                : Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8, top: 6, bottom: 1),
+                                    child: const ButtonLayout(
+                                      button: {
+                                        "key": "reaction",
+                                        "icon":
+                                            "assets/reaction/like_light.png",
+                                        "label": "Thích"
+                                      },
+                                    ),
+                                  ),
+                            value: 'kakakak'),
                       ),
-                    )),
-          ],
-        ),
-      ),
-    );
+                    ),
+                    ...List.generate(
+                        buttonAction.length,
+                        (index) => Flexible(
+                              flex: 1,
+                              child: InkWell(
+                                onTap: () {
+                                  handlePress(buttonAction[index]['key']);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                    // left: 8,
+                                    // right: 8,
+                                    top: 6,
+                                  ),
+                                  child: Container(
+                                      margin: index == 1
+                                          ? const EdgeInsets.only(right: 20)
+                                          : null,
+                                      child: ButtonLayout(
+                                          button: buttonAction[index])),
+                                ),
+                              ),
+                            )),
+                  ],
+                ),
+              )
+            : buildTextContent(suggestReactionContent, false,
+                isCenterLeft: false));
   }
 }
 

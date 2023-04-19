@@ -274,7 +274,7 @@ class BlockNamePost extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => UserPage(),
+              builder: (context) => const UserPage(),
               settings: RouteSettings(
                 arguments: {'id': account['id']},
               ),

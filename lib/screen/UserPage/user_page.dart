@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,7 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/post_media.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_friend_block.dart';
@@ -64,9 +66,9 @@ class _UserPageState extends ConsumerState<UserPage> {
         // ref.read(postControllerProvider.notifier).removeListPost('user');
         // ref.read(userInformationProvider.notifier).removeUserInfo();
 
-        List postUserNew = await UserPageApi()
-                .getListPostApi(id, {"limit": 3, "exclude_replies": true}) ??
-            [];
+        List postUserNew =
+            await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
+                [];
         dynamic userDataNew = await UserPageApi().getAccountInfor(id);
         dynamic userAboutNew =
             await UserPageApi().getAccountAboutInformation(id);
@@ -83,15 +85,21 @@ class _UserPageState extends ConsumerState<UserPage> {
     }
 
     scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent - 1000 ==
-          scrollController.offset) {
-        if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
-        if (id != null) {
-          String maxId =
-              ref.read(postControllerProvider).postUserPage.last['id'];
-          ref.read(postControllerProvider.notifier).getListPostUserPage(
-              id, {"max_id": maxId, "limit": 3, "exclude_replies": true});
-        }
+      if (scrollController.position.maxScrollExtent < 2000 ||
+          (scrollController.offset).toDouble() <
+                  scrollController.position.maxScrollExtent &&
+              (scrollController.offset).toDouble() >
+                  scrollController.position.maxScrollExtent - 2000) {
+        EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 300),
+            () {
+           if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
+          if (id != null) {
+            String maxId =
+                ref.read(postControllerProvider).postUserPage.last['id'];
+            ref.read(postControllerProvider.notifier).getListPostUserPage(
+                id, {"max_id": maxId, "exclude_replies": true});
+          }
+        });
       }
     });
   }
@@ -105,7 +113,7 @@ class _UserPageState extends ConsumerState<UserPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     var userAbout = ref.watch(userInformationProvider).userMoreInfor;
-
+    // bool isShowStack = false;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -240,3 +248,6 @@ class _UserPageState extends ConsumerState<UserPage> {
     );
   }
 }
+  // isShowStack
+          //     ? PostMedia(post: post, type: widget.type)
+          //     : SizedBox(),

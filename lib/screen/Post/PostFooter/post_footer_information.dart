@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,7 +18,6 @@ class PostFooterInformation extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     dynamic meData = ref.read(meControllerProvider)[0];
-
     const style = TextStyle(color: greyColor, fontSize: 15);
     dynamic favourites = post['favourites'];
     String viewerReaction = post['viewer_reaction'] ?? '';
@@ -73,26 +74,45 @@ class PostFooterInformation extends ConsumerWidget {
       }
     }
 
+    double setHeight() {
+      double height = 5;
+      if ((post['favourites_count'] ?? 0) > 0 ||
+          (post['replies_total'] ?? 0) > 0) {
+        height = 40;
+      }
+      return height;
+    }
+
+    EdgeInsets setPadding() {
+      EdgeInsets padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
+      // if ((post['favourites_count'] ?? 0) > 0 ||
+      //     (post['replies_total'] ?? 0) > 0) {
+      //   if (favourites != null && favourites.length == 2) {
+      //     padding = const EdgeInsets.fromLTRB(8, 3, 8, 6);
+      //   } else {
+      //     if (reactionsCount > 1) {
+      //       //bajn va nguoi khac
+      //       padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
+      //     } else {
+      //       //ban
+      //       padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
+      //     }
+      //   }
+      // }
+
+      return padding;
+    }
+
     return Container(
-      height: (post['favourites_count'] ?? 0) > 0 ||
-              (post['replies_total'] ?? 0) > 0
-          ? favourites?.length == 2 && textRender.contains("và")
-              ? 40
-              : 35
-          : 5,
-      padding: (post['favourites_count'] ?? 0) > 0 ||
-              (post['replies_total'] ?? 0) > 0
-          ? reactionsCount > 1
-              ? const EdgeInsets.fromLTRB(8, 6, 8, 9)
-              : const EdgeInsets.fromLTRB(8, 3, 8, 6)
-          : const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      height: setHeight(),
+      padding: setPadding(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          (post['favourites_count'] ?? 0) > 0 ||
-                  (post['replies_total'] ?? 0) > 0
-              ? buildDivider()
-              : const SizedBox(),
+          // (post['favourites_count'] ?? 0) > 0 ||
+          //         (post['replies_total'] ?? 0) > 0
+          //     ? SizedBox(height:5)
+          //     : const SizedBox(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

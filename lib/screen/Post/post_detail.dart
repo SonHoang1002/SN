@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/split_link.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
@@ -42,9 +45,27 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     }
   }
 
-  Future handleComment(data) async {
+  Future handleComment(data, previewLinkText) async {
     if (!mounted) return;
-
+    final preCardData = await getPreviewUrl(previewLinkText);
+    final cardData = preCardData != null
+        ? {
+            "url": preCardData[0]['link'],
+            "title": preCardData[0]['title'],
+            "description": preCardData[0]['description'],
+            "type": "link",
+            "author_name": "",
+            "author_url": "",
+            "provider_name": "",
+            "provider_url": "",
+            "html": "",
+            "width": 400,
+            "height": 240,
+            "image": preCardData[0]['url'],
+            "embed_url": "",
+            "blurhash": "UNKKi:%L~A9Fvesm%MX9pdR+RPV@wajZjtt6"
+          }
+        : null;
     var newCommentPreview = {
       "id": data['id'],
       "in_reply_to_id": widget.post['id'],
@@ -82,7 +103,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       "muted": false,
       "bookmarked": false,
       "pinned": null,
-      "card": null,
+      "card": preCardData != null ? cardData : preCardData,
       "in_reply_to_parent_id": null,
       "reblog": null,
       "application": {"name": "Web", "website": null},
@@ -133,7 +154,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newCommentPreview['id']);
       List newListUpdate = [];
-
       if (indexComment > -1) {
         newListUpdate = [
           ...postComment.sublist(0, indexComment),
@@ -158,12 +178,20 @@ class _PostDetailState extends ConsumerState<PostDetail> {
             "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
           }) ??
           newCommentPreview;
+      if (newComment['card'] == null && preCardData != null) {
+        // newComment["card"] = getPreviewData(preCardData);
+        newComment["card"] = newCommentPreview["card"];
+      }
     } else {
       newComment = await PostApi().updatePost(data['id'], {
         "extra_body": data['extra_body'],
         "status": data['status'],
         "tags": data['tags']
       });
+      if (newComment['card'] == null ||
+          (newComment["card"] != newCommentPreview["card"])) {
+        newComment["card"] = newCommentPreview["card"];
+      }
     }
 
     if (mounted && newComment != null) {
@@ -193,7 +221,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         //Edit comment parent
         dataCommentUpdate = newListUpdate;
       }
-
       setState(() {
         postComment = dataCommentUpdate;
         commentChild = newComment;
@@ -201,7 +228,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     }
   }
 
-  getCommentSelected(comment) {
+  getCommentSelected(comment) {  
     setState(() {
       commentSelected = comment;
     });
@@ -277,16 +304,17 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                           shrinkWrap: true,
                           itemCount: postComment.length,
                           itemBuilder: ((context, index) => CommentTree(
-                              key: Key(postComment[index]['id']),
-                              commentChildCreate: postComment[index]['id'] ==
-                                      commentChild?['in_reply_to_id']
-                                  ? commentChild
-                                  : null,
-                              commentNode: commentNode,
-                              commentSelected: commentSelected,
-                              commentParent: postComment[index],
-                              getCommentSelected: getCommentSelected,
-                              handleDeleteComment: handleDeleteComment))),
+                                key: Key(postComment[index]['id']),
+                                commentChildCreate: postComment[index]['id'] ==
+                                        commentChild?['in_reply_to_id']
+                                    ? commentChild
+                                    : null,
+                                commentNode: commentNode,
+                                commentSelected: commentSelected,
+                                commentParent: postComment[index],
+                                getCommentSelected: getCommentSelected,
+                                handleDeleteComment: handleDeleteComment,
+                              ))),
                       commentCount - postComment.length > 0
                           ? InkWell(
                               onTap: isLoadComment

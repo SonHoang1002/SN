@@ -35,13 +35,8 @@ class _PostCenterState extends State<PostCenter> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: const EdgeInsets.only(
-                bottom: 6,
-              ),
-              child: PostContent(
-                post: widget.post,
-              ),
+            PostContent(
+              post: widget.post,
             ),
             (widget.post['card'] != null ||
                     widget.post['poll'] != null ||

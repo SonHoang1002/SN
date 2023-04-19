@@ -51,7 +51,7 @@ class _PostContentState extends State<PostContent> {
         return Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 12,
-            ), 
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
