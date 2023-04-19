@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_card.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_host.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_interested.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_learned.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_library.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 
 import '../../widget/cross_bar.dart';
@@ -37,7 +41,21 @@ class _LearnSpaceRenderState extends State<LearnSpaceRender> {
           ),
         ),
         const CrossBar(),
-        const LearnSpaceCard(),
+        menuSelected == 'course_interesting'
+            ? const LearnSpaceCard()
+            : const SizedBox(),
+        menuSelected == 'course_following'
+            ? const LearnSpaceInterested()
+            : const SizedBox(),
+        menuSelected == 'course_host'
+            ? const LearnSpaceHost()
+            : const SizedBox(),
+        menuSelected == 'course_learned'
+            ? const LearnSpaceLearned()
+            : const SizedBox(),
+        menuSelected == 'course_save'
+            ? const LearnSpaceLibrary()
+            : const SizedBox(),
       ],
     );
   }

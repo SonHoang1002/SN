@@ -82,7 +82,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                     },
                     child: Container(
                       height: 38,
-                      width: MediaQuery.of(context).size.width * 0.44,
+                      width: MediaQuery.of(context).size.width * 0.43,
                       decoration: BoxDecoration(
                           color: eventAction
                               ? secondaryColor
@@ -114,7 +114,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                     },
                     child: Container(
                       height: 38,
-                      width: MediaQuery.of(context).size.width * 0.44,
+                      width: MediaQuery.of(context).size.width * 0.43,
                       decoration: BoxDecoration(
                           color: !eventAction
                               ? secondaryColor

@@ -76,7 +76,7 @@ class PostFooterInformation extends ConsumerWidget {
     return Container(
       height: (post['favourites_count'] ?? 0) > 0 ||
               (post['replies_total'] ?? 0) > 0
-          ? favourites.length == 2 && textRender.contains("và")
+          ? favourites?.length == 2 && textRender.contains("và")
               ? 40
               : 35
           : 5,

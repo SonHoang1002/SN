@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 @immutable
 class RecruitState {
   final List recruits;
+  final List recruitsCV;
   final List recruitsPropose;
   final List recruitsSimilar;
   final bool isMore;
@@ -14,6 +15,7 @@ class RecruitState {
   const RecruitState(
       {this.recruits = const [],
       this.isMore = true,
+      this.recruitsCV = const [],
       this.recruitsSimilar = const [],
       this.recruitsPropose = const [],
       this.detailRecruit = const {}});
@@ -21,6 +23,7 @@ class RecruitState {
   RecruitState copyWith({
     List recruits = const [],
     List recruitsSimilar = const [],
+    List recruitsCV = const [],
     List recruitsPropose = const [],
     bool isMore = true,
     dynamic detailRecruit = const {},
@@ -28,6 +31,7 @@ class RecruitState {
     return RecruitState(
         recruits: recruits,
         isMore: isMore,
+        recruitsCV: recruitsCV,
         detailRecruit: detailRecruit,
         recruitsSimilar: recruitsSimilar,
         recruitsPropose: recruitsPropose);
@@ -37,12 +41,12 @@ class RecruitState {
 final recruitControllerProvider =
     StateNotifierProvider.autoDispose<RecruitController, RecruitState>((ref) {
   ref.read(meControllerProvider);
-  return RecruitController();
+  return RecruitController(ref.watch(meControllerProvider));
 });
 
 class RecruitController extends StateNotifier<RecruitState> {
-  RecruitController() : super(const RecruitState());
-
+  final List meData;
+  RecruitController(this.meData) : super(const RecruitState());
   getListRecruit(params) async {
     List response = await RecruitApi().getListRecruitApi(params);
     if (response.isNotEmpty) {
@@ -60,6 +64,7 @@ class RecruitController extends StateNotifier<RecruitState> {
         recruitsSimilar: state.recruitsSimilar,
         recruitsPropose: state.recruitsPropose,
         detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
       );
     } else {
       final newGrows =
@@ -71,6 +76,7 @@ class RecruitController extends StateNotifier<RecruitState> {
           detailRecruit: state.detailRecruit,
           recruitsSimilar: state.recruitsSimilar,
           recruitsPropose: state.recruitsPropose,
+          recruitsCV: state.recruitsCV,
           isMore: false);
     }
   }
@@ -88,6 +94,7 @@ class RecruitController extends StateNotifier<RecruitState> {
                 : true
             : false,
         detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
       );
     }
   }
@@ -105,6 +112,21 @@ class RecruitController extends StateNotifier<RecruitState> {
                 : true
             : false,
         detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+      );
+    }
+  }
+
+  getListRecruitCV() async {
+    List response = await RecruitApi().getListRecruitCVApi(meData[0]['id']);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        recruitsCV: response,
+        recruitsSimilar: response,
+        recruitsPropose: state.recruitsPropose,
+        recruits: state.recruits,
+        isMore: state.isMore,
+        detailRecruit: state.detailRecruit,
       );
     }
   }
@@ -115,6 +137,7 @@ class RecruitController extends StateNotifier<RecruitState> {
       state = state.copyWith(
         detailRecruit: response,
         recruits: state.recruits,
+        recruitsCV: state.recruitsCV,
         isMore: state.isMore,
         recruitsSimilar: state.recruitsSimilar,
         recruitsPropose: state.recruitsPropose,
@@ -128,6 +151,7 @@ class RecruitController extends StateNotifier<RecruitState> {
       if (mounted) {
         state = state.copyWith(
             recruits: response,
+            recruitsCV: state.recruitsCV,
             detailRecruit: state.detailRecruit,
             recruitsSimilar: state.recruitsSimilar,
             recruitsPropose: state.recruitsPropose,
@@ -162,6 +186,7 @@ class RecruitController extends StateNotifier<RecruitState> {
     state = state.copyWith(
         recruits: [...state.recruits]..[indexRecruitUpdate] = eventUpdate,
         detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
         recruitsSimilar: state.recruitsSimilar,
         recruitsPropose: state.recruitsPropose,
         isMore: state.isMore);

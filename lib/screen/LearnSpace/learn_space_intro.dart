@@ -71,7 +71,9 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                 CourseRow(
                   leadingIcon: Icons.access_alarm,
                   title: 'Học phí',
-                  subtitle: shortenNumber(courseDetail['price'] ~/ 1),
+                  subtitle: courseDetail['price'] ~/ 1 == 0
+                      ? 'Miễn phí'
+                      : shortenNumber(courseDetail['price'] ~/ 1),
                 ),
                 CourseRow(
                   leadingIcon: Icons.access_time,

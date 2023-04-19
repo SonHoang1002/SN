@@ -97,7 +97,7 @@ class _EventHostState extends ConsumerState<EventHost> {
                       },
                       child: Container(
                         height: 38,
-                        width: MediaQuery.of(context).size.width * 0.44,
+                        width: MediaQuery.of(context).size.width * 0.43,
                         decoration: BoxDecoration(
                             color: eventHost
                                 ? secondaryColor
@@ -129,7 +129,7 @@ class _EventHostState extends ConsumerState<EventHost> {
                       },
                       child: Container(
                         height: 38,
-                        width: MediaQuery.of(context).size.width * 0.44,
+                        width: MediaQuery.of(context).size.width * 0.43,
                         decoration: BoxDecoration(
                             color: !eventHost
                                 ? secondaryColor
