@@ -136,7 +136,9 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
       }
     } else {
       var newGrows = response['data']
-          .where((item) => !state.courseInvitations.contains(item))
+          .where((item) => !state.courseInvitations
+              .map((inv) => inv['course']['id'])
+              .contains(item['course']['id']))
           .toList();
       state = state.copyWith(
           courseInvitations: [...state.courseInvitations, ...newGrows],
