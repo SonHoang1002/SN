@@ -109,6 +109,7 @@ dependencies:
   flutter_widget_from_html_core: ^0.8.5+3
   infinite_scroll_pagination: ^3.2.0
   image: ^4.0.6
+  permission_handler: ^10.2.0
   open_file:
     git:
       url: https://github.com/crazecoder/open_file
