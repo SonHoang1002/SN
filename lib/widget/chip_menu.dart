@@ -5,9 +5,14 @@ class ChipMenu extends StatelessWidget {
   final String label;
   final bool isSelected;
   final Widget? icon;
+  final Widget? endIcon;
 
   const ChipMenu(
-      {Key? key, this.icon, required this.isSelected, required this.label})
+      {Key? key,
+      this.icon,
+      required this.isSelected,
+      required this.label,
+      this.endIcon})
       : super(key: key);
 
   @override
@@ -35,6 +40,10 @@ class ChipMenu extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: isSelected ? white : null),
           ),
+          const SizedBox(
+            width: 6.0,
+          ),
+          endIcon ?? const SizedBox.shrink()
         ],
       ),
     );

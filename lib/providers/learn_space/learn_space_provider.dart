@@ -6,9 +6,12 @@ import 'package:social_network_app_mobile/apis/learn_space_api.dart';
 @immutable
 class LearnSpaceState {
   final List course;
+  final List coursePosts;
   final List courseInvitations;
   final List coursePropose;
   final List courseSimilar;
+  final List courseLessonChapter;
+  final List courseChapter;
   final bool isMore;
   final List courseLibrary;
   final dynamic detailCourse;
@@ -17,28 +20,37 @@ class LearnSpaceState {
     this.course = const [],
     this.isMore = true,
     this.courseInvitations = const [],
-    this.coursePropose = const [],
+    this.courseLessonChapter = const [],
     this.detailCourse = const {},
     this.courseLibrary = const [],
+    this.courseChapter = const [],
+    this.coursePosts = const [],
     this.courseSimilar = const [],
+    this.coursePropose = const [],
   });
 
   LearnSpaceState copyWith({
     List course = const [],
-    List coursePropose = const [],
+    List courseLessonChapter = const [],
     List courseInvitations = const [],
     bool isMore = true,
     List courseLibrary = const [],
     dynamic detailCourse = const {},
+    List courseChapter = const [],
+    List coursePosts = const [],
+    List coursePropose = const [],
     List courseSimilar = const [],
   }) {
     return LearnSpaceState(
       course: course,
       isMore: isMore,
       courseInvitations: courseInvitations,
-      coursePropose: coursePropose,
+      courseLessonChapter: courseLessonChapter,
       courseLibrary: courseLibrary,
       detailCourse: detailCourse,
+      courseChapter: courseChapter,
+      coursePosts: coursePosts,
+      coursePropose: coursePropose,
       courseSimilar: courseSimilar,
     );
   }
@@ -69,6 +81,9 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
             detailCourse: state.detailCourse,
             courseLibrary: state.courseLibrary,
             courseInvitations: state.courseInvitations,
+            courseLessonChapter: state.courseLessonChapter,
+            courseChapter: state.courseChapter,
+            coursePosts: state.coursePosts,
             coursePropose: state.coursePropose,
             courseSimilar: state.courseSimilar);
       }
@@ -83,8 +98,50 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           detailCourse: state.detailCourse,
           courseLibrary: state.courseLibrary,
           courseInvitations: state.courseInvitations,
+          courseLessonChapter: state.courseLessonChapter,
+          courseChapter: state.courseChapter,
           coursePropose: state.coursePropose,
           courseSimilar: state.courseSimilar);
+    }
+  }
+
+  getListCoursesPosts(params, id) async {
+    List response = await LearnSpaceApi().getListCoursesPostsApi(params, id);
+    if (response.isNotEmpty) {
+      if (mounted) {
+        final newGrows = response
+            .where((item) => !state.coursePosts.contains(item))
+            .toList();
+        state = state.copyWith(
+            coursePosts: params.containsKey('max_id')
+                ? [...state.coursePosts, ...newGrows]
+                : newGrows,
+            isMore: params['limit'] != null
+                ? response.length < params['limit'] || response.isEmpty
+                    ? false
+                    : true
+                : false,
+            course: state.course,
+            detailCourse: state.detailCourse,
+            courseLibrary: state.courseLibrary,
+            courseInvitations: state.courseInvitations,
+            courseLessonChapter: state.courseLessonChapter,
+            courseChapter: state.courseChapter);
+      }
+    } else {
+      final newGrows =
+          response.where((item) => !state.coursePosts.contains(item)).toList();
+      state = state.copyWith(
+          coursePosts: params.containsKey('max_id')
+              ? [...state.coursePosts, ...newGrows]
+              : newGrows,
+          course: state.course,
+          isMore: false,
+          detailCourse: state.detailCourse,
+          courseLibrary: state.courseLibrary,
+          courseInvitations: state.courseInvitations,
+          courseLessonChapter: state.courseLessonChapter,
+          courseChapter: state.courseChapter);
     }
   }
 
@@ -96,8 +153,11 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           isMore: state.isMore,
           detailCourse: response,
           courseInvitations: state.courseInvitations,
-          coursePropose: state.coursePropose,
+          courseLessonChapter: state.courseLessonChapter,
           courseLibrary: state.courseLibrary,
+          courseChapter: state.courseChapter,
+          coursePosts: state.coursePosts,
+          coursePropose: state.coursePropose,
           courseSimilar: state.courseSimilar);
     }
   }
@@ -110,8 +170,11 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           course: state.course,
           detailCourse: state.detailCourse,
           courseInvitations: state.courseInvitations,
-          coursePropose: state.coursePropose,
+          courseLessonChapter: state.courseLessonChapter,
           isMore: state.isMore,
+          courseChapter: state.courseChapter,
+          coursePosts: state.coursePosts,
+          coursePropose: state.coursePropose,
           courseSimilar: state.courseSimilar);
     }
   }
@@ -130,8 +193,11 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
             courseLibrary: state.courseLibrary,
             course: state.course,
             detailCourse: state.detailCourse,
-            coursePropose: state.coursePropose,
+            courseLessonChapter: state.courseLessonChapter,
             isMore: newGrows.isEmpty ? false : state.isMore,
+            courseChapter: state.courseChapter,
+            coursePosts: state.coursePosts,
+            coursePropose: state.coursePropose,
             courseSimilar: state.courseSimilar);
       }
     } else {
@@ -145,9 +211,29 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           courseLibrary: state.courseLibrary,
           course: state.course,
           detailCourse: state.detailCourse,
-          coursePropose: state.coursePropose,
+          courseLessonChapter: state.courseLessonChapter,
           isMore: false,
+          courseChapter: state.courseChapter,
+          coursePosts: state.coursePosts,
+          coursePropose: state.coursePropose,
           courseSimilar: state.courseSimilar);
+    }
+  }
+
+  getListCoursesLessonChapter(params) async {
+    List response =
+        await LearnSpaceApi().getListCoursesLessonChapterApi(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        course: state.course,
+        detailCourse: state.detailCourse,
+        courseInvitations: state.courseInvitations,
+        courseLibrary: state.courseLibrary,
+        courseLessonChapter: response,
+        isMore: state.isMore,
+        courseChapter: state.courseChapter,
+        coursePosts: state.coursePosts,
+      );
     }
   }
 
@@ -161,7 +247,25 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           courseLibrary: state.courseLibrary,
           coursePropose: response,
           isMore: state.isMore,
+          courseLessonChapter: state.courseLessonChapter,
+          courseChapter: state.courseChapter,
           courseSimilar: state.courseSimilar);
+    }
+  }
+
+  getListCoursesChapter(params, id) async {
+    List response = await LearnSpaceApi().getListCoursesChapterApi(params, id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        course: state.course,
+        courseInvitations: state.courseInvitations,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        isMore: state.isMore,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: response,
+        coursePosts: state.coursePosts,
+      );
     }
   }
 
@@ -169,13 +273,16 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
     List response = await LearnSpaceApi().getListCoursesApi(params);
     if (response.isNotEmpty) {
       state = state.copyWith(
-          course: state.course,
-          courseInvitations: state.courseInvitations,
-          detailCourse: state.detailCourse,
-          courseLibrary: state.courseLibrary,
-          isMore: state.isMore,
-          coursePropose: state.coursePropose,
-          courseSimilar: response);
+        course: state.course,
+        courseInvitations: state.courseInvitations,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        isMore: state.isMore,
+        coursePropose: state.coursePropose,
+        courseSimilar: response,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+      );
     }
   }
 
@@ -198,6 +305,9 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
       courseInvitations: state.courseInvitations,
       isMore: state.isMore,
       courseLibrary: state.courseLibrary,
+      courseLessonChapter: state.courseLessonChapter,
+      courseChapter: state.courseChapter,
+      coursePosts: state.coursePosts,
       coursePropose: state.coursePropose,
       courseSimilar: state.courseSimilar,
     );
@@ -213,6 +323,9 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         detailCourse: response,
         courseLibrary: state.courseLibrary,
         isMore: state.isMore,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        coursePosts: state.coursePosts,
         coursePropose: state.coursePropose,
         courseSimilar: state.courseSimilar,
       );
