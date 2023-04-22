@@ -15,6 +15,7 @@ class LearnSpaceState {
   final bool isMore;
   final List courseLibrary;
   final dynamic detailCourse;
+  final List courseFAQ;
 
   const LearnSpaceState({
     this.course = const [],
@@ -27,6 +28,7 @@ class LearnSpaceState {
     this.coursePosts = const [],
     this.courseSimilar = const [],
     this.coursePropose = const [],
+    this.courseFAQ = const [],
   });
 
   LearnSpaceState copyWith({
@@ -40,6 +42,7 @@ class LearnSpaceState {
     List coursePosts = const [],
     List coursePropose = const [],
     List courseSimilar = const [],
+    List courseFAQ = const [],
   }) {
     return LearnSpaceState(
       course: course,
@@ -52,6 +55,7 @@ class LearnSpaceState {
       coursePosts: coursePosts,
       coursePropose: coursePropose,
       courseSimilar: courseSimilar,
+      courseFAQ: courseFAQ,
     );
   }
 }
@@ -70,38 +74,42 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         final newGrows =
             response.where((item) => !state.course.contains(item)).toList();
         state = state.copyWith(
-            course: params.containsKey('max_id')
-                ? [...state.course, ...newGrows]
-                : newGrows,
-            isMore: params['limit'] != null
-                ? response.length < params['limit'] || response.isEmpty
-                    ? false
-                    : true
-                : false,
-            detailCourse: state.detailCourse,
-            courseLibrary: state.courseLibrary,
-            courseInvitations: state.courseInvitations,
-            courseLessonChapter: state.courseLessonChapter,
-            courseChapter: state.courseChapter,
-            coursePosts: state.coursePosts,
-            coursePropose: state.coursePropose,
-            courseSimilar: state.courseSimilar);
-      }
-    } else {
-      final newGrows =
-          response.where((item) => !state.course.contains(item)).toList();
-      state = state.copyWith(
           course: params.containsKey('max_id')
               ? [...state.course, ...newGrows]
               : newGrows,
-          isMore: false,
+          isMore: params['limit'] != null
+              ? response.length < params['limit'] || response.isEmpty
+                  ? false
+                  : true
+              : false,
           detailCourse: state.detailCourse,
           courseLibrary: state.courseLibrary,
           courseInvitations: state.courseInvitations,
           courseLessonChapter: state.courseLessonChapter,
           courseChapter: state.courseChapter,
+          coursePosts: state.coursePosts,
           coursePropose: state.coursePropose,
-          courseSimilar: state.courseSimilar);
+          courseSimilar: state.courseSimilar,
+          courseFAQ: state.courseFAQ,
+        );
+      }
+    } else {
+      final newGrows =
+          response.where((item) => !state.course.contains(item)).toList();
+      state = state.copyWith(
+        course: params.containsKey('max_id')
+            ? [...state.course, ...newGrows]
+            : newGrows,
+        isMore: false,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+      );
     }
   }
 
@@ -113,35 +121,39 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
             .where((item) => !state.coursePosts.contains(item))
             .toList();
         state = state.copyWith(
-            coursePosts: params.containsKey('max_id')
-                ? [...state.coursePosts, ...newGrows]
-                : newGrows,
-            isMore: params['limit'] != null
-                ? response.length < params['limit'] || response.isEmpty
-                    ? false
-                    : true
-                : false,
-            course: state.course,
-            detailCourse: state.detailCourse,
-            courseLibrary: state.courseLibrary,
-            courseInvitations: state.courseInvitations,
-            courseLessonChapter: state.courseLessonChapter,
-            courseChapter: state.courseChapter);
+          coursePosts: params.containsKey('max_id')
+              ? [...state.coursePosts, ...newGrows]
+              : newGrows,
+          isMore: params['limit'] != null
+              ? response.length < params['limit'] || response.isEmpty
+                  ? false
+                  : true
+              : false,
+          course: state.course,
+          detailCourse: state.detailCourse,
+          courseLibrary: state.courseLibrary,
+          courseInvitations: state.courseInvitations,
+          courseLessonChapter: state.courseLessonChapter,
+          courseChapter: state.courseChapter,
+          courseFAQ: state.courseFAQ,
+        );
       }
     } else {
       final newGrows =
           response.where((item) => !state.coursePosts.contains(item)).toList();
       state = state.copyWith(
-          coursePosts: params.containsKey('max_id')
-              ? [...state.coursePosts, ...newGrows]
-              : newGrows,
-          course: state.course,
-          isMore: false,
-          detailCourse: state.detailCourse,
-          courseLibrary: state.courseLibrary,
-          courseInvitations: state.courseInvitations,
-          courseLessonChapter: state.courseLessonChapter,
-          courseChapter: state.courseChapter);
+        coursePosts: params.containsKey('max_id')
+            ? [...state.coursePosts, ...newGrows]
+            : newGrows,
+        course: state.course,
+        isMore: false,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        courseFAQ: state.courseFAQ,
+      );
     }
   }
 
@@ -149,16 +161,18 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
     dynamic response = await LearnSpaceApi().getDetailCoursesApi(id);
     if (response.isNotEmpty) {
       state = state.copyWith(
-          course: state.course,
-          isMore: state.isMore,
-          detailCourse: response,
-          courseInvitations: state.courseInvitations,
-          courseLessonChapter: state.courseLessonChapter,
-          courseLibrary: state.courseLibrary,
-          courseChapter: state.courseChapter,
-          coursePosts: state.coursePosts,
-          coursePropose: state.coursePropose,
-          courseSimilar: state.courseSimilar);
+        course: state.course,
+        isMore: state.isMore,
+        detailCourse: response,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        courseLibrary: state.courseLibrary,
+        courseChapter: state.courseChapter,
+        coursePosts: state.coursePosts,
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+      );
     }
   }
 
@@ -166,16 +180,18 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
     List response = await LearnSpaceApi().getListCoursesLibrariesApi();
     if (response.isNotEmpty) {
       state = state.copyWith(
-          courseLibrary: response,
-          course: state.course,
-          detailCourse: state.detailCourse,
-          courseInvitations: state.courseInvitations,
-          courseLessonChapter: state.courseLessonChapter,
-          isMore: state.isMore,
-          courseChapter: state.courseChapter,
-          coursePosts: state.coursePosts,
-          coursePropose: state.coursePropose,
-          courseSimilar: state.courseSimilar);
+        courseLibrary: response,
+        course: state.course,
+        detailCourse: state.detailCourse,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        isMore: state.isMore,
+        courseChapter: state.courseChapter,
+        coursePosts: state.coursePosts,
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+      );
     }
   }
 
@@ -189,16 +205,18 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
                 .contains(item['course']['id']))
             .toList();
         state = state.copyWith(
-            courseInvitations: [...state.courseInvitations, ...newGrows],
-            courseLibrary: state.courseLibrary,
-            course: state.course,
-            detailCourse: state.detailCourse,
-            courseLessonChapter: state.courseLessonChapter,
-            isMore: newGrows.isEmpty ? false : state.isMore,
-            courseChapter: state.courseChapter,
-            coursePosts: state.coursePosts,
-            coursePropose: state.coursePropose,
-            courseSimilar: state.courseSimilar);
+          courseInvitations: [...state.courseInvitations, ...newGrows],
+          courseLibrary: state.courseLibrary,
+          course: state.course,
+          detailCourse: state.detailCourse,
+          courseLessonChapter: state.courseLessonChapter,
+          isMore: newGrows.isEmpty ? false : state.isMore,
+          courseChapter: state.courseChapter,
+          coursePosts: state.coursePosts,
+          coursePropose: state.coursePropose,
+          courseSimilar: state.courseSimilar,
+          courseFAQ: state.courseFAQ,
+        );
       }
     } else {
       var newGrows = response['data']
@@ -207,16 +225,18 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
               .contains(item['course']['id']))
           .toList();
       state = state.copyWith(
-          courseInvitations: [...state.courseInvitations, ...newGrows],
-          courseLibrary: state.courseLibrary,
-          course: state.course,
-          detailCourse: state.detailCourse,
-          courseLessonChapter: state.courseLessonChapter,
-          isMore: false,
-          courseChapter: state.courseChapter,
-          coursePosts: state.coursePosts,
-          coursePropose: state.coursePropose,
-          courseSimilar: state.courseSimilar);
+        courseInvitations: [...state.courseInvitations, ...newGrows],
+        courseLibrary: state.courseLibrary,
+        course: state.course,
+        detailCourse: state.detailCourse,
+        courseLessonChapter: state.courseLessonChapter,
+        isMore: false,
+        courseChapter: state.courseChapter,
+        coursePosts: state.coursePosts,
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+      );
     }
   }
 
@@ -233,6 +253,19 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         isMore: state.isMore,
         courseChapter: state.courseChapter,
         coursePosts: state.coursePosts,
+        courseFAQ: state.courseFAQ,
+      );
+    } else {
+      state = state.copyWith(
+        course: state.course,
+        detailCourse: state.detailCourse,
+        courseInvitations: state.courseInvitations,
+        courseLibrary: state.courseLibrary,
+        courseLessonChapter: response,
+        isMore: state.isMore,
+        courseChapter: state.courseChapter,
+        coursePosts: state.coursePosts,
+        courseFAQ: state.courseFAQ,
       );
     }
   }
@@ -241,15 +274,17 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
     List response = await LearnSpaceApi().getListCoursesApi(params);
     if (response.isNotEmpty) {
       state = state.copyWith(
-          course: state.course,
-          detailCourse: state.detailCourse,
-          courseInvitations: state.courseInvitations,
-          courseLibrary: state.courseLibrary,
-          coursePropose: response,
-          isMore: state.isMore,
-          courseLessonChapter: state.courseLessonChapter,
-          courseChapter: state.courseChapter,
-          courseSimilar: state.courseSimilar);
+        course: state.course,
+        detailCourse: state.detailCourse,
+        courseInvitations: state.courseInvitations,
+        courseLibrary: state.courseLibrary,
+        coursePropose: response,
+        isMore: state.isMore,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+      );
     }
   }
 
@@ -265,6 +300,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseLessonChapter: state.courseLessonChapter,
         courseChapter: response,
         coursePosts: state.coursePosts,
+        courseFAQ: state.courseFAQ,
       );
     }
   }
@@ -280,6 +316,25 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         isMore: state.isMore,
         coursePropose: state.coursePropose,
         courseSimilar: response,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        courseFAQ: state.courseFAQ,
+      );
+    }
+  }
+
+  getListCoursesFAQ(id) async {
+    List response = await LearnSpaceApi().getListCoursesFAQApi(id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        course: state.course,
+        courseInvitations: state.courseInvitations,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        isMore: state.isMore,
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: response,
         courseLessonChapter: state.courseLessonChapter,
         courseChapter: state.courseChapter,
       );
@@ -310,6 +365,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
       coursePosts: state.coursePosts,
       coursePropose: state.coursePropose,
       courseSimilar: state.courseSimilar,
+      courseFAQ: state.courseFAQ,
     );
   }
 
@@ -328,6 +384,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         coursePosts: state.coursePosts,
         coursePropose: state.coursePropose,
         courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
       );
       return true;
     } on DioError {

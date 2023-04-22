@@ -757,7 +757,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                             ? LearnSpaceCourse(id: courseDetail['id'])
                             : const SizedBox.shrink(),
                         menuCourse == 'faq'
-                            ? const LearnSpaceFAQ()
+                            ?  LearnSpaceFAQ(id: courseDetail['id'])
                             : const SizedBox.shrink(),
                         menuCourse == 'review'
                             ? const LearnSpaceReview()
