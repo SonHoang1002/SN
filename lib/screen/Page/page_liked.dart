@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/page_item.dart';
+import 'package:social_network_app_mobile/widget/screen_share.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 
 class PageLiked extends ConsumerStatefulWidget {
@@ -52,7 +54,14 @@ class _PageLikedState extends ConsumerState<PageLiked> {
   }
 
   handleInvite() async {}
-  handleShare() async {}
+  handleShare(page) async {
+    showBarModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (context) => ScreenShare(
+            pageShared: page, type: 'share_page', entityType: 'share_page'));
+  }
+
   handleBlock(id) {
     showCupertinoModalPopup(
         context: context,
@@ -130,7 +139,7 @@ class _PageLikedState extends ConsumerState<PageLiked> {
         handleInvite();
         break;
       case 'share':
-        handleShare();
+        handleShare(pageCurrent);
         break;
       case 'block':
         handleBlock(pageCurrent['id']);
