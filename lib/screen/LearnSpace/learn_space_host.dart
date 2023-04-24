@@ -18,18 +18,25 @@ class LearnSpaceHost extends ConsumerStatefulWidget {
 class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
   late double width;
   late double height;
-  var paramsConfigList = {"limit": 10, "only_current_user": true};
-
+  List course = [];
+  var paramsConfigList = {"only_current_user": true};
   final scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     if (mounted) {
-      Future.delayed(
-          Duration.zero,
-          () => ref
-              .read(learnSpaceStateControllerProvider.notifier)
-              .getListCourses(paramsConfigList));
+      Future.delayed(Duration.zero).then((_) {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .getListCourses(paramsConfigList)
+            .then((value) {
+          setState(() {
+            course = ref.watch(learnSpaceStateControllerProvider).course;
+          });
+        }).catchError((error) {
+          // handle error
+        });
+      });
     }
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
@@ -45,7 +52,6 @@ class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
 
   @override
   Widget build(BuildContext context) {
-    List course = ref.watch(learnSpaceStateControllerProvider).course;
     bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
     final size = MediaQuery.of(context).size;
     width = size.width;
@@ -65,14 +71,14 @@ class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
             const Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
               child: Text(
-                'Khoá học đã học',
+                'Khoá học bạn tổ chức',
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            course.isNotEmpty
+            course.any((element) => element['title'] != null)
                 ? SizedBox(
                     child: ListView.builder(
                     shrinkWrap: true,

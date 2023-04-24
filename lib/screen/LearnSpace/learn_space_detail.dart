@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_course.d
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_discussion.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_faq.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_intro.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_purchased.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_review.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
@@ -33,6 +34,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   dynamic courseDetail = {};
   bool isCourseInterested = false;
   String courseMenu = 'intro';
+  String currentMenu = 'intro';
   String menuCourse = '';
   @override
   void initState() {
@@ -671,14 +673,21 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                 (index) {
                                   final isMore =
                                       itemChipCourse[index]['key'] == 'more';
-                                  final isSelected = itemChipCourse[index]
-                                          ['key'] ==
-                                      courseMenu;
+                                  final isSelected = menuCourse == ""
+                                      ? itemChipCourse[index]['key'] ==
+                                          currentMenu
+                                      : itemChipCourse[index]['key'] ==
+                                          courseMenu;
                                   return InkWell(
                                     onTap: () {
                                       setState(() {
                                         courseMenu =
                                             itemChipCourse[index]['key'];
+                                        if (itemChipCourse[index]['key'] !=
+                                            'more') {
+                                          currentMenu =
+                                              itemChipCourse[index]['key'];
+                                        }
                                         if (courseMenu != 'more') {
                                           menuCourse = '';
                                         }
@@ -715,6 +724,8 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                           itemChipCourse
                                                                               .length)[
                                                                       newIndex]['key'];
+                                                                  currentMenu =
+                                                                      '';
                                                                 });
                                                                 Navigator.pop(
                                                                     context);
@@ -738,12 +749,12 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                             ),
                           ),
                         ),
-                        courseMenu == 'intro'
+                        currentMenu == 'intro'
                             ? LearnSpaceIntro(
                                 courseDetail: courseDetail,
                               )
                             : const SizedBox.shrink(),
-                        courseMenu == 'discussion' &&
+                        currentMenu == 'discussion' &&
                                 (courseDetail['course_relationships']
                                         ['host_course'] ||
                                     courseDetail['course_relationships']
@@ -753,14 +764,17 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                 "course_id": courseDetail['id']
                               })
                             : const SizedBox.shrink(),
-                        courseMenu == 'course'
+                        currentMenu == 'course'
                             ? LearnSpaceCourse(id: courseDetail['id'])
                             : const SizedBox.shrink(),
                         menuCourse == 'faq'
-                            ?  LearnSpaceFAQ(id: courseDetail['id'])
+                            ? LearnSpaceFAQ(courseDetail: courseDetail)
                             : const SizedBox.shrink(),
                         menuCourse == 'review'
-                            ? const LearnSpaceReview()
+                            ? LearnSpaceReview(courseDetail: courseDetail)
+                            : const SizedBox.shrink(),
+                        menuCourse == 'course_bought'
+                            ? LearnSpacePurchased(courseDetail: courseDetail)
                             : const SizedBox.shrink(),
                         const SizedBox(height: 70),
                       ],

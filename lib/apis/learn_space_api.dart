@@ -5,6 +5,25 @@ class LearnSpaceApi {
     return await Api().getRequestBase('/api/v1/courses', params);
   }
 
+  Future getListCourseRatingApi(id) async {
+    return await Api()
+        .getRequestBase('/api/v1/courses/$id/course_rating', null);
+  }
+
+  Future getListCoursePurchasedApi(id) async {
+    return await Api()
+        .getRequestBase('/api/v1/courses/$id/list_participants', null);
+  }
+
+  Future createFAQCoursesApi(id, data) async {
+    try {
+      return await Api()
+          .postRequestBase('/api/v1/courses/$id/course_faqs', data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future getListCoursesChapterApi(params, id) async {
     return await Api()
         .getRequestBase('/api/v1/courses/$id/course_chapters', params);

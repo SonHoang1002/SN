@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/apis/learn_space_api.dart';
 
 import '../../providers/learn_space/learn_space_provider.dart';
 
 class LearnSpaceFAQ extends ConsumerStatefulWidget {
-  final String? id;
-  const LearnSpaceFAQ({super.key, this.id});
+  final dynamic courseDetail;
+  const LearnSpaceFAQ({super.key, this.courseDetail});
 
   @override
   ConsumerState<LearnSpaceFAQ> createState() => _LearnSpaceFAQState();
 }
 
 class _LearnSpaceFAQState extends ConsumerState<LearnSpaceFAQ> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _textQuestion = TextEditingController(text: "");
+  final TextEditingController _textAnswer = TextEditingController(text: "");
   List<CourseFAQ> _courseFAQ = [];
-
+  var formData = {};
   @override
   void initState() {
     super.initState();
@@ -21,7 +26,7 @@ class _LearnSpaceFAQState extends ConsumerState<LearnSpaceFAQ> {
       Future.delayed(Duration.zero, () async {
         await ref
             .read(learnSpaceStateControllerProvider.notifier)
-            .getListCoursesFAQ(widget.id);
+            .getListCoursesFAQ(widget.courseDetail['id']);
         setState(() {
           _courseFAQ = ref
               .watch(learnSpaceStateControllerProvider)
@@ -47,7 +52,138 @@ class _LearnSpaceFAQState extends ConsumerState<LearnSpaceFAQ> {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [Text('FAQ'), Text('Tạo câu hỏi')],
+            children: [
+              const Text('Câu hỏi thường gặp'),
+              widget.courseDetail['course_relationships']['host_course']
+                  ? TextButton(
+                      onPressed: () {
+                        _textQuestion.clear();
+                        _textAnswer.clear();
+                        showBarModalBottomSheet(
+                            context: context,
+                            builder: (context) => SingleChildScrollView(
+                                  primary: true,
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: SizedBox(
+                                    height: 300,
+                                    child: InkWell(
+                                      onTap: () {
+                                        FocusScopeNode currentFocus =
+                                            FocusScope.of(context);
+                                        if (!currentFocus.hasPrimaryFocus) {
+                                          currentFocus.unfocus();
+                                        }
+                                      },
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Padding(
+                                                padding: EdgeInsets.all(16.0),
+                                                child: Center(
+                                                    child: Text('Tạo câu hỏi')),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
+                                                child: TextFormField(
+                                                  controller: _textQuestion,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                    labelText: 'Câu hỏi',
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
+                                                child: TextFormField(
+                                                  controller: _textAnswer,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                    labelText: 'Trả lời',
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 16.0, right: 16.0),
+                                                child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      minimumSize: Size(
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                          45),
+                                                      foregroundColor: Colors
+                                                          .white, // foreground
+                                                    ),
+                                                    onPressed: () async {
+                                                      if (_formKey.currentState!
+                                                          .validate()) {
+                                                        final dataQuestion =
+                                                            _textQuestion.text;
+                                                        final dataAnswer =
+                                                            _textAnswer.text;
+                                                        try {
+                                                          await LearnSpaceApi()
+                                                              .createFAQCoursesApi(
+                                                            widget.courseDetail[
+                                                                'id'],
+                                                            {
+                                                              "question":
+                                                                  dataQuestion,
+                                                              "answer":
+                                                                  dataAnswer
+                                                            },
+                                                          );
+                                                          await ref
+                                                              .read(
+                                                                  learnSpaceStateControllerProvider
+                                                                      .notifier)
+                                                              .getListCoursesFAQ(
+                                                                  widget.courseDetail[
+                                                                      'id']);
+                                                          setState(() {
+                                                            _courseFAQ = ref
+                                                                .watch(
+                                                                    learnSpaceStateControllerProvider)
+                                                                .courseFAQ
+                                                                .map((json) =>
+                                                                    CourseFAQ
+                                                                        .fromJson(
+                                                                            json))
+                                                                .toList();
+                                                          });
+                                                          Navigator.pop(
+                                                              context);
+                                                        } catch (e) {
+                                                          print(e);
+                                                        }
+                                                      }
+                                                    },
+                                                    child: const Text(
+                                                        'Tạo câu hỏi')),
+                                              )
+                                            ]),
+                                      ),
+                                    ),
+                                  ),
+                                ));
+                      },
+                      child: const Text('Tạo câu hỏi'))
+                  : const SizedBox()
+            ],
           ),
         ),
         const Divider(
