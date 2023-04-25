@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/providers/page/page_list_provider.dart
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 import 'package:social_network_app_mobile/widget/page_item.dart';
 import 'package:social_network_app_mobile/widget/screen_share.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
@@ -53,7 +54,24 @@ class _PageLikedState extends ConsumerState<PageLiked> {
     }
   }
 
-  handleInvite() async {}
+  handleInvite(page) async {
+    showBarModalBottomSheet(
+        context: context,
+        builder: (context) => InviteFriend(
+              id: page['id'],
+              type: 'page',
+              handleInvite: (value) async {
+                var res = await PageApi().createInviteLikePage({
+                  'target_account_ids': [value],
+                  'invitation_type': 'like'
+                }, page['id']);
+                if (res != null) {
+                  print('success');
+                }
+              },
+            ));
+  }
+
   handleShare(page) async {
     showBarModalBottomSheet(
         context: context,
@@ -136,7 +154,7 @@ class _PageLikedState extends ConsumerState<PageLiked> {
             pageCurrent['id']);
         break;
       case 'invite':
-        handleInvite();
+        handleInvite(pageCurrent);
         break;
       case 'share':
         handleShare(pageCurrent);

@@ -53,7 +53,7 @@ class _SearchInputState extends State<SearchInput> {
             decoration: InputDecoration(
                 hintText: widget.title ?? 'Tìm kiếm',
                 hintStyle: TextStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     color: widget.type == postWatch ? Colors.white : null),
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
