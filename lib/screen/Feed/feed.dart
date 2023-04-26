@@ -40,22 +40,29 @@ class _FeedState extends ConsumerState<Feed> {
     });
 
     scrollController.addListener(() {
-      // if (scrollController.position.maxScrollExtent < 2000 ||
+      // if (scrollController.position.maxScrollExtent < 3000 ||
       //     (scrollController.offset).toDouble() <
       //             scrollController.position.maxScrollExtent &&
       //         (scrollController.offset).toDouble() >
-      //             scrollController.position.maxScrollExtent - 2000) {
+      //             scrollController.position.maxScrollExtent - 3000) {
+      //   EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 300),
+      //       () {
+      //     String maxId = ref.watch(postControllerProvider).posts.last['score'];
+      //     ref.read(postControllerProvider.notifier).getListPost({
+      //       "max_id": maxId,
+      //       "multi": 2,
+      //       ...paramsConfig,
+      //     });
       //   });
       // }
 
       if (scrollController.position.userScrollDirection ==
-              ScrollDirection.forward ||
-          scrollController.position.userScrollDirection ==
-              ScrollDirection.reverse) {
-        if (double.parse((scrollController.offset).toStringAsFixed(0)) % 60.0 ==
+          ScrollDirection.reverse) {
+        if (double.parse((scrollController.offset).toStringAsFixed(0)) %
+                120.0 ==
             0) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 300), () {
+              'my-debouncer', const Duration(milliseconds: 1000), () {
             String maxId =
                 ref.watch(postControllerProvider).posts.last['score'];
             ref.read(postControllerProvider.notifier).getListPost({
@@ -122,9 +129,9 @@ class _FeedState extends ConsumerState<Feed> {
   Future<void> dispose() async {
     super.dispose();
     scrollController.dispose();
-    if (scrollController.offset > 0) {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setDouble('scrollOffset', scrollController.offset);
-    }
+    // if (scrollController.offset > 0) {
+    //   final prefs = await SharedPreferences.getInstance();
+    //   prefs.setDouble('scrollOffset', scrollController.offset);
+    // }
   }
 }

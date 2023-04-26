@@ -23,7 +23,8 @@ class PostCard extends StatelessWidget {
     var card = post['card'];
     var size = MediaQuery.of(context).size;
     return card != null
-        ? card['provider_name'] != null && card['provider_name'] != 'GIPHY'
+        ? (card['provider_name'] != null && card['provider_name'] != 'GIPHY')||card['link']!=null
+        // ? card['provider_name'] != null && card['provider_name'] != 'GIPHY'
             ? Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20), border: border),

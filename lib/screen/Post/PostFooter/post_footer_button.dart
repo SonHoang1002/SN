@@ -258,8 +258,11 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                   ],
                 ),
               )
-            : buildTextContent(suggestReactionContent, false,
-                isCenterLeft: false));
+            : Container(
+                height: 40,
+                child: buildTextContent(suggestReactionContent, false,
+                    isCenterLeft: false),
+              ));
   }
 }
 

@@ -22,12 +22,14 @@ import 'package:social_network_app_mobile/screen/UserPage/user_page_pin_post.dar
 import 'package:social_network_app_mobile/screen/UserPage/user_photo_video.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Banner/banner_base.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
+import 'dart:convert';
 
 class UserPage extends ConsumerStatefulWidget {
   final dynamic user;
@@ -62,6 +64,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           id = queryParams['id'];
         });
       });
+
       Future.delayed(Duration.zero, () async {
         // ref.read(postControllerProvider.notifier).removeListPost('user');
         // ref.read(userInformationProvider.notifier).removeUserInfo();
@@ -69,6 +72,9 @@ class _UserPageState extends ConsumerState<UserPage> {
         List postUserNew =
             await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
                 [];
+        ref
+            .read(postControllerProvider.notifier)
+            .getListPostUserPage(id, {"exclude_replies": true, "limit": 5});
         dynamic userDataNew = await UserPageApi().getAccountInfor(id);
         dynamic userAboutNew =
             await UserPageApi().getAccountAboutInformation(id);
@@ -85,20 +91,25 @@ class _UserPageState extends ConsumerState<UserPage> {
     }
 
     scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent < 2000 ||
+      if (scrollController.position.maxScrollExtent < 4000 ||
           (scrollController.offset).toDouble() <
                   scrollController.position.maxScrollExtent &&
               (scrollController.offset).toDouble() >
-                  scrollController.position.maxScrollExtent - 2000) {
+                  scrollController.position.maxScrollExtent - 4000) {
         EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 300),
             () {
-           if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
-          if (id != null) {
-            String maxId =
-                ref.read(postControllerProvider).postUserPage.last['id'];
-            ref.read(postControllerProvider.notifier).getListPostUserPage(
-                id, {"max_id": maxId, "exclude_replies": true});
+          // if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
+          // if (id != null) {
+
+          String maxId = "";
+          if (ref.read(postControllerProvider).postUserPage.isEmpty) {
+            maxId = postUser.last['id'];
+          } else {
+            maxId = ref.read(postControllerProvider).postUserPage.last['id'];
           }
+          ref.read(postControllerProvider.notifier).getListPostUserPage(
+              id, {"max_id": maxId, "exclude_replies": true, "limit": 5});
+          // }
         });
       }
     });
@@ -113,7 +124,10 @@ class _UserPageState extends ConsumerState<UserPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     var userAbout = ref.watch(userInformationProvider).userMoreInfor;
-    // bool isShowStack = false;
+    if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
+      postUser = ref.watch(postControllerProvider).postUserPage;
+      isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -241,13 +255,14 @@ class _UserPageState extends ConsumerState<UserPage> {
                     )),
             isMorePageUser
                 ? Center(child: SkeletonCustom().postSkeleton(context))
-                : const SizedBox()
+                : Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    child: buildTextContent("Không còn bài viết nào khác", true,
+                        fontSize: 20, isCenterLeft: false),
+                  )
           ],
         ),
       ),
     );
   }
 }
-  // isShowStack
-          //     ? PostMedia(post: post, type: widget.type)
-          //     : SizedBox(),

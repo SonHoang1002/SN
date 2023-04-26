@@ -53,7 +53,8 @@ class _TabSocialState extends State<TabSocial> with TickerProviderStateMixin {
               List.generate(
                   widget.tabHeader!.length,
                   (index) => Tab(
-                        icon: widget.tabHeader![index]['icon'],
+                        icon: widget.tabHeader![index]['icon'] ??
+                            const Icon(Icons.abc),
                         text: widget.tabHeader![index],
                       )),
         ),

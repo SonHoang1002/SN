@@ -4,7 +4,7 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/post_mutiple_media_detail.dart';
-import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart'; 
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 
@@ -20,7 +20,7 @@ class PostMedia extends StatelessWidget {
     handlePress(media) {
       if (checkIsImage(media)) {
         if (medias.length == 1) {
-          pushCustomPageRoute(
+          pushCustomVerticalPageRoute(
               context,
               PostOneMediaDetail(
                 postMedia: post,
@@ -32,16 +32,23 @@ class PostMedia extends StatelessWidget {
         } else if (medias.length > 1) {
           int initialIndex =
               medias.indexWhere((element) => element['id'] == media['id']);
-          pushCustomPageRoute(
+          pushCustomCupertinoPageRoute(
               context,
-              CreateModalBaseMenu(
-                  title: 'Bài viết',
-                  body: PostMutipleMediaDetail(
-                    post: post,
-                    initialIndex: initialIndex,
-                  ),
-                  buttonAppbar: const SizedBox()),
+              PostMutipleMediaDetail(
+                post: post,
+                initialIndex: initialIndex,
+              ),
               opaque: false);
+          //  pushCustomPageRoute(
+          // context,
+          // CreateModalBaseMenu(
+          //     title: 'Bài viết',
+          //     body: PostMutipleMediaDetail(
+          //       post: post,
+          //       initialIndex: initialIndex,
+          //     ),
+          //     buttonAppbar: const SizedBox()),
+          // opaque: false);
         } else {
           Navigator.push(
               context,
