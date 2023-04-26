@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -53,32 +54,51 @@ class _MomentState extends ConsumerState<Moment>
     List momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
     List momentFollow = ref.watch(momentControllerProvider).momentFollow;
 
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
         body: Stack(children: <Widget>[
       TabBarView(controller: _tabController, children: [
-        if (mounted)
-          MomentPageview(
-            type: 'follow',
-            momentRender: momentFollow,
-            handlePageChange: (value) {
-              if (value == momentFollow.length - 5) {
-                ref.read(momentControllerProvider.notifier).getListMomentFollow(
-                    {"limit": 10, "max_id": momentFollow.last['score']});
-              }
-            },
-          )
-        else
-          Container(),
-        MomentPageview(
-          type: 'suggest',
-          momentRender: momentSuggests,
-          handlePageChange: (value) {
-            if (value == momentSuggests.length - 5) {
-              ref.read(momentControllerProvider.notifier).getListMomentSuggest(
-                  {"limit": 10, "max_id": momentSuggests.last['score']});
-            }
-          },
-        )
+        momentFollow.isNotEmpty
+            ? MomentPageview(
+                type: 'follow',
+                momentRender: momentFollow,
+                handlePageChange: (value) {
+                  if (value == momentFollow.length - 5) {
+                    ref
+                        .read(momentControllerProvider.notifier)
+                        .getListMomentFollow({
+                      "limit": 10,
+                      "max_id": momentFollow.last['score']
+                    });
+                  }
+                },
+              )
+            : Container(
+                color: Colors.black,
+                width: size.width,
+                height: size.height,
+              ),
+        momentSuggests.isNotEmpty
+            ? MomentPageview(
+                type: 'suggest',
+                momentRender: momentSuggests,
+                handlePageChange: (value) {
+                  if (value == momentSuggests.length - 5) {
+                    ref
+                        .read(momentControllerProvider.notifier)
+                        .getListMomentSuggest({
+                      "limit": 10,
+                      "max_id": momentSuggests.last['score']
+                    });
+                  }
+                },
+              )
+            : Container(
+                color: Colors.black,
+                width: size.width,
+                height: size.height,
+              )
       ]),
       Positioned(
           //Place it at the top, and not use the entire screen
