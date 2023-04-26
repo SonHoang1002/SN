@@ -9,32 +9,40 @@ class RecruitState {
   final List recruitsCV;
   final List recruitsPropose;
   final List recruitsSimilar;
+  final List recruitsInvite;
   final bool isMore;
   final dynamic detailRecruit;
+  final List recruitsChipMenu;
 
-  const RecruitState(
-      {this.recruits = const [],
-      this.isMore = true,
-      this.recruitsCV = const [],
-      this.recruitsSimilar = const [],
-      this.recruitsPropose = const [],
-      this.detailRecruit = const {}});
+  const RecruitState({
+    this.recruits = const [],
+    this.isMore = true,
+    this.recruitsCV = const [],
+    this.recruitsSimilar = const [],
+    this.recruitsPropose = const [],
+    this.detailRecruit = const {},
+    this.recruitsInvite = const [],
+    this.recruitsChipMenu = const [],
+  });
 
-  RecruitState copyWith({
-    List recruits = const [],
-    List recruitsSimilar = const [],
-    List recruitsCV = const [],
-    List recruitsPropose = const [],
-    bool isMore = true,
-    dynamic detailRecruit = const {},
-  }) {
+  RecruitState copyWith(
+      {List recruits = const [],
+      List recruitsSimilar = const [],
+      List recruitsCV = const [],
+      List recruitsPropose = const [],
+      bool isMore = true,
+      dynamic detailRecruit = const {},
+      List recruitsInvite = const [],
+      List recruitsChipMenu = const []}) {
     return RecruitState(
         recruits: recruits,
         isMore: isMore,
         recruitsCV: recruitsCV,
         detailRecruit: detailRecruit,
         recruitsSimilar: recruitsSimilar,
-        recruitsPropose: recruitsPropose);
+        recruitsPropose: recruitsPropose,
+        recruitsInvite: recruitsInvite,
+        recruitsChipMenu: recruitsChipMenu);
   }
 }
 
@@ -65,6 +73,7 @@ class RecruitController extends StateNotifier<RecruitState> {
         recruitsPropose: state.recruitsPropose,
         detailRecruit: state.detailRecruit,
         recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
       );
     } else {
       final newGrows =
@@ -77,6 +86,47 @@ class RecruitController extends StateNotifier<RecruitState> {
           recruitsSimilar: state.recruitsSimilar,
           recruitsPropose: state.recruitsPropose,
           recruitsCV: state.recruitsCV,
+          recruitsInvite: state.recruitsInvite,
+          isMore: false);
+    }
+  }
+
+  getListRecruitChipMenu(params) async {
+    List response = await RecruitApi().getListRecruitApi(params);
+    if (response.isNotEmpty) {
+      final newGrows = response
+          .where((item) => !state.recruitsChipMenu.contains(item))
+          .toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        recruitsChipMenu: params.containsKey('max_id')
+            ? [...state.recruits, ...newGrows]
+            : newGrows,
+        isMore: params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
+      );
+    } else {
+      final newGrows = response
+          .where((item) => !state.recruitsChipMenu.contains(item))
+          .toList();
+      state = state.copyWith(
+          recruits: state.recruits,
+          recruitsChipMenu: params.containsKey('max_id')
+              ? [...state.recruits, ...newGrows]
+              : newGrows,
+          detailRecruit: state.detailRecruit,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsCV: state.recruitsCV,
+          recruitsInvite: state.recruitsInvite,
           isMore: false);
     }
   }
@@ -86,6 +136,25 @@ class RecruitController extends StateNotifier<RecruitState> {
     if (response.isNotEmpty) {
       state = state.copyWith(
         recruitsPropose: response,
+        recruitsSimilar: state.recruitsSimilar,
+        recruits: state.recruits,
+        isMore: params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
+        detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+      );
+    }
+  }
+
+  getListRecruitInvite(params) async {
+    var response = await RecruitApi().getListRecruitInviteApi(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        recruitsInvite: response['data'],
+        recruitsPropose: state.recruitsPropose,
         recruitsSimilar: state.recruitsSimilar,
         recruits: state.recruits,
         isMore: params['limit'] != null
@@ -113,6 +182,7 @@ class RecruitController extends StateNotifier<RecruitState> {
             : false,
         detailRecruit: state.detailRecruit,
         recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
       );
     }
   }
@@ -127,6 +197,7 @@ class RecruitController extends StateNotifier<RecruitState> {
         recruits: state.recruits,
         isMore: state.isMore,
         detailRecruit: state.detailRecruit,
+        recruitsInvite: state.recruitsInvite,
       );
     }
   }
@@ -141,6 +212,7 @@ class RecruitController extends StateNotifier<RecruitState> {
         isMore: state.isMore,
         recruitsSimilar: state.recruitsSimilar,
         recruitsPropose: state.recruitsPropose,
+        recruitsInvite: state.recruitsInvite,
       );
     }
   }
@@ -155,6 +227,7 @@ class RecruitController extends StateNotifier<RecruitState> {
             detailRecruit: state.detailRecruit,
             recruitsSimilar: state.recruitsSimilar,
             recruitsPropose: state.recruitsPropose,
+            recruitsInvite: state.recruitsInvite,
             isMore: response.length < params['limit'] ? false : true);
       }
     } else {
@@ -165,6 +238,7 @@ class RecruitController extends StateNotifier<RecruitState> {
           detailRecruit: state.detailRecruit,
           recruitsSimilar: state.recruitsSimilar,
           recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
         );
       }
     }
@@ -189,6 +263,7 @@ class RecruitController extends StateNotifier<RecruitState> {
         recruitsCV: state.recruitsCV,
         recruitsSimilar: state.recruitsSimilar,
         recruitsPropose: state.recruitsPropose,
+        recruitsInvite: state.recruitsInvite,
         isMore: state.isMore);
   }
 }

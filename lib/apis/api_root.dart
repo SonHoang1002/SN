@@ -53,7 +53,7 @@ class Api {
       Dio dio = await getDio(userToken);
       var response = await dio.post(path, data: data);
       return response.data;
-    } catch (e) {
+    } on DioError {
       rethrow;
     }
   }

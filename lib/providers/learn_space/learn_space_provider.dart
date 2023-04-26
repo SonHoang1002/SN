@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/learn_space_api.dart';
+import 'package:social_network_app_mobile/widget/show_modal_message.dart';
 
 @immutable
 class LearnSpaceState {
@@ -18,6 +19,7 @@ class LearnSpaceState {
   final List courseFAQ;
   final List coursePurchased;
   final List courseReview;
+  final List coursesChipMenu;
 
   const LearnSpaceState({
     this.course = const [],
@@ -33,6 +35,7 @@ class LearnSpaceState {
     this.courseFAQ = const [],
     this.coursePurchased = const [],
     this.courseReview = const [],
+    this.coursesChipMenu = const [],
   });
 
   LearnSpaceState copyWith({
@@ -49,6 +52,7 @@ class LearnSpaceState {
     List courseFAQ = const [],
     List coursePurchased = const [],
     List courseReview = const [],
+    List coursesChipMenu = const [],
   }) {
     return LearnSpaceState(
       course: course,
@@ -64,6 +68,7 @@ class LearnSpaceState {
       courseFAQ: courseFAQ,
       coursePurchased: coursePurchased,
       courseReview: courseReview,
+      coursesChipMenu: coursesChipMenu,
     );
   }
 }
@@ -101,6 +106,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           courseFAQ: state.courseFAQ,
           coursePurchased: state.coursePurchased,
           courseReview: state.courseReview,
+          coursesChipMenu: state.coursesChipMenu,
         );
       }
     } else {
@@ -109,6 +115,61 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
       state = state.copyWith(
         course: params.containsKey('max_id')
             ? [...state.course, ...newGrows]
+            : newGrows,
+        isMore: false,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+        coursePurchased: state.coursePurchased,
+        courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
+      );
+    }
+  }
+
+  getListCoursesChipMenu(params) async {
+    List response = await LearnSpaceApi().getListCoursesApi(params);
+    if (response.isNotEmpty) {
+      if (mounted) {
+        final newGrows = response
+            .where((item) => !state.coursesChipMenu.contains(item))
+            .toList();
+        state = state.copyWith(
+          coursesChipMenu: params.containsKey('max_id')
+              ? [...state.coursesChipMenu, ...newGrows]
+              : newGrows,
+          isMore: params['limit'] != null
+              ? response.length < params['limit'] || response.isEmpty
+                  ? false
+                  : true
+              : false,
+          course: state.course,
+          detailCourse: state.detailCourse,
+          courseLibrary: state.courseLibrary,
+          courseInvitations: state.courseInvitations,
+          courseLessonChapter: state.courseLessonChapter,
+          courseChapter: state.courseChapter,
+          coursePosts: state.coursePosts,
+          coursePropose: state.coursePropose,
+          courseSimilar: state.courseSimilar,
+          courseFAQ: state.courseFAQ,
+          coursePurchased: state.coursePurchased,
+          courseReview: state.courseReview,
+        );
+      }
+    } else {
+      final newGrows = response
+          .where((item) => !state.coursesChipMenu.contains(item))
+          .toList();
+      state = state.copyWith(
+        course: state.course,
+        coursesChipMenu: params.containsKey('max_id')
+            ? [...state.coursesChipMenu, ...newGrows]
             : newGrows,
         isMore: false,
         detailCourse: state.detailCourse,
@@ -150,6 +211,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           courseFAQ: state.courseFAQ,
           coursePurchased: state.coursePurchased,
           courseReview: state.courseReview,
+          coursesChipMenu: state.coursesChipMenu,
         );
       }
     } else {
@@ -169,6 +231,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -190,6 +253,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -211,6 +275,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -238,6 +303,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
           courseFAQ: state.courseFAQ,
           coursePurchased: state.coursePurchased,
           courseReview: state.courseReview,
+          coursesChipMenu: state.coursesChipMenu,
         );
       }
     } else {
@@ -260,6 +326,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -280,6 +347,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     } else {
       state = state.copyWith(
@@ -294,6 +362,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -314,6 +383,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -333,6 +403,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -353,6 +424,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -373,6 +445,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseChapter: state.courseChapter,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -404,6 +477,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
       courseFAQ: state.courseFAQ,
       coursePurchased: state.coursePurchased,
       courseReview: state.courseReview,
+      coursesChipMenu: state.coursesChipMenu,
     );
   }
 
@@ -423,6 +497,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: response['data'],
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
@@ -443,11 +518,12 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: response,
+        coursesChipMenu: state.coursesChipMenu,
       );
     }
   }
 
-  updatePaymentCourse(id) async {
+  Future<void> updatePaymentCourse(id, BuildContext ctx) async {
     try {
       await LearnSpaceApi().coursesPaymentApi(id);
       dynamic response = await LearnSpaceApi().getDetailCoursesApi(id);
@@ -465,11 +541,13 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
       );
-      return true;
-    } on DioError {
-      return false;
-    } catch (e) {
+    } on DioError catch (e) {
+      showSnackbar(
+        ctx,
+        e.response!.data['error'].toString(),
+      );
       rethrow;
     }
   }

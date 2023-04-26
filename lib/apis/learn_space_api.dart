@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class LearnSpaceApi {
@@ -71,7 +72,7 @@ class LearnSpaceApi {
     try {
       return await Api().postRequestBase('/api/v1/courses/$id/payment_course',
           {"detail_type": "payment_course"});
-    } catch (e) {
+    } on DioError {
       rethrow;
     }
   }

@@ -19,7 +19,7 @@ class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
   late double width;
   late double height;
   List course = [];
-  var paramsConfigList = {"only_current_user": true};
+  var paramsConfigList = {"limit": 10, "only_current_user": true};
   final scrollController = ScrollController();
   @override
   void initState() {
@@ -28,10 +28,11 @@ class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
       Future.delayed(Duration.zero).then((_) {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
-            .getListCourses(paramsConfigList)
+            .getListCoursesChipMenu(paramsConfigList)
             .then((value) {
           setState(() {
-            course = ref.watch(learnSpaceStateControllerProvider).course;
+            course =
+                ref.watch(learnSpaceStateControllerProvider).coursesChipMenu;
           });
         }).catchError((error) {
           // handle error
@@ -41,11 +42,13 @@ class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        String maxId =
-            ref.read(learnSpaceStateControllerProvider).course.last['id'];
+        String maxId = ref
+            .read(learnSpaceStateControllerProvider)
+            .coursesChipMenu
+            .last['id'];
         ref
             .read(learnSpaceStateControllerProvider.notifier)
-            .getListCourses({"max_id": maxId, ...paramsConfigList});
+            .getListCoursesChipMenu({"max_id": maxId, ...paramsConfigList});
       }
     });
   }
@@ -61,7 +64,7 @@ class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
       onRefresh: () async {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
-            .getListCourses(paramsConfigList);
+            .getListCoursesChipMenu(paramsConfigList);
       },
       child: SingleChildScrollView(
         controller: scrollController,

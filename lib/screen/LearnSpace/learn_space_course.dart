@@ -22,6 +22,7 @@ class LearnSpaceCourse extends ConsumerStatefulWidget {
 class _LearnSpaceCourseState extends ConsumerState<LearnSpaceCourse> {
   String menuSelected = "";
   bool loadingCourse = false;
+  bool loadingCourseFile = false;
   String currentChapterId = '-1';
   List courseLessonChapter = [];
 
@@ -89,88 +90,106 @@ class _LearnSpaceCourseState extends ConsumerState<LearnSpaceCourse> {
                     height: MediaQuery.of(context).size.height * 0.45,
                     child: const Center(child: CupertinoActivityIndicator()))
                 : courseLessonChapter.any((element) => element['title'] != null)
-                    ? ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        primary: false,
-                        itemCount: courseLessonChapter.length,
-                        itemBuilder: (context, newIndex) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                  dense: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 0.0),
-                                  visualDensity: const VisualDensity(
-                                      horizontal: -4, vertical: 0),
-                                  leading: const Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 8.0, right: 8.0),
-                                    child: Icon(FontAwesomeIcons.bookOpen,
-                                        size: 18),
-                                  ),
-                                  title: Text(
-                                    courseLessonChapter[newIndex]['title'],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  subtitle: Text(courseLessonChapter[newIndex]
-                                                  ['course_lesson_attachments']
-                                              [0]['attachment']['type'] ==
-                                          'document'
-                                      ? 'Tài liệu'
-                                      : courseLessonChapter[newIndex][
-                                                      'course_lesson_attachments']
+                    ? Stack(
+                        children: [
+                          ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            primary: false,
+                            itemCount: courseLessonChapter.length,
+                            itemBuilder: (context, newIndex) {
+                              return Column(
+                                children: [
+                                  ListTile(
+                                      dense: true,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16.0, vertical: 0.0),
+                                      visualDensity: const VisualDensity(
+                                          horizontal: -4, vertical: 0),
+                                      leading: const Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 8.0, right: 8.0),
+                                        child: Icon(FontAwesomeIcons.bookOpen,
+                                            size: 18),
+                                      ),
+                                      title: Text(
+                                        courseLessonChapter[newIndex]['title'],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      subtitle: Text(courseLessonChapter[
+                                                          newIndex]
+                                                      ['course_lesson_attachments']
                                                   [0]['attachment']['type'] ==
-                                              'video'
-                                          ? 'Video'
-                                          : 'Ảnh'),
-                                  onTap: () async {
-                                    String fileUrl = courseLessonChapter[
-                                                    newIndex]
-                                                ['course_lesson_attachments'][0]
-                                            ['attachment']
-                                        ['url']; // Đường dẫn đến file
-                                    String fileName = fileUrl
-                                        .split('/')
-                                        .last; // Tên file được trích xuất từ đường dẫn
+                                              'document'
+                                          ? 'Tài liệu'
+                                          : courseLessonChapter[newIndex]
+                                                          ['course_lesson_attachments']
+                                                      [0]['attachment']['type'] ==
+                                                  'video'
+                                              ? 'Video'
+                                              : 'Ảnh'),
+                                      onTap: () async {
+                                        setState(() {
+                                          loadingCourseFile = true;
+                                        });
+                                        String fileUrl = courseLessonChapter[
+                                                        newIndex][
+                                                    'course_lesson_attachments']
+                                                [0]['attachment']
+                                            ['url']; // Đường dẫn đến file
+                                        String fileName = fileUrl
+                                            .split('/')
+                                            .last; // Tên file được trích xuất từ đường dẫn
 
-                                    // Tải file về bằng http
-                                    final response =
-                                        await http.get(Uri.parse(fileUrl));
-                                    final bytes = response.bodyBytes;
+                                        // Tải file về bằng http
+                                        final response =
+                                            await http.get(Uri.parse(fileUrl));
+                                        final bytes = response.bodyBytes;
 
-                                    // Lưu file vào thư mục tạm trên thiết bị của người dùng
-                                    final tempDir =
-                                        await getTemporaryDirectory();
-                                    final file =
-                                        File('${tempDir.path}/$fileName');
-                                    await file.writeAsBytes(bytes);
-                                    bool permission = await Permission
-                                        .manageExternalStorage.isGranted;
-                                    if (Platform.isAndroid && !permission) {
-                                      PermissionStatus status = await Permission
-                                          .manageExternalStorage
-                                          .request();
-                                      if (status.isGranted) {
-                                        OpenFile.open(file.path);
-                                      }
-                                    } else {
-                                      OpenFile.open(file.path);
-                                    }
-                                  }),
-                              Divider(
-                                height: 1,
-                                thickness: 1,
-                                color: Colors.grey[300],
-                                indent: 16,
-                                endIndent: 16,
-                              ),
-                            ],
-                          );
-                        },
+                                        // Lưu file vào thư mục tạm trên thiết bị của người dùng
+                                        final tempDir =
+                                            await getTemporaryDirectory();
+                                        final file =
+                                            File('${tempDir.path}/$fileName');
+                                        await file.writeAsBytes(bytes);
+                                        bool permission = await Permission
+                                            .manageExternalStorage.isGranted;
+                                        if (Platform.isAndroid && !permission) {
+                                          PermissionStatus status =
+                                              await Permission
+                                                  .manageExternalStorage
+                                                  .request();
+                                          if (status.isGranted) {
+                                            OpenFile.open(file.path);
+                                          }
+                                        } else {
+                                          OpenFile.open(file.path);
+                                        }
+                                        setState(() {
+                                          loadingCourseFile = false;
+                                        });
+                                      }),
+                                  Divider(
+                                    height: 1,
+                                    thickness: 1,
+                                    color: Colors.grey[300],
+                                    indent: 16,
+                                    endIndent: 16,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          loadingCourseFile
+                              ? const Center(
+                                  child: CupertinoActivityIndicator(),
+                                )
+                              : const SizedBox()
+                        ],
                       )
                     : const Padding(
                         padding: EdgeInsets.all(16.0),

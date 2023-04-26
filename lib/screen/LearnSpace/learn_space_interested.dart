@@ -21,6 +21,7 @@ class LearnSpaceInterested extends ConsumerStatefulWidget {
 class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
   late double width;
   late double height;
+  List course = [];
   var paramsConfigList = {"limit": 10, "following": true};
 
   final scrollController = ScrollController();
@@ -28,27 +29,36 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
   void initState() {
     super.initState();
     if (mounted) {
-      Future.delayed(
-          Duration.zero,
-          () => ref
-              .read(learnSpaceStateControllerProvider.notifier)
-              .getListCourses(paramsConfigList));
+      Future.delayed(Duration.zero).then((_) {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .getListCoursesChipMenu(paramsConfigList)
+            .then((value) {
+          setState(() {
+            course =
+                ref.watch(learnSpaceStateControllerProvider).coursesChipMenu;
+          });
+        }).catchError((error) {
+          // handle error
+        });
+      });
     }
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        String maxId =
-            ref.read(learnSpaceStateControllerProvider).course.last['id'];
+        String maxId = ref
+            .read(learnSpaceStateControllerProvider)
+            .coursesChipMenu
+            .last['id'];
         ref
             .read(learnSpaceStateControllerProvider.notifier)
-            .getListCourses({"max_id": maxId, ...paramsConfigList});
+            .getListCoursesChipMenu({"max_id": maxId, ...paramsConfigList});
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    List course = ref.watch(learnSpaceStateControllerProvider).course;
     bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
     final size = MediaQuery.of(context).size;
     width = size.width;
@@ -58,7 +68,7 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
       onRefresh: () async {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
-            .getListCourses(paramsConfigList);
+            .getListCoursesChipMenu(paramsConfigList);
       },
       child: SingleChildScrollView(
         controller: scrollController,
@@ -75,7 +85,7 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
                 ),
               ),
             ),
-            course.isNotEmpty
+            course.any((element) => element['title'] != null)
                 ? SizedBox(
                     child: ListView.builder(
                     shrinkWrap: true,
@@ -162,7 +172,36 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
                                   Align(
                                     alignment: Alignment.bottomLeft,
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        if (course[index]
+                                                    ['course_relationships']
+                                                ['follow_course'] ==
+                                            true) {
+                                          ref
+                                              .read(
+                                                  learnSpaceStateControllerProvider
+                                                      .notifier)
+                                              .updateStatusCourse(
+                                                  false, course[index]['id']);
+                                          setState(() {
+                                            course[index]
+                                                    ['course_relationships']
+                                                ['follow_course'] = false;
+                                          });
+                                        } else {
+                                          ref
+                                              .read(
+                                                  learnSpaceStateControllerProvider
+                                                      .notifier)
+                                              .updateStatusCourse(
+                                                  true, course[index]['id']);
+                                          setState(() {
+                                            course[index]
+                                                    ['course_relationships']
+                                                ['follow_course'] = true;
+                                          });
+                                        }
+                                      },
                                       child: Padding(
                                         padding:
                                             const EdgeInsets.only(left: 3.0),
@@ -170,8 +209,12 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
                                           height: 32,
                                           width: width * 0.7,
                                           decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  189, 202, 202, 202),
+                                              color: course[index][
+                                                          'course_relationships']
+                                                      ['follow_course']
+                                                  ? secondaryColor
+                                                  : const Color.fromARGB(
+                                                      189, 202, 202, 202),
                                               borderRadius:
                                                   BorderRadius.circular(6),
                                               border: Border.all(
@@ -180,11 +223,15 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.solidStar,
-                                                  color: Colors.black,
+                                                  color: course[index][
+                                                              'course_relationships']
+                                                          ['follow_course']
+                                                      ? Colors.white
+                                                      : Colors.black,
                                                   size: 14),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 5.0,
                                               ),
                                               Text(
@@ -192,11 +239,15 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 12.0,
-                                                  color: Colors.black,
+                                                  color: course[index][
+                                                              'course_relationships']
+                                                          ['follow_course']
+                                                      ? Colors.white
+                                                      : Colors.black,
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 3.0,
                                               ),
                                             ],

@@ -377,20 +377,19 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                       1) {
                                                                 Navigator.pop(
                                                                     context);
-                                                                final result = await ref
+                                                                await ref
                                                                     .read(learnSpaceStateControllerProvider
                                                                         .notifier)
                                                                     .updatePaymentCourse(
                                                                         widget.data[
-                                                                            'id']);
-                                                                if (result) {
-                                                                  setState(() {
-                                                                    courseDetail = ref
-                                                                        .read(
-                                                                            learnSpaceStateControllerProvider)
-                                                                        .detailCourse;
-                                                                  });
-                                                                }
+                                                                            'id'],
+                                                                        context);
+                                                                setState(() {
+                                                                  courseDetail = ref
+                                                                      .read(
+                                                                          learnSpaceStateControllerProvider)
+                                                                      .detailCourse;
+                                                                });
                                                               } else {
                                                                 Navigator.pop(
                                                                     context);
@@ -487,20 +486,19 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                 () async {
                                                               Navigator.pop(
                                                                   context);
-                                                              final result = await ref
+                                                              await ref
                                                                   .read(learnSpaceStateControllerProvider
                                                                       .notifier)
                                                                   .updatePaymentCourse(
                                                                       widget.data[
-                                                                          'id']);
-                                                              if (result) {
-                                                                setState(() {
-                                                                  courseDetail = ref
-                                                                      .read(
-                                                                          learnSpaceStateControllerProvider)
-                                                                      .detailCourse;
-                                                                });
-                                                              }
+                                                                          'id'],
+                                                                      context);
+                                                              setState(() {
+                                                                courseDetail = ref
+                                                                    .read(
+                                                                        learnSpaceStateControllerProvider)
+                                                                    .detailCourse;
+                                                              });
                                                             },
                                                             child: const Text(
                                                                 'Đăng ký'),
