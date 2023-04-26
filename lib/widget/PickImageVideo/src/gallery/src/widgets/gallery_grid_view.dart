@@ -127,7 +127,7 @@ class GalleryGridView extends StatelessWidget {
 
                     if (entity == null) return const SizedBox();
 
-                    return _MediaTile(controller: controller, entity: entity);
+                    return _MediaTile(controller: controller, entity: entity); 
                   },
                 ),
               );

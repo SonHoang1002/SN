@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
@@ -17,8 +18,8 @@ class CreatePostButton extends ConsumerWidget {
         Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: ((context) =>
-                    CreateNewFeed(postDiscussion: postDiscussion))));
+                builder: ((context) => CreateNewFeed(
+                    type: postPageUser, postDiscussion: postDiscussion))));
       },
       child: Container(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 6, bottom: 6),

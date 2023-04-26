@@ -98,9 +98,9 @@ class _GalleryViewState extends State<GalleryView> {
 
   fetchDataMutipleFile(entities) async {
     if (entities.isEmpty) return;
-
-    List newList = widget.filesSelected ?? [];
-
+    List<dynamic> primaryList=[];
+    List<dynamic> newList = widget.filesSelected ?? [];
+    primaryList.addAll(newList);
     for (var i = 0; i < entities.length; i++) {
       File fileData = await entities[i].file;
       var typeFile =
@@ -113,7 +113,7 @@ class _GalleryViewState extends State<GalleryView> {
           decodedImage = await videoInfo.getVideoInfo(fileData.path);
         }
 
-        newList.add({
+        primaryList.add({
           'file': fileData,
           "aspect": decodedImage.width / decodedImage.height,
           "type": typeFile,
@@ -122,8 +122,8 @@ class _GalleryViewState extends State<GalleryView> {
       }
     }
 
-    if (newList.isNotEmpty) {
-      widget.handleGetFiles!('update_file', newList);
+    if (primaryList.isNotEmpty) {
+      widget.handleGetFiles!('update_file', primaryList);
     }
   }
 
@@ -346,7 +346,6 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                   onAlbumToggle: _toogleAlbumList,
                 ),
               ),
-
               // Body
               Column(
                 children: [
@@ -357,7 +356,6 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                       if (_controller.fullScreenMode) {
                         return SizedBox(height: panelSetting.headerMaxHeight);
                       }
-
                       // Toogling size for header hiding animation
                       return ValueListenableBuilder<PanelValue>(
                         valueListenable: _panelController,
@@ -372,10 +370,8 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                           return SizedBox(height: height);
                         },
                       );
-//
                     },
                   ),
-
                   // Divider
                   Divider(
                     color: Colors.lightBlue.shade300,
@@ -386,7 +382,8 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                   ),
 
                   // Gallery grid
-                  Expanded(
+                  Flexible(
+                    flex: 1,
                     child: GalleryGridView(
                       controller: _controller,
                       albums: _albums,
@@ -407,12 +404,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                 ),
 
               // Send button
-              if (actionMode)
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: SendButton(controller: _controller),
-                ),
+              if (actionMode) SendButton(controller: _controller),
 
               // Album list
               AnimatedBuilder(
