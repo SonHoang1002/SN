@@ -3,62 +3,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
-import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_detail.dart';
+import 'package:social_network_app_mobile/providers/recruit/recruit_provider.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recuit_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 
-class LearnSpaceLearned extends ConsumerStatefulWidget {
-  const LearnSpaceLearned({Key? key}) : super(key: key);
+class RecruitInvite extends ConsumerStatefulWidget {
+  const RecruitInvite({super.key});
 
   @override
-  ConsumerState<LearnSpaceLearned> createState() => _LearnSpaceLearnedState();
+  ConsumerState<RecruitInvite> createState() => _RecruitInviteState();
 }
 
-class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
+class _RecruitInviteState extends ConsumerState<RecruitInvite> {
+  var paramsList = {
+    "limit": 10,
+  };
   late double width;
   late double height;
-  List course = [];
-  var paramsConfigList = {"limit": 10, "joined": true};
-
-  final scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
-    if (mounted) {
-      Future.delayed(Duration.zero).then((_) {
+    Future.delayed(Duration.zero, () {
+      if (mounted) {
         ref
-            .read(learnSpaceStateControllerProvider.notifier)
-            .getListCoursesChipMenu(paramsConfigList)
-            .then((value) {
-          setState(() {
-            course =
-                ref.watch(learnSpaceStateControllerProvider).coursesChipMenu;
-          });
-        }).catchError((error) {
-          // handle error
-        });
-      });
-    }
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.offset) {
-        String maxId = ref
-            .read(learnSpaceStateControllerProvider)
-            .coursesChipMenu
-            .last['id'];
-        ref
-            .read(learnSpaceStateControllerProvider.notifier)
-            .getListCoursesChipMenu({"max_id": maxId, ...paramsConfigList});
+            .read(recruitControllerProvider.notifier)
+            .getListRecruitInvite(paramsList);
       }
     });
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
+    List recruits = ref.watch(recruitControllerProvider).recruitsInvite;
+
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
@@ -66,33 +51,32 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
         child: RefreshIndicator(
       onRefresh: () async {
         ref
-            .read(learnSpaceStateControllerProvider.notifier)
-            .getListCoursesChipMenu(paramsConfigList);
+            .read(recruitControllerProvider.notifier)
+            .getListRecruitInvite(paramsList);
       },
       child: SingleChildScrollView(
-        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
               child: Text(
-                'Khoá học đã học',
+                'Lời mời quan tâm tuyển dụng',
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            course.isNotEmpty
+            recruits.isNotEmpty
                 ? SizedBox(
                     child: ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: course.length,
+                    itemCount: recruits.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
-                      if (index < course.length) {
+                      if (index < recruits.length) {
                         return Padding(
                           padding: const EdgeInsets.only(
                               top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
@@ -103,8 +87,10 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15)),
                               child: ImageCacheRender(
-                                path: course[index]['banner'] != null
-                                    ? course[index]['banner']['url']
+                                path: recruits[index]['recruit']['banner'] !=
+                                        null
+                                    ? recruits[index]['recruit']['banner']
+                                        ['url']
                                     : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
                               ),
                             ),
@@ -112,8 +98,8 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                               Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                      builder: (context) => LearnSpaceDetail(
-                                          data: course[index])));
+                                      builder: (context) => RecruitDetail(
+                                          data: recruits[index]['recruit'])));
                             },
                             textCard: Padding(
                               padding: const EdgeInsets.only(
@@ -127,7 +113,7 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      course[index]['title'],
+                                      recruits[index]['recruit']['title'],
                                       maxLines: 2,
                                       style: const TextStyle(
                                         fontSize: 16.0,
@@ -139,7 +125,8 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      course[index]['account']['display_name'],
+                                      recruits[index]['recruit']['account']
+                                          ['display_name'],
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         color: greyColor,
@@ -150,12 +137,12 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      course[index]['free'] == true
-                                          ? 'Miễn phí'
-                                          : '${convertNumberToVND(course[index]['price'] ~/ 1)} VNĐ',
+                                      '${convertNumberToVND(recruits[index]['recruit']['salary_min'] ~/ 1)}'
+                                      ' - '
+                                      '${convertNumberToVND(recruits[index]['recruit']['salary_max'] ~/ 1)} VNĐ',
                                       style: const TextStyle(
-                                        fontSize: 13.0,
-                                        color: secondaryColor,
+                                        fontSize: 12.0,
+                                        color: greyColor,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -172,32 +159,34 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                     alignment: Alignment.bottomLeft,
                                     child: InkWell(
                                       onTap: () {
-                                        if (course[index]
-                                                    ['course_relationships']
-                                                ['follow_course'] ==
+                                        if (recruits[index]['recruit']
+                                                    ['recruit_relationships']
+                                                ['follow_recruit'] ==
                                             true) {
                                           ref
-                                              .read(
-                                                  learnSpaceStateControllerProvider
-                                                      .notifier)
-                                              .updateStatusCourse(
-                                                  false, course[index]['id']);
+                                              .read(recruitControllerProvider
+                                                  .notifier)
+                                              .updateStatusRecruit(
+                                                  false,
+                                                  recruits[index]['recruit']
+                                                      ['id']);
                                           setState(() {
-                                            course[index]
-                                                    ['course_relationships']
-                                                ['follow_course'] = false;
+                                            recruits[index]['recruit']
+                                                    ['recruit_relationships']
+                                                ['follow_recruit'] = false;
                                           });
                                         } else {
                                           ref
-                                              .read(
-                                                  learnSpaceStateControllerProvider
-                                                      .notifier)
-                                              .updateStatusCourse(
-                                                  true, course[index]['id']);
+                                              .read(recruitControllerProvider
+                                                  .notifier)
+                                              .updateStatusRecruit(
+                                                  true,
+                                                  recruits[index]['recruit']
+                                                      ['id']);
                                           setState(() {
-                                            course[index]
-                                                    ['course_relationships']
-                                                ['follow_course'] = true;
+                                            recruits[index]['recruit']
+                                                    ['recruit_relationships']
+                                                ['follow_recruit'] = true;
                                           });
                                         }
                                       },
@@ -208,9 +197,9 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                           height: 32,
                                           width: width * 0.7,
                                           decoration: BoxDecoration(
-                                              color: course[index][
-                                                          'course_relationships']
-                                                      ['follow_course']
+                                              color: recruits[index]['recruit'][
+                                                          'recruit_relationships']
+                                                      ['follow_recruit']
                                                   ? secondaryColor
                                                   : const Color.fromARGB(
                                                       189, 202, 202, 202),
@@ -224,9 +213,10 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Icon(FontAwesomeIcons.solidStar,
-                                                  color: course[index][
-                                                              'course_relationships']
-                                                          ['follow_course']
+                                                  color: recruits[index]
+                                                                  ['recruit'][
+                                                              'recruit_relationships']
+                                                          ['follow_recruit']
                                                       ? Colors.white
                                                       : Colors.black,
                                                   size: 14),
@@ -238,9 +228,10 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 12.0,
-                                                  color: course[index][
-                                                              'course_relationships']
-                                                          ['follow_course']
+                                                  color: recruits[index]
+                                                                  ['recruit'][
+                                                              'recruit_relationships']
+                                                          ['follow_recruit']
                                                       ? Colors.white
                                                       : Colors.black,
                                                   fontWeight: FontWeight.w700,
@@ -299,27 +290,14 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                             ),
                           ),
                         );
-                      } else {
-                        isMore == true
-                            ? const Center(child: CupertinoActivityIndicator())
-                            : const SizedBox();
                       }
-                      return null;
+                      return const SizedBox();
                     },
                   ))
                 : const SizedBox(),
-            isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
-                : const SizedBox()
           ],
         ),
       ),
     ));
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
   }
 }

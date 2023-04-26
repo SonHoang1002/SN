@@ -357,7 +357,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
-                                            height: 30,
+                                            height: 40,
                                             child: Text(
                                               '${coursePropose[indexPropose]['title']}',
                                               maxLines: 2,
@@ -369,7 +369,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 30,
+                                            height: 40,
                                             child: Text(
                                               '${coursePropose[indexPropose]['account']['display_name']}',
                                               maxLines: 2,
@@ -381,7 +381,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 30,
+                                            height: 20,
                                             child: Text(
                                               coursePropose[indexPropose]
                                                           ['price'] ==
@@ -408,29 +408,42 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             alignment: Alignment.bottomLeft,
                                             child: InkWell(
                                               onTap: () {
-                                                // if (grows[indexSuggest][
-                                                //             'project_relationship']
-                                                //         [
-                                                //         'follow_project'] ==
-                                                //     true) {
-                                                //   ref
-                                                //       .read(
-                                                //           growControllerProvider
-                                                //               .notifier)
-                                                //       .updateStatusHost(
-                                                //           grows[indexSuggest]
-                                                //               ['id'],
-                                                //           false);
-                                                // } else {
-                                                //   ref
-                                                //       .read(
-                                                //           growControllerProvider
-                                                //               .notifier)
-                                                //       .updateStatusHost(
-                                                //           grows[indexSuggest]
-                                                //               ['id'],
-                                                //           true);
-                                                // }
+                                                if (coursePropose[indexPropose][
+                                                            'course_relationships']
+                                                        ['follow_course'] ==
+                                                    true) {
+                                                  ref
+                                                      .read(
+                                                          learnSpaceStateControllerProvider
+                                                              .notifier)
+                                                      .updateStatusCourse(
+                                                          false,
+                                                          coursePropose[
+                                                                  indexPropose]
+                                                              ['id']);
+                                                  setState(() {
+                                                    coursePropose[indexPropose][
+                                                            'course_relationships']
+                                                        [
+                                                        'follow_course'] = false;
+                                                  });
+                                                } else {
+                                                  ref
+                                                      .read(
+                                                          learnSpaceStateControllerProvider
+                                                              .notifier)
+                                                      .updateStatusCourse(
+                                                          true,
+                                                          coursePropose[
+                                                                  indexPropose]
+                                                              ['id']);
+                                                  setState(() {
+                                                    coursePropose[indexPropose][
+                                                            'course_relationships']
+                                                        [
+                                                        'follow_course'] = true;
+                                                  });
+                                                }
                                               },
                                               child: Container(
                                                 height: 33,
@@ -439,20 +452,16 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                         .width *
                                                     0.37,
                                                 decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                        189, 202, 202, 202),
-                                                    // color: grows[indexSuggest]
-                                                    //                 ['project_relationship'][
-                                                    //             'follow_project'] ==
-                                                    //         true
-                                                    //     ? secondaryColor
-                                                    //         .withOpacity(
-                                                    //             0.45)
-                                                    //     : const Color.fromARGB(
-                                                    //         189,
-                                                    //         202,
-                                                    //         202,
-                                                    //         202),
+                                                    color: coursePropose[
+                                                                        indexPropose]
+                                                                    [
+                                                                    'course_relationships']
+                                                                [
+                                                                'follow_course'] ==
+                                                            true
+                                                        ? secondaryColor
+                                                        : const Color.fromARGB(
+                                                            189, 202, 202, 202),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             6),
@@ -462,21 +471,21 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Icon(
                                                         FontAwesomeIcons
                                                             .solidStar,
-                                                        color: Colors.black,
-                                                        // color: grows[indexSuggest]
-                                                        //                 [
-                                                        //                 'project_relationship']
-                                                        //             [
-                                                        //             'follow_project'] ==
-                                                        //         true
-                                                        //     ? secondaryColor
-                                                        //     : Colors.black,
+                                                        color: coursePropose[
+                                                                            indexPropose]
+                                                                        [
+                                                                        'course_relationships']
+                                                                    [
+                                                                    'follow_course'] ==
+                                                                true
+                                                            ? secondaryColor
+                                                            : Colors.black,
                                                         size: 14),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 5.0,
                                                     ),
                                                     Text(
@@ -485,20 +494,20 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         fontSize: 12.0,
-                                                        // color: grows[indexSuggest]
-                                                        //                 [
-                                                        //                 'project_relationship']
-                                                        //             [
-                                                        //             'follow_project'] ==
-                                                        //         true
-                                                        //     ? secondaryColor
-                                                        //     : Colors.black,
-                                                        color: Colors.black,
+                                                        color: coursePropose[
+                                                                            indexPropose]
+                                                                        [
+                                                                        'course_relationships']
+                                                                    [
+                                                                    'follow_course'] ==
+                                                                true
+                                                            ? secondaryColor
+                                                            : Colors.black,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                       ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 3.0,
                                                     ),
                                                   ],
@@ -637,7 +646,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
-                                            height: 30,
+                                            height: 40,
                                             child: Text(
                                               '${courseSimilar[indexSimilar]['title']}',
                                               maxLines: 2,
@@ -649,7 +658,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 30,
+                                            height: 40,
                                             child: Text(
                                               '${courseSimilar[indexSimilar]['account']['display_name']}',
                                               maxLines: 2,
@@ -661,7 +670,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 30,
+                                            height: 20,
                                             child: Text(
                                               courseSimilar[indexSimilar]
                                                           ['price'] ==
@@ -688,29 +697,42 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             alignment: Alignment.bottomLeft,
                                             child: InkWell(
                                               onTap: () {
-                                                // if (grows[indexSuggest][
-                                                //             'project_relationship']
-                                                //         [
-                                                //         'follow_project'] ==
-                                                //     true) {
-                                                //   ref
-                                                //       .read(
-                                                //           growControllerProvider
-                                                //               .notifier)
-                                                //       .updateStatusHost(
-                                                //           grows[indexSuggest]
-                                                //               ['id'],
-                                                //           false);
-                                                // } else {
-                                                //   ref
-                                                //       .read(
-                                                //           growControllerProvider
-                                                //               .notifier)
-                                                //       .updateStatusHost(
-                                                //           grows[indexSuggest]
-                                                //               ['id'],
-                                                //           true);
-                                                // }
+                                                if (courseSimilar[indexSimilar][
+                                                            'course_relationships']
+                                                        ['follow_course'] ==
+                                                    true) {
+                                                  ref
+                                                      .read(
+                                                          learnSpaceStateControllerProvider
+                                                              .notifier)
+                                                      .updateStatusCourse(
+                                                          false,
+                                                          courseSimilar[
+                                                                  indexSimilar]
+                                                              ['id']);
+                                                  setState(() {
+                                                    courseSimilar[indexSimilar][
+                                                            'course_relationships']
+                                                        [
+                                                        'follow_course'] = false;
+                                                  });
+                                                } else {
+                                                  ref
+                                                      .read(
+                                                          learnSpaceStateControllerProvider
+                                                              .notifier)
+                                                      .updateStatusCourse(
+                                                          true,
+                                                          courseSimilar[
+                                                                  indexSimilar]
+                                                              ['id']);
+                                                  setState(() {
+                                                    courseSimilar[indexSimilar][
+                                                            'course_relationships']
+                                                        [
+                                                        'follow_course'] = true;
+                                                  });
+                                                }
                                               },
                                               child: Container(
                                                 height: 33,
@@ -719,20 +741,16 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                         .width *
                                                     0.37,
                                                 decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                        189, 202, 202, 202),
-                                                    // color: grows[indexSuggest]
-                                                    //                 ['project_relationship'][
-                                                    //             'follow_project'] ==
-                                                    //         true
-                                                    //     ? secondaryColor
-                                                    //         .withOpacity(
-                                                    //             0.45)
-                                                    //     : const Color.fromARGB(
-                                                    //         189,
-                                                    //         202,
-                                                    //         202,
-                                                    //         202),
+                                                    color: courseSimilar[
+                                                                        indexSimilar]
+                                                                    [
+                                                                    'course_relationships']
+                                                                [
+                                                                'follow_course'] ==
+                                                            true
+                                                        ? secondaryColor
+                                                        : const Color.fromARGB(
+                                                            189, 202, 202, 202),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             6),
@@ -742,21 +760,21 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Icon(
                                                         FontAwesomeIcons
                                                             .solidStar,
-                                                        color: Colors.black,
-                                                        // color: grows[indexSuggest]
-                                                        //                 [
-                                                        //                 'project_relationship']
-                                                        //             [
-                                                        //             'follow_project'] ==
-                                                        //         true
-                                                        //     ? secondaryColor
-                                                        //     : Colors.black,
+                                                        color: courseSimilar[
+                                                                            indexSimilar]
+                                                                        [
+                                                                        'course_relationships']
+                                                                    [
+                                                                    'follow_course'] ==
+                                                                true
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                         size: 14),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 5.0,
                                                     ),
                                                     Text(
@@ -765,20 +783,20 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         fontSize: 12.0,
-                                                        // color: grows[indexSuggest]
-                                                        //                 [
-                                                        //                 'project_relationship']
-                                                        //             [
-                                                        //             'follow_project'] ==
-                                                        //         true
-                                                        //     ? secondaryColor
-                                                        //     : Colors.black,
-                                                        color: Colors.black,
+                                                        color: courseSimilar[
+                                                                            indexSimilar]
+                                                                        [
+                                                                        'course_relationships']
+                                                                    [
+                                                                    'follow_course'] ==
+                                                                true
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                       ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 3.0,
                                                     ),
                                                   ],

@@ -30,25 +30,24 @@ import 'package:social_network_app_mobile/screen/Post/PostCenter/post_life_event
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/Posts/drag_bottom_sheet.dart';
 import 'package:social_network_app_mobile/widget/Posts/drag_icon.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
 
 import '../../../providers/create_feed/feed_draft_provider.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
-  const CreateNewFeed({Key? key, this.post, this.type}) : super(key: key);
+  final dynamic postDiscussion;
+  const CreateNewFeed({Key? key, this.post, this.type, this.postDiscussion})
+      : super(key: key);
 
   @override
   ConsumerState<CreateNewFeed> createState() => _CreateNewFeedState();
@@ -75,7 +74,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool isActiveBackground = false;
   double height = 0;
   double width = 0;
-
+  dynamic postDiscussion;
   dynamic previewUrlData;
   bool showPreviewImage = true;
   ScrollController menuController = ScrollController();
@@ -101,6 +100,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         lifeEvent = widget.post['life_event'];
         // statusQuestion =
         //     widget.post['status_question'] ?? widget.post['status_target'];
+      });
+    }
+    if (mounted && widget.postDiscussion != null) {
+      setState(() {
+        postDiscussion = widget.postDiscussion!;
       });
     }
     menuController.addListener(() {
@@ -355,7 +359,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     if (lifeEvent != null) {
       data = {...data, "life_event": lifeEvent};
     }
-
+    if (postDiscussion != null) {
+      data = {...data, ...postDiscussion};
+    }
     var response = await PostApi().createStatus(data);
 
     if (response != null) {
@@ -372,7 +378,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           isUploadVideo = false;
         });
       } else {
-        String? type = widget.type??feedPost;
+        String? type = widget.type ?? feedPost;
         ref
             .read(postControllerProvider.notifier)
             .createUpdatePost(type, response);

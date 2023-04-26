@@ -1,5 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"        
     package="com.example.social_network_app_mobile">
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:usesCleartextTraffic="true"
@@ -10,8 +16,10 @@
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
+            android:supportsRtl="true"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:requestLegacyExternalStorage="true"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
@@ -32,5 +40,16 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="${applicationId}.fileProvider"
+                android:exported="false"
+                android:grantUriPermissions="true"
+                tools:replace="android:authorities">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/filepaths"
+                    tools:replace="android:resource" />
+        </provider>
     </application>
 </manifest>

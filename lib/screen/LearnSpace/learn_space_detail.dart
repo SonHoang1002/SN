@@ -7,8 +7,12 @@ import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_course.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_discussion.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_faq.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_intro.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_purchased.dart';
+import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_review.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
@@ -30,6 +34,8 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   dynamic courseDetail = {};
   bool isCourseInterested = false;
   String courseMenu = 'intro';
+  String currentMenu = 'intro';
+  String menuCourse = '';
   @override
   void initState() {
     super.initState();
@@ -76,6 +82,11 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
     {
       'key': 'course',
       'label': 'Bài học',
+    },
+    {
+      'key': 'more',
+      'label': 'Xem thêm',
+      'endIcon': FontAwesomeIcons.chevronDown
     },
     {
       'key': 'faq',
@@ -366,20 +377,19 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                       1) {
                                                                 Navigator.pop(
                                                                     context);
-                                                                final result = await ref
+                                                                await ref
                                                                     .read(learnSpaceStateControllerProvider
                                                                         .notifier)
                                                                     .updatePaymentCourse(
                                                                         widget.data[
-                                                                            'id']);
-                                                                if (result) {
-                                                                  setState(() {
-                                                                    courseDetail = ref
-                                                                        .read(
-                                                                            learnSpaceStateControllerProvider)
-                                                                        .detailCourse;
-                                                                  });
-                                                                }
+                                                                            'id'],
+                                                                        context);
+                                                                setState(() {
+                                                                  courseDetail = ref
+                                                                      .read(
+                                                                          learnSpaceStateControllerProvider)
+                                                                      .detailCourse;
+                                                                });
                                                               } else {
                                                                 Navigator.pop(
                                                                     context);
@@ -476,20 +486,19 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                 () async {
                                                               Navigator.pop(
                                                                   context);
-                                                              final result = await ref
+                                                              await ref
                                                                   .read(learnSpaceStateControllerProvider
                                                                       .notifier)
                                                                   .updatePaymentCourse(
                                                                       widget.data[
-                                                                          'id']);
-                                                              if (result) {
-                                                                setState(() {
-                                                                  courseDetail = ref
-                                                                      .read(
-                                                                          learnSpaceStateControllerProvider)
-                                                                      .detailCourse;
-                                                                });
-                                                              }
+                                                                          'id'],
+                                                                      context);
+                                                              setState(() {
+                                                                courseDetail = ref
+                                                                    .read(
+                                                                        learnSpaceStateControllerProvider)
+                                                                    .detailCourse;
+                                                              });
                                                             },
                                                             child: const Text(
                                                                 'Đăng ký'),
@@ -652,40 +661,118 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                         ),
                         const SizedBox(height: 10),
                         SingleChildScrollView(
+                          physics: const NeverScrollableScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Row(
                               children: List.generate(
-                                  itemChipCourse.length,
-                                  (index) => InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            courseMenu =
-                                                itemChipCourse[index]['key'];
-                                          });
-                                        },
-                                        child: ChipMenu(
-                                            isSelected: courseMenu ==
-                                                itemChipCourse[index]['key'],
-                                            label: itemChipCourse[index]
-                                                ['label']),
-                                      )),
+                                itemChipCourse.sublist(0, 4).length,
+                                (index) {
+                                  final isMore =
+                                      itemChipCourse[index]['key'] == 'more';
+                                  final isSelected = menuCourse == ""
+                                      ? itemChipCourse[index]['key'] ==
+                                          currentMenu
+                                      : itemChipCourse[index]['key'] ==
+                                          courseMenu;
+                                  return InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        courseMenu =
+                                            itemChipCourse[index]['key'];
+                                        if (itemChipCourse[index]['key'] !=
+                                            'more') {
+                                          currentMenu =
+                                              itemChipCourse[index]['key'];
+                                        }
+                                        if (courseMenu != 'more') {
+                                          menuCourse = '';
+                                        }
+                                      });
+                                      if (isMore) {
+                                        showBarModalBottomSheet(
+                                            context: context,
+                                            backgroundColor: Colors.white,
+                                            builder: (context) => SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.25,
+                                                child: ListView.builder(
+                                                    itemCount: itemChipCourse
+                                                        .sublist(
+                                                            4,
+                                                            itemChipCourse
+                                                                .length)
+                                                        .length,
+                                                    itemBuilder:
+                                                        (_, newIndex) =>
+                                                            ListTile(
+                                                              title: Text(itemChipCourse
+                                                                      .sublist(
+                                                                          4,
+                                                                          itemChipCourse
+                                                                              .length)[
+                                                                  newIndex]['label']),
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  menuCourse = itemChipCourse.sublist(
+                                                                          4,
+                                                                          itemChipCourse
+                                                                              .length)[
+                                                                      newIndex]['key'];
+                                                                  currentMenu =
+                                                                      '';
+                                                                });
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ))));
+                                      }
+                                    },
+                                    child: ChipMenu(
+                                      endIcon: isMore
+                                          ? Icon(
+                                              itemChipCourse[index]['endIcon'],
+                                              size: 10,
+                                              color: isSelected ? white : null)
+                                          : const SizedBox(),
+                                      isSelected: isSelected,
+                                      label: itemChipCourse[index]['label'],
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
-                        courseMenu == 'intro'
+                        currentMenu == 'intro'
                             ? LearnSpaceIntro(
                                 courseDetail: courseDetail,
                               )
                             : const SizedBox.shrink(),
-                        courseMenu == 'discussion' &&
+                        currentMenu == 'discussion' &&
                                 (courseDetail['course_relationships']
                                         ['host_course'] ||
                                     courseDetail['course_relationships']
                                         ['participant_course']) &&
                                 courseDetail['allow_discussion']
-                            ? const LearnSpaceDiscusstion()
+                            ? LearnSpaceDiscusstion(postDiscussion: {
+                                "course_id": courseDetail['id']
+                              })
+                            : const SizedBox.shrink(),
+                        currentMenu == 'course'
+                            ? LearnSpaceCourse(id: courseDetail['id'])
+                            : const SizedBox.shrink(),
+                        menuCourse == 'faq'
+                            ? LearnSpaceFAQ(courseDetail: courseDetail)
+                            : const SizedBox.shrink(),
+                        menuCourse == 'review'
+                            ? LearnSpaceReview(courseDetail: courseDetail)
+                            : const SizedBox.shrink(),
+                        menuCourse == 'course_bought'
+                            ? LearnSpacePurchased(courseDetail: courseDetail)
                             : const SizedBox.shrink(),
                         const SizedBox(height: 70),
                       ],
