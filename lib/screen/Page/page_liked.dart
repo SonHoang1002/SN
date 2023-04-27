@@ -60,15 +60,6 @@ class _PageLikedState extends ConsumerState<PageLiked> {
         builder: (context) => InviteFriend(
               id: page['id'],
               type: 'page',
-              handleInvite: (value) async {
-                var res = await PageApi().createInviteLikePage({
-                  'target_account_ids': [value],
-                  'invitation_type': 'like'
-                }, page['id']);
-                if (res != null) {
-                  print('success');
-                }
-              },
             ));
   }
 

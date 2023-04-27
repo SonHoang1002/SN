@@ -58,82 +58,70 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
     var meData = ref.watch(meControllerProvider);
 
     return SizedBox(
-      height: 400,
+      height: 450,
       child: Scaffold(
-        appBar: AppBar(
+          appBar: AppBar(
             automaticallyImplyLeading: false,
             elevation: 0,
-            title: Column(
-              children: [
-                const AppBarTitle(title: "Chuyển tài khoản"),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 0.2,
-                  width: size.width,
-                  color: greyColor,
-                )
-              ],
-            )),
-        body: Container(
-          margin: const EdgeInsets.only(left: 10),
-          child: Column(
-            children: List.generate(
-                dataLogin.length,
-                (index) => InkWell(
-                      onTap: () {
-                        if (meData[0]['username'] !=
-                            dataLogin[index]['username']) {
-                          SecureStorage().deleteKeyStorage('theme');
-                          handleLogin(dataLogin[index]['token']);
-                        } else {
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                AvatarSocial(
-                                    width: 36,
-                                    height: 36,
-                                    path: dataLogin[index]['show_url'] ??
-                                        linkAvatarDefault),
-                                const SizedBox(
-                                  width: 7,
-                                ),
-                                Text(
-                                  dataLogin[index]['name'],
-                                  style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500),
-                                )
-                              ],
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 5, right: 8),
-                              child: Icon(
-                                meData[0]['username'] ==
-                                        dataLogin[index]['username']
-                                    ? FontAwesomeIcons.circleDot
-                                    : FontAwesomeIcons.circle,
-                                size: 16,
-                                color: secondaryColor,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )),
+            title: const AppBarTitle(title: "Chuyển tài khoản"),
           ),
-        ),
-      ),
+          body: ListView.builder(
+              itemCount: dataLogin.length,
+              itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      if (meData[0]['username'] !=
+                          dataLogin[index]['username']) {
+                        SecureStorage().deleteKeyStorage('theme');
+                        handleLogin(dataLogin[index]['token']);
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: Theme.of(context).dividerColor,
+                      ))),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 8),
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              AvatarSocial(
+                                  width: 40,
+                                  height: 40,
+                                  path: dataLogin[index]['show_url'] ??
+                                      linkAvatarDefault),
+                              const SizedBox(
+                                width: 7,
+                              ),
+                              Text(
+                                dataLogin[index]['name'],
+                                style: const TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5, right: 8),
+                            child: Icon(
+                              meData[0]['username'] ==
+                                      dataLogin[index]['username']
+                                  ? FontAwesomeIcons.circleDot
+                                  : FontAwesomeIcons.circle,
+                              size: 16,
+                              color: secondaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ))),
     );
   }
 }

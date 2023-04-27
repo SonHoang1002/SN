@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/friends_api.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/providers/friend_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
-class InviteFriend extends ConsumerStatefulWidget {
+class InviteFriend extends StatefulWidget {
   final dynamic inviteFriend;
-  final Function? handleInvite;
   final String? id;
   final dynamic type;
   const InviteFriend({
     Key? key,
     this.inviteFriend,
-    this.handleInvite,
     this.id,
     this.type,
   }) : super(key: key);
   @override
-  ConsumerState<InviteFriend> createState() => _InviteFriendState();
+  State<InviteFriend> createState() => _InviteFriendState();
 }
 
-class _InviteFriendState extends ConsumerState<InviteFriend>
+class _InviteFriendState extends State<InviteFriend>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  var paramsConfig = {"excluded_invitation_event": '109853875958872608'};
+  List friendInvited = [];
+  List friendUnInvited = [];
+  var paramsExcluded = {"excluded_invitation_event": '109853875958872608'};
+  var paramsIncluded;
+  List inviteSuccess = [];
+  List inviteCheck = [];
 
   @override
   void initState() {
@@ -37,21 +42,79 @@ class _InviteFriendState extends ConsumerState<InviteFriend>
       switch (widget.type) {
         case 'page':
           if (widget.id is String) {
-            paramsConfig = {"excluded_page": widget.id ?? ''};
+            paramsExcluded = {"excluded_page": widget.id ?? ''};
+            paramsIncluded = {
+              'included_invitation_follow_page': widget.id ?? ''
+            };
           }
           break;
         case 'event':
-          paramsConfig = {"excluded_invitation_event": "109853875958872608"};
+          paramsExcluded = {"excluded_invitation_event": "109853875958872608"};
           break;
         default:
       }
     });
 
-    Future.delayed(
-        Duration.zero,
-        () => ref
-            .read(friendControllerProvider.notifier)
-            .getListFriendExcludes(paramsConfig));
+    searchFriendInvite(null);
+    _tabController.addListener(() {
+      if (_tabController.index == 1) {
+        fetchFriendInvited(null);
+      }
+    });
+  }
+
+  void searchFriendInvite(key) async {
+    fetchFriendUnInvited(key);
+    fetchFriendInvited(key);
+  }
+
+  void fetchFriendUnInvited(key) async {
+    if (paramsExcluded != null) {
+      var response = await FriendsApi().getListFriendsApi(
+          key == null || key == ''
+              ? paramsExcluded
+              : {...paramsExcluded, 'keyword': key});
+      if (response != null) {
+        if (mounted) {
+          setState(() {
+            friendUnInvited = response['data'];
+          });
+        }
+      }
+    }
+  }
+
+  void fetchFriendInvited(key) async {
+    if (paramsIncluded != null) {
+      var response = await FriendsApi().getListFriendsApi(
+          key == null || key == ''
+              ? paramsIncluded
+              : {...paramsIncluded, 'keyword': key});
+      if (response != null) {
+        if (mounted) {
+          setState(() {
+            friendInvited = response['data'];
+          });
+        }
+      }
+    }
+  }
+
+  void handleInviteFriend(value) async {
+    switch (widget.type) {
+      case 'page':
+        var res = await PageApi().createInviteLikePage(
+            {'target_account_ids': value, 'invitation_type': 'like'},
+            widget.id);
+        if (res != null) {
+          setState(() {
+            inviteSuccess = inviteSuccess + value;
+          });
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -62,129 +125,150 @@ class _InviteFriendState extends ConsumerState<InviteFriend>
 
   @override
   Widget build(BuildContext context) {
-    List friendExcludes = ref.watch(friendControllerProvider).friendExcludes;
+    Color getColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.pressed,
+        MaterialState.hovered,
+        MaterialState.focused,
+      };
+      if (states.any(interactiveStates.contains)) {
+        return secondaryColor;
+      }
+      return secondaryColor;
+    }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: const AppBarTitle(title: "Mời bạn bè"),
-        bottom: TabBar(
-          padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-          labelColor: secondaryColor,
-          unselectedLabelColor: Theme.of(context).textTheme.bodyMedium?.color,
-          indicatorColor: secondaryColor,
-          dividerColor: secondaryColor,
-          controller: _tabController,
-          tabs: const <Widget>[
-            Tab(
-              icon: Text(
-                'Chưa mời',
-                style: TextStyle(fontSize: 15),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          title: const AppBarTitle(title: "Mời bạn bè"),
+          actions: [
+            if (_tabController.index == 0)
+              InkWell(
+                onTap: () {
+                  handleInviteFriend(inviteCheck);
+                },
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(22, 18, 22, 0),
+                  child: const Text(
+                    'Mời',
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: secondaryColor,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              )
+          ],
+          bottom: TabBar(
+            padding: const EdgeInsets.fromLTRB(6, 0, 6, 3),
+            labelColor: secondaryColor,
+            unselectedLabelColor: Theme.of(context).textTheme.bodyMedium?.color,
+            indicatorColor: secondaryColor,
+            dividerColor: secondaryColor,
+            controller: _tabController,
+            tabs: const <Widget>[
+              Tab(
+                icon: Text(
+                  'Chưa mời',
+                  style: TextStyle(fontSize: 15),
+                ),
               ),
-            ),
-            Tab(
-              icon: Text(
-                'Đã mời',
-                style: TextStyle(fontSize: 15),
+              Tab(
+                icon: Text(
+                  'Đã mời',
+                  style: TextStyle(fontSize: 15),
+                ),
               ),
+            ],
+          ),
+        ),
+        body: Column(
+          children: [
+            Container(
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+                child: SearchInput(handleSearch: (value) async {
+                  searchFriendInvite(value);
+                })),
+            Expanded(
+              child: TabBarView(controller: _tabController, children: [
+                ListView.builder(
+                    itemCount: friendUnInvited.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              friendUnInvited[index]['avatar_media'] != null
+                                  ? friendUnInvited[index]['avatar_media']
+                                      ['preview_url']
+                                  : friendUnInvited[index]['avatar_static']),
+                        ),
+                        title: Text(friendUnInvited[index]['display_name'],
+                            style: TextStyle(color: colorWord(context))),
+                        trailing: inviteSuccess
+                                .contains(friendUnInvited[index]['id'])
+                            ? const Text(
+                                'Đã gửi',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: secondaryColor),
+                              )
+                            : Checkbox(
+                                checkColor: Colors.white,
+                                fillColor:
+                                    MaterialStateProperty.resolveWith(getColor),
+                                value: inviteCheck
+                                    .contains(friendUnInvited[index]['id']),
+                                onChanged: (bool? value) {
+                                  if (value == true) {
+                                    setState(() {
+                                      var tempInviteCheck = inviteCheck;
+                                      inviteCheck = tempInviteCheck +
+                                          [friendUnInvited[index]['id']];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      var tempInviteCheck = inviteCheck;
+                                      inviteCheck = tempInviteCheck
+                                          .where((element) =>
+                                              element !=
+                                              friendUnInvited[index]['id'])
+                                          .toList();
+                                    });
+                                  }
+                                },
+                              ),
+                      );
+                    }),
+                ListView.builder(
+                    itemCount: friendInvited.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              friendInvited[index]['avatar_media'] != null
+                                  ? friendInvited[index]['avatar_media']
+                                      ['preview_url']
+                                  : friendInvited[index]['avatar_static']),
+                        ),
+                        title: Text(friendInvited[index]['display_name'],
+                            style: TextStyle(color: colorWord(context))),
+                      );
+                    }),
+              ]),
             ),
           ],
         ),
-      ),
-      body: Column(
-        children: [
-          Container(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
-              child: SearchInput(handleSearch: (value) async {
-                await ref
-                    .read(friendControllerProvider.notifier)
-                    .getListFriendExcludes({paramsConfig});
-              })),
-          Expanded(
-            child: TabBarView(controller: _tabController, children: [
-              ListView.builder(
-                  itemCount: friendExcludes.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      onTap: () {},
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            friendExcludes[index]['avatar_media'] != null
-                                ? friendExcludes[index]['avatar_media']
-                                    ['preview_url']
-                                : friendExcludes[index]['avatar_static']),
-                      ),
-                      title: Text(friendExcludes[index]['display_name'],
-                          style: TextStyle(color: colorWord(context))),
-                      trailing: Container(
-                          width: 50,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              color: secondaryColor.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                            child: InkWell(
-                              onTap: () {
-                                if (widget.handleInvite != null) {
-                                  widget.handleInvite!(
-                                      friendExcludes[index]['id']);
-                                }
-                              },
-                              child: const Text('Mời',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: secondaryColor)),
-                            ),
-                          )),
-                    );
-                  }),
-              ListView.builder(
-                  itemCount: friendExcludes.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      onTap: () {},
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            friendExcludes[index]['avatar_media'] != null
-                                ? friendExcludes[index]['avatar_media']
-                                    ['preview_url']
-                                : friendExcludes[index]['avatar_static']),
-                      ),
-                      title: Text(friendExcludes[index]['display_name'],
-                          style: TextStyle(color: colorWord(context))),
-                      trailing: Container(
-                          width: 50,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              color: secondaryColor.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                            child: InkWell(
-                              onTap: () {
-                                if (widget.handleInvite != null) {
-                                  widget.handleInvite!(
-                                      friendExcludes[index]['id']);
-                                }
-                              },
-                              child: const Text('Mời',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: secondaryColor)),
-                            ),
-                          )),
-                    );
-                  }),
-            ]),
-          ),
-        ],
       ),
     );
   }

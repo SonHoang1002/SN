@@ -23,15 +23,9 @@ class CreateModalBaseMenu extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
         leading: const BackIconAppbar(),
-        title: SizedBox(
-          width: buttonAppbar != const SizedBox()
-              ? size.width - 125
-              : size.width - 70,
-          child: Center(
-            child: AppBarTitle(
-              title: title,
-            ),
-          ),
+        centerTitle: true,
+        title: AppBarTitle(
+          title: title,
         ),
         actions: [buttonAppbar],
       ),
