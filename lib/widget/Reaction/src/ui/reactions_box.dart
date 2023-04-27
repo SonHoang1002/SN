@@ -8,6 +8,7 @@ import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/providers/posts/reaction_message_content.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Reaction/src/models/reaction.dart';
+import 'package:social_network_app_mobile/widget/Reaction/src/ui/reaction_button.dart';
 import 'package:social_network_app_mobile/widget/Reaction/src/ui/test/show_position_fill.dart';
 import 'package:social_network_app_mobile/widget/Reaction/src/utils/extensions.dart';
 import 'package:social_network_app_mobile/widget/Reaction/src/utils/reactions_position.dart';
@@ -205,173 +206,186 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
             child: Listener(
               onPointerDown: (_) {
                 onTapUpBtn(null);
+                widget.onCancelReaction != null
+                    ? widget.onCancelReaction!()
+                    : null;
                 Navigator.of(context).pop();
               },
-              onPointerUp: (_) { 
-              },
-              onPointerMove: (_) { 
-              },
+              onPointerUp: (_) {},
+              onPointerMove: (_) {},
               child: Container(color: transparent),
             ),
           ),
           PositionedDirectional(
               top: _getVerticalPosition() - 100,
               start: _getHorizontalPosition(),
-              child: GestureDetector(
-                onTapUp: (details) {
-                  onTapBtn();
-                  onDragUpdateBoxIcon(details);
-                  Future.delayed(const Duration(milliseconds: 250), () {
-                    onDragEndBoxIcon();
-                  });
+              child: NotificationListener(
+                onNotification: (notification) {
+                  if (notification is CustomNotification &&
+                      notification.name == 'long_press_event') {
+                    final details = notification.data;
+                    onHorizontalDragUpdateBoxIcon(details);
+                    return true;
+                  }
+                  return false;
                 },
-                onHorizontalDragEnd: onHorizontalDragEndBoxIcon,
-                onHorizontalDragUpdate: onHorizontalDragUpdateBoxIcon,
-                child: Column(
-                  children: <Widget>[
-                    // main content
-                    Stack(
-                      children: <Widget>[
-                        // Box and icons
-                        Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: <Widget>[
-                            // Box
-                            renderBox(),
-                            // Icons
-                            renderIcons(),
-                          ],
-                        ),
-                        // Icon like
-                        whichIconUserChoose == 1 && !isDragging
-                            ? Container(
-                                margin: EdgeInsets.only(
-                                  bottom: processTopPosition(
-                                          moveUpIconWhenRelease.value) +
-                                      50,
-                                  left: moveLeftIconLikeWhenRelease.value,
-                                ),
-                                child: Transform.scale(
-                                  scale: zoomIconWhenRelease.value,
-                                  child: Image.asset(
-                                    'assets/reaction/like.gif',
-                                    width: 40.0,
-                                    height: 40.0,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapUp: (details) {
+                    onTapBtn();
+                    onDragUpdateBoxIcon(details);
+                    Future.delayed(const Duration(milliseconds: 250), () {
+                      onDragEndBoxIcon();
+                    });
+                  },
+                  onHorizontalDragEnd: onHorizontalDragEndBoxIcon,
+                  onHorizontalDragUpdate: onHorizontalDragUpdateBoxIcon,
+                  child: Column(
+                    children: <Widget>[
+                      // main content
+                      Stack(
+                        children: <Widget>[
+                          // Box and icons
+                          Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: <Widget>[
+                              // Box
+                              renderBox(),
+                              // Icons
+                              renderIcons(),
+                            ],
+                          ),
+                          // Icon like
+                          whichIconUserChoose == 1 && !isDragging
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: processTopPosition(
+                                            moveUpIconWhenRelease.value) +
+                                        50,
+                                    left: moveLeftIconLikeWhenRelease.value,
                                   ),
-                                ),
-                              )
-                            : Container(),
-                        // Icon love
-                        whichIconUserChoose == 2 && !isDragging
-                            ? Container(
-                                margin: EdgeInsets.only(
-                                  bottom: processTopPosition(
-                                      moveUpIconWhenRelease.value),
-                                  left: moveLeftIconLoveWhenRelease.value,
-                                ),
-                                child: Transform.scale(
-                                  scale: zoomIconWhenRelease.value,
-                                  child: Image.asset(
-                                    'assets/reaction/tym.gif',
-                                    width: 40.0,
-                                    height: 40.0,
+                                  child: Transform.scale(
+                                    scale: zoomIconWhenRelease.value,
+                                    child: Image.asset(
+                                      'assets/reaction/like.gif',
+                                      width: 40.0,
+                                      height: 40.0,
+                                    ),
                                   ),
-                                ),
-                              )
-                            : Container(),
-                        // Icon yay
-                        whichIconUserChoose == 3 && !isDragging
-                            ? Container(
-                                margin: EdgeInsets.only(
-                                  bottom: processTopPosition(
-                                      moveUpIconWhenRelease.value),
-                                  left: moveLeftIconYayWhenRelease.value,
-                                ),
-                                child: Transform.scale(
-                                  scale: zoomIconWhenRelease.value,
-                                  child: Image.asset(
-                                    'assets/reaction/hug.gif',
-                                    width: 40.0,
-                                    height: 40.0,
+                                )
+                              : Container(),
+                          // Icon love
+                          whichIconUserChoose == 2 && !isDragging
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: processTopPosition(
+                                        moveUpIconWhenRelease.value),
+                                    left: moveLeftIconLoveWhenRelease.value,
                                   ),
-                                ),
-                              )
-                            : Container(),
-                        // Icon haha
-                        whichIconUserChoose == 4 && !isDragging
-                            ? Container(
-                                margin: EdgeInsets.only(
-                                  bottom: processTopPosition(
-                                      moveUpIconWhenRelease.value),
-                                  left: moveLeftIconHahaWhenRelease.value,
-                                ),
-                                child: Transform.scale(
-                                  scale: zoomIconWhenRelease.value,
-                                  child: Image.asset(
-                                    'assets/reaction/haha.gif',
-                                    width: 40.0,
-                                    height: 40.0,
+                                  child: Transform.scale(
+                                    scale: zoomIconWhenRelease.value,
+                                    child: Image.asset(
+                                      'assets/reaction/tym.gif',
+                                      width: 40.0,
+                                      height: 40.0,
+                                    ),
                                   ),
-                                ),
-                              )
-                            : Container(),
-                        // Icon Wow
-                        whichIconUserChoose == 5 && !isDragging
-                            ? Container(
-                                margin: EdgeInsets.only(
-                                  bottom: processTopPosition(
-                                      moveUpIconWhenRelease.value),
-                                  left: moveLeftIconWowWhenRelease.value,
-                                ),
-                                child: Transform.scale(
-                                  scale: zoomIconWhenRelease.value,
-                                  child: Image.asset(
-                                    'assets/reaction/wow.gif',
-                                    width: 40.0,
-                                    height: 40.0,
+                                )
+                              : Container(),
+                          // Icon yay
+                          whichIconUserChoose == 3 && !isDragging
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: processTopPosition(
+                                        moveUpIconWhenRelease.value),
+                                    left: moveLeftIconYayWhenRelease.value,
                                   ),
-                                ),
-                              )
-                            : Container(),
-                        // Icon sad
-                        whichIconUserChoose == 6 && !isDragging
-                            ? Container(
-                                margin: EdgeInsets.only(
-                                  bottom: processTopPosition(
-                                      moveUpIconWhenRelease.value),
-                                  left: moveLeftIconSadWhenRelease.value,
-                                ),
-                                child: Transform.scale(
-                                  scale: zoomIconWhenRelease.value,
-                                  child: Image.asset(
-                                    'assets/reaction/cry.gif',
-                                    width: 40.0,
-                                    height: 40.0,
+                                  child: Transform.scale(
+                                    scale: zoomIconWhenRelease.value,
+                                    child: Image.asset(
+                                      'assets/reaction/hug.gif',
+                                      width: 40.0,
+                                      height: 40.0,
+                                    ),
                                   ),
-                                ),
-                              )
-                            : Container(),
-                        // Icon angry
-                        whichIconUserChoose == 7 && !isDragging
-                            ? Container(
-                                margin: EdgeInsets.only(
-                                  bottom: processTopPosition(
-                                      moveUpIconWhenRelease.value),
-                                  left: moveLeftIconAngryWhenRelease.value,
-                                ),
-                                child: Transform.scale(
-                                  scale: zoomIconWhenRelease.value,
-                                  child: Image.asset(
-                                    'assets/reaction/mad.gif',
-                                    width: 40.0,
-                                    height: 40.0,
+                                )
+                              : Container(),
+                          // Icon haha
+                          whichIconUserChoose == 4 && !isDragging
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: processTopPosition(
+                                        moveUpIconWhenRelease.value),
+                                    left: moveLeftIconHahaWhenRelease.value,
                                   ),
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                  ],
+                                  child: Transform.scale(
+                                    scale: zoomIconWhenRelease.value,
+                                    child: Image.asset(
+                                      'assets/reaction/haha.gif',
+                                      width: 40.0,
+                                      height: 40.0,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          // Icon Wow
+                          whichIconUserChoose == 5 && !isDragging
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: processTopPosition(
+                                        moveUpIconWhenRelease.value),
+                                    left: moveLeftIconWowWhenRelease.value,
+                                  ),
+                                  child: Transform.scale(
+                                    scale: zoomIconWhenRelease.value,
+                                    child: Image.asset(
+                                      'assets/reaction/wow.gif',
+                                      width: 40.0,
+                                      height: 40.0,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          // Icon sad
+                          whichIconUserChoose == 6 && !isDragging
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: processTopPosition(
+                                        moveUpIconWhenRelease.value),
+                                    left: moveLeftIconSadWhenRelease.value,
+                                  ),
+                                  child: Transform.scale(
+                                    scale: zoomIconWhenRelease.value,
+                                    child: Image.asset(
+                                      'assets/reaction/cry.gif',
+                                      width: 40.0,
+                                      height: 40.0,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          // Icon angry
+                          whichIconUserChoose == 7 && !isDragging
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: processTopPosition(
+                                        moveUpIconWhenRelease.value),
+                                    left: moveLeftIconAngryWhenRelease.value,
+                                  ),
+                                  child: Transform.scale(
+                                    scale: zoomIconWhenRelease.value,
+                                    child: Image.asset(
+                                      'assets/reaction/mad.gif',
+                                      width: 40.0,
+                                      height: 40.0,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ))
         ]));
@@ -476,9 +490,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
     if (isSizeBig) {
       if (whichIconUserChoose != 0 && isDragging) {
         bottomMargin = 10;
-        if (currentIconFocus == 3) {
-
-        }
+        if (currentIconFocus == 3) {}
       } else {
         bottomMargin = 0;
       }

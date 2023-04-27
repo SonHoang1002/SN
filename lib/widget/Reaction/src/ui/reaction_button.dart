@@ -161,10 +161,12 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
           // ref
           //     .read(showPositionFillProvider.notifier)
           //     .setShowPositionFill(false);
-
+          final notification =
+              CustomNotification(name: 'long_press_event', data: details);
+          notification.dispatch(context);
           _showReactionsBox(details.globalPosition);
           widget.onWaitingReaction != null ? widget.onWaitingReaction!() : null;
-        }, 
+        },
         child: (_selectedReaction ?? widget.reactions.first).icon,
       ),
     );
@@ -174,6 +176,7 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
     final buttonSize = _buttonKey.widgetSize;
     final reactionButton = await Navigator.of(context).push(
       PageRouteBuilder(
+        
         opaque: false,
         pageBuilder: (_, __, ___) {
           return ReactionsBox(
@@ -211,3 +214,11 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
     }
   }
 }
+
+class CustomNotification extends Notification {
+  String name;
+  dynamic data;
+
+  CustomNotification({required this.name, required this.data});
+}
+typedef void OnLongPressCallback(DragUpdateDetails details);

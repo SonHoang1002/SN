@@ -3,6 +3,7 @@ import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recruit_card.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recruit_cv.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recruit_interested.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recruit_invite.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recruit_news.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recruit_news_past.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
@@ -47,7 +48,9 @@ class _RecruitRenderState extends State<RecruitRender> {
         menuSelected == 'recruit_following'
             ? const RecruitInterested()
             : const SizedBox(),
-        menuSelected == 'recruit_news' ? const RecruitNews() : const SizedBox(),
+        menuSelected == 'recruit_invite'
+            ? const RecruitInvite()
+            : const SizedBox(),
         menuSelected == 'recruit_news' ? const RecruitNews() : const SizedBox(),
         menuSelected == 'recruit_news_past'
             ? const RecruitNewsPast()

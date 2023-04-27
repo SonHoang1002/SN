@@ -10,6 +10,10 @@ class RecruitApi {
     return await Api().getRequestBase('/api/v1/recruits', params);
   }
 
+  Future getListRecruitInviteApi(params) async {
+    return await Api().getRequestBase('/api/v1/recruit_invitations', params);
+  }
+
   Future getListRecruitCVApi(id) async {
     return await Api()
         .getRequestBase('/api/v1/accounts/$id/account_resumes', null);

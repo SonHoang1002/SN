@@ -54,6 +54,11 @@ class PageApi {
     return await Api().getRequestBase('/api/v1/pages/$id/albums', params);
   }
 
+  Future getListGroupPageApi(params, id) async {
+    return await Api()
+        .getRequestBase('/api/v1/pages/$id/linked_groups', params);
+  }
+
   Future getListPhotoAlbumPageApi(params, id) async {
     return await Api()
         .getRequestBase('/api/v1/albums/$id/media_attachments', params);

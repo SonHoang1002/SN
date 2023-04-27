@@ -25,7 +25,7 @@ buildContentAndStatusWidget(String title,
             itemCount: contents!.length,
             itemBuilder: ((context, index) {
               return Container(
-                margin: EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -46,9 +46,9 @@ buildContentAndStatusWidget(String title,
                             child: Container(
                               decoration: BoxDecoration(
                                   color: Colors.grey[300],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              padding: EdgeInsets.symmetric(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(5))),
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
                               child: Column(
                                 children: [
@@ -56,13 +56,12 @@ buildContentAndStatusWidget(String title,
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
-                                          SettingConstants.PATH_ICON +
-                                              "bell_icon.svg",
+                                          "${SettingConstants.PATH_ICON}bell_icon.svg",
                                           height: 15,
                                           // color:  white
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(
+                                          margin: const EdgeInsets.only(
                                               left: 5, right: 5),
                                           child: buildTextContent(
                                               contents[index]["status"]!
@@ -70,7 +69,7 @@ buildContentAndStatusWidget(String title,
                                               true,
                                               fontSize: 14),
                                         ),
-                                        Icon(
+                                        const Icon(
                                           SettingConstants.DOWN_ICON_DATA,
                                           size: 15,
                                           // color:  white,
@@ -93,7 +92,7 @@ buildContentAndStatusWidget(String title,
 }
 
 _buildDivider() {
-  return Padding(
+  return const Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: Divider(
         color: white,

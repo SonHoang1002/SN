@@ -8,7 +8,9 @@ class Post extends StatelessWidget {
   final dynamic post;
   final String? type;
   final bool? isHiddenCrossbar;
-  const Post({Key? key, this.post, this.type, this.isHiddenCrossbar})
+  final dynamic data;
+
+  const Post({Key? key, this.post, this.type, this.isHiddenCrossbar, this.data})
       : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class Post extends StatelessWidget {
               PostCenter(
                 post: post,
                 type: type,
+                data: data
               ),
               PostFooter(
                 post: post,

@@ -24,11 +24,13 @@ class MomentPageview extends ConsumerStatefulWidget {
   ConsumerState<MomentPageview> createState() => _MomentPageviewState();
 }
 
-class _MomentPageviewState extends ConsumerState<MomentPageview> {
+class _MomentPageviewState extends ConsumerState<MomentPageview>
+    with AutomaticKeepAliveClientMixin {
   bool isDragSlider = false;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     handleAction(type, data) async {
       dynamic response;
       if (type == 'reaction') {
@@ -92,6 +94,9 @@ class _MomentPageviewState extends ConsumerState<MomentPageview> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class CustomPageViewScrollPhysics extends ScrollPhysics {

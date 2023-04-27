@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -28,11 +29,12 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
   void initState() {
     super.initState();
     if (mounted) {
-      Future.delayed(
-          Duration.zero,
-          () => ref
-              .read(learnSpaceStateControllerProvider.notifier)
-              .getListCoursesInvitations(paramsConfigList));
+      Future.delayed(Duration.zero, () {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .getListCoursesInvitations(paramsConfigList);
+        ref.read(growControllerProvider.notifier).getGrowTransactions({});
+      });
     }
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
@@ -48,6 +50,7 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
 
   @override
   Widget build(BuildContext context) {
+    var transactions = ref.watch(growControllerProvider).growTransactions;
     List courseInvitations =
         ref.watch(learnSpaceStateControllerProvider).courseInvitations;
     bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
@@ -171,7 +174,240 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                   Align(
                                     alignment: Alignment.bottomLeft,
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        if (!courseInvitations[index]['course']
+                                                ['course_relationships']
+                                            ['participant_course']) {
+                                          if (courseInvitations[index]['course']
+                                                  ['price'] !=
+                                              0) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) {
+                                                  return CupertinoAlertDialog(
+                                                    title: const Text(
+                                                        'Xác nhận thanh toán'),
+                                                    content: RichText(
+                                                        text: TextSpan(
+                                                            text:
+                                                                'Bạn có muốn thanh toán khoá học ',
+                                                            style: TextStyle(
+                                                                color: colorWord(
+                                                                    context)),
+                                                            children: [
+                                                          TextSpan(
+                                                              text: courseInvitations[
+                                                                              index]
+                                                                          [
+                                                                          'course']
+                                                                      [
+                                                                      'title'] ??
+                                                                  '',
+                                                              style: TextStyle(
+                                                                color: colorWord(
+                                                                    context),
+                                                              )),
+                                                          TextSpan(
+                                                              text: ' với giá ',
+                                                              style: TextStyle(
+                                                                  color: colorWord(
+                                                                      context))),
+                                                          TextSpan(
+                                                              text: convertNumberToVND(
+                                                                      courseInvitations[index]['course']
+                                                                              [
+                                                                              'price'] ~/
+                                                                          1)
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  color: colorWord(
+                                                                      context),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                          TextSpan(
+                                                              text: ' VNĐ?',
+                                                              style: TextStyle(
+                                                                  color: colorWord(
+                                                                      context))),
+                                                        ])),
+                                                    actions: <
+                                                        CupertinoDialogAction>[
+                                                      CupertinoDialogAction(
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child:
+                                                            const Text('Huỷ'),
+                                                      ),
+                                                      CupertinoDialogAction(
+                                                        isDefaultAction: true,
+                                                        onPressed: () async {
+                                                          if (transactions[
+                                                                  'balance'] >
+                                                              courseInvitations[
+                                                                              index]
+                                                                          [
+                                                                          'course']
+                                                                      [
+                                                                      'price'] ~/
+                                                                  1) {
+                                                            Navigator.pop(
+                                                                context);
+                                                            await ref
+                                                                .read(learnSpaceStateControllerProvider
+                                                                    .notifier)
+                                                                .updatePaymentCourse(
+                                                                    courseInvitations[
+                                                                            index]
+                                                                        [
+                                                                        'course']['id'],
+                                                                    context);
+                                                          } else {
+                                                            Navigator.pop(
+                                                                context);
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder: (_) {
+                                                                  return CupertinoAlertDialog(
+                                                                    title: const Text(
+                                                                        'Thông báo'),
+                                                                    content:
+                                                                        const Text(
+                                                                            'Số dư trong ví không đủ để thanh toán khoá học. Vui lòng nạp thêm tiền vào ví để thanh toán khoá học.'),
+                                                                    actions: <
+                                                                        CupertinoDialogAction>[
+                                                                      CupertinoDialogAction(
+                                                                        isDefaultAction:
+                                                                            true,
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        child: const Text(
+                                                                            'Đóng'),
+                                                                      ),
+                                                                      CupertinoDialogAction(
+                                                                        isDefaultAction:
+                                                                            true,
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        child: const Text(
+                                                                            'Nạp'),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                });
+                                                          }
+                                                        },
+                                                        child: const Text(
+                                                            'Thanh toán'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) {
+                                                  return CupertinoAlertDialog(
+                                                    title: const Text(
+                                                        'Xác nhận đăng ký khoá học'),
+                                                    content: RichText(
+                                                        text: TextSpan(
+                                                            text:
+                                                                'Bạn có muốn đăng ký khoá học ',
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .black),
+                                                            children: [
+                                                          TextSpan(
+                                                              text: courseInvitations[
+                                                                              index]
+                                                                          [
+                                                                          'course']
+                                                                      [
+                                                                      'title'] ??
+                                                                  '',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                              )),
+                                                          const TextSpan(
+                                                              text: ' không?',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black)),
+                                                        ])),
+                                                    actions: <
+                                                        CupertinoDialogAction>[
+                                                      CupertinoDialogAction(
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child:
+                                                            const Text('Huỷ'),
+                                                      ),
+                                                      CupertinoDialogAction(
+                                                        isDefaultAction: true,
+                                                        onPressed: () async {
+                                                          Navigator.pop(
+                                                              context);
+                                                          await ref
+                                                              .read(
+                                                                  learnSpaceStateControllerProvider
+                                                                      .notifier)
+                                                              .updatePaymentCourse(
+                                                                  courseInvitations[
+                                                                          index]
+                                                                      [
+                                                                      'course']['id'],
+                                                                  context);
+                                                        },
+                                                        child: const Text(
+                                                            'Đăng ký'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          }
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: const Text(
+                                                  'Bạn đã tham gia khoá học này!'),
+                                              duration: const Duration(
+                                                  milliseconds: 1500),
+                                              width: 300.0,
+                                              // Width of the SnackBar.
+                                              padding: const EdgeInsets
+                                                      .symmetric(
+                                                  horizontal: 8.0,
+                                                  vertical:
+                                                      16.0 // Inner padding for SnackBar content.
+                                                  ),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
                                       child: Container(
                                         height: 32,
                                         width: width * 0.35,
@@ -223,13 +459,51 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                   Align(
                                     alignment: Alignment.bottomLeft,
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        if (courseInvitations[index]['course']
+                                                    ['course_relationships']
+                                                ['follow_course'] ==
+                                            true) {
+                                          ref
+                                              .read(
+                                                  learnSpaceStateControllerProvider
+                                                      .notifier)
+                                              .updateStatusCourse(
+                                                  false,
+                                                  courseInvitations[index]
+                                                      ['course']['id']);
+                                          setState(() {
+                                            courseInvitations[index]['course']
+                                                    ['course_relationships']
+                                                ['follow_course'] = false;
+                                          });
+                                        } else {
+                                          ref
+                                              .read(
+                                                  learnSpaceStateControllerProvider
+                                                      .notifier)
+                                              .updateStatusCourse(
+                                                  true,
+                                                  courseInvitations[index]
+                                                      ['course']['id']);
+                                          setState(() {
+                                            courseInvitations[index]['course']
+                                                    ['course_relationships']
+                                                ['follow_course'] = true;
+                                          });
+                                        }
+                                      },
                                       child: Container(
                                         height: 32,
                                         width: width * 0.35,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                189, 202, 202, 202),
+                                            color: courseInvitations[index]
+                                                            ['course']
+                                                        ['course_relationships']
+                                                    ['follow_course']
+                                                ? secondaryColor
+                                                : const Color.fromARGB(
+                                                    189, 202, 202, 202),
                                             borderRadius:
                                                 BorderRadius.circular(6),
                                             border: Border.all(
@@ -237,10 +511,16 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(FontAwesomeIcons.solidStar,
-                                                color: Colors.black, size: 14),
-                                            SizedBox(
+                                                color: courseInvitations[index]
+                                                                ['course'][
+                                                            'course_relationships']
+                                                        ['follow_course']
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                size: 14),
+                                            const SizedBox(
                                               width: 5.0,
                                             ),
                                             Text(
@@ -248,11 +528,16 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 12.0,
-                                                color: Colors.black,
+                                                color: courseInvitations[index]
+                                                                ['course'][
+                                                            'course_relationships']
+                                                        ['follow_course']
+                                                    ? Colors.white
+                                                    : Colors.black,
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 3.0,
                                             ),
                                           ],

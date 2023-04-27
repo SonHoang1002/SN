@@ -5,7 +5,12 @@ import 'package:social_network_app_mobile/widget/expandable_text.dart';
 class PostContent extends StatefulWidget {
   final dynamic post;
   final Color? textColor;
-  const PostContent({Key? key, this.post, this.textColor}) : super(key: key);
+
+  const PostContent({
+    Key? key,
+    this.post,
+    this.textColor,
+  }) : super(key: key);
 
   @override
   State<PostContent> createState() => _PostContentState();
