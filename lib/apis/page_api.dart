@@ -49,6 +49,11 @@ class PageApi {
     return await Api().getRequestBase('/api/v1/pages/$id/albums', params);
   }
 
+  Future getListGroupPageApi(params, id) async {
+    return await Api()
+        .getRequestBase('/api/v1/pages/$id/linked_groups', params);
+  }
+
   Future handleDeleteReviewPageApi(idPage, idFeedback) async {
     return await Api()
         .deleteRequestBase('/api/v1/pages/$idPage/feedbacks/$idFeedback', null);

@@ -18,6 +18,8 @@ class PageState {
   final bool isMoreAlbum;
   final List pageVideo;
   final bool isMoreVideo;
+  final List pageGroup;
+  final bool isMoreGroup;
 
   const PageState(
       {this.rolePage = true,
@@ -31,7 +33,9 @@ class PageState {
       this.pageAlbum = const [],
       this.isMoreAlbum = true,
       this.pageVideo = const [],
-      this.isMoreVideo = true});
+      this.isMoreVideo = true,
+      this.pageGroup = const [],
+      this.isMoreGroup = true});
 
   PageState copyWith(
       {bool rolePage = true,
@@ -45,7 +49,9 @@ class PageState {
       List pageAlbum = const [],
       bool isMoreAlbum = true,
       List pageVideo = const [],
-      bool isMoreVideo = true}) {
+      bool isMoreVideo = true,
+      List pageGroup = const [],
+      bool isMoreGroup = true}) {
     return PageState(
         rolePage: rolePage,
         pageFeed: pageFeed,
@@ -58,7 +64,9 @@ class PageState {
         pageAlbum: pageAlbum,
         isMoreAlbum: isMoreAlbum,
         pageVideo: pageVideo,
-        isMoreVideo: isMoreVideo);
+        isMoreVideo: isMoreVideo,
+        pageGroup: pageGroup,
+        isMoreGroup: isMoreGroup);
   }
 }
 
@@ -91,7 +99,33 @@ class PageController extends StateNotifier<PageState> {
             pageAlbum: state.pageAlbum,
             isMoreAlbum: state.isMoreAlbum,
             pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo);
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+      }
+    }
+  }
+
+  getListPageGroup(params, id) async {
+    var response = await PageApi().getListGroupPageApi(params, id);
+    if (response != null) {
+      if (mounted) {
+        state = state.copyWith(
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup:
+                checkObjectUniqueInList(state.pageGroup + response, 'id'),
+            isMoreGroup: response.length < params['limit'] ? false : true);
       }
     }
   }
@@ -112,7 +146,9 @@ class PageController extends StateNotifier<PageState> {
             pageAlbum: state.pageAlbum,
             isMoreAlbum: state.isMoreAlbum,
             pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo);
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
       }
     }
   }
@@ -133,7 +169,9 @@ class PageController extends StateNotifier<PageState> {
             pageAlbum: state.pageAlbum,
             isMoreAlbum: state.isMoreAlbum,
             pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo);
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
       }
     }
   }
@@ -143,29 +181,30 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
-          rolePage: state.rolePage,
-          pageFeed: state.pageFeed,
-          isMoreFeed: state.isMoreFeed,
-          pageReview: state.pageReview,
-          isMoreReview: state.isMoreReview,
-          pagePined: state.pagePined,
-          pagePhoto: state.pagePhoto +
-              (params['media_type'] == 'image' ? response : []),
-          isMorePhoto: params['media_type'] == 'image'
-              ? response.length < params['limit']
-                  ? false
-                  : true
-              : state.isMorePhoto,
-          pageAlbum: state.pageAlbum,
-          isMoreAlbum: state.isMoreAlbum,
-          pageVideo: state.pageVideo +
-              (params['media_type'] == 'video' ? response : []),
-          isMoreVideo: params['media_type'] == 'video'
-              ? response.length < params['limit']
-                  ? false
-                  : true
-              : state.isMoreVideo,
-        );
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto +
+                (params['media_type'] == 'image' ? response : []),
+            isMorePhoto: params['media_type'] == 'image'
+                ? response.length < params['limit']
+                    ? false
+                    : true
+                : state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo +
+                (params['media_type'] == 'video' ? response : []),
+            isMoreVideo: params['media_type'] == 'video'
+                ? response.length < params['limit']
+                    ? false
+                    : true
+                : state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
       }
     }
   }
@@ -186,7 +225,9 @@ class PageController extends StateNotifier<PageState> {
             pageAlbum: state.pageAlbum + response,
             isMoreAlbum: response.length < params['limit'] ? false : true,
             pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo);
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
       }
     }
   }
@@ -206,7 +247,9 @@ class PageController extends StateNotifier<PageState> {
           pageAlbum: state.pageAlbum,
           isMoreAlbum: state.isMoreAlbum,
           pageVideo: state.pageVideo,
-          isMoreVideo: state.isMoreVideo);
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
     }
   }
 
@@ -224,7 +267,9 @@ class PageController extends StateNotifier<PageState> {
           pageAlbum: state.pageAlbum,
           isMoreAlbum: state.isMoreAlbum,
           pageVideo: state.pageVideo,
-          isMoreVideo: state.isMoreVideo);
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
     }
   }
 }
