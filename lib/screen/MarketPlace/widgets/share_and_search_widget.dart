@@ -60,7 +60,7 @@ class _ShareAndSearchWidgetState extends State<ShareAndSearchWidget> {
             margin: const EdgeInsets.only(right: 10),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: const ImageCacheRender(
+              child: ImageCacheRender(
                 height: 40.0,
                 width: 40.0,
                 path:

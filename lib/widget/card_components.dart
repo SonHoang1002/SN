@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:provider/provider.dart' as pv;
 
 class CardComponents extends StatelessWidget {
   final dynamic buttonCard;
@@ -35,9 +35,11 @@ class CardComponents extends StatelessWidget {
       bottom: false,
       child: Card(
         color: theme.isDarkMode ? Colors.grey.shade900 : Colors.white,
-        shape:  RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
             side: BorderSide(
-              color: theme.isDarkMode ? Colors.black.withOpacity(0.5): Colors.grey,
+              color: theme.isDarkMode
+                  ? Colors.black.withOpacity(0.5)
+                  : Colors.grey,
               width: 0.5,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(15))),
@@ -65,8 +67,7 @@ class CardComponents extends StatelessWidget {
                                     margin: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                         color: Colors.black.withOpacity(0.4),
-                                        borderRadius:
-                                            BorderRadius.circular(15),
+                                        borderRadius: BorderRadius.circular(15),
                                         border: Border.all(
                                             width: 0.2, color: greyColor)),
                                     child: InkWell(
@@ -114,14 +115,10 @@ class CardComponents extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: textCard ?? const SizedBox()),
+                child: textCard ?? const SizedBox(),
               ),
               SizedBox(
-                child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                    child:  buttonCard ?? const SizedBox()),
+                child: buttonCard ?? const SizedBox(),
               )
             ],
           ),

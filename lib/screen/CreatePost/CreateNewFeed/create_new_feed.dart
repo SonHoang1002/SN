@@ -30,23 +30,24 @@ import 'package:social_network_app_mobile/screen/Post/PostCenter/post_life_event
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/show_bottom_sheet_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widget/Posts/drag_bottom_sheet.dart';
 import 'package:social_network_app_mobile/widget/Posts/drag_icon.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
+
+import '../../../providers/create_feed/feed_draft_provider.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
-  const CreateNewFeed({Key? key, this.post, this.type}) : super(key: key);
+  final dynamic postDiscussion;
+  const CreateNewFeed({Key? key, this.post, this.type, this.postDiscussion})
+      : super(key: key);
 
   @override
   ConsumerState<CreateNewFeed> createState() => _CreateNewFeedState();
@@ -73,15 +74,20 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool isActiveBackground = false;
   double height = 0;
   double width = 0;
-
+  dynamic postDiscussion;
   dynamic previewUrlData;
   bool showPreviewImage = true;
   ScrollController menuController = ScrollController();
   bool isMenuMinExtent = true;
-
   @override
   void initState() {
     super.initState();
+    final draftContent = ref.read(draftFeedController);
+    gifLink = draftContent.gifLink;
+    files = draftContent.files;
+    content = draftContent.content;
+    checkin = draftContent.checkin;
+    previewUrlData = draftContent.previewUrlData;
     if (mounted && widget.post != null) {
       setState(() {
         checkin = widget.post['place'];
@@ -94,6 +100,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         lifeEvent = widget.post['life_event'];
         // statusQuestion =
         //     widget.post['status_question'] ?? widget.post['status_target'];
+      });
+    }
+    if (mounted && widget.postDiscussion != null) {
+      setState(() {
+        postDiscussion = widget.postDiscussion!;
       });
     }
     menuController.addListener(() {
@@ -348,7 +359,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     if (lifeEvent != null) {
       data = {...data, "life_event": lifeEvent};
     }
-
+    if (postDiscussion != null) {
+      data = {...data, ...postDiscussion};
+    }
     var response = await PostApi().createStatus(data);
 
     if (response != null) {
@@ -365,9 +378,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           isUploadVideo = false;
         });
       } else {
+        String? type = widget.type ?? feedPost;
         ref
             .read(postControllerProvider.notifier)
-            .createUpdatePost(feedPost, response);
+            .createUpdatePost(type, response);
       }
     } else {}
   }
@@ -425,6 +439,18 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
   }
 
+  bool checkHasContent() {
+    if (gifLink.isNotEmpty ||
+        files.isNotEmpty ||
+        content.isNotEmpty ||
+        checkin != null ||
+        previewUrlData != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   handleChooseMenu(menu, subType) {
     if (menu == null) return;
 
@@ -432,11 +458,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) => Expanded(
-                  child: GalleryView(
-                      isMutipleFile: true,
-                      handleGetFiles: handleUpdateData,
-                      filesSelected: files))));
+              builder: (context) => GalleryView(
+                  isMutipleFile: true,
+                  handleGetFiles: handleUpdateData,
+                  filesSelected: files)));
       return;
     }
     setState(() {
@@ -503,153 +528,173 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 title: menu['label'], body: body, buttonAppbar: buttonAppbar)));
   }
 
+  checkSaveDraft() {
+    if (checkHasContent()) {
+      return showCupertinoModalPopup(
+              context: context,
+              builder: (context) {
+                return CupertinoAlertDialog(
+                  title: buildTextContent(
+                      "Lưu bài viết này dưới dạng bản nháp ?", false,
+                      fontSize: 18, isCenterLeft: false),
+                  content: buildTextContent(
+                      "Nếu bỏ bây giờ, bạn sẽ mất bài viết này.", false,
+                      fontSize: 14, isCenterLeft: false),
+                  actions: [
+                    Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: Column(children: [
+                        CupertinoButton(
+                            child: buildTextContent("Lưu bản nháp", false,
+                                fontSize: 13, isCenterLeft: false),
+                            onPressed: () {
+                              ref
+                                  .read(draftFeedController.notifier)
+                                  .saveDraftFeed(DraftFeed(
+                                    gifLink: gifLink,
+                                    files: files,
+                                    content: content,
+                                    checkin: checkin,
+                                    previewUrlData: previewUrlData,
+                                  ));
+                              popToPreviousScreen(context);
+                              popToPreviousScreen(context);
+                            }),
+                        buildDivider(color: greyColor),
+                        CupertinoButton(
+                            child: buildTextContent("Bỏ bài viết", false,
+                                fontSize: 13,
+                                colorWord: red,
+                                isCenterLeft: false),
+                            onPressed: () {
+                              ref
+                                  .read(draftFeedController.notifier)
+                                  .saveDraftFeed(DraftFeed(
+                                    gifLink: "",
+                                    files: [],
+                                    content: "",
+                                    checkin: null,
+                                    previewUrlData: null,
+                                  ));
+                              popToPreviousScreen(context);
+                              popToPreviousScreen(context);
+                            }),
+                        buildDivider(color: greyColor),
+                        CupertinoButton(
+                            child: buildTextContent("Tiếp tục chỉnh sửa", false,
+                                fontSize: 13, isCenterLeft: false),
+                            onPressed: () {
+                              popToPreviousScreen(context);
+                            }),
+                        buildDivider(color: greyColor),
+                        CupertinoButton(
+                            child: const Text("Hủy"),
+                            onPressed: () {
+                              popToPreviousScreen(context);
+                            }),
+                      ]),
+                    )
+                  ],
+                );
+              }) ??
+          false;
+    } else {
+      popToPreviousScreen(context);
+    }
+  }
+
+  @override
+  void onBackPressed() {}
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     height = size.height;
     width = size.width;
-    return LoaderOverlay(
-        useDefaultLoading: false,
-        overlayWidget: const Center(
-          child: CupertinoActivityIndicator(),
-        ),
-        child: GestureDetector(
-          onTap: () {
-            hiddenKeyboard(context);
-          },
-          child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              appBar: AppBar(
-                elevation: 0,
-                automaticallyImplyLeading: false,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (checkisShowBackground() == true) {
-                          showCupertinoModalPopup(
-                              context: context,
-                              builder: (context) {
-                                return CupertinoAlertDialog(
-                                  title: buildTextContent(
-                                      "Lưu bài viết này dưới dạng bản nháp ?",
-                                      false,
-                                      fontSize: 18,
-                                      isCenterLeft: false),
-                                  content: buildTextContent(
-                                      "Nếu bỏ bây giờ, bạn sẽ mất bài viết này.",
-                                      false,
-                                      fontSize: 14,
-                                      isCenterLeft: false),
-                                  actions: [
-                                    Container(
-                                      height: 200,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7),
-                                      ),
-                                      child: Column(children: [
-                                        CupertinoButton(
-                                            child: buildTextContent(
-                                                "Lưu bản nháp", false,
-                                                fontSize: 13,
-                                                isCenterLeft: false),
-                                            onPressed: () {
-                                              popToPreviousScreen(context);
-                                              popToPreviousScreen(context);
-                                            }),
-                                        buildDivider(color: greyColor),
-                                        CupertinoButton(
-                                            child: buildTextContent(
-                                                "Bỏ bài viết", false,
-                                                fontSize: 13,
-                                                colorWord: red,
-                                                isCenterLeft: false),
-                                            onPressed: () {
-                                              popToPreviousScreen(context);
-                                              popToPreviousScreen(context);
-                                            }),
-                                        buildDivider(color: greyColor),
-                                        CupertinoButton(
-                                            child: buildTextContent(
-                                                "Tiếp tục chỉnh sửa", false,
-                                                fontSize: 13,
-                                                isCenterLeft: false),
-                                            onPressed: () {
-                                              popToPreviousScreen(context);
-                                            }),
-                                        buildDivider(color: greyColor),
-                                        CupertinoButton(
-                                            child: const Text("Hủy"),
-                                            onPressed: () {
-                                              popToPreviousScreen(context);
-                                            }),
-                                      ]),
-                                    )
-                                  ],
-                                );
-                              });
-                        } else {
-                          popToPreviousScreen(context);
-                        }
-                      },
-                      child: Icon(
-                        FontAwesomeIcons.chevronLeft,
-                        color: Theme.of(context).textTheme.displayLarge!.color,
+    return WillPopScope(
+      onWillPop: () async {
+        return checkSaveDraft();
+      },
+      child: LoaderOverlay(
+          useDefaultLoading: false,
+          overlayWidget: const Center(
+            child: CupertinoActivityIndicator(),
+          ),
+          child: GestureDetector(
+            onTap: () {
+              hiddenKeyboard(context);
+            },
+            child: Scaffold(
+                resizeToAvoidBottomInset: true,
+                appBar: AppBar(
+                  elevation: 0,
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // ignore: void_checks
+                          return checkSaveDraft();
+                        },
+                        child: Icon(
+                          FontAwesomeIcons.chevronLeft,
+                          color:
+                              Theme.of(context).textTheme.displayLarge!.color,
+                        ),
                       ),
-                    ),
-                    AppBarTitle(
-                        title: widget.post != null
-                            ? "Chỉnh sửa bài viết"
-                            : "Tạo bài viết"),
-                    ButtonPrimary(
-                      label: widget.post != null ? 'Lưu' : "Đăng",
-                      handlePress: checkVisiblePress()
-                          ? widget.post != null
-                              ? handleUpdatePost
-                              : handleCreatePost
-                          : null,
-                    )
-                  ],
+                      AppBarTitle(
+                          title: widget.post != null
+                              ? "Chỉnh sửa bài viết"
+                              : "Tạo bài viết"),
+                      ButtonPrimary(
+                        label: widget.post != null ? 'Lưu' : "Đăng",
+                        handlePress: checkVisiblePress()
+                            ? widget.post != null
+                                ? handleUpdatePost
+                                : handleCreatePost
+                            : null,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              body: _isShow
-                  ? CustomDraggableBottomSheet(
-                      previewWidget: _menuOptions(),
-                      backgroundWidget: mainBody(),
-                      expandedWidget: _menuOptions(),
-                      onDragging: (pos) {},
-                      maxExtent: MediaQuery.of(context).size.height * 0.8,
-                      minExtent: height / 2,
-                      // endExtent: 110,
-                      useSafeArea: false,
-                      curve: Curves.easeIn,
-                      duration: const Duration(milliseconds: 300),
-                      onClose: () {
-                        // showCustomBottomSheet(context, 80, "",
-                        //     widget: getBottomSheet());
-                        setState(() {
-                          _isShow = false;
-                        });
-                      })
-                  : Stack(
-                      children: [
-                        mainBody(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [const SizedBox(), getBottomSheet()],
-                        )
-                      ],
-                    )),
-        ));
+                body: _isShow
+                    ? CustomDraggableBottomSheet(
+                        previewWidget: _menuOptions(),
+                        backgroundWidget: mainBody(),
+                        expandedWidget: _menuOptions(),
+                        onDragging: (pos) {},
+                        maxExtent: MediaQuery.of(context).size.height * 0.8,
+                        minExtent: height / 2,
+                        useSafeArea: false,
+                        curve: Curves.easeIn,
+                        duration: const Duration(milliseconds: 300),
+                        onClose: () {
+                          setState(() {
+                            _isShow = false;
+                          });
+                        })
+                    : Stack(
+                        children: [
+                          mainBody(),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [const SizedBox(), getBottomSheet()],
+                          )
+                        ],
+                      )),
+          )),
+    );
   }
 
   Widget mainBody() {
     final size = MediaQuery.of(context).size;
     return Container(
-      decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
+      // decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -671,7 +716,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     showImage: showPreviewImage,
                   )
                 : const SizedBox(),
-            Stack(
+            Column(
               children: [
                 files.isNotEmpty
                     ? GridLayoutImage(medias: files, handlePress: (media) {})
@@ -743,10 +788,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       ))
               ],
             ),
-            Container(
-              height: 80,
-              color: transparent,
-            )
+            // Container(
+            //   height: 80,
+            //   color: red,
+            // )
           ],
         ),
       ),
@@ -818,7 +863,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                           decoration: BoxDecoration(
                                               color: white,
                                               border: Border.all(
-                                                  width: 0.1, color: greyColor),
+                                                  width: 0.4, color: greyColor),
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                         ),
@@ -1107,8 +1152,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     );
   }
 }
-
-// https://vnexpress.net/de-xuat-thue-nha-tu-15-m2-moi-duoc-dang-ky-thuong-tru-ha-noi-4585797.html
 
 // ignore: must_be_immutable
 class PreviewUrlPost extends StatelessWidget {

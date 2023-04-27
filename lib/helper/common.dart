@@ -12,6 +12,17 @@ Function(int num) shortenLargeNumber = (int num) {
   }
   return num;
 };
+String shortenNumber(int num) {
+  if (num >= 1000000000) {
+    return '${(num / 1000000000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}B';
+  } else if (num >= 1000000 && num < 1000000000) {
+    return '${(num / 1000000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}M';
+  } else if (num >= 1000 && num < 1000000) {
+    return '${(num / 1000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}K';
+  } else {
+    return num.toString();
+  }
+}
 
 Function(int num) convertNumberToVND = (int num) {
   return num.toString().replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');

@@ -83,7 +83,7 @@ class MenuRender extends StatelessWidget {
                             Text(
                               listSocial[index]['label'],
                               style: const TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w500),
+                                  fontSize: 14, fontWeight: FontWeight.w500),
                             ),
                           ],
                         )

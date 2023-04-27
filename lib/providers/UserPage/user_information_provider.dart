@@ -98,4 +98,15 @@ class UserInformationController extends StateNotifier<UserInformationState> {
           featureContent: response);
     }
   }
+
+  removeUserInfo() async {
+    if (mounted) {
+      state = state.copyWith(
+        userInfor: {},
+        userMoreInfor: {},
+        friends: [],
+        friendsNear: [],
+      );
+    }
+  }
 }

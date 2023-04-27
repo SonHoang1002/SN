@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recruit_card.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recruit_cv.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recruit_interested.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recruit_invite.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recruit_news.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recruit_news_past.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 
 import '../../widget/cross_bar.dart';
@@ -24,20 +29,33 @@ class _RecruitRenderState extends State<RecruitRender> {
           child: Row(
             children: List.generate(
                 recruitMenu.length,
-                    (index) => InkWell(
-                  onTap: () {
-                    setState(() {
-                      menuSelected = recruitMenu[index]['key'];
-                    });
-                  },
-                  child: ChipMenu(
-                      isSelected: menuSelected == recruitMenu[index]['key'],
-                      label: recruitMenu[index]['label']),
-                )),
+                (index) => InkWell(
+                      onTap: () {
+                        setState(() {
+                          menuSelected = recruitMenu[index]['key'];
+                        });
+                      },
+                      child: ChipMenu(
+                          isSelected: menuSelected == recruitMenu[index]['key'],
+                          label: recruitMenu[index]['label']),
+                    )),
           ),
         ),
         const CrossBar(),
-        const RecruitCard(),
+        menuSelected == 'recruit_interesting'
+            ? const RecruitCard()
+            : const SizedBox(),
+        menuSelected == 'recruit_following'
+            ? const RecruitInterested()
+            : const SizedBox(),
+        menuSelected == 'recruit_invite'
+            ? const RecruitInvite()
+            : const SizedBox(),
+        menuSelected == 'recruit_news' ? const RecruitNews() : const SizedBox(),
+        menuSelected == 'recruit_news_past'
+            ? const RecruitNewsPast()
+            : const SizedBox(),
+        menuSelected == 'recruit_save' ? const RecruitCV() : const SizedBox(),
       ],
     );
   }

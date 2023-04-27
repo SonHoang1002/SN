@@ -70,12 +70,12 @@ List recruitMenu = [
     "label": "Khám phá",
   },
   {
-    "key": "recruit_following",
-    "label": "Quan tâm ",
+    "key": "recruit_invite",
+    "label": "Lời mời",
   },
   {
-    "key": "recruit_going",
-    "label": "Sẽ tham gia",
+    "key": "recruit_following",
+    "label": "Quan tâm ",
   },
   {
     "key": "recruit_news",
@@ -90,7 +90,32 @@ List recruitMenu = [
     "label": "CV đã lưu",
   },
 ];
-
+List courseMenu = [
+  {
+    "key": "course_interesting",
+    "label": "Khám phá",
+  },
+  {
+    "key": "course_invite",
+    "label": "Lời mời ",
+  },
+  {
+    "key": "course_following",
+    "label": "Quan tâm ",
+  },
+  {
+    "key": "course_host",
+    "label": "Tổ chức",
+  },
+  {
+    "key": "course_learned",
+    "label": "Khoá học đã học",
+  },
+  {
+    "key": "course_save",
+    "label": "Thư viện nội dung",
+  },
+];
 List listSocial = [
   {
     "key": 'friendSocial',
@@ -123,34 +148,10 @@ List listSocial = [
     "icon": "assets/event.svg"
   },
   {
-    "key": 'blood',
-    "label": 'Hiến máu',
-    "subLabel": 'Hiến máu thiện nguyện vì cộng đồng.',
-    "icon": "assets/blood.png"
-  },
-  {
     "key": 'moment',
     "subLabel": 'khoảnh khắc thú vị làm bạn yêu thích.',
     "label": 'Moment',
     "icon": "assets/MomentMenu.png"
-  },
-  {
-    "key": 'watch',
-    "subLabel": 'Video phù hợp sở thích của bạn.',
-    "label": 'Watch',
-    "icon": "assets/WatchFC.svg"
-  },
-  {
-    "key": 'music',
-    "subLabel": 'Âm nhạc thiết yếu cho nhu cầu giải trí.',
-    "label": 'Âm nhạc',
-    "icon": "assets/music.svg"
-  },
-  {
-    "key": 'marketPlace',
-    "subLabel": 'Mua bán trên cộng đồng Emso.',
-    "label": 'Marketplace',
-    "icon": "assets/Maket.svg"
   },
   {
     "key": 'grow',
@@ -159,10 +160,34 @@ List listSocial = [
     "icon": "assets/Grow.svg"
   },
   {
+    "key": 'watch',
+    "subLabel": 'Video phù hợp sở thích của bạn.',
+    "label": 'Watch',
+    "icon": "assets/WatchFC.svg"
+  },
+  {
+    "key": 'lessonSocial',
+    "label": 'Không gian học tập',
+    "subLabel": 'Không gian học tập vì cộng đồng.',
+    "icon": "assets/learnspace.svg"
+  },
+  {
+    "key": 'music',
+    "subLabel": 'Âm nhạc thiết yếu cho nhu cầu giải trí.',
+    "label": 'Âm nhạc',
+    "icon": "assets/music.svg"
+  },
+  {
     "key": 'job',
     "subLabel": 'Công việc phù hợp với năng lực của bạn',
     "label": 'Tuyển dụng',
     "icon": "assets/job.svg"
+  },
+  {
+    "key": 'marketPlace',
+    "subLabel": 'Mua bán trên cộng đồng Emso.',
+    "label": 'Marketplace',
+    "icon": "assets/Maket.svg"
   },
   {
     "key": 'storyHistory',

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
 
+import '../../../theme/colors.dart';
+import 'PostType/avatar_banner.dart';
 import 'PostType/post_share_event.dart';
 import 'PostType/post_share_group.dart';
 import 'PostType/post_share_page.dart';
 import 'PostType/post_target.dart';
 import 'post_card.dart';
-import 'PostType/avatar_banner.dart';
 import 'post_content.dart';
 import 'post_life_event.dart';
 import 'post_media.dart';
@@ -17,7 +18,9 @@ import 'post_share.dart';
 class PostCenter extends StatefulWidget {
   final dynamic post;
   final String? type;
-  const PostCenter({Key? key, this.post, this.type}) : super(key: key);
+  final dynamic data;
+  const PostCenter({Key? key, this.post, this.type, this.data})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -29,10 +32,30 @@ class _PostCenterState extends State<PostCenter> {
   Widget build(BuildContext context) {
     String postType = widget.post['post_type'] ?? '';
     return Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(
+          top: 10,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            widget.type == 'rating'
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+                    child: Row(
+                      children: List.generate(
+                        5,
+                        (index) => index < int.parse(widget.data['rating'])
+                            ? const Icon(Icons.star,
+                                size: 20, color: Colors.yellow)
+                            : const Icon(
+                                Icons.star_border,
+                                size: 20,
+                                color: greyColor,
+                              ),
+                      ),
+                    ),
+                  )
+                : const SizedBox(),
             PostContent(
               post: widget.post,
             ),

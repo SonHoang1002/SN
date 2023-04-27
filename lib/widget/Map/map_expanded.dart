@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,10 +27,14 @@ class _MapExpanded extends State<MapExpanded> {
     final latitude = widget.checkin['location']['lat'];
     final longitude = widget.checkin['location']['lng'];
 
-    final url = 'comgooglemaps://?q=$latitude,$longitude&zoom=13';
-
+    String url;
+    if (Platform.isIOS) {
+      url = 'comgooglemaps://?q=$latitude,$longitude&zoom=13';
+    } else {
+      url = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    }
     if (await canLaunch(url)) {
-      await launch(url);
+      await launch(url, forceSafariVC: false);
     } else {
       throw 'Could not launch $url';
     }
@@ -58,8 +64,7 @@ class _MapExpanded extends State<MapExpanded> {
           )),
       body: FlutterMap(
         options: MapOptions(
-          center: LatLng(widget.checkin['location']['lat'],
-              widget.checkin['location']['lng']),
+          center: LatLng(widget.checkin['location']['lat'], widget.checkin['location']['lng']),
           zoom: 13,
           minZoom: 0,
           maxZoom: 19,
@@ -74,8 +79,7 @@ class _MapExpanded extends State<MapExpanded> {
                 "https://api.mapbox.com/styles/v1/thanghoa1420/cl8dw369f000114pdxdhvyrf3/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGhhbmdob2ExNDIwIiwiYSI6ImNsOGNzaGNraTBvaXozcW9mOTZvemlxM3QifQ.amy7PdzwTqaolJMVQzpGSg",
             subdomains: const ['a', 'b', 'c'],
             additionalOptions: const {
-              "access_token":
-                  "pk.eyJ1IjoidGhhbmdob2ExNDIwIiwiYSI6ImNsOGNzaGNraTBvaXozcW9mOTZvemlxM3QifQ.amy7PdzwTqaolJMVQzpGSg",
+              "access_token": "pk.eyJ1IjoidGhhbmdob2ExNDIwIiwiYSI6ImNsOGNzaGNraTBvaXozcW9mOTZvemlxM3QifQ.amy7PdzwTqaolJMVQzpGSg",
             },
             maxZoom: 25,
           ),
@@ -84,8 +88,7 @@ class _MapExpanded extends State<MapExpanded> {
               Marker(
                 width: 80.0,
                 height: 80.0,
-                point: LatLng(widget.checkin['location']['lat'],
-                    widget.checkin['location']['lng']),
+                point: LatLng(widget.checkin['location']['lat'], widget.checkin['location']['lng']),
                 builder: (ctx) => const Icon(
                   FontAwesomeIcons.locationDot,
                   color: Colors.red,

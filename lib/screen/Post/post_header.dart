@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
@@ -267,8 +268,17 @@ class BlockNamePost extends StatelessWidget {
     }
 
     void pushToScreen() {
-      if (post['place']?['id'] != page['id'] && currentRouter != '/page') {
+      if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
         Navigator.pushNamed(context, '/page', arguments: page);
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const UserPage(),
+              settings: RouteSettings(
+                arguments: {'id': account['id']},
+              ),
+            ));
       }
     }
 

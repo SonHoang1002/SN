@@ -26,7 +26,7 @@ class MapWidget extends StatelessWidget {
     final theme = pv.Provider.of<ThemeManager>(context);
     return FlutterMap(
       options: MapOptions(
-        center: LatLng(checkin['location']['lat'], checkin['location']['lng']),
+        center: LatLng(checkin['location']?['lat']??21.0398009, checkin['location']?['lng']??105.4336946),
         zoom: zoom,
         interactiveFlags: interactiveFlags,
       ),
@@ -75,7 +75,7 @@ class MapWidget extends StatelessWidget {
               width: 80.0,
               height: 80.0,
               point: LatLng(
-                  checkin['location']['lat'], checkin['location']['lng']),
+                  checkin['location']?['lat']??21.0398009, checkin['location']?['lng']??105.4336946),
               builder: (ctx) => const Icon(
                 FontAwesomeIcons.locationDot,
                 color: Colors.red,

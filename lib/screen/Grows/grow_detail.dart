@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -1011,12 +1012,6 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                           ],
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 5.0),
-                        child: Divider(
-                          thickness: 1,
-                        ),
-                      ),
                       growStatus
                           ? GrowIntro(data: growDetail)
                           : GrowDiscuss(data: growDetail),
@@ -1143,7 +1138,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
               ],
             )
           : const Center(
-              child: CircularProgressIndicator(),
+              child: CupertinoActivityIndicator(),
             ),
     );
   }

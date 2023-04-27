@@ -40,7 +40,10 @@ class _VideoPageState extends ConsumerState<VideoPage> {
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
           ),
           const SizedBox(height: 8),
-          RenderPhoto(photoData: videoPage)
+          RenderPhoto(
+            photoData: videoPage,
+            hasTitle: false,
+          )
         ],
       ),
     );

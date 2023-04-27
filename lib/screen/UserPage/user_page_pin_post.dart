@@ -9,7 +9,10 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
 class UserPagePinPost extends ConsumerStatefulWidget {
-  const UserPagePinPost({Key? key}) : super(key: key);
+  final dynamic user;
+  final List pinPosts;
+  const UserPagePinPost({Key? key, this.user, required this.pinPosts})
+      : super(key: key);
 
   @override
   ConsumerState<UserPagePinPost> createState() => _UserPagePinPostState();
@@ -19,12 +22,6 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(Duration.zero, () {
-      ref
-          .read(postControllerProvider.notifier)
-          .getListPostPin(ref.watch(meControllerProvider)[0]['id']);
-    });
   }
 
   @override
@@ -34,10 +31,9 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
 
   @override
   Widget build(BuildContext context) {
-    List pinPosts = ref.watch(postControllerProvider).postsPin;
     final size = MediaQuery.of(context).size;
 
-    return pinPosts.isNotEmpty
+    return widget.pinPosts.isNotEmpty
         ? Column(
             children: [
               Container(
@@ -67,18 +63,18 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: List.generate(
-                    pinPosts.length,
+                    widget.pinPosts.length,
                     (index) => Container(
                       width: size.width,
                       margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                      padding: const EdgeInsets.only(top: 15.0, bottom: 7.0),
                       decoration: BoxDecoration(
                           border: Border.all(width: 0.3, color: greyColor),
                           borderRadius: BorderRadius.circular(12.0)),
                       child: Post(
                         type: postPageUser,
                         isHiddenCrossbar: true,
-                        post: pinPosts[index],
+                        post: widget.pinPosts[index],
                       ),
                     ),
                   ),

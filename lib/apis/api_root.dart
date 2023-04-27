@@ -53,8 +53,8 @@ class Api {
       Dio dio = await getDio(userToken);
       var response = await dio.post(path, data: data);
       return response.data;
-    } on DioError catch (e) {
-      print(e.error);
+    } on DioError {
+      rethrow;
     }
   }
 
@@ -88,7 +88,7 @@ class Api {
       var response = await dio.post(path, data: data);
       return response.data;
     } on DioError catch (e) {
-      if (e?.response?.statusCode == 401) {
+      if (e.response?.statusCode == 401) {
         logOutWhenTokenError();
       }
     }

@@ -5,7 +5,12 @@ import 'package:social_network_app_mobile/widget/expandable_text.dart';
 class PostContent extends StatefulWidget {
   final dynamic post;
   final Color? textColor;
-  const PostContent({Key? key, this.post, this.textColor}) : super(key: key);
+
+  const PostContent({
+    Key? key,
+    this.post,
+    this.textColor,
+  }) : super(key: key);
 
   @override
   State<PostContent> createState() => _PostContentState();
@@ -29,7 +34,7 @@ class _PostContentState extends State<PostContent> {
                 onError: (exception, stackTrace) => const SizedBox(),
                 fit: BoxFit.cover),
           ),
-          child: Padding(
+          child: Container(
             padding: const EdgeInsets.all(15.0),
             child: Center(
               child: Text(
@@ -48,8 +53,10 @@ class _PostContentState extends State<PostContent> {
           ),
         );
       } else {
-        return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+        return Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

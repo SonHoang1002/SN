@@ -68,14 +68,14 @@ class _VideoPlayerHasControllerState
       BetterPlayerDataSource dataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network,
         widget.media['remote_url'] ?? widget.media['url'],
-        cacheConfiguration: const BetterPlayerCacheConfiguration(
-          useCache: true,
-          maxCacheSize:
-              1000 * 1024 * 1024, // Kích thước tối đa lưu đệm (ví dụ: 200 MB)
-          maxCacheFileSize: 50 *
-              1024 *
-              1024, // Kích thước tối đa của mỗi tập tin (ví dụ: 20 MB)
-        ),
+        // cacheConfiguration: const BetterPlayerCacheConfiguration(
+        //   useCache: true,
+        //   maxCacheSize:
+        //       1000 * 1024 * 1024, // Kích thước tối đa lưu đệm (ví dụ: 200 MB)
+        //   maxCacheFileSize: 50 *
+        //       1024 *
+        //       1024, // Kích thước tối đa của mỗi tập tin (ví dụ: 20 MB)
+        // ),
       );
       betterPlayerController =
           BetterPlayerController(betterPlayerConfiguration);

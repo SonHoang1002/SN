@@ -57,10 +57,11 @@ class PostController extends StateNotifier<PostState> {
           // isMore: true,
           isMoreUserPage: state.isMoreUserPage);
     }
-  }
+    }
 
   getListPostUserPage(accountId, params) async {
     List response = await UserPageApi().getListPostApi(accountId, params) ?? [];
+    
     if (mounted) {
       state = state.copyWith(
           posts: state.posts,
@@ -152,13 +153,12 @@ class PostController extends StateNotifier<PostState> {
 
   actionHiddenDeletePost(type, data) {
     int index = -1;
-
-    if (type == feedPost) {
+     if (type == feedPost) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (type == postPageUser) {
       index = state.postUserPage
           .indexWhere((element) => element['id'] == data['id']);
-    }
+        }
 
     if (index < 0) return;
     if (mounted) {
@@ -201,6 +201,17 @@ class PostController extends StateNotifier<PostState> {
             postUserPage: state.postUserPage,
             isMoreUserPage: state.isMoreUserPage);
       }
+    }
+  }
+
+  removeListPost(type) async {
+    if (mounted) {
+      state = state.copyWith(
+          isMore: true,
+          posts: type == 'post' ? [] : state.posts,
+          postsPin: type == 'user' ? [] : state.posts,
+          postUserPage: type == 'user' ? [] : state.posts,
+          isMoreUserPage: type == 'user' ? true : false);
     }
   }
 }
