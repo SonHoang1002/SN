@@ -13,6 +13,7 @@ import 'package:social_network_app_mobile/screen/Page/PageDetail/page_pinned_pos
 import 'package:social_network_app_mobile/screen/Page/PageDetail/photo_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/review_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/video_page.dart';
+import 'package:social_network_app_mobile/screen/Page/PageDetail/group_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
@@ -103,6 +104,18 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   {"max_id": maxId, ...paramsFeedPage}, pageData['id']);
             }
             break;
+          case 'group_page':
+            Map<String, dynamic> paramsGroupPage = {"limit": 10};
+            if (ref.read(pageControllerProvider).pageGroup.isNotEmpty &&
+                ref.read(pageControllerProvider).isMoreGroup) {
+              String maxId =
+                  ref.read(pageControllerProvider).pageFeed.last['score'];
+              ref.read(pageControllerProvider.notifier).getListPageGroup({
+                ...paramsGroupPage,
+                "max_id": maxId,
+              }, pageData['id']);
+            }
+            break;
           case 'review_page':
             if (ref.read(pageControllerProvider).pageReview.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreReview) {
@@ -171,6 +184,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             FeedPage(pageData),
           ],
         );
+      case 'group_page':
+        return GroupPage(pageData);
       case 'review_page':
         return ReviewPage(pageData);
       case 'about_page':
