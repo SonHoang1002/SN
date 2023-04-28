@@ -19,9 +19,9 @@ class ChipMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 6, right: 6),
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(17),
+          borderRadius: BorderRadius.circular(18),
           color: isSelected
               ? primaryColor
               : Theme.of(context).colorScheme.background),

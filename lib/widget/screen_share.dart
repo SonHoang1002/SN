@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helpers/helpers.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
@@ -14,6 +15,7 @@ import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/group_item.dart';
@@ -24,12 +26,14 @@ class ScreenShare extends ConsumerStatefulWidget {
   final dynamic entityShare;
   final String type;
   final String entityType;
-  const ScreenShare(
-      {Key? key,
-      this.entityShare,
-      required this.type,
-      required this.entityType})
-      : super(key: key);
+  final dynamic pageShared;
+  const ScreenShare({
+    Key? key,
+    this.entityShare,
+    required this.type,
+    required this.entityType,
+    this.pageShared,
+  }) : super(key: key);
 
   @override
   ConsumerState<ScreenShare> createState() => _ScreenShareState();
@@ -96,7 +100,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         );
       } else if (key == 'update_content') {
         setState(() {
-          () => content = value;
+          content = value;
         });
       }
     }
@@ -203,6 +207,29 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
           }
         }
       }
+      if (widget.entityType == 'share_page') {
+        data['shared_page_id'] = widget.pageShared['id'];
+        var response = await PostApi().createStatus(data);
+        if (response != null) {
+          // if (context.mounted) {
+          // ignore: use_build_context_synchronously
+          context.loaderOverlay.hide();
+          // ignore: use_build_context_synchronously
+          Navigator.of(context)
+            ..pop()
+            ..pop();
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Chia sẻ Trang thành công")));
+          // }
+        } else {
+          // ignore: use_build_context_synchronously
+          context.loaderOverlay.hide();
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Chia sẻ bài viết thất bại.")));
+        }
+      }
     }
 
     return LoaderOverlay(
@@ -221,6 +248,15 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
               centerTitle: true,
               automaticallyImplyLeading: false,
               title: const AppBarTitle(title: "Chia sẻ"),
+              actions: [
+                if (!['groups', 'pages'].contains(renderType))
+                  ButtonPrimary(
+                    label: "Chia sẻ",
+                    handlePress: handleShare,
+                    colorButton: Theme.of(context).scaffoldBackgroundColor,
+                    colorText: secondaryColor,
+                  )
+              ],
             ),
             body: Container(
               margin:
@@ -290,52 +326,49 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                               )
                       ],
                     )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CreateFeedStatusHeader(
-                          entity: groupShareSelected ?? pageShareSelected,
-                          visibility: visibility,
-                          handleUpdateData: handleUpdateData,
-                          friendSelected: const [],
-                        ),
-                        const SizedBox(
-                          height: 8.0,
-                        ),
-                        SizedBox(
-                          height: 100,
-                          child: TextFormField(
-                            autofocus: true,
-                            onChanged: (value) {
-                              handleUpdateData('update_content', value);
-                            },
-                            textAlign: TextAlign.left,
-                            maxLines: 4,
-                            minLines: 1,
-                            enabled: true,
-                            decoration: const InputDecoration(
-                              hintText: "Nói gì đó về nội dung này...",
-                              hintStyle: TextStyle(fontSize: 15),
-                              border: InputBorder.none,
+                  : SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CreateFeedStatusHeader(
+                            entity: groupShareSelected ?? pageShareSelected,
+                            visibility: visibility,
+                            handleUpdateData: handleUpdateData,
+                            friendSelected: const [],
+                          ),
+                          const SizedBox(
+                            height: 8.0,
+                          ),
+                          SizedBox(
+                            height: 100,
+                            child: TextFormField(
+                              autofocus: true,
+                              onChanged: (value) {
+                                handleUpdateData('update_content', value);
+                              },
+                              textAlign: TextAlign.left,
+                              maxLines: 4,
+                              minLines: 1,
+                              enabled: true,
+                              decoration: const InputDecoration(
+                                hintText: "Nói gì đó về nội dung này...",
+                                hintStyle: TextStyle(fontSize: 15),
+                                border: InputBorder.none,
+                              ),
                             ),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(),
-                            ButtonPrimary(
-                              label: "Chia sẻ",
-                              handlePress: handleShare,
-                            )
-                          ],
-                        ),
-                        const CrossBar(
-                          height: 0.5,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
+                          if (widget.pageShared != null)
+                            SizedBox(
+                              child: PageGroupShared(
+                                page: widget.pageShared,
+                              ),
+                            ),
+                          const CrossBar(
+                            height: 0.5,
+                          ),
+                          ListView.builder(
                               itemCount: menuShare.length,
+                              shrinkWrap: true,
                               itemBuilder: (context, index) => InkWell(
                                     onTap: () {
                                       handlePress(menuShare[index]['key']);
@@ -370,12 +403,77 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                                         ],
                                       ),
                                     ),
-                                  )),
-                        )
-                      ],
+                                  ))
+                        ],
+                      ),
                     ),
             ),
           ),
         ));
+  }
+}
+
+class PageGroupShared extends StatelessWidget {
+  final dynamic page;
+  const PageGroupShared({super.key, this.page});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Stack(
+      alignment: AlignmentDirectional.bottomCenter,
+      children: [
+        Container(
+          constraints: const BoxConstraints(minHeight: 226),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            image: DecorationImage(
+                image: NetworkImage(page['banner']['url']),
+                onError: (exception, stackTrace) => const SizedBox(),
+                fit: BoxFit.cover),
+          ),
+        ),
+        Container(
+          height: 52,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+                bottomRight: Radius.circular(12),
+                bottomLeft: Radius.circular(12)),
+            color: Colors.grey.shade100,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            child: Row(
+              children: [
+                PageItem(
+                  page: page,
+                  sizeAvatar: 42,
+                  sizeTitle: 14,
+                  maxLinesTitle: 1,
+                  sizeDesription: 12,
+                  maxLinesDescription: 1,
+                  marginContent: 2,
+                  widthTitle: size.width - 212,
+                ),
+                ButtonPrimary(
+                  icon: Icon(
+                    FontAwesomeIcons.solidThumbsUp,
+                    size: 18,
+                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                  ),
+                  colorButton: greyColorOutlined,
+                  colorText: Theme.of(context).textTheme.bodyMedium?.color,
+                  label:
+                      page['page_relationship']['like'] ? 'Đã thích' : 'Thích',
+                  handlePress: () {
+                    print('handlelike');
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -53,8 +53,10 @@ class Api {
       Dio dio = await getDio(userToken);
       var response = await dio.post(path, data: data);
       return response.data;
-    } on DioError {
-      rethrow;
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        logOutWhenTokenError();
+      }
     }
   }
 
@@ -65,8 +67,10 @@ class Api {
       Dio dio = await getDio(userToken);
       var response = await dio.patch(path, data: data);
       return response.data;
-    } catch (e) {
-      print(e.toString());
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        logOutWhenTokenError();
+      }
     }
   }
 
@@ -77,8 +81,10 @@ class Api {
       Dio dio = await getDio(userToken);
       var response = await dio.delete(path, data: data);
       return response.data;
-    } catch (e) {
-      print(e.toString());
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        logOutWhenTokenError();
+      }
     }
   }
 
@@ -95,6 +101,7 @@ class Api {
   }
 }
 
+// case token changed while update password and logout other device
 void logOutWhenTokenError() async {
   var newList = await SecureStorage().getKeyStorage('dataLogin');
   var id = await SecureStorage().getKeyStorage("userId");

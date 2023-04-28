@@ -22,8 +22,9 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
     if (mounted) {
       SecureStorage().getKeyStorage("token").then((value) {
         if (value != 'noData') {
-          Future.delayed(const Duration(seconds: 1), () {
-            ref.read(meControllerProvider.notifier).getMeData();
+          Future.delayed(const Duration(seconds: 1), () async {
+            await ref.read(meControllerProvider.notifier).getMeData();
+            // ignore: use_build_context_synchronously
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: ((context) => const Home())));
           });

@@ -12,13 +12,19 @@ class PageItem extends StatelessWidget {
   final double? sizeTitle;
   final double? sizeDesription;
   final int? maxLinesTitle;
+  final double? marginContent;
+  final double? widthTitle;
+  final int? maxLinesDescription;
   const PageItem(
       {Key? key,
       this.page,
       this.sizeAvatar,
       this.sizeTitle,
       this.maxLinesTitle,
-      this.sizeDesription})
+      this.sizeDesription,
+      this.marginContent,
+      this.widthTitle,
+      this.maxLinesDescription})
       : super(key: key);
 
   @override
@@ -42,9 +48,10 @@ class PageItem extends StatelessWidget {
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: size.width - 180,
+                width: widthTitle ?? size.width - 180,
                 child: Text(
                   page['title'],
                   maxLines: maxLinesTitle ?? 1,
@@ -54,13 +61,17 @@ class PageItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis),
                 ),
               ),
-              const SizedBox(
-                height: 4.0,
+              SizedBox(
+                height: marginContent ?? 4.0,
               ),
               page['page_categories'].isNotEmpty
-                  ? TextDescription(
-                      description: page['page_categories'][0]['text'],
-                      size: sizeDesription,
+                  ? SizedBox(
+                      width: widthTitle ?? size.width - 180,
+                      child: TextDescription(
+                        description: page['page_categories'][0]['text'],
+                        maxLinesDescription: maxLinesDescription,
+                        size: sizeDesription,
+                      ),
                     )
                   : const SizedBox()
             ],

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -24,7 +26,19 @@ class SearchInput extends StatefulWidget {
 }
 
 class _SearchInputState extends State<SearchInput> {
+  final FocusNode _focusNode = FocusNode();
   TextEditingController controller = TextEditingController();
+  Timer? _debounce;
+
+  void _onTextChanged(String text) {
+    if (_debounce?.isActive ?? false) {
+      _debounce?.cancel();
+    }
+
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      widget.handleSearch != null ? widget.handleSearch!(text) : () {};
+    });
+  }
 
   @override
   void initState() {
@@ -45,15 +59,17 @@ class _SearchInputState extends State<SearchInput> {
             border: Border.all(width: 0.2, color: greyColor),
             borderRadius: BorderRadius.circular(20)),
         child: TextFormField(
+            focusNode: _focusNode,
+            autofocus: true,
             controller: controller,
             onChanged: (value) {
-              widget.handleSearch != null ? widget.handleSearch!(value) : () {};
+              _onTextChanged(value);
             },
             cursorColor: Theme.of(context).textTheme.displayLarge?.color,
             decoration: InputDecoration(
                 hintText: widget.title ?? 'Tìm kiếm',
                 hintStyle: TextStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     color: widget.type == postWatch ? Colors.white : null),
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
@@ -77,11 +93,8 @@ class _SearchInputState extends State<SearchInput> {
                           widget.handleSearch!('');
                           controller.clear();
                         },
-                        child: Container(
-                          width: 20,
-                          height: 20,
-                          decoration: const BoxDecoration(
-                              color: transparent, shape: BoxShape.circle),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(6, 10, 6, 6),
                           child: Icon(
                             FontAwesomeIcons.xmark,
                             size: 15,
@@ -96,7 +109,9 @@ class _SearchInputState extends State<SearchInput> {
   @override
   void dispose() {
     // Clean up the focus node when the Form is disposed.
+    _debounce?.cancel();
     controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 }

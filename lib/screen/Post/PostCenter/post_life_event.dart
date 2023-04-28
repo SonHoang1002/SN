@@ -22,7 +22,7 @@ class PostLifeEvent extends StatelessWidget {
             height: 8,
           ),
           Text(
-            lifeEvent['name']??"",
+            lifeEvent['name'] ?? "",
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           lifeEvent['place'] != null

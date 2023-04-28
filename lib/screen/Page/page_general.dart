@@ -141,32 +141,28 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
             height: 2,
           ),
         ),
-        SingleChildScrollView(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(12, 10, 12, 8),
-              child: Text(
-                'Trang bạn quản lý',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-              ),
-            ),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              controller: scrollController,
-              itemCount: pagesAdmin.length,
-              itemBuilder: (context, i) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: PageItem(page: pagesAdmin[i]),
-                );
-              },
-            ),
-          ],
-        ))
+        const Padding(
+          padding: EdgeInsets.fromLTRB(12, 10, 12, 8),
+          child: Text(
+            'Trang bạn quản lý',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            // physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            controller: scrollController,
+            itemCount: pagesAdmin.length,
+            itemBuilder: (context, i) {
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: PageItem(page: pagesAdmin[i]),
+              );
+            },
+          ),
+        )
       ],
     );
   }

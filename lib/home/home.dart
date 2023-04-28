@@ -226,115 +226,85 @@ class _HomeState extends ConsumerState<Home>
 
     var meData = ref.watch(meControllerProvider);
 
-    return meData.isEmpty
-        ? Scaffold(
-            body: Center(
-              child: Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Emso",
-                        style: TextStyle(
-                            fontSize: 26,
-                            color: primaryColor,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      Text(
-                        "Social",
-                        style: TextStyle(
-                            fontSize: 26,
-                            color: secondaryColor,
-                            fontWeight: FontWeight.w700),
-                      )
-                    ]),
-              ),
+    return Scaffold(
+      drawer: _selectedIndex == 1 || _selectedIndex == 4
+          ? null
+          : Drawer(
+              width: size.width - 20,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              child: const Menu(),
             ),
-          )
-        : Scaffold(
-            drawer: _selectedIndex == 1 || _selectedIndex == 4
-                ? null
-                : Drawer(
-                    width: size.width - 20,
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    child: const Menu(),
-                  ),
-            appBar: _selectedIndex == 1 || _selectedIndex == 4
-                ? null
-                : AppBar(
-                    elevation: 0,
-                    centerTitle: false,
-                    iconTheme: const IconThemeData(color: primaryColor),
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    actions: actions.elementAt(_selectedIndex),
-                    title: titles.elementAt(_selectedIndex),
-                  ),
-            body: IndexedStack(
-              index: _selectedIndex,
-              children: pages,
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              selectedItemColor: primaryColor,
-              unselectedItemColor: greyColor,
-              showSelectedLabels: false,
-              selectedLabelStyle: const TextStyle(fontSize: 0),
-              unselectedLabelStyle: const TextStyle(fontSize: 0),
+      appBar: _selectedIndex == 1 || _selectedIndex == 4
+          ? null
+          : AppBar(
               elevation: 0,
-              backgroundColor: _selectedIndex == 1
-                  ? Colors.black
-                  : Theme.of(context).scaffoldBackgroundColor,
-              type: BottomNavigationBarType.fixed,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    _selectedIndex == 0
-                        ? "assets/HomeFC.svg"
-                        : "assets/home.svg",
-                    width: 20,
-                    height: 20,
-                  ),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                    icon: Image.asset(
-                      _selectedIndex == 1
-                          ? 'assets/MomentFC.png'
-                          : 'assets/MomentLM.png',
-                      width: 22,
-                      height: 22,
-                    ),
-                    label: ''),
-                BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      "assets/Plus.svg",
-                      width: 20,
-                      height: 20,
-                      color: _selectedIndex == 2 ? primaryColor : greyColor,
-                    ),
-                    label: ''),
-                BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      _selectedIndex == 3
-                          ? "assets/WatchFC.svg"
-                          : "assets/Watch.svg",
-                      width: 20,
-                      height: 20,
-                    ),
-                    label: ''),
-                BottomNavigationBarItem(
-                    icon: Image.asset(
-                      _selectedIndex == 4
-                          ? 'assets/MarketFC.png'
-                          : 'assets/MarketLM.png',
-                      width: 22,
-                      height: 22,
-                    ),
-                    label: '')
-              ],
-              currentIndex: _selectedIndex,
-              onTap: _onItemTapped,
+              centerTitle: false,
+              iconTheme: const IconThemeData(color: primaryColor),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              actions: actions.elementAt(_selectedIndex),
+              title: titles.elementAt(_selectedIndex),
             ),
-          );
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: primaryColor,
+        unselectedItemColor: greyColor,
+        showSelectedLabels: false,
+        selectedLabelStyle: const TextStyle(fontSize: 0),
+        unselectedLabelStyle: const TextStyle(fontSize: 0),
+        elevation: 0,
+        backgroundColor: _selectedIndex == 1
+            ? Colors.black
+            : Theme.of(context).scaffoldBackgroundColor,
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              _selectedIndex == 0 ? "assets/HomeFC.svg" : "assets/home.svg",
+              width: 20,
+              height: 20,
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+              icon: Image.asset(
+                _selectedIndex == 1
+                    ? 'assets/MomentFC.png'
+                    : 'assets/MomentLM.png',
+                width: 22,
+                height: 22,
+              ),
+              label: ''),
+          BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/Plus.svg",
+                width: 20,
+                height: 20,
+                color: _selectedIndex == 2 ? primaryColor : greyColor,
+              ),
+              label: ''),
+          BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                _selectedIndex == 3 ? "assets/WatchFC.svg" : "assets/Watch.svg",
+                width: 20,
+                height: 20,
+              ),
+              label: ''),
+          BottomNavigationBarItem(
+              icon: Image.asset(
+                _selectedIndex == 4
+                    ? 'assets/MarketFC.png'
+                    : 'assets/MarketLM.png',
+                width: 22,
+                height: 22,
+              ),
+              label: '')
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }

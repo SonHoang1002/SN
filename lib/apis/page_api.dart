@@ -16,6 +16,11 @@ class PageApi {
         .getRequestBase("/api/v1/accounts/$id/page_likes", params);
   }
 
+  createInviteLikePage(params, id) async {
+    return await Api()
+        .postRequestBase("/api/v1/pages/$id/invitation_follows", params);
+  }
+
   fetchListPageInvitedLike() async {
     return await Api().getRequestBase("/api/v1/page_invitation_follows", null);
   }
