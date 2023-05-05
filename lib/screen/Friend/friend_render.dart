@@ -409,146 +409,161 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                       ],
                     )
                   : const SizedBox(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                    child: Text('Những người bạn có thể biết'),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: friendSuggestions.length,
-                    itemBuilder: ((context, index) => Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16.0, right: 16.0, bottom: 16.0),
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundImage: CachedNetworkImageProvider(
-                                    friendSuggestions[index]['avatar_media'] !=
-                                            null
-                                        ? friendSuggestions[index]
-                                            ['avatar_media']['preview_url']
-                                        : friendSuggestions[index]
-                                            ['avatar_static']),
-                              ),
-                            ),
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+              friendSuggestions.isNotEmpty
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                          child: Text('Những người bạn có thể biết'),
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: friendSuggestions.length,
+                          itemBuilder: ((context, index) => Row(
                                 children: [
-                                  Text(
-                                      friendSuggestions[index]['display_name']),
-                                  const SizedBox(
-                                    height: 10,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16.0, right: 16.0, bottom: 16.0),
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                              friendSuggestions[index]
+                                                          ['avatar_media'] !=
+                                                      null
+                                                  ? friendSuggestions[index]
+                                                          ['avatar_media']
+                                                      ['preview_url']
+                                                  : friendSuggestions[index]
+                                                      ['avatar_static']),
+                                    ),
                                   ),
-                                  Text(
-                                      '${friendSuggestions[index]['friends_count']} bạn chung',
-                                      style: const TextStyle(color: greyColor)),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () async {
-                                          await FriendsApi()
-                                              .sendFriendRequestApi(
-                                                  friendSuggestions[index]
-                                                      ['id']);
-                                          await ref
-                                              .read(friendControllerProvider
-                                                  .notifier)
-                                              .removeFriendSuggest(
-                                                  friendSuggestions[index]
-                                                      ['id']);
-                                        },
-                                        child: Container(
-                                          height: 35,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.3,
-                                          decoration: BoxDecoration(
-                                              color: secondaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                              border: Border.all(
-                                                  width: 0.2,
-                                                  color: greyColor)),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Text(
-                                                'Thêm bạn bè',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w700,
+                                  Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(friendSuggestions[index]
+                                            ['display_name']),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                            '${friendSuggestions[index]['friends_count']} bạn chung',
+                                            style: const TextStyle(
+                                                color: greyColor)),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            InkWell(
+                                              onTap: () async {
+                                                await FriendsApi()
+                                                    .sendFriendRequestApi(
+                                                        friendSuggestions[index]
+                                                            ['id']);
+                                                await ref
+                                                    .read(
+                                                        friendControllerProvider
+                                                            .notifier)
+                                                    .removeFriendSuggest(
+                                                        friendSuggestions[index]
+                                                            ['id']);
+                                              },
+                                              child: Container(
+                                                height: 35,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3,
+                                                decoration: BoxDecoration(
+                                                    color: secondaryColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: greyColor)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: const [
+                                                    Text(
+                                                      'Thêm bạn bè',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontSize: 12.0,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          ref
-                                              .read(friendControllerProvider
-                                                  .notifier)
-                                              .removeFriendSuggest(
-                                                  friendSuggestions[index]
-                                                      ['id']);
-                                        },
-                                        child: Container(
-                                          height: 35,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.3,
-                                          decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  189, 202, 202, 202),
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                              border: Border.all(
-                                                  width: 0.2,
-                                                  color: greyColor)),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Text(
-                                                'Gỡ',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w700,
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                ref
+                                                    .read(
+                                                        friendControllerProvider
+                                                            .notifier)
+                                                    .removeFriendSuggest(
+                                                        friendSuggestions[index]
+                                                            ['id']);
+                                              },
+                                              child: Container(
+                                                height: 35,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3,
+                                                decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(
+                                                        189, 202, 202, 202),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: greyColor)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: const [
+                                                    Text(
+                                                      'Gỡ',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontSize: 12.0,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                ])
-                          ],
-                        )),
-                  )
-                ],
-              ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                      ])
+                                ],
+                              )),
+                        )
+                      ],
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),
