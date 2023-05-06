@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 
-import '../theme/colors.dart';
-
+// ignore: must_be_immutable
 class SearchInput extends StatefulWidget {
   final Function? handleSearch;
   final Function? handleUpdateFocus;
   final Function? handleSearchClick;
   final String? type;
+  final String? initValue;
+
   String? title = "Tìm kiếm";
 
   SearchInput(
@@ -19,6 +20,7 @@ class SearchInput extends StatefulWidget {
       this.handleSearch,
       this.handleUpdateFocus,
       this.title,
+      this.initValue,
       this.handleSearchClick});
 
   @override
@@ -28,6 +30,7 @@ class SearchInput extends StatefulWidget {
 class _SearchInputState extends State<SearchInput> {
   final FocusNode _focusNode = FocusNode();
   TextEditingController controller = TextEditingController();
+
   Timer? _debounce;
 
   void _onTextChanged(String text) {
@@ -44,6 +47,7 @@ class _SearchInputState extends State<SearchInput> {
   void initState() {
     if (!mounted) return;
     super.initState();
+    controller.text = widget.initValue ?? '';
   }
 
   @override
@@ -56,7 +60,6 @@ class _SearchInputState extends State<SearchInput> {
             color: widget.type == postWatch
                 ? Colors.black
                 : Theme.of(context).canvasColor,
-            border: Border.all(width: 0.2, color: greyColor),
             borderRadius: BorderRadius.circular(20)),
         child: TextFormField(
             focusNode: _focusNode,

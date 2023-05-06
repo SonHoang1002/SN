@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/data/search.dart';
+import 'package:social_network_app_mobile/providers/search/search_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
-class SearchHistory extends StatelessWidget {
-  const SearchHistory({Key? key}) : super(key: key);
+class SearchHistory extends ConsumerWidget {
+  final List searchHistory;
+  const SearchHistory({Key? key, required this.searchHistory})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         margin: const EdgeInsets.all(8.0),
         child: Column(children: [
@@ -126,9 +129,18 @@ class SearchHistory extends StatelessWidget {
                                   const SizedBox(
                                     width: 10.0,
                                   ),
-                                  const Icon(
-                                    FontAwesomeIcons.xmark,
-                                    size: 20,
+                                  InkWell(
+                                    onTap: () {
+                                      ref
+                                          .read(
+                                              searchControllerProvider.notifier)
+                                          .deleteSearchHistory(
+                                              searchHistory[index]['id']);
+                                    },
+                                    child: const Icon(
+                                      FontAwesomeIcons.xmark,
+                                      size: 20,
+                                    ),
                                   ),
                                 ],
                               )
