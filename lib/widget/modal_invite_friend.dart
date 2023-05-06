@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
-import 'package:social_network_app_mobile/providers/friend_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
@@ -69,17 +66,14 @@ class _InviteFriendState extends State<InviteFriend>
   }
 
   void fetchFriendUnInvited(key) async {
-    if (paramsExcluded != null) {
-      var response = await FriendsApi().getListFriendsApi(
-          key == null || key == ''
-              ? paramsExcluded
-              : {...paramsExcluded, 'keyword': key});
-      if (response != null) {
-        if (mounted) {
-          setState(() {
-            friendUnInvited = response['data'];
-          });
-        }
+    var response = await FriendsApi().getListFriendsApi(key == null || key == ''
+        ? paramsExcluded
+        : {...paramsExcluded, 'keyword': key});
+    if (response != null) {
+      if (mounted) {
+        setState(() {
+          friendUnInvited = response['data'];
+        });
       }
     }
   }

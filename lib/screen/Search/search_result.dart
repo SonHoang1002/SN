@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/data/search.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/search/search_provider.dart';
 import 'package:social_network_app_mobile/screen/Search/search_item.dart';
 
-class SearchResult extends StatelessWidget {
-  const SearchResult({Key? key}) : super(key: key);
+class SearchResult extends ConsumerWidget {
+  const SearchResult({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    List accounts = searchResultKeyword['accounts'] ?? [];
-    List groups = searchResultKeyword['groups'] ?? [];
-    List pages = searchResultKeyword['pages'] ?? [];
+  Widget build(BuildContext context, WidgetRef ref) {
+    var searchResults = ref.watch(searchControllerProvider).search;
+
+    List accounts = searchResults['accounts'] ?? [];
+    List groups = searchResults['groups'] ?? [];
+    List pages = searchResults['pages'] ?? [];
 
     List newList = [...accounts, ...groups, ...pages];
 

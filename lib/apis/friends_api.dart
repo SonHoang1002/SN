@@ -5,8 +5,35 @@ class FriendsApi {
     return await Api()
         .getRequestBase('/api/v1/accounts/$idUser/friendships', params);
   }
+
   Future getListFriendsApi(params) async {
+    return await Api().getRequestBase('/api/v1/friendships', params);
+  }
+
+  Future getListFriendRequestApi(params) async {
+    return await Api().getRequestBase('/api/v1/friendship_requests', params);
+  }
+
+  Future sendFriendRequestApi(id) async {
     return await Api()
-        .getRequestBase('/api/v1/friendships', params);
+        .postRequestBase('/api/v1/accounts/$id/friendship_requests', null);
+  }
+
+  Future rejectFriendRequestApi(id) async {
+    return await Api()
+        .postRequestBase('/api/v1/accounts/$id/reject_friendship', null);
+  }
+
+  Future approveFriendRequestApi(id) async {
+    return await Api()
+        .postRequestBase('/api/v1/accounts/$id/approve_friendship', null);
+  }
+
+  Future getListFriendSuggestApi(params) async {
+    return await Api().getRequestBase('/api/v1/friend_suggestions', params);
+  }
+
+  Future getListFriendInvitedApi(params) async {
+    return await Api().getRequestBase('/api/v1/requested_friendships', params);
   }
 }

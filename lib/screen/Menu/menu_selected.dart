@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Event/CreateEvent/create_event.dart';
 import 'package:social_network_app_mobile/screen/Event/event_render.dart';
+import 'package:social_network_app_mobile/screen/Friend/friend.dart';
+import 'package:social_network_app_mobile/screen/Friend/friend_search.dart';
 import 'package:social_network_app_mobile/screen/Group/group.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_render.dart';
 import 'package:social_network_app_mobile/screen/Page/page_general.dart';
@@ -32,11 +34,7 @@ class MenuSelected extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeManager>(context);
 
-    Color colorWord = theme.themeMode == ThemeMode.dark
-        ? white
-        : theme.themeMode == ThemeMode.light
-            ? blackColor
-            : blackColor;
+    Color colorWord = theme.isDarkMode ? white : blackColor;
     Widget buttonAppbar = const SizedBox();
     Widget body = const SizedBox();
     switch (menuSelected['key']) {
@@ -48,6 +46,7 @@ class MenuSelected extends StatelessWidget {
         break;
       case 'grow':
         body = const GrowRender();
+
         // buttonAppbar = Row(
         //   children: [
         //     GestureDetector(
@@ -81,6 +80,25 @@ class MenuSelected extends StatelessWidget {
         //         ))
         //   ],
         // );
+        break;
+      case 'friendSocial':
+        body = const Friend();
+        buttonAppbar = Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => const SearchScreen()),
+              );
+            },
+            child: Icon(
+              FontAwesomeIcons.search,
+              size: 17,
+              color: colorWord,
+            ),
+          ),
+        );
         break;
       case 'eventSocial':
         body = const EventRender();
