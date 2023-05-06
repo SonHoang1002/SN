@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:helpers/helpers/extensions/extensions.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/post_current_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
+import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer_button.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer_information.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
@@ -41,12 +46,14 @@ List typeVisibility = [
   }
 ];
 
-class PostOneMediaDetail extends StatefulWidget {
+class PostOneMediaDetail extends ConsumerStatefulWidget {
   final dynamic postMedia;
   final List? medias;
   final int? currentIndex;
   final Function? backFunction;
   final dynamic post;
+  final dynamic type;
+  final dynamic preType;
 
   const PostOneMediaDetail(
       {Key? key,
@@ -54,14 +61,16 @@ class PostOneMediaDetail extends StatefulWidget {
       this.medias,
       this.currentIndex,
       this.backFunction,
-      this.post})
+      this.post,
+      this.type,
+      this.preType})
       : super(key: key);
 
   @override
-  State<PostOneMediaDetail> createState() => _PostOneMediaDetailState();
+  ConsumerState<PostOneMediaDetail> createState() => _PostOneMediaDetailState();
 }
 
-class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
+class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
   dynamic postRender;
   bool isShowAction = false;
   int indexRender = 0;
@@ -69,22 +78,25 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
   final PhotoViewController photoViewController = PhotoViewController();
   final GlobalKey _imageKey = GlobalKey();
   final GlobalKey _imageKeyDrag = GlobalKey();
-
   double? opacityValue;
   final GlobalKey _contentKey = GlobalKey();
   dynamic userData;
   bool isShowDetail = true;
   double? _dragOffset;
-  Offset? _dragAnchor;
   double? _initialPosition;
   double? _currentPosition;
 
-  double progress = 0; 
+  double progress = 0;
   @override
   void initState() {
     super.initState();
     opacityValue = 1;
     _dragOffset = 0;
+    Future.delayed(Duration.zero, () {
+      ref
+          .read(currentPostControllerProvider.notifier)
+          .saveCurrentPost(widget.post);
+    });
 
     if (mounted && widget.postMedia != null) {
       setState(() {
@@ -147,51 +159,81 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
   }
 
   bool isDismissed = false;
+
+  checkPreType() {
+    if (widget.preType != null) return widget.preType;
+    dynamic type = widget.type;
+    if (type != null) {
+      if (type == postPageUser) {
+        return postDetailFromUserPage;
+      }
+      if (type == feedPost) {
+        return postDetailFromFeed;
+      }
+      return type;
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    userData = ref.watch(currentPostControllerProvider).currentPost.isNotEmpty
+        ? ref.watch(currentPostControllerProvider).currentPost
+        : userData;
     String path =
         postRender['media_attachments']?[0]?['url'] ?? postRender['url'];
     final tag = postRender['media_attachments']?[0]?['id'] ?? postRender['id'];
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: blackColor.withOpacity(opacityValue! > 1.0
-          ? 1.0
-          : opacityValue! < 0.0
-              ? 0.0
-              : opacityValue!),
-      body: Opacity(
-        opacity: 1,
-        child: Stack(
-          children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isShowDetail = !isShowDetail;
-                });
-              },
-              child: ExtendedImageGesturePageView.builder(
-                itemCount: widget.medias != null
-                    ? widget.medias!.length
-                    : postRender['media_attachments'] != null
-                        ? postRender['media_attachments'].length
-                        : 1,
-                itemBuilder: (BuildContext context, int index) {
-                  dynamic pathImg = path;
-                  if (postRender['media_attachments'] != null &&
-                      postRender['media_attachments'].isNotEmpty) {
-                    pathImg = postRender['media_attachments'][index]['url'];
-                  } else {
-                    if (widget.medias != null && widget.medias!.isNotEmpty) {
-                      pathImg = widget.medias![index]['url'];
+    return WillPopScope(
+      onWillPop: () async {
+        widget.backFunction != null ? widget.backFunction!() : null;
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: blackColor.withOpacity(opacityValue! > 1.0
+            ? 1.0
+            : opacityValue! < 0.0
+                ? 0.0
+                : opacityValue!),
+        body: Opacity(
+          opacity: 1,
+          child: Stack(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isShowDetail = !isShowDetail;
+                  });
+                },
+                child: ExtendedImageGesturePageView.builder(
+                  itemCount: widget.medias != null
+                      ? widget.medias!.length
+                      : postRender['media_attachments'] != null
+                          ? postRender['media_attachments'].length
+                          : 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    dynamic pathImg = path;
+                    if (postRender['media_attachments'] != null &&
+                        postRender['media_attachments'].isNotEmpty) {
+                      pathImg = postRender['media_attachments'][index]['url'];
+                    } else {
+                      if (widget.medias != null && widget.medias!.isNotEmpty) {
+                        pathImg = widget.medias![index]['url'];
+                      }
                     }
-                  }
-                  Widget image = Hero(
-                    tag: tag,
-                    child: Container(
+                    Widget image = Container(
                       padding: const EdgeInsets.all(5.0),
                       child: Listener(
                         onPointerUp: (details) {
                           if (progress > 0.06) {
+                            setState(() {
+                              opacityValue = 0.0;
+                            });
+                            widget.backFunction != null
+                                ? widget.backFunction!()
+                                : null;
+
                             popToPreviousScreen(context);
                           }
                         },
@@ -200,6 +242,10 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
                           key: const Key("dismiss"),
                           resizeDuration: const Duration(milliseconds: 0),
                           onDismissed: (direction) {
+                            widget.backFunction != null
+                                ? widget.backFunction!()
+                                : null;
+
                             popToPreviousScreen(context);
                           },
                           onUpdate: (details) {
@@ -218,60 +264,65 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
                               }
                             }
                             setState(() {
-                              opacityValue = 1 - details.progress * 2;
+                              if (opacityValue != 0) {
+                                opacityValue = 1 - details.progress * 2;
+                              }
                               progress = details.progress;
                             });
                           },
-                          child: ExtendedImage.network(
-                            pathImg,
-                            fit: BoxFit.contain,
-                            mode: ExtendedImageMode.gesture,
-                            initGestureConfigHandler: (handler) {
-                              return GestureConfig(
-                                  minScale: 1.0,
-                                  maxScale: 3.0,
-                                  animationMaxScale: 3.5,
-                                  animationMinScale: 0.8,
-                                  speed: 1.0,
-                                  inertialSpeed: 100.0,
-                                  initialScale: 1.0,
-                                  cacheGesture: false,
-                                  inPageView: true);
-                            },
-                            onDoubleTap: (state) {
-                              if (state.gestureDetails!.totalScale == 1.0) {
-                                state.handleDoubleTap(
-                                    scale: 2.0,
-                                    doubleTapPosition:
-                                        state.pointerDownPosition);
-                              } else {
-                                state.handleDoubleTap(
-                                    scale: 1.0,
-                                    doubleTapPosition:
-                                        state.pointerDownPosition);
-                              }
-                            },
+                          child: Hero(
+                            tag: tag,
+                            child: ExtendedImage.network(
+                              pathImg,
+                              fit: BoxFit.contain,
+                              mode: ExtendedImageMode.gesture,
+                              initGestureConfigHandler: (handler) {
+                                return GestureConfig(
+                                    minScale: 1.0,
+                                    maxScale: 3.0,
+                                    animationMaxScale: 3.5,
+                                    animationMinScale: 0.8,
+                                    speed: 1.0,
+                                    inertialSpeed: 100.0,
+                                    initialScale: 1.0,
+                                    cacheGesture: false,
+                                    inPageView: true);
+                              },
+                              onDoubleTap: (state) {
+                                if (state.gestureDetails!.totalScale == 1.0) {
+                                  state.handleDoubleTap(
+                                      scale: 2.0,
+                                      doubleTapPosition:
+                                          state.pointerDownPosition);
+                                } else {
+                                  state.handleDoubleTap(
+                                      scale: 1.0,
+                                      doubleTapPosition:
+                                          state.pointerDownPosition);
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                  return image;
-                },
-                onPageChanged: (int value) {
-                  setState(() {
-                    postRender = widget.medias![value];
-                    indexRender = value;
-                  });
-                },
-                controller: ExtendedPageController(
-                  initialPage: indexRender,
+                    );
+                    return image;
+                  },
+                  onPageChanged: (int value) {
+                    setState(() {
+                      postRender = widget.medias![value];
+                      indexRender = value;
+                    });
+                  },
+                  controller: ExtendedPageController(
+                    initialPage: indexRender,
+                  ),
+                  scrollDirection: Axis.horizontal,
                 ),
-                scrollDirection: Axis.horizontal,
               ),
-            ),
-            buildContent(size)
-          ],
+              buildContent(size)
+            ],
+          ),
         ),
       ),
     );
@@ -373,7 +424,7 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
   buildContent(Size size) {
     return _isDragging
         ? const SizedBox()
-        : isShowDetail
+        : isShowDetail && opacityValue != 0
             ? SafeArea(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -391,6 +442,7 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
                                 widget.backFunction != null
                                     ? widget.backFunction!()
                                     : null;
+                                popToPreviousScreen(context);
                               },
                               child: Container(
                                 width: 30,
@@ -511,12 +563,15 @@ class _PostOneMediaDetailState extends State<PostOneMediaDetail> {
                           ),
                           PostFooterInformation(
                             post: userData,
+                            preType: checkPreType(),
                           ),
                           buildDivider(),
                           SizedBox(
                             height: 40,
                             child: PostFooterButton(
                               post: userData,
+                              type: postMultipleMedia,
+                              preType: checkPreType(),
                             ),
                           )
                         ],

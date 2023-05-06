@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/posts/position_post_provider.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
+import 'package:social_network_app_mobile/screen/Reef_ShortVideo/reef.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
@@ -92,6 +93,10 @@ class _FeedState extends ConsumerState<Feed> {
           child: Column(
             children: [
               const CreatePostButton(),
+              const CrossBar(
+                height: 5,
+              ),
+              const Reef(),
               const CrossBar(
                 height: 5,
               ),

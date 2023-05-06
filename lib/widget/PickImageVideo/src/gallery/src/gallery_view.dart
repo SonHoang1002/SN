@@ -98,7 +98,7 @@ class _GalleryViewState extends State<GalleryView> {
 
   fetchDataMutipleFile(entities) async {
     if (entities.isEmpty) return;
-    List<dynamic> primaryList=[];
+    List<dynamic> primaryList = [];
     List<dynamic> newList = widget.filesSelected ?? [];
     primaryList.addAll(newList);
     for (var i = 0; i < entities.length; i++) {
@@ -112,7 +112,6 @@ class _GalleryViewState extends State<GalleryView> {
         } else {
           decodedImage = await videoInfo.getVideoInfo(fileData.path);
         }
-
         primaryList.add({
           'file': fileData,
           "aspect": decodedImage.width / decodedImage.height,

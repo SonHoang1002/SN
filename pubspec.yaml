@@ -153,6 +153,7 @@ flutter:
     - assets/live_video.png
     - assets/bg_color.png
     - assets/icons/
+    - assets/icon/
     - assets/reaction/
     - assets/post_media.svg
     - assets/target.svg

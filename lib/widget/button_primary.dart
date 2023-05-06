@@ -10,6 +10,7 @@ class ButtonPrimary extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final Color? colorButton;
   final Color? colorText;
+  final double? fontSize;
 
   const ButtonPrimary(
       {Key? key,
@@ -20,7 +21,8 @@ class ButtonPrimary extends StatelessWidget {
       this.padding,
       this.colorButton,
       this.colorText,
-      this.isGrey})
+      this.isGrey,
+      this.fontSize = 14})
       : super(key: key);
 
   @override
@@ -59,7 +61,7 @@ class ButtonPrimary extends StatelessWidget {
                           : handlePress != null
                               ? white
                               : null),
-                  fontSize: 14,
+                  fontSize: fontSize,
                   fontWeight: FontWeight.w500),
             ),
           ],

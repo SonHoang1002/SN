@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +134,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
       });
     }
 
-    handleChooseEntity(entity) {
+    handleChooseEntity(entity) { 
       if (renderType == 'groups') {
         setState(() {
           groupShareSelected = {...entity, 'entityType': 'group'};
@@ -320,6 +322,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                                                   )
                                                 : PageItem(
                                                     page: pagesRender[index],
+                                                    isActiveNewScreen: false,
                                                   ),
                                           ),
                                         )),
@@ -357,12 +360,19 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                               ),
                             ),
                           ),
-                          if (widget.pageShared != null)
-                            SizedBox(
-                              child: PageGroupShared(
-                                page: widget.pageShared,
-                              ),
-                            ),
+                          pageShareSelected != null
+                              ? SizedBox(
+                                  child: PageGroupShared(
+                                    page: pageShareSelected,
+                                  ),
+                                )
+                              : groupShareSelected != null
+                                  ? SizedBox(
+                                      child: PageGroupShared(
+                                        page: groupShareSelected ,
+                                      ),
+                                    )
+                                  : const SizedBox(),
                           const CrossBar(
                             height: 0.5,
                           ),
@@ -464,10 +474,10 @@ class PageGroupShared extends StatelessWidget {
                   colorButton: greyColorOutlined,
                   colorText: Theme.of(context).textTheme.bodyMedium?.color,
                   label:
-                      page['page_relationship']['like'] ? 'Đã thích' : 'Thích',
-                  handlePress: () {
-                    print('handlelike');
-                  },
+                     page['page_relationship']!=null && page['page_relationship']['like'] ? 'Đã thích' : 'Thích'
+                     ,
+                      
+                  handlePress: () {},
                 )
               ],
             ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
@@ -74,7 +76,22 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                           // : ImageCacheRender(path: medias[0]['url']),
                           : Hero(
                               tag: medias[0]['id'],
-                              child: ExtendedImage.network(medias[0]['url'])),
+                              child: ExtendedImage.network(
+                                medias[0]['url'],
+                                // width: double.parse(medias[0]['meta']['small']
+                                //                 ['width']
+                                //             .toString()) >
+                                //         size.width
+                                //     ? double.parse(medias[0]['meta']['small']
+                                //             ['width']
+                                //         .toString())
+                                //     : size.width,
+                                // // fit: BoxFit.fitWidth,
+                                // height: double.parse(medias[0]['meta']['small']
+                                //         ['height']
+                                //     .toString()),
+                              ),
+                            ),
                       buildDivider(color: greyColor),
                     ],
                   ),

@@ -18,6 +18,7 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/helper/split_any.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_card.dart';
 import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -41,13 +42,15 @@ class CommentTree extends StatefulHookConsumerWidget {
       this.getCommentSelected,
       this.commentSelected,
       this.commentChildCreate,
-      this.handleDeleteComment})
+      this.handleDeleteComment,
+      this.preType})
       : super(key: key);
 
   final dynamic commentChildCreate;
   final dynamic commentParent;
   final dynamic commentSelected;
   final String? type;
+  final dynamic preType;
 
   final FocusNode? commentNode;
   final Function? getCommentSelected;
@@ -156,13 +159,14 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
       if (post != null && post['in_reply_to_parent_id'] != null) {
         int index = postChildComment
             .indexWhere((element) => element['id'] == post['id']);
+
         if (index < 0) return;
+        widget.handleDeleteComment!(post);
         setState(() {
           postChildComment = [
             ...postChildComment.sublist(0, index),
             ...postChildComment.sublist((index + 1))
           ];
-
           commentChild = [
             ...commentChild.sublist(0, index),
             ...commentChild.sublist((index + 1))
@@ -247,6 +251,7 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
                     ),
                   ),
                 )
+              // cmt con
               : BoxComment(
                   key: Key(data.content.toString()),
                   widget: widget,
@@ -385,10 +390,10 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
       String str = postRender['content'] ?? '';
       List<TextSpan> listRender = [];
       List matches = str.split(RegExp(r'\[|\]'));
-      // List listIdTags = tags.map((e) => e['entity_id']).toList();
       // check tag friend, group,.. conditions
 
       List conditions = tags.map((e) => e['name']).toList();
+
       // trường hợp người dùng tags thêm mà api chưa cập nhật bổ sung
       if (oldTags.isNotEmpty) {
         for (var element in oldTags) {
@@ -403,24 +408,29 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
         TextSpan textSpan = TextSpan(
             text: "",
             children: checkHasLink(conditions, subStr).map((e) {
+              String name = e;
+              tags.forEach((ele) => {
+                    if (ele["entity_id"] == e) {name = ele["name"]}
+                  });
               return TextSpan(
-                  text: "$e ",
-                  recognizer: getColorCommentGesture(conditions, e),
+                  text: "$name ",
+                  recognizer: getColorCommentGesture(conditions, name),
                   style: TextStyle(
-                      color: getColorCommentText(conditions, e),
-                      fontWeight: conditions.contains(e)
+                      color: getColorCommentText(conditions, name),
+                      fontWeight: conditions.contains(name)
                           ? FontWeight.bold
                           : FontWeight.normal));
             }).toList());
         listRender.add(textSpan);
       }
-      String text = postRender['content'];
+      String text = postRender['content']; 
       for (var mention in tags) {
         text = text.replaceAll('[${mention['entity_id']}]', mention['name']);
+        // text = mention['name'];
       }
       setState(() {
         textRender = text;
-      });
+      }); 
       return listRender;
     }
     // handleGetComment() {
