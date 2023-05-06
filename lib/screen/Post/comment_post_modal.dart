@@ -4,16 +4,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/split_link.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_tree.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/comment_textfield.dart';
 
+import '../../providers/post_provider.dart';
+
 class CommentPostModal extends ConsumerStatefulWidget {
   final dynamic post;
-  final String? type;
-  const CommentPostModal({Key? key, this.post, this.type}) : super(key: key);
+  final dynamic type;
+  final dynamic preType;
+  const CommentPostModal({Key? key, this.post, this.type, this.preType})
+      : super(key: key);
 
   @override
   ConsumerState<CommentPostModal> createState() => _CommentPostModalState();
@@ -71,16 +78,35 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
     }
   }
 
-  Future handleComment(data) async {
+  Future handleComment(data, previewLinkText) async {
     if (!mounted) return;
-
+    final preCardData = await getPreviewUrl(previewLinkText);
+    final cardData = preCardData != null
+        ? {
+            "url": preCardData[0]['link'],
+            "title": preCardData[0]['title'],
+            "description": preCardData[0]['description'],
+            "type": "link",
+            "author_name": "",
+            "author_url": "",
+            "provider_name": "",
+            "provider_url": "",
+            "html": "",
+            "width": 400,
+            "height": 240,
+            "image": preCardData[0]['url'],
+            "embed_url": "",
+            "blurhash": "UNKKi:%L~A9Fvesm%MX9pdR+RPV@wajZjtt6"
+          }
+        : null;
     var newCommentPreview = {
       "id": data['id'],
       "in_reply_to_id": widget.post['id'],
       "account": ref.watch(meControllerProvider)[0],
       "content": data['status'],
       "typeStatus": data['typeStatus'] ?? "previewComment",
-      "created_at": "2023-02-01T23:04:48.047+07:00",
+      "created_at":
+          '${DateTime.now().toIso8601String().substring(0, 23)}+07:00',
       "backdated_time": "2023-02-01T23:04:48.047+07:00",
       "sensitive": false,
       "spoiler_text": "",
@@ -101,6 +127,9 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
         {"type": "yay", "yays_count": 0}
       ],
       "replies_total": 0,
+      //  data['typeStatus'] == 'editComment'
+      //     ? widget.post["replies_total"]
+      //     : (widget.post["replies_total"] + 1),
       "score": "109790330095515423",
       "hidden": false,
       "notify": false,
@@ -111,7 +140,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       "muted": false,
       "bookmarked": false,
       "pinned": null,
-      "card": null,
+      "card": preCardData != null ? cardData : preCardData,
       "in_reply_to_parent_id": null,
       "reblog": null,
       "application": {"name": "Web", "website": null},
@@ -162,7 +191,6 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newCommentPreview['id']);
       List newListUpdate = [];
-
       if (indexComment > -1) {
         newListUpdate = [
           ...postComment.sublist(0, indexComment),
@@ -177,9 +205,15 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       postComment = dataPreComment;
       commentChild = data['type'] == 'child' ? newCommentPreview : null;
     });
+    _updatePostCount(
+        addtionalIfChild: data['type'] == 'child' &&
+                data['typeStatus'] != 'editChild' &&
+                data['typeStatus'] != "editComment"
+            ? 1
+            : 0);
 
     dynamic newComment;
-
+    // cal api
     if (!['editComment', 'editChild'].contains(data['typeStatus'])) {
       newComment = await PostApi().createStatus({
             ...data,
@@ -187,12 +221,19 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
             "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
           }) ??
           newCommentPreview;
+      if (newComment['card'] == null && preCardData != null) {
+        newComment["card"] = newCommentPreview["card"];
+      }
     } else {
       newComment = await PostApi().updatePost(data['id'], {
         "extra_body": data['extra_body'],
         "status": data['status'],
         "tags": data['tags']
       });
+      if (newComment['card'] == null ||
+          (newComment["card"] != newCommentPreview["card"])) {
+        newComment["card"] = newCommentPreview["card"];
+      }
     }
 
     if (mounted && newComment != null) {
@@ -222,11 +263,18 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
         //Edit comment parent
         dataCommentUpdate = newListUpdate;
       }
-
       setState(() {
         postComment = dataCommentUpdate;
         commentChild = newComment;
       });
+      if (newComment != null) {
+        _updatePostCount(
+            addtionalIfChild: data['type'] == 'child' &&
+                    data['typeStatus'] != 'editChild' &&
+                    data['typeStatus'] != "editComment"
+                ? 1
+                : 0);
+      }
     }
   }
 
@@ -238,19 +286,67 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
 
   handleDeleteComment(post) {
     if (post != null) {
-      List newPostComment =
-          postComment.where((element) => element['id'] != post['id']).toList();
+      if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
+        List newPostComment = postComment
+            .where((element) => element['id'] != post['id'])
+            .toList();
+        setState(() {
+          postComment = newPostComment;
+        });
+        _updatePostCount();
+        return;
+      } else if (post['in_reply_to_id'] != null) {
+        // cap nhat so luong khi xoa cmt con
 
-      setState(() {
-        postComment = newPostComment;
-      });
+        postComment.forEach((element) {
+          if (element['id'] == post['in_reply_to_id']) {
+            setState(() {
+              postComment = postComment;
+            });
+            _updatePostCount(subIfChild: 1);
+          }
+        });
+      }
+    }
+  }
+
+  _updatePostCount({int? addtionalIfChild, int? subIfChild}) async {
+    print('----------------------------CALL _updatePostCount------------');
+    int countAdditionalIfChild = addtionalIfChild ?? 0;
+    int countSubIfChild = subIfChild ?? 0;
+    dynamic updateCountPostData = widget.post;
+    dynamic count = postComment.length;
+    // Future.delayed(const Duration(seconds: 3), () {
+    postComment.forEach((element) {
+      count += element["replies_total"];
+    });
+    updateCountPostData['replies_total'] =
+        count + countAdditionalIfChild - countSubIfChild;
+    ref
+        .read(postControllerProvider.notifier)
+        .actionUpdatePostCount(widget.preType, updateCountPostData);
+    // });
+  }
+
+  checkPreType() {
+    dynamic _preType = widget.preType;
+
+    if (_preType != null) {
+      if (_preType == postPageUser) {
+        return postDetailFromUserPage;
+      }
+      if (_preType == feedPost) {
+        return postDetailFromFeed;
+      }
+      return _preType;
+    } else {
+      return null;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final commentCount = postDetail?['replies_count'] ?? 0;
-
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
@@ -277,29 +373,54 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListView.builder(
-                          primary: false,
-                          shrinkWrap: true,
-                          itemCount: postComment.length,
-                          itemBuilder: ((context, index) => CommentTree(
-                              key: Key(postComment[index]['id']),
-                              type: widget.type,
-                              commentChildCreate: postComment[index]['id'] ==
-                                      commentChild?['in_reply_to_id']
-                                  ? commentChild
-                                  : null,
-                              commentNode: commentNode,
-                              commentSelected: commentSelected,
-                              commentParent: postComment[index],
-                              getCommentSelected: getCommentSelected,
-                              handleDeleteComment: handleDeleteComment))),
-                    ],
-                  ),
-                ),
+                child: postComment.isEmpty
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          buildSpacer(height: 30),
+                          Image.asset(
+                            "assets/images/comment_icon.png",
+                            height: 150,
+                            width: 200,
+                            color: greyColor.withOpacity(0.4),
+                          ),
+                          buildTextContent("Chưa có bình luận !", true,
+                              fontSize: 18,
+                              colorWord: greyColor,
+                              isCenterLeft: false),
+                          buildSpacer(height: 10),
+                          buildTextContent(
+                              "Hãy là người đầu tiên bình luận", false,
+                              fontSize: 18,
+                              colorWord: greyColor,
+                              isCenterLeft: false),
+                        ],
+                      )
+                    : SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                itemCount: postComment.length,
+                                itemBuilder: ((context, index) => CommentTree(
+                                    key: Key(postComment[index]['id']),
+                                    type: widget.type,
+                                    commentChildCreate: postComment[index]
+                                                ['id'] ==
+                                            commentChild?['in_reply_to_id']
+                                        ? commentChild
+                                        : null,
+                                    commentNode: commentNode,
+                                    commentSelected: commentSelected,
+                                    commentParent: postComment[index],
+                                    getCommentSelected: getCommentSelected,
+                                    handleDeleteComment: handleDeleteComment))),
+                          ],
+                        ),
+                      ),
               ),
               commentCount - postComment.length > 0
                   ? InkWell(

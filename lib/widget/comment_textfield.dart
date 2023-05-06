@@ -207,7 +207,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         final selection = TextSelection.fromPosition(
             TextPosition(offset: textController.text.length));
         textController.selection = selection;
-      } 
+      }
       setState(() {
         listMentions = [];
         content = message;
@@ -291,8 +291,22 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 widget.commentSelected['typeStatus'] != 'editComment'
             ? "child"
             : 'parent',
-        "typeStatus": widget.commentSelected?['typeStatus']
+        "typeStatus": widget.commentSelected?['typeStatus'],
       }, textController.text.trim());
+      print("55555555555555555555555555check tags : ${(checkHasMention(widget.commentSelected) ? [
+              ...listMentionsSelected,
+              widget.commentSelected['account']
+            ] : listMentionsSelected)
+          // .where((element) => flagContent.contains(element['id']))
+          .map((e) => {
+                "entity_id": e['id'],
+                "entity_type": e['username'] != null
+                    ? 'Account'
+                    : e['page_relationship'] != null
+                        ? 'Page'
+                        : 'Group',
+                "name": e['display_name'] ?? e['title']
+              }).toList()}");
       textController.clear();
       setState(() {
         files = [];
@@ -310,7 +324,6 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       if (textController.text.trim().isNotEmpty) return true;
       if (linkEmojiSticky.isNotEmpty) return true;
       if (files.isNotEmpty) return true;
-
       return false;
     }
 

@@ -433,6 +433,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         content.length > 150 ||
         checkin != null ||
         previewUrlData != null) {
+      
       return false;
     } else {
       return true;
@@ -531,83 +532,78 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   checkSaveDraft() {
     if (checkHasContent()) {
       return showCupertinoModalPopup(
-              context: context,
-              builder: (context) {
-                return CupertinoAlertDialog(
-                  title: buildTextContent(
-                      "Lưu bài viết này dưới dạng bản nháp ?", false,
-                      fontSize: 18, isCenterLeft: false),
-                  content: buildTextContent(
-                      "Nếu bỏ bây giờ, bạn sẽ mất bài viết này.", false,
-                      fontSize: 14, isCenterLeft: false),
-                  actions: [
-                    Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: Column(children: [
-                        CupertinoButton(
-                            child: buildTextContent("Lưu bản nháp", false,
-                                fontSize: 13, isCenterLeft: false),
-                            onPressed: () {
-                              ref
-                                  .read(draftFeedController.notifier)
-                                  .saveDraftFeed(DraftFeed(
-                                    gifLink: gifLink,
-                                    files: files,
-                                    content: content,
-                                    checkin: checkin,
-                                    previewUrlData: previewUrlData,
-                                  ));
-                              popToPreviousScreen(context);
-                              popToPreviousScreen(context);
-                            }),
-                        buildDivider(color: greyColor),
-                        CupertinoButton(
-                            child: buildTextContent("Bỏ bài viết", false,
-                                fontSize: 13,
-                                colorWord: red,
-                                isCenterLeft: false),
-                            onPressed: () {
-                              ref
-                                  .read(draftFeedController.notifier)
-                                  .saveDraftFeed(DraftFeed(
-                                    gifLink: "",
-                                    files: [],
-                                    content: "",
-                                    checkin: null,
-                                    previewUrlData: null,
-                                  ));
-                              popToPreviousScreen(context);
-                              popToPreviousScreen(context);
-                            }),
-                        buildDivider(color: greyColor),
-                        CupertinoButton(
-                            child: buildTextContent("Tiếp tục chỉnh sửa", false,
-                                fontSize: 13, isCenterLeft: false),
-                            onPressed: () {
-                              popToPreviousScreen(context);
-                            }),
-                        buildDivider(color: greyColor),
-                        CupertinoButton(
-                            child: const Text("Hủy"),
-                            onPressed: () {
-                              popToPreviousScreen(context);
-                            }),
-                      ]),
-                    )
-                  ],
-                );
-              }) ??
-          false;
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: buildTextContent(
+                  "Lưu bài viết này dưới dạng bản nháp ?", false,
+                  fontSize: 18, isCenterLeft: false),
+              content: buildTextContent(
+                  "Nếu bỏ bây giờ, bạn sẽ mất bài viết này.", false,
+                  fontSize: 14, isCenterLeft: false),
+              actions: [
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Column(children: [
+                    CupertinoButton(
+                        child: buildTextContent("Lưu bản nháp", false,
+                            fontSize: 13, isCenterLeft: false),
+                        onPressed: () {
+                          ref
+                              .read(draftFeedController.notifier)
+                              .saveDraftFeed(DraftFeed(
+                                gifLink: gifLink,
+                                files: files,
+                                content: content,
+                                checkin: checkin,
+                                previewUrlData: previewUrlData,
+                              ));
+                          popToPreviousScreen(context);
+                          popToPreviousScreen(context);
+                        }),
+                    buildDivider(color: greyColor),
+                    CupertinoButton(
+                        child: buildTextContent("Bỏ bài viết", false,
+                            fontSize: 13, colorWord: red, isCenterLeft: false),
+                        onPressed: () {
+                          ref
+                              .read(draftFeedController.notifier)
+                              .saveDraftFeed(DraftFeed(
+                                gifLink: "",
+                                files: [],
+                                content: "",
+                                checkin: null,
+                                previewUrlData: null,
+                              ));
+                          popToPreviousScreen(context);
+                          popToPreviousScreen(context);
+                        }),
+                    buildDivider(color: greyColor),
+                    CupertinoButton(
+                        child: buildTextContent("Tiếp tục chỉnh sửa", false,
+                            fontSize: 13, isCenterLeft: false),
+                        onPressed: () {
+                          popToPreviousScreen(context);
+                        }),
+                    buildDivider(color: greyColor),
+                    CupertinoButton(
+                        child: const Text("Hủy"),
+                        onPressed: () {
+                          popToPreviousScreen(context);
+                        }),
+                  ]),
+                )
+              ],
+            );
+          });
     } else {
       popToPreviousScreen(context);
     }
   }
 
-  @override
-  void onBackPressed() {}
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -692,7 +688,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   Widget mainBody() {
-    final size = MediaQuery.of(context).size;
+   final size = MediaQuery.of(context).size;
     return Container(
       // decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
       child: SingleChildScrollView(
@@ -705,7 +701,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 statusActivity: statusActivity,
                 isShowBackground: checkisShowBackground(),
                 visibility: visibility,
-                backgroundSelected: backgroundSelected,
+                backgroundSelected: files.isNotEmpty || checkin != null
+                    ? null
+                    : backgroundSelected,
                 handleUpdateData: handleUpdateData,
                 handleGetPreviewUrl: handleGetPreviewUrl),
             previewUrlData != null
@@ -788,10 +786,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       ))
               ],
             ),
-            // Container(
-            //   height: 80,
-            //   color: red,
-            // )
+            Container(
+              height: 80,
+              color: transparent,
+            )
           ],
         ),
       ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
@@ -57,11 +59,11 @@ class PostController extends StateNotifier<PostState> {
           // isMore: true,
           isMoreUserPage: state.isMoreUserPage);
     }
-    }
+  }
 
   getListPostUserPage(accountId, params) async {
     List response = await UserPageApi().getListPostApi(accountId, params) ?? [];
-    
+
     if (mounted) {
       state = state.copyWith(
           posts: state.posts,
@@ -118,21 +120,22 @@ class PostController extends StateNotifier<PostState> {
     }
   }
 
-  actionUpdateDetailInPost(type, data) async {
+  actionUpdatePostCount(String? preType, dynamic data) {
+    print(
+        "------------------------------preType of actionUpdatePostCount from post provider ----------------------------- $preType");
     int index = -1;
-
-    if (type == feedPost) {
+    if (preType == feedPost || preType == postDetailFromFeed) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
-    } else if (type == postPageUser) {
+    } else if (preType == postPageUser || preType == postDetailFromUserPage) {
       index = state.postUserPage
           .indexWhere((element) => element['id'] == data['id']);
     }
-
     if (index < 0) return;
+
     if (mounted) {
       state = state.copyWith(
           postsPin: state.postsPin,
-          posts: type == feedPost
+          posts: preType == feedPost
               ? [
                   ...state.posts.sublist(0, index),
                   data,
@@ -140,7 +143,46 @@ class PostController extends StateNotifier<PostState> {
                 ]
               : state.posts,
           isMore: state.isMore,
-          postUserPage: type == postPageUser
+          postUserPage: preType == postPageUser
+              ? [
+                  ...state.postUserPage.sublist(0, index),
+                  data,
+                  ...state.postUserPage.sublist(index + 1)
+                ]
+              : state.postUserPage,
+          isMoreUserPage: state.isMoreUserPage);
+    }
+    if (preType == feedPost) {
+    } else if (preType == postPageUser) {}
+  }
+
+  actionUpdateDetailInPost(dynamic type, dynamic data,
+      {dynamic preType}) async {
+    print("-------------call actionUpdateDetailInPost-------------"); 
+    int index = -1;
+    if (type == feedPost ||
+        (preType != null && preType == postDetailFromFeed)) {
+      index = state.posts.indexWhere((element) => element['id'] == data['id']);
+    } else if (type == postPageUser ||
+        (preType != null && preType == postDetailFromUserPage)) {
+      index = state.postUserPage
+          .indexWhere((element) => element['id'] == data['id']);
+    }
+    if (index < 0) return;
+    if (mounted) {
+      state = state.copyWith(
+          postsPin: state.postsPin,
+          posts: type == feedPost ||
+                  (preType != null && preType == postDetailFromFeed)
+              ? [
+                  ...state.posts.sublist(0, index),
+                  data,
+                  ...state.posts.sublist(index + 1)
+                ]
+              : state.posts,
+          isMore: state.isMore,
+          postUserPage: type == postPageUser ||
+                  (preType != null && preType == postDetailFromUserPage)
               ? [
                   ...state.postUserPage.sublist(0, index),
                   data,
@@ -153,12 +195,12 @@ class PostController extends StateNotifier<PostState> {
 
   actionHiddenDeletePost(type, data) {
     int index = -1;
-     if (type == feedPost) {
+    if (type == feedPost) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (type == postPageUser) {
       index = state.postUserPage
           .indexWhere((element) => element['id'] == data['id']);
-        }
+    }
 
     if (index < 0) return;
     if (mounted) {

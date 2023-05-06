@@ -4,14 +4,18 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/post_mutiple_media_detail.dart';
-import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart'; 
+import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 
 class PostMedia extends StatelessWidget {
   final dynamic post;
   final String? type;
-  const PostMedia({Key? key, this.post, this.type}) : super(key: key);
+  final dynamic preType;
+  final Function? backFunction;
+  const PostMedia(
+      {Key? key, this.post, this.type, this.preType, this.backFunction})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +28,11 @@ class PostMedia extends StatelessWidget {
               context,
               PostOneMediaDetail(
                 postMedia: post,
+                post: post,
+                type: type,
+                preType: preType,
                 backFunction: () {
-                  popToPreviousScreen(context);
+                  backFunction != null ? backFunction!() : null;
                 },
               ),
               opaque: false);
@@ -37,6 +44,7 @@ class PostMedia extends StatelessWidget {
               PostMutipleMediaDetail(
                 post: post,
                 initialIndex: initialIndex,
+                preType: preType,
               ),
               opaque: false);
           //  pushCustomPageRoute(
@@ -55,6 +63,7 @@ class PostMedia extends StatelessWidget {
               CupertinoPageRoute(
                   builder: (context) => PostDetail(
                         post: post,
+                        preType: type,
                       )));
         }
       } else {

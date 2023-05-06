@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
+import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/posts/reaction_message_content.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
@@ -22,7 +24,11 @@ String cancelReaction = "Buông ra để hủy";
 class PostFooterButton extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
-  const PostFooterButton({Key? key, this.post, this.type}) : super(key: key);
+  final String? preType;
+  final Function? backFunction;
+
+  const PostFooterButton({Key? key, this.post, this.type,this.backFunction, this.preType})
+      : super(key: key);
 
   @override
   ConsumerState<PostFooterButton> createState() => _PostFooterButtonState();
@@ -59,12 +65,18 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
           Navigator.push(
               context,
               CupertinoPageRoute(
-                  builder: (context) => PostDetail(post: widget.post)));
+                  builder: (context) => PostDetail(
+                        post: widget.post,
+                        preType: widget.type,
+                      )));
         } else if (widget.type == postMultipleMedia) {
           showBarModalBottomSheet(
               context: context,
               backgroundColor: Colors.transparent,
-              builder: (context) => CommentPostModal(post: widget.post));
+              builder: (context) => CommentPostModal(
+                    post: widget.post,
+                    preType: widget.preType,
+                  ));
         }
       } else if (key == 'share') {
         showBarModalBottomSheet(
@@ -87,7 +99,6 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
           ? newPost['reactions']
               .indexWhere((element) => element['type'] == viewerReaction)
           : -1;
-
       if (index >= 0) {
         newFavourites[index] = {
           "type": react,
@@ -113,10 +124,12 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
           "viewer_reaction": react,
           "reactions": newFavourites
         };
+        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+            widget.type, newPost,
+            preType: widget.preType);
         ref
-            .read(postControllerProvider.notifier)
-            .actionUpdateDetailInPost(widget.type, newPost);
-
+            .read(currentPostControllerProvider.notifier)
+            .saveCurrentPost(newPost);
         await PostApi().reactionPostApi(widget.post['id'], data);
       } else {
         newPost = {
@@ -126,12 +139,13 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
               : newPost['favourites_count'],
           "viewer_reaction": null,
           "reactions": newFavourites
-        };
-
+        }; 
+        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+            widget.type, newPost,
+            preType: widget.preType);
         ref
-            .read(postControllerProvider.notifier)
-            .actionUpdateDetailInPost(widget.type, newPost);
-
+            .read(currentPostControllerProvider.notifier)
+            .saveCurrentPost(newPost);
         await PostApi().unReactionPostApi(widget.post['id']);
       }
     }

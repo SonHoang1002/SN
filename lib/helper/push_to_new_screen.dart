@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/Posts/opaque_cupertino_route.dart';
 
 pushToNextScreen(BuildContext context, Widget newScreen) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => newScreen));
@@ -22,17 +21,17 @@ popToPreviousScreen(BuildContext context) {
 pushCustomCupertinoPageRoute(BuildContext context, Widget newScreen,
     {bool opaque = true}) {
   Navigator.push(
-    context,
-    CustomCupertinoPageRoute(builder: (context) => newScreen,)
-  );
+      context,
+      CustomOpaqueCupertinoPageRoute(
+        builder: (context) => newScreen,
+      ));
 }
 
 pushCustomVerticalPageRoute(BuildContext context, Widget newScreen,
     {bool opaque = true}) {
   Navigator.push(
     context,
-   
-PageRouteBuilder(
+    PageRouteBuilder(
       opaque: opaque,
       pageBuilder: (context, animation, secondaryAnimation) => newScreen,
       transitionDuration: const Duration(milliseconds: 200),
@@ -48,7 +47,6 @@ PageRouteBuilder(
       //   );
       // },
     ),
-
   );
 }
 
@@ -85,53 +83,3 @@ class CustomPageRoute<T> extends PageRoute<T> {
     return child;
   }
 }
-
-
-
-class CustomCupertinoPageRoute<T> extends PageRoute<T> {
-  final WidgetBuilder builder;
-
-  CustomCupertinoPageRoute({
-    required this.builder,
-  });
-
-  @override
-  bool get opaque => false;
-
-
-  @override
-  String get barrierLabel => "";
-
-  @override
-  Color? get barrierColor => transparent;
-
-  @override
-  Duration get transitionDuration => const Duration(milliseconds: 200);
-
-  @override
-  bool get maintainState => true;
-
-  @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    return CupertinoPageTransition(
-      primaryRouteAnimation: animation,
-      secondaryRouteAnimation: secondaryAnimation,
-      linearTransition: true,
-      child: builder(context),
-    );
-  }
- 
-
-  @override
-  RoutePageBuilder get pageBuilder =>
-      (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation) {
-        return CupertinoPageTransition(
-          primaryRouteAnimation: animation,
-          secondaryRouteAnimation: secondaryAnimation,
-          linearTransition: true,
-          child: builder(context),
-        );
-      };
-} 

@@ -21,4 +21,6 @@ String feedPost = 'feed_post_upload';
 String postPageUser = 'post_page_user';
 String postReblog = 'reblog';
 String postDetail = 'post_detail';
+String postDetailFromFeed = 'post_detail_from_feed';
+String postDetailFromUserPage = "post_detail_from_userpage";
 String postWatch = 'post_watch';

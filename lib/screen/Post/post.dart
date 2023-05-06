@@ -14,7 +14,7 @@ class Post extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return post != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,11 +23,7 @@ class Post extends StatelessWidget {
                 post: post,
                 type: type,
               ),
-              PostCenter(
-                post: post,
-                type: type,
-                data: data
-              ),
+              PostCenter(post: post, type: type, data: data),
               PostFooter(
                 post: post,
                 type: type,

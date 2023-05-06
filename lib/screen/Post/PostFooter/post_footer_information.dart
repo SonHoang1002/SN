@@ -12,7 +12,8 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.da
 class PostFooterInformation extends ConsumerWidget {
   final dynamic post;
   final String? type;
-  const PostFooterInformation({Key? key, this.post, this.type})
+  final dynamic preType;
+  const PostFooterInformation({Key? key, this.post, this.type, this.preType})
       : super(key: key);
 
   @override

@@ -19,7 +19,15 @@ class PostCenter extends StatefulWidget {
   final dynamic post;
   final String? type;
   final dynamic data;
-  const PostCenter({Key? key, this.post, this.type, this.data})
+  final dynamic preType;
+  final Function? backFunction;
+  const PostCenter(
+      {Key? key,
+      this.post,
+      this.type,
+      this.data,
+      this.preType,
+      this.backFunction})
       : super(key: key);
 
   @override
@@ -65,7 +73,16 @@ class _PostCenterState extends State<PostCenter> {
                     postType == postAvatarAccount ||
                     postType == postBannerAccount)
                 ? const SizedBox()
-                : PostMedia(post: widget.post, type: widget.type),
+                : PostMedia(
+                    post: widget.post,
+                    type: widget.type,
+                    preType: widget.preType ?? widget.type,
+                    backFunction: () {
+                      widget.backFunction != null
+                          ? widget.backFunction!()
+                          : null;
+                    },
+                  ),
             widget.post['card'] != null &&
                     widget.post['media_attachments'].length == 0
                 ? PostCard(post: widget.post)

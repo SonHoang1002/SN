@@ -5,6 +5,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer_button.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer_information.dart';
+import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/post_list_share.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -13,7 +14,9 @@ import 'package:social_network_app_mobile/widget/reaction_list.dart';
 class PostFooter extends StatelessWidget {
   final dynamic post;
   final dynamic type;
-  const PostFooter({Key? key, this.post, this.type}) : super(key: key);
+  final dynamic preType;
+  const PostFooter({Key? key, this.post, this.type, this.preType})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +30,25 @@ class PostFooter extends StatelessWidget {
                         Navigator.push(
                             context,
                             CupertinoPageRoute(
-                                builder: (context) => PostDetail(post: post)));
+                                builder: (context) => PostDetail(
+                                      post: post,
+                                      preType: type,
+                                    )));
                       }
-                    : null,
-                child: PostFooterInformation(post: post, type: type)),
+                    : () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => CommentPostModal(
+                                      post: post,
+                                      preType: type,
+                                    )));
+                      },
+                child: PostFooterInformation(
+                  post: post,
+                  type: type,
+                  // preType: checkPreType(),
+                )),
         Container(
           height: 1,
           margin: type == postDetail
@@ -41,6 +59,7 @@ class PostFooter extends StatelessWidget {
         PostFooterButton(
           post: post,
           type: type,
+          preType: preType,
         ),
         type != postDetail
             ? const SizedBox()

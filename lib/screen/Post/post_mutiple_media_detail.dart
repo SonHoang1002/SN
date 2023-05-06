@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
@@ -24,7 +26,9 @@ const String closeBottomToTop = "bottomToTop";
 class PostMutipleMediaDetail extends StatefulWidget {
   final int? initialIndex;
   final dynamic post;
-  const PostMutipleMediaDetail({Key? key, this.post, this.initialIndex})
+  final dynamic preType;
+  const PostMutipleMediaDetail(
+      {Key? key, this.post, this.preType, this.initialIndex})
       : super(key: key);
 
   @override
@@ -69,7 +73,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
   }
 
   showAppbar() {
-    // REVERSE: KEOPS TỪ DƯỚI LÊN
+    // REVERSE: KEOS TỪ DƯỚI LÊN
     // ẩn hiện appbar
     // khi người dùng kéo forward xuống trong trường hợp
     // canDrag==true và isDragOutside -> ẩn
@@ -184,7 +188,6 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
 
   @override
   Widget build(BuildContext context) {
-
     List medias = widget.post['media_attachments'];
     final size = MediaQuery.of(context).size;
     final height = size.height;
@@ -197,7 +200,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
             duration: const Duration(milliseconds: 500),
             height: closeDirection == "" ? height : 0,
             width: width,
-            curve: Curves.easeInOut, 
+            curve: Curves.easeInOut,
             transform: Matrix4.translationValues(
                 0,
                 closeDirection == closeBottomToTop
@@ -271,25 +274,27 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                             setState(() {
                               closeDirection = closeBottomToTop;
                             });
-                          } 
+                          }
                         }
                       }
                       return true;
                     },
                     child: Column(
                       children: [
-                        const SizedBox(),
+                        isDragOutside ? buildAppbar() : const SizedBox(),
                         Flexible(
                           flex: 1,
                           child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(
+                                    parent: AlwaysScrollableScrollPhysics())
+                                .applyTo(const ClampingScrollPhysics()),
                             controller: _scrollParentController,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  isDragOutside
-                                      ? buildAppbar()
-                                      : const SizedBox(),
+                                  // isDragOutside
+                                  //     ? buildAppbar()
+                                  //     : const SizedBox(),
                                   const SizedBox(
                                     height: 12.0,
                                   ),
@@ -307,112 +312,107 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                     post: widget.post,
                                     type: postMultipleMedia,
                                   ),
-                                  // const SizedBox(
-                                  //   height: 8.0,
-                                  // ),
                                   const CrossBar(
                                     height: 5,
                                     onlyTop: 5,
                                     onlyBottom: 0,
                                   ),
                                   Column(
-                                    children: List.generate(
-                                        medias.length,
-                                        (index) => Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                // const CrossBar(
-                                                //   height: 5,
-                                                //   onlyTop: 5,
-                                                //   onlyBottom: 0,
-                                                // ),
-                                                GestureDetector(
-                                                    onTap: () {
-                                                      pushCustomVerticalPageRoute(
-                                                          context,
-                                                          PostOneMediaDetail(
-                                                              currentIndex:
-                                                                  index,
-                                                              medias:
-                                                                  medias, //list anh
-                                                              post: widget.post,
-                                                              postMedia: medias[
-                                                                  index], // anh hien tai dang duoc chon
-                                                              backFunction: () {
-                                                                popToPreviousScreen(
-                                                                    context);
-                                                              }),
-                                                          opaque: false);
-                                                    },
-                                                    child: checkIsImage(
-                                                            medias[index])
-                                                        ? Stack(
-                                                            children: [
-                                                              Hero(
-                                                                tag: medias[
-                                                                        index]
-                                                                    ['id'],
-                                                                child: ExtendedImage.network(
-                                                                    medias[index]
-                                                                        ['url'],
-                                                                    key: Key(medias[
-                                                                            index]
-                                                                        ['id']),
-                                                                    width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width,
-                                                                    height: double.parse(medias[index]['meta']["small"]
-                                                                            ["height"]
-                                                                        .toString())
-                                                                    // ImageCacheRender(
-                                                                    //     key: Key(medias[index]['id']
-                                                                    //         .toString()),
-                                                                    //     path: medias[index]['url'],
-                                                                    //     width: MediaQuery.of(context)
-                                                                    //         .size
-                                                                    //         .width,
-                                                                    //     height: double.parse(
-                                                                    //         medias[index]['meta']
-                                                                    //                 ["small"]["height"]
-                                                                    //             .toString())
-                                                                    ),
-                                                              ),
-                                                              // isShowImage &&
-                                                              //         imgIndex ==
-                                                              //             index
-                                                              //     ? SizedBox(
-                                                              //         width: MediaQuery.of(
-                                                              //                 context)
-                                                              //             .size
-                                                              //             .width,
-                                                              //         height: double.parse(medias[index]['meta']["small"]
-                                                              //                 [
-                                                              //                 "height"]
-                                                              //             .toString()))
-                                                              //     : Container()
-                                                            ],
-                                                          )
-                                                        : VideoPlayerNoneController(
-                                                            path: medias[index]
-                                                                ['url'],
-                                                            type: postDetail)),
-                                                PostFooter(
-                                                  post: medias[index],
-                                                  type: postMultipleMedia,
-                                                ),
-                                                const CrossBar(
-                                                  height: 5,
-                                                  onlyTop: 5,
-                                                  onlyBottom: 0,
-                                                ),
-                                              ],
-                                            )),
+                                    children:
+                                        List.generate(medias.length, (index) {
+                                      dynamic mediaData;
+                                      // while(mediaData==null){
+                                      Future.delayed(Duration.zero, () async {
+                                        mediaData = await PostApi()
+                                            .getPostDetailMedia(
+                                                medias[index]['id']);
+                                      });
+                                      // }  
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
+                                              onTap: () {
+                                                pushCustomVerticalPageRoute(
+                                                    context,
+                                                    PostOneMediaDetail(
+                                                        currentIndex: index,
+                                                        medias:
+                                                            medias, //list anh
+                                                        post: widget.post,
+                                                        postMedia: medias[
+                                                            index], // anh hien tai dang duoc chon
+                                                        type: postMultipleMedia,
+                                                        preType: widget.preType,
+                                                        backFunction: () {
+                                                          popToPreviousScreen(
+                                                              context);
+                                                        }),
+                                                    opaque: false);
+                                              },
+                                              child: Stack(
+                                                children: [
+                                                  Hero(
+                                                    tag: medias[index]['id'],
+                                                    child: ExtendedImage.network(
+                                                        medias[index]['url'],
+                                                        key: Key(medias[index]
+                                                            ['id']),
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        height: double.parse(
+                                                            medias[index]['meta']
+                                                                        ["small"]
+                                                                    ["height"]
+                                                                .toString())
+                                                        // ImageCacheRender(
+                                                        //     key: Key(medias[index]['id']
+                                                        //         .toString()),
+                                                        //     path: medias[index]['url'],
+                                                        //     width: MediaQuery.of(context)
+                                                        //         .size
+                                                        //         .width,
+                                                        //     height: double.parse(
+                                                        //         medias[index]['meta']
+                                                        //                 ["small"]["height"]
+                                                        //             .toString())
+                                                        ),
+                                                  ),
+                                                  // isShowImage &&
+                                                  //         imgIndex ==
+                                                  //             index
+                                                  //     ? SizedBox(
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //         height: double.parse(medias[index]['meta']["small"]
+                                                  //                 [
+                                                  //                 "height"]
+                                                  //             .toString()))
+                                                  //     : Container()
+                                                ],
+                                              )),
+                                          PostFooter(
+                                            post: mediaData ?? medias[index],
+                                            type: postMultipleMedia,
+                                            preType: widget.preType,
+                                          ),
+                                          const CrossBar(
+                                            height: 5,
+                                            onlyTop: 5,
+                                            onlyBottom: 0,
+                                          ),
+                                        ],
+                                      );
+                                    }),
                                   ),
                                   Container(
                                     color: transparent,
-                                    height: isDragOutside ? 80 : 20,
+                                    height: isDragOutside ? 100 : 20,
                                   )
                                 ]),
                           ),
@@ -434,7 +434,8 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       automaticallyImplyLeading: false,
       leading: const BackIconAppbar(),
-      title: SizedBox(
+      title: Container(
+        padding: const EdgeInsets.only(right: 30),
         width: size.width - 70,
         child: const Center(
           child: AppBarTitle(
@@ -446,35 +447,3 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

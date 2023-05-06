@@ -47,7 +47,7 @@ class PostCard extends StatelessWidget {
                                 path: card['image'] ??
                                     card['url'] ??
                                     card['link'],
-                                height: 200,
+                                height: 250,
                                 width: size.width),
                             Container(
                               width: size.width,

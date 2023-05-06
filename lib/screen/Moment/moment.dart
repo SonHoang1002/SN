@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/data/moment.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -50,7 +51,12 @@ class _MomentState extends ConsumerState<Moment>
       {"icon": Icons.search, 'type': 'icon'},
     ];
 
-    List momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
+    // List momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
+    List momentSuggests =
+        ref.watch(momentControllerProvider).momentSuggest.isEmpty
+            ? moments
+            : ref.watch(momentControllerProvider).momentSuggest;
+
     List momentFollow = ref.watch(momentControllerProvider).momentFollow;
 
     final size = MediaQuery.of(context).size;

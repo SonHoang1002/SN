@@ -108,7 +108,7 @@ class _PostHeaderState extends State<PostHeader> {
           Navigator.push(
               context,
               CupertinoPageRoute(
-                  builder: (context) => PostDetail(post: widget.post)));
+                  builder: (context) => PostDetail(post: widget.post,preType: widget.type,)));
         }
       },
       child: Padding(

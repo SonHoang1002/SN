@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/data/post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/split_link.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/post_current_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
@@ -19,7 +22,8 @@ import 'comment_tree.dart';
 
 class PostDetail extends ConsumerStatefulWidget {
   final dynamic post;
-  const PostDetail({Key? key, this.post}) : super(key: key);
+  final dynamic preType;
+  const PostDetail({Key? key, this.preType, this.post}) : super(key: key);
 
   @override
   ConsumerState<PostDetail> createState() => _PostDetailState();
@@ -31,6 +35,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   FocusNode commentNode = FocusNode();
   dynamic commentSelected;
   dynamic commentChild;
+  dynamic postData;
+
+  dynamic preUpdateData;
 
   Future getListCommentPost(postId, params) async {
     setState(() {
@@ -68,11 +75,12 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         : null;
     var newCommentPreview = {
       "id": data['id'],
-      "in_reply_to_id": widget.post['id'],
+      "in_reply_to_id": postData['id'],
       "account": ref.watch(meControllerProvider)[0],
       "content": data['status'],
       "typeStatus": data['typeStatus'] ?? "previewComment",
-      "created_at": "2023-02-01T23:04:48.047+07:00",
+      "created_at":
+          '${DateTime.now().toIso8601String().substring(0, 23)}+07:00',
       "backdated_time": "2023-02-01T23:04:48.047+07:00",
       "sensitive": false,
       "spoiler_text": "",
@@ -93,6 +101,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         {"type": "yay", "yays_count": 0}
       ],
       "replies_total": 0,
+      // data['typeStatus'] == 'editComment'
+      //     ? postData["replies_total"]
+      //     : (postData["replies_total"] + 1),
       "score": "109790330095515423",
       "hidden": false,
       "notify": false,
@@ -126,7 +137,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       "target_account": null,
       "media_attachments": [],
       "mentions": [],
-      "tags": [],
+      "tags": data['tags'],
       "replies": [],
       "favourites": [],
       "emojis": [],
@@ -168,14 +179,20 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       postComment = dataPreComment;
       commentChild = data['type'] == 'child' ? newCommentPreview : null;
     });
+    _updatePostCount(
+        addtionalIfChild: data['type'] == 'child' &&
+                data['typeStatus'] != 'editChild' &&
+                data['typeStatus'] != "editComment"
+            ? 1
+            : 0);
 
     dynamic newComment;
-
+    // cal api
     if (!['editComment', 'editChild'].contains(data['typeStatus'])) {
       newComment = await PostApi().createStatus({
             ...data,
             "visibility": "public",
-            "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
+            "in_reply_to_id": data['in_reply_to_id'] ?? postData['id']
           }) ??
           newCommentPreview;
       if (newComment['card'] == null && preCardData != null) {
@@ -225,30 +242,98 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         postComment = dataCommentUpdate;
         commentChild = newComment;
       });
+      if (newComment != null) {
+        _updatePostCount(
+            addtionalIfChild: data['type'] == 'child' &&
+                    data['typeStatus'] != 'editChild' &&
+                    data['typeStatus'] != "editComment"
+                ? 1
+                : 0);
+      }
     }
   }
 
-  getCommentSelected(comment) {  
+  getCommentSelected(comment) {
     setState(() {
       commentSelected = comment;
     });
   }
 
   handleDeleteComment(post) {
+    // print(
+    //     "list data from handleDeleteComment ${postComment.map((e) => e['id']).toList()}");
+    // print("post['id'] ${post['id']}");
+    // print("post['in_reply_to_id'] ${post['in_reply_to_id']}");
     if (post != null) {
-      List newPostComment =
-          postComment.where((element) => element['id'] != post['id']).toList();
+      if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
+        List newPostComment = postComment
+            .where((element) => element['id'] != post['id'])
+            .toList();
+        setState(() {
+          postComment = newPostComment;
+        });
+        _updatePostCount();
+        return;
+      } else if (post['in_reply_to_id'] != null) {
+        // cap nhat so luong khi xoa cmt con
 
-      setState(() {
-        postComment = newPostComment;
-      });
+        postComment.forEach((element) {
+          if (element['id'] == post['in_reply_to_id']) {
+            setState(() {
+              postComment = postComment;
+            });
+            _updatePostCount(subIfChild: 1);
+          }
+        });
+      }
     }
+  }
+
+  _updatePostCount({int? addtionalIfChild, int? subIfChild}) {
+    int countAdditionalIfChild = addtionalIfChild ?? 0;
+    int countSubIfChild = subIfChild ?? 0;
+    dynamic updateCountPostData = postData;
+    dynamic count = postComment.length;
+    postComment.forEach((element) {
+      count += element["replies_total"];
+    });
+    updateCountPostData['replies_total'] =
+        count + countAdditionalIfChild - countSubIfChild;
+    ref
+        .read(postControllerProvider.notifier)
+        .actionUpdatePostCount(widget.preType, updateCountPostData);
   }
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () {
+      ref
+          .read(currentPostControllerProvider.notifier)
+          .saveCurrentPost(widget.post);
+    });
     getListCommentPost(widget.post['id'], {"sort_by": "newest"});
+    // ref.read(postControllerProvider).postUserPage.forEach((element) {
+    //   if (element['id'] == widget.post['id']) {
+    //     postData = element;
+    //     return;
+    //   }
+    // });
+
+    // ref.read(postControllerProvider).posts.forEach((element) {
+    //   if (element['id'] == widget.post['id']) {
+    //     postData = element;
+    //     return;
+    //   }
+    // });
+    // ref.read(postControllerProvider).postsPin.forEach((element) {
+    //   if (element['id'] == widget.post['id']) {
+    //     postData = element;
+    //     return;
+    //   }
+    // });
+    postData =
+        ref.read(currentPostControllerProvider).currentPost ?? widget.post;
   }
 
   @override
@@ -256,10 +341,27 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     super.dispose();
   }
 
+  checkPreType() {
+    dynamic _preType = widget.preType;
+    if (_preType != null) {
+      if (_preType == postPageUser) {
+        return postDetailFromUserPage;
+      }
+      if (_preType == feedPost) {
+        return postDetailFromFeed;
+      }
+      return _preType;
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final commentCount = widget.post['replies_count'] ?? 0;
-
+    postData = ref.watch(currentPostControllerProvider).currentPost.isNotEmpty
+        ? ref.watch(currentPostControllerProvider).currentPost
+        : widget.post;
+    final commentCount = postData['replies_count'] ?? 0;
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
@@ -275,7 +377,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
               const BackIconAppbar(),
               SizedBox(
                 child: PostHeader(
-                  post: widget.post,
+                  post: postData,
                   type: postDetail,
                 ),
               ),
@@ -292,10 +394,25 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PostCenter(
-                        post: widget.post,
+                        post: postData,
                         type: postDetail,
+                        preType: checkPreType(),
+                        backFunction: () async {
+                          List newList = [];
+                          while (newList.isEmpty) {
+                            newList = await PostApi().getListCommentPost(
+                                    widget.post["id"], {"sort_by": "newest"}) ??
+                                [];
+                          }
+                          setState(() {
+                            postComment = newList;
+                          });
+                        },
                       ),
-                      PostFooter(post: widget.post, type: postDetail),
+                      PostFooter(
+                          post: postData,
+                          type: postDetail,
+                          preType: checkPreType()),
                       const SizedBox(
                         height: 8,
                       ),
@@ -309,6 +426,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                                         commentChild?['in_reply_to_id']
                                     ? commentChild
                                     : null,
+                                preType: widget.preType,
                                 commentNode: commentNode,
                                 commentSelected: commentSelected,
                                 commentParent: postComment[index],
@@ -320,7 +438,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                               onTap: isLoadComment
                                   ? null
                                   : () {
-                                      getListCommentPost(widget.post['id'], {
+                                      getListCommentPost(postData['id'], {
                                         "max_id": postComment.last['id'],
                                         "sort_by": "newest"
                                       });

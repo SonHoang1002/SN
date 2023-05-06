@@ -9,9 +9,9 @@ showCustomBottomSheet(BuildContext context, double height, String title,
     {Widget? widget,
     Color? bgColor,
     bool? isBarrierTransparent = false,
+    bool? isHaveHeader = true,
     IconData? iconData}) {
-  final bgColor1 =
-  ThemeMode.dark == true
+  final bgColor1 = ThemeMode.dark == true
       ? Theme.of(context).cardColor
       : const Color(0xfff1f2f5);
   showModalBottomSheet(
@@ -49,33 +49,35 @@ showCustomBottomSheet(BuildContext context, double height, String title,
               ),
             ),
             //  title
-            Container(
-              padding: const EdgeInsets.only(left: 5, right: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      iconData ?? FontAwesomeIcons.close,
-                      // color: white,
-                      // size: 15,
+            isHaveHeader!
+                ? Container(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            iconData ?? FontAwesomeIcons.close,
+                            // color: white,
+                            // size: 15,
+                          ),
+                        ),
+                        Text(
+                          title,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              // color: white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox()
+                      ],
                     ),
-                  ),
-                  Text(
-                    title,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        // color: white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox()
-                ],
-              ),
-            ),
+                  )
+                : SizedBox(),
             //content
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
