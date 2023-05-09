@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Friend/friend_search.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
@@ -176,33 +177,43 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: friends.length,
                       itemBuilder: ((context, index) => ListTile(
-                            visualDensity:
-                                const VisualDensity(vertical: 4, horizontal: 0),
-                            leading: FittedBox(
-                              child: AvatarSocial(
-                                width: 100,
-                                height: 100,
-                                path: friends[index]['avatar_media'] != null
-                                    ? friends[index]['avatar_media']['show_url']
-                                    : friends[index]['avatar_static'],
+                          visualDensity:
+                              const VisualDensity(vertical: 4, horizontal: 0),
+                          leading: FittedBox(
+                            child: AvatarSocial(
+                              width: 100,
+                              height: 100,
+                              path: friends[index]['avatar_media'] != null
+                                  ? friends[index]['avatar_media']['show_url']
+                                  : friends[index]['avatar_static'],
+                            ),
+                          ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(top: 25.0),
+                            child: Text(friends[index]['display_name']),
+                          ),
+                          subtitle: Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: 16.0, top: 4),
+                            child: Text(
+                              '${friends[index]['relationships']['mutual_friend_count'] ?? 0} bạn chung',
+                            ),
+                          ),
+                          trailing: const Padding(
+                            padding: EdgeInsets.only(top: 20.0),
+                            child: Icon(FontAwesomeIcons.ellipsis),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const UserPage(),
+                                settings: RouteSettings(
+                                  arguments: {'id': friends[index]['id']},
+                                ),
                               ),
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 25.0),
-                              child: Text(friends[index]['display_name']),
-                            ),
-                            subtitle: Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 16.0, top: 4),
-                              child: Text(
-                                '${friends[index]['relationships']['mutual_friend_count'] ?? 0} bạn chung',
-                              ),
-                            ),
-                            trailing: const Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Icon(FontAwesomeIcons.ellipsis),
-                            ),
-                          )),
+                            );
+                          })),
                     )
                   ],
                 )

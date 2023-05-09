@@ -19,6 +19,7 @@ class PageState {
   final bool isMoreVideo;
   final List pageGroup;
   final bool isMoreGroup;
+  final dynamic pageDetail;
 
   const PageState(
       {this.rolePage = true,
@@ -34,6 +35,7 @@ class PageState {
       this.pageVideo = const [],
       this.isMoreVideo = true,
       this.pageGroup = const [],
+      this.pageDetail = const {},
       this.isMoreGroup = true});
 
   PageState copyWith(
@@ -50,6 +52,7 @@ class PageState {
       List pageVideo = const [],
       bool isMoreVideo = true,
       List pageGroup = const [],
+      dynamic pageDetail = const {},
       bool isMoreGroup = true}) {
     return PageState(
         rolePage: rolePage,
@@ -65,6 +68,7 @@ class PageState {
         pageVideo: pageVideo,
         isMoreVideo: isMoreVideo,
         pageGroup: pageGroup,
+        pageDetail: pageDetail,
         isMoreGroup: isMoreGroup);
   }
 }
@@ -82,14 +86,40 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: checkObjectUniqueInList(
+              params['page'] == '0'
+                  ? response + state.pageReview
+                  : state.pageReview + response,
+              'id'),
+          isMoreReview: response.isEmpty ? false : true,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup,
+          pageDetail: state.pageDetail,
+        );
+      }
+    }
+  }
+
+  getPageDetail(id) async {
+    var response = await PageApi().fetchPageDetail(id);
+    if (response != null) {
+      if (mounted) {
+        state = state.copyWith(
+            pageDetail: response,
             rolePage: state.rolePage,
             pageFeed: state.pageFeed,
             isMoreFeed: state.isMoreFeed,
-            pageReview: checkObjectUniqueInList(
-                params['page'] == '0'
-                    ? response + state.pageReview
-                    : state.pageReview + response,
-                'id'),
+            pageReview: state.pageReview,
             isMoreReview: response.isEmpty ? false : true,
             pagePined: state.pagePined,
             pagePhoto: state.pagePhoto,
@@ -121,6 +151,7 @@ class PageController extends StateNotifier<PageState> {
             isMoreAlbum: state.isMoreAlbum,
             pageVideo: state.pageVideo,
             isMoreVideo: state.isMoreVideo,
+            pageDetail: state.pageDetail,
             pageGroup:
                 checkObjectUniqueInList(state.pageGroup + response, 'id'),
             isMoreGroup: response.length < params['limit'] ? false : true);
@@ -142,6 +173,7 @@ class PageController extends StateNotifier<PageState> {
             pagePhoto: state.pagePhoto,
             isMorePhoto: state.isMorePhoto,
             pageAlbum: state.pageAlbum,
+            pageDetail: state.pageDetail,
             isMoreAlbum: state.isMoreAlbum,
             pageVideo: state.pageVideo,
             isMoreVideo: state.isMoreVideo,
@@ -160,6 +192,7 @@ class PageController extends StateNotifier<PageState> {
             pageFeed: state.pageFeed,
             isMoreFeed: state.isMoreFeed,
             pageReview: state.pageReview,
+            pageDetail: state.pageDetail,
             isMoreReview: state.isMoreReview,
             pagePined: response,
             pagePhoto: state.pagePhoto,
@@ -183,6 +216,7 @@ class PageController extends StateNotifier<PageState> {
             pageFeed: state.pageFeed,
             isMoreFeed: state.isMoreFeed,
             pageReview: state.pageReview,
+            pageDetail: state.pageDetail,
             isMoreReview: state.isMoreReview,
             pagePined: state.pagePined,
             pagePhoto: state.pagePhoto +
@@ -218,6 +252,7 @@ class PageController extends StateNotifier<PageState> {
             pageReview: state.pageReview,
             isMoreReview: state.isMoreReview,
             pagePined: state.pagePined,
+            pageDetail: state.pageDetail,
             pagePhoto: state.pagePhoto,
             isMorePhoto: state.isMorePhoto,
             pageAlbum: state.pageAlbum + response,
@@ -235,6 +270,7 @@ class PageController extends StateNotifier<PageState> {
       state = state.copyWith(
           rolePage: state.rolePage,
           pageFeed: state.pageFeed,
+          pageDetail: state.pageDetail,
           isMoreFeed: state.isMoreFeed,
           pageReview:
               state.pageReview.where((element) => element['id'] != id).toList(),
@@ -258,6 +294,7 @@ class PageController extends StateNotifier<PageState> {
           pageFeed: state.pageFeed,
           isMoreFeed: state.isMoreFeed,
           pageReview: state.pageReview,
+          pageDetail: state.pageDetail,
           isMoreReview: state.isMoreReview,
           pagePined: state.pagePined,
           pagePhoto: state.pagePhoto,

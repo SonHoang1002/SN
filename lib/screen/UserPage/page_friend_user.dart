@@ -162,7 +162,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    UserPage(),
+                                                    const UserPage(),
                                                 settings: RouteSettings(
                                                   arguments: {
                                                     'id': friendsAll[index]
@@ -263,8 +263,9 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                                     width: 32,
                                     height: 32,
                                     decoration: BoxDecoration(
-                                        color:
-                                            Theme.of(context).backgroundColor,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
                                         shape: BoxShape.circle),
                                     child: Icon(
                                       listMenu[index]['icon'],
