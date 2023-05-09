@@ -640,7 +640,18 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                           return null;
                         },
                       ))
-                    : const SizedBox() // image calendar show null data
+                    : Column(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              "assets/wow-emo-2.gif",
+                              height: 125.0,
+                              width: 125.0,
+                            ),
+                          ),
+                          const Text('Không tìm thấy kết quả nào'),
+                        ],
+                      )
                 : eventsInviteHost.isNotEmpty
                     ? SizedBox(
                         child: ListView.builder(
@@ -1122,7 +1133,18 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                           return null;
                         },
                       ))
-                    : const SizedBox(), // image calendar show null data
+                    : Column(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              "assets/wow-emo-2.gif",
+                              height: 125.0,
+                              width: 125.0,
+                            ),
+                          ),
+                          const Text('Không tìm thấy kết quả nào'),
+                        ],
+                      ),
           ],
         )),
       ),

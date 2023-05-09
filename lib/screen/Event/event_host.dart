@@ -382,7 +382,18 @@ class _EventHostState extends ConsumerState<EventHost> {
                             return null;
                           },
                         ))
-                      : const SizedBox()
+                      : Column(
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                "assets/wow-emo-2.gif",
+                                height: 125.0,
+                                width: 125.0,
+                              ),
+                            ),
+                            const Text('Không tìm thấy kết quả nào'),
+                          ],
+                        )
                   : eventPast.isNotEmpty
                       ? SizedBox(
                           child: ListView.builder(
@@ -591,7 +602,18 @@ class _EventHostState extends ConsumerState<EventHost> {
                             return null;
                           },
                         ))
-                      : const SizedBox(),
+                      : Column(
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                "assets/wow-emo-2.gif",
+                                height: 125.0,
+                                width: 125.0,
+                              ),
+                            ),
+                            const Text('Không tìm thấy kết quả nào'),
+                          ],
+                        ),
               isMore == true
                   ? const Center(child: CupertinoActivityIndicator())
                   : const SizedBox()

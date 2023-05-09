@@ -567,7 +567,18 @@ class _EventCardState extends ConsumerState<EventCard> {
                         return null;
                       },
                     ))
-                  : const SizedBox(),
+                  : Column(
+                      children: [
+                        Center(
+                          child: Image.asset(
+                            "assets/wow-emo-2.gif",
+                            height: 125.0,
+                            width: 125.0,
+                          ),
+                        ),
+                        const Text('Không tìm thấy kết quả nào'),
+                      ],
+                    ),
               isMore == true
                   ? Center(
                       child: CupertinoActivityIndicator(
