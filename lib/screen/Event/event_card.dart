@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_detail.dart';
@@ -40,10 +41,11 @@ class _EventCardState extends ConsumerState<EventCard> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        String maxId = ref.read(eventControllerProvider).events.last['id'];
+        String offset =
+            ref.read(eventControllerProvider).events.length.toString();
         ref
             .read(eventControllerProvider.notifier)
-            .getListEvent({"max_id": maxId, ...paramsConfig});
+            .getListEvent({"offset": offset, ...paramsConfig});
       }
     });
   }
@@ -107,8 +109,11 @@ class _EventCardState extends ConsumerState<EventCard> {
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
                                 child: ImageCacheRender(
-                                  path: events[indexInteresting]['banner']
-                                      ['url'],
+                                  path:
+                                      events[indexInteresting]['banner'] != null
+                                          ? events[indexInteresting]['banner']
+                                              ['url']
+                                          : linkBannerDefault,
                                 ),
                               ),
                               onTap: () {

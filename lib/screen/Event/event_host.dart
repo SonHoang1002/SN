@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -175,8 +176,11 @@ class _EventHostState extends ConsumerState<EventHost> {
                                       topLeft: Radius.circular(15),
                                       topRight: Radius.circular(15)),
                                   child: ImageCacheRender(
-                                    path: events[indexInteresting]['banner']
-                                        ['url'],
+                                    path: events[indexInteresting]['banner'] !=
+                                            null
+                                        ? events[indexInteresting]['banner']
+                                            ['url']
+                                        : linkBannerDefault,
                                   ),
                                 ),
                                 onTap: () {
@@ -376,7 +380,9 @@ class _EventHostState extends ConsumerState<EventHost> {
                                       topLeft: Radius.circular(15),
                                       topRight: Radius.circular(15)),
                                   child: ImageCacheRender(
-                                    path: eventPast[indexPast]['banner']['url'],
+                                    path: eventPast[indexPast]['banner'] != null
+                                        ? eventPast[indexPast]['banner']['url']
+                                        : linkBannerDefault,
                                   ),
                                 ),
                                 onTap: () {

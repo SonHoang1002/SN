@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_detail.dart';
@@ -165,7 +166,11 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                     topRight: Radius.circular(15)),
                                 child: ImageCacheRender(
                                   path: events[indexInteresting]['event']
-                                      ['banner']['url'],
+                                              ['banner'] !=
+                                          null
+                                      ? events[indexInteresting]['event']
+                                          ['banner']['url']
+                                      : linkBannerDefault,
                                 ),
                               ),
                               onTap: () {
@@ -656,7 +661,11 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                     topRight: Radius.circular(15)),
                                 child: ImageCacheRender(
                                   path: eventsInviteHost[indexHost]['event']
-                                      ['banner']['url'],
+                                              ['banner'] !=
+                                          null
+                                      ? eventsInviteHost[indexHost]['event']
+                                          ['banner']['url']
+                                      : linkBannerDefault,
                                 ),
                               ),
                               onTap: () {
