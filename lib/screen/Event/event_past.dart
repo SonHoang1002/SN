@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:provider/provider.dart' as pv;
@@ -32,14 +33,14 @@ class _EventPastState extends ConsumerState<EventPast> {
         Duration.zero,
         () => ref
             .read(eventControllerProvider.notifier)
-            .getListEventHosts(paramsConfigPast));
+            .getListEventPast(paramsConfigPast));
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
         String maxId = ref.read(eventControllerProvider).eventHosts.last['id'];
         ref
             .read(eventControllerProvider.notifier)
-            .getListEventHosts({"max_id": maxId, ...paramsConfigPast});
+            .getListEventPast({"max_id": maxId, ...paramsConfigPast});
       }
     });
   }
@@ -61,114 +62,124 @@ class _EventPastState extends ConsumerState<EventPast> {
     height = size.height;
 
     return Expanded(
-      child: SingleChildScrollView(
-        controller: scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
-              child: Text(
-                'Sự kiện đã qua của bạn',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref
+              .read(eventControllerProvider.notifier)
+              .getListEventPast(paramsConfigPast);
+        },
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+                child: Text(
+                  'Sự kiện đã qua của bạn',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            events.isNotEmpty
-                ? SizedBox(
-                    child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: events.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, indexInteresting) {
-                      if (indexInteresting < events.length) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
-                          child: CardComponents(
-                            imageCard: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15)),
-                              child: ImageCacheRender(
-                                path: events[indexInteresting]['banner'] != null
-                                    ? events[indexInteresting]['banner']['url']
-                                    : linkBannerDefault,
+              events.isNotEmpty
+                  ? SizedBox(
+                      child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: events.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, indexInteresting) {
+                        if (indexInteresting < events.length) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
+                            child: CardComponents(
+                              imageCard: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15)),
+                                child: ImageCacheRender(
+                                  path:
+                                      events[indexInteresting]['banner'] != null
+                                          ? events[indexInteresting]['banner']
+                                              ['url']
+                                          : linkBannerDefault,
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => EventDetail(
+                                            eventDetail:
+                                                events[indexInteresting])));
+                              },
+                              textCard: Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 16.0,
+                                    right: 16.0,
+                                    left: 16.0,
+                                    top: 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: Text(
+                                        GetTimeAgo.parse(DateTime.parse(
+                                            events[indexInteresting]
+                                                ['start_time'])),
+                                        maxLines: 2,
+                                        style: const TextStyle(
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.w700,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: Text(
+                                        events[indexInteresting]['title'],
+                                        style: const TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: Text(
+                                        '${events[indexInteresting]['users_interested_count'].toString()} người quan tâm · ${events[indexInteresting]['users_going_count'].toString()} người tham gia ',
+                                        style: const TextStyle(
+                                          fontSize: 12.0,
+                                          color: greyColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (context) => EventDetail(
-                                          eventDetail:
-                                              events[indexInteresting])));
-                            },
-                            textCard: Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 16.0,
-                                  right: 16.0,
-                                  left: 16.0,
-                                  top: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Text(
-                                      GetTimeAgo.parse(DateTime.parse(
-                                          events[indexInteresting]
-                                              ['start_time'])),
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w700,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Text(
-                                      events[indexInteresting]['title'],
-                                      style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Text(
-                                      '${events[indexInteresting]['users_interested_count'].toString()} người quan tâm · ${events[indexInteresting]['users_going_count'].toString()} người tham gia ',
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
-                                        color: greyColor,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        isMore == true
-                            ? const Center(child: CupertinoActivityIndicator())
-                            : const SizedBox();
-                      }
-                      return null;
-                    },
-                  ))
-                : const SizedBox(),
-            isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
-                : const SizedBox()
-          ],
+                          );
+                        } else {
+                          isMore == true
+                              ? const Center(
+                                  child: CupertinoActivityIndicator())
+                              : const SizedBox();
+                        }
+                        return null;
+                      },
+                    ))
+                  : const SizedBox(),
+              isMore == true
+                  ? const Center(child: CupertinoActivityIndicator())
+                  : const SizedBox()
+            ],
+          ),
         ),
       ),
     );

@@ -68,9 +68,7 @@ class _EventCardState extends ConsumerState<EventCard> {
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {
-          ref
-              .read(eventControllerProvider.notifier)
-              .refreshListEvent(paramsConfig);
+          ref.read(eventControllerProvider.notifier).getListEvent(paramsConfig);
         },
         child: SingleChildScrollView(
           controller: scrollController,

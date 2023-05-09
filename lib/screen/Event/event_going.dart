@@ -37,7 +37,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
         Duration.zero,
         () => ref
             .read(eventControllerProvider.notifier)
-            .getListEventOwner(paramsConfigOwner));
+            .getListEventGoing(paramsConfigOwner));
   }
 
   @override
@@ -47,7 +47,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
 
   @override
   Widget build(BuildContext context) {
-    List events = ref.watch(eventControllerProvider).eventsOwner;
+    List events = ref.watch(eventControllerProvider).eventsGoing;
     bool isMore = ref.watch(eventControllerProvider).isMore;
     final theme = pv.Provider.of<ThemeManager>(context);
 
@@ -60,7 +60,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
         onRefresh: () async {
           ref
               .read(eventControllerProvider.notifier)
-              .getListEventOwner(paramsConfigOwner);
+              .getListEventGoing(paramsConfigOwner);
         },
         child: SingleChildScrollView(
           child: Column(
@@ -218,7 +218,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                                     ref
                                                                         .read(eventControllerProvider
                                                                             .notifier)
-                                                                        .updateStatusEvents(
+                                                                        .updateStatusEventsGoing(
                                                                             events[indexInteresting]['id'],
                                                                             {
                                                                           'status':
@@ -260,7 +260,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                                         groupValue: statusEvent,
                                                                         value: iconEventCare[indexGes]['key'],
                                                                         onChanged: (value) {
-                                                                          ref.read(eventControllerProvider.notifier).updateStatusEvents(
+                                                                          ref.read(eventControllerProvider.notifier).updateStatusEventsGoing(
                                                                               events[indexInteresting]['id'],
                                                                               {
                                                                                 'status': value
@@ -341,7 +341,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                             ref
                                                 .read(eventControllerProvider
                                                     .notifier)
-                                                .updateStatusEvents(
+                                                .updateStatusEventsGoing(
                                                     events[indexInteresting]
                                                         ['id'],
                                                     {'status': 'interested'});
@@ -359,7 +359,6 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                             decoration: BoxDecoration(
                                                 color: statusEvent != ""
                                                     ? secondaryColor
-                                                        .withOpacity(0.45)
                                                     : const Color.fromARGB(
                                                         189, 202, 202, 202),
                                                 borderRadius:
@@ -372,22 +371,18 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
-                                                    children: [
+                                                    children: const [
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets
-                                                                    .only(
+                                                            EdgeInsets.only(
                                                                 bottom: 3.0),
                                                         child: Icon(
                                                             FontAwesomeIcons
                                                                 .solidStar,
-                                                            color: theme
-                                                                    .isDarkMode
-                                                                ? Colors.white
-                                                                : secondaryColor,
+                                                            color: Colors.white,
                                                             size: 14),
                                                       ),
-                                                      const SizedBox(
+                                                      SizedBox(
                                                         width: 5.0,
                                                       ),
                                                       Text(
@@ -398,26 +393,20 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                             fontSize: 12.0,
                                                             fontWeight:
                                                                 FontWeight.w700,
-                                                            color: theme
-                                                                    .isDarkMode
-                                                                ? Colors.white
-                                                                : secondaryColor),
+                                                            color:
+                                                                Colors.white),
                                                       ),
-                                                      const SizedBox(
+                                                      SizedBox(
                                                         width: 5.0,
                                                       ),
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets
-                                                                    .only(
+                                                            EdgeInsets.only(
                                                                 bottom: 5.0),
                                                         child: Icon(
                                                             FontAwesomeIcons
                                                                 .sortDown,
-                                                            color: theme
-                                                                    .isDarkMode
-                                                                ? Colors.white
-                                                                : secondaryColor,
+                                                            color: Colors.white,
                                                             size: 14),
                                                       ),
                                                     ],
@@ -427,16 +416,14 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .center,
-                                                        children: [
+                                                        children: const [
                                                           Icon(
                                                               FontAwesomeIcons
                                                                   .circleCheck,
-                                                              color: theme
-                                                                      .isDarkMode
-                                                                  ? Colors.white
-                                                                  : secondaryColor,
+                                                              color:
+                                                                  Colors.white,
                                                               size: 14),
-                                                          const SizedBox(
+                                                          SizedBox(
                                                             width: 5.0,
                                                           ),
                                                           Text(
@@ -448,29 +435,22 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700,
-                                                                color: theme
-                                                                        .isDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : secondaryColor),
+                                                                color: Colors
+                                                                    .white),
                                                           ),
-                                                          const SizedBox(
+                                                          SizedBox(
                                                             width: 5.0,
                                                           ),
                                                           Padding(
                                                             padding:
-                                                                const EdgeInsets
-                                                                        .only(
+                                                                EdgeInsets.only(
                                                                     bottom:
                                                                         4.0),
                                                             child: Icon(
                                                                 FontAwesomeIcons
                                                                     .sortDown,
-                                                                color: theme
-                                                                        .isDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : secondaryColor,
+                                                                color: Colors
+                                                                    .white,
                                                                 size: 14),
                                                           )
                                                         ],

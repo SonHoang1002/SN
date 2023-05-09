@@ -65,7 +65,7 @@ class _RecruitNewsState extends ConsumerState<RecruitNews> {
             const Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
               child: Text(
-                'Khám phá khoá học',
+                'Tin tuyển dụng của bạn',
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
