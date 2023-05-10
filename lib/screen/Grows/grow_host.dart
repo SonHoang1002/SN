@@ -220,14 +220,11 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                                   borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(15),
                                       topRight: Radius.circular(15)),
-                                  child: Hero(
-                                    tag: grows[indexOwner]['id'] ?? "",
-                                    child: ExtendedImage.network(
-                                      grows[indexOwner]['banner'] != null
-                                          ? grows[indexOwner]['banner']['url']
-                                          : linkBannerDefault,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  child: ExtendedImage.network(
+                                    grows[indexOwner]['banner'] != null
+                                        ? grows[indexOwner]['banner']['url']
+                                        : linkBannerDefault,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                                 onTap: () {
@@ -331,19 +328,14 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                                       borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(15),
                                           topRight: Radius.circular(15)),
-                                      child: Hero(
-                                        tag: growsUpcoming[indexUpcoming]
-                                                ['id'] ??
-                                            "",
-                                        child: ExtendedImage.network(
-                                          growsUpcoming[indexUpcoming]
-                                                      ['banner'] !=
-                                                  null
-                                              ? growsUpcoming[indexUpcoming]
-                                                  ['banner']['url']
-                                              : linkBannerDefault,
-                                          fit: BoxFit.cover,
-                                        ),
+                                      child: ExtendedImage.network(
+                                        growsUpcoming[indexUpcoming]
+                                                    ['banner'] !=
+                                                null
+                                            ? growsUpcoming[indexUpcoming]
+                                                ['banner']['url']
+                                            : linkBannerDefault,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                     onTap: () {
@@ -453,15 +445,12 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                                       borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(15),
                                           topRight: Radius.circular(15)),
-                                      child: Hero(
-                                        tag: growsPast[indexPast]['id'] ?? "",
-                                        child: ExtendedImage.network(
-                                          growsPast[indexPast]['banner'] != null
-                                              ? growsPast[indexPast]['banner']
-                                                  ['url']
-                                              : linkBannerDefault,
-                                          fit: BoxFit.cover,
-                                        ),
+                                      child: ExtendedImage.network(
+                                        growsPast[indexPast]['banner'] != null
+                                            ? growsPast[indexPast]['banner']
+                                                ['url']
+                                            : linkBannerDefault,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                     onTap: () {

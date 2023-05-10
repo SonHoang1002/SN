@@ -246,49 +246,39 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                           borderRadius: const BorderRadius.only(
                                               topLeft: Radius.circular(15),
                                               topRight: Radius.circular(15)),
-                                          child: Hero(
-                                            tag: hosts[index]['account']
-                                                    ['id'] ??
-                                                "",
-                                            child: ExtendedImage.network(
-                                              hosts[index]['account']
-                                                          ['avatar_media'] !=
-                                                      null
-                                                  ? hosts[index]['account']
-                                                      ['avatar_media']['url']
-                                                  : hosts[index]['account']
-                                                      ['avatar_static'],
-                                              fit: BoxFit.cover,
-                                              width: hosts.length > 1
-                                                  ? MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.61
-                                                  : MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.91,
-                                              height: 180.0,
-                                            ),
+                                          child: ExtendedImage.network(
+                                            hosts[index]['account']
+                                                        ['avatar_media'] !=
+                                                    null
+                                                ? hosts[index]['account']
+                                                    ['avatar_media']['url']
+                                                : hosts[index]['account']
+                                                    ['avatar_static'],
+                                            fit: BoxFit.cover,
+                                            width: hosts.length > 1
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.61
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.91,
+                                            height: 180.0,
                                           ),
                                         )
                                       : ClipOval(
-                                          child: Hero(
-                                            tag: hosts[index]['account']
-                                                    ['id'] ??
-                                                "",
-                                            child: ExtendedImage.network(
-                                              hosts[index]['account']
-                                                          ['avatar_media'] !=
-                                                      null
-                                                  ? hosts[index]['account']
-                                                      ['avatar_media']['url']
-                                                  : hosts[index]['account']
-                                                      ['avatar_static'],
-                                              fit: BoxFit.cover,
-                                              width: 180.0,
-                                              height: 180.0,
-                                            ),
+                                          child: ExtendedImage.network(
+                                            hosts[index]['account']
+                                                        ['avatar_media'] !=
+                                                    null
+                                                ? hosts[index]['account']
+                                                    ['avatar_media']['url']
+                                                : hosts[index]['account']
+                                                    ['avatar_static'],
+                                            fit: BoxFit.cover,
+                                            width: 180.0,
+                                            height: 180.0,
                                           ),
                                         ),
                                 ],
@@ -452,19 +442,14 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(15),
                                         topRight: Radius.circular(15)),
-                                    child: Hero(
-                                      tag: grows[indexSuggest]['id'] ?? "",
-                                      child: ExtendedImage.network(
-                                        grows[indexSuggest]['banner'] != null
-                                            ? grows[indexSuggest]['banner']
-                                                ['url']
-                                            : linkBannerDefault,
-                                        fit: BoxFit.cover,
-                                        height: 180.0,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.6,
-                                      ),
+                                    child: ExtendedImage.network(
+                                      grows[indexSuggest]['banner'] != null
+                                          ? grows[indexSuggest]['banner']['url']
+                                          : linkBannerDefault,
+                                      fit: BoxFit.cover,
+                                      height: 180.0,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
                                     ),
                                   ),
                                 ],

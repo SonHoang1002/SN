@@ -162,15 +162,12 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                   ),
                                 ],
                               ),
-                              child: Hero(
-                                tag: growDetail['banner']['url'] ?? "",
-                                child: ClipRRect(
-                                  child: ExtendedImage.network(
-                                    growDetail['banner'] != null
-                                        ? growDetail['banner']['url']
-                                        : linkBannerDefault,
-                                    fit: BoxFit.cover,
-                                  ),
+                              child: ClipRRect(
+                                child: ExtendedImage.network(
+                                  growDetail['banner'] != null
+                                      ? growDetail['banner']['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),

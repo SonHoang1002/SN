@@ -187,19 +187,14 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                 borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
-                                child: Hero(
-                                  tag: grows[indexInteresting]['project']
-                                          ['id'] ??
-                                      "",
-                                  child: ExtendedImage.network(
-                                    grows[indexInteresting]['project']
-                                                ['banner'] !=
-                                            null
-                                        ? grows[indexInteresting]['project']
-                                            ['banner']['url']
-                                        : linkBannerDefault,
-                                    fit: BoxFit.cover,
-                                  ),
+                                child: ExtendedImage.network(
+                                  grows[indexInteresting]['project']
+                                              ['banner'] !=
+                                          null
+                                      ? grows[indexInteresting]['project']
+                                          ['banner']['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                               onTap: () {
@@ -424,19 +419,14 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                 borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
-                                child: Hero(
-                                  tag: growsInviteHost[indexHost]['project']
-                                          ['id'] ??
-                                      "",
-                                  child: ExtendedImage.network(
-                                    growsInviteHost[indexHost]['project']
-                                                ['banner'] !=
-                                            null
-                                        ? growsInviteHost[indexHost]['project']
-                                            ['banner']['url']
-                                        : linkBannerDefault,
-                                    fit: BoxFit.cover,
-                                  ),
+                                child: ExtendedImage.network(
+                                  growsInviteHost[indexHost]['project']
+                                              ['banner'] !=
+                                          null
+                                      ? growsInviteHost[indexHost]['project']
+                                          ['banner']['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                               onTap: () {

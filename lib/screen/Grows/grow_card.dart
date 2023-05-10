@@ -102,14 +102,11 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15)),
-                              child: Hero(
-                                tag: grows[indexInteresting]['id'] ?? "",
-                                child: ExtendedImage.network(
-                                  grows[indexInteresting]['banner'] != null
-                                      ? grows[indexInteresting]['banner']['url']
-                                      : linkBannerDefault,
-                                  fit: BoxFit.cover,
-                                ),
+                              child: ExtendedImage.network(
+                                grows[indexInteresting]['banner'] != null
+                                    ? grows[indexInteresting]['banner']['url']
+                                    : linkBannerDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             onTap: () {

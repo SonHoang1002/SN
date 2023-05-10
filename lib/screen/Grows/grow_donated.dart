@@ -93,14 +93,11 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
                                 borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
-                                child: Hero(
-                                  tag: grows[indexOwner]['id'] ?? "",
-                                  child: ExtendedImage.network(
-                                    grows[indexOwner]['banner'] != null
-                                        ? grows[indexOwner]['banner']['url']
-                                        : linkBannerDefault,
-                                    fit: BoxFit.cover,
-                                  ),
+                                child: ExtendedImage.network(
+                                  grows[indexOwner]['banner'] != null
+                                      ? grows[indexOwner]['banner']['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                               onTap: () {
