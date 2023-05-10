@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +13,6 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 
 class EventCard extends ConsumerStatefulWidget {
@@ -106,12 +106,12 @@ class _EventCardState extends ConsumerState<EventCard> {
                                 borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
-                                child: ImageCacheRender(
-                                  path:
-                                      events[indexInteresting]['banner'] != null
-                                          ? events[indexInteresting]['banner']
-                                              ['url']
-                                          : linkBannerDefault,
+                                child: ExtendedImage.network(
+                                  events[indexInteresting]['banner'] != null
+                                      ? events[indexInteresting]['banner']
+                                          ['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                               onTap: () {
@@ -567,24 +567,26 @@ class _EventCardState extends ConsumerState<EventCard> {
                         return null;
                       },
                     ))
-                  : Column(
-                      children: [
-                        Center(
-                          child: Image.asset(
-                            "assets/wow-emo-2.gif",
-                            height: 125.0,
-                            width: 125.0,
-                          ),
-                        ),
-                        const Text('Không tìm thấy kết quả nào'),
-                      ],
-                    ),
+                  : const SizedBox(),
               isMore == true
                   ? Center(
                       child: CupertinoActivityIndicator(
                           color:
                               theme.isDarkMode ? Colors.white : Colors.black))
-                  : const SizedBox()
+                  : events.isEmpty
+                      ? Column(
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                "assets/wow-emo-2.gif",
+                                height: 125.0,
+                                width: 125.0,
+                              ),
+                            ),
+                            const Text('Không tìm thấy kết quả nào'),
+                          ],
+                        )
+                      : const SizedBox()
             ],
           ),
         ),

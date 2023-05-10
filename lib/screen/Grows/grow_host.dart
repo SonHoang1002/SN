@@ -537,9 +537,10 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                               },
                             ))
                           : const SizedBox(),
-              loading && growHost == 'upcoming' && growsUpcoming.isEmpty ||
-                      growHost == 'now' && grows.isEmpty ||
-                      growHost == 'past' && growsPast.isEmpty ||
+              loading &&
+                          (growHost == 'upcoming' && growsUpcoming.isEmpty ||
+                              growHost == 'now' && grows.isEmpty ||
+                              growHost == 'past' && growsPast.isEmpty) ||
                       isMore == true
                   ? const Center(child: CupertinoActivityIndicator())
                   : growHost == 'upcoming' && growsUpcoming.isEmpty ||

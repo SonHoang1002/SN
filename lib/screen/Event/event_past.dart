@@ -24,23 +24,17 @@ class _EventPastState extends ConsumerState<EventPast> {
   late double height;
   var paramsConfigPast = {"limit": 10, "time": "past"};
   final scrollController = ScrollController();
-
+  bool isLoading = true;
   @override
   void initState() {
     if (!mounted) return;
     super.initState();
-    Future.delayed(
-        Duration.zero,
-        () => ref
-            .read(eventControllerProvider.notifier)
-            .getListEventPast(paramsConfigPast));
+    Future.delayed(Duration.zero, () => fetchData(paramsConfigPast));
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
         String maxId = ref.read(eventControllerProvider).eventHosts.last['id'];
-        ref
-            .read(eventControllerProvider.notifier)
-            .getListEventPast({"max_id": maxId, ...paramsConfigPast});
+        fetchData({"max_id": maxId, ...paramsConfigPast});
       }
     });
   }
@@ -51,12 +45,18 @@ class _EventPastState extends ConsumerState<EventPast> {
     super.dispose();
   }
 
+  void fetchData(params) async {
+    await ref.read(eventControllerProvider.notifier).getListEventPast(params);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List events = ref.watch(eventControllerProvider).eventHosts;
+    List events = ref.watch(eventControllerProvider).eventsPast;
     bool isMore = ref.watch(eventControllerProvider).isMore;
     final theme = pv.Provider.of<ThemeManager>(context);
-
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
@@ -174,21 +174,23 @@ class _EventPastState extends ConsumerState<EventPast> {
                         return null;
                       },
                     ))
-                  : Column(
-                      children: [
-                        Center(
-                          child: Image.asset(
-                            "assets/wow-emo-2.gif",
-                            height: 125.0,
-                            width: 125.0,
-                          ),
-                        ),
-                        const Text('Không tìm thấy kết quả nào'),
-                      ],
-                    ),
-              isMore == true
+                  : const SizedBox(),
+              isLoading && events.isEmpty || isMore == true
                   ? const Center(child: CupertinoActivityIndicator())
-                  : const SizedBox()
+                  : events.isEmpty
+                      ? Column(
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                "assets/wow-emo-2.gif",
+                                height: 125.0,
+                                width: 125.0,
+                              ),
+                            ),
+                            const Text('Không tìm thấy kết quả nào'),
+                          ],
+                        )
+                      : const SizedBox()
             ],
           ),
         ),

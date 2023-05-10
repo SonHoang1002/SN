@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_detail.dart';
@@ -17,7 +19,6 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/Map/map.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -175,14 +176,15 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                       borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(15),
                                           topRight: Radius.circular(15)),
-                                      child: ImageCacheRender(
-                                        path: hosts[index]['account']
+                                      child: ExtendedImage.network(
+                                        hosts[index]['account']
                                                     ['avatar_media'] !=
                                                 null
                                             ? hosts[index]['account']
                                                 ['avatar_media']['url']
                                             : hosts[index]['account']
                                                 ['avatar_static'],
+                                        fit: BoxFit.cover,
                                         width: hosts.length > 1
                                             ? MediaQuery.of(context)
                                                     .size
@@ -193,21 +195,19 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                     .width *
                                                 0.91,
                                         height: 180.0,
-                                      ),
-                                    )
+                                      ))
                                   : ClipOval(
-                                      child: ImageCacheRender(
-                                        path: hosts[index]['account']
-                                                    ['avatar_media'] !=
-                                                null
-                                            ? hosts[index]['account']
-                                                ['avatar_media']['url']
-                                            : hosts[index]['account']
-                                                ['avatar_static'],
-                                        width: 180.0,
-                                        height: 180.0,
-                                      ),
-                                    ),
+                                      child: ExtendedImage.network(
+                                      hosts[index]['account']['avatar_media'] !=
+                                              null
+                                          ? hosts[index]['account']
+                                              ['avatar_media']['url']
+                                          : hosts[index]['account']
+                                              ['avatar_static'],
+                                      fit: BoxFit.cover,
+                                      width: 180.0,
+                                      height: 180.0,
+                                    )),
                             ],
                           ),
                           textCard: Column(
@@ -438,17 +438,22 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15)),
-                                    child: ImageCacheRender(
-                                      path: eventsSuggested[indexSuggest]
-                                          ['banner']['url'],
-                                      height: 180.0,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                    ),
-                                  ),
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15)),
+                                      child: ExtendedImage.network(
+                                        eventsSuggested[indexSuggest]
+                                                    ['banner'] !=
+                                                null
+                                            ? eventsSuggested[indexSuggest]
+                                                ['banner']['url']
+                                            : linkBannerDefault,
+                                        height: 180.0,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        fit: BoxFit.cover,
+                                      )),
                                 ],
                               ),
                               onTap: () {
@@ -942,21 +947,21 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15)),
-                                    child: ImageCacheRender(
-                                      path: groupSuggest[indexGroup]
-                                                  ['banner'] !=
-                                              null
-                                          ? groupSuggest[indexGroup]['banner']
-                                              ['url']
-                                          : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
-                                      height: 180.0,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                    ),
-                                  ),
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15)),
+                                      child: ExtendedImage.network(
+                                        groupSuggest[indexGroup]['banner'] !=
+                                                null
+                                            ? groupSuggest[indexGroup]['banner']
+                                                ['url']
+                                            : linkBannerDefault,
+                                        height: 180.0,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        fit: BoxFit.cover,
+                                      )),
                                 ],
                               ),
                               onTap: () {

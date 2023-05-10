@@ -811,8 +811,9 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                         },
                       ))
                     : const SizedBox(),
-            loading && eventAction && grows.isEmpty ||
-                    !eventAction && growsInviteHost.isEmpty ||
+            loading &&
+                        (eventAction && grows.isEmpty ||
+                            !eventAction && growsInviteHost.isEmpty) ||
                     isMore == true
                 ? const Center(child: CupertinoActivityIndicator())
                 : eventAction && grows.isEmpty ||

@@ -87,7 +87,11 @@ class EventController extends StateNotifier<EventState> {
         events: params.containsKey('max_id')
             ? [...state.events, ...newEvents]
             : newEvents,
-        isMore: response.length < params['limit'] ? false : true,
+        isMore: params.containsKey('max_id') && params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
         hosts: state.hosts,
         groupSuggest: state.groupSuggest,
         posts: state.posts,
@@ -137,7 +141,11 @@ class EventController extends StateNotifier<EventState> {
         eventHosts: state.eventHosts,
         eventsInviteHost: state.eventsInviteHost,
         eventDetail: state.eventDetail,
-        isMore: response.length < params['limit'] ? false : true,
+        isMore: params.containsKey('max_id') && params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
         hosts: state.hosts,
         eventsGoing: state.eventsGoing,
         eventsPast: state.eventsPast,
@@ -176,7 +184,11 @@ class EventController extends StateNotifier<EventState> {
         eventHosts: state.eventHosts,
         eventsInviteHost: state.eventsInviteHost,
         eventDetail: state.eventDetail,
-        isMore: response.length < params['limit'] ? false : true,
+        isMore: params.containsKey('max_id') && params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
         hosts: state.hosts,
         eventsGoing: state.eventsGoing,
         eventsOwner: state.eventsOwner,
@@ -215,7 +227,11 @@ class EventController extends StateNotifier<EventState> {
         eventHosts: state.eventHosts,
         eventsInviteHost: state.eventsInviteHost,
         eventDetail: state.eventDetail,
-        isMore: response.length < params['limit'] ? false : true,
+        isMore: params.containsKey('max_id') && params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
         hosts: state.hosts,
         eventsSuggested: state.eventsSuggested,
         eventsGoing: response,
@@ -252,7 +268,11 @@ class EventController extends StateNotifier<EventState> {
         eventHosts: state.eventHosts,
         eventsInviteHost: state.eventsInviteHost,
         eventDetail: state.eventDetail,
-        isMore: response.length < params['limit'] ? false : true,
+        isMore: params.containsKey('max_id') && params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
         hosts: state.hosts,
         eventsSuggested: state.eventsSuggested,
         eventsGoing: state.eventsGoing,
@@ -446,7 +466,11 @@ class EventController extends StateNotifier<EventState> {
         eventsInvite: state.eventsInvite,
         eventsInviteHost: state.eventsInviteHost,
         eventDetail: state.eventDetail,
-        isMore: response.length < params['limit'] ? false : true,
+        isMore: params.containsKey('max_id') && params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
         hosts: state.hosts,
         eventsSuggested: state.eventsSuggested,
         eventsGoing: state.eventsGoing,

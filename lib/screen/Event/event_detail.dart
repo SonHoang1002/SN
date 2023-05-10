@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_discuss.dart';
@@ -13,7 +15,6 @@ import 'package:social_network_app_mobile/screen/Event/event_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/icon_action_ellipsis.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
@@ -144,13 +145,13 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                   ),
                                 ],
                               ),
-                              child: Hero(
-                                tag: eventDetail['banner']['url'],
-                                child: ClipRRect(
-                                  child: ImageCacheRender(
-                                    path: eventDetail['banner']['url'],
-                                  ),
-                                ),
+                              child: ClipRRect(
+                                child: ExtendedImage.network(
+                                        eventDetail['banner']!= null
+                                            ? eventDetail['banner']['url']
+                                            : linkBannerDefault,
+                                        fit: BoxFit.cover,
+                                      )
                               ),
                             ),
                           ],
