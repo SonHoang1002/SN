@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +9,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_detail.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/Map/map.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../Page/PageDetail/page_detail.dart';
 
 class EventIntro extends ConsumerStatefulWidget {
   final dynamic eventDetail;
@@ -31,7 +38,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
   late double width;
   late double height;
   bool flag = true;
-
+  var eventDetail = {};
   @override
   void initState() {
     super.initState();
@@ -43,11 +50,30 @@ class _EventIntroState extends ConsumerState<EventIntro> {
       firstHalf = widget.eventDetail['description'];
       secondHalf = "";
     }
+    eventDetail = widget.eventDetail;
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _launchMapsApp() async {
+    final latitude = widget.eventDetail['location']['lat'];
+    final longitude = widget.eventDetail['location']['lng'];
+
+    String url;
+    if (Platform.isIOS) {
+      url = 'comgooglemaps://?q=$latitude,$longitude&zoom=13';
+    } else {
+      url =
+          'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    }
+    if (await canLaunch(url)) {
+      await launch(url, forceSafariVC: false);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -150,14 +176,15 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                       borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(15),
                                           topRight: Radius.circular(15)),
-                                      child: ImageCacheRender(
-                                        path: hosts[index]['account']
+                                      child: ExtendedImage.network(
+                                        hosts[index]['account']
                                                     ['avatar_media'] !=
                                                 null
                                             ? hosts[index]['account']
                                                 ['avatar_media']['url']
                                             : hosts[index]['account']
                                                 ['avatar_static'],
+                                        fit: BoxFit.cover,
                                         width: hosts.length > 1
                                             ? MediaQuery.of(context)
                                                     .size
@@ -168,21 +195,19 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                     .width *
                                                 0.91,
                                         height: 180.0,
-                                      ),
-                                    )
+                                      ))
                                   : ClipOval(
-                                      child: ImageCacheRender(
-                                        path: hosts[index]['account']
-                                                    ['avatar_media'] !=
-                                                null
-                                            ? hosts[index]['account']
-                                                ['avatar_media']['url']
-                                            : hosts[index]['account']
-                                                ['avatar_static'],
-                                        width: 180.0,
-                                        height: 180.0,
-                                      ),
-                                    ),
+                                      child: ExtendedImage.network(
+                                      hosts[index]['account']['avatar_media'] !=
+                                              null
+                                          ? hosts[index]['account']
+                                              ['avatar_media']['url']
+                                          : hosts[index]['account']
+                                              ['avatar_static'],
+                                      fit: BoxFit.cover,
+                                      width: 180.0,
+                                      height: 180.0,
+                                    )),
                             ],
                           ),
                           textCard: Column(
@@ -239,36 +264,64 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 ),
                                 Align(
                                   alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    height: 35,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.8,
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            189, 202, 202, 202),
-                                        borderRadius: BorderRadius.circular(6),
-                                        border: Border.all(
-                                            width: 0.2, color: greyColor)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(FontAwesomeIcons.user, size: 14),
-                                        SizedBox(
-                                          width: 5.0,
-                                        ),
-                                        Text(
-                                          'Xem',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w700,
+                                  child: InkWell(
+                                    onTap: () {
+                                      hosts[index]['account']['group']
+                                          ? Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const PageDetail(),
+                                                settings: RouteSettings(
+                                                    arguments: hosts[index]
+                                                            ['account']['id']
+                                                        .toString()),
+                                              ))
+                                          : Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const UserPage(),
+                                                settings: RouteSettings(
+                                                  arguments: {
+                                                    'id': hosts[index]
+                                                        ['account']['id']
+                                                  },
+                                                ),
+                                              ));
+                                    },
+                                    child: Container(
+                                      height: 35,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              189, 202, 202, 202),
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          border: Border.all(
+                                              width: 0.2, color: greyColor)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(FontAwesomeIcons.user, size: 14),
+                                          SizedBox(
+                                            width: 5.0,
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 3.0,
-                                        ),
-                                      ],
+                                          Text(
+                                            'Xem',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 3.0,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -308,7 +361,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     ),
                   ),
                   SizedBox(
-                    height: 380,
+                    height: 180,
                     child: Column(
                       children: [
                         SizedBox(
@@ -321,6 +374,27 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                       ],
                     ),
                   ),
+                  ListTile(
+                    dense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                      vertical: 0.0,
+                    ),
+                    visualDensity: const VisualDensity(
+                      horizontal: -4,
+                      vertical: 0,
+                    ),
+                    leading:
+                        const Icon(FontAwesomeIcons.diamondTurnRight, size: 20),
+                    title: Text(eventDetail['address'] ?? "",
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w700)),
+                    trailing: TextButton(
+                        onPressed: () {
+                          _launchMapsApp();
+                        },
+                        child: const Text('Xem đường đi')),
+                  )
                 ],
               )
             : const SizedBox(),
@@ -364,17 +438,22 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15)),
-                                    child: ImageCacheRender(
-                                      path: eventsSuggested[indexSuggest]
-                                          ['banner']['url'],
-                                      height: 180.0,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                    ),
-                                  ),
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15)),
+                                      child: ExtendedImage.network(
+                                        eventsSuggested[indexSuggest]
+                                                    ['banner'] !=
+                                                null
+                                            ? eventsSuggested[indexSuggest]
+                                                ['banner']['url']
+                                            : linkBannerDefault,
+                                        height: 180.0,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        fit: BoxFit.cover,
+                                      )),
                                 ],
                               ),
                               onTap: () {
@@ -868,21 +947,21 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15)),
-                                    child: ImageCacheRender(
-                                      path: groupSuggest[indexGroup]
-                                                  ['banner'] !=
-                                              null
-                                          ? groupSuggest[indexGroup]['banner']
-                                              ['url']
-                                          : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
-                                      height: 180.0,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                    ),
-                                  ),
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15)),
+                                      child: ExtendedImage.network(
+                                        groupSuggest[indexGroup]['banner'] !=
+                                                null
+                                            ? groupSuggest[indexGroup]['banner']
+                                                ['url']
+                                            : linkBannerDefault,
+                                        height: 180.0,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        fit: BoxFit.cover,
+                                      )),
                                 ],
                               ),
                               onTap: () {

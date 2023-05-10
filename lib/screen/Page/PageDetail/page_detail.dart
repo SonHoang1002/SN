@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -9,14 +10,13 @@ import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/about_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/box_quick_update_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/feed_page.dart';
+import 'package:social_network_app_mobile/screen/Page/PageDetail/group_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/page_pinned_post.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/photo_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/review_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/video_page.dart';
-import 'package:social_network_app_mobile/screen/Page/PageDetail/group_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widget/Banner/banner_base.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
@@ -24,8 +24,12 @@ import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/header_tabs.dart';
 
 class PageDetail extends ConsumerStatefulWidget {
-  final pageData;
-  const PageDetail({super.key, this.pageData});
+  final dynamic pageData;
+
+  const PageDetail({
+    super.key,
+    this.pageData,
+  });
 
   @override
   ConsumerState<PageDetail> createState() => _PageDetailState();
@@ -33,7 +37,7 @@ class PageDetail extends ConsumerStatefulWidget {
 
 class _PageDetailState extends ConsumerState<PageDetail> {
   dynamic pageData;
-  GlobalKey _widgetKey = GlobalKey();
+  final GlobalKey _widgetKey = GlobalKey();
   final scrollController = ScrollController();
   String menuSelected = 'home_page';
   int pageReview = 1;
@@ -45,13 +49,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
   void initState() {
     if (!mounted) return;
     super.initState();
-    if (pageData != null) {
+    if (pageData == null) {
       if (mounted) {
         setState(() {
           pageData = widget.pageData;
         });
       }
     }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox =
           _widgetKey.currentContext?.findRenderObject() as RenderBox;
@@ -342,13 +347,12 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                 ref
                                     .read(pageControllerProvider.notifier)
                                     .switchToRolePage(false);
-                                Navigator.of(context).pop();
                               } else {
                                 ref
                                     .read(pageControllerProvider.notifier)
                                     .switchToRolePage(true);
-                                Navigator.of(context).pop();
                               }
+                              Navigator.of(context).pop();
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -375,7 +379,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                       ),
                                       Text(
                                         listSwitch[index]?['display_name'] ??
-                                            listSwitch[index]['title'],
+                                            listSwitch[index]?['title'],
                                         style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w500),
@@ -406,9 +410,23 @@ class _PageDetailState extends ConsumerState<PageDetail> {
   @override
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)?.settings.arguments != null) {
-      setState(() {
-        pageData = ModalRoute.of(context)?.settings.arguments;
-      });
+      var arguments = ModalRoute.of(context)?.settings.arguments;
+      if (arguments is String) {
+        ref
+            .read(pageControllerProvider.notifier)
+            .getPageDetail(arguments)
+            .then((value) {
+          if (mounted) {
+            setState(() {
+              pageData = ref.watch(pageControllerProvider).pageDetail;
+            });
+          }
+        });
+      } else {
+        setState(() {
+          pageData = arguments;
+        });
+      }
     }
     final theme = pv.Provider.of<ThemeManager>(context);
     var meData = ref.watch(meControllerProvider);
@@ -442,7 +460,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             }
           },
           child: Wrap(children: [
-            Text(rolePage ? pageData['title'] : meData[0]['display_name'],
+            Text(rolePage ? pageData!['title'] : meData[0]['display_name'],
                 style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontSize: 15)),

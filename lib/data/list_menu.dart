@@ -48,6 +48,10 @@ List growMenu = [
     "label": "Khám phá",
   },
   {
+    "key": "grow_invite",
+    "label": "Lời mời",
+  },
+  {
     "key": "grow_donated",
     "label": "Đã ủng hộ",
   },
