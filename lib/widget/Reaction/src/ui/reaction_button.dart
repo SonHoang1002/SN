@@ -178,6 +178,7 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
     final buttonSize = _buttonKey.widgetSize;
     final reactionButton = await Navigator.of(context).push(
       PageRouteBuilder(
+        
         opaque: false,
         pageBuilder: (_, __, ___) {
           return ReactionsBox(
@@ -222,5 +223,4 @@ class CustomNotification extends Notification {
 
   CustomNotification({required this.name, required this.data});
 }
-
 typedef void OnLongPressCallback(DragUpdateDetails details);

@@ -282,151 +282,154 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                       children: [
                         isDragOutside ? buildAppbar() : const SizedBox(),
                         Flexible(
-                          flex: 1,
-                          child: LayoutBuilder(builder: (context, constraints) {
-                            return OverflowBox(
-                              maxHeight: constraints.maxHeight,
+                            flex: 1,
+                            child: Container(
+                              color: transparent,
                               child: SingleChildScrollView(
                                 physics: const BouncingScrollPhysics(),
                                 controller: _scrollParentController,
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // isDragOutside
-                                      //     ? buildAppbar()
-                                      //     : const SizedBox(),
-                                      const SizedBox(
-                                        height: 12.0,
-                                      ),
-                                      PostHeader(
+                                child: Container(
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // isDragOutside
+                                        //     ? buildAppbar()
+                                        //     : const SizedBox(),
+                                        const SizedBox(
+                                          height: 12.0,
+                                        ),
+                                        PostHeader(
+                                            post: widget.post,
+                                            type: postMultipleMedia),
+                                        const SizedBox(
+                                          height: 12.0,
+                                        ),
+                                        PostContent(post: widget.post),
+                                        const SizedBox(
+                                          height: 12.0,
+                                        ),
+                                        PostFooter(
                                           post: widget.post,
-                                          type: postMultipleMedia),
-                                      const SizedBox(
-                                        height: 12.0,
-                                      ),
-                                      PostContent(post: widget.post),
-                                      const SizedBox(
-                                        height: 12.0,
-                                      ),
-                                      PostFooter(
-                                        post: widget.post,
-                                        type: postMultipleMedia,
-                                      ),
-                                      const CrossBar(
-                                        height: 5,
-                                        onlyTop: 5,
-                                        onlyBottom: 0,
-                                      ),
-                                      Column(
-                                        children: List.generate(medias.length,
-                                            (index) {
-                                          dynamic mediaData;
-                                          // while(mediaData==null){
-                                          // Future.delayed(Duration.zero, () async {
-                                          //   mediaData = await PostApi()
-                                          //       .getPostDetailMedia(
-                                          //           medias[index]['id']);
-                                          // });
-                                          // }
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    pushCustomVerticalPageRoute(
-                                                        context,
-                                                        PostOneMediaDetail(
-                                                            currentIndex: index,
-                                                            medias:
-                                                                medias, //list anh
-                                                            post: widget.post,
-                                                            postMedia: medias[
-                                                                index], // anh hien tai dang duoc chon
-                                                            type:
-                                                                postMultipleMedia,
-                                                            preType:
-                                                                widget.preType,
-                                                            backFunction: () {
-                                                              popToPreviousScreen(
-                                                                  context);
-                                                            }),
-                                                        opaque: false);
-                                                  },
-                                                  child: Stack(
-                                                    children: [
-                                                      Hero(
-                                                        tag: medias[index]
-                                                            ['id'],
-                                                        child: ExtendedImage.network(
-                                                            medias[index]
-                                                                ['url'],
-                                                            key: Key(
-                                                                medias[index]
-                                                                    ['id']),
-                                                            fit: BoxFit.cover,
-                                                            width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width,
-                                                            height: double.parse(
-                                                                medias[index]['meta']
-                                                                            ["small"]
-                                                                        ["height"]
-                                                                    .toString())
-                                                            // ImageCacheRender(
-                                                            //     key: Key(medias[index]['id']
-                                                            //         .toString()),
-                                                            //     path: medias[index]['url'],
-                                                            //     width: MediaQuery.of(context)
-                                                            //         .size
-                                                            //         .width,
-                                                            //     height: double.parse(
-                                                            //         medias[index]['meta']
-                                                            //                 ["small"]["height"]
-                                                            //             .toString())
-                                                            ),
-                                                      ),
-                                                      // isShowImage &&
-                                                      //         imgIndex ==
-                                                      //             index
-                                                      //     ? SizedBox(
-                                                      //         width: MediaQuery.of(
-                                                      //                 context)
-                                                      //             .size
-                                                      //             .width,
-                                                      //         height: double.parse(medias[index]['meta']["small"]
-                                                      //                 [
-                                                      //                 "height"]
-                                                      //             .toString()))
-                                                      //     : Container()
-                                                    ],
-                                                  )),
-                                              PostFooter(
-                                                post:
-                                                    mediaData ?? medias[index],
-                                                type: postMultipleMedia,
-                                                preType: widget.preType,
-                                              ),
-                                              const CrossBar(
-                                                height: 5,
-                                                onlyTop: 5,
-                                                onlyBottom: 0,
-                                              ),
-                                            ],
-                                          );
-                                        }),
-                                      ),
-                                      Container(
-                                        color: transparent,
-                                        height: isDragOutside ? 100 : 20,
-                                      )
-                                    ]),
+                                          type: postMultipleMedia,
+                                        ),
+                                        const CrossBar(
+                                          height: 5,
+                                          onlyTop: 5,
+                                          onlyBottom: 0,
+                                        ),
+                                        Column(
+                                          children: List.generate(medias.length,
+                                              (index) {
+                                            dynamic mediaData;
+                                            // while(mediaData==null){
+                                            // Future.delayed(Duration.zero, () async {
+                                            //   mediaData = await PostApi()
+                                            //       .getPostDetailMedia(
+                                            //           medias[index]['id']);
+                                            // });
+                                            // }
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      pushCustomVerticalPageRoute(
+                                                          context,
+                                                          PostOneMediaDetail(
+                                                              currentIndex:
+                                                                  index,
+                                                              medias:
+                                                                  medias, //list anh
+                                                              post: widget.post,
+                                                              postMedia: medias[
+                                                                  index], // anh hien tai dang duoc chon
+                                                              type:
+                                                                  postMultipleMedia,
+                                                              preType: widget
+                                                                  .preType,
+                                                              backFunction: () {
+                                                                popToPreviousScreen(
+                                                                    context);
+                                                              }),
+                                                          opaque: false);
+                                                    },
+                                                    child: Stack(
+                                                      children: [
+                                                        Hero(
+                                                          tag: medias[index]
+                                                              ['id'],
+                                                          child: ExtendedImage.network(
+                                                              medias[index]
+                                                                  ['url'],
+                                                              key: Key(
+                                                                  medias[index]
+                                                                      ['id']),
+                                                              fit: BoxFit.cover,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              height: double.parse(
+                                                                  medias[index]['meta']
+                                                                              ["small"]
+                                                                          ["height"]
+                                                                      .toString())
+                                                              // ImageCacheRender(
+                                                              //     key: Key(medias[index]['id']
+                                                              //         .toString()),
+                                                              //     path: medias[index]['url'],
+                                                              //     width: MediaQuery.of(context)
+                                                              //         .size
+                                                              //         .width,
+                                                              //     height: double.parse(
+                                                              //         medias[index]['meta']
+                                                              //                 ["small"]["height"]
+                                                              //             .toString())
+                                                              ),
+                                                        ),
+                                                        // isShowImage &&
+                                                        //         imgIndex ==
+                                                        //             index
+                                                        //     ? SizedBox(
+                                                        //         width: MediaQuery.of(
+                                                        //                 context)
+                                                        //             .size
+                                                        //             .width,
+                                                        //         height: double.parse(medias[index]['meta']["small"]
+                                                        //                 [
+                                                        //                 "height"]
+                                                        //             .toString()))
+                                                        //     : Container()
+                                                      ],
+                                                    )),
+                                                PostFooter(
+                                                  post: mediaData ??
+                                                      medias[index],
+                                                  type: postMultipleMedia,
+                                                  preType: widget.preType,
+                                                ),
+                                                const CrossBar(
+                                                  height: 5,
+                                                  onlyTop: 5,
+                                                  onlyBottom: 0,
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                        ),
+                                        Container(
+                                          color: transparent,
+                                          height: isDragOutside ? 100 : 20,
+                                        )
+                                      ]),
+                                ),
                               ),
-                            );
-                          }),
-                        ),
+                            )),
                       ],
                     ),
                   ),
@@ -463,6 +466,37 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
         : widget.post["page"] != null
             ? widget.post["page"]['title'] ?? ""
             : widget.post["account"]['display_name'] ?? "";
+  }
+}
+
+class CustomBouncingScrollPhysics extends BouncingScrollPhysics {
+  const CustomBouncingScrollPhysics({ScrollPhysics? parent})
+      : super(parent: parent);
+
+  @override
+  CustomBouncingScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return CustomBouncingScrollPhysics(parent: buildParent(ancestor));
+  }
+
+  @override
+  double applyBoundaryConditions(ScrollMetrics position, double value) {
+    if (value < position.pixels &&
+        position.pixels <= position.minScrollExtent) {
+      return value - position.pixels;
+    }
+    if (position.maxScrollExtent <= position.pixels &&
+        position.pixels < value) {
+      return value - position.pixels;
+    }
+    if (value < position.minScrollExtent &&
+        position.minScrollExtent < position.pixels) {
+      return value - position.minScrollExtent;
+    }
+    if (position.maxScrollExtent < value &&
+        position.pixels < position.maxScrollExtent) {
+      return value - position.maxScrollExtent;
+    }
+    return 0.0;
   }
 }
 
