@@ -134,7 +134,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
       });
     }
 
-    handleChooseEntity(entity) { 
+    handleChooseEntity(entity) {
       if (renderType == 'groups') {
         setState(() {
           groupShareSelected = {...entity, 'entityType': 'group'};
@@ -155,22 +155,22 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
     List menuShare = [
       {
         "key": "share_now",
-        "icon": FontAwesomeIcons.solidComment,
+        "icon": "assets/icons/chia_se_qua_chat_black.png",
         "label": "Gửi qua EmsoChat"
       },
       {
         "key": "share_group",
-        "icon": FontAwesomeIcons.userGroup,
+        "icon": "assets/icons/chia_se_len_nhom_black.png",
         "label": "Chia sẻ lên một nhóm"
       },
       {
         "key": "share_page",
-        "icon": FontAwesomeIcons.solidFlag,
+        "icon": "assets/icons/chia_se_ngay_black.png",
         "label": "Chia sẻ lên trang của bạn"
       },
       {
         "key": "share_user_page_other",
-        "icon": FontAwesomeIcons.solidUser,
+        "icon": "assets/icons/chia_se_len_nhom_black.png",
         "label": "Chia sẻ lên trang cá nhân của bạn bè"
       }
     ];
@@ -369,7 +369,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                               : groupShareSelected != null
                                   ? SizedBox(
                                       child: PageGroupShared(
-                                        page: groupShareSelected ,
+                                        page: groupShareSelected,
                                       ),
                                     )
                                   : const SizedBox(),
@@ -391,15 +391,15 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                                       child: Row(
                                         children: [
                                           Container(
-                                            width: 34,
-                                            height: 34,
+                                            width: 25,
+                                            height: 25,
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 color: secondaryColorSelected),
-                                            child: Icon(
+                                            child: Image.asset(
                                               menuShare[index]['icon'],
-                                              size: 16,
-                                              color: secondaryColor,
+                                              height: 15,
+                                              color: blackColor,
                                             ),
                                           ),
                                           const SizedBox(
@@ -473,10 +473,10 @@ class PageGroupShared extends StatelessWidget {
                   ),
                   colorButton: greyColorOutlined,
                   colorText: Theme.of(context).textTheme.bodyMedium?.color,
-                  label:
-                     page['page_relationship']!=null && page['page_relationship']['like'] ? 'Đã thích' : 'Thích'
-                     ,
-                      
+                  label: page['page_relationship'] != null &&
+                          page['page_relationship']['like']
+                      ? 'Đã thích'
+                      : 'Thích',
                   handlePress: () {},
                 )
               ],

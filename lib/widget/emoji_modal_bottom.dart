@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -171,9 +172,12 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
                                   widget.functionGetEmoji(
                                       gifs[index]['images']['original']['url']);
                                 },
-                                child: ImageCacheRender(
-                                    path: gifs[index]['images']['original']
-                                        ['url']),
+                                // child: ImageCacheRender(
+                                //     path: gifs[index]['images']['original']
+                                //         ['url']),
+                                child: ExtendedImage.network(
+                                  gifs[index]['images']['original']['url'],
+                                ),
                               );
                             })
                   ]),

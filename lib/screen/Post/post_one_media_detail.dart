@@ -54,7 +54,6 @@ class PostOneMediaDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
   final dynamic preType;
-
   const PostOneMediaDetail(
       {Key? key,
       this.postMedia,
@@ -87,6 +86,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
   double? _currentPosition;
 
   double progress = 0;
+  dynamic tag;
   @override
   void initState() {
     super.initState();
@@ -117,19 +117,12 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
     _initialPosition = 0;
     _currentPosition = _initialPosition;
 
-    // List<UniqueKey> _dismissUniqueKeyList = widget.medias != null
-    //     ? widget.medias!.map((e) => UniqueKey()).toList()
-    //     : postRender['media_attachments'] != null
-    //         ? postRender['media_attachments'].map((e) => UniqueKey()).toList()
-    //         : [UniqueKey()];
-    // dismissUniqueKeyList = _dismissUniqueKeyList;
+    tag = postRender['media_attachments']?[0]?['id'] ?? postRender['id'];
   }
 
   @override
   void dispose() {
     super.dispose();
-
-    // dismissUniqueKeyList.removeAll(dismissUniqueKeyList);
   }
 
   void showActionSheet(BuildContext context, {required objectItem}) {
@@ -183,7 +176,6 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
         : userData;
     String path =
         postRender['media_attachments']?[0]?['url'] ?? postRender['url'];
-    final tag = postRender['media_attachments']?[0]?['id'] ?? postRender['id'];
     final size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
@@ -230,10 +222,9 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                             setState(() {
                               opacityValue = 0.0;
                             });
-                            widget.backFunction != null
-                                ? widget.backFunction!()
-                                : null;
-
+                            // widget.backFunction != null
+                            //     ? widget.backFunction!()
+                            //     : null;
                             popToPreviousScreen(context);
                           }
                         },
@@ -241,12 +232,11 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                           direction: DismissDirection.vertical,
                           key: const Key("dismiss"),
                           resizeDuration: const Duration(milliseconds: 0),
-                          onDismissed: (direction) {
-                            widget.backFunction != null
-                                ? widget.backFunction!()
-                                : null;
-
+                          onDismissed: (direction) { 
                             popToPreviousScreen(context);
+                          },
+                          confirmDismiss: (direction) async {
+                            return false;
                           },
                           onUpdate: (details) {
                             if (details.progress != 0.0) {
@@ -271,7 +261,9 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                             });
                           },
                           child: Hero(
-                            tag: tag,
+                            tag: postRender['media_attachments']?[index]
+                                    ?['id'] ??
+                                postRender['id'],
                             child: ExtendedImage.network(
                               pathImg,
                               fit: BoxFit.contain,
@@ -328,15 +320,6 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
     );
   }
 
-  dynamic imagePost(dynamic path, double width, double height) {
-    return ImageCacheRender(
-      // key: _imageKeyDrag,
-      path: path,
-      width: width,
-      height: height,
-    );
-  }
-
   void pushToScreen() {
     final currentRouter = ModalRoute.of(context)?.settings.name;
     final account = userData['account'] ?? {};
@@ -354,48 +337,6 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
             ),
           ));
     }
-  }
-
-  Widget buildDragWidget(dynamic tag, Widget child) {
-    return Draggable(
-      axis: Axis.vertical,
-      feedback: Container(
-          // height: MediaQuery.of(context).size.width,
-          // width: MediaQuery.of(context).size.width,
-          // transform: Matrix4.translationValues(
-          //     -MediaQuery.of(context).size.width / 2, -200, 0.0),
-          child: child),
-      onDragStarted: () {
-        setState(() {
-          _isDragging = true;
-        });
-      },
-      childWhenDragging: const SizedBox(),
-      onDragUpdate: (details) {
-        _dragOffset = details.globalPosition.dy - details.globalPosition.dy;
-        double differY =
-            (details.globalPosition.dy - MediaQuery.of(context).size.height / 2)
-                .abs();
-        if (_imageKey.currentContext != null) {
-          final RenderBox renderBox =
-              _imageKey.currentContext!.findRenderObject() as RenderBox;
-          final size = renderBox.size;
-        }
-        setState(() {
-          _dragOffset = _dragOffset! + details.delta.dy;
-        });
-      },
-      onDragEnd: (details) {
-        if (_dragOffset!.abs() > 100) {
-          widget.backFunction != null ? widget.backFunction!() : null;
-        }
-        setState(() {
-          _isDragging = false;
-        });
-      },
-      child:
-          Container(color: Colors.black, child: Hero(tag: tag, child: child)),
-    );
   }
 
   handleUpdateData(type) {
@@ -509,14 +450,14 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                         buildTextContentButton(
                                             userData["group"] != null
                                                 ? userData["group"]['title'] ??
-                                                    "Kiểm tra group"
+                                                    ""
                                                 : userData["page"] != null
                                                     ? userData["page"]
                                                             ['title'] ??
-                                                        "Kiểm tra page"
+                                                        ""
                                                     : userData["account"]
                                                             ['display_name'] ??
-                                                        "hello",
+                                                        "",
                                             true,
                                             colorWord: white,
                                             fontSize: 14, function: () {
@@ -583,19 +524,3 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
             : const SizedBox();
   }
 }
-// RenderBox? renderContentBox;
-// if (_contentKey.currentContext != null) {
-//   renderContentBox =
-//       _contentKey.currentContext!.findRenderObject() as RenderBox;
-// }
-// double? imageHeight;
-// double? imageWidth;
-// final metaPost =
-//     postRender['media_attachments']?[0]?['meta'] ?? postRender['meta'];
-// if (metaPost["small"] != null) {
-//   imageHeight = double.parse(metaPost["small"]["height"].toString());
-//   imageWidth = double.parse(metaPost["small"]["width"].toString()) >
-//           MediaQuery.of(context).size.width
-//       ? MediaQuery.of(context).size.width
-//       : double.parse(metaPost["small"]["width"].toString());
-// }

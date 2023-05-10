@@ -433,7 +433,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         content.length > 150 ||
         checkin != null ||
         previewUrlData != null) {
-      
       return false;
     } else {
       return true;
@@ -688,7 +687,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   Widget mainBody() {
-   final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Container(
       // decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
       child: SingleChildScrollView(
@@ -745,9 +744,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     files.isNotEmpty ||
                     statusQuestion != null ||
                     checkin != null)
-                  Positioned(
-                      top: statusQuestion != null ? 20 : 10,
-                      right: statusQuestion != null ? 20 : 10,
+                  Container(
+                      margin: EdgeInsets.only(
+                          top: statusQuestion != null ? 20 : 10,
+                          right: statusQuestion != null ? 20 : 10),
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -773,9 +773,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                         ),
                       )),
                 if (files.isNotEmpty)
-                  Positioned(
-                      top: 2,
-                      left: 10,
+                  Container(
+                      margin: const EdgeInsets.only(
+                        top: 2,
+                        left: 10,
+                      ),
                       child: SizedBox(
                         width: 100,
                         child: ButtonPrimary(

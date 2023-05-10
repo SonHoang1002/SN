@@ -7,7 +7,8 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 
 class Moment extends ConsumerStatefulWidget {
   final bool? isBack;
-  const Moment({Key? key, this.isBack}) : super(key: key);
+  final dynamic dataFromReef;
+  const Moment({Key? key, this.isBack, this.dataFromReef}) : super(key: key);
 
   @override
   ConsumerState<Moment> createState() => _MomentState();
@@ -51,11 +52,13 @@ class _MomentState extends ConsumerState<Moment>
       {"icon": Icons.search, 'type': 'icon'},
     ];
 
-    // List momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
     List momentSuggests =
         ref.watch(momentControllerProvider).momentSuggest.isEmpty
             ? moments
             : ref.watch(momentControllerProvider).momentSuggest;
+    if (widget.dataFromReef != null && widget.dataFromReef.isNotEmpty) {
+      momentSuggests.insert(0, widget.dataFromReef);
+    }
 
     List momentFollow = ref.watch(momentControllerProvider).momentFollow;
 

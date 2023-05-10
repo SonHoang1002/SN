@@ -423,14 +423,14 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
             }).toList());
         listRender.add(textSpan);
       }
-      String text = postRender['content']; 
+      String text = postRender['content'];
       for (var mention in tags) {
         text = text.replaceAll('[${mention['entity_id']}]', mention['name']);
         // text = mention['name'];
       }
       setState(() {
         textRender = text;
-      }); 
+      });
       return listRender;
     }
     // handleGetComment() {
