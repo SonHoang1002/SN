@@ -601,13 +601,18 @@ class EventController extends StateNotifier<EventState> {
     final index = state.eventsInvite
         .indexWhere((element) => element['event']['id'] == id.toString());
     final eventsInvite = state.eventsInvite[index];
-    final updatedEvent = {
+
+    var updatedEvent = {
       ...eventsInvite,
-      'event_relationship': {
-        ...eventsInvite['event_relationship'],
-        'status': data['status'] ?? '',
+      'event': {
+        ...eventsInvite['event'],
+        'event_relationship': {
+          ...(eventsInvite['event']['event_relationship'] ?? {}),
+          'status': data['status'] ?? '',
+        },
       },
     };
+
     state = state.copyWith(
       eventsInvite: [
         ...state.eventsInvite.sublist(0, index),

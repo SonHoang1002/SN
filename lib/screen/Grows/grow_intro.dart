@@ -1,17 +1,20 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/text_readmore.dart';
 
+import '../Page/PageDetail/page_detail.dart';
+import '../UserPage/user_page.dart';
 import 'grow_detail.dart';
 
 class GrowIntro extends ConsumerStatefulWidget {
@@ -243,37 +246,49 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                           borderRadius: const BorderRadius.only(
                                               topLeft: Radius.circular(15),
                                               topRight: Radius.circular(15)),
-                                          child: ImageCacheRender(
-                                            path: hosts[index]['account']
-                                                        ['avatar_media'] !=
-                                                    null
-                                                ? hosts[index]['account']
-                                                    ['avatar_media']['url']
-                                                : hosts[index]['account']
-                                                    ['avatar_static'],
-                                            width: hosts.length > 1
-                                                ? MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.61
-                                                : MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.91,
-                                            height: 180.0,
+                                          child: Hero(
+                                            tag: hosts[index]['account']
+                                                    ['id'] ??
+                                                "",
+                                            child: ExtendedImage.network(
+                                              hosts[index]['account']
+                                                          ['avatar_media'] !=
+                                                      null
+                                                  ? hosts[index]['account']
+                                                      ['avatar_media']['url']
+                                                  : hosts[index]['account']
+                                                      ['avatar_static'],
+                                              fit: BoxFit.cover,
+                                              width: hosts.length > 1
+                                                  ? MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.61
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.91,
+                                              height: 180.0,
+                                            ),
                                           ),
                                         )
                                       : ClipOval(
-                                          child: ImageCacheRender(
-                                            path: hosts[index]['account']
-                                                        ['avatar_media'] !=
-                                                    null
-                                                ? hosts[index]['account']
-                                                    ['avatar_media']['url']
-                                                : hosts[index]['account']
-                                                    ['avatar_static'],
-                                            width: 180.0,
-                                            height: 180.0,
+                                          child: Hero(
+                                            tag: hosts[index]['account']
+                                                    ['id'] ??
+                                                "",
+                                            child: ExtendedImage.network(
+                                              hosts[index]['account']
+                                                          ['avatar_media'] !=
+                                                      null
+                                                  ? hosts[index]['account']
+                                                      ['avatar_media']['url']
+                                                  : hosts[index]['account']
+                                                      ['avatar_static'],
+                                              fit: BoxFit.cover,
+                                              width: 180.0,
+                                              height: 180.0,
+                                            ),
                                           ),
                                         ),
                                 ],
@@ -332,38 +347,66 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                     left: 16.0, right: 16.0),
                                 child: Align(
                                   alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    height: 35,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.8,
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            189, 202, 202, 202),
-                                        borderRadius: BorderRadius.circular(6),
-                                        border: Border.all(
-                                            width: 0.2, color: greyColor)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(FontAwesomeIcons.user,
-                                            color: Colors.black, size: 14),
-                                        SizedBox(
-                                          width: 5.0,
-                                        ),
-                                        Text(
-                                          'Xem',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
+                                  child: InkWell(
+                                    onTap: () {
+                                      hosts[index]['account']['group']
+                                          ? Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const PageDetail(),
+                                                settings: RouteSettings(
+                                                    arguments: hosts[index]
+                                                            ['account']['id']
+                                                        .toString()),
+                                              ))
+                                          : Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const UserPage(),
+                                                settings: RouteSettings(
+                                                  arguments: {
+                                                    'id': hosts[index]
+                                                        ['account']['id']
+                                                  },
+                                                ),
+                                              ));
+                                    },
+                                    child: Container(
+                                      height: 35,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              189, 202, 202, 202),
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          border: Border.all(
+                                              width: 0.2, color: greyColor)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(FontAwesomeIcons.user,
+                                              color: Colors.black, size: 14),
+                                          SizedBox(
+                                            width: 5.0,
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 3.0,
-                                        ),
-                                      ],
+                                          Text(
+                                            'Xem',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 3.0,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -409,12 +452,19 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(15),
                                         topRight: Radius.circular(15)),
-                                    child: ImageCacheRender(
-                                      path: grows[indexSuggest]['banner']
-                                          ['url'],
-                                      height: 180.0,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
+                                    child: Hero(
+                                      tag: grows[indexSuggest]['id'] ?? "",
+                                      child: ExtendedImage.network(
+                                        grows[indexSuggest]['banner'] != null
+                                            ? grows[indexSuggest]['banner']
+                                                ['url']
+                                            : linkBannerDefault,
+                                        fit: BoxFit.cover,
+                                        height: 180.0,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                      ),
                                     ),
                                   ),
                                 ],

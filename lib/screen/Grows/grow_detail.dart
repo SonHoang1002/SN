@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
@@ -13,7 +15,6 @@ import 'package:social_network_app_mobile/screen/Grows/grow_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Payment/modal_donate.dart';
 import 'package:social_network_app_mobile/widget/icon_action_ellipsis.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
 class GrowDetail extends ConsumerStatefulWidget {
@@ -164,8 +165,11 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                               child: Hero(
                                 tag: growDetail['banner']['url'] ?? "",
                                 child: ClipRRect(
-                                  child: ImageCacheRender(
-                                    path: growDetail['banner']['url'] ?? "",
+                                  child: ExtendedImage.network(
+                                    growDetail['banner'] != null
+                                        ? growDetail['banner']['url']
+                                        : linkBannerDefault,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
@@ -361,7 +365,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                             .read(
                                                                 growControllerProvider
                                                                     .notifier)
-                                                            .updateStatusGrow(
+                                                            .updateStatusGrowDetail(
                                                                 growDetail[
                                                                     'id'],
                                                                 false);
@@ -370,7 +374,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                             .read(
                                                                 growControllerProvider
                                                                     .notifier)
-                                                            .updateStatusGrow(
+                                                            .updateStatusGrowDetail(
                                                                 growDetail[
                                                                     'id'],
                                                                 true);
