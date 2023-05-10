@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+// import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image/image.dart' as img;
 import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 
 ///
@@ -48,6 +49,46 @@ class DrishyaEntity extends AssetEntity {
 
   /// Field where asset is stored
   final File? pickedFile;
+
+  //  Future<Uint8List?> thumbnailDataWithQuality(int quality) async {
+  //   if (type == AssetType.image || type == AssetType.video) {
+  //     Uint8List? thumbnailBytes;
+  //     if (pickedThumbData != null) {
+  //       thumbnailBytes = pickedThumbData;
+  //     } else {
+  //       thumbnailBytes = await thumbnailData;
+  //     }
+  //     if (thumbnailBytes != null) {
+  //       final thumbnailWithQuality = await FlutterImageCompress.compressWithList(
+  //         thumbnailBytes,
+  //         quality: quality,
+  //       );
+  //       return thumbnailWithQuality;
+  //     }
+  //   }
+  //   return null;
+  // }
+
+  Future<Uint8List?> thumbnailDataWithQuality(int quality) async {
+    if (type == AssetType.image || type == AssetType.video) {
+      Uint8List? thumbnailBytes;
+
+      if (pickedThumbData != null) {
+        thumbnailBytes = pickedThumbData;
+      } else {
+        thumbnailBytes = await thumbnailData;
+      }
+
+      if (thumbnailBytes != null) {
+        final image = img.decodeImage(thumbnailBytes);
+        if (image != null) {
+          final thumbnailWithQuality = img.encodeJpg(image, quality: quality);
+          return Uint8List.fromList(thumbnailWithQuality);
+        }
+      }
+    }
+    return null;
+  }
 
   ///
   @override

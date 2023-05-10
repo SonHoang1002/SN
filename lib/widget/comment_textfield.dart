@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -54,6 +55,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   double heightModal = 250;
 
   String content = '';
+  // String contentWithId = "";
   String flagContent = '';
   String preMessage = '';
 
@@ -259,6 +261,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         "status": checkHasMention(widget.commentSelected)
             ? '[${widget.commentSelected['account']['id']}] $content'
             : content,
+        // "contentWithId": contentWithId,
         "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : null,
         "extra_body": linkEmojiSticky.isEmpty
             ? null
@@ -293,20 +296,6 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
             : 'parent',
         "typeStatus": widget.commentSelected?['typeStatus'],
       }, textController.text.trim());
-      print("55555555555555555555555555check tags : ${(checkHasMention(widget.commentSelected) ? [
-              ...listMentionsSelected,
-              widget.commentSelected['account']
-            ] : listMentionsSelected)
-          // .where((element) => flagContent.contains(element['id']))
-          .map((e) => {
-                "entity_id": e['id'],
-                "entity_type": e['username'] != null
-                    ? 'Account'
-                    : e['page_relationship'] != null
-                        ? 'Page'
-                        : 'Group',
-                "name": e['display_name'] ?? e['title']
-              }).toList()}");
       textController.clear();
       setState(() {
         files = [];
@@ -380,55 +369,64 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   )
                 : const SizedBox(),
             (linkEmojiSticky.isNotEmpty || files.isNotEmpty)
-                ? Container(
-                    margin: const EdgeInsets.only(top: 4, bottom: 4, left: 30),
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: files.isNotEmpty
-                                ? files[0]['id'] != null
-                                    ? ImageCacheRender(
-                                        path: files[0]['preview_url'],
-                                        height: 80.0,
-                                        width: 70.0,
-                                      )
-                                    : Image.memory(
-                                        files[0].pickedThumbData,
-                                        fit: BoxFit.cover,
-                                        height: 80,
-                                        width: 70,
-                                        errorBuilder: (context, error,
-                                                stackTrace) =>
-                                            const Text(
-                                                'Hình ảnh không được hiển thị'),
-                                      )
-                                : ImageCacheRender(
-                                    height: 70.0, path: linkEmojiSticky)),
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  files = [];
-                                  linkEmojiSticky = '';
-                                });
-                              },
-                              child: Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      shape: BoxShape.circle),
-                                  child: const Icon(
-                                    FontAwesomeIcons.xmark,
-                                    size: 10,
-                                    color: white,
-                                  ))),
-                        )
-                      ],
-                    ),
+                ? Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 25),
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              top: 4, bottom: 4, left: 30),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: greyColor, width: 0.2),
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: files.isNotEmpty
+                                  ? files[0]['id'] != null
+                                      ? ImageCacheRender(
+                                          path: files[0]['preview_url'],
+                                          height: 85.0,
+                                          width: 85.0,
+                                        )
+                                      : Image.memory(
+                                          files[0].pickedThumbData,
+                                          fit: BoxFit.cover,
+                                          height: 85.0,
+                                          width: 85.0,
+                                          errorBuilder: (context, error,
+                                                  stackTrace) =>
+                                              const Text(
+                                                  'Hình ảnh không được hiển thị'),
+                                        )
+                                  : ImageCacheRender(
+                                      height: 85.0,
+                                      width: 85.0,
+                                      path: linkEmojiSticky)),
+                        ),
+                      ),
+                      Positioned(
+                        top: 4,
+                        right: 0,
+                        child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                files = [];
+                                linkEmojiSticky = '';
+                              });
+                            },
+                            child: Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    shape: BoxShape.circle),
+                                child: const Icon(
+                                  FontAwesomeIcons.xmark,
+                                  size: 10,
+                                  color: white,
+                                ))),
+                      )
+                    ],
                   )
                 : const SizedBox(),
             Row(crossAxisAlignment: CrossAxisAlignment.center, children: [

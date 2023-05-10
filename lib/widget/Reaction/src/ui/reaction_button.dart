@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 
 import 'package:social_network_app_mobile/widget/Reaction/src/ui/test/show_position_fill.dart';
@@ -161,6 +162,7 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
           // ref
           //     .read(showPositionFillProvider.notifier)
           //     .setShowPositionFill(false);
+          hiddenKeyboard(context);
           final notification =
               CustomNotification(name: 'long_press_event', data: details);
           notification.dispatch(context);

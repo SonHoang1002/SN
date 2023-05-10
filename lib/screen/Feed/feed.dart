@@ -1,4 +1,5 @@
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,13 +32,6 @@ class _FeedState extends ConsumerState<Feed> {
     super.initState();
     Future.delayed(Duration.zero, () async {
       ref.read(postControllerProvider.notifier).getListPost(paramsConfig);
-      // if (ref.watch(positionPostProvider).positionScroll == null ||
-      //     ref.watch(positionPostProvider).positionScroll == "") {
-      //   ref.read(positionPostProvider.notifier).setPostionPost(0);
-      // }
-      // final prefs = await SharedPreferences.getInstance();
-      // final double offset = prefs.getDouble('scrollOffset') ?? 0.0;
-      // scrollController.jumpTo(offset);
     });
 
     scrollController.addListener(() {
@@ -131,12 +125,9 @@ class _FeedState extends ConsumerState<Feed> {
   }
 
   @override
-  Future<void> dispose() async {
+  void dispose() {
     super.dispose();
+    scrollController.removeListener(() {});
     scrollController.dispose();
-    // if (scrollController.offset > 0) {
-    //   final prefs = await SharedPreferences.getInstance();
-    //   prefs.setDouble('scrollOffset', scrollController.offset);
-    // }
   }
 }

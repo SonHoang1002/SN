@@ -30,7 +30,7 @@ class PostMedia extends StatelessWidget {
                 postMedia: post,
                 post: post,
                 type: type,
-                preType: preType,
+                preType: preType, 
                 backFunction: () {
                   backFunction != null ? backFunction!() : null;
                 },

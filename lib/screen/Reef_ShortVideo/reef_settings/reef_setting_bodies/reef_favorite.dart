@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
@@ -10,6 +11,7 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/information_compo
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
@@ -33,27 +35,35 @@ class ReefFavorite extends StatefulWidget {
 
 class _ReefFavoriteState extends State<ReefFavorite> {
   String _tabCurrent = tabsTitles[0];
-  List<dynamic>? _selectionList;
-  bool isLoading = true;
+  List<dynamic>? _friendList;
+  List<dynamic>? _pageList;
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      dynamic response = await FriendsApi().getListFriendsApi({"abc": "fssdf"});
-      if (response != null) {
-        _selectionList = response["data"];
-        print("response ${json.encode(response)}");
+    Future.wait([_initData()]);
+  }
+
+  Future _initData() async {
+    if (_friendList == null) {
+      dynamic friendReponse =
+          await FriendsApi().getListFriendsApi({"abc": "fssdf"});
+      if (friendReponse != null && friendReponse.isNotEmpty) {
+        _friendList = friendReponse["data"];
       }
-    });
-    setState(() {
-      isLoading = false;
-    });
+    }
+
+    if (_pageList == null) {
+      dynamic pageReponse = await PageApi().fetchListPageAdmin({"limit": 20});
+      if (pageReponse != null && pageReponse.isNotEmpty) {
+        _pageList = pageReponse;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _selectionList ??= [];
-    print("_selectionList ${_selectionList}");
+    Future.wait([_initData()]);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -87,7 +97,7 @@ class _ReefFavoriteState extends State<ReefFavorite> {
         Row(
           children: tabsTitles
               .map((e) => InkWell(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
                         _tabCurrent = e;
                       });
@@ -115,20 +125,33 @@ class _ReefFavoriteState extends State<ReefFavorite> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(top: 7),
             physics: const BouncingScrollPhysics(),
-            child:
-                // _selectionList == null
-                //     ? buildCircularProgressIndicator()
-                //     :
-                _selectionList!.isEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: buildTextContent("Không có bạn bè", true,
-                            fontSize: 17, isCenterLeft: false),
-                      )
-                    : Column(
-                        children: _selectionList!
-                            .map((e) => _buildSelectionWidget(e))
-                            .toList()),
+            child: _tabCurrent == tabsTitles[0]
+                ? _friendList == null
+                    ? buildCircularProgressIndicator(
+                        margin: const EdgeInsets.only(top: 30))
+                    : _friendList!.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 20.0),
+                            child: buildTextContent("Không có bạn bè", true,
+                                fontSize: 17, isCenterLeft: false),
+                          )
+                        : Column(
+                            children: _friendList!
+                                .map((e) => _buildSelectionWidget(e))
+                                .toList())
+                : _pageList == null
+                    ? buildCircularProgressIndicator(
+                        margin: const EdgeInsets.only(top: 30))
+                    : _pageList!.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 20.0),
+                            child: buildTextContent("Không có nhóm", true,
+                                fontSize: 17, isCenterLeft: false),
+                          )
+                        : Column(
+                            children: _pageList!
+                                .map((e) => _buildSelectionWidget(e))
+                                .toList()),
           ),
         )
       ],
@@ -155,7 +178,11 @@ class _ReefFavoriteState extends State<ReefFavorite> {
     return GeneralComponent(
       [
         buildTextContent(
-            _data["display_name"] ?? _data["username"] ?? "---", true,
+            _data["display_name"] ??
+                _data["username"] ??
+                _data["title"] ??
+                "---",
+            true,
             fontSize: 14),
         buildSpacer(height: 5),
         buildTextContent("Thông tin thêm", false,
@@ -167,9 +194,14 @@ class _ReefFavoriteState extends State<ReefFavorite> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
         ),
-        child: _data["avatar_media"] != null
-            ? Image.network(_data["avatar_media"]["url"])
-            : Image.asset("assets/images/cat_1.png"),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: _data["avatar_media"] != null
+              ? ImageCacheRender(
+                  path: _data["avatar_media"]["url"],
+                )
+              : Image.asset("assets/images/cat_1.png"),
+        ),
       ),
       suffixWidget: const ButtonPrimary(
         label: "Thêm",

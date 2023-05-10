@@ -121,9 +121,7 @@ class PostController extends StateNotifier<PostState> {
   }
 
   actionUpdatePostCount(String? preType, dynamic data) {
-    print(
-        "------------------------------preType of actionUpdatePostCount from post provider ----------------------------- $preType");
-    int index = -1;
+     int index = -1;
     if (preType == feedPost || preType == postDetailFromFeed) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (preType == postPageUser || preType == postDetailFromUserPage) {
@@ -158,7 +156,6 @@ class PostController extends StateNotifier<PostState> {
 
   actionUpdateDetailInPost(dynamic type, dynamic data,
       {dynamic preType}) async {
-    print("-------------call actionUpdateDetailInPost-------------"); 
     int index = -1;
     if (type == feedPost ||
         (preType != null && preType == postDetailFromFeed)) {
