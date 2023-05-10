@@ -4,6 +4,10 @@ List watchMenu = [
     "label": "Trang chủ",
   },
   {
+    "key": "watch_follow",
+    "label": "Đang theo dõi",
+  },
+  {
     "key": "watch_live",
     "label": "Trực tiếp",
   },

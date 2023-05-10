@@ -6,7 +6,10 @@ import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 
 class WatchHome extends ConsumerStatefulWidget {
-  const WatchHome({Key? key}) : super(key: key);
+  final String type;
+  final Function fetchDataWatch;
+  const WatchHome({Key? key, required this.type, required this.fetchDataWatch})
+      : super(key: key);
 
   @override
   _WatchHomeState createState() => _WatchHomeState();
@@ -17,26 +20,16 @@ class _WatchHomeState extends ConsumerState<WatchHome> {
 
   @override
   void initState() {
-    if (mounted && ref.read(watchControllerProvider).watchSuggest.isEmpty) {
-      Future.delayed(Duration.zero, () {
-        ref
-            .read(watchControllerProvider.notifier)
-            .getListWatchSuggest({"limit": 3});
-      });
-    }
-
+    super.initState();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        String maxId =
-            ref.read(watchControllerProvider).watchSuggest.last['score'];
-        ref
-            .read(watchControllerProvider.notifier)
-            .getListWatchSuggest({"max_id": maxId, "limit": 3});
+        String maxId = widget.type == 'watch_home'
+            ? ref.read(watchControllerProvider).watchSuggest.last['score']
+            : ref.read(watchControllerProvider).watchFollow.last['score'];
+        widget.fetchDataWatch(widget.type, {"max_id": maxId, "limit": 3});
       }
     });
-
-    super.initState();
   }
 
   @override
@@ -46,7 +39,9 @@ class _WatchHomeState extends ConsumerState<WatchHome> {
 
   @override
   Widget build(BuildContext context) {
-    List watchSuggest = ref.watch(watchControllerProvider).watchSuggest;
+    List watchData = widget.type == 'watch_home'
+        ? ref.watch(watchControllerProvider).watchSuggest
+        : ref.watch(watchControllerProvider).watchFollow;
 
     return Expanded(
       child: SingleChildScrollView(
@@ -54,15 +49,16 @@ class _WatchHomeState extends ConsumerState<WatchHome> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            Column(
-                children: List.generate(
-                    watchSuggest.length,
-                    (index) => Post(
-                          key: Key(watchSuggest[index]['id']),
-                          post: watchSuggest[index],
-                          type: postWatch,
-                        ))),
-            SkeletonCustom().postSkeleton(context)
+            ListView.builder(
+                shrinkWrap: true,
+                primary: false,
+                itemCount: watchData.length,
+                itemBuilder: (context, index) => Post(
+                      key: Key(watchData[index]['id']),
+                      post: watchData[index],
+                      type: postWatch,
+                    )),
+            // SkeletonCustom().postSkeleton(context)
           ],
         ),
       ),
