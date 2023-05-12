@@ -51,7 +51,12 @@ class SearchController extends StateNotifier<SearchState> {
       state = state.copyWith(
         searchHistory: state.searchHistory,
         search: state.search,
-        searchDetail: response,
+        searchDetail: response['accounts'].isNotEmpty ||
+                response['groups'].isNotEmpty ||
+                response['pages'].isNotEmpty ||
+                response['statuses'].isNotEmpty
+            ? response
+            : {},
       );
     }
   }

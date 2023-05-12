@@ -12,13 +12,25 @@ import 'package:social_network_app_mobile/widget/user_item.dart';
 
 import '../../widget/back_icon_appbar.dart';
 
-class SearchResultPageDetail extends StatelessWidget {
+class SearchResultPageDetail extends ConsumerStatefulWidget {
   final String keyword;
   const SearchResultPageDetail({Key? key, required this.keyword})
       : super(key: key);
+  @override
+  ConsumerState<SearchResultPageDetail> createState() =>
+      _SearchResultPageDetailState();
+}
 
+class _SearchResultPageDetailState
+    extends ConsumerState<SearchResultPageDetail> {
   @override
   Widget build(BuildContext context) {
+    var searchDetail = ref.watch(searchControllerProvider).searchDetail;
+    var searchStatusDetail = searchDetail?['statuses'];
+    var searchAccountDetail = searchDetail?['accounts'];
+    var searchGroupDetail = searchDetail?['groups'];
+    var searchPageDetail = searchDetail?['pages'];
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -30,7 +42,7 @@ class SearchResultPageDetail extends StatelessWidget {
             Navigator.push(
                 context,
                 CupertinoPageRoute(
-                    builder: (context) => Search(keyword: keyword)));
+                    builder: (context) => Search(keyword: widget.keyword)));
           },
           child: ConstrainedBox(
             constraints: const BoxConstraints(
@@ -40,8 +52,7 @@ class SearchResultPageDetail extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),
               child: TextFormField(
-                initialValue: keyword,
-                key: UniqueKey(),
+                initialValue: widget.keyword,
                 readOnly: true,
                 autofocus: false,
                 enabled: false,
@@ -72,63 +83,67 @@ class SearchResultPageDetail extends StatelessWidget {
               'Trang'
             ].toList(),
             childTab: [
+              searchDetail.isEmpty
+                  ? const Text('Không có dữ liệu')
+                  : SingleChildScrollView(
+                      child: Container(
+                        margin: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            const Text(
+                              'Tài khoản',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w500),
+                            ),
+                            AccountWidget(
+                                searchAccountDetail: searchAccountDetail),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            const Text(
+                              'Nhóm',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w500),
+                            ),
+                            GroupWidget(searchGroupDetail: searchGroupDetail),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            const Text(
+                              'Trang',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w500),
+                            ),
+                            PageWidget(searchPageDetail: searchPageDetail),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            const Text(
+                              'Bài viết',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w500),
+                            ),
+                            StatusWidget(
+                                searchStatusDetail: searchStatusDetail),
+                          ],
+                        ),
+                      ),
+                    ),
               SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        'Tài khoản',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w500),
-                      ),
-                      AccountWidget(),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        'Nhóm',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w500),
-                      ),
-                      GroupWidget(),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        'Trang',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w500),
-                      ),
-                      PageWidget(),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        'Bài viết',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w500),
-                      ),
-                      // StatusWidget(),
-                    ],
-                  ),
-                ),
+                child: AccountWidget(searchAccountDetail: searchAccountDetail),
               ),
-              const SingleChildScrollView(
-                child: AccountWidget(),
+              SingleChildScrollView(
+                child: StatusWidget(searchStatusDetail: searchStatusDetail),
               ),
-              const SingleChildScrollView(
-                child: StatusWidget(),
+              SingleChildScrollView(
+                child: GroupWidget(searchGroupDetail: searchGroupDetail),
               ),
-              const SingleChildScrollView(
-                child: GroupWidget(),
-              ),
-              const SingleChildScrollView(
-                child: PageWidget(),
+              SingleChildScrollView(
+                child: PageWidget(searchPageDetail: searchPageDetail),
               ),
             ]),
       ),
@@ -137,24 +152,26 @@ class SearchResultPageDetail extends StatelessWidget {
 }
 
 class PageWidget extends ConsumerWidget {
+  final dynamic searchPageDetail;
   const PageWidget({
+    this.searchPageDetail,
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var searchPageDetail =
-        ref.watch(searchControllerProvider).searchDetail ?? [];
-
+    if (searchPageDetail == null) {
+      return const SizedBox();
+    }
     return Column(
-        children: List.generate(searchPageDetail['pages']!.length, (index) {
-      dynamic page = searchPageDetail['pages'];
+        children: List.generate(searchPageDetail?.length, (index) {
+      dynamic page = searchPageDetail?[index];
       return Container(
           margin: const EdgeInsets.all(8.0),
           padding: const EdgeInsets.all(8.0),
           child: Row(children: [
             PageItem(
-              page: page[index],
+              page: page,
             )
           ]));
     }));
@@ -162,17 +179,20 @@ class PageWidget extends ConsumerWidget {
 }
 
 class GroupWidget extends ConsumerWidget {
+  final dynamic searchGroupDetail;
   const GroupWidget({
+    this.searchGroupDetail,
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var searchGroupDetail =
-        ref.watch(searchControllerProvider).searchDetail ?? [];
+    if (searchGroupDetail == null) {
+      return const SizedBox();
+    }
     return Column(
-      children: List.generate(searchGroupDetail['groups']!.length, (index) {
-        dynamic group = searchGroupDetail['groups'][index];
+      children: List.generate(searchGroupDetail?.length, (index) {
+        dynamic group = searchGroupDetail?[index];
         return Container(
             margin: const EdgeInsets.all(8.0),
             padding: const EdgeInsets.all(8.0),
@@ -187,32 +207,35 @@ class GroupWidget extends ConsumerWidget {
 }
 
 class StatusWidget extends ConsumerWidget {
-  const StatusWidget({
-    super.key,
-  });
+  final dynamic searchStatusDetail;
+  const StatusWidget({super.key, this.searchStatusDetail});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var searchStatusDetail =
-        ref.watch(searchControllerProvider).searchDetail ?? [];
+    if (searchStatusDetail == null) {
+      return const SizedBox();
+    }
     return Column(
-        children: List.generate(searchStatusDetail['statuses']!.length,
-            (index) => Post(post: searchStatusDetail['statuses']![index])));
+        children: List.generate(searchStatusDetail?.length,
+            (index) => Post(post: searchStatusDetail?[index])));
   }
 }
 
 class AccountWidget extends ConsumerWidget {
+  final dynamic searchAccountDetail;
   const AccountWidget({
     super.key,
+    this.searchAccountDetail,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var searchAccountDetail =
-        ref.watch(searchControllerProvider).searchDetail ?? [];
+    if (searchAccountDetail == null) {
+      return const SizedBox();
+    }
     return Column(
-      children: List.generate(searchAccountDetail['accounts']!.length, (index) {
-        var user = searchAccountDetail['accounts']![index];
+      children: List.generate(searchAccountDetail?.length, (index) {
+        var user = searchAccountDetail?[index];
         return Container(
           margin: const EdgeInsets.all(8.0),
           padding: const EdgeInsets.all(8.0),

@@ -4,7 +4,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart' as pv;
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/Map/map_expanded.dart';
 
@@ -26,15 +25,19 @@ class MapWidget extends StatelessWidget {
     final theme = pv.Provider.of<ThemeManager>(context);
     return FlutterMap(
       options: MapOptions(
-        center: LatLng(checkin['location']?['lat']??21.0398009, checkin['location']?['lng']??105.4336946),
+        center: LatLng(checkin['location']?['lat'] ?? 21.0398009,
+            checkin['location']?['lng'] ?? 105.4336946),
         zoom: zoom,
         interactiveFlags: interactiveFlags,
       ),
       children: [
         InkWell(
           onTap: () {
-            Navigator.push(context,
-                CupertinoPageRoute(builder: ((context) =>  MapExpanded(checkin: checkin, type: type))));
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: ((context) =>
+                        MapExpanded(checkin: checkin, type: type))));
           },
           child: type == 'custom_map'
               ? ClipRRect(
@@ -75,10 +78,24 @@ class MapWidget extends StatelessWidget {
               width: 80.0,
               height: 80.0,
               point: LatLng(
-                  checkin['location']?['lat']??21.0398009, checkin['location']?['lng']??105.4336946),
-              builder: (ctx) => const Icon(
-                FontAwesomeIcons.locationDot,
-                color: Colors.red,
+                checkin['location']?['lat'] ?? 21.0398009,
+                checkin['location']?['lng'] ?? 105.4336946,
+              ),
+              builder: (ctx) => Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Icon(
+                    FontAwesomeIcons.locationDot,
+                    color: Colors.red,
+                  ),
+                  Text(
+                    checkin['address'] ?? '',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

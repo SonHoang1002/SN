@@ -55,7 +55,6 @@ class ReefSettingMain extends StatefulWidget {
 class _ReefSettingMain1State extends State<ReefSettingMain> {
   handleChooseSelections(dynamic key) {
     Widget nextScreen;
-    Widget? buttonAppbar;
     String title = "";
     if (key == "favorite") {
       nextScreen = const ReefFavorite();
@@ -67,15 +66,12 @@ class _ReefSettingMain1State extends State<ReefSettingMain> {
     pushToNextScreen(
         context,
         CreateModalBaseMenu(
-            title: title,
-            body: nextScreen,
-            buttonAppbar: buttonAppbar ?? const SizedBox()));
+            title: title, body: nextScreen, buttonAppbar: const SizedBox()));
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final height = size.height;
     final width = size.width;
     final bgColor =
         ThemeMode.dark == true ? blackColor.withOpacity(0.4) : greyColor[200];
@@ -88,8 +84,14 @@ class _ReefSettingMain1State extends State<ReefSettingMain> {
             children: [
               buildSpacer(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [BackIconAppbar(), SizedBox()],
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  BackIconAppbar(),
+                  SizedBox()
+                ],
               ),
               buildSpacer(height: 20),
               Image.asset("assets/icon/logo_app.png", height: 30),

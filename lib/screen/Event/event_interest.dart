@@ -1,9 +1,11 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screen/Event/event_detail.dart';
@@ -11,7 +13,6 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 
 class EventInterested extends ConsumerStatefulWidget {
@@ -26,21 +27,24 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
   late double width;
   late double height;
   var paramsConfigOwner = {"limit": 10, "event_account_status": "interested"};
-
+  bool isLoading = true;
   @override
   void initState() {
     if (!mounted) return;
     super.initState();
-    Future.delayed(
-        Duration.zero,
-        () => ref
-            .read(eventControllerProvider.notifier)
-            .getListEventOwner(paramsConfigOwner));
+    Future.delayed(Duration.zero, () => fetchData(paramsConfigOwner));
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void fetchData(params) async {
+    await ref.read(eventControllerProvider.notifier).getListEventOwner(params);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -54,45 +58,52 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
     height = size.height;
 
     return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
-              child: Text(
-                'Sự kiện đã quan tâm',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          fetchData(paramsConfigOwner);
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+                child: Text(
+                  'Sự kiện đã quan tâm',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            events.isNotEmpty
-                ? SizedBox(
-                    child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: events.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, indexInteresting) {
-                      String statusEvent = events[indexInteresting]
-                              ['event_relationship']['status'] ??
-                          '';
-                      if (indexInteresting < events.length) {
+              events.isNotEmpty
+                  ? SizedBox(
+                      child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: events.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, indexInteresting) {
+                        String statusEvent = events[indexInteresting]
+                                ['event_relationship']['status'] ??
+                            '';
+
                         return Padding(
                           padding: const EdgeInsets.only(
                               top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                           child: CardComponents(
                             type: 'homeScreen',
                             imageCard: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15)),
-                              child: ImageCacheRender(
-                                path: events[indexInteresting]['banner']['url'],
-                              ),
-                            ),
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15)),
+                                child: ExtendedImage.network(
+                                  events[indexInteresting]['banner'] != null
+                                      ? events[indexInteresting]['banner']
+                                          ['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
+                                )),
                             onTap: () {
                               Navigator.push(
                                   context,
@@ -518,19 +529,27 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
                             ),
                           ),
                         );
-                      } else {
-                        isMore == true
-                            ? const Center(child: CupertinoActivityIndicator())
-                            : const SizedBox();
-                      }
-                      return null;
-                    },
-                  ))
-                : const SizedBox(),
-            isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
-                : const SizedBox()
-          ],
+                      },
+                    ))
+                  : const SizedBox(),
+              isLoading && events.isEmpty || isMore == true
+                  ? const Center(child: CupertinoActivityIndicator())
+                  : events.isEmpty
+                      ? Column(
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                "assets/wow-emo-2.gif",
+                                height: 125.0,
+                                width: 125.0,
+                              ),
+                            ),
+                            const Text('Không tìm thấy kết quả nào'),
+                          ],
+                        )
+                      : const SizedBox()
+            ],
+          ),
         ),
       ),
     );

@@ -48,6 +48,28 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
       }
     }
 
+    List<double?> checkHeightAndWidthOneImage(medias) {
+      final size = MediaQuery.of(context).size;
+      List<double?> values = [null, null];
+      double width =
+          double.parse(medias[0]['meta']['small']['width'].toString());
+      double height =
+          double.parse(medias[0]['meta']['small']['height'].toString());
+      if (width < height) {
+        //anh doc
+        values[0] = size.width;
+        if (height > 400) {
+          values[1] = height;
+        } else {
+          values[1] = 400;
+        }
+      } else {
+        // anh ngang
+      }
+
+      return values;
+    }
+
     renderLayoutMedia(medias) {
       final size = MediaQuery.of(context).size;
       switch (medias.length) {
@@ -73,23 +95,13 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                               medias[0]['file'],
                               fit: BoxFit.cover,
                             )
-                          // : ImageCacheRender(path: medias[0]['url']),
                           : Hero(
                               tag: medias[0]['id'],
                               child: ExtendedImage.network(
                                 medias[0]['url'],
-                                // width: double.parse(medias[0]['meta']['small']
-                                //                 ['width']
-                                //             .toString()) >
-                                //         size.width
-                                //     ? double.parse(medias[0]['meta']['small']
-                                //             ['width']
-                                //         .toString())
-                                //     : size.width,
-                                // // fit: BoxFit.fitWidth,
-                                // height: double.parse(medias[0]['meta']['small']
-                                //         ['height']
-                                //     .toString()),
+                                // fit: BoxFit.cover,
+                                width: checkHeightAndWidthOneImage(medias)[0],
+                                height: checkHeightAndWidthOneImage(medias)[1],
                               ),
                             ),
                       buildDivider(color: greyColor),
@@ -109,15 +121,12 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                         1
                     ? size.width
                     : null,
-                child: Container(
-                  child: VideoPlayerNoneController(
-                      path: path,
-                      media: medias[0],
-                      post: widget.post,
-                      type: medias[0]['file']?.path != null
-                          ? 'local'
-                          : 'network'),
-                ));
+                child: VideoPlayerNoneController(
+                    path: path,
+                    media: medias[0],
+                    post: widget.post,
+                    type:
+                        medias[0]['file']?.path != null ? 'local' : 'network'));
           }
         case 2:
           return GirdviewBuilderMedia(

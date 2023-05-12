@@ -1,13 +1,14 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/screen/Grows/grow_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -58,30 +59,35 @@ class _GrowCardState extends ConsumerState<GrowCard> {
     width = size.width;
     height = size.height;
     return Expanded(
-      child: SingleChildScrollView(
-        controller: scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
-              child: Text(
-                'Khám phá dự án gọi vốn cộng đồng',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref
+              .read(growControllerProvider.notifier)
+              .getListGrow(paramsConfigList);
+        },
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+                child: Text(
+                  'Khám phá dự án gọi vốn cộng đồng',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            grows.isNotEmpty
-                ? SizedBox(
-                    child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: grows.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, indexInteresting) {
-                      if (indexInteresting < grows.length) {
+              grows.isNotEmpty
+                  ? SizedBox(
+                      child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: grows.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, indexInteresting) {
                         var valueLinearProgressBar = ((grows[indexInteresting]
                                         ['real_value'] ??
                                     0 - 0) *
@@ -96,10 +102,11 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15)),
-                              child: ImageCacheRender(
-                                path: grows[indexInteresting]['banner'] != null
+                              child: ExtendedImage.network(
+                                grows[indexInteresting]['banner'] != null
                                     ? grows[indexInteresting]['banner']['url']
-                                    : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+                                    : linkBannerDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             onTap: () {
@@ -363,19 +370,27 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                             ),
                           ),
                         );
-                      } else {
-                        isMore == true
-                            ? const Center(child: CupertinoActivityIndicator())
-                            : const SizedBox();
-                      }
-                      return null;
-                    },
-                  ))
-                : const SizedBox(),
-            isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
-                : const SizedBox()
-          ],
+                      },
+                    ))
+                  : const SizedBox(),
+              isMore == true
+                  ? const Center(child: CupertinoActivityIndicator())
+                  : grows.isEmpty
+                      ? Column(
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                "assets/wow-emo-2.gif",
+                                height: 125.0,
+                                width: 125.0,
+                              ),
+                            ),
+                            const Text('Không tìm thấy kết quả nào'),
+                          ],
+                        )
+                      : const SizedBox(),
+            ],
+          ),
         ),
       ),
     );

@@ -311,7 +311,6 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
   }
 
   _updatePostCount({int? addtionalIfChild, int? subIfChild}) async {
-    print('----------------------------CALL _updatePostCount------------');
     int countAdditionalIfChild = addtionalIfChild ?? 0;
     int countSubIfChild = subIfChild ?? 0;
     dynamic updateCountPostData = widget.post;

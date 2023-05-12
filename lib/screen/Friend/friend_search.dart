@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
@@ -125,7 +126,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             '${searchResults[index]['relationships']['mutual_friend_count']} bạn chung'),
                         trailing:
                             const Icon(FontAwesomeIcons.arrowRight, size: 16),
-                        onTap: () {}),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UserPage(),
+                              settings: RouteSettings(
+                                arguments: {'id': searchResults[index]['id']},
+                              ),
+                            ),
+                          );
+                        }),
                   ),
                 )
               ],

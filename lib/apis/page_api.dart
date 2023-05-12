@@ -1,14 +1,19 @@
-import 'package:social_network_app_mobile/apis/api_root.dart';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
-import 'dart:io';
 
 import 'config.dart';
 
 class PageApi {
   fetchListPageAdmin(params) async {
     return await Api().getRequestBase("/api/v1/pages", params);
+  }
+
+  fetchPageDetail(id) async {
+    return await Api().getRequestBase("/api/v1/pages/$id", null);
   }
 
   fetchListPageLiked(params, id) async {

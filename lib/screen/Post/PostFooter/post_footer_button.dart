@@ -27,7 +27,8 @@ class PostFooterButton extends ConsumerStatefulWidget {
   final String? preType;
   final Function? backFunction;
 
-  const PostFooterButton({Key? key, this.post, this.type,this.backFunction, this.preType})
+  const PostFooterButton(
+      {Key? key, this.post, this.type, this.backFunction, this.preType})
       : super(key: key);
 
   @override
@@ -139,7 +140,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
               : newPost['favourites_count'],
           "viewer_reaction": null,
           "reactions": newFavourites
-        }; 
+        };
         ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
             widget.type, newPost,
             preType: widget.preType);
@@ -272,7 +273,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                   ],
                 ),
               )
-            : Container(
+            : SizedBox(
                 height: 40,
                 child: buildTextContent(suggestReactionContent, false,
                     isCenterLeft: false),

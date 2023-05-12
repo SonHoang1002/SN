@@ -1,12 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/search/search_provider.dart';
+import 'package:social_network_app_mobile/screen/Search/search_result_page_detail.dart';
+import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
+
+import '../Page/PageDetail/page_detail.dart';
 
 class SearchHistory extends ConsumerWidget {
   final List searchHistory;
@@ -51,56 +56,117 @@ class SearchHistory extends ConsumerWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/story.svg',
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.55,
-                                        child: Text(
-                                          searchHistory[index]['keyword'],
-                                          style: const TextStyle(fontSize: 13),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                          height: searchHistory[index]
-                                                      ['entity_type'] !=
-                                                  null
-                                              ? 2.0
-                                              : 0),
-                                      searchHistory[index]['entity_type'] !=
+                              InkWell(
+                                onTap: () {
+                                  searchHistory[index]['entity_type'] ==
+                                          'Account'
+                                      ? Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const UserPage(),
+                                            settings: RouteSettings(
+                                              arguments: {
+                                                'id': searchHistory[index]
+                                                    ['entity_id']
+                                              },
+                                            ),
+                                          ))
+                                      : searchHistory[index]['entity_type'] ==
                                               null
-                                          ? TextDescription(
-                                              description: searchHistory[index]
-                                                          ['entity_type'] ==
-                                                      'Account'
-                                                  ? 'Tài khoản cá nhân'
-                                                  : searchHistory[index]
-                                                              ['entity_type'] ==
-                                                          'Page'
-                                                      ? 'Trang'
-                                                      : searchHistory[index][
-                                                                  'entity_type'] ==
-                                                              'Group'
-                                                          ? 'Nhóm'
-                                                          : searchHistory[index]
-                                                              ['entity_type'])
-                                          : const SizedBox()
-                                    ],
-                                  )
-                                ],
+                                          ? {
+                                              Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          SearchResultPageDetail(
+                                                              keyword:
+                                                                  searchHistory[
+                                                                          index]
+                                                                      [
+                                                                      'keyword']))),
+                                              ref
+                                                  .read(searchControllerProvider
+                                                      .notifier)
+                                                  .getSearchDetail({
+                                                "q": searchHistory[index]
+                                                    ['keyword'],
+                                                'offset': 1,
+                                                "limit": 5
+                                              })
+                                            }
+                                          : searchHistory[index]
+                                                      ['entity_type'] ==
+                                                  'Page'
+                                              ? Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const PageDetail(),
+                                                    settings: RouteSettings(
+                                                        arguments:
+                                                            searchHistory[index]
+                                                                    [
+                                                                    'entity_id']
+                                                                .toString()),
+                                                  ))
+                                              : const SizedBox();
+                                },
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/story.svg',
+                                      width: 35,
+                                      height: 35,
+                                    ),
+                                    const SizedBox(
+                                      width: 8.0,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.55,
+                                          child: Text(
+                                            searchHistory[index]['keyword'],
+                                            style:
+                                                const TextStyle(fontSize: 13),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                            height: searchHistory[index]
+                                                        ['entity_type'] !=
+                                                    null
+                                                ? 2.0
+                                                : 0),
+                                        searchHistory[index]['entity_type'] !=
+                                                null
+                                            ? TextDescription(
+                                                description: searchHistory[
+                                                                index]
+                                                            ['entity_type'] ==
+                                                        'Account'
+                                                    ? 'Tài khoản cá nhân'
+                                                    : searchHistory[index][
+                                                                'entity_type'] ==
+                                                            'Page'
+                                                        ? 'Trang'
+                                                        : searchHistory[index][
+                                                                    'entity_type'] ==
+                                                                'Group'
+                                                            ? 'Nhóm'
+                                                            : searchHistory[
+                                                                    index]
+                                                                ['entity_type'])
+                                            : const SizedBox()
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
                               Row(
                                 children: [

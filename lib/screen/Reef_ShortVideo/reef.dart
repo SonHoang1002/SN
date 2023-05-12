@@ -36,11 +36,7 @@ class _ReefState extends ConsumerState<Reef> {
     Future.delayed(Duration.zero, () async {
       ref
           .read(momentControllerProvider.notifier)
-          .getListMomentSuggest({"limit": 10});
-      while (momentSuggests.isEmpty) {
-        momentSuggests =
-            await MomentApi().getListMomentSuggest({"limit": 10}) ?? moments;
-      }
+          .getListMomentSuggest({"limit": 5});
     });
     // }
   }
@@ -51,9 +47,9 @@ class _ReefState extends ConsumerState<Reef> {
         ref.watch(momentControllerProvider).momentSuggest.isNotEmpty
             ? ref.watch(momentControllerProvider).momentSuggest
             : momentSuggests.isEmpty
-                ? moments
+                ? moments.sublist(1, 7)
                 : momentSuggests;
-
+    momentSuggests.shuffle();
     handleSettingHeader() {
       showCustomBottomSheet(context, 170, "",
           isHaveHeader: false,
@@ -70,8 +66,7 @@ class _ReefState extends ConsumerState<Reef> {
                 prefixWidget: const Icon(
                   FontAwesomeIcons.rectangleXmark,
                   size: 18,
-                ),
-                // padding: EdgeInsets.zero,
+                ), 
                 changeBackground: greyColor[300],
               ),
               buildSpacer(height: 10),
@@ -87,8 +82,8 @@ class _ReefState extends ConsumerState<Reef> {
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 changeBackground: greyColor[300],
                 function: () {
-                  Navigator.of(context).push(
-                      CupertinoPageRoute(builder: (ctx) => const ReefSettingMain()));
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      builder: (ctx) => const ReefSettingMain()));
                 },
               ),
             ],
