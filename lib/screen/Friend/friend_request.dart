@@ -8,6 +8,8 @@ import 'package:social_network_app_mobile/screen/Friend/friend_search.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
+import '../../widget/appbar_title.dart';
+
 class FriendRequest extends ConsumerStatefulWidget {
   const FriendRequest({super.key});
 
@@ -39,8 +41,9 @@ class _FriendRequestState extends ConsumerState<FriendRequest> {
         automaticallyImplyLeading: false,
         elevation: 0,
         titleSpacing: 0,
+        centerTitle: true,
         leading: const BackIconAppbar(),
-        title: const Text('Lời mời kết bạn'),
+        title: const AppBarTitle(title: 'Lời mời kết bạn'),
         actions: [
           InkWell(
             onTap: () {
@@ -125,7 +128,7 @@ class _FriendRequestState extends ConsumerState<FriendRequest> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                      '${friendRequest[index]['account']['friends_count']} bạn chung',
+                                                      '${friendRequest[index]['account']['friends_count'] ?? 0} bạn chung',
                                                       style: const TextStyle(
                                                           color: greyColor)),
                                                   const SizedBox(

@@ -121,7 +121,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                           height: 50,
                           width: 100,
                           decoration: BoxDecoration(
-                            color: greyColor,
+                            color: greyColor.withOpacity(0.4),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Padding(
@@ -164,7 +164,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                       decoration: BoxDecoration(
                           color: selectedItemIndex == index
                               ? secondaryColor
-                              : greyColor,
+                              : greyColor.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(16),
                           border: selectedItemIndex == index
                               ? Border.all(width: 1, color: greyColor)
@@ -197,7 +197,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: greyColor,
+                  color: greyColor.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: InkWell(
@@ -438,7 +438,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: greyColor,
+                    color: greyColor.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Align(
