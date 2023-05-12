@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:social_network_app_mobile/data/notification.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
-import 'package:get_time_ago/get_time_ago.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -15,26 +15,78 @@ class NotificationPage extends ConsumerStatefulWidget {
 }
 
 class _NotificationPageState extends ConsumerState<NotificationPage> {
+  final scrollController = ScrollController();
+
   @override
   void initState() {
     GetTimeAgo.setDefaultLocale('vi');
     super.initState();
+    Future.delayed(Duration.zero, () => fetchNotifications(null));
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        String maxId =
+            ref.read(notificationControllerProvider).notifications.last['id'];
+        fetchNotifications({
+          "max_id": maxId,
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
+    scrollController.dispose();
+  }
+
+  void fetchNotifications(params) async {
+    await ref
+        .read(notificationControllerProvider.notifier)
+        .getListNotifications(params);
   }
 
   @override
   Widget build(BuildContext context) {
+    List notifications =
+        ref.watch(notificationControllerProvider).notifications;
     renderName(noti) {
       dynamic status = noti['status'];
       dynamic account = noti['account'];
-      if (noti['type'] == 'event_invitation_host') {
-        return status['event']?['page']?['title'] ?? account['display_name'];
+      switch (noti['type']) {
+        case 'event_invitation_host':
+          return status['event']?['page']?['title'] ?? account['display_name'];
+        case 'status':
+          return status['group']?['title'] ??
+              status['page']?['title'] ??
+              account['display_name'];
+
+        default:
+          return account['display_name'];
       }
-      return account['display_name'];
+    }
+
+    renderTextBold(
+      String textNone,
+      String textBold,
+    ) {
+      return RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: textNone,
+              style: const TextStyle(color: Colors.black),
+            ),
+            TextSpan(
+              text: textBold,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     renderContent(noti) {
@@ -88,7 +140,11 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         return ' đã bình luận về một bài viết có thể bạn quan tâm: ${status['content']}';
       } else if (type == 'approved_group_join_request') {
         return ' Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với';
-      }
+      } else if (type == 'course_invitation') {
+        return ' đã mời bạn tham gia khóa học';
+      } else if (type == 'product_invitation') {
+        return ' đã mời bạn quan tâm đến sản phẩm';
+      } else if (type == 'admin_page_invitation') {}
       if (type == 'favourite') {
         return ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận:' : 'bài viết:'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content']}';
       } else if (type == 'status') {
@@ -96,15 +152,25 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
           return ' đã chia sẻ một bài viết ${status['reblog']?['page'] != null || status['reblog']?['group'] != null ? 'trong' : ''}';
         } else if (status['page_owner'] != null) {
           return status['post_type'] == 'event_shared'
-              ? ' đã tạo một sự kiện'
-              : ' có một bài viết mới';
+              ? ' đã tạo một sự kiện '
+              : ' có một bài viết mới: ${status['content']} ';
         } else if (status['group'] != null || status['page'] != null) {
-          return status['post_type'] == 'event_shared'
-              ? ' đã tạo một sự kiện trong'
-              : 'đã tạo bài viết trong';
+          if (noti['account']['relationship'] != null &&
+              noti['account']['relationship']['friendship_status'] ==
+                  'ARE_FRIENDS') {
+            return status['post_type'] == 'event_shared'
+                ? ' đã tạo một sự kiện trong '
+                    '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}'
+                : ' có tạo bài viết trong '
+                    '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}';
+          } else {
+            return status['post_type'] == 'event_shared'
+                ? ' có sự kiện mới: ${status['content'] ?? ""}'
+                : ' có bài viết mới: ${status['content'] ?? ""}';
+          }
         } else if (status['post_type'] == 'moment') {
           return ' đã đăng một khoảnh khắc mới';
-        } else if (status['post_type'] == 'moment') {
+        } else if (status['post_type'] == 'watch') {
           return ' đã đăng một video mới trong watch';
         } else if (status['post_type'] == 'question') {
           return ' đã đặt một câu hỏi';
@@ -166,6 +232,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
             child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: notifications.length,
+                controller: scrollController,
                 itemBuilder: ((context, index) {
                   return Container(
                     padding: const EdgeInsets.symmetric(
@@ -225,7 +292,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                                           )),
                                       TextSpan(
                                           text:
-                                              ' ${notifications[index]['page']?["title"] ?? notifications[index]['group']?["title"] ?? notifications[index]['event']?["title"] ?? ''}')
+                                              ' ${notifications[index]['page']?["title"] ?? notifications[index]['group']?["title"] ?? notifications[index]['event']?["title"] ?? ""}')
                                     ]),
                               ),
                             ),
