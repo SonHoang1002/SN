@@ -24,7 +24,7 @@ class _WatchRenderState extends ConsumerState<WatchRender>
         ref.read(watchControllerProvider).watchFollow.isEmpty &&
             menuSelected == 'watch_follow';
 
-    if (isFetchData) {
+    if (isFetchData || params['max_id'] != null) {
       if (type == 'watch_home') {
         ref.read(watchControllerProvider.notifier).getListWatchSuggest(params);
       } else if (type == 'watch_follow') {

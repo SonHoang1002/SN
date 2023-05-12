@@ -58,7 +58,7 @@ class _WatchHomeState extends ConsumerState<WatchHome> {
                       post: watchData[index],
                       type: postWatch,
                     )),
-            // SkeletonCustom().postSkeleton(context)
+            SkeletonCustom().postSkeleton(context)
           ],
         ),
       ),
