@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/Banuba/banuba.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 
 class CreatePost extends StatelessWidget {
@@ -43,7 +44,9 @@ class CreatePost extends StatelessWidget {
                                 String key = postTypeCreate[index]['key'];
                                 return key == 'post'
                                     ? const CreateNewFeed()
-                                    : const SizedBox();
+                                    : key == 'moment'
+                                        ? const Banuba()
+                                        : const SizedBox();
                               })));
                             },
                             child: Container(
