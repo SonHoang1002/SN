@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,8 +9,9 @@ import 'package:social_network_app_mobile/providers/learn_space/learn_space_prov
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
+
+import '../../constant/common.dart';
 
 class LearnSpaceInvitations extends ConsumerStatefulWidget {
   const LearnSpaceInvitations({Key? key}) : super(key: key);
@@ -39,8 +41,10 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        String maxId =
-            ref.read(learnSpaceStateControllerProvider).course.last['id'];
+        String maxId = ref
+            .read(learnSpaceStateControllerProvider)
+            .courseInvitations
+            .last['id'];
         ref
             .read(learnSpaceStateControllerProvider.notifier)
             .getListCoursesInvitations({"max_id": maxId, ...paramsConfigList});
@@ -97,13 +101,13 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15)),
-                              child: ImageCacheRender(
-                                path: courseInvitations[index]['course']
-                                            ['banner'] !=
+                              child: ExtendedImage.network(
+                                courseInvitations[index]['course']['banner'] !=
                                         null
                                     ? courseInvitations[index]['course']
                                         ['banner']['url']
-                                    : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+                                    : linkBannerDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             onTap: () {
@@ -597,7 +601,20 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                 : const SizedBox(),
             isMore == true
                 ? const Center(child: CupertinoActivityIndicator())
-                : const SizedBox(),
+                : courseInvitations.isEmpty
+                    ? Column(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              "assets/wow-emo-2.gif",
+                              height: 125.0,
+                              width: 125.0,
+                            ),
+                          ),
+                          const Text('Không tìm thấy kết quả nào'),
+                        ],
+                      )
+                    : const SizedBox(),
           ],
         ),
       ),

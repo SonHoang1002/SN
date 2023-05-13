@@ -1,17 +1,21 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/recruit/recruit_provider.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recuit_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/text_readmore.dart';
+
+import '../Page/PageDetail/page_detail.dart';
+import '../UserPage/user_page.dart';
 
 class RecruitIntro extends ConsumerStatefulWidget {
   final recruitDetail;
@@ -162,27 +166,28 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(15),
                                         topRight: Radius.circular(15)),
-                                    child: ImageCacheRender(
-                                      path: recruitDetail['page_owner']
-                                                  ['banner'] !=
+                                    child: ExtendedImage.network(
+                                      recruitDetail['page_owner']['banner'] !=
                                               null
                                           ? recruitDetail['page_owner']
                                               ['avatar_media']['preview_url']
                                           : recruitDetail['page_owner']
                                               ['avatar_media']['show_url'],
+                                      fit: BoxFit.cover,
                                       width: MediaQuery.of(context).size.width,
                                       height: 180.0,
                                     ),
                                   )
                                 : ClipOval(
-                                    child: ImageCacheRender(
-                                      path: recruitDetail['account']
+                                    child: ExtendedImage.network(
+                                      recruitDetail['account']
                                                   ['avatar_media'] !=
                                               null
                                           ? recruitDetail['account']
                                               ['avatar_media']['url']
                                           : recruitDetail['account']
                                               ['avatar_static'],
+                                      fit: BoxFit.cover,
                                       width: 180.0,
                                       height: 180.0,
                                     ),
@@ -216,34 +221,62 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                           padding: const EdgeInsets.all(16.0),
                           child: Align(
                             alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 35,
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(189, 202, 202, 202),
-                                  borderRadius: BorderRadius.circular(6),
-                                  border:
-                                      Border.all(width: 0.2, color: greyColor)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(FontAwesomeIcons.user, size: 14),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    'Xem',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w700,
+                            child: InkWell(
+                              onTap: () {
+                                recruitDetail['page_owner'] != null
+                                    ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PageDetail(),
+                                          settings: RouteSettings(
+                                              arguments:
+                                                  recruitDetail['page_owner']
+                                                          ['id']
+                                                      .toString()),
+                                        ))
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const UserPage(),
+                                          settings: RouteSettings(
+                                            arguments: {
+                                              'id': recruitDetail['account']
+                                                  ['id']
+                                            },
+                                          ),
+                                        ));
+                              },
+                              child: Container(
+                                height: 35,
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        189, 202, 202, 202),
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                        width: 0.2, color: greyColor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(FontAwesomeIcons.user, size: 14),
+                                    SizedBox(
+                                      width: 5.0,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 3.0,
-                                  ),
-                                ],
+                                    Text(
+                                      'Xem',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 3.0,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -290,10 +323,14 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                           borderRadius: const BorderRadius.only(
                                               topLeft: Radius.circular(15),
                                               topRight: Radius.circular(15)),
-                                          child: ImageCacheRender(
-                                            path: recruitsPropose[indexPropose]
-                                                    ['banner']['preview_url'] ??
-                                                'https://sn.emso.vn/static/media/group_cover.81acfb42.png',
+                                          child: ExtendedImage.network(
+                                            recruitsPropose[indexPropose]
+                                                        ['banner'] !=
+                                                    null
+                                                ? recruitsPropose[indexPropose]
+                                                    ['banner']['preview_url']
+                                                : linkBannerDefault,
+                                            fit: BoxFit.cover,
                                             height: 180.0,
                                             width: MediaQuery.of(context)
                                                     .size
@@ -566,10 +603,14 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                           borderRadius: const BorderRadius.only(
                                               topLeft: Radius.circular(15),
                                               topRight: Radius.circular(15)),
-                                          child: ImageCacheRender(
-                                            path: recruitsSimilar[indexSimilar]
-                                                    ['banner']['preview_url'] ??
-                                                'https://sn.emso.vn/static/media/group_cover.81acfb42.png',
+                                          child: ExtendedImage.network(
+                                            recruitsSimilar[indexSimilar]
+                                                        ['banner'] !=
+                                                    null
+                                                ? recruitsSimilar[indexSimilar]
+                                                    ['banner']['preview_url']
+                                                : linkBannerDefault,
+                                            fit: BoxFit.cover,
                                             height: 180.0,
                                             width: MediaQuery.of(context)
                                                     .size

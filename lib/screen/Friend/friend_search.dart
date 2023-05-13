@@ -2,11 +2,14 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+
+import '../../theme/theme_manager.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -53,6 +56,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = pv.Provider.of<ThemeManager>(context);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -82,8 +87,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(30.0)),
                 hintText: "Tìm kiếm bạn bè",
-                hintStyle: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w300),
+                hintStyle: TextStyle(
+                    color: theme.isDarkMode ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.w400),
                 filled: true,
                 fillColor: Colors.grey.withOpacity(0.3),
                 suffixIcon: _hasValue
@@ -95,9 +101,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             _hasValue = false;
                           });
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.clear,
-                          color: Colors.white,
+                          size: 20,
+                          color: theme.isDarkMode ? Colors.white : Colors.black,
                         ),
                       )
                     : const SizedBox(),

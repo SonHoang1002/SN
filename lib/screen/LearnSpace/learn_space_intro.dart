@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,9 +12,10 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/text_readmore.dart';
+
+import '../../constant/common.dart';
 
 class LearnSpaceIntro extends ConsumerStatefulWidget {
   final dynamic courseDetail;
@@ -136,25 +138,26 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(15),
                                         topRight: Radius.circular(15)),
-                                    child: ImageCacheRender(
-                                      path: courseDetail['page_owner'] != null
-                                          ? courseDetail['page_owner']
-                                              ['avatar_media']['preview_url']
-                                          : courseDetail['page_owner']
-                                              ['avatar_media']['show_url'],
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 180.0,
-                                    ),
+                                    child: ExtendedImage.network(
+                                        courseDetail['page_owner'] != null
+                                            ? courseDetail['page_owner']
+                                                ['avatar_media']['preview_url']
+                                            : courseDetail['page_owner']
+                                                ['avatar_media']['show_url'],
+                                        fit: BoxFit.cover,
+                                        height: 180.0,
+                                        width:
+                                            MediaQuery.of(context).size.width),
                                   )
                                 : ClipOval(
-                                    child: ImageCacheRender(
-                                      path: courseDetail['account']
-                                                  ['avatar_media'] !=
+                                    child: ExtendedImage.network(
+                                      courseDetail['account']['avatar_media'] !=
                                               null
                                           ? courseDetail['account']
                                               ['avatar_media']['url']
                                           : courseDetail['account']
                                               ['avatar_static'],
+                                      fit: BoxFit.cover,
                                       width: 180.0,
                                       height: 180.0,
                                     ),
@@ -324,10 +327,14 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                           borderRadius: const BorderRadius.only(
                                               topLeft: Radius.circular(15),
                                               topRight: Radius.circular(15)),
-                                          child: ImageCacheRender(
-                                            path: coursePropose[indexPropose]
-                                                    ['banner']['preview_url'] ??
-                                                'https://sn.emso.vn/static/media/group_cover.81acfb42.png',
+                                          child: ExtendedImage.network(
+                                            coursePropose[indexPropose]
+                                                        ['banner'] !=
+                                                    null
+                                                ? coursePropose[indexPropose]
+                                                    ['banner']['preview_url']
+                                                : linkBannerDefault,
+                                            fit: BoxFit.cover,
                                             height: 180.0,
                                             width: MediaQuery.of(context)
                                                     .size
@@ -482,7 +489,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                                     [
                                                                     'follow_course'] ==
                                                                 true
-                                                            ? secondaryColor
+                                                            ? Colors.white
                                                             : Colors.black,
                                                         size: 14),
                                                     const SizedBox(
@@ -501,7 +508,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                                     [
                                                                     'follow_course'] ==
                                                                 true
-                                                            ? secondaryColor
+                                                            ? Colors.white
                                                             : Colors.black,
                                                         fontWeight:
                                                             FontWeight.w700,
@@ -613,10 +620,14 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                           borderRadius: const BorderRadius.only(
                                               topLeft: Radius.circular(15),
                                               topRight: Radius.circular(15)),
-                                          child: ImageCacheRender(
-                                            path: courseSimilar[indexSimilar]
-                                                    ['banner']['preview_url'] ??
-                                                'https://sn.emso.vn/static/media/group_cover.81acfb42.png',
+                                          child: ExtendedImage.network(
+                                            courseSimilar[indexSimilar]
+                                                        ['banner'] !=
+                                                    null
+                                                ? courseSimilar[indexSimilar]
+                                                    ['banner']['preview_url']
+                                                : linkBannerDefault,
+                                            fit: BoxFit.cover,
                                             height: 180.0,
                                             width: MediaQuery.of(context)
                                                     .size

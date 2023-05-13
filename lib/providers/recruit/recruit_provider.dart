@@ -13,6 +13,10 @@ class RecruitState {
   final bool isMore;
   final dynamic detailRecruit;
   final List recruitsChipMenu;
+  final List recruitsInterest;
+  final List recruitsPast;
+  final List recruitsNew;
+  final List recruitsNewPast;
 
   const RecruitState({
     this.recruits = const [],
@@ -23,26 +27,40 @@ class RecruitState {
     this.detailRecruit = const {},
     this.recruitsInvite = const [],
     this.recruitsChipMenu = const [],
+    this.recruitsNew = const [],
+    this.recruitsPast = const [],
+    this.recruitsInterest = const [],
+    this.recruitsNewPast = const [],
   });
 
-  RecruitState copyWith(
-      {List recruits = const [],
-      List recruitsSimilar = const [],
-      List recruitsCV = const [],
-      List recruitsPropose = const [],
-      bool isMore = true,
-      dynamic detailRecruit = const {},
-      List recruitsInvite = const [],
-      List recruitsChipMenu = const []}) {
+  RecruitState copyWith({
+    List recruits = const [],
+    List recruitsSimilar = const [],
+    List recruitsCV = const [],
+    List recruitsPropose = const [],
+    bool isMore = true,
+    dynamic detailRecruit = const {},
+    List recruitsInvite = const [],
+    List recruitsChipMenu = const [],
+    List recruitsNew = const [],
+    List recruitsPast = const [],
+    List recruitsInterest = const [],
+    List recruitsNewPast = const [],
+  }) {
     return RecruitState(
-        recruits: recruits,
-        isMore: isMore,
-        recruitsCV: recruitsCV,
-        detailRecruit: detailRecruit,
-        recruitsSimilar: recruitsSimilar,
-        recruitsPropose: recruitsPropose,
-        recruitsInvite: recruitsInvite,
-        recruitsChipMenu: recruitsChipMenu);
+      recruits: recruits,
+      isMore: isMore,
+      recruitsCV: recruitsCV,
+      detailRecruit: detailRecruit,
+      recruitsSimilar: recruitsSimilar,
+      recruitsPropose: recruitsPropose,
+      recruitsInvite: recruitsInvite,
+      recruitsChipMenu: recruitsChipMenu,
+      recruitsNew: recruitsNew,
+      recruitsPast: recruitsPast,
+      recruitsInterest: recruitsInterest,
+      recruitsNewPast: recruitsNewPast,
+    );
   }
 }
 
@@ -74,20 +92,222 @@ class RecruitController extends StateNotifier<RecruitState> {
         detailRecruit: state.detailRecruit,
         recruitsCV: state.recruitsCV,
         recruitsInvite: state.recruitsInvite,
+        recruitsChipMenu: state.recruitsChipMenu,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
       );
     } else {
       final newGrows =
           response.where((item) => !state.recruits.contains(item)).toList();
       state = state.copyWith(
-          recruits: params.containsKey('max_id')
-              ? [...state.recruits, ...newGrows]
-              : newGrows,
-          detailRecruit: state.detailRecruit,
-          recruitsSimilar: state.recruitsSimilar,
-          recruitsPropose: state.recruitsPropose,
-          recruitsCV: state.recruitsCV,
-          recruitsInvite: state.recruitsInvite,
-          isMore: false);
+        recruits: params.containsKey('max_id')
+            ? [...state.recruits, ...newGrows]
+            : newGrows,
+        detailRecruit: state.detailRecruit,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
+        recruitsChipMenu: state.recruitsChipMenu,
+        isMore: false,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
+      );
+    }
+  }
+
+  getListRecruitInterest(params) async {
+    List response = await RecruitApi().getListRecruitApi(params);
+    if (response.isNotEmpty) {
+      final newGrows = response
+          .where((item) => !state.recruitsInterest.contains(item))
+          .toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        isMore: params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+        recruitsChipMenu: state.recruitsChipMenu,
+        recruitsInvite: state.recruitsInvite,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: params.containsKey('max_id')
+            ? [...state.recruitsInterest, ...newGrows]
+            : newGrows,
+        recruitsNewPast: state.recruitsNewPast,
+      );
+    } else {
+      final newGrows = response
+          .where((item) => !state.recruitsInterest.contains(item))
+          .toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        detailRecruit: state.detailRecruit,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        recruitsCV: state.recruitsCV,
+        recruitsChipMenu: state.recruitsChipMenu,
+        recruitsInvite: state.recruitsInvite,
+        isMore: false,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: params.containsKey('max_id')
+            ? [...state.recruitsInterest, ...newGrows]
+            : newGrows,
+        recruitsNewPast: state.recruitsNewPast,
+      );
+    }
+  }
+
+  getListRecruitPast(params) async {
+    List response = await RecruitApi().getListRecruitApi(params);
+    if (response.isNotEmpty) {
+      final newGrows =
+          response.where((item) => !state.recruitsPast.contains(item)).toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        isMore: params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+        recruitsChipMenu: state.recruitsChipMenu,
+        recruitsInvite: state.recruitsInvite,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: params.containsKey('max_id')
+            ? [...state.recruitsPast, ...newGrows]
+            : newGrows,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
+      );
+    } else {
+      final newGrows =
+          response.where((item) => !state.recruitsPast.contains(item)).toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        isMore: false,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        detailRecruit: state.detailRecruit,
+        recruitsChipMenu: state.recruitsChipMenu,
+        recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: params.containsKey('max_id')
+            ? [...state.recruitsPast, ...newGrows]
+            : newGrows,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
+      );
+    }
+  }
+
+  getListRecruitNewPast(params) async {
+    List response = await RecruitApi().getListRecruitApi(params);
+    if (response.isNotEmpty) {
+      final newGrows =
+          response.where((item) => !state.recruitsPast.contains(item)).toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        isMore: params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        recruitsChipMenu: state.recruitsChipMenu,
+        detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: params.containsKey('max_id')
+            ? [...state.recruitsNewPast, ...newGrows]
+            : newGrows,
+      );
+    } else {
+      final newGrows = response
+          .where((item) => !state.recruitsNewPast.contains(item))
+          .toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        isMore: false,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
+        recruitsChipMenu: state.recruitsChipMenu,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: params.containsKey('max_id')
+            ? [...state.recruitsNewPast, ...newGrows]
+            : newGrows,
+      );
+    }
+  }
+
+  getListRecruitNew(params) async {
+    List response = await RecruitApi().getListRecruitApi(params);
+    if (response.isNotEmpty) {
+      final newGrows =
+          response.where((item) => !state.recruitsNew.contains(item)).toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        isMore: params['limit'] != null
+            ? response.length < params['limit']
+                ? false
+                : true
+            : false,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+        recruitsChipMenu: state.recruitsChipMenu,
+        recruitsInvite: state.recruitsInvite,
+        recruitsNew: params.containsKey('max_id')
+            ? [...state.recruitsNew, ...newGrows]
+            : newGrows,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
+      );
+    } else {
+      final newGrows =
+          response.where((item) => !state.recruitsNew.contains(item)).toList();
+      state = state.copyWith(
+        recruits: state.recruits,
+        isMore: false,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        detailRecruit: state.detailRecruit,
+        recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
+        recruitsChipMenu: state.recruitsChipMenu,
+        recruitsNew: params.containsKey('max_id')
+            ? [...state.recruitsNew, ...newGrows]
+            : newGrows,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
+      );
     }
   }
 
@@ -112,22 +332,31 @@ class RecruitController extends StateNotifier<RecruitState> {
         detailRecruit: state.detailRecruit,
         recruitsCV: state.recruitsCV,
         recruitsInvite: state.recruitsInvite,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
       );
     } else {
       final newGrows = response
           .where((item) => !state.recruitsChipMenu.contains(item))
           .toList();
       state = state.copyWith(
-          recruits: state.recruits,
-          recruitsChipMenu: params.containsKey('max_id')
-              ? [...state.recruits, ...newGrows]
-              : newGrows,
-          detailRecruit: state.detailRecruit,
-          recruitsSimilar: state.recruitsSimilar,
-          recruitsPropose: state.recruitsPropose,
-          recruitsCV: state.recruitsCV,
-          recruitsInvite: state.recruitsInvite,
-          isMore: false);
+        recruits: state.recruits,
+        recruitsChipMenu: params.containsKey('max_id')
+            ? [...state.recruits, ...newGrows]
+            : newGrows,
+        detailRecruit: state.detailRecruit,
+        recruitsSimilar: state.recruitsSimilar,
+        recruitsPropose: state.recruitsPropose,
+        recruitsCV: state.recruitsCV,
+        recruitsInvite: state.recruitsInvite,
+        isMore: false,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
+      );
     }
   }
 
@@ -138,6 +367,7 @@ class RecruitController extends StateNotifier<RecruitState> {
         recruitsPropose: response,
         recruitsSimilar: state.recruitsSimilar,
         recruits: state.recruits,
+        recruitsChipMenu: state.recruitsChipMenu,
         isMore: params['limit'] != null
             ? response.length < params['limit']
                 ? false
@@ -145,6 +375,10 @@ class RecruitController extends StateNotifier<RecruitState> {
             : false,
         detailRecruit: state.detailRecruit,
         recruitsCV: state.recruitsCV,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
       );
     }
   }
@@ -157,6 +391,7 @@ class RecruitController extends StateNotifier<RecruitState> {
         recruitsPropose: state.recruitsPropose,
         recruitsSimilar: state.recruitsSimilar,
         recruits: state.recruits,
+        recruitsChipMenu: state.recruitsChipMenu,
         isMore: params['limit'] != null
             ? response.length < params['limit']
                 ? false
@@ -164,6 +399,10 @@ class RecruitController extends StateNotifier<RecruitState> {
             : false,
         detailRecruit: state.detailRecruit,
         recruitsCV: state.recruitsCV,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
       );
     }
   }
@@ -175,6 +414,7 @@ class RecruitController extends StateNotifier<RecruitState> {
         recruitsSimilar: response,
         recruitsPropose: state.recruitsPropose,
         recruits: state.recruits,
+        recruitsChipMenu: state.recruitsChipMenu,
         isMore: params['limit'] != null
             ? response.length < params['limit']
                 ? false
@@ -183,6 +423,10 @@ class RecruitController extends StateNotifier<RecruitState> {
         detailRecruit: state.detailRecruit,
         recruitsCV: state.recruitsCV,
         recruitsInvite: state.recruitsInvite,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
       );
     }
   }
@@ -195,9 +439,14 @@ class RecruitController extends StateNotifier<RecruitState> {
         recruitsSimilar: response,
         recruitsPropose: state.recruitsPropose,
         recruits: state.recruits,
+        recruitsChipMenu: state.recruitsChipMenu,
         isMore: state.isMore,
         detailRecruit: state.detailRecruit,
         recruitsInvite: state.recruitsInvite,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
       );
     }
   }
@@ -208,11 +457,16 @@ class RecruitController extends StateNotifier<RecruitState> {
       state = state.copyWith(
         detailRecruit: response,
         recruits: state.recruits,
+        recruitsChipMenu: state.recruitsChipMenu,
         recruitsCV: state.recruitsCV,
         isMore: state.isMore,
         recruitsSimilar: state.recruitsSimilar,
         recruitsPropose: state.recruitsPropose,
         recruitsInvite: state.recruitsInvite,
+        recruitsNew: state.recruitsNew,
+        recruitsPast: state.recruitsPast,
+        recruitsInterest: state.recruitsInterest,
+        recruitsNewPast: state.recruitsNewPast,
       );
     }
   }
@@ -222,13 +476,19 @@ class RecruitController extends StateNotifier<RecruitState> {
     if (response.isNotEmpty) {
       if (mounted) {
         state = state.copyWith(
-            recruits: response,
-            recruitsCV: state.recruitsCV,
-            detailRecruit: state.detailRecruit,
-            recruitsSimilar: state.recruitsSimilar,
-            recruitsPropose: state.recruitsPropose,
-            recruitsInvite: state.recruitsInvite,
-            isMore: response.length < params['limit'] ? false : true);
+          recruits: response,
+          recruitsCV: state.recruitsCV,
+          detailRecruit: state.detailRecruit,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          isMore: response.length < params['limit'] ? false : true,
+          recruitsChipMenu: state.recruitsChipMenu,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+        );
       }
     } else {
       if (mounted) {
@@ -239,31 +499,183 @@ class RecruitController extends StateNotifier<RecruitState> {
           recruitsSimilar: state.recruitsSimilar,
           recruitsPropose: state.recruitsPropose,
           recruitsInvite: state.recruitsInvite,
+          recruitsChipMenu: state.recruitsChipMenu,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
         );
       }
     }
   }
 
-  updateStatusRecruit(params, id) async {
+  updateStatusRecruit(params, id, {String name = 'recruits'}) async {
     params == true
         ? await RecruitApi().recruitUpdateStatusApi(id)
         : await RecruitApi().recruitDeleteStatusApi(id);
-    final indexRecruitUpdate =
-        state.recruits.indexWhere((element) => element['id'] == id.toString());
-    final eventUpdate = {
-      ...state.recruits[indexRecruitUpdate],
-      'recruit_relationships': {
-        ...state.recruits[indexRecruitUpdate]['recruit_relationships'],
-        'follow_recruit': params
-      }
-    };
-    state = state.copyWith(
-        recruits: [...state.recruits]..[indexRecruitUpdate] = eventUpdate,
-        detailRecruit: state.detailRecruit,
-        recruitsCV: state.recruitsCV,
-        recruitsSimilar: state.recruitsSimilar,
-        recruitsPropose: state.recruitsPropose,
-        recruitsInvite: state.recruitsInvite,
-        isMore: state.isMore);
+    List recruitsList;
+    switch (name) {
+      case 'recruitsNew':
+        recruitsList = state.recruitsNew;
+        break;
+      case 'recruitsInterest':
+        recruitsList = state.recruitsInterest;
+        break;
+      case 'recruitsInvite':
+        recruitsList = state.recruitsInvite;
+        break;
+      case 'recruitsNewPast':
+        recruitsList = state.recruitsNewPast;
+        break;
+      case 'recruitsPast':
+        recruitsList = state.recruitsPast;
+        break;
+      case 'detailRecruit':
+        recruitsList = state.recruitsPast;
+        break;
+      default:
+        recruitsList = state.recruits;
+        break;
+    }
+
+    final indexRecruitUpdate = name != 'detailRecruit'
+        ? recruitsList.indexWhere((element) => element['id'] == id.toString())
+        : null;
+
+    final eventUpdate = name != 'detailRecruit'
+        ? {
+            ...recruitsList[indexRecruitUpdate!],
+            'recruit_relationships': {
+              ...recruitsList[indexRecruitUpdate]['recruit_relationships'],
+              'follow_recruit': params
+            }
+          }
+        : null;
+
+    switch (name) {
+      case 'recruitsNew':
+        state = state.copyWith(
+          recruits: state.recruits,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          isMore: state.isMore,
+          recruitsNew: [...state.recruitsNew]..[indexRecruitUpdate!] =
+              eventUpdate,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+      case 'detailRecruit':
+        state = state.copyWith(
+          recruits: state.recruits,
+          detailRecruit: {
+            ...state.detailRecruit,
+            "recruit_relationships": {
+              ...state.detailRecruit["recruit_relationships"],
+              "follow_recruit": params
+            }
+          },
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          isMore: state.isMore,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+      case 'recruitsInterest':
+        state = state.copyWith(
+          recruits: state.recruits,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          isMore: state.isMore,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: [...state.recruitsInterest]..[indexRecruitUpdate!] =
+              eventUpdate,
+          recruitsNewPast: state.recruitsNewPast,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+      case 'recruitsInvite':
+        state = state.copyWith(
+          recruits: state.recruits,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: [...state.recruitsInvite]..[indexRecruitUpdate!] =
+              eventUpdate,
+          isMore: state.isMore,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+      case 'recruitsNewPast':
+        state = state.copyWith(
+          recruits: state.recruits,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          isMore: state.isMore,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: [...state.recruitsNewPast]..[indexRecruitUpdate!] =
+              eventUpdate,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+      case 'recruitsPast':
+        state = state.copyWith(
+          recruits: state.recruits,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          isMore: state.isMore,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: [...state.recruitsPast]..[indexRecruitUpdate!] =
+              eventUpdate,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+      default:
+        state = state.copyWith(
+          recruits: [...state.recruits]..[indexRecruitUpdate!] = eventUpdate,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          isMore: state.isMore,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+    }
   }
 }

@@ -8,6 +8,7 @@ import 'package:social_network_app_mobile/providers/friend/friend_provider.dart'
 import 'package:social_network_app_mobile/screen/Friend/friend_search.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class FriendSuggest extends ConsumerStatefulWidget {
@@ -43,7 +44,8 @@ class _FriendSuggestState extends ConsumerState<FriendSuggest> {
         elevation: 0,
         titleSpacing: 0,
         leading: const BackIconAppbar(),
-        title: const Text('Gợi ý'),
+        centerTitle: true,
+        title: const AppBarTitle(title: 'Gợi ý'),
         actions: [
           InkWell(
             onTap: () {
@@ -123,7 +125,7 @@ class _FriendSuggestState extends ConsumerState<FriendSuggest> {
                                         height: 10,
                                       ),
                                       Text(
-                                          '${friendSuggestions[index]['friends_count']} bạn chung',
+                                          '${friendSuggestions[index]['relationships']['mutual_friend_count'] ?? 0} bạn chung',
                                           style: const TextStyle(
                                               color: greyColor)),
                                       const SizedBox(

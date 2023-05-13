@@ -116,8 +116,9 @@ dependencies:
   shared_preferences: ^2.1.0
   # flutter_typeahead: ^4.3.7
   extended_image: ^7.0.2
+  webview_flutter: ^3.0.4
   # flutter_image_compress: ^2.0.2
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

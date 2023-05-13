@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/providers/search/search_provider.dart';
 import 'package:social_network_app_mobile/screen/Search/searchHistory.dart';
 import 'package:social_network_app_mobile/screen/Search/search_result.dart';
@@ -59,7 +60,7 @@ class _SearchState extends ConsumerState<Search> {
     Future.delayed(Duration.zero, () async {
       await ref
           .read(searchControllerProvider.notifier)
-          .getSearchHistory({"limit": 6, "page": 1});
+          .getSearchHistory({"limit": 6, "page": 1, "global": true});
     });
     if (widget.keyword != null) {
       setState(() {
@@ -109,6 +110,7 @@ class _SearchState extends ConsumerState<Search> {
                             .getSearchDetail(
                                 {"q": keyword, 'offset': 1, "limit": 5});
                       });
+                      SearchApi().postSearchHistoriesApi({"keyword": keyword});
                     },
                     borderRadius: BorderRadius.circular(10.0),
                     child: Container(
