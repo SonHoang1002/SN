@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
@@ -105,10 +106,19 @@ class _PostHeaderState extends State<PostHeader> {
       splashColor: transparent,
       onTap: () {
         if (widget.type != postDetail) {
-          Navigator.push(
+          pushCustomCupertinoPageRoute(
               context,
-              CupertinoPageRoute(
-                  builder: (context) => PostDetail(post: widget.post,preType: widget.type,)));
+              PostDetail(
+                post: widget.post,
+                preType: widget.type,
+              ));
+          // Navigator.push(
+          //     context,
+          //     CupertinoPageRoute(
+          //         builder: (context) => PostDetail(
+          //               post: widget.post,
+          //               preType: widget.type,
+          //             )));
         }
       },
       child: Padding(
@@ -271,14 +281,18 @@ class BlockNamePost extends StatelessWidget {
       if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
         Navigator.pushNamed(context, '/page', arguments: page);
       } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const UserPage(),
-              settings: RouteSettings(
-                arguments: {'id': account['id']},
-              ),
+        pushCustomCupertinoPageRoute(context, const UserPage(),
+            settings: RouteSettings(
+              arguments: {'id': account['id']},
             ));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const UserPage(),
+        //       settings: RouteSettings(
+        //         arguments: {'id': account['id']},
+        //       ),
+        //     ));
       }
     }
 
@@ -326,11 +340,13 @@ class BlockNamePost extends StatelessWidget {
                       text: '${mentions.length - 1} người khác',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) =>
-                                      PageMention(mentions: mentions)));
+                          pushCustomCupertinoPageRoute(
+                              context, PageMention(mentions: mentions));
+                          // Navigator.push(
+                          //     context,
+                          //     CupertinoPageRoute(
+                          //         builder: (context) =>
+                          //             PageMention(mentions: mentions)));
                         })
                   : const TextSpan(),
             ],

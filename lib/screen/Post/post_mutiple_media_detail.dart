@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -34,18 +35,14 @@ class PostMutipleMediaDetail extends StatefulWidget {
 
 class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
   late ScrollController _scrollParentController;
-  bool isShowImage = false;
-  int? imgIndex;
-  GlobalKey imageSingleKey = GlobalKey();
-  double? imagSingleHeight;
   bool isDragOutside = false;
   bool canDragOutside = false;
   bool isHaveAppbar = true;
-  double? spacerBottom = 0;
-  double? spacerTop = 0;
   double? beginPositonY = 0;
   double? updatePositonY = 0;
   String closeDirection = "";
+  // tránh conflict giữa cử chỉ drag outside lên rồi xuống
+  ScrollDirection? beginDirection;
   @override
   void initState() {
     super.initState();
@@ -77,33 +74,44 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
     if (_scrollParentController.position.userScrollDirection ==
         ScrollDirection.forward) {
       if (canDragOutside && isDragOutside) {
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           isHaveAppbar = false;
         });
+        // });
       } else {
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           isHaveAppbar = true;
         });
+        // });
       }
     }
     if (_scrollParentController.position.userScrollDirection ==
         ScrollDirection.reverse) {
       if (canDragOutside && isDragOutside) {
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           isHaveAppbar = false;
         });
+        // });
         if (double.parse((_scrollParentController.offset).toStringAsFixed(1)) ==
             double.parse((_scrollParentController.position.maxScrollExtent)
                 .toStringAsFixed(1))) {
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             isDragOutside = false;
+            showBgContainer.value = true;
             isHaveAppbar = true;
           });
+          // });
         }
       } else {
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           isHaveAppbar = true;
         });
+        // });
       }
     }
   }
@@ -119,18 +127,25 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                 -10.0 &&
             double.parse((_scrollParentController.offset).toStringAsFixed(1)) <
                 0.0) {
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             isDragOutside = true;
+
+            showBgContainer.value = false;
           });
+          // });
         }
       }
       if (canDragOutside == true && isDragOutside == true) {
         if (double.parse((_scrollParentController.offset).toStringAsFixed(1)) ==
             double.parse((_scrollParentController.position.maxScrollExtent)
                 .toStringAsFixed(1))) {
-          setState(() {
-            isDragOutside = false;
-            isHaveAppbar = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              isDragOutside = false;
+              showBgContainer.value = true;
+              isHaveAppbar = true;
+            });
           });
         }
       }
@@ -150,9 +165,12 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                 0.0 &&
             double.parse((_scrollParentController.offset).toStringAsFixed(1)) <
                 10.0) {
-          setState(() {
-            isDragOutside = false;
-            isHaveAppbar = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              isDragOutside = false;
+              showBgContainer.value = true;
+              isHaveAppbar = true;
+            });
           });
         }
       }
@@ -165,8 +183,11 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
             //     double.parse((_scrollParentController.position.maxScrollExtent)
             //         .toStringAsFixed(1))
             ) {
-          setState(() {
-            isDragOutside = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              isDragOutside = true;
+              showBgContainer.value = false;
+            });
           });
         }
       }
@@ -182,6 +203,8 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
     return media['type'] == 'image' ? true : false;
   }
 
+  ValueNotifier<bool> showBgContainer = ValueNotifier(true);
+
   @override
   Widget build(BuildContext context) {
     List medias = widget.post['media_attachments'];
@@ -190,7 +213,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
     final width = size.width;
     return Scaffold(
         appBar: isHaveAppbar ? buildAppbar() as PreferredSizeWidget : null,
-        backgroundColor: blackColor.withOpacity(0.1),
+        backgroundColor: transparent,
         body: SafeArea(
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 500),
@@ -200,7 +223,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
             transform: Matrix4.translationValues(
                 0,
                 closeDirection == closeBottomToTop
-                    ? 0
+                    ? -height
                     : closeDirection == closeTopToBottom
                         ? height
                         : 0,
@@ -210,13 +233,28 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
             },
             child: Stack(
               children: [
+                // ValueListenableBuilder<bool>(
+                //     valueListenable: showBgContainer,
+                //     builder: (ctx, state, child) {
+                //       if (state) {
+                //         return Container(
+                //           height: height,
+                //           width: width,
+                //           color: Theme.of(context).scaffoldBackgroundColor,
+                //         );
+                //       } else {
+                //         return const SizedBox();
+                //       }
+                //     }),
+
                 Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
                   margin: EdgeInsets.only(
-                    top: ((updatePositonY! - beginPositonY!) > 0
+                    top: (beginDirection == ScrollDirection.forward &&
+                            (updatePositonY! - beginPositonY!) > 0
                         ? (updatePositonY! - beginPositonY!)
                         : 0),
-                    bottom: ((updatePositonY! - beginPositonY!) < 0
+                    bottom: (beginDirection == ScrollDirection.reverse &&
+                            (updatePositonY! - beginPositonY!) < 0
                         ? (updatePositonY! - beginPositonY!).abs()
                         : 0),
                   ),
@@ -231,6 +269,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                             _scrollParentController.offset ==
                                 _scrollParentController
                                     .position.maxScrollExtent) {
+                          // WidgetsBinding.instance.addPostFrameCallback((_) {
                           setState(() {
                             canDragOutside = true;
                             beginPositonY = notification.dragDetails != null
@@ -240,39 +279,72 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                 ? notification.dragDetails!.globalPosition.dy
                                 : 0;
                           });
+                          // });
                         } else {
-                          setState(() {
-                            canDragOutside = false;
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              canDragOutside = false;
+                            });
                           });
                         }
                       }
                       if (notification is ScrollUpdateNotification) {
                         if (isDragOutside) {
-                          setState(() {
-                            updatePositonY = notification.dragDetails != null
-                                ? notification.dragDetails!.globalPosition.dy
-                                : updatePositonY;
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              updatePositonY = notification.dragDetails != null
+                                  ? notification.dragDetails!.globalPosition.dy
+                                  : updatePositonY;
+                              beginDirection ??= _scrollParentController
+                                  .position.userScrollDirection;
+                            });
                           });
                         }
                       }
                       if (notification is ScrollEndNotification) {
-                        if ((updatePositonY! - beginPositonY!).abs() < 50) {
-                          setState(() {
-                            isDragOutside = false;
-                            updatePositonY = 0;
-                            beginPositonY = 0;
+                        if (
+                            // (updatePositonY! - beginPositonY!)>0 &&
+                            (updatePositonY! - beginPositonY!).abs() < 50
+                            //  || (updatePositonY! - beginPositonY!)<0 && (updatePositonY! - beginPositonY!) > -100
+                            ) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              isDragOutside = false;
+                              showBgContainer.value = true;
+                              updatePositonY = 0;
+                              beginPositonY = 0;
+                              isHaveAppbar = true;
+                              beginDirection = null;
+                            });
                           });
                         } else {
-                          if ((updatePositonY! - beginPositonY!) > 0) {
-                            setState(() {
-                              isDragOutside = false;
-                              closeDirection = closeTopToBottom;
+                          if (beginDirection == ScrollDirection.forward &&
+                              (updatePositonY! - beginPositonY!) > 0) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              setState(() {
+                                // isDragOutside = false;
+                                showBgContainer.value = true;
+                                closeDirection = closeTopToBottom;
+                              });
                             });
-                          } else {
-                            setState(() {
-                              isDragOutside = false;
-                              closeDirection = closeBottomToTop;
+                          } else if (beginDirection ==
+                                  ScrollDirection.reverse &&
+                              (updatePositonY! - beginPositonY!) < 0) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              setState(() {
+                                // isDragOutside = false;
+                                showBgContainer.value = true;
+                                closeDirection = closeBottomToTop;
+                              });
                             });
+                          } else { 
+                            if (beginDirection != null) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                setState(() {
+                                  beginDirection = null;
+                                });
+                              });
+                            }
                           }
                         }
                       }
@@ -280,13 +352,14 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                     },
                     child: Column(
                       children: [
-                        isDragOutside ? buildAppbar() : const SizedBox(),
                         Flexible(
                             flex: 1,
                             child: Container(
-                              color: transparent,
+                              color:isDragOutside ? transparent:Theme.of(context).scaffoldBackgroundColor,
                               child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
+                                physics: !isDragOutside
+                                    ? const BouncingScrollPhysics()
+                                    : const CustomBouncingScrollPhysics(),
                                 controller: _scrollParentController,
                                 child: Container(
                                   color:
@@ -295,9 +368,9 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        // isDragOutside
-                                        //     ? buildAppbar()
-                                        //     : const SizedBox(),
+                                        isDragOutside
+                                            ? buildAppbar()
+                                            : const SizedBox(),
                                         const SizedBox(
                                           height: 12.0,
                                         ),
@@ -369,42 +442,16 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                                                   medias[index]
                                                                       ['id']),
                                                               fit: BoxFit.cover,
-                                                              width:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                              height: double.parse(
-                                                                  medias[index]['meta']
-                                                                              ["small"]
-                                                                          ["height"]
-                                                                      .toString())
-                                                              // ImageCacheRender(
-                                                              //     key: Key(medias[index]['id']
-                                                              //         .toString()),
-                                                              //     path: medias[index]['url'],
-                                                              //     width: MediaQuery.of(context)
-                                                              //         .size
-                                                              //         .width,
-                                                              //     height: double.parse(
-                                                              //         medias[index]['meta']
-                                                              //                 ["small"]["height"]
-                                                              //             .toString())
-                                                              ),
+                                                              width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width,
+                                                              height: double.parse(medias[index]
+                                                                              ['meta']
+                                                                          ["small"]
+                                                                      ["height"]
+                                                                  .toString())),
                                                         ),
-                                                        // isShowImage &&
-                                                        //         imgIndex ==
-                                                        //             index
-                                                        //     ? SizedBox(
-                                                        //         width: MediaQuery.of(
-                                                        //                 context)
-                                                        //             .size
-                                                        //             .width,
-                                                        //         height: double.parse(medias[index]['meta']["small"]
-                                                        //                 [
-                                                        //                 "height"]
-                                                        //             .toString()))
-                                                        //     : Container()
                                                       ],
                                                     )),
                                                 PostFooter(
@@ -424,7 +471,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                         ),
                                         Container(
                                           color: transparent,
-                                          height: isDragOutside ? 100 : 20,
+                                          height: 20,
                                         )
                                       ]),
                                 ),
@@ -470,7 +517,9 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
 }
 
 class CustomBouncingScrollPhysics extends BouncingScrollPhysics {
-  const CustomBouncingScrollPhysics({ScrollPhysics? parent})
+  final bool isAcceptScroll;
+  const CustomBouncingScrollPhysics(
+      {ScrollPhysics? parent, this.isAcceptScroll = true})
       : super(parent: parent);
 
   @override
@@ -479,193 +528,21 @@ class CustomBouncingScrollPhysics extends BouncingScrollPhysics {
   }
 
   @override
-  double applyBoundaryConditions(ScrollMetrics position, double value) {
-    if (value < position.pixels &&
-        position.pixels <= position.minScrollExtent) {
-      return value - position.pixels;
+  Simulation? createBallisticSimulation(
+      ScrollMetrics position, double velocity) {
+    final Tolerance tolerance = this.tolerance;
+    if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
+      double constantDeceleration;
+      switch (decelerationRate) {
+        case ScrollDecelerationRate.fast:
+          constantDeceleration = 1400;
+          break;
+        case ScrollDecelerationRate.normal:
+          constantDeceleration = 0;
+          break;
+      }
+      return null;
     }
-    if (position.maxScrollExtent <= position.pixels &&
-        position.pixels < value) {
-      return value - position.pixels;
-    }
-    if (value < position.minScrollExtent &&
-        position.minScrollExtent < position.pixels) {
-      return value - position.minScrollExtent;
-    }
-    if (position.maxScrollExtent < value &&
-        position.pixels < position.maxScrollExtent) {
-      return value - position.maxScrollExtent;
-    }
-    return 0.0;
+    return null;
   }
 }
-
-// class CustomBouncingScrollPhysics extends ScrollPhysics {
-//   /// Creates scroll physics that bounce back from the edge.
-//   const CustomBouncingScrollPhysics({
-//     this.decelerationRate = ScrollDecelerationRate.normal,
-//     this.isOverScroll ,
-//     super.parent,
-//   });
-
-//   /// Used to determine parameters for friction simulations.
-//   final ScrollDecelerationRate decelerationRate;
-//   final bool? isOverScroll;
-
-//   @override
-//   CustomBouncingScrollPhysics applyTo(ScrollPhysics? ancestor) {
-//     return CustomBouncingScrollPhysics(
-//         parent: buildParent(ancestor), decelerationRate: decelerationRate);
-//   }
-
-//   @override
-//   bool shouldAcceptUserOffset(ScrollMetrics position) => isOverScroll??true;
-
-//   @override
-//   bool get allowImplicitScrolling => isOverScroll??true;
-
-//   /// The multiple applied to overscroll to make it appear that scrolling past
-//   /// the edge of the scrollable contents is harder than scrolling the list.
-//   /// This is done by reducing the ratio of the scroll effect output vs the
-//   /// scroll gesture input.
-//   ///
-//   /// This factor starts at 0.52 and progressively becomes harder to overscroll
-//   /// as more of the area past the edge is dragged in (represented by an increasing
-//   /// `overscrollFraction` which starts at 0 when there is no overscroll).
-//   double frictionFactor(double overscrollFraction) {
-//     switch (decelerationRate) {
-//       case ScrollDecelerationRate.fast:
-//         return 0.07 * math.pow(1 - overscrollFraction, 2);
-//       case ScrollDecelerationRate.normal:
-//         return 0.52 * math.pow(1 - overscrollFraction, 2);
-//     }
-//   }
-
-//   @override
-//   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
-//     assert(offset != 0.0);
-//     assert(position.minScrollExtent <= position.maxScrollExtent);
-
-//     if (!position.outOfRange) {
-//       return offset;
-//     }
-
-//     final double overscrollPastStart =
-//         math.max(position.minScrollExtent - position.pixels, 0.0);
-//     final double overscrollPastEnd =
-//         math.max(position.pixels - position.maxScrollExtent, 0.0);
-//     final double overscrollPast =
-//         math.max(overscrollPastStart, overscrollPastEnd);
-//     final bool easing = (overscrollPastStart > 0.0 && offset < 0.0) ||
-//         (overscrollPastEnd > 0.0 && offset > 0.0);
-
-//     final double friction = easing
-//         // Apply less resistance when easing the overscroll vs tensioning.
-//         ? frictionFactor(
-//             (overscrollPast - offset.abs()) / position.viewportDimension)
-//         : frictionFactor(overscrollPast / position.viewportDimension);
-//     final double direction = offset.sign;
-
-//     return direction * _applyFriction(overscrollPast, offset.abs(), friction);
-//   }
-
-//   static double _applyFriction(
-//       double extentOutside, double absDelta, double gamma) {
-//     assert(absDelta > 0);
-//     double total = 0.0;
-//     if (extentOutside > 0) {
-//       final double deltaToLimit = extentOutside / gamma;
-//       if (absDelta < deltaToLimit) {
-//         return absDelta * gamma;
-//       }
-//       total += extentOutside;
-//       absDelta -= deltaToLimit;
-//     }
-//     return total + absDelta;
-//   }
-
-//   @override
-//   double applyBoundaryConditions(ScrollMetrics position, double value) => 0.0;
-
-//   @override
-//   Simulation? createBallisticSimulation(
-//       ScrollMetrics position, double velocity) {
-//     final Tolerance tolerance = this.tolerance;
-//     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
-//       double constantDeceleration;
-//       switch (decelerationRate) {
-//         case ScrollDecelerationRate.fast:
-//           constantDeceleration = 1400;
-//           break;
-//         case ScrollDecelerationRate.normal:
-//           constantDeceleration = 0;
-//           break;
-//       }
-//       return BouncingScrollSimulation(
-//           spring: spring,
-//           position: position.pixels,
-//           velocity: velocity,
-//           leadingExtent: position.minScrollExtent,
-//           trailingExtent: position.maxScrollExtent,
-//           tolerance: tolerance,
-//           constantDeceleration: constantDeceleration);
-//     }
-//     return null;
-//   }
-
-//   // The ballistic simulation here decelerates more slowly than the one for
-//   // ClampingScrollPhysics so we require a more deliberate input gesture
-//   // to trigger a fling.
-//   @override
-//   double get minFlingVelocity => kMinFlingVelocity * 2.0;
-
-//   // Methodology:
-//   // 1- Use https://github.com/flutter/platform_tests/tree/master/scroll_overlay to test with
-//   //    Flutter and platform scroll views superimposed.
-//   // 3- If the scrollables stopped overlapping at any moment, adjust the desired
-//   //    output value of this function at that input speed.
-//   // 4- Feed new input/output set into a power curve fitter. Change function
-//   //    and repeat from 2.
-//   // 5- Repeat from 2 with medium and slow flings.
-//   /// Momentum build-up function that mimics iOS's scroll speed increase with repeated flings.
-//   ///
-//   /// The velocity of the last fling is not an important factor. Existing speed
-//   /// and (related) time since last fling are factors for the velocity transfer
-//   /// calculations.
-//   @override
-//   double carriedMomentum(double existingVelocity) {
-//     return existingVelocity.sign *
-//         math.min(0.000816 * math.pow(existingVelocity.abs(), 1.967).toDouble(),
-//             40000.0);
-//   }
-
-//   // Eyeballed from observation to counter the effect of an unintended scroll
-//   // from the natural motion of lifting the finger after a scroll.
-//   @override
-//   double get dragStartDistanceMotionThreshold => 3.5;
-
-//   @override
-//   double get maxFlingVelocity {
-//     switch (decelerationRate) {
-//       case ScrollDecelerationRate.fast:
-//         return kMaxFlingVelocity * 8.0;
-//       case ScrollDecelerationRate.normal:
-//         return super.maxFlingVelocity;
-//     }
-//   }
-
-//   @override
-//   SpringDescription get spring {
-//     switch (decelerationRate) {
-//       case ScrollDecelerationRate.fast:
-//         return SpringDescription.withDampingRatio(
-//           mass: 0.3,
-//           stiffness: 75.0,
-//           ratio: 1.3,
-//         );
-//       case ScrollDecelerationRate.normal:
-//         return super.spring;
-//     }
-//   }
-// }
-

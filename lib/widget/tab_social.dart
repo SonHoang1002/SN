@@ -29,8 +29,13 @@ class _TabSocialState extends State<TabSocial> with TickerProviderStateMixin {
     if (!mounted) return;
 
     super.initState();
-    _tabController =
-        TabController(length: widget.tabHeader!.length, vsync: this);
+    _tabController = TabController(
+        length: widget.tabHeader != null
+            ? widget.tabHeader!.length
+            : widget.tabCustom != null
+                ? widget.tabCustom!.length
+                : 0,
+        vsync: this);
   }
 
   @override
@@ -52,11 +57,15 @@ class _TabSocialState extends State<TabSocial> with TickerProviderStateMixin {
             unselectedLabelColor:
                 Theme.of(context).textTheme.displayLarge!.color,
             tabs: List.generate(
-              widget.tabHeader!.length,
+              widget.tabHeader != null
+                  ? widget.tabHeader!.length
+                  : widget.tabCustom != null
+                      ? widget.tabCustom!.length
+                      : 0,
               (index) => Tab(
                 icon:
                     widget.tabCustom != null ? widget.tabCustom![index] : null,
-                text: widget.tabHeader![index],
+                text: widget.tabHeader != null ? widget.tabHeader![index] : "",
               ),
             ),
           ),

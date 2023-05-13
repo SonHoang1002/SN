@@ -54,10 +54,10 @@ class _FeedState extends ConsumerState<Feed> {
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                120.0 ==
+                100.0 ==
             0) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 1000), () {
+              'my-debouncer', const Duration(milliseconds: 800), () {
             String maxId =
                 ref.watch(postControllerProvider).posts.last['score'];
             ref.read(postControllerProvider.notifier).getListPost({
@@ -86,7 +86,9 @@ class _FeedState extends ConsumerState<Feed> {
           controller: scrollController,
           child: Column(
             children: [
-              const CreatePostButton(),
+              CreatePostButton(
+                preType: feedPost,
+              ),
               const CrossBar(
                 height: 5,
               ),

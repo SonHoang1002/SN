@@ -76,20 +76,23 @@ class DrishyaEntity extends AssetEntity {
       if (pickedThumbData != null) {
         thumbnailBytes = pickedThumbData;
       } else {
-        thumbnailBytes = await thumbnailData;
+        thumbnailBytes = await thumbnailDataWithSize(
+          quality:100,
+        const ThumbnailSize.square(200),
+      );
       }
 
       if (thumbnailBytes != null) {
-        final image = img.decodeImage(thumbnailBytes);
-        if (image != null) {
-          final thumbnailWithQuality = img.encodeJpg(image, quality: quality);
-          return Uint8List.fromList(thumbnailWithQuality);
-        }
+        // final image = img.decodeImage(thumbnailBytes);
+        // if (image != null) {
+          // final thumbnailWithQuality = img.encodeJpg(image, quality: quality);
+          return Uint8List.fromList(thumbnailBytes);
+        // }
       }
     }
     return null;
   }
-
+ 
   ///
   @override
   DrishyaEntity copyWith({

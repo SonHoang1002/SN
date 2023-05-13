@@ -393,9 +393,9 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                                           Container(
                                             width: 25,
                                             height: 25,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: secondaryColorSelected),
+                                            // decoration: BoxDecoration(
+                                            //     shape: BoxShape.circle,
+                                            //     color: secondaryColorSelected),
                                             child: Image.asset(
                                               menuShare[index]['icon'],
                                               height: 15,

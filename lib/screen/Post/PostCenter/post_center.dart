@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_project.dart';
 import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
 
 import '../../../theme/colors.dart';
 import 'PostType/avatar_banner.dart';
+import 'PostType/post_course.dart';
+import 'PostType/post_product.dart';
+import 'PostType/post_recruit.dart';
 import 'PostType/post_share_event.dart';
 import 'PostType/post_share_group.dart';
 import 'PostType/post_share_page.dart';
@@ -105,6 +109,24 @@ class _PostCenterState extends State<PostCenter> {
             widget.post['place'] != null
                 ? MapWidgetItem(checkin: widget.post['place'])
                 : const SizedBox(),
+            widget.post['shared_course'] != null
+                ? PostCourse(post: widget.post)
+                : const SizedBox(),
+            widget.post['shared_project'] != null
+                ? PostProject(post: widget.post)
+                : const SizedBox(),
+            widget.post['shared_recruit'] != null
+                ? PostRecruit(post: widget.post)
+                : const SizedBox(),
+            widget.post['shared_product'] != null
+                ? PostProduct(post: widget.post)
+                : const SizedBox(),
+            widget.post['shared_event'] != null
+                ? PostShareEvent(post: widget.post)
+                : const SizedBox(),
+            // "shared_product": null,
+            // "shared_page": null,
+            // "shared_group": null,
             postType != '' ? renderPostType(postType) : const SizedBox(),
           ],
         ));
@@ -119,9 +141,11 @@ class _PostCenterState extends State<PostCenter> {
         type: postType == postVisibleQuestion ? postQuestionAnwer : postTarget,
         statusQuestion: widget.post['status_question'],
       );
-    } else if (postType == postShareEvent) {
-      return PostShareEvent(post: widget.post);
-    } else {
+    }
+    // else if (postType == postShareEvent) {
+    //   return PostShareEvent(post: widget.post);
+    // }
+    else {
       return const SizedBox();
     }
   }

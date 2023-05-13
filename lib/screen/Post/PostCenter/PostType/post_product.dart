@@ -1,0 +1,189 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/rating_star_widget.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widget/avatar_social.dart';
+
+class PostProduct extends StatefulWidget {
+  final dynamic post;
+  const PostProduct({Key? key, this.post}) : super(key: key);
+
+  @override
+  State<PostProduct> createState() => _PostProductState();
+}
+
+class _PostProductState extends State<PostProduct> {
+  bool isScrollToLimit = true;
+  dynamic product;
+  @override
+  void initState() {
+    super.initState();
+    product = widget.post['shared_product'];
+  }
+
+  @override
+  Widget build(BuildContext context) { 
+    product ??= widget.post['shared_product'];
+    final size = MediaQuery.of(context).size;
+    return GestureDetector(
+      onTap: () {
+        // Navigator.pushNamed(context, '/course', arguments: page);
+      },
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 5,
+          ),
+          Container(
+              height: 250,
+              decoration: const BoxDecoration(
+                  border:
+                      Border(top: BorderSide(width: 0.4, color: greyColor))),
+              child: buildCarousel(
+                product["product_image_attachments"],
+              )),
+          Container(
+              width: size.width,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: size.width - 80,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildTextContent(
+                          "${product["page"]?["title"]}",
+                          false,
+                          fontSize: 13,
+                          maxLines: 1,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        buildTextContent(
+                          product['title'],
+                          true,
+                          fontSize: 15,
+                          maxLines: 2,
+                          fontWeight: FontWeight.w700,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ))
+        ],
+      ),
+    );
+  }
+
+  Widget buidlFlexWidget(dynamic product, Size size) {
+    return Flex(
+      direction: Axis.horizontal,
+      children: [
+        Flexible(
+            flex: 1,
+            child: ExtendedImage.network(
+              product['product_image_attachments']?[0]['attachment']
+                      ?['preview_url'] ??
+                  linkBannerDefault,
+              height: 250,
+              width: size.width,
+              fit: BoxFit.cover,
+            )),
+        Flexible(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  buildTextContent(
+                    product['title'],
+                    true,
+                    fontSize: 15,
+                    maxLines: 10,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  buildSpacer(height: 10),
+                  buildTextContent(
+                    "${getMinAndMaxPrice(product['product_variants'])[0].toString()}₫ - ${getMinAndMaxPrice(product['product_variants'])[1].toString()}₫",
+                    true,
+                    fontSize: 16,
+                    colorWord: red,
+                  ),
+                  buildSpacer(height: 10),
+                  Row(
+                    children: [
+                      buildRatingStarWidget(product["rating"]),
+                      buildTextContent(
+                        "(${product['rating_count']} đánh giá)",
+                        true,
+                        fontSize: 13,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )),
+      ],
+    );
+  }
+
+  Widget buildCarousel(
+    List imageList,
+  ) {
+    return CarouselSlider(
+      items: imageList.map((child) {
+        int index = imageList.indexOf(child);
+        return GestureDetector(
+          onTap: () {},
+          child: Container(
+            height: 250,
+            width: 250,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: greyColor, width: 0.3)),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: ExtendedImage.network(
+                  imageList[index]['attachment']?['preview_url'] ??
+                      linkBannerDefault,
+                  height: 250,
+                  width: 250,
+                  fit: BoxFit.cover,
+                )),
+          ),
+        );
+      }).toList(),
+      options: CarouselOptions(
+          padEnds: !isScrollToLimit,
+          // enlargeStrategy:CenterPageEnlargeStrategy.zoom,
+          enableInfiniteScroll: false,
+          viewportFraction: 0.65,
+          height: 250,
+          scrollPhysics: const BouncingScrollPhysics(),
+          onPageChanged: (value, reason) {
+            if (value == 0 || value == imageList.length) {
+              setState(() {
+                isScrollToLimit = true;
+              });
+              return;
+            }
+            if (isScrollToLimit) {
+              isScrollToLimit = false;
+            }
+          }),
+    );
+  }
+}

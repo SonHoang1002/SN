@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer_button.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer_information.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
@@ -27,22 +29,34 @@ class PostFooter extends StatelessWidget {
             : InkWell(
                 onTap: ![postDetail, postMultipleMedia].contains(type)
                     ? () {
-                        Navigator.push(
+                        pushCustomCupertinoPageRoute(
                             context,
-                            CupertinoPageRoute(
-                                builder: (context) => PostDetail(
-                                      post: post,
-                                      preType: type,
-                                    )));
+                            PostDetail(
+                              post: post,
+                              preType: type,
+                            ));
+                        // Navigator.push(
+                        //     context,
+                        //     CupertinoPageRoute(
+                        //         builder: (context) => PostDetail(
+                        //               post: post,
+                        //               preType: type,
+                        // )));
                       }
                     : () {
-                        Navigator.push(
+                        pushCustomCupertinoPageRoute(
                             context,
-                            CupertinoPageRoute(
-                                builder: (context) => CommentPostModal(
-                                      post: post,
-                                      preType: type,
-                                    )));
+                            CommentPostModal(
+                              post: post,
+                              preType: type,
+                            ));
+                        // Navigator.push(
+                        //     context,
+                        //     CupertinoPageRoute(
+                        //         builder: (context) => CommentPostModal(
+                        //               post: post,
+                        //               preType: type,
+                        //             )));
                       },
                 child: PostFooterInformation(
                   post: post,
