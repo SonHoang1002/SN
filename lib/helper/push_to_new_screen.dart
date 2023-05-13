@@ -18,13 +18,25 @@ popToPreviousScreen(BuildContext context) {
   Navigator.of(context).pop();
 }
 
-pushCustomCupertinoPageRoute(BuildContext context, Widget newScreen,
-    {bool opaque = true}) {
+pushCustomCupertinoPageRoute(
+  BuildContext context,
+  Widget newScreen, {
+  bool opaque = true,
+  String? title,
+  RouteSettings? settings,
+  bool maintainState = true,
+  bool fullscreenDialog = false,
+  bool allowSnapshotting = true,
+}) {
   Navigator.push(
       context,
       CustomOpaqueCupertinoPageRoute(
-        builder: (context) => newScreen,
-      ));
+          builder: (context) => newScreen,
+          title: title,
+          settings: settings,
+          maintainState: maintainState,
+          fullscreenDialog: fullscreenDialog,
+          allowSnapshotting: allowSnapshotting));
 }
 
 pushCustomVerticalPageRoute(BuildContext context, Widget newScreen,

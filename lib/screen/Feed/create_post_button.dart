@@ -8,7 +8,9 @@ import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 class CreatePostButton extends ConsumerWidget {
   final dynamic postDiscussion;
-  const CreatePostButton({Key? key, this.postDiscussion}) : super(key: key);
+  final dynamic preType;
+  const CreatePostButton({Key? key, this.postDiscussion, this.preType})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,7 +21,7 @@ class CreatePostButton extends ConsumerWidget {
             context,
             CupertinoPageRoute(
                 builder: ((context) => CreateNewFeed(
-                    type: postPageUser, postDiscussion: postDiscussion))));
+                    type: preType, postDiscussion: postDiscussion))));
       },
       child: Container(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 6, bottom: 6),

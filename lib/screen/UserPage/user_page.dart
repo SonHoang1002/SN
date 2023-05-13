@@ -1,6 +1,7 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -91,26 +92,34 @@ class _UserPageState extends ConsumerState<UserPage> {
     }
 
     scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent < 4000 ||
-          (scrollController.offset).toDouble() <
-                  scrollController.position.maxScrollExtent &&
-              (scrollController.offset).toDouble() >
-                  scrollController.position.maxScrollExtent - 4000) {
-        EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 300),
-            () {
-          // if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
-          // if (id != null) {
+      // if (scrollController.position.maxScrollExtent < 4000 ||
+      //     (scrollController.offset).toDouble() <
+      //             scrollController.position.maxScrollExtent &&
+      //         (scrollController.offset).toDouble() >
+      //             scrollController.position.maxScrollExtent - 4000) {
+        if (scrollController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          if (double.parse((scrollController.offset).toStringAsFixed(0)) %
+                  100.0 ==
+              0) {
+            EasyDebounce.debounce(
+                'my-debouncer', const Duration(milliseconds: 800), () {
+              // if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
+              // if (id != null) {
 
-          String maxId = "";
-          if (ref.read(postControllerProvider).postUserPage.isEmpty) {
-            maxId = postUser.last['id'];
-          } else {
-            maxId = ref.read(postControllerProvider).postUserPage.last['id'];
+              String maxId = "";
+              if (ref.read(postControllerProvider).postUserPage.isEmpty) {
+                maxId = postUser.last['id'];
+              } else {
+                maxId =
+                    ref.read(postControllerProvider).postUserPage.last['id'];
+              }
+              ref.read(postControllerProvider.notifier).getListPostUserPage(
+                  id, {"max_id": maxId, "exclude_replies": true, "limit": 10});
+              // }
+            });
           }
-          ref.read(postControllerProvider.notifier).getListPostUserPage(
-              id, {"max_id": maxId, "exclude_replies": true, "limit": 5});
-          // }
-        });
+        // }
       }
     });
   }
@@ -125,7 +134,7 @@ class _UserPageState extends ConsumerState<UserPage> {
     final size = MediaQuery.of(context).size;
     var userAbout = ref.watch(userInformationProvider).userMoreInfor;
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
-      postUser = ref.watch(postControllerProvider).postUserPage;
+      postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
     }
     return Scaffold(
@@ -158,109 +167,120 @@ class _UserPageState extends ConsumerState<UserPage> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        controller: scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            BannerBase(object: userData, objectMore: userAbout),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                      height: 35,
-                      width: size.width - 85,
-                      child: ButtonPrimary(
-                        icon: const Icon(
-                          FontAwesomeIcons.pen,
-                          size: 16,
-                          color: white,
-                        ),
-                        label: "Chỉnh sửa trang cá nhân",
-                        handlePress: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) =>
-                                      const CreateModalBaseMenu(
-                                          title: "Chỉnh sửa trang cá nhân",
-                                          body: UserPageEditProfile(),
-                                          buttonAppbar: SizedBox())));
-                        },
-                      )),
-                  SizedBox(
-                      height: 35,
-                      width: 48,
-                      child: ButtonPrimary(
-                        label: "···",
-                        handlePress: () {},
-                      )),
-                ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          Future.delayed(const Duration(milliseconds: 800), () {
+            ref.read(postControllerProvider.notifier).getListPostUserPage(
+                id, {"exclude_replies": true, "limit": 20});
+          });
+        },
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BannerBase(object: userData, objectMore: userAbout),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        height: 35,
+                        width: size.width - 85,
+                        child: ButtonPrimary(
+                          icon: const Icon(
+                            FontAwesomeIcons.pen,
+                            size: 16,
+                            color: white,
+                          ),
+                          label: "Chỉnh sửa trang cá nhân",
+                          handlePress: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) =>
+                                        const CreateModalBaseMenu(
+                                            title: "Chỉnh sửa trang cá nhân",
+                                            body: UserPageEditProfile(),
+                                            buttonAppbar: SizedBox())));
+                          },
+                        )),
+                    SizedBox(
+                        height: 35,
+                        width: 48,
+                        child: ButtonPrimary(
+                          label: "···",
+                          handlePress: () {},
+                        )),
+                  ],
+                ),
               ),
-            ),
-            const CrossBar(),
-            UserPageInfomationBlock(
-                user: userData,
-                userAbout: userAbout,
-                featureContents: featureContents),
-            const CrossBar(),
-            UserPageFriendBlock(user: userData, friends: friend),
-            const SizedBox(
-              height: 12.0,
-            ),
-            const CrossBar(),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: const Text(
-                "Bài viết của bạn",
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+              const CrossBar(),
+              UserPageInfomationBlock(
+                  user: userData,
+                  userAbout: userAbout,
+                  featureContents: featureContents),
+              const CrossBar(),
+              UserPageFriendBlock(user: userData, friends: friend),
+              const SizedBox(
+                height: 12.0,
               ),
-            ),
-            const SizedBox(
-              height: 12.0,
-            ),
-            const CreatePostButton(),
-            const CrossBar(),
-            InkWell(
-              onTap: () {
-                pushToNextScreen(context, const UserPhotoVideo());
-              },
-              child: SizedBox(
-                width: 118,
-                child: ChipMenu(
-                  isSelected: false,
-                  label: "Ảnh/video",
-                  icon: SvgPicture.asset(
-                    "assets/post_media.svg",
-                    width: 18,
-                    height: 18,
+              const CrossBar(),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: const Text(
+                  "Bài viết của bạn",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              CreatePostButton(
+                preType: postPageUser,
+              ),
+              const CrossBar(),
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, const UserPhotoVideo());
+                },
+                child: SizedBox(
+                  width: 118,
+                  child: ChipMenu(
+                    isSelected: false,
+                    label: "Ảnh/video",
+                    icon: SvgPicture.asset(
+                      "assets/post_media.svg",
+                      width: 18,
+                      height: 18,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const CrossBar(),
-            UserPagePinPost(
-              user: userData,
-              pinPosts: pinPost,
-            ),
-            ListView.builder(
-                shrinkWrap: true,
-                primary: false,
-                itemCount: postUser.length,
-                itemBuilder: (context, index) => Post(
-                      type: postPageUser,
-                      post: postUser[index],
-                    )),
-            isMorePageUser
-                ? Center(child: SkeletonCustom().postSkeleton(context))
-                : Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 20),
-                    child: buildTextContent("Không còn bài viết nào khác", true,
-                        fontSize: 20, isCenterLeft: false),
-                  )
-          ],
+              const CrossBar(),
+              UserPagePinPost(
+                user: userData,
+                pinPosts: pinPost,
+              ),
+              ListView.builder(
+                  shrinkWrap: true,
+                  primary: false,
+                  itemCount: postUser.length,
+                  itemBuilder: (context, index) => Post(
+                        type: postPageUser,
+                        post: postUser[index],
+                      )),
+              isMorePageUser
+                  ? Center(child: SkeletonCustom().postSkeleton(context))
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 20),
+                      child: buildTextContent(
+                          "Không còn bài viết nào khác", true,
+                          fontSize: 20, isCenterLeft: false),
+                    )
+            ],
+          ),
         ),
       ),
     );

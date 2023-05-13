@@ -1,6 +1,11 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class PostShareEvent extends StatelessWidget {
@@ -9,7 +14,7 @@ class PostShareEvent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final event = post['event'];
+    final event = post['shared_event'];
     final size = MediaQuery.of(context).size;
 
     return Column(
@@ -17,77 +22,103 @@ class PostShareEvent extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        ImageCacheRender(path: event['banner']['preview_url']),
+        ExtendedImage.network(
+          event['banner']?['preview_url'] ?? linkBannerDefault,
+          height: 250,
+          width: size.width,
+          fit: BoxFit.cover,
+        ),
         Container(
           padding: const EdgeInsets.all(8),
           decoration:
               BoxDecoration(color: Theme.of(context).colorScheme.background),
-          child: Row(
+          child: Column(
             children: [
-              Column(children: [
-                Container(
-                  height: 15,
-                  width: 60,
-                  decoration: const BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8))),
-                ),
-                Container(
-                  height: 45,
-                  width: 60,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          bottomRight: Radius.circular(8))),
-                  child: Center(
-                    child: Text(
-                      DateFormat.d()
-                          .format(DateTime.parse(event['start_time'])),
-                      style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: blueColor),
-                    ),
-                  ),
-                )
-              ]),
-              const SizedBox(
-                width: 10,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Text(
-                    DateFormat.yMd()
-                        .add_jm()
-                        .format(DateTime.parse(event['start_time'])),
-                    style: const TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  SizedBox(
-                    width: size.width - 86,
-                    child: Text(
-                      event['title'],
-                      style: const TextStyle(
-                          color: blueColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          overflow: TextOverflow.ellipsis),
+                  Column(children: [
+                    Container(
+                      height: 15,
+                      width: 60,
+                      decoration: const BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8))),
                     ),
+                    Container(
+                      height: 45,
+                      width: 60,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8),
+                              bottomRight: Radius.circular(8))),
+                      child: Center(
+                        child: Text(
+                          DateFormat.d()
+                              .format(DateTime.parse(event['start_time'])),
+                          style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: blueColor),
+                        ),
+                      ),
+                    )
+                  ]),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        getRefractorTime(event['start_time']),
+                        // DateFormat.yMd()
+                        //     .add_jm()
+                        //     .format(DateTime.parse(event['start_time'])),
+                        style: const TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SizedBox(
+                        width: size.width - 86,
+                        child: Text(
+                          event['title'],
+                          style: const TextStyle(
+                              color: blueColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      )
+                    ],
                   )
                 ],
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 7),
+                child: Row(
+                  children: [
+                    buildTextContent(
+                        "${event['users_interested_count']} người quan tâm",
+                        false,
+                        fontSize: 14),
+                    const Text(" - "),
+                    buildTextContent(
+                        "${event['users_going_count']} người sẽ tham gia",
+                        false,
+                        fontSize: 14)
+                  ],
+                ),
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

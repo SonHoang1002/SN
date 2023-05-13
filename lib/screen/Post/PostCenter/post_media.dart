@@ -30,7 +30,7 @@ class PostMedia extends StatelessWidget {
                 postMedia: post,
                 post: post,
                 type: type,
-                preType: preType, 
+                preType: preType,
                 backFunction: () {
                   backFunction != null ? backFunction!() : null;
                 },
@@ -58,13 +58,19 @@ class PostMedia extends StatelessWidget {
           //     buttonAppbar: const SizedBox()),
           // opaque: false);
         } else {
-          Navigator.push(
+          pushCustomCupertinoPageRoute(
               context,
-              CupertinoPageRoute(
-                  builder: (context) => PostDetail(
-                        post: post,
-                        preType: type,
-                      )));
+              PostDetail(
+                post: post,
+                preType: type,
+              ));
+          // Navigator.push(
+          //     context,
+          //     CupertinoPageRoute(
+          //         builder: (context) => PostDetail(
+          //               post: post,
+          //               preType: type,
+          //             )));
         }
       } else {
         return;
