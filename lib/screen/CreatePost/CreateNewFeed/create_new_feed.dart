@@ -22,9 +22,11 @@ import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activ
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/friend_tag.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/gif.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/life_event_categories.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/poll_body.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/question_anwer.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/page_edit_media_upload.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_poll.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_target.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_life_event.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -41,6 +43,7 @@ import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import '../../../providers/create_feed/feed_draft_provider.dart';
+import 'package:dio/src/multipart_file.dart';
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
@@ -67,6 +70,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   dynamic statusQuestion;
   dynamic checkin;
   dynamic lifeEvent;
+  dynamic poll;
 
   bool isUploadVideo = false;
 
@@ -88,6 +92,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     content = draftContent.content;
     checkin = draftContent.checkin;
     previewUrlData = draftContent.previewUrlData;
+    poll = draftContent.poll;
     if (mounted && widget.post != null) {
       setState(() {
         checkin = widget.post['place'];
@@ -98,6 +103,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         visibility = typeVisibility.firstWhere(
             (element) => element['key'] == widget.post['visibility']);
         lifeEvent = widget.post['life_event'];
+        poll = widget.post["poll"];
         // statusQuestion =
         //     widget.post['status_question'] ?? widget.post['status_target'];
       });
@@ -248,11 +254,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           files = data;
         });
         break;
+      case 'update_poll':
+        setState(() {
+          poll = data;
+        });
+        break;
       case 'updateLifeEvent':
         setState(() {
-          setState(() {
-            lifeEvent = data;
-          });
+          lifeEvent = data;
         });
     }
   }
@@ -323,6 +332,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         ...data,
         'mention_ids': friendSelected.map((e) => e['id']).toList()
       };
+    }
+    if (poll != null) {
+      data = {...data, 'poll': poll};
     }
 
     if (statusQuestion != null) {
@@ -432,7 +444,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         files.isNotEmpty ||
         content.length > 150 ||
         checkin != null ||
-        previewUrlData != null) {
+        previewUrlData != null ||
+        poll != null) {
       return false;
     } else {
       return true;
@@ -444,7 +457,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         files.isNotEmpty ||
         content.isNotEmpty ||
         checkin != null ||
-        previewUrlData != null) {
+        previewUrlData != null ||
+        poll != null) {
       return true;
     } else {
       return false;
@@ -514,6 +528,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         body =
             QuestionAnwer(handleUpdateData: handleUpdateData, type: 'question');
         break;
+      case 'poll':
+        body = PollBody(
+            type: subType, poll: poll, handleUpdateData: handleUpdateData);
+        break;
       case 'target':
         body =
             QuestionAnwer(handleUpdateData: handleUpdateData, type: 'target');
@@ -551,15 +569,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                         child: buildTextContent("Lưu bản nháp", false,
                             fontSize: 13, isCenterLeft: false),
                         onPressed: () {
-                          ref
-                              .read(draftFeedController.notifier)
-                              .saveDraftFeed(DraftFeed(
-                                gifLink: gifLink,
-                                files: files,
-                                content: content,
-                                checkin: checkin,
-                                previewUrlData: previewUrlData,
-                              ));
+                          ref.read(draftFeedController.notifier).saveDraftFeed(
+                              DraftFeed(
+                                  gifLink: gifLink,
+                                  files: files,
+                                  content: content,
+                                  checkin: checkin,
+                                  previewUrlData: previewUrlData,
+                                  poll: poll));
                           popToPreviousScreen(context);
                           popToPreviousScreen(context);
                         }),
@@ -730,6 +747,27 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                             ? 'target_create'
                             : postCreateQuestionAnwer,
                         statusQuestion: statusQuestion,
+                      )
+                    : const SizedBox(),
+                poll != null
+                    ? PostPoll(
+                        pollData: poll,
+                        functionClose: () {
+                          setState(() {
+                            poll = null;
+                          });
+                        },
+                        functionAdditional: () {
+                          pushCustomCupertinoPageRoute(
+                              context,
+                              CreateModalBaseMenu(
+                                  title: "Thăm dò ý kiến",
+                                  body: PollBody(
+                                      handleUpdateData: handleUpdateData,
+                                      poll: poll,
+                                      type: widget.type!),
+                                  buttonAppbar: const SizedBox()));
+                        },
                       )
                     : const SizedBox(),
                 checkin != null
@@ -1212,8 +1250,8 @@ class PreviewUrlPost extends StatelessWidget {
         child: Column(
           children: [
             showImage
-                ? ImageCacheRender(
-                    path: detailData["url"],
+                ? Image.network(
+                    detailData["url"] ?? linkBannerDefault,
                     height: 200.0,
                     width: size.width,
                   )

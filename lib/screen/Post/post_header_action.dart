@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,10 +9,12 @@ import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widget/page_permission_comment.dart';
 import 'package:social_network_app_mobile/widget/page_visibility.dart';
@@ -67,7 +71,9 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "label": "Đánh dấu hoàn thành mục tiêu",
         "icon": FontAwesomeIcons.bullseye,
         "isShow": meData['id'] == widget.post['account']['id'] &&
-            widget.post['post_type'] == postTarget
+            widget.post['post_type'] == postTarget &&
+            (widget.post["status_target"] != null &&
+                widget.post["status_target"]["target_status"] != "completed")
       },
       {
         "key": "comment_permission_post",
@@ -106,11 +112,13 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       },
       {
         "key": ["account_avatar", "account_banner"]
-                .contains(widget.post['post_type'])
+                    .contains(widget.post['post_type']) ||
+                meData['id'] != widget.post['account']['id']
             ? "hidden_post"
             : "delete_post",
         "label": ["account_avatar", "account_banner"]
-                .contains(widget.post['post_type'])
+                    .contains(widget.post['post_type']) ||
+                meData['id'] != widget.post['account']['id']
             ? "Ẩn bài viết"
             : "Xoá bài viết",
         "icon": FontAwesomeIcons.trash,
@@ -191,6 +199,16 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       }
     }
 
+    handleCompleteTarget() async {
+      final newData = widget.post;
+      newData['status_target']["target_status"] = "completed";
+      ref
+          .read(postControllerProvider.notifier)
+          .actionUpdatePost(widget.type, newData);
+      Navigator.pop(context);
+      final response = await PostApi().postCompleteTarget(widget.post['id']);
+    }
+
     void showAlertDialog(BuildContext context) {
       showCupertinoModalPopup<void>(
           context: context,
@@ -231,13 +249,14 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
                     buttonAppbar: const SizedBox(),
                   )),
         );
-      } else if (["hidden_post", "delete_post"].contains(key)) {
-        if (key == "hidden_post") {
-          handleUpdatePost({"hidden": true});
-        } else {
-          Navigator.pop(context);
-          showAlertDialog(context);
-        }
+      } else if (key == "hidden_post") {
+        handleUpdatePost({"hidden": true});
+        Navigator.pop(context);
+      } else if (key == "delete_post") {
+        Navigator.pop(context);
+        showAlertDialog(context);
+      } else if (key == "complete_goal") {
+        handleCompleteTarget();
       } else if (key == "report_post") {
         Navigator.pop(context);
         showBarModalBottomSheet(
@@ -396,7 +415,7 @@ class BlockAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: InkWell(
         onTap: () {
           handleAction(item['key']);

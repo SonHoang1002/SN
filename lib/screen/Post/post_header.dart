@@ -1,13 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header_action.dart';
@@ -18,7 +21,7 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import 'post_detail.dart';
 
-class PostHeader extends StatefulWidget {
+class PostHeader extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
   final Color? textColor;
@@ -26,10 +29,10 @@ class PostHeader extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<PostHeader> createState() => _PostHeaderState();
+  ConsumerState<PostHeader> createState() => _PostHeaderState();
 }
 
-class _PostHeaderState extends State<PostHeader> {
+class _PostHeaderState extends ConsumerState<PostHeader> {
   @override
   void initState() {
     GetTimeAgo.setDefaultLocale('vi');
@@ -79,6 +82,21 @@ class _PostHeaderState extends State<PostHeader> {
 
     if (widget.post['shared_page'] != null) {
       description = ' đã chia sẻ một trang ';
+    }
+    if (widget.post['shared_event'] != null) {
+      description = ' đã chia sẻ một sự kiện ';
+    }
+    if (widget.post['shared_course'] != null) {
+      description = ' đã chia sẻ một khóa học ';
+    }
+    if (widget.post['shared_product'] != null) {
+      description = ' đã chia sẻ một sản phẩm ';
+    }
+    if (widget.post['shared_project'] != null) {
+      description = ' đã chia sẻ một dự án ';
+    }
+    if (widget.post['shared_recruit'] != null) {
+      description = ' đã chia sẻ tin tuyển dụng ';
     }
 
     if (widget.post['life_event'] != null) {
@@ -218,7 +236,15 @@ class _PostHeaderState extends State<PostHeader> {
                         ),
                         ![postDetail, postPageUser].contains(widget.type)
                             ? InkWell(
-                                onTap: () {},
+                                onTap: () async {
+                                  final data = {"hidden": true};
+                                  await PostApi()
+                                      .updatePost(widget.post['id'], data);
+                                  ref
+                                      .read(postControllerProvider.notifier)
+                                      .actionHiddenDeletePost(
+                                          widget.type, widget.post);
+                                },
                                 child: const Icon(
                                   FontAwesomeIcons.xmark,
                                   size: 20,

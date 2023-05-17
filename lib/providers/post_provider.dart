@@ -68,9 +68,20 @@ class PostController extends StateNotifier<PostState> {
       newList = checkObjectUniqueInList(state.postUserPage + response, 'id');
     } else {
       newList = response;
-    } 
+    }
 
-    
+    // List newList = [];
+    // List allDataList = [];
+    // allDataList.addAll(state.postUserPage);
+    // allDataList.addAll(response);
+    // for (int i = 0; i < allDataList.length; i++) {
+    //   List keyOfNewList = newList.map((element) => element['id']).toList();
+
+    //   if (!keyOfNewList.contains(allDataList[i]["id"])) {
+    //     newList.add(allDataList[i]);
+    //   }
+    // }
+
     if (mounted) {
       state = state.copyWith(
           posts: state.posts,
@@ -228,6 +239,24 @@ class PostController extends StateNotifier<PostState> {
                 ]
               : state.posts,
           isMoreUserPage: state.isMoreUserPage);
+    }
+  }
+
+  actionUpdatePost(type, data) {
+    int index = -1;
+    if (type == feedPost) {
+      index = state.posts.indexWhere((element) => element['id'] == data['id']);
+    } else if (type == postPageUser) {
+      index = state.postUserPage
+          .indexWhere((element) => element['id'] == data['id']);
+    }
+    if (index < 0) return;
+    if (mounted) {
+      type == feedPost
+          ? state.posts[index] = data
+          : type == postPageUser
+              ? state.postUserPage[index] = data
+              : null;
     }
   }
 
