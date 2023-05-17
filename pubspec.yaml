@@ -117,6 +117,9 @@ dependencies:
   # flutter_typeahead: ^4.3.7
   extended_image: ^7.0.2
   webview_flutter: ^3.0.4
+  web_socket_channel: ^2.3.0
+  flutter_local_notifications: ^13.0.0
+
   # flutter_image_compress: ^2.0.2
 
 dev_dependencies:
@@ -204,6 +207,16 @@ flutter:
     - assets/MarketFC.png
     - assets/Plus_2.png
     - assets/wow-emo-2.gif
+    - assets/Noti/Noti.png
+    - assets/Noti/Friend.png
+    - assets/Noti/watch.png
+    - assets/Noti/event.png
+    - assets/Noti/moment.png
+    - assets/Noti/Page.png
+    - assets/Noti/group.png
+    - assets/Noti/post.png
+    - assets/Noti/comment.png
+    - assets/Noti/livestream.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

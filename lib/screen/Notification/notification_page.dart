@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,6 +8,10 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
+import '../../service/notification_service.dart';
+import '../../service/web_socket_service.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -16,6 +22,8 @@ class NotificationPage extends ConsumerStatefulWidget {
 
 class _NotificationPageState extends ConsumerState<NotificationPage> {
   final scrollController = ScrollController();
+  WebSocketService webSocketService = WebSocketService();
+  late WebSocketChannel webSocketChannel;
 
   @override
   void initState() {
@@ -32,12 +40,43 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         });
       }
     });
+    WebSocketService webSocketService = WebSocketService();
+    webSocketChannel = webSocketService.connectToWebSocket();
+    listenToWebSocket();
+  }
+
+  void listenToWebSocket() {
+    webSocketChannel.stream.listen(
+      (data) {
+        if (data.contains('42')) {
+          fetchNotifications(null);
+          // int startIndex = data.indexOf('[') + 1;
+          // int endIndex = data.lastIndexOf(']');
+          // String jsonString = data.substring(startIndex, endIndex);
+          // List<dynamic> dataList = jsonDecode("[$jsonString]");
+          // Map<String, dynamic> object = dataList[1];
+          // print(object);
+          NotificationService().showNotification(title: 'test', body: 'test');
+        }
+      },
+      onDone: () {
+        print('WebSocket closed');
+      },
+      onError: (error) {
+        print('WebSocket error: $error');
+      },
+    );
+  }
+
+  void cancelListening() {
+    webSocketChannel.sink.close();
   }
 
   @override
   void dispose() {
-    super.dispose();
     scrollController.dispose();
+    cancelListening();
+    super.dispose();
   }
 
   void fetchNotifications(params) async {
@@ -66,118 +105,147 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       }
     }
 
-    renderTextBold(
-      String textNone,
-      String textBold,
-    ) {
-      return RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: textNone,
-              style: const TextStyle(color: Colors.black),
-            ),
-            TextSpan(
-              text: textBold,
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    renderContent(noti) {
+    dynamic renderContent(noti) {
       dynamic status = noti['status'] ?? {};
       String type = noti['type'];
-
       if (type == 'folow') {
-        return ' đã theo dõi bạn';
+        return {'textNone': ' đã theo dõi bạn'};
       } else if (type == 'reblog') {
-        return ' đã chia sẻ bài viết của bạn';
+        return {'textNone': ' đã chia sẻ bài viết của bạn'};
       } else if (type == 'mention') {
-        return ' đã nhắc đến bạn trong một bài viết';
+        return {'textNone': ' đã nhắc đến bạn trong một bài viết'};
       } else if (type == 'poll') {
-        return ' đã bầu chọn trong cuộc thăm dò của bạn';
+        return {'textNone': ' đã bầu chọn trong cuộc thăm dò của bạn'};
       } else if (type == 'friendship_request') {
-        return ' đã gửi cho bạn lời mời kết bạn';
+        return {'textNone': ' đã gửi cho bạn lời mời kết bạn'};
       } else if (type == 'event_invitation') {
-        return ' đã gửi cho bạn lời mời tham gia sự kiện';
+        return {'textNone': ' đã gửi cho bạn lời mời tham gia sự kiện'};
       } else if (type == 'event_invitation_host') {
-        return ' đã mời bạn đồng tổ chức sự kiện:';
+        return {'textNone': ' đã mời bạn đồng tổ chức sự kiện:'};
       } else if (type == 'page_follow') {
-        return ' đã thích';
+        return {'textNone': ' đã thích'};
       } else if (type == 'page_invitation') {
-        return ' đã mời bạn làm quản trị viên ';
+        return {'textNone': ' đã mời bạn làm quản trị viên '};
       } else if (type == 'page_invitation_follow') {
-        return ' đã mời bạn thích trang';
+        return {'textNone': ' đã mời bạn thích trang'};
       } else if (type == 'group_invitation') {
-        return ' đã mời bạn tham gia nhóm';
+        return {'textNone': ' đã mời bạn tham gia nhóm'};
       } else if (type == 'accept_event_invitation') {
-        return ' đã đồng ý tham gia sự kiện';
+        return {'textNone': ' đã đồng ý tham gia sự kiện'};
       } else if (type == 'accept_event_invitation_host') {
-        return ' đã đồng ý đồng tổ chức sự kiện';
+        return {'textNone': ' đã đồng ý đồng tổ chức sự kiện'};
       } else if (type == 'accept_page_invitation') {
-        return ' đã đồng ý làm quản trị viên trang';
+        return {'textNone': ' đã đồng ý làm quản trị viên trang'};
       } else if (type == 'accept_page_invitation_follow') {
-        return ' đã chấp nhận lời mời thích trang';
+        return {'textNone': ' đã chấp nhận lời mời thích trang'};
       } else if (type == 'accept_group_invitation') {
-        return ' đã chấp nhận lời mời tham gia nhóm';
+        return {'textNone': ' đã chấp nhận lời mời tham gia nhóm'};
       } else if (type == 'accept_friendship_request') {
-        return ' đã chấp nhận lời mời kết bạn';
+        return {'textNone': ' đã chấp nhận lời mời kết bạn'};
       } else if (type == 'group_join_request') {
-        return ' đã yêu cầu tham gia';
+        return {'textNone': ' đã yêu cầu tham gia'};
       } else if (type == 'created_status') {
-        return ' Video của bạn đã sẵn sàng.Bây giờ bạn có thể mở xem';
+        return {
+          'textNone': ' Video của bạn đã sẵn sàng.Bây giờ bạn có thể mở xem'
+        };
       } else if (type == 'status_tag') {
-        return status['in_reply_to_parent_id'] != null ||
-                status['in_reply_to_id'] != null
-            ? ' đã nhắc đến bạn trong một bình luận'
-            : ' đã gắn thẻ bạn trong một bài viết';
+        return {
+          'textNone': status['in_reply_to_parent_id'] != null ||
+                  status['in_reply_to_id'] != null
+              ? ' đã nhắc đến bạn trong một bình luận'
+              : ' đã gắn thẻ bạn trong một bài viết'
+        };
       } else if (type == 'comment') {
-        return ' đã bình luận về một bài viết có thể bạn quan tâm: ${status['content']}';
+        return {
+          'textNone':
+              ' đã bình luận về một bài viết có thể bạn quan tâm: ${status['content']}'
+        };
       } else if (type == 'approved_group_join_request') {
-        return ' Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với';
+        return {
+          'textNone':
+              ' Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với'
+        };
       } else if (type == 'course_invitation') {
-        return ' đã mời bạn tham gia khóa học';
+        return {'textNone': ' đã mời bạn tham gia khóa học'};
       } else if (type == 'product_invitation') {
-        return ' đã mời bạn quan tâm đến sản phẩm';
-      } else if (type == 'admin_page_invitation') {}
+        return {'textNone': ' đã mời bạn quan tâm đến sản phẩm'};
+      } else if (type == 'admin_page_invitation') {
+        return {
+          'textNone': ' đã mời bạn làm quản trị viên',
+          'textBold': '${status?['page']?['title']}'
+        };
+      } else if (type == 'approved_group_status') {
+        return {
+          'textNone':
+              '  bài viết của bạn tại ${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']} đã được phê duyệt',
+        };
+      } else if (type == 'accept_admin_page_invitation') {
+        return {
+          'textNone': ' đã đồng ý làm quản trị viên trang',
+          'textBold': '${status?['page']?['title']}'
+        };
+      } else if (type == 'recruit_apply') {
+        return {
+          'textNone': ' đã ứng tuyển vào công việc',
+          'textBold': '${status?['recruit']?['title']}'
+        };
+      } else if (type == 'recruit_invitation') {
+        return {
+          'textNone': ' đã mời bạn tham gia tuyển dụng',
+          'textBold': '${status?['recruit']?['title']}'
+        };
+      } else if (type == 'moderator_page_invitation') {
+        return {
+          'textNone': ' đã đồng ý làm kiểm duyệt viên trang',
+          'textBold': '${status?['page']?['title']}'
+        };
+      }
       if (type == 'favourite') {
-        return ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận:' : 'bài viết:'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content']}';
+        return {
+          'textNone':
+              ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận:' : 'bài viết:'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content']}'
+        };
       } else if (type == 'status') {
         if (status['reblog'] != null) {
-          return ' đã chia sẻ một bài viết ${status['reblog']?['page'] != null || status['reblog']?['group'] != null ? 'trong' : ''}';
+          return {
+            'textNone':
+                ' đã chia sẻ một bài viết ${status['reblog']?['page'] != null || status['reblog']?['group'] != null ? 'trong' : ''}'
+          };
         } else if (status['page_owner'] != null) {
-          return status['post_type'] == 'event_shared'
-              ? ' đã tạo một sự kiện '
-              : ' có một bài viết mới: ${status['content']} ';
+          return {
+            'textNone': status['post_type'] == 'event_shared}'
+                ? ' đã tạo một sự kiện '
+                : ' có một bài viết mới: ${status['content']} '
+          };
         } else if (status['group'] != null || status['page'] != null) {
           if (noti['account']['relationship'] != null &&
               noti['account']['relationship']['friendship_status'] ==
                   'ARE_FRIENDS') {
-            return status['post_type'] == 'event_shared'
-                ? ' đã tạo một sự kiện trong '
-                    '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}'
-                : ' có tạo bài viết trong '
-                    '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}';
+            return {
+              'textNone': status['post_type'] == 'event_shared}'
+                  ? ' đã tạo một sự kiện trong '
+                  : ' có tạo bài viết trong ',
+              'textBold': status['post_type'] == 'event_shared}'
+                  ? '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}'
+                  : '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}'
+            };
           } else {
-            return status['post_type'] == 'event_shared'
-                ? ' có sự kiện mới: ${status['content'] ?? ""}'
-                : ' có bài viết mới: ${status['content'] ?? ""}';
+            return {
+              'textNone': status['post_type'] == 'event_shared}'
+                  ? ' có sự kiện mới: ${status['content'] ?? ""}'
+                  : ' có bài viết mới: ${status['content'] ?? ""}'
+            };
           }
         } else if (status['post_type'] == 'moment') {
-          return ' đã đăng một khoảnh khắc mới';
+          return {'textNone': ' đã đăng một khoảnh khắc mới'};
         } else if (status['post_type'] == 'watch') {
-          return ' đã đăng một video mới trong watch';
+          return {'textNone': ' đã đăng một video mới trong watch'};
         } else if (status['post_type'] == 'question') {
-          return ' đã đặt một câu hỏi';
+          return {'textNone': ' đã đặt một câu hỏi'};
         } else if (status['post_type'] == 'target') {
-          return ' đã đặt một mục tiêu mới';
+          return {'textNone': ' đã đặt một mục tiêu mới'};
         } else {
-          'đã tạo bài viết mới ${status['content']}';
+          return {'textNone': ' đã tạo bài viết mới ${status['content']}'};
         }
       }
     }
@@ -190,39 +258,52 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
 
     renderLinkSvg(type, status) {
       switch (type) {
+        case 'mention':
+          return 'assets/Noti/Friend.png';
+        case 'status':
+          if (status['group'] != null) {
+            return 'assets/Noti/group.png';
+          } else if (status['page'] != null) {
+            return 'assets/Noti/Page.png';
+          } else if (status['post_type'] == 'event_shared') {
+            return 'assets/Noti/event.png';
+          } else if (status['post_type'] == 'watch') {
+            return 'assets/Noti/watch.png';
+          } else if (status['post_type'] == 'moment') {
+            return 'assets/Noti/moment.png';
+          } else {
+            return 'assets/Noti/post.png';
+          }
         case 'friendship_request':
         case 'accept_friendship_request':
-          return 'assets/friend.svg';
+          return 'assets/Noti/Friend.png';
         case 'event_invitation':
         case 'event_invitation_host':
         case 'accept_event_invitation':
         case 'accept_event_invitation_host':
-          return 'assets/event.svg';
+          return 'assets/Noti/event.png';
         case 'page_follow':
         case 'page_invitation':
         case 'page_invitation_follow':
         case 'accept_page_invitation':
         case 'accept_page_invitation_follow':
-          return 'assets/Page.svg';
+        case 'accept_moderator_page_invitation':
+        case 'accept_admin_page_invitation':
+          return 'assets/Noti/Page.png';
         case 'group_invitation':
+        case 'group_invitation_host':
         case 'group_join_request':
         case 'accept_group_invitation':
         case 'approved_group_join_request':
-          return 'assers/Groups_1.svg';
-        case 'status':
-          if (status['post_type'] == 'event_shared') {
-            return 'assets/event.svg';
-          } else if (status['post_type'] == 'watch') {
-            return 'assets/WatchFC.svg';
-          } else if (status['post_type'] == 'moment') {
-            return 'assets/moment_menu/svg';
-          } else {
-            return 'assets/notification.svg';
-          }
-        case 'mention':
-          return 'assets/Friend';
+          return 'assets/Noti/group.png';
+        case 'comment':
+          return 'assets/Noti/comment.png';
+        case 'status_tag':
+          return 'assets/Noti/post.png';
+        case 'created_status':
+          return 'assets/Noti/livestream.png';
         default:
-          return 'assets/notification.svg';
+          return 'assets/Noti/Noti.png';
       }
     }
 
@@ -238,7 +319,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 8.0),
                     decoration: BoxDecoration(
-                        color: [1, 3, 5].contains(index)
+                        color: !notifications[index]['read']
                             ? secondaryColorSelected
                             : null),
                     child: Row(
@@ -262,10 +343,11 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                             Positioned(
                                 bottom: 0,
                                 right: 0,
-                                child: SvgPicture.asset(
+                                child: Image.asset(
                                   renderLinkSvg(notifications[index]['type'],
                                       notifications[index]['status']),
-                                  color: secondaryColor,
+                                  width: 24,
+                                  height: 24,
                                 ))
                           ],
                         ),
@@ -286,9 +368,17 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                                     children: [
                                       TextSpan(
                                           text: renderContent(
-                                              notifications[index]),
+                                              notifications[index])['textNone'],
                                           style: const TextStyle(
                                             fontWeight: FontWeight.normal,
+                                          )),
+                                      TextSpan(
+                                          text: renderContent(
+                                                      notifications[index])[
+                                                  'textBold'] ??
+                                              '',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
                                           )),
                                       TextSpan(
                                           text:
