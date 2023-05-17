@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -37,19 +38,24 @@ class MaterialAppWithTheme extends ConsumerStatefulWidget {
 
 class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   late WebSocketChannel webSocketChannel;
+  StreamSubscription<dynamic>? subscription;
   @override
   void initState() {
     if (!mounted) return;
     super.initState();
     Future.delayed(Duration.zero, () => fetchNotifications(null));
+    connectToWebSocket();
+  }
 
-    webSocketChannel = WebSocketService().connectToWebSocket();
+  void connectToWebSocket() async {
+    webSocketChannel = await WebSocketService().connectToWebSocket();
     listenToWebSocket();
   }
 
   void listenToWebSocket() {
-    webSocketChannel.stream.listen(
+    subscription = webSocketChannel.stream.listen(
       (data) {
+        print(data);
         if (data.contains('42')) {
           int startIndex = data.indexOf('[') + 1;
           int endIndex = data.lastIndexOf(']');
