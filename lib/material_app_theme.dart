@@ -55,7 +55,6 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   void listenToWebSocket() {
     subscription = webSocketChannel.stream.listen(
       (data) {
-        print(data);
         if (data.contains('42')) {
           int startIndex = data.indexOf('[') + 1;
           int endIndex = data.lastIndexOf(']');
@@ -259,6 +258,7 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
 
   @override
   void dispose() {
+    subscription?.cancel();
     cancelListening();
     super.dispose();
   }
