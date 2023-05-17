@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,10 +6,6 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
-import '../../service/notification_service.dart';
-import '../../service/web_socket_service.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -22,14 +16,11 @@ class NotificationPage extends ConsumerStatefulWidget {
 
 class _NotificationPageState extends ConsumerState<NotificationPage> {
   final scrollController = ScrollController();
-  WebSocketService webSocketService = WebSocketService();
-  late WebSocketChannel webSocketChannel;
 
   @override
   void initState() {
     GetTimeAgo.setDefaultLocale('vi');
     super.initState();
-    Future.delayed(Duration.zero, () => fetchNotifications(null));
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -40,43 +31,6 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         });
       }
     });
-    WebSocketService webSocketService = WebSocketService();
-    webSocketChannel = webSocketService.connectToWebSocket();
-    listenToWebSocket();
-  }
-
-  void listenToWebSocket() {
-    webSocketChannel.stream.listen(
-      (data) {
-        if (data.contains('42')) {
-          fetchNotifications(null);
-          // int startIndex = data.indexOf('[') + 1;
-          // int endIndex = data.lastIndexOf(']');
-          // String jsonString = data.substring(startIndex, endIndex);
-          // List<dynamic> dataList = jsonDecode("[$jsonString]");
-          // Map<String, dynamic> object = dataList[1];
-          // print(object);
-          NotificationService().showNotification(title: 'test', body: 'test');
-        }
-      },
-      onDone: () {
-        print('WebSocket closed');
-      },
-      onError: (error) {
-        print('WebSocket error: $error');
-      },
-    );
-  }
-
-  void cancelListening() {
-    webSocketChannel.sink.close();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    cancelListening();
-    super.dispose();
   }
 
   void fetchNotifications(params) async {
