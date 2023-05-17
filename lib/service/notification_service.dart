@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/subjects.dart';
 
+int id = 0;
+
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -59,6 +61,7 @@ class NotificationService {
         AndroidNotificationDetails('your channel id', 'your channel name',
             channelDescription: 'your channel description',
             importance: Importance.max,
+            setAsGroupSummary: true,
             priority: Priority.high,
             largeIcon: FilePathAndroidBitmap(largeIconPath),
             styleInformation: bigPictureStyleInformation,
@@ -75,11 +78,7 @@ class NotificationService {
   }
 
   Future showNotification(
-      {int id = 0,
-      String? title,
-      String? body,
-      String? payLoad,
-      String? largeIcon}) async {
+      {String? title, String? body, String? payLoad, String? largeIcon}) async {
     return notificationsPlugin.show(
         id++, title, body, await notificationDetails(largeIcon));
   }
