@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
+import 'package:social_network_app_mobile/screen/Moment/moment.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_suggest.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -86,15 +87,24 @@ class _VideoPlayerNoneControllerState
         child: Stack(
           children: [
             GestureDetector(
-                onTap: widget.type == 'local'
-                    ? null
-                    : () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WatchSuggest(
-                                    post: widget.post, media: widget.media)));
-                      },
+                onTap: () {
+                  widget.type == 'local'
+                      ? null
+                      : widget.post != null &&
+                              widget.post["post_type"] != null &&
+                              widget.post["post_type"] == 'moment'
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Moment(
+                                        dataAdditional: widget.post,
+                                      )))
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WatchSuggest(
+                                      post: widget.post, media: widget.media)));
+                },
                 child: Hero(
                     tag: widget.path,
                     child: AspectRatio(

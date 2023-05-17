@@ -48,6 +48,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
       }
     }
 
+    /// return List[width,height]
     List<double?> checkHeightAndWidthOneImage(medias) {
       final size = MediaQuery.of(context).size;
       List<double?> values = [null, null];

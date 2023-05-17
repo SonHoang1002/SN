@@ -27,7 +27,7 @@ class _PostProductState extends State<PostProduct> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     product ??= widget.post['shared_product'];
     final size = MediaQuery.of(context).size;
     return GestureDetector(
@@ -39,11 +39,8 @@ class _PostProductState extends State<PostProduct> {
           const SizedBox(
             height: 5,
           ),
-          Container(
+          SizedBox(
               height: 250,
-              decoration: const BoxDecoration(
-                  border:
-                      Border(top: BorderSide(width: 0.4, color: greyColor))),
               child: buildCarousel(
                 product["product_image_attachments"],
               )),
@@ -150,19 +147,16 @@ class _PostProductState extends State<PostProduct> {
           child: Container(
             height: 250,
             width: 250,
-            margin: const EdgeInsets.symmetric(horizontal: 5),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: greyColor, width: 0.3)),
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: ExtendedImage.network(
-                  imageList[index]['attachment']?['preview_url'] ??
-                      linkBannerDefault,
-                  height: 250,
-                  width: 250,
-                  fit: BoxFit.cover,
-                )),
+            margin: const EdgeInsets.symmetric(horizontal: 3),
+            decoration:
+                BoxDecoration(border: Border.all(color: greyColor, width: 0.3)),
+            child: ExtendedImage.network(
+              imageList[index]['attachment']?['preview_url'] ??
+                  linkBannerDefault,
+              height: 250,
+              width: 250,
+              fit: BoxFit.cover,
+            ),
           ),
         );
       }).toList(),

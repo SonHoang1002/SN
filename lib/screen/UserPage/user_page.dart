@@ -103,7 +103,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                   100.0 ==
               0) {
             EasyDebounce.debounce(
-                'my-debouncer', const Duration(milliseconds: 800), () {
+                'my-debouncer', const Duration(milliseconds: 300), () {
               // if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
               // if (id != null) {
 

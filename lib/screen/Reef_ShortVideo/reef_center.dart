@@ -39,7 +39,7 @@ class _ReefCenterState extends State<ReefCenter> {
             pushToNextScreen(
                 context,
                 Moment(
-                  dataFromReef: _reefList[index],
+                  dataAdditional: _reefList[index],
                 ));
           },
           child: Container(
@@ -101,7 +101,7 @@ class _ReefCenterState extends State<ReefCenter> {
               pushToNextScreen(
                   context,
                   Moment(
-                    dataFromReef: _reefList[index],
+                    dataAdditional: _reefList[index],
                   ));
             },
             child: Container(
