@@ -4,13 +4,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../constant/page_constants.dart';
-import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
 import 'invite_friend_page.dart';
 
 class AvatarPage extends StatefulWidget {
-  final dataCreate;
+  final dynamic dataCreate;
 
   const AvatarPage({super.key, this.dataCreate});
   @override
@@ -88,12 +87,13 @@ class _AvatarPageState extends State<AvatarPage> {
                           Stack(
                             children: [
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 height: 170,
                                 width: width,
                                 decoration: BoxDecoration(
                                     color: Colors.grey[800],
-                                    borderRadius: BorderRadius.only(
+                                    borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(10),
                                         topRight: Radius.circular(10))),
                                 child: _pickedBgImage != null
@@ -104,7 +104,8 @@ class _AvatarPageState extends State<AvatarPage> {
                                     : Container(),
                               ),
                               Container(
-                                padding: EdgeInsets.fromLTRB(0, 0, 15, 30),
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 0, 15, 30),
                                 height: 200,
                                 // color: Colors.red,
                                 child: Row(
@@ -120,7 +121,7 @@ class _AvatarPageState extends State<AvatarPage> {
                                             left: 80, top: 80),
                                         child: Card(
                                           shape: RoundedRectangleBorder(
-                                              side: BorderSide(width: 2),
+                                              side: const BorderSide(width: 2),
                                               borderRadius:
                                                   BorderRadius.circular(30)),
                                           child: const CircleAvatar(
@@ -142,14 +143,14 @@ class _AvatarPageState extends State<AvatarPage> {
                         ],
                       ),
                       // avatar img background
-                      Container(
+                      SizedBox(
                         height: 210,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Center(
                               child: Stack(children: [
-                                Container(
+                                SizedBox(
                                   height: 120,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -158,8 +159,7 @@ class _AvatarPageState extends State<AvatarPage> {
                                           ? CircleAvatar(
                                               maxRadius: 60,
                                               backgroundImage: AssetImage(
-                                                  PageConstants.PATH_IMG +
-                                                      "avatar_img.png"))
+                                                  "${PageConstants.PATH_IMG}avatar_img.png"))
                                           : CircleAvatar(
                                               maxRadius: 60,
                                               backgroundImage: FileImage(
@@ -176,7 +176,7 @@ class _AvatarPageState extends State<AvatarPage> {
                                         left: 80, top: 80),
                                     child: Card(
                                       shape: RoundedRectangleBorder(
-                                          side: BorderSide(width: 2),
+                                          side: const BorderSide(width: 2),
                                           borderRadius:
                                               BorderRadius.circular(20)),
                                       child: const CircleAvatar(

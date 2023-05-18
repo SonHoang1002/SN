@@ -194,6 +194,28 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                   ),
                           ],
                         ),
+                        onTap: () {
+                          recruitDetail['page_owner'] != null
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const PageDetail(),
+                                    settings: RouteSettings(
+                                        arguments: recruitDetail['page_owner']
+                                                ['id']
+                                            .toString()),
+                                  ))
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const UserPage(),
+                                    settings: RouteSettings(
+                                      arguments: {
+                                        'id': recruitDetail['account']['id']
+                                      },
+                                    ),
+                                  ));
+                        },
                         textCard: Column(
                           children: [
                             Padding(

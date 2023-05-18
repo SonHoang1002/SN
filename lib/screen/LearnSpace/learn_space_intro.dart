@@ -190,39 +190,44 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                           padding: const EdgeInsets.all(16.0),
                           child: Align(
                             alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 35,
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(189, 202, 202, 202),
-                                  borderRadius: BorderRadius.circular(6),
-                                  border:
-                                      Border.all(width: 0.2, color: greyColor)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(
-                                    FontAwesomeIcons.user,
-                                    size: 14,
-                                    color: Colors.black,
-                                  ),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    'Xem',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 12.0,
+                            child: InkWell(
+                              onTap: () {
+                                
+                              },
+                              child: Container(
+                                height: 35,
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(189, 202, 202, 202),
+                                    borderRadius: BorderRadius.circular(6),
+                                    border:
+                                        Border.all(width: 0.2, color: greyColor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      FontAwesomeIcons.user,
+                                      size: 14,
                                       color: Colors.black,
-                                      fontWeight: FontWeight.w700,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 3.0,
-                                  ),
-                                ],
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Text(
+                                      'Xem',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 3.0,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

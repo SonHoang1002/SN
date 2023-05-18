@@ -6,15 +6,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/Page/PageCreate/CreateStep/information_page_page.dart';
+
 import '../../../../constant/page_constants.dart';
 import '../../../../theme/colors.dart';
+import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
 
-import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
-
 class CategoryPage extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final dataCreate;
+  final dynamic dataCreate;
   const CategoryPage({super.key, this.dataCreate});
 
   @override
@@ -56,10 +55,15 @@ class _CategoryPageState extends State<CategoryPage> {
       loadingCreate = false;
     });
     if (response.statusCode == 200) {
+      print({
+        ...widget.dataCreate,
+        'category': categorySelected,
+        ...jsonDecode(response.body)
+      });
       // ignore: use_build_context_synchronously
       pushToNextScreen(
           context,
-          InformationPagePage({
+          InformationPagePage(dataCreate: {
             ...widget.dataCreate,
             'category': categorySelected,
             ...jsonDecode(response.body)
@@ -292,7 +296,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         return AlertDialog(
                           title: Text(
                             CategoryPageConstants.WARNING_MESSAGE[0],
-                            style: TextStyle(fontSize: 17),
+                            style: const TextStyle(fontSize: 17),
                           ),
                           actions: [
                             GestureDetector(
