@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/app.dart';
 import 'package:social_network_app_mobile/service/notification_service.dart';
+import 'package:social_network_app_mobile/service/web_socket_service.dart';
 
 void main() async {
   // if (!Platform.isWindows) {
@@ -15,9 +16,11 @@ void main() async {
   NotificationService().initNotification();
   HttpOverrides.global = MyHttpOverrides();
 
+  final webSocketChannel = await WebSocketService().connectToWebSocket();
+
   runApp(
-    const ProviderScope(
-      child: App(),
+    ProviderScope(
+      child: App(webSocketChannel: webSocketChannel),
     ),
   );
 }

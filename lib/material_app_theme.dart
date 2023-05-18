@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
+import 'package:social_network_app_mobile/service/notification_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'home/PreviewScreen.dart';
@@ -13,8 +14,6 @@ import 'home/home.dart';
 import 'screen/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'screen/Page/PageDetail/page_detail.dart';
 import 'screen/UserPage/user_page.dart';
-import 'service/notification_service.dart';
-import 'service/web_socket_service.dart';
 import 'theme/theme_manager.dart';
 
 var routes = <String, WidgetBuilder>{
@@ -27,8 +26,10 @@ var routes = <String, WidgetBuilder>{
 };
 
 class MaterialAppWithTheme extends ConsumerStatefulWidget {
+  final WebSocketChannel webSocketChannel;
   const MaterialAppWithTheme({
     super.key,
+    required this.webSocketChannel,
   });
 
   @override
@@ -48,7 +49,7 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   }
 
   void connectToWebSocket() async {
-    webSocketChannel = await WebSocketService().connectToWebSocket();
+    webSocketChannel = widget.webSocketChannel;
     listenToWebSocket();
   }
 
@@ -88,6 +89,10 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
         print('WebSocket error: $error');
       },
     );
+  }
+
+  void cancelListening() {
+    webSocketChannel.sink.close();
   }
 
   dynamic renderContent(noti) {
@@ -250,10 +255,6 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
       default:
         return account['display_name'];
     }
-  }
-
-  void cancelListening() {
-    webSocketChannel.sink.close();
   }
 
   @override

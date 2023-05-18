@@ -16,6 +16,8 @@ import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/text_readmore.dart';
 
 import '../../constant/common.dart';
+import '../Page/PageDetail/page_detail.dart';
+import '../UserPage/user_page.dart';
 
 class LearnSpaceIntro extends ConsumerStatefulWidget {
   final dynamic courseDetail;
@@ -164,6 +166,28 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                   ),
                           ],
                         ),
+                        onTap: () {
+                          courseDetail['page_owner'] != null
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const PageDetail(),
+                                    settings: RouteSettings(
+                                        arguments: courseDetail['page_owner']
+                                                ['id']
+                                            .toString()),
+                                  ))
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const UserPage(),
+                                    settings: RouteSettings(
+                                      arguments: {
+                                        'id': courseDetail['account']['id']
+                                      },
+                                    ),
+                                  ));
+                        },
                         textCard: Column(
                           children: [
                             Padding(
@@ -192,17 +216,40 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                             alignment: Alignment.bottomCenter,
                             child: InkWell(
                               onTap: () {
-                                
+                                courseDetail['page_owner'] != null
+                                    ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PageDetail(),
+                                          settings: RouteSettings(
+                                              arguments:
+                                                  courseDetail['page_owner']
+                                                          ['id']
+                                                      .toString()),
+                                        ))
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const UserPage(),
+                                          settings: RouteSettings(
+                                            arguments: {
+                                              'id': courseDetail['account']
+                                                  ['id']
+                                            },
+                                          ),
+                                        ));
                               },
                               child: Container(
                                 height: 35,
                                 width: MediaQuery.of(context).size.width * 0.8,
                                 decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromARGB(189, 202, 202, 202),
+                                    color: const Color.fromARGB(
+                                        189, 202, 202, 202),
                                     borderRadius: BorderRadius.circular(6),
-                                    border:
-                                        Border.all(width: 0.2, color: greyColor)),
+                                    border: Border.all(
+                                        width: 0.2, color: greyColor)),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const [
