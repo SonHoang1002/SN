@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../apis/me_api.dart';
+
 class WebSocketService {
   Timer? timer;
   WebSocketChannel? webSocketChannel;
@@ -10,11 +12,12 @@ class WebSocketService {
 
   Future fetchToken() async {
     try {
+      var res = await MeApi().fetchDataMeApi();
       final response = await Dio().post(
         'https://notification-api.emso.vn/v1/widgets/session/initialize',
         data: {
           "applicationIdentifier": "NQdDh27Faz0F",
-          "subscriberId": "108571825456188313",
+          "subscriberId": res['id'].toString(),
           "hmacHash": null,
         },
       );

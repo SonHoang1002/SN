@@ -117,7 +117,7 @@ dependencies:
   # flutter_typeahead: ^4.3.7
   extended_image: ^7.0.2
   webview_flutter: ^3.0.4
-  web_socket_channel: ^2.3.0
+  web_socket_channel: ^2.4.0
   flutter_local_notifications: ^14.0.0+2
 
   # flutter_image_compress: ^2.0.2

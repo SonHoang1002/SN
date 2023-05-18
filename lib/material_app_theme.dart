@@ -68,7 +68,6 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
                 .notifications
                 .where((element) => element['id'] == object['id'])
                 .toList();
-
             if (dataFilter != null && dataFilter.isNotEmpty) {
               await NotificationService().showNotification(
                   title: 'EMSO',
