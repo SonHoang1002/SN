@@ -312,15 +312,17 @@ class _AvatarPageState extends State<AvatarPage> {
       );
 
       formData.files.add(MapEntry('banner[file]', imageFile));
-      formDataFile.files.add(MapEntry('file', imageFile));
 
       // Convert the image to base64 format
       String base64Image = base64Encode(imageBytes);
-
+      formDataFile = FormData.fromMap({
+        "file": await MultipartFile.fromFile(_pickedBgImage!.path,
+            filename: _pickedBgImage!.path.split('/').last),
+        "show_url": 'data:image/png;base64,$base64Image'
+      });
       formData.fields.add(
           MapEntry('banner[show_url]', 'data:image/png;base64,$base64Image'));
-      formDataFile.fields
-          .add(MapEntry('show_url', 'data:image/png;base64,$base64Image'));
+
       try {
         setState(() {
           isLoading = true;
