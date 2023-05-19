@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/post_mutiple_media_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/post_one_media_detail.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/grid_layout_image.dart';
 
 class PostMedia extends StatelessWidget {

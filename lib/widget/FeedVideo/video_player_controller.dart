@@ -72,7 +72,7 @@ class _VideoPlayerHasControllerState
         //   useCache: true,
         //   maxCacheSize:
         //       1000 * 1024 * 1024, // Kích thước tối đa lưu đệm (ví dụ: 200 MB)
-        //   maxCacheFileSize: 50 *
+        //   maxCacheFileSize: 10 *
         //       1024 *
         //       1024, // Kích thước tối đa của mỗi tập tin (ví dụ: 20 MB)
         // ),

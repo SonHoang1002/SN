@@ -63,7 +63,7 @@ class _VideoPlayerNoneControllerState
         onVisibilityChanged: (visibilityInfo) {
           if (mounted) {
             setState(() {
-              isVisible = visibilityInfo.visibleFraction > 0.5;
+              isVisible = visibilityInfo.visibleFraction == 1;
 
               if (isVisible) {
                 videoPlayerController.play();
