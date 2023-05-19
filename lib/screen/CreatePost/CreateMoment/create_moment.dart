@@ -157,7 +157,7 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
             context,
             MaterialPageRoute(
                 builder: (context) => Moment(
-                      dataFromReef: response,
+                      dataAdditional: response,
                     )));
         snackbar.showSnackBar(
             const SnackBar(content: Text('Đăng bài viết thành công')));
