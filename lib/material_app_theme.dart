@@ -7,6 +7,7 @@ import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/service/notification_service.dart';
+import 'package:social_network_app_mobile/service/web_socket_service.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'home/PreviewScreen.dart';
@@ -26,10 +27,8 @@ var routes = <String, WidgetBuilder>{
 };
 
 class MaterialAppWithTheme extends ConsumerStatefulWidget {
-  final WebSocketChannel webSocketChannel;
   const MaterialAppWithTheme({
     super.key,
-    required this.webSocketChannel,
   });
 
   @override
@@ -49,7 +48,7 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   }
 
   void connectToWebSocket() async {
-    webSocketChannel = widget.webSocketChannel;
+    webSocketChannel = await WebSocketService().connectToWebSocket();
     listenToWebSocket();
   }
 

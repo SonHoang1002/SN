@@ -9,13 +9,11 @@ import 'package:social_network_app_mobile/providers/page/route_provider.dart';
 import 'package:social_network_app_mobile/providers/page/search_category_provider.dart';
 import 'package:social_network_app_mobile/providers/page/select_province_page_provider.dart';
 import 'package:social_network_app_mobile/providers/setting/choose_object_provider.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'theme/theme_manager.dart';
 
 class App extends StatefulWidget {
-  final WebSocketChannel webSocketChannel;
-  const App({Key? key, required this.webSocketChannel}) : super(key: key);
+  const App({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -37,7 +35,7 @@ class _AppState extends State<App> {
         ChangeNotifierProvider(create: (_) => SelectTargetGroupProvider()),
         ChangeNotifierProvider(create: (_) => SelectionPrivateEventProvider()),
       ],
-      child: MaterialAppWithTheme(webSocketChannel: widget.webSocketChannel),
+      child: const MaterialAppWithTheme(),
     );
   }
 }
