@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:social_network_app_mobile/screen/CreatePost/CreateMoment/create_moment.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
@@ -66,10 +67,19 @@ class _CreatePostState extends State<CreatePost> {
       final exportedVideoCoverPreviewPath =
           result[argExportedVideoCoverPreviewPath];
 
-      _showConfirmation(context, "Play exported video file?", () {
-        platform.invokeMethod(
-            methodDemoPlayExportedVideo, exportedVideoFilePath);
-      });
+      // _showConfirmation(context, "Play exported video file?", () {
+      //   platform.invokeMethod(
+      //       methodDemoPlayExportedVideo, exportedVideoFilePath);
+      // });
+      if (exportedVideoCoverPreviewPath != null &&
+          exportedVideoFilePath != null) {
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => CreateMoment(
+                    imageCover: exportedVideoCoverPreviewPath,
+                    videoPath: exportedVideoFilePath)));
+      }
     }
   }
 

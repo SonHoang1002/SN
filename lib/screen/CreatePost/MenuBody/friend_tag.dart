@@ -44,7 +44,7 @@ class _FriendTagState extends ConsumerState<FriendTag> {
 
   fetchFriends(params) async {
     var response = await FriendsApi()
-        .getListFriendApi(ref.watch(meControllerProvider)[0]['id'], params);
+        .getListFriendApi(ref.read(meControllerProvider)[0]['id'], params);
     if (response != null) {
       setState(() {
         friends = response;
