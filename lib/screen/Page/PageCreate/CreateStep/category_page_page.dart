@@ -55,12 +55,6 @@ class _CategoryPageState extends State<CategoryPage> {
       loadingCreate = false;
     });
     if (response.statusCode == 200) {
-      print({
-        ...widget.dataCreate,
-        'category': categorySelected,
-        ...jsonDecode(response.body)
-      });
-      // ignore: use_build_context_synchronously
       pushToNextScreen(
           context,
           InformationPagePage(dataCreate: {
@@ -69,7 +63,6 @@ class _CategoryPageState extends State<CategoryPage> {
             ...jsonDecode(response.body)
           }));
     } else {
-      // ignore: use_build_context_synchronously
       _showAlertDialog(
           context, 'Tạo trang không thành công, vui lòng thử lại!');
     }
@@ -127,7 +120,6 @@ class _CategoryPageState extends State<CategoryPage> {
                       Container(
                           padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                           child: Column(children: [
-                            //question
                             Wrap(
                               children: [
                                 Text(
@@ -142,7 +134,6 @@ class _CategoryPageState extends State<CategoryPage> {
                             const SizedBox(
                               height: 10,
                             ),
-                            // description for question
                             const Text(
                                 'Nhờ hạng mục, mọi người sẽ tìm thấy Trang này trong kết quả tìm kiếm. Bạn có thể thêm đến 3 hạng mục.',
                                 style: TextStyle(
@@ -184,10 +175,10 @@ class _CategoryPageState extends State<CategoryPage> {
                                       decoration: const InputDecoration(
                                           border: InputBorder.none,
                                           suffixIcon: Icon(Icons.search),
-                                          hintText: CategoryPageConstants
+                                          labelText: CategoryPageConstants
                                               .PLACEHOLDER_CATEGORY,
-                                          hintStyle: TextStyle(
-                                              color: Colors.grey, fontSize: 20),
+                                          labelStyle: TextStyle(
+                                              color: Colors.grey, fontSize: 16),
                                           contentPadding: EdgeInsets.fromLTRB(
                                               10, 12, 0, 0)),
                                     ),

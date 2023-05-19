@@ -61,6 +61,22 @@ class Api {
     }
   }
 
+  Future postRequestBaseWithParams(String path, data) async {
+    try {
+      var userToken = await SecureStorage().getKeyStorage("token");
+      Dio dio = await getDio(userToken);
+      var response = await dio.post(
+        path,
+        queryParameters: data,
+      );
+      return response.data;
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        logOutWhenTokenError();
+      }
+    }
+  }
+
   Future patchRequestBase(String path, data) async {
     try {
       var userToken = await SecureStorage().getKeyStorage("token");

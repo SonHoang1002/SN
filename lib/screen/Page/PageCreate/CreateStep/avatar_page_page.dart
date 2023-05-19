@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../../../../apis/media_api.dart';
+import '../../../../apis/page_api.dart' as custom;
 import '../../../../constant/page_constants.dart';
 import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
@@ -20,7 +25,9 @@ class _AvatarPageState extends State<AvatarPage> {
   late double width = 0;
   late double height = 0;
   List<int> radioGroupWorkTime = [0, 1, 2];
-
+  dynamic dataAvatar;
+  dynamic dataBgAvatar;
+  bool isLoading = false;
   int currentValue = 0;
 
   File? _pickedAvatarImage;
@@ -114,7 +121,7 @@ class _AvatarPageState extends State<AvatarPage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        dialogImgSource();
+                                        getBgImage(ImageSource.gallery);
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.only(
@@ -169,7 +176,7 @@ class _AvatarPageState extends State<AvatarPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    dialogImgSource();
+                                    getAvatarImage(ImageSource.gallery);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(
@@ -194,12 +201,12 @@ class _AvatarPageState extends State<AvatarPage> {
                       )
                     ],
                   ),
-                  const Center(
+                  Center(
                     heightFactor: 2,
                     child: Text(
-                      "NAME OF PAGE",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                      widget.dataCreate['title'],
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 17),
                     ),
                   ),
                   Center(
@@ -215,57 +222,123 @@ class _AvatarPageState extends State<AvatarPage> {
               child: buildBottomNavigatorWithButtonAndChipWidget(
                   context: context,
                   width: width,
-                  newScreen: InviteFriendPage(dataCreate: widget.dataCreate),
+                  loading: isLoading,
+                  newScreen: InviteFriendPage(dataCreate: {
+                    ...widget.dataCreate,
+                    'avatar_media':
+                        _pickedAvatarImage != null && dataAvatar != null
+                            ? dataAvatar
+                            : null,
+                    'banner': _pickedBgImage != null && dataBgAvatar != null
+                        ? dataBgAvatar
+                        : null,
+                  }),
                   title: "Tiếp",
-                  isPassCondition: true,
+                  isPassCondition: !isLoading ? true : false,
                   currentPage: 4),
             )
           ]),
         ));
   }
 
-  // Future getAvatarImage(ImageSource src) async {
-  //   _imageAvatar = (await ImagePicker().pickImage(source: src))!;
-  //   setState(() {
-  //     _pickedAvatarImage = File(_imageAvatar!.path);
-  //   });
-  // }
+  Future<void> getAvatarImage(ImageSource src) async {
+    _imageAvatar = (await ImagePicker().pickImage(source: src))!;
+    setState(() {
+      _pickedAvatarImage = File(_imageAvatar!.path);
+    });
 
-  // Future getBgImage(ImageSource src) async {
-  //   _imageBg = (await ImagePicker().pickImage(source: src))!;
-  //   setState(() {
-  //     _pickedBgImage = File(_imageBg!.path);
-  //   });
-  // }
+    if (_pickedAvatarImage != null) {
+      FormData formData = FormData();
+      FormData formDataFile = FormData();
 
-  dialogImgSource() {
-    // showDialog(
-    //     context: context,
-    //     builder: (_) {
-    //       return AlertDialog(
-    //         content: SingleChildScrollView(
-    //           child: ListBody(
-    //             children: [
-    //               ListTile(
-    //                 leading: const Icon(Icons.camera),
-    //                 title: const Text("Pick From Camera"),
-    //                 onTap: () {
-    //                   getAvatarImage(ImageSource.camera);
-    //                   Navigator.of(context).pop();
-    //                 },
-    //               ),
-    //               ListTile(
-    //                 leading: const Icon(Icons.camera),
-    //                 title: const Text("Pick From Galery"),
-    //                 onTap: () {
-    //                   Navigator.of(context).pop();
-    //                   getAvatarImage(ImageSource.gallery);
-    //                 },
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       );
-    //     });
+      final imageBytes = await _pickedAvatarImage!.readAsBytes();
+      MultipartFile imageFile = MultipartFile.fromBytes(
+        imageBytes,
+        filename: _pickedAvatarImage!.path.split('/').last,
+        contentType: MediaType(
+          'image',
+          _pickedAvatarImage!.path.split('.').last.toLowerCase(),
+        ),
+      );
+
+      formData.files.add(MapEntry('avatar[file]', imageFile));
+
+      // Convert the image to base64 format
+      String base64Image = base64Encode(imageBytes);
+      formDataFile = FormData.fromMap({
+        "file": await MultipartFile.fromFile(_pickedAvatarImage!.path,
+            filename: _pickedAvatarImage!.path.split('/').last),
+        "show_url": 'data:image/png;base64,$base64Image'
+      });
+      formData.fields.add(
+          MapEntry('avatar[show_url]', 'data:image/png;base64,$base64Image'));
+
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        var value = await MediaApi().uploadMediaEmso(formDataFile);
+        if (value != null) {
+          setState(() {
+            dataAvatar = value;
+            isLoading = false;
+            formData.fields.add(MapEntry('avatar[id]', dataAvatar['id']));
+          });
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      await custom.PageApi().pagePostMedia(formData, widget.dataCreate['id']);
+    }
+  }
+
+  Future<void> getBgImage(ImageSource src) async {
+    _imageBg = (await ImagePicker().pickImage(source: src))!;
+    setState(() {
+      _pickedBgImage = File(_imageBg!.path);
+    });
+
+    if (_pickedBgImage != null) {
+      FormData formData = FormData();
+      FormData formDataFile = FormData();
+
+      final imageBytes = await _pickedBgImage!.readAsBytes();
+      MultipartFile imageFile = MultipartFile.fromBytes(
+        imageBytes,
+        filename: _pickedBgImage!.path.split('/').last,
+        contentType: MediaType('image', 'png'),
+      );
+
+      formData.files.add(MapEntry('banner[file]', imageFile));
+      formDataFile.files.add(MapEntry('file', imageFile));
+
+      // Convert the image to base64 format
+      String base64Image = base64Encode(imageBytes);
+
+      formData.fields.add(
+          MapEntry('banner[show_url]', 'data:image/png;base64,$base64Image'));
+      formDataFile.fields
+          .add(MapEntry('show_url', 'data:image/png;base64,$base64Image'));
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        await MediaApi().uploadMediaEmso(formDataFile).then((value) {
+          if (value != null) {
+            setState(() {
+              dataBgAvatar = value;
+              isLoading = false;
+            });
+          }
+        });
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      await custom.PageApi().pagePostMedia(formData, widget.dataCreate['id']);
+    }
   }
 }

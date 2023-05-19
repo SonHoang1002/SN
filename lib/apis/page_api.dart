@@ -42,8 +42,23 @@ class PageApi {
     return await Api().getRequestBase('/api/v1/timelines/page/$id', params);
   }
 
+  Future postInviteManage(data, id) async {
+    return await Api().postRequestBaseWithParams(
+        '/api/v1/pages/$id/invitations/invitations_respond', data);
+  }
+
+  Future postInviteLike(data, id) async {
+    return await Api().postRequestBaseWithParams(
+        '/api/v1/pages/$id/invitation_follows/invitation_follows_respond',
+        data);
+  }
+
   Future getListPostPagePinedApi(id) async {
     return await Api().getRequestBase('/api/v1/pages/$id/pins', null);
+  }
+
+  Future pagePostMedia(data, id) async {
+    return await Api().patchRequestBase('/api/v1/pages/$id', data);
   }
 
   Future getListReviewPageApi(params, id) async {
