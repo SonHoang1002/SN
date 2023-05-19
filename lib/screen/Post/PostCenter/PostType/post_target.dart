@@ -35,8 +35,8 @@ class PostTarget extends ConsumerWidget {
           [postCreateQuestionAnwer, postQuestionAnwer, 'target_create']
                   .contains(type)
               ? type == 'target_create'
-                  ? SvgPicture.asset(
-                      "assets/target.svg",
+                  ? Image.asset(
+                      "assets/target_in_post.png",
                       width: size.width * 0.5,
                     )
                   : AvatarSocial(
@@ -52,8 +52,8 @@ class PostTarget extends ConsumerWidget {
                       "assets/win.svg",
                       width: size.width * 0.5,
                     )
-                  : SvgPicture.asset(
-                      "assets/target.svg",
+                  : Image.asset(
+                      "assets/target_in_post.png",
                       width: size.width * 0.5,
                     ),
           const SizedBox(

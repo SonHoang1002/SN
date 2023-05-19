@@ -85,4 +85,9 @@ class PostApi {
     return await Api().getRequestBase(
         '/api/v1/accounts/$idPage/statuses?post_type_moment=true', null);
   }
+
+  Future postCompleteTarget(dynamic postId) async {
+    return await Api()
+        .postRequestBase('/api/v1/statuses/$postId/complete_target', null);
+  }
 }
