@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,8 +10,9 @@ import 'package:social_network_app_mobile/providers/recruit/recruit_provider.dar
 import 'package:social_network_app_mobile/screen/Recruit/recruit_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
+
+import '../../constant/common.dart';
 
 class RecruitDetail extends ConsumerStatefulWidget {
   final dynamic data;
@@ -126,12 +128,12 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                   ),
                                 ],
                               ),
-                              child: Hero(
-                                tag: recruitDetail['banner']['url'] ?? "",
-                                child: ClipRRect(
-                                  child: ImageCacheRender(
-                                    path: recruitDetail['banner']['url'] ?? "",
-                                  ),
+                              child: ClipRRect(
+                                child: ExtendedImage.network(
+                                  recruitDetail['banner'] != null
+                                      ? recruitDetail['banner']['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -175,11 +177,14 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                 onTap: () {
                                   setState(() {
                                     isRecruitInterested = !isRecruitInterested;
+                                    ref
+                                        .read(
+                                            recruitControllerProvider.notifier)
+                                        .updateStatusRecruit(
+                                            isRecruitInterested,
+                                            widget.data['id'],
+                                            name: 'detailRecruit');
                                   });
-                                  ref
-                                      .read(recruitControllerProvider.notifier)
-                                      .updateStatusRecruit(isRecruitInterested,
-                                          widget.data['id']);
                                 },
                                 child: Container(
                                     height: 35,

@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,8 +8,9 @@ import 'package:social_network_app_mobile/providers/recruit/recruit_provider.dar
 import 'package:social_network_app_mobile/screen/Recruit/recuit_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
+
+import '../../constant/common.dart';
 
 class RecruitInvite extends ConsumerStatefulWidget {
   const RecruitInvite({super.key});
@@ -43,6 +45,7 @@ class _RecruitInviteState extends ConsumerState<RecruitInvite> {
   @override
   Widget build(BuildContext context) {
     List recruits = ref.watch(recruitControllerProvider).recruitsInvite;
+    bool isMore = ref.watch(recruitControllerProvider).isMore;
 
     final size = MediaQuery.of(context).size;
     width = size.width;
@@ -86,12 +89,12 @@ class _RecruitInviteState extends ConsumerState<RecruitInvite> {
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15)),
-                              child: ImageCacheRender(
-                                path: recruits[index]['recruit']['banner'] !=
-                                        null
+                              child: ExtendedImage.network(
+                                recruits[index]['recruit']['banner'] != null
                                     ? recruits[index]['recruit']['banner']
                                         ['url']
-                                    : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+                                    : linkBannerDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             onTap: () {
@@ -163,27 +166,29 @@ class _RecruitInviteState extends ConsumerState<RecruitInvite> {
                                                     ['recruit_relationships']
                                                 ['follow_recruit'] ==
                                             true) {
-                                          ref
-                                              .read(recruitControllerProvider
-                                                  .notifier)
-                                              .updateStatusRecruit(
-                                                  false,
-                                                  recruits[index]['recruit']
-                                                      ['id']);
                                           setState(() {
+                                            ref
+                                                .read(recruitControllerProvider
+                                                    .notifier)
+                                                .updateStatusRecruit(
+                                                    false,
+                                                    recruits[index]['recruit']
+                                                        ['id'],
+                                                    name: 'recruitsInvite');
                                             recruits[index]['recruit']
                                                     ['recruit_relationships']
                                                 ['follow_recruit'] = false;
                                           });
                                         } else {
-                                          ref
-                                              .read(recruitControllerProvider
-                                                  .notifier)
-                                              .updateStatusRecruit(
-                                                  true,
-                                                  recruits[index]['recruit']
-                                                      ['id']);
                                           setState(() {
+                                            ref
+                                                .read(recruitControllerProvider
+                                                    .notifier)
+                                                .updateStatusRecruit(
+                                                    true,
+                                                    recruits[index]['recruit']
+                                                        ['id'],
+                                                    name: 'recruitsInvite');
                                             recruits[index]['recruit']
                                                     ['recruit_relationships']
                                                 ['follow_recruit'] = true;
@@ -294,7 +299,22 @@ class _RecruitInviteState extends ConsumerState<RecruitInvite> {
                       return const SizedBox();
                     },
                   ))
-                : const SizedBox(),
+                : isMore == true
+                    ? const Center(child: CupertinoActivityIndicator())
+                    : recruits.isEmpty
+                        ? Column(
+                            children: [
+                              Center(
+                                child: Image.asset(
+                                  "assets/wow-emo-2.gif",
+                                  height: 125.0,
+                                  width: 125.0,
+                                ),
+                              ),
+                              const Text('Không tìm thấy kết quả nào'),
+                            ],
+                          )
+                        : const SizedBox(),
           ],
         ),
       ),

@@ -17,6 +17,8 @@ import 'package:social_network_app_mobile/widget/Payment/modal_donate.dart';
 import 'package:social_network_app_mobile/widget/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
+import '../../widget/show_modal_message.dart';
+
 class GrowDetail extends ConsumerStatefulWidget {
   final dynamic data;
   const GrowDetail({super.key, this.data});
@@ -227,83 +229,76 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                 children: [
                                                   InkWell(
                                                     onTap: () {
-                                                      showModalBottomSheet(
-                                                          shape:
-                                                              const RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .vertical(
-                                                              top: Radius
-                                                                  .circular(15),
-                                                            ),
-                                                          ),
-                                                          context: context,
-                                                          builder: (context) => (DateTime.parse(
-                                                                          growDetail[
-                                                                              'due_date'])
-                                                                      .isBefore(
-                                                                          DateTime.parse(
-                                                                              DateTime.now().toString()))) ==
-                                                                  false
-                                                              ? SizedBox(
-                                                                  height: 250,
-                                                                  child: ListView
-                                                                      .builder(
-                                                                    itemCount:
-                                                                        growPriceTitle
-                                                                            .length,
-                                                                    itemBuilder:
-                                                                        (BuildContext
-                                                                                context,
-                                                                            int indexTitle) {
-                                                                      return ListTile(
-                                                                        title: Text(
-                                                                            '${growPriceTitle[indexTitle]['title']}',
-                                                                            style:
-                                                                                const TextStyle(fontWeight: FontWeight.w700)),
-                                                                        subtitle:
-                                                                            Text('${growPriceTitle[indexTitle]['subTitle']}'),
-                                                                        onTap:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          indexTitle != 2
-                                                                              ? showModalBottomSheet(
-                                                                                  shape: const RoundedRectangleBorder(
-                                                                                    borderRadius: BorderRadius.vertical(
-                                                                                      top: Radius.circular(15),
-                                                                                    ),
-                                                                                  ),
-                                                                                  context: context,
-                                                                                  isScrollControlled: true,
-                                                                                  isDismissible: true,
-                                                                                  builder: (context) => SingleChildScrollView(
-                                                                                        primary: true,
-                                                                                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                                                                        child: ModalPayment(
-                                                                                          title: 'Tặng xu để ủng hộ ${growPriceTitle[indexTitle]['title'].toString().toLowerCase()} ${growDetail['title']}',
-                                                                                          buttonTitle: growPriceTitle[indexTitle]['title'],
-                                                                                          updateApi: (params) {
-                                                                                            if (params.isNotEmpty) {
-                                                                                              ref.read(growControllerProvider.notifier).updateTransactionDonate({
-                                                                                                "amount": params['amount'],
-                                                                                                "detail_type": growPriceTitle[indexTitle]['type'].toString()
-                                                                                              }, growDetail['id']);
-                                                                                            }
-                                                                                          },
+                                                      (DateTime.parse(growDetail[
+                                                                      'due_date'])
+                                                                  .isBefore(DateTime
+                                                                      .parse(DateTime
+                                                                              .now()
+                                                                          .toString()))) ==
+                                                              false
+                                                          ? showModalBottomSheet(
+                                                              shape:
+                                                                  const RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .vertical(
+                                                                  top: Radius
+                                                                      .circular(
+                                                                          15),
+                                                                ),
+                                                              ),
+                                                              context: context,
+                                                              builder:
+                                                                  (context) =>
+                                                                      SizedBox(
+                                                                        height:
+                                                                            250,
+                                                                        child: ListView
+                                                                            .builder(
+                                                                          itemCount:
+                                                                              growPriceTitle.length,
+                                                                          itemBuilder:
+                                                                              (BuildContext context, int indexTitle) {
+                                                                            return ListTile(
+                                                                              title: Text('${growPriceTitle[indexTitle]['title']}', style: const TextStyle(fontWeight: FontWeight.w700)),
+                                                                              subtitle: Text('${growPriceTitle[indexTitle]['subTitle']}'),
+                                                                              onTap: () {
+                                                                                Navigator.pop(context);
+                                                                                indexTitle != 2
+                                                                                    ? showModalBottomSheet(
+                                                                                        shape: const RoundedRectangleBorder(
+                                                                                          borderRadius: BorderRadius.vertical(
+                                                                                            top: Radius.circular(15),
+                                                                                          ),
                                                                                         ),
-                                                                                      ))
-                                                                              : null;
-                                                                        },
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                )
-                                                              : const SizedBox(
-                                                                  height: 50,
-                                                                  child: Text(
-                                                                      'Dự án đã kết thúc'),
-                                                                ));
+                                                                                        context: context,
+                                                                                        isScrollControlled: true,
+                                                                                        isDismissible: true,
+                                                                                        builder: (context) => SingleChildScrollView(
+                                                                                              primary: true,
+                                                                                              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                                              child: ModalPayment(
+                                                                                                title: 'Tặng xu để ủng hộ ${growPriceTitle[indexTitle]['title'].toString().toLowerCase()} ${growDetail['title']}',
+                                                                                                buttonTitle: growPriceTitle[indexTitle]['title'],
+                                                                                                updateApi: (params) {
+                                                                                                  if (params.isNotEmpty) {
+                                                                                                    ref.read(growControllerProvider.notifier).updateTransactionDonate({
+                                                                                                      "amount": params['amount'],
+                                                                                                      "detail_type": growPriceTitle[indexTitle]['type'].toString()
+                                                                                                    }, growDetail['id']);
+                                                                                                  }
+                                                                                                },
+                                                                                              ),
+                                                                                            ))
+                                                                                    : null;
+                                                                              },
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      ))
+                                                          : showSnackbar(
+                                                              context,
+                                                              'Dự án đã kết thúc');
                                                     },
                                                     child: Container(
                                                         height: 32,

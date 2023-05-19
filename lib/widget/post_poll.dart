@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 // FlutterPolls widget.
 // This widget is used to display a poll.
@@ -33,12 +34,12 @@ class FlutterPolls extends HookWidget {
     this.votedPollOptionsRadius,
     this.votedBackgroundColor = const Color(0xffEEF0EB),
     this.votedProgressColor = const Color(0xff84D2F6),
-    this.leadingVotedProgessColor = const Color(0xff0496FF),
+    this.leadingVotedProgessColor = secondaryColor,
     this.votedCheckmark,
     this.votedPercentageTextStyle,
     this.votedAnimationDuration = 1000,
   }) : _isloading = false;
-
+     
   /// The id of the poll.
   /// This id is used to identify the poll.
   /// It is also used to check if a user has already voted in this poll.

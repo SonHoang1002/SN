@@ -22,9 +22,11 @@ class PostCard extends StatelessWidget {
     bool isVertical = (axis == Axis.vertical);
     var card = post['card'];
     var size = MediaQuery.of(context).size;
+
     return card != null
-        ? (card['provider_name'] != null && card['provider_name'] != 'GIPHY')||card['link']!=null
-        // ? card['provider_name'] != null && card['provider_name'] != 'GIPHY'
+        ? (card['provider_name'] != null && card['provider_name'] != 'GIPHY') ||
+                card['link'] != null
+            // ? card['provider_name'] != null && card['provider_name'] != 'GIPHY'
             ? Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20), border: border),
@@ -69,20 +71,26 @@ class PostCard extends StatelessWidget {
                                           overflow: TextOverflow.ellipsis),
                                     ),
                                     Text(
-                                      card['title'],
+                                      card['title'] ?? "",
                                       maxLines: 2,
                                       style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
                                           overflow: TextOverflow.ellipsis),
                                     ),
-                                    // Text(
-                                    //   card['description'],
-                                    //   style: const TextStyle(
-                                    //       fontSize: 12,
-                                    //       color: greyColor,
-                                    //       overflow: TextOverflow.ellipsis),
-                                    // ),
+                                    card['description'] != null &&
+                                            card['description'] != ""
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 8.0),
+                                            child: buildTextContent(
+                                                card['description'], false,
+                                                fontSize: 12,
+                                                colorWord: greyColor,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          )
+                                        : const SizedBox(),
                                   ],
                                 ),
                               ),
@@ -133,7 +141,7 @@ class PostCard extends StatelessWidget {
                                         colorWord: greyColor,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      card['title'] == null ||
+                                      card['title'] != null ||
                                               card['title'] != ""
                                           ? Padding(
                                               padding: const EdgeInsets.only(

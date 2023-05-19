@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class SearchApi {
@@ -9,7 +8,12 @@ class SearchApi {
   Future getListSearchHistoriesApi(params) async {
     return await Api().getRequestBase('/api/v1/search_histories', params);
   }
-    Future deleteSearchHistoriesApi(id) async {
+
+  Future postSearchHistoriesApi(data) async {
+    return await Api().postRequestBase('/api/v1/search_histories', data);
+  }
+
+  Future deleteSearchHistoriesApi(id) async {
     return await Api().deleteRequestBase('/api/v1/search_histories/$id', null);
   }
 }

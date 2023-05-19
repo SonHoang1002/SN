@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/events_api.dart';
@@ -345,7 +347,8 @@ class EventController extends StateNotifier<EventState> {
 
   getDetailEvent(id) async {
     var response = await EventApi().getEventDetailApi(id);
-    if (response.isNotEmpty) {
+    if (response != null && mounted) { 
+
       state = state.copyWith(
         eventDetail: response,
         events: state.events,
@@ -367,7 +370,7 @@ class EventController extends StateNotifier<EventState> {
 
   getPostEvent(id, params) async {
     var response = await EventApi().getListPostEventApi(id, params);
-    if (response.isNotEmpty) {
+    if ((response != null && response.isNotEmpty) && mounted) {
       state = state.copyWith(
         posts: response,
         eventDetail: state.eventDetail,
@@ -389,7 +392,7 @@ class EventController extends StateNotifier<EventState> {
 
   getListEventSuggested(params) async {
     List response = await EventApi().getEventSuggestedApi(params);
-    if (response.isNotEmpty) {
+    if ((response.isNotEmpty) && mounted) {
       state = state.copyWith(
         eventsSuggested: [...response],
         events: state.events,
@@ -410,7 +413,7 @@ class EventController extends StateNotifier<EventState> {
 
   getListGroupSuggested(params) async {
     List response = await EventApi().getGroupSuggestedApi(params);
-    if (response.isNotEmpty) {
+    if ((response.isNotEmpty) && mounted) {
       state = state.copyWith(
         groupSuggest: [...response],
         eventsSuggested: state.eventsSuggested,
@@ -431,7 +434,7 @@ class EventController extends StateNotifier<EventState> {
 
   getEventHosts(id) async {
     List response = await EventApi().getEventHostApi(id);
-    if (response.isNotEmpty) {
+    if ((response.isNotEmpty) && mounted) {
       state = state.copyWith(
         hosts: [...response],
         events: state.events,

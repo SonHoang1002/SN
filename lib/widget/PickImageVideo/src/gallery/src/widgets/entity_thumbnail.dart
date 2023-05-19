@@ -102,7 +102,6 @@ class _MediaThumbnailProvider extends ImageProvider<_MediaThumbnailProvider> {
   ) async {
     assert(key == this, 'Checks _MediaThumbnailProvider');
     final bytes = await entity.thumbnailData;
-    final quality = await entity.thumbnailDataWithQuality(90);
     onBytesLoaded?.call(bytes);
     return decode(bytes!);
   }

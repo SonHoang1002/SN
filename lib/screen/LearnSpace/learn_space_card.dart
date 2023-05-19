@@ -1,13 +1,14 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 
 class LearnSpaceCard extends ConsumerStatefulWidget {
@@ -23,7 +24,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
   final scrollController = ScrollController();
   final scrollControllerCourseFee = ScrollController();
   final scrollControllerCourseNoFee = ScrollController();
-
+  bool isLoading = false;
   late double width;
   late double height;
   var paramsCourse = {
@@ -69,7 +70,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
         if (ref.watch(learnSpaceStateControllerProvider).isMore == true) {
           String maxId =
               ref.read(learnSpaceStateControllerProvider).course.last['id'];
-          _fetchCourseList({'max_id': maxId, ...paramsCourseFee});
+          _fetchCourseFeeList({'max_id': maxId, ...paramsCourseFee});
         }
       }
     });
@@ -85,27 +86,39 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
     });
   }
 
-  void _fetchCourseList(params) {
-    ref.read(learnSpaceStateControllerProvider.notifier).getListCourses(params);
-  }
-
-  void _fetchCourseFeeList() {
-    ref.read(learnSpaceStateControllerProvider.notifier).getListCourses({
-      "exclude_current_user": true,
-      "visibility": "public",
-      'limit': 10,
-      'status': 'approved',
-      'free': false,
+  void _fetchCourseList(params) async {
+    setState(() {
+      isLoading = true;
+    });
+    await ref
+        .read(learnSpaceStateControllerProvider.notifier)
+        .getListCourses(params);
+    setState(() {
+      isLoading = false;
     });
   }
 
-  void _fetchCourseNoFeeList() {
-    ref.read(learnSpaceStateControllerProvider.notifier).getListCourses({
-      "exclude_current_user": true,
-      "visibility": "public",
-      'limit': 10,
-      'status': 'approved',
-      'free': true,
+  void _fetchCourseFeeList(params) async {
+    setState(() {
+      isLoading = true;
+    });
+    await ref
+        .read(learnSpaceStateControllerProvider.notifier)
+        .getListCoursesFee(params);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void _fetchCourseNoFeeList(params) async {
+    setState(() {
+      isLoading = true;
+    });
+    await ref
+        .read(learnSpaceStateControllerProvider.notifier)
+        .getListCoursesNoFee(params);
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -119,7 +132,15 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
 
   @override
   Widget build(BuildContext context) {
-    List course = ref.watch(learnSpaceStateControllerProvider).course;
+    List courses = ref.watch(learnSpaceStateControllerProvider).course;
+    List coursesNoFee =
+        ref.watch(learnSpaceStateControllerProvider).coursesNoFee;
+    List coursesFee = ref.watch(learnSpaceStateControllerProvider).coursesFee;
+    List course = !courseFee && !courseNoFee
+        ? courses
+        : courseFee && !courseNoFee
+            ? coursesFee
+            : coursesNoFee;
     bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
     final size = MediaQuery.of(context).size;
     width = size.width;
@@ -131,10 +152,10 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
             _fetchCourseList(paramsCourse);
           }
           if (courseFee && !courseNoFee) {
-            _fetchCourseFeeList();
+            _fetchCourseFeeList(paramsCourseFee);
           }
           if (!courseFee && courseNoFee) {
-            _fetchCourseNoFeeList();
+            _fetchCourseNoFeeList(paramsCourseNoFee);
           }
         },
         child: SingleChildScrollView(
@@ -173,7 +194,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                             _fetchCourseList(paramsCourse);
                           }
                           if (courseFee && !courseNoFee) {
-                            _fetchCourseFeeList();
+                            _fetchCourseFeeList(paramsCourseFee);
                           }
                         },
                         child: Container(
@@ -215,7 +236,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                           _fetchCourseList(paramsCourse);
                         }
                         if (!courseFee && courseNoFee) {
-                          _fetchCourseNoFeeList();
+                          _fetchCourseNoFeeList(paramsCourseNoFee);
                         }
                       },
                       child: Container(
@@ -256,229 +277,244 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                       itemCount: course.length,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
-                        if (index < course.length) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
-                            child: CardComponents(
-                              type: 'homeScreen',
-                              imageCard: ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15)),
-                                child: ImageCacheRender(
-                                  path: course[index]['banner'] != null
-                                      ? course[index]['banner']['url']
-                                      : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LearnSpaceDetail(
-                                      data: course[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                              textCard: Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: 16.0,
-                                    right: 16.0,
-                                    left: 16.0,
-                                    top: 8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: Text(
-                                        course[index]['title'],
-                                        maxLines: 2,
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w800,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: Text(
-                                        course[index]['account']
-                                            ['display_name'],
-                                        style: const TextStyle(
-                                          fontSize: 13.0,
-                                          color: greyColor,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: Text(
-                                        course[index]['free'] == true
-                                            ? 'Miễn phí'
-                                            : '${convertNumberToVND(course[index]['price'] ~/ 1)} VNĐ',
-                                        style: const TextStyle(
-                                          fontSize: 13.0,
-                                          color: secondaryColor,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              buttonCard: Container(
-                                padding: const EdgeInsets.only(
-                                    bottom: 16.0, left: 16.0, right: 16.0),
-                                child: Row(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: InkWell(
-                                        onTap: () {
-                                          if (course[index]
-                                                      ['course_relationships']
-                                                  ['follow_course'] ==
-                                              true) {
-                                            ref
-                                                .read(
-                                                    learnSpaceStateControllerProvider
-                                                        .notifier)
-                                                .updateStatusCourse(
-                                                    false, course[index]['id']);
-                                            setState(() {
-                                              course[index]
-                                                      ['course_relationships']
-                                                  ['follow_course'] = false;
-                                            });
-                                          } else {
-                                            ref
-                                                .read(
-                                                    learnSpaceStateControllerProvider
-                                                        .notifier)
-                                                .updateStatusCourse(
-                                                    true, course[index]['id']);
-                                            setState(() {
-                                              course[index]
-                                                      ['course_relationships']
-                                                  ['follow_course'] = true;
-                                            });
-                                          }
-                                        },
-                                        child: Container(
-                                          height: 32,
-                                          width: width * 0.7,
-                                          decoration: BoxDecoration(
-                                              color: course[index][
-                                                          'course_relationships']
-                                                      ['follow_course']
-                                                  ? secondaryColor
-                                                  : const Color.fromARGB(
-                                                      189, 202, 202, 202),
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                              border: Border.all(
-                                                  width: 0.2,
-                                                  color: greyColor)),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(FontAwesomeIcons.solidStar,
-                                                  color: course[index][
-                                                              'course_relationships']
-                                                          ['follow_course']
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  size: 14),
-                                              const SizedBox(
-                                                width: 5.0,
-                                              ),
-                                              Text(
-                                                'Quan tâm',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  color: course[index][
-                                                              'course_relationships']
-                                                          ['follow_course']
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 3.0,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 11.0,
-                                    ),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: InkWell(
-                                        onTap: () {
-                                          showModalBottomSheet(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                  top: Radius.circular(10),
-                                                ),
-                                              ),
-                                              context: context,
-                                              builder: (context) =>
-                                                  const ShareModalBottom());
-                                        },
-                                        child: Container(
-                                          height: 32,
-                                          width: width * 0.12,
-                                          decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  189, 202, 202, 202),
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                              border: Border.all(
-                                                  width: 0.2,
-                                                  color: greyColor)),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Icon(FontAwesomeIcons.share,
-                                                  color: Colors.black,
-                                                  size: 14),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
+                          child: CardComponents(
+                            type: 'homeScreen',
+                            imageCard: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15)),
+                              child: ExtendedImage.network(
+                                course[index]['banner'] != null
+                                    ? course[index]['banner']['url']
+                                    : linkBannerDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          );
-                        } else {
-                          isMore == true
-                              ? const Center(
-                                  child: CupertinoActivityIndicator())
-                              : const SizedBox();
-                        }
-                        return null;
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LearnSpaceDetail(
+                                    data: course[index],
+                                  ),
+                                ),
+                              );
+                            },
+                            textCard: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 16.0,
+                                  right: 16.0,
+                                  left: 16.0,
+                                  top: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text(
+                                      course[index]['title'],
+                                      maxLines: 2,
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w800,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text(
+                                      course[index]['account']['display_name'],
+                                      style: const TextStyle(
+                                        fontSize: 13.0,
+                                        color: greyColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text(
+                                      course[index]['free'] == true
+                                          ? 'Miễn phí'
+                                          : '${convertNumberToVND(course[index]['price'] ~/ 1)} VNĐ',
+                                      style: const TextStyle(
+                                        fontSize: 13.0,
+                                        color: secondaryColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            buttonCard: Container(
+                              padding: const EdgeInsets.only(
+                                  bottom: 16.0, left: 16.0, right: 16.0),
+                              child: Row(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (course[index]
+                                                    ['course_relationships']
+                                                ['follow_course'] ==
+                                            true) {
+                                          ref
+                                              .read(
+                                                  learnSpaceStateControllerProvider
+                                                      .notifier)
+                                              .updateStatusCourse(
+                                                false,
+                                                course[index]['id'],
+                                                name: !courseFee && !courseNoFee
+                                                    ? 'courses'
+                                                    : courseFee && !courseNoFee
+                                                        ? 'coursesFee'
+                                                        : 'coursesNoFee',
+                                              );
+                                          setState(() {
+                                            course[index]
+                                                    ['course_relationships']
+                                                ['follow_course'] = false;
+                                          });
+                                        } else {
+                                          ref
+                                              .read(
+                                                  learnSpaceStateControllerProvider
+                                                      .notifier)
+                                              .updateStatusCourse(
+                                                true,
+                                                course[index]['id'],
+                                                name: !courseFee && !courseNoFee
+                                                    ? 'courses'
+                                                    : courseFee && !courseNoFee
+                                                        ? 'coursesFee'
+                                                        : 'coursesNoFee',
+                                              );
+                                          setState(() {
+                                            course[index]
+                                                    ['course_relationships']
+                                                ['follow_course'] = true;
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 32,
+                                        width: width * 0.7,
+                                        decoration: BoxDecoration(
+                                            color: course[index]
+                                                        ['course_relationships']
+                                                    ['follow_course']
+                                                ? secondaryColor
+                                                : const Color.fromARGB(
+                                                    189, 202, 202, 202),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            border: Border.all(
+                                                width: 0.2, color: greyColor)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(FontAwesomeIcons.solidStar,
+                                                color: course[index][
+                                                            'course_relationships']
+                                                        ['follow_course']
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                size: 14),
+                                            const SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Text(
+                                              'Quan tâm',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: course[index][
+                                                            'course_relationships']
+                                                        ['follow_course']
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 3.0,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 11.0,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: InkWell(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(10),
+                                              ),
+                                            ),
+                                            context: context,
+                                            builder: (context) =>
+                                                const ShareModalBottom());
+                                      },
+                                      child: Container(
+                                        height: 32,
+                                        width: width * 0.12,
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                189, 202, 202, 202),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            border: Border.all(
+                                                width: 0.2, color: greyColor)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(FontAwesomeIcons.share,
+                                                color: Colors.black, size: 14),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
                       },
                     ))
                   : const SizedBox(),
-              isMore == true
+              isLoading && course.isEmpty || isMore == true
                   ? const Center(child: CupertinoActivityIndicator())
-                  : const SizedBox()
+                  : course.isEmpty
+                      ? Column(
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                "assets/wow-emo-2.gif",
+                                height: 125.0,
+                                width: 125.0,
+                              ),
+                            ),
+                            const Text('Không tìm thấy kết quả nào'),
+                          ],
+                        )
+                      : const SizedBox()
             ],
           ),
         ),

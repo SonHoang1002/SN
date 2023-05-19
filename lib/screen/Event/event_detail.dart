@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,9 @@ import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
   final dynamic eventDetail;
-  const EventDetail({Key? key, this.eventDetail}) : super(key: key);
+  final bool? isUseEventData;
+  const EventDetail({Key? key, this.eventDetail, this.isUseEventData})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -53,15 +57,31 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     });
   }
 
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (mounted) {
+  //     setState(() {
+  //       eventDetail = ref.watch(eventControllerProvider).eventDetail;
+  //     });
+  //   }
+  // }
+
   void loadData() async {
-    await ref
-        .read(eventControllerProvider.notifier)
-        .getDetailEvent(widget.eventDetail['id'])
-        .then((value) {
-      setState(() {
-        eventDetail = ref.read(eventControllerProvider).eventDetail;
+    if (eventDetail.isEmpty &&
+        (widget.isUseEventData != null && widget.isUseEventData!)) {
+      eventDetail = widget.eventDetail;
+    } else {
+      await ref
+          .read(eventControllerProvider.notifier)
+          .getDetailEvent(widget.eventDetail['id'])
+          .then((value) {
+        setState(() {
+          eventDetail = ref.watch(eventControllerProvider).eventDetail;
+        });
       });
-    });
+    }
+
     await ref
         .read(eventControllerProvider.notifier)
         .getListEventSuggested(paramsConfig);
@@ -146,13 +166,12 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                 ],
                               ),
                               child: ClipRRect(
-                                child: ExtendedImage.network(
-                                        eventDetail['banner']!= null
-                                            ? eventDetail['banner']['url']
-                                            : linkBannerDefault,
-                                        fit: BoxFit.cover,
-                                      )
-                              ),
+                                  child: ExtendedImage.network(
+                                eventDetail['banner'] != null
+                                    ? eventDetail['banner']['url']
+                                    : linkBannerDefault,
+                                fit: BoxFit.cover,
+                              )),
                             ),
                           ],
                         ),

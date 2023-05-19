@@ -62,24 +62,25 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
         },
         child: SingleChildScrollView(
           controller: scrollController,
-          child: Column(children: [
-            grows.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, bottom: 8.0),
-                        child: Text(
-                          'Dự án đã ủng hộ',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                          child: ListView.builder(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start,  children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding:
+                      EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+                  child: Text(
+                    'Dự án đã ủng hộ',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                grows.isNotEmpty
+                    ? SizedBox(
+                        child: ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: grows.length,
@@ -290,10 +291,10 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
                             ),
                           );
                         },
-                      )),
-                    ],
-                  )
-                : const SizedBox(),
+                      ))
+                    : const SizedBox(),
+              ],
+            ),
             loading && grows.isEmpty || isMore == true
                 ? const Center(child: CupertinoActivityIndicator())
                 : grows.isEmpty

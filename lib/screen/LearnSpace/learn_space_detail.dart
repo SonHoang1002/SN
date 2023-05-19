@@ -1,9 +1,11 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
@@ -16,7 +18,6 @@ import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_review.d
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
 class LearnSpaceDetail extends ConsumerStatefulWidget {
@@ -52,7 +53,14 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   void loadData() async {
     await ref
         .read(learnSpaceStateControllerProvider.notifier)
-        .getDetailCourses(widget.data['id']);
+        .getDetailCourses(widget.data['id'])
+        .then((value) {
+      setState(() {
+        courseDetail = ref.read(learnSpaceStateControllerProvider).detailCourse;
+        isCourseInterested =
+            courseDetail['course_relationships']['follow_course'];
+      });
+    });
     await ref
         .read(learnSpaceStateControllerProvider.notifier)
         .getListCoursesSimilar({'only_current_user': true, 'limit': 5});
@@ -65,9 +73,6 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
       'visibility': 'public'
     });
     await ref.read(growControllerProvider.notifier).getGrowTransactions({});
-    setState(() {
-      courseDetail = ref.read(learnSpaceStateControllerProvider).detailCourse;
-    });
   }
 
   List itemChipCourse = [
@@ -105,6 +110,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     var transactions = ref.watch(growControllerProvider).growTransactions;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
@@ -165,13 +171,12 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                   ),
                                 ],
                               ),
-                              child: Hero(
-                                tag: courseDetail['banner']['url'] ??
-                                    "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
-                                child: ClipRRect(
-                                  child: ImageCacheRender(
-                                    path: courseDetail['banner']['url'] ?? "",
-                                  ),
+                              child: ClipRRect(
+                                child: ExtendedImage.network(
+                                  courseDetail['banner'] != null
+                                      ? courseDetail['banner']['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),

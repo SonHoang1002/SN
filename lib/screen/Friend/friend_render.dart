@@ -85,7 +85,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: friendRequest.length,
-                          itemBuilder: ((context, index) => InkWell(
+                          itemBuilder: ((context, indexRequest) => InkWell(
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -93,7 +93,8 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                       builder: (context) => const UserPage(),
                                       settings: RouteSettings(
                                         arguments: {
-                                          'id': friendRequest[index]['id']
+                                          'id': friendRequest[indexRequest]
+                                              ['id']
                                         },
                                       ),
                                     ),
@@ -114,15 +115,17 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                             radius: 50,
                                             backgroundImage:
                                                 CachedNetworkImageProvider(
-                                                    friendRequest[index]
-                                                                    ['account'][
+                                                    friendRequest[indexRequest]
+                                                                    ['account']
+                                                                [
                                                                 'avatar_media'] !=
                                                             null
-                                                        ? friendRequest[index]
+                                                        ? friendRequest[indexRequest]
                                                                     ['account']
                                                                 ['avatar_media']
                                                             ['preview_url']
-                                                        : friendRequest[index]
+                                                        : friendRequest[
+                                                                    indexRequest]
                                                                 ['account']
                                                             ['avatar_static']),
                                           ),
@@ -131,14 +134,14 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(friendRequest[index]
+                                              Text(friendRequest[indexRequest]
                                                   ['account']['display_name']),
                                               const SizedBox(
                                                 height: 5,
                                               ),
-                                              friendRequest[index]['account']['relationships']['friendship_status'] !=
+                                              friendRequest[indexRequest]['account']['relationships']['friendship_status'] !=
                                                           'ARE_FRIENDS' &&
-                                                      friendRequest[index]
+                                                      friendRequest[indexRequest]
                                                                       ['account']
                                                                   ['relationships'][
                                                               'friendship_status'] !=
@@ -149,7 +152,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                            '${friendRequest[index]['account']['friends_count']} bạn chung',
+                                                            '${friendRequest[indexRequest]['account']['friends_count'] ?? 0} bạn chung',
                                                             style: const TextStyle(
                                                                 color:
                                                                     greyColor)),
@@ -161,7 +164,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                             InkWell(
                                                               onTap: () async {
                                                                 setState(() {
-                                                                  friendRequest[index]['account']
+                                                                  friendRequest[indexRequest]['account']
                                                                               [
                                                                               'relationships']
                                                                           [
@@ -173,7 +176,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                                         .notifier)
                                                                     .statusFriendRequest(
                                                                         'add',
-                                                                        friendRequest[index]['account']
+                                                                        friendRequest[indexRequest]['account']
                                                                             [
                                                                             'id']);
                                                               },
@@ -226,7 +229,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                             InkWell(
                                                               onTap: () async {
                                                                 setState(() {
-                                                                  friendRequest[index]['account']
+                                                                  friendRequest[indexRequest]['account']
                                                                               [
                                                                               'relationships']
                                                                           [
@@ -238,7 +241,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                                         .notifier)
                                                                     .statusFriendRequest(
                                                                         'reject',
-                                                                        friendRequest[index]['account']
+                                                                        friendRequest[indexRequest]['account']
                                                                             [
                                                                             'id']);
                                                               },
@@ -296,7 +299,8 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                         ),
                                                       ],
                                                     )
-                                                  : friendRequest[index]['account']
+                                                  : friendRequest[indexRequest]
+                                                                      ['account']
                                                                   ['relationships'][
                                                               'friendship_status'] ==
                                                           'ARE_FRIENDS'
@@ -376,7 +380,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                             ),
                                                           ],
                                                         )
-                                                      : friendRequest[index]
+                                                      : friendRequest[indexRequest]
                                                                           ['account']
                                                                       ['relationships']
                                                                   ['friendship_status'] ==
@@ -402,7 +406,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                             ]),
                                       ],
                                     ),
-                                    friendRequest[index]['account']
+                                    friendRequest[indexRequest]['account']
                                                     ['relationships']
                                                 ['friendship_status'] ==
                                             'CAN_REQUEST'
@@ -477,7 +481,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                             height: 10,
                                           ),
                                           Text(
-                                              '${friendSuggestions[index]['friends_count']} bạn chung',
+                                              '${friendSuggestions[index]['relationships']['mutual_friend_count'] ?? 0} bạn chung',
                                               style: const TextStyle(
                                                   color: greyColor)),
                                           const SizedBox(

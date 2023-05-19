@@ -68,11 +68,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
-        <!--
-        NOT REQUIRED FOR INTEGRATION
-        Added for playing exported video file.
-        -->
+       <meta-data android:name="android.webkit.WebView.EnableFeature.interest-cohort" android:value="true" />
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.provider"

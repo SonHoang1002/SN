@@ -50,6 +50,7 @@ class _ReefState extends ConsumerState<Reef> {
                 ? moments.sublist(1, 7)
                 : momentSuggests;
     momentSuggests.shuffle();
+    // momentSuggests.insert(0, {});
     handleSettingHeader() {
       showCustomBottomSheet(context, 170, "",
           isHaveHeader: false,
@@ -66,7 +67,7 @@ class _ReefState extends ConsumerState<Reef> {
                 prefixWidget: const Icon(
                   FontAwesomeIcons.rectangleXmark,
                   size: 18,
-                ), 
+                ),
                 changeBackground: greyColor[300],
               ),
               buildSpacer(height: 10),

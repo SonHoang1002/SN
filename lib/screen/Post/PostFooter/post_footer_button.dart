@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -63,13 +64,19 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     handlePress(key) {
       if (key == 'comment') {
         if (![postDetail, postMultipleMedia].contains(widget.type)) {
-          Navigator.push(
-              context,
-              CupertinoPageRoute(
-                  builder: (context) => PostDetail(
+           pushCustomCupertinoPageRoute(
+                            context,
+                           PostDetail(
                         post: widget.post,
                         preType: widget.type,
-                      )));
+                      ));
+          // Navigator.push(
+          //     context,
+          //     CupertinoPageRoute(
+          //         builder: (context) => PostDetail(
+          //               post: widget.post,
+          //               preType: widget.type,
+          //             )));
         } else if (widget.type == postMultipleMedia) {
           showBarModalBottomSheet(
               context: context,

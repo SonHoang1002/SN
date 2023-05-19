@@ -63,13 +63,32 @@ class PostController extends StateNotifier<PostState> {
 
   getListPostUserPage(accountId, params) async {
     List response = await UserPageApi().getListPostApi(accountId, params) ?? [];
+    List newList = [];
+    if (params["max_id"] != null) {
+      newList = checkObjectUniqueInList(state.postUserPage + response, 'id');
+    } else {
+      newList = response;
+    }
+
+    // List newList = [];
+    // List allDataList = [];
+    // allDataList.addAll(state.postUserPage);
+    // allDataList.addAll(response);
+    // for (int i = 0; i < allDataList.length; i++) {
+    //   List keyOfNewList = newList.map((element) => element['id']).toList();
+
+    //   if (!keyOfNewList.contains(allDataList[i]["id"])) {
+    //     newList.add(allDataList[i]);
+    //   }
+    // }
 
     if (mounted) {
       state = state.copyWith(
           posts: state.posts,
           postsPin: state.postsPin,
-          postUserPage:
-              checkObjectUniqueInList(state.postUserPage + response, 'id'),
+          postUserPage: newList,
+          // postUserPage:
+          //     checkObjectUniqueInList(state.postUserPage + response, 'id'),
           isMore: state.isMore,
           isMoreUserPage: response.length < params['limit'] ? false : true);
       // isMoreUserPage: true);
@@ -92,7 +111,10 @@ class PostController extends StateNotifier<PostState> {
     if (mounted) {
       state = state.copyWith(
           postsPin: state.postsPin,
-          posts: type == feedPost ? [newPost] + state.posts : state.posts,
+          posts: [feedPost, postPageUser].contains(type)
+              ? [newPost] + state.posts
+              : state.posts,
+          // posts: type == feedPost ? [newPost] + state.posts : state.posts,
           isMore: state.isMore,
           postUserPage: [feedPost, postPageUser].contains(type)
               ? [newPost] + state.postUserPage
@@ -121,7 +143,7 @@ class PostController extends StateNotifier<PostState> {
   }
 
   actionUpdatePostCount(String? preType, dynamic data) {
-     int index = -1;
+    int index = -1;
     if (preType == feedPost || preType == postDetailFromFeed) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (preType == postPageUser || preType == postDetailFromUserPage) {
@@ -217,6 +239,24 @@ class PostController extends StateNotifier<PostState> {
                 ]
               : state.posts,
           isMoreUserPage: state.isMoreUserPage);
+    }
+  }
+
+  actionUpdatePost(type, data) {
+    int index = -1;
+    if (type == feedPost) {
+      index = state.posts.indexWhere((element) => element['id'] == data['id']);
+    } else if (type == postPageUser) {
+      index = state.postUserPage
+          .indexWhere((element) => element['id'] == data['id']);
+    }
+    if (index < 0) return;
+    if (mounted) {
+      type == feedPost
+          ? state.posts[index] = data
+          : type == postPageUser
+              ? state.postUserPage[index] = data
+              : null;
     }
   }
 

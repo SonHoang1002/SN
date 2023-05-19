@@ -1,13 +1,14 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/recruit/recruit_provider.dart';
 import 'package:social_network_app_mobile/screen/Recruit/recuit_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 
 class RecruitCard extends ConsumerStatefulWidget {
@@ -95,10 +96,11 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15)),
-                              child: ImageCacheRender(
-                                path: recruits[index]['banner'] != null
+                              child: ExtendedImage.network(
+                                recruits[index]['banner'] != null
                                     ? recruits[index]['banner']['url']
-                                    : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+                                    : linkBannerDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             onTap: () {
@@ -174,7 +176,9 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                               .read(recruitControllerProvider
                                                   .notifier)
                                               .updateStatusRecruit(
-                                                  false, recruits[index]['id']);
+                                                false,
+                                                recruits[index]['id'],
+                                              );
                                           setState(() {
                                             recruits[index]
                                                     ['recruit_relationships']
@@ -302,7 +306,20 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                 : const SizedBox(),
             isMore == true
                 ? const Center(child: CupertinoActivityIndicator())
-                : const SizedBox()
+                : recruits.isEmpty
+                    ? Column(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              "assets/wow-emo-2.gif",
+                              height: 125.0,
+                              width: 125.0,
+                            ),
+                          ),
+                          const Text('Không tìm thấy kết quả nào'),
+                        ],
+                      )
+                    : const SizedBox()
           ],
         ),
       ),

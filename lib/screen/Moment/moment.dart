@@ -7,8 +7,8 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 
 class Moment extends ConsumerStatefulWidget {
   final bool? isBack;
-  final dynamic dataFromReef;
-  const Moment({Key? key, this.isBack, this.dataFromReef}) : super(key: key);
+  final dynamic dataAdditional;
+  const Moment({Key? key, this.isBack, this.dataAdditional}) : super(key: key);
 
   @override
   ConsumerState<Moment> createState() => _MomentState();
@@ -20,6 +20,7 @@ class _MomentState extends ConsumerState<Moment>
   PageController controller =
       PageController(viewportFraction: 1, keepPage: true);
   bool isPlay = false;
+  List momentSuggests = [];
 
   @override
   void initState() {
@@ -38,6 +39,12 @@ class _MomentState extends ConsumerState<Moment>
             .getListMomentFollow({"limit": 10});
       });
     }
+    momentSuggests = ref.read(momentControllerProvider).momentSuggest.isEmpty
+        ? moments
+        : ref.read(momentControllerProvider).momentSuggest;
+    if (widget.dataAdditional != null && widget.dataAdditional.isNotEmpty) {
+      momentSuggests.insert(0, widget.dataAdditional);
+    }
   }
 
   @override
@@ -51,14 +58,6 @@ class _MomentState extends ConsumerState<Moment>
     List iconAction = [
       {"icon": Icons.search, 'type': 'icon'},
     ];
-
-    List momentSuggests =
-        ref.watch(momentControllerProvider).momentSuggest.isEmpty
-            ? moments
-            : ref.watch(momentControllerProvider).momentSuggest;
-    if (widget.dataFromReef != null && widget.dataFromReef.isNotEmpty) {
-      momentSuggests.insert(0, widget.dataFromReef);
-    }
 
     List momentFollow = ref.watch(momentControllerProvider).momentFollow;
 

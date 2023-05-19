@@ -1,15 +1,19 @@
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/Friend/friend_search.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
+
+import '../../theme/theme_manager.dart';
+import '../../widget/appbar_title.dart';
 
 class FriendOfYou extends ConsumerStatefulWidget {
   const FriendOfYou({super.key});
@@ -19,8 +23,8 @@ class FriendOfYou extends ConsumerStatefulWidget {
 }
 
 class _FriendOfYouState extends ConsumerState<FriendOfYou> {
-  List friends = [];
-  var meData = {};
+  // List friends = [];
+  // var meData = {};
   final TextEditingController _searchController = TextEditingController();
   bool _hasValue = false;
 
@@ -36,12 +40,6 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
     await ref
         .read(friendControllerProvider.notifier)
         .getListFriends(ref.watch(meControllerProvider)[0]['id'], params);
-    if (mounted) {
-      setState(() {
-        friends = ref.watch(friendControllerProvider).friends;
-        meData = ref.watch(meControllerProvider)[0];
-      });
-    }
   }
 
   handleSearch(value) {
@@ -63,13 +61,18 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
 
   @override
   Widget build(BuildContext context) {
+    List friends = ref.watch(friendControllerProvider).friends;
+    var meData = ref.watch(meControllerProvider)[0];
+    final theme = pv.Provider.of<ThemeManager>(context);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
         titleSpacing: 0,
+        centerTitle: true,
         leading: const BackIconAppbar(),
-        title: const Text('Bạn bè'),
+        title: const AppBarTitle(title: 'Bạn bè'),
         actions: [
           InkWell(
             onTap: () {
@@ -121,14 +124,18 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
                                 borderSide: BorderSide.none,
                                 borderRadius: BorderRadius.circular(30.0)),
                             hintText: "Tìm kiếm bạn bè",
-                            hintStyle: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300),
+                            hintStyle: TextStyle(
+                                color: theme.isDarkMode
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.w400),
                             filled: true,
                             fillColor: Colors.grey.withOpacity(0.3),
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               Icons.search,
-                              color: Colors.white,
+                              color: theme.isDarkMode
+                                  ? Colors.white
+                                  : Colors.black,
                             ),
                             suffixIcon: _hasValue
                                 ? IconButton(
@@ -180,14 +187,17 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
                           visualDensity:
                               const VisualDensity(vertical: 4, horizontal: 0),
                           leading: FittedBox(
-                            child: AvatarSocial(
-                              width: 100,
-                              height: 100,
-                              path: friends[index]['avatar_media'] != null
+                              child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                MediaQuery.of(context).size.width / 2),
+                            child: ExtendedImage.network(
+                              friends[index]['avatar_media'] != null
                                   ? friends[index]['avatar_media']['show_url']
                                   : friends[index]['avatar_static'],
+                              width: 100,
+                              height: 100,
                             ),
-                          ),
+                          )),
                           title: Padding(
                             padding: const EdgeInsets.only(top: 25.0),
                             child: Text(friends[index]['display_name']),

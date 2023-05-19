@@ -15,6 +15,7 @@ class PostPollCenter extends StatefulWidget {
 }
 
 class _PostPollCenterState extends State<PostPollCenter> {
+  bool isUserVote = false;
   @override
   Widget build(BuildContext context) {
     var poll = widget.post['poll'];
@@ -36,8 +37,7 @@ class _PostPollCenterState extends State<PostPollCenter> {
       child: FlutterPolls(
         pollId: widget.post['id'],
         onVoted: (PollOption pollOption, int newTotalVotes) async {
-          await Future.delayed(const Duration(seconds: 1));
-
+          await Future.delayed(const Duration(seconds: 1), () {});
           return true;
         },
         pollOptionsSplashColor: Theme.of(context).colorScheme.background,
@@ -59,9 +59,11 @@ class _PostPollCenterState extends State<PostPollCenter> {
             return PollOption(
               title: Text(
                 option['title'],
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
+                style: TextStyle(
+                    fontSize: 16,
+                    color: isUserVote
+                        ? blueColor
+                        : Theme.of(context).textTheme.bodyMedium!.color),
               ),
               votes: option['votes_count'],
             );
@@ -78,7 +80,7 @@ class _PostPollCenterState extends State<PostPollCenter> {
             ),
             Text(
               timeStamps > 0
-                  ? 'Còn ${renderTimeExpires(poll['expires_at'])} ngày'
+                  ? 'Còn ${renderTimeExpires(poll['expires_at'])}'
                   : "Đã kết thúc",
             ),
           ],

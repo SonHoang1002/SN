@@ -1,11 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:helpers/helpers/extensions/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -125,14 +131,35 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
     super.dispose();
   }
 
-  void showActionSheet(BuildContext context, {required objectItem}) {
+  void showActionSheet(BuildContext context1, {required objectItem}) {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
         actions: <CupertinoActionSheetAction>[
           CupertinoActionSheetAction(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
+              var status = await Permission.storage.status;
+              if (!status.isGranted) {
+                await Permission.storage.request();
+              }
+              String imageUrl = postRender['media_attachments']?[0]?['url'] ??
+                  postRender['url'];
+              // Get the image data
+              var response = await Dio().get(imageUrl,
+                  options: Options(responseType: ResponseType.bytes));
+              var dir = await getApplicationDocumentsDirectory();
+              String fileName = '${Random().nextInt(10000)}.jpg';
+              File file = File('${dir.path}/$fileName');
+
+              await file.writeAsBytes(response.data);
+              final result =
+                  await GallerySaver.saveImage('${dir.path}/$fileName');
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context1).showSnackBar(SnackBar(
+                  content: result == true
+                      ? const Text("Lưu ảnh thành công")
+                      : const Text("Lưu ảnh thất bại")));
             },
             child: const Text(
               'Lưu ảnh',
@@ -232,7 +259,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                           direction: DismissDirection.vertical,
                           key: const Key("dismiss"),
                           resizeDuration: const Duration(milliseconds: 0),
-                          onDismissed: (direction) { 
+                          onDismissed: (direction) {
                             popToPreviousScreen(context);
                           },
                           confirmDismiss: (direction) async {

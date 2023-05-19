@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,8 +8,9 @@ import 'package:social_network_app_mobile/providers/learn_space/learn_space_prov
 import 'package:social_network_app_mobile/screen/LearnSpace/learn_space_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
+
+import '../../constant/common.dart';
 
 class LearnSpaceLearned extends ConsumerStatefulWidget {
   const LearnSpaceLearned({Key? key}) : super(key: key);
@@ -20,26 +22,16 @@ class LearnSpaceLearned extends ConsumerStatefulWidget {
 class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
   late double width;
   late double height;
-  List course = [];
   var paramsConfigList = {"limit": 10, "joined": true};
+  bool isLoading = false;
 
   final scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     if (mounted) {
-      Future.delayed(Duration.zero).then((_) {
-        ref
-            .read(learnSpaceStateControllerProvider.notifier)
-            .getListCoursesChipMenu(paramsConfigList)
-            .then((value) {
-          setState(() {
-            course =
-                ref.watch(learnSpaceStateControllerProvider).coursesChipMenu;
-          });
-        }).catchError((error) {
-          // handle error
-        });
+      Future.delayed(Duration.zero, () {
+        fetchData(paramsConfigList);
       });
     }
     scrollController.addListener(() {
@@ -49,25 +41,34 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
             .read(learnSpaceStateControllerProvider)
             .coursesChipMenu
             .last['id'];
-        ref
-            .read(learnSpaceStateControllerProvider.notifier)
-            .getListCoursesChipMenu({"max_id": maxId, ...paramsConfigList});
+        fetchData({"max_id": maxId, ...paramsConfigList});
       }
+    });
+  }
+
+  void fetchData(params) async {
+    setState(() {
+      isLoading = true;
+    });
+    await ref
+        .read(learnSpaceStateControllerProvider.notifier)
+        .getListCoursesChipMenu(params);
+    setState(() {
+      isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
+    List course = ref.watch(learnSpaceStateControllerProvider).coursesChipMenu;
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
     return Expanded(
         child: RefreshIndicator(
       onRefresh: () async {
-        ref
-            .read(learnSpaceStateControllerProvider.notifier)
-            .getListCoursesChipMenu(paramsConfigList);
+        fetchData(paramsConfigList);
       },
       child: SingleChildScrollView(
         controller: scrollController,
@@ -102,10 +103,11 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(15),
                                   topRight: Radius.circular(15)),
-                              child: ImageCacheRender(
-                                path: course[index]['banner'] != null
+                              child: ExtendedImage.network(
+                                course[index]['banner'] != null
                                     ? course[index]['banner']['url']
-                                    : "https://sn.emso.vn/static/media/group_cover.81acfb42.png",
+                                    : linkBannerDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             onTap: () {
@@ -181,7 +183,8 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                                   learnSpaceStateControllerProvider
                                                       .notifier)
                                               .updateStatusCourse(
-                                                  false, course[index]['id']);
+                                                  false, course[index]['id'],
+                                                  name: 'coursesLearned');
                                           setState(() {
                                             course[index]
                                                     ['course_relationships']
@@ -193,7 +196,8 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                                                   learnSpaceStateControllerProvider
                                                       .notifier)
                                               .updateStatusCourse(
-                                                  true, course[index]['id']);
+                                                  true, course[index]['id'],
+                                                  name: 'coursesLearned');
                                           setState(() {
                                             course[index]
                                                     ['course_relationships']
@@ -308,9 +312,22 @@ class _LearnSpaceLearnedState extends ConsumerState<LearnSpaceLearned> {
                     },
                   ))
                 : const SizedBox(),
-            isMore == true
+            isLoading && course.isEmpty || isMore == true
                 ? const Center(child: CupertinoActivityIndicator())
-                : const SizedBox()
+                : course.isEmpty
+                    ? Column(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              "assets/wow-emo-2.gif",
+                              height: 125.0,
+                              width: 125.0,
+                            ),
+                          ),
+                          const Text('Không tìm thấy kết quả nào'),
+                        ],
+                      )
+                    : const SizedBox()
           ],
         ),
       ),

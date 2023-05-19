@@ -122,23 +122,23 @@ List listMenuPost = [
       'answer-learn'
     ]
   },
-  // {
-  //   "key": 'poll',
-  //   "label": 'Thăm dò ý kiến',
-  //   "icon": FontAwesomeIcons.poll,
-  //   "color": 0xFFf7923b,
-  //   "display": 'group',
-  //   "disabled": [
-  //     'media',
-  //     'life-event',
-  //     'gif',
-  //     'file',
-  //     'write-suggest',
-  //     'event-group',
-  //     'answer-learn',
-  //     'answer'
-  //   ]
-  // },
+  {
+    "key": 'poll',
+    "label": 'Thăm dò ý kiến',
+    "icon": FontAwesomeIcons.poll,
+    "color": 0xFFf7923b,
+    "display": 'group',
+    "disabled": [
+      'media',
+      'life-event',
+      'gif',
+      'file',
+      'write-suggest',
+      'event-group',
+      'answer-learn',
+      'answer'
+    ]
+  },
   // {
   //   "key": 'event-group',
   //   "label": 'Tạo sự kiện',
