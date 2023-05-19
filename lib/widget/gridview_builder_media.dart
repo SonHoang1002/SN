@@ -3,14 +3,14 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
-class GirdviewBuilderMedia extends StatelessWidget {
+class GridViewBuilderMedia extends StatelessWidget {
   final List medias;
   final double aspectRatio;
   final int crossAxisCount;
   final int? imageRemain;
   final Function? handlePress;
 
-  const GirdviewBuilderMedia(
+  const GridViewBuilderMedia(
       {Key? key,
       required this.aspectRatio,
       required this.medias,

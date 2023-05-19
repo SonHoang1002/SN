@@ -196,6 +196,8 @@ PODS:
     - Flutter
   - wakelock (0.0.1):
     - Flutter
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
@@ -240,6 +242,7 @@ DEPENDENCIES:
   - VideoEditor (= 1.26.7)
   - volume_watcher (from `.symlinks/plugins/volume_watcher/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
   https://github.com/Banuba/specs.git:
@@ -335,6 +338,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/volume_watcher/ios"
   wakelock:
     :path: ".symlinks/plugins/wakelock/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
@@ -402,6 +407,7 @@ SPEC CHECKSUMS:
   VideoEditor: e01ef9442a6ddb66e966d2b6ed83cee9b3a9b45a
   volume_watcher: 6271ae8f78dfafa401c8dac4d117c35576568693
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
+  webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
 
 PODFILE CHECKSUM: d898ba04c89f4c28c23bb495cd4b1ea19f22e39b
 
