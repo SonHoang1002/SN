@@ -4,6 +4,9 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
 
+import '../Page/PageDetail/page_detail.dart';
+import '../UserPage/user_page.dart';
+
 class SearchItem extends StatelessWidget {
   final dynamic item;
   const SearchItem({Key? key, required this.item}) : super(key: key);
@@ -21,7 +24,26 @@ class SearchItem extends StatelessWidget {
                         ? 'Nhóm của bạn'
                         : '';
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        item?['relationships']?['friendship_status'] == 'ARE_FRIENDS'
+            ? Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserPage(),
+                  settings: RouteSettings(
+                    arguments: {'id': item['id'].toString()},
+                  ),
+                ))
+            : item['page_relationship']?['like'] == true ||
+                    item['page_relationship']?['following'] == true
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PageDetail(),
+                      settings: RouteSettings(arguments: item['id'].toString()),
+                    ))
+                : const SizedBox();
+      },
       borderRadius: BorderRadius.circular(10),
       child: Container(
         padding: const EdgeInsets.all(8.0),

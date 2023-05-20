@@ -94,22 +94,21 @@ class _AvatarPageState extends State<AvatarPage> {
                           Stack(
                             children: [
                               Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                height: 170,
-                                width: width,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[800],
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10))),
-                                child: _pickedBgImage != null
-                                    ? Image.file(
-                                        _pickedBgImage!,
-                                        fit: BoxFit.fitWidth,
-                                      )
-                                    : Container(),
-                              ),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  height: 170,
+                                  width: width,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[800],
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10))),
+                                  child: _pickedBgImage != null
+                                      ? Image.file(
+                                          _pickedBgImage!,
+                                          fit: BoxFit.fitWidth,
+                                        )
+                                      : Container()),
                               Container(
                                 padding:
                                     const EdgeInsets.fromLTRB(0, 0, 15, 30),

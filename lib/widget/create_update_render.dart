@@ -119,7 +119,7 @@ class CreateUpdateRender extends StatelessWidget {
                 counterText: "",
                 enabledBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide: BorderSide(color: Colors.grey, width: 2),
+                  borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
                 hintText: placeholder,
                 hintStyle: const TextStyle(
@@ -209,7 +209,7 @@ class CreateUpdateRender extends StatelessWidget {
               borderRadius: const BorderRadius.all(
                 Radius.circular(5),
               ),
-              border: Border.all(color: Colors.grey, width: 2)),
+              border: Border.all(color: Colors.grey, width: 1)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
