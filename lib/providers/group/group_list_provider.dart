@@ -8,24 +8,27 @@ class GroupListState {
   final List groupMember;
   final bool isMoreGroupAdmin;
   final bool isMoreGroupMember;
+  final List memberQuestionList;
 
   const GroupListState(
       {this.groupAdmin = const [],
       this.groupMember = const [],
       this.isMoreGroupAdmin = true,
-      this.isMoreGroupMember = true});
+      this.isMoreGroupMember = true,
+      this.memberQuestionList = const []});
 
   GroupListState copyWith(
       {List groupAdmin = const [],
       List groupMember = const [],
       bool isMoreGroupAdmin = true,
-      bool isMoreGroupMember = true}) {
+      bool isMoreGroupMember = true,
+      List memberQuestionList = const []}) {
     return GroupListState(
-      groupAdmin: groupAdmin,
-      groupMember: groupMember,
-      isMoreGroupAdmin: isMoreGroupAdmin,
-      isMoreGroupMember: isMoreGroupMember,
-    );
+        groupAdmin: groupAdmin,
+        groupMember: groupMember,
+        isMoreGroupAdmin: isMoreGroupAdmin,
+        isMoreGroupMember: isMoreGroupMember,
+        memberQuestionList: memberQuestionList);
   }
 }
 
@@ -53,7 +56,31 @@ class GroupListController extends StateNotifier<GroupListState> {
               : state.isMoreGroupAdmin,
           isMoreGroupMember: tab == 'member' && response.length < limit
               ? false
-              : state.isMoreGroupMember);
+              : state.isMoreGroupMember,
+          memberQuestionList: state.memberQuestionList);
     }
+  }
+
+  getMemberQuestion(dynamic groupId) async {
+    final response = await GroupApi().getMemberQuestion(groupId);
+    if (response != null) {
+      state = state.copyWith(
+          groupAdmin: state.groupAdmin,
+          groupMember: state.groupMember,
+          isMoreGroupAdmin: state.isMoreGroupAdmin,
+          isMoreGroupMember: state.isMoreGroupMember,
+          memberQuestionList: response);
+    }
+  }
+
+  removeGroupMember(dynamic groupMemberId) async {
+    state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember
+            .where((element) => element['id'] != groupMemberId)
+            .toList(),
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList);
   }
 }

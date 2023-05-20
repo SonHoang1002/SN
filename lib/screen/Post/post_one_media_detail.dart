@@ -57,6 +57,7 @@ class PostOneMediaDetail extends ConsumerStatefulWidget {
   final List? medias;
   final int? currentIndex;
   final Function? backFunction;
+  final Function? reloadFunction;
   final dynamic post;
   final dynamic type;
   final dynamic preType;
@@ -66,6 +67,7 @@ class PostOneMediaDetail extends ConsumerStatefulWidget {
       this.medias,
       this.currentIndex,
       this.backFunction,
+      this.reloadFunction,
       this.post,
       this.type,
       this.preType})
@@ -537,10 +539,17 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                           SizedBox(
                             height: 40,
                             child: PostFooterButton(
-                              post: userData,
-                              type: postMultipleMedia,
-                              preType: checkPreType(),
-                            ),
+                                post: userData,
+                                type: postMultipleMedia,
+                                preType: checkPreType(),
+                                reloadFunction: () {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    widget.reloadFunction != null
+                                        ? widget.reloadFunction!()
+                                        : null;
+                                  });
+                                }),
                           )
                         ],
                       ),

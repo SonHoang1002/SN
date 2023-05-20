@@ -56,9 +56,9 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
           double.parse(medias[0]['meta']['small']['width'].toString());
       double height =
           double.parse(medias[0]['meta']['small']['height'].toString());
+      values[0] = size.width;
       if (width < height) {
         //anh doc
-        values[0] = size.width;
         if (height > 400) {
           values[1] = height;
         } else {
@@ -100,7 +100,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                               tag: medias[0]['id'],
                               child: ExtendedImage.network(
                                 medias[0]['url'],
-                                // fit: BoxFit.cover,
+                                // fit: BoxFit.fitWidth,
                                 width: checkHeightAndWidthOneImage(medias)[0],
                                 height: checkHeightAndWidthOneImage(medias)[1],
                               ),

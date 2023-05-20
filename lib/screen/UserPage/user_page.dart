@@ -97,28 +97,27 @@ class _UserPageState extends ConsumerState<UserPage> {
       //             scrollController.position.maxScrollExtent &&
       //         (scrollController.offset).toDouble() >
       //             scrollController.position.maxScrollExtent - 4000) {
-        if (scrollController.position.userScrollDirection ==
-            ScrollDirection.reverse) {
-          if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                  100.0 ==
-              0) {
-            EasyDebounce.debounce(
-                'my-debouncer', const Duration(milliseconds: 300), () {
-              // if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
-              // if (id != null) {
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (double.parse((scrollController.offset).toStringAsFixed(0)) %
+                100.0 ==
+            0) {
+          EasyDebounce.debounce(
+              'my-debouncer', const Duration(milliseconds: 300), () {
+            // if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
+            // if (id != null) {
 
-              String maxId = "";
-              if (ref.read(postControllerProvider).postUserPage.isEmpty) {
-                maxId = postUser.last['id'];
-              } else {
-                maxId =
-                    ref.read(postControllerProvider).postUserPage.last['id'];
-              }
-              ref.read(postControllerProvider.notifier).getListPostUserPage(
-                  id, {"max_id": maxId, "exclude_replies": true, "limit": 10});
-              // }
-            });
-          }
+            String maxId = "";
+            if (ref.read(postControllerProvider).postUserPage.isEmpty) {
+              maxId = postUser.last['id'];
+            } else {
+              maxId = ref.read(postControllerProvider).postUserPage.last['id'];
+            }
+            ref.read(postControllerProvider.notifier).getListPostUserPage(
+                id, {"max_id": maxId, "exclude_replies": true, "limit": 10});
+            // }
+          });
+        }
         // }
       }
     });
@@ -270,6 +269,9 @@ class _UserPageState extends ConsumerState<UserPage> {
                   itemBuilder: (context, index) => Post(
                         type: postPageUser,
                         post: postUser[index],
+                        reloadFunction: () {
+                          setState(() {});
+                        },
                       )),
               isMorePageUser
                   ? Center(child: SkeletonCustom().postSkeleton(context))

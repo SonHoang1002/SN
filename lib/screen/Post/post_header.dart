@@ -25,7 +25,15 @@ class PostHeader extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
   final Color? textColor;
-  const PostHeader({Key? key, this.post, this.type, this.textColor})
+  final bool? isHaveAction;
+  final Function? reloadFunction;
+  const PostHeader(
+      {Key? key,
+      this.post,
+      this.type,
+      this.textColor,
+      this.isHaveAction,
+      this.reloadFunction})
       : super(key: key);
 
   @override
@@ -213,47 +221,57 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                   )
                 ],
               ),
-              (![postReblog, postMultipleMedia].contains(widget.type))
-                  ? Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            showBarModalBottomSheet(
-                                context: context,
-                                backgroundColor: Theme.of(context).canvasColor,
-                                barrierColor: Colors.transparent,
-                                builder: (context) => PostHeaderAction(
-                                    post: widget.post, type: widget.type));
-                          },
-                          child: const Icon(
-                            FontAwesomeIcons.ellipsis,
-                            size: 20,
-                            color: greyColor,
-                          ),
-                        ),
-                        SizedBox(
-                          width: widget.type != postDetail ? 10 : 0,
-                        ),
-                        ![postDetail, postPageUser].contains(widget.type)
-                            ? InkWell(
-                                onTap: () async {
-                                  final data = {"hidden": true};
-                                  await PostApi()
-                                      .updatePost(widget.post['id'], data);
-                                  ref
-                                      .read(postControllerProvider.notifier)
-                                      .actionHiddenDeletePost(
-                                          widget.type, widget.post);
-                                },
-                                child: const Icon(
-                                  FontAwesomeIcons.xmark,
-                                  size: 20,
-                                  color: greyColor,
-                                ),
-                              )
-                            : const SizedBox()
-                      ],
-                    )
+              widget.isHaveAction == true
+                  ? (![postReblog, postMultipleMedia].contains(widget.type))
+                      ? Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                showBarModalBottomSheet(
+                                    context: context,
+                                    backgroundColor:
+                                        Theme.of(context).canvasColor,
+                                    barrierColor: Colors.transparent,
+                                    builder: (context) => PostHeaderAction(
+                                          post: widget.post,
+                                          type: widget.type,
+                                          reloadFunction: () {
+                                            widget.reloadFunction != null
+                                                ? widget.reloadFunction!()
+                                                : null;
+                                          },
+                                        ));
+                              },
+                              child: const Icon(
+                                FontAwesomeIcons.ellipsis,
+                                size: 20,
+                                color: greyColor,
+                              ),
+                            ),
+                            SizedBox(
+                              width: widget.type != postDetail ? 10 : 0,
+                            ),
+                            ![postDetail, postPageUser].contains(widget.type)
+                                ? InkWell(
+                                    onTap: () async {
+                                      final data = {"hidden": true};
+                                      await PostApi()
+                                          .updatePost(widget.post['id'], data);
+                                      ref
+                                          .read(postControllerProvider.notifier)
+                                          .actionHiddenDeletePost(
+                                              widget.type, widget.post);
+                                    },
+                                    child: const Icon(
+                                      FontAwesomeIcons.xmark,
+                                      size: 20,
+                                      color: greyColor,
+                                    ),
+                                  )
+                                : const SizedBox()
+                          ],
+                        )
+                      : const SizedBox()
                   : const SizedBox()
             ]),
       ),
@@ -303,6 +321,28 @@ class BlockNamePost extends StatelessWidget {
       }
     }
 
+    TextSpan renderLikeTextSpan() {
+      if (group != null) {
+        return (page["group_relationship"] != null &&
+                page["group_relationship"]?["like"] == true)
+            ? const TextSpan(
+                text: " Đã thích", style: TextStyle(color: secondaryColor))
+            : const TextSpan(
+                text: " Thích", style: TextStyle(color: secondaryColor));
+      } else if (page != null) {
+        return post['place']?['id'] != page['id']
+            ? (page["page_relationship"] != null &&
+                    page["page_relationship"]?["like"] == true)
+                ? const TextSpan(
+                    text: " Đã thích", style: TextStyle(color: secondaryColor))
+                : const TextSpan(
+                    text: " Thích", style: TextStyle(color: secondaryColor))
+            : TextSpan(text: account['display_name']);
+      } else {
+        return const TextSpan(text: '');
+      }
+    }
+
     void pushToScreen() {
       if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
         Navigator.pushNamed(context, '/page', arguments: page);
@@ -322,62 +362,87 @@ class BlockNamePost extends StatelessWidget {
       }
     }
 
-    return InkWell(
-        onTap: () {
-          pushToScreen();
-        },
-        child: RichText(
-          text: TextSpan(
-            text: renderDisplayName(),
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: textColor ??
-                    Theme.of(context).textTheme.displayLarge!.color),
-            children: [
-              const TextSpan(text: ' '),
-              statusActivity.isNotEmpty
-                  ? WidgetSpan(
-                      child: ImageCacheRender(
-                        path: statusActivity['url'],
-                        width: 18.0,
-                        height: 18.0,
-                      ),
-                    )
-                  : const TextSpan(text: ''),
-              TextSpan(
-                  text: description,
-                  style: const TextStyle(fontWeight: FontWeight.normal)),
-              mentions.isNotEmpty
-                  ? TextSpan(text: mentions[0]['display_name'])
-                  : const TextSpan(),
-              mentions.isNotEmpty && mentions.length >= 2
-                  ? const TextSpan(
-                      text: ' và ',
-                      style: TextStyle(fontWeight: FontWeight.normal))
-                  : const TextSpan(),
-              mentions.isNotEmpty && mentions.length == 2
-                  ? TextSpan(
-                      text: mentions[1]['display_name'],
-                    )
-                  : const TextSpan(),
-              mentions.isNotEmpty && mentions.length > 2
-                  ? TextSpan(
-                      text: '${mentions.length - 1} người khác',
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          pushCustomCupertinoPageRoute(
-                              context, PageMention(mentions: mentions));
-                          // Navigator.push(
-                          //     context,
-                          //     CupertinoPageRoute(
-                          //         builder: (context) =>
-                          //             PageMention(mentions: mentions)));
-                        })
-                  : const TextSpan(),
-            ],
+    final size = MediaQuery.of(context).size;
+
+    return Row(
+      children: [
+        InkWell(
+          onTap: () {
+            pushToScreen();
+          },
+          child: Container(
+            // constraints: BoxConstraints(maxWidth:size.width*0.7 ),
+            child: RichText(
+              text: TextSpan(
+                text: renderDisplayName(),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: textColor ??
+                        Theme.of(context).textTheme.displayLarge!.color),
+                children: [
+                  const TextSpan(text: ' '),
+                  statusActivity.isNotEmpty
+                      ? WidgetSpan(
+                          child: ImageCacheRender(
+                            path: statusActivity['url'],
+                            width: 18.0,
+                            height: 18.0,
+                          ),
+                        )
+                      : const TextSpan(text: ''),
+                  TextSpan(
+                      text: description,
+                      style: const TextStyle(fontWeight: FontWeight.normal)),
+                  mentions.isNotEmpty
+                      ? TextSpan(text: mentions[0]['display_name'])
+                      : const TextSpan(),
+                  mentions.isNotEmpty && mentions.length >= 2
+                      ? const TextSpan(
+                          text: ' và ',
+                          style: TextStyle(fontWeight: FontWeight.normal))
+                      : const TextSpan(),
+                  mentions.isNotEmpty && mentions.length == 2
+                      ? TextSpan(
+                          text: mentions[1]['display_name'],
+                        )
+                      : const TextSpan(),
+                  mentions.isNotEmpty && mentions.length > 2
+                      ? TextSpan(
+                          text: '${mentions.length - 1} người khác',
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              pushCustomCupertinoPageRoute(
+                                  context, PageMention(mentions: mentions));
+                              // Navigator.push(
+                              //     context,
+                              //     CupertinoPageRoute(
+                              //         builder: (context) =>
+                              //             PageMention(mentions: mentions)));
+                            })
+                      : const TextSpan(),
+                ],
+              ),
+            ),
           ),
-        ));
+        ),
+        group != null || page != null
+            ? RichText(
+                text: TextSpan(
+                  children: [
+                    const TextSpan(text: " · "),
+                    renderLikeTextSpan(),
+                  ],
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: textColor ??
+                          Theme.of(context).textTheme.displayLarge!.color),
+                ),
+              )
+            : const SizedBox()
+      ],
+    );
   }
 }
 

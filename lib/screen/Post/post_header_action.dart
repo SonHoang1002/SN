@@ -24,7 +24,9 @@ import 'package:social_network_app_mobile/widget/text_description.dart';
 class PostHeaderAction extends ConsumerStatefulWidget {
   final dynamic post;
   final String type;
-  const PostHeaderAction({Key? key, this.post, required this.type})
+  final Function? reloadFunction;
+  const PostHeaderAction(
+      {Key? key, this.post, required this.type, this.reloadFunction})
       : super(key: key);
 
   @override
@@ -207,6 +209,9 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
           .actionUpdatePost(widget.type, newData);
       Navigator.pop(context);
       final response = await PostApi().postCompleteTarget(widget.post['id']);
+      if (response != null) {
+        widget.reloadFunction != null ? widget.reloadFunction!() : null;
+      }
     }
 
     void showAlertDialog(BuildContext context) {
