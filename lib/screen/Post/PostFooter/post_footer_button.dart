@@ -23,9 +23,15 @@ class PostFooterButton extends ConsumerStatefulWidget {
   final dynamic type;
   final String? preType;
   final Function? backFunction;
+  final Function? reloadFunction;
 
   const PostFooterButton(
-      {Key? key, this.post, this.type, this.backFunction, this.preType})
+      {Key? key,
+      this.post,
+      this.type,
+      this.backFunction,
+      this.reloadFunction,
+      this.preType})
       : super(key: key);
 
   @override
@@ -139,6 +145,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(newPost);
+
         await PostApi().reactionPostApi(widget.post['id'], data);
       } else {
         newPost = {
@@ -157,6 +164,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             .saveCurrentPost(newPost);
         await PostApi().unReactionPostApi(widget.post['id']);
       }
+      widget.reloadFunction != null ? widget.reloadFunction!() : null;
     }
 
     handlePressButton() {

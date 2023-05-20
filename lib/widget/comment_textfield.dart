@@ -55,7 +55,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   double heightModal = 250;
 
   String content = '';
-  // String contentWithId = "";
+  String contentWithId = '';
   String flagContent = '';
   String preMessage = '';
 
@@ -122,7 +122,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     useEffect(
       () {
         if (widget.commentSelected != null &&
@@ -186,6 +186,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
     handleGetComment(value) async {
       setState(() {
         content = value;
+        contentWithId = value;
       });
 
       for (var mention in listMentionsSelected) {
@@ -198,13 +199,15 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       });
     }
 
-    handleClickMention(data) {
+    handleClickMention(data) { 
       //Should show notification
-      if (listMentionsSelected.length > 30) return;
-
+      if (listMentionsSelected.length > 30) return; 
       String message =
           '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
       textController.text = message;
+      String messageWithId =
+          '${textController.text.substring(0, query.range.start)}${data['id']}${textController.text.substring(query.range.end)}';
+
       if (textController.text.isNotEmpty) {
         final selection = TextSelection.fromPosition(
             TextPosition(offset: textController.text.length));
@@ -213,6 +216,8 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       setState(() {
         listMentions = [];
         content = message;
+        contentWithId = messageWithId;
+
       });
       setState(() {
         listMentionsSelected = [...listMentionsSelected, data];
@@ -538,3 +543,4 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         functionGetEmoji: functionGetEmoji);
   }
 }
+ 

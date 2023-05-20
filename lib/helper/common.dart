@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Function(int num) shortenLargeNumber = (int num) {
   if (num >= 1000000000) {
@@ -80,4 +81,35 @@ String formatDuration(Duration duration) {
   String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
   String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
   return "$twoDigitMinutes:$twoDigitSeconds";
+}
+
+String? handleTimeShow(String value) {
+  DateTime time = DateTime.parse(value);
+  DateTime currentDate = DateTime.now();
+  Duration timeDiff = currentDate.difference(time);
+  int diffInDays = timeDiff.inDays;
+  int yearTime = time.year;
+  int yearNow = DateTime.now().year;
+
+  if (yearTime == yearNow) {
+    String timeShow = DateFormat('MMM d, yyyy, hh:mm a').format(
+      time,
+    );
+
+    if (diffInDays < 7) {
+      return '${diffInDays} ngày';
+    } else if (diffInDays >= 7 && diffInDays < 14) {
+      return '${diffInDays} tuần';
+    } else if (diffInDays >= 14) {
+      return '${(diffInDays / 7).floor()} tuần';
+    }
+  }
+}
+
+String formatDateTimeToStringDateTimeYear(DateTime dateTime) {
+  return DateFormat('dd/MM/yyyy').format(dateTime);
+}
+
+String convertISO8086toLTime(DateTime dateTime) {
+  return DateFormat('HH:mm').format(dateTime);
 }
