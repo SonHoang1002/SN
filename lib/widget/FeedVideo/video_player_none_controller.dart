@@ -52,7 +52,7 @@ class _VideoPlayerNoneControllerState
       })
       ..addListener(() {
         if (mounted) {
-          ref.read(watchControllerProvider.notifier).updatePositonPlaying(
+          ref.read(watchControllerProvider.notifier).updatePositionPlaying(
               videoPlayerController.value.position.inSeconds);
         }
       });
