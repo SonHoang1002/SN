@@ -18,7 +18,9 @@ class ChipMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 6, right: 6),
+      margin: endIcon != null
+          ? const EdgeInsets.only(left: 3, right: 3)
+          : const EdgeInsets.only(left: 6, right: 6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
