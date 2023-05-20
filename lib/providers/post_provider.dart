@@ -177,22 +177,26 @@ class PostController extends StateNotifier<PostState> {
   }
 
   actionUpdateDetailInPost(dynamic type, dynamic data,
-      {dynamic preType}) async {
+      {dynamic preType}) async { 
     int index = -1;
     if (type == feedPost ||
-        (preType != null && preType == postDetailFromFeed)) {
+        (preType != null && preType == postDetailFromFeed) ||
+        (type == postMultipleMedia && preType == feedPost)) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (type == postPageUser ||
-        (preType != null && preType == postDetailFromUserPage)) {
+        (preType != null && preType == postDetailFromUserPage) ||
+        (type == postMultipleMedia && preType == postPageUser)) {
       index = state.postUserPage
           .indexWhere((element) => element['id'] == data['id']);
     }
     if (index < 0) return;
+
     if (mounted) {
       state = state.copyWith(
           postsPin: state.postsPin,
           posts: type == feedPost ||
-                  (preType != null && preType == postDetailFromFeed)
+                  (preType != null && preType == postDetailFromFeed) ||
+                  (type == postMultipleMedia && preType == feedPost)
               ? [
                   ...state.posts.sublist(0, index),
                   data,
@@ -201,7 +205,8 @@ class PostController extends StateNotifier<PostState> {
               : state.posts,
           isMore: state.isMore,
           postUserPage: type == postPageUser ||
-                  (preType != null && preType == postDetailFromUserPage)
+                  (preType != null && preType == postDetailFromUserPage) ||
+                  (type == postMultipleMedia && preType == postPageUser)
               ? [
                   ...state.postUserPage.sublist(0, index),
                   data,

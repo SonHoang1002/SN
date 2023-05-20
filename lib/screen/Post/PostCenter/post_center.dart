@@ -25,13 +25,15 @@ class PostCenter extends StatefulWidget {
   final dynamic data;
   final dynamic preType;
   final Function? backFunction;
+  final Function? reloadFunction;
   const PostCenter(
       {Key? key,
       this.post,
       this.type,
       this.data,
       this.preType,
-      this.backFunction})
+      this.backFunction,
+      this.reloadFunction})
       : super(key: key);
 
   @override
@@ -86,7 +88,13 @@ class _PostCenterState extends State<PostCenter> {
                           ? widget.backFunction!()
                           : null;
                     },
-                  ),
+                    reloadFunction: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        widget.reloadFunction != null
+                            ? widget.reloadFunction!()
+                            : null;
+                      });
+                    }),
             widget.post['card'] != null &&
                     widget.post['media_attachments'].length == 0
                 ? PostCard(post: widget.post)

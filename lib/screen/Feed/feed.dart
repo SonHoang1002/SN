@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
-import 'package:social_network_app_mobile/providers/posts/position_post_provider.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/screen/Reef_ShortVideo/reef.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widget/Suggestions/suggest.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
@@ -73,7 +77,7 @@ class _FeedState extends ConsumerState<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    List posts = ref.watch(postControllerProvider).posts;
+    List posts = List.from(ref.watch(postControllerProvider).posts);
     bool isMore = ref.watch(postControllerProvider).isMore;
     return Scaffold(
       body: RefreshIndicator(
@@ -96,13 +100,57 @@ class _FeedState extends ConsumerState<Feed> {
               const CrossBar(
                 height: 5,
               ),
+              Suggest(
+                  type: suggestFriends,
+                  headerWidget: buildTextContent(
+                      "Những người bạn có thể biết", true,
+                      fontSize: 17),
+                  reloadFunction: () {
+                    setState(() {});
+                  },
+                  footerTitle: "Xem thêm"),
+              const CrossBar(
+                height: 5,
+              ),
+              Suggest(
+                  type: suggestGroups,
+                  headerWidget: Image.asset(
+                    'assets/icon/logo_app.png',
+                    height: 20,
+                  ),
+                  subHeaderWidget: Column(children: [
+                    buildSpacer(height: 5),
+                    buildTextContent(
+                        ref.watch(meControllerProvider)[0]['display_name'] +
+                            " ơi, bạn có thể sẽ thích các nhóm sau ",
+                        true,
+                        fontSize: 17),
+                    buildSpacer(height: 5),
+                    buildTextContent(
+                        "Kết nối với và học hỏi từ những người có chung sử thích với bạn",
+                        false,
+                        fontSize: 16),
+                  ]),
+                  reloadFunction: () {
+                    setState(() {});
+                  },
+                  footerTitle: "Khám phá thêm nhóm"),
+              const CrossBar(
+                height: 5,
+              ),
               ListView.builder(
                   shrinkWrap: true,
                   primary: false,
                   itemCount: posts.length + 1,
                   itemBuilder: (context, index) {
                     if (index < posts.length) {
-                      return Post(type: feedPost, post: posts[index]);
+                      return Post(
+                        type: feedPost,
+                        post: posts[index],
+                        reloadFunction: () {
+                          setState(() {});
+                        },
+                      );
                     } else {
                       return isMore == true
                           ? Center(

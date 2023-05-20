@@ -13,8 +13,15 @@ class PostMedia extends StatelessWidget {
   final String? type;
   final dynamic preType;
   final Function? backFunction;
+  final Function? reloadFunction;
+
   const PostMedia(
-      {Key? key, this.post, this.type, this.preType, this.backFunction})
+      {Key? key,
+      this.post,
+      this.type,
+      this.preType,
+      this.backFunction,
+      this.reloadFunction})
       : super(key: key);
 
   @override
@@ -27,14 +34,18 @@ class PostMedia extends StatelessWidget {
           pushCustomVerticalPageRoute(
               context,
               PostOneMediaDetail(
-                postMedia: post,
-                post: post,
-                type: type,
-                preType: preType,
-                backFunction: () {
-                  backFunction != null ? backFunction!() : null;
-                },
-              ),
+                  postMedia: post,
+                  post: post,
+                  type: type,
+                  preType: preType,
+                  backFunction: () {
+                    backFunction != null ? backFunction!() : null;
+                  },
+                  reloadFunction: () {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      reloadFunction != null ? reloadFunction!() : null;
+                    });
+                  }),
               opaque: false);
         } else if (medias.length > 1) {
           int initialIndex =
