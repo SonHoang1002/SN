@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:social_network_app_mobile/constant/page_constants.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 class SettingsPage extends StatefulWidget {
-  final dataCreate;
+  final dynamic dataCreate;
   const SettingsPage({super.key, this.dataCreate});
 
   @override
@@ -36,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
           }),
           child: Stack(alignment: Alignment.bottomCenter, children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
               child: Column(
                 children: [
                   Text(

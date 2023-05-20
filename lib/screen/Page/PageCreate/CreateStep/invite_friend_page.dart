@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
 import 'package:social_network_app_mobile/screen/Page/PageCreate/CreateStep/settting_page_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
-import 'package:social_network_app_mobile/widget/avatar_social.dart';
 import 'package:social_network_app_mobile/widget/list_stack_avatar.dart';
 
-import '../../../../constant/page_constants.dart';
-import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
 // import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class InviteFriendPage extends ConsumerStatefulWidget {
-  final dataCreate;
+  final dynamic dataCreate;
   const InviteFriendPage({
     super.key,
     this.dataCreate,

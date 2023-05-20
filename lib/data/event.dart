@@ -632,6 +632,7 @@ List iconEventHost = [
   {"key": "pending", "label": "Đang chờ"},
 ];
 List iconActionEllipsis = [
+  {"key": "invite", "label": "Mời bạn bè", "icon": FontAwesomeIcons.share},
   {"key": "share", "label": "Chia sẻ", "icon": FontAwesomeIcons.share},
   {"key": "save", "label": "Lưu", "icon": FontAwesomeIcons.bookmark},
   {"key": "copy", "label": "Sao chép liên kết", "icon": FontAwesomeIcons.link},

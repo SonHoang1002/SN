@@ -55,21 +55,25 @@ class CreateUpdateRender extends StatelessWidget {
                 infoField[index]['action'], infoField[index]['listSelect']);
           default:
             return _buildTextFormField(
-                infoField[index]['title'],
-                infoField[index]['iconTitle'],
-                infoField[index]['description'],
-                infoField[index]['placeholder']);
+              infoField[index]['title'],
+              infoField[index]['iconTitle'],
+              infoField[index]['description'],
+              infoField[index]['placeholder'],
+              infoField[index]['type'],
+            );
         }
       },
     );
   }
 
   Widget _buildTextFormField(
-      // TextEditingController controller,
-      String? title,
-      IconData? iconTitle,
-      String? description,
-      String placeholder) {
+    // TextEditingController controller,
+    String? title,
+    IconData? iconTitle,
+    String? description,
+    String placeholder,
+    String? type,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Column(
@@ -102,9 +106,9 @@ class CreateUpdateRender extends StatelessWidget {
             onChanged: ((value) {}),
             validator: (value) {
               if (value != null) {}
+              return null;
             },
-            keyboardType:
-                placeholder == placeholder ? TextInputType.number : null,
+            keyboardType: type == 'number' ? TextInputType.number : null,
             decoration: InputDecoration(
                 suffix: placeholder == placeholder
                     ? const Icon(
@@ -115,7 +119,7 @@ class CreateUpdateRender extends StatelessWidget {
                 counterText: "",
                 enabledBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  borderSide: BorderSide(color: Colors.grey, width: 2),
+                  borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
                 hintText: placeholder,
                 hintStyle: const TextStyle(
@@ -195,9 +199,9 @@ class CreateUpdateRender extends StatelessWidget {
   Widget _buildAutocomplete(
       BuildContext context, String title, Function? action, List listSelect) {
     return GestureDetector(
-      onTap: (() {
+      onTap: () {
         _showBottomSheetForSelect(context, action, listSelect);
-      }),
+      },
       child: Container(
           height: 56,
           margin: const EdgeInsets.only(bottom: 8),
@@ -205,7 +209,7 @@ class CreateUpdateRender extends StatelessWidget {
               borderRadius: const BorderRadius.all(
                 Radius.circular(5),
               ),
-              border: Border.all(color: Colors.grey, width: 2)),
+              border: Border.all(color: Colors.grey, width: 1)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -287,7 +291,7 @@ class CreateUpdateRender extends StatelessWidget {
                         itemBuilder: ((context, index) {
                           if (listSelected.isNotEmpty) {
                             return Container(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: const EdgeInsets.only(left: 10),
                               height: 40,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

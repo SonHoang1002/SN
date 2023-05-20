@@ -32,19 +32,20 @@ class _GrowDiscussState extends ConsumerState<GrowDiscuss> {
     List growPosts = ref.watch(growControllerProvider).posts;
     return growPosts.isNotEmpty
         ? Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                primary: false,
-                itemCount: growPosts.length,
-                itemBuilder: (context, index) {
-                 return  Post(post: growPosts[index]);
-                })
-          ])
-        : const Center(child: CupertinoActivityIndicator());
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+                ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    primary: false,
+                    itemCount: growPosts.length,
+                    itemBuilder: (context, index) {
+                      return Post(post: growPosts[index]);
+                    })
+              ])
+        : const SizedBox();
   }
 
   @override

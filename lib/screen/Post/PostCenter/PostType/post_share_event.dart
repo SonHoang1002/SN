@@ -6,9 +6,7 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/screen/Event/event_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class PostShareEvent extends StatelessWidget {
   final dynamic post;
@@ -20,7 +18,7 @@ class PostShareEvent extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return GestureDetector(
-      onTap: () { 
+      onTap: () {
         Navigator.push(
             context,
             CupertinoPageRoute(

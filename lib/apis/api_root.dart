@@ -4,8 +4,9 @@ import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
-import 'package:social_network_app_mobile/app.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
+
+import '../material_app_theme.dart';
 
 class Api {
   getDio(userToken) {
@@ -52,6 +53,22 @@ class Api {
       var userToken = await SecureStorage().getKeyStorage("token");
       Dio dio = await getDio(userToken);
       var response = await dio.post(path, data: data);
+      return response.data;
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        logOutWhenTokenError();
+      }
+    }
+  }
+
+  Future postRequestBaseWithParams(String path, data) async {
+    try {
+      var userToken = await SecureStorage().getKeyStorage("token");
+      Dio dio = await getDio(userToken);
+      var response = await dio.post(
+        path,
+        queryParameters: data,
+      );
       return response.data;
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
