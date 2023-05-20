@@ -8,8 +8,8 @@ import 'package:social_network_app_mobile/widget/create_update_render.dart';
 import 'avatar_page_page.dart';
 
 class InformationPagePage extends StatefulWidget {
-  final dataCreate;
-  const InformationPagePage(Map map, {super.key, this.dataCreate});
+  final dynamic dataCreate;
+  const InformationPagePage({super.key, this.dataCreate});
 
   @override
   State<InformationPagePage> createState() => _InformationPagePageState();
@@ -53,7 +53,8 @@ class _InformationPagePageState extends State<InformationPagePage> {
         'title': null,
         'iconTitle': null,
         'description': null,
-        'placeholder': 'Số điện thoại'
+        'placeholder': 'Số điện thoại',
+        'type': 'number'
       },
       {
         'title': 'Vị trí',
@@ -70,7 +71,8 @@ class _InformationPagePageState extends State<InformationPagePage> {
         'title': null,
         'iconTitle': null,
         'description': null,
-        'placeholder': 'Mã ZIP'
+        'placeholder': 'Mã ZIP',
+        'type': 'number'
       },
       {
         'type': 'radio',

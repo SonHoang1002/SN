@@ -68,7 +68,8 @@ class SearchHistory extends ConsumerWidget {
                                             settings: RouteSettings(
                                               arguments: {
                                                 'id': searchHistory[index]
-                                                    ['entity_id']
+                                                        ['entity_id']
+                                                    .toString()
                                               },
                                             ),
                                           ))

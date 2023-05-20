@@ -15,10 +15,11 @@ class ActionEllipsis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (menuSelected['key']) {
-      case 'share':
+      case 'invite':
         return const InviteFriend();
       case 'report':
         return const  ReportCategory(entityReport: 'event', entityType: "event");
+        case 'share': 
       default:
         return const SizedBox();
     }
