@@ -16,18 +16,22 @@ class CreateModalBaseMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
-        leading: const BackIconAppbar(),
         centerTitle: true,
-        title: AppBarTitle(
-          title: title,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const BackIconAppbar(),
+            AppBarTitle(
+              title: title,
+            ),
+            buttonAppbar
+          ],
         ),
-        actions: [buttonAppbar],
       ),
       body: body,
     );

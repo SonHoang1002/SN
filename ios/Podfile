@@ -1,5 +1,7 @@
-# Uncomment this line to define a global platform for your project
-platform :ios, '11.0'
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/Banuba/specs.git'
+
+platform :ios, '13.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -30,6 +32,29 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
+
+  sdk_version = '1.26.7'
+
+  pod 'BanubaARCloudSDK', sdk_version #optional
+  pod 'BanubaVideoEditorSDK', sdk_version
+  pod 'BanubaAudioBrowserSDK', sdk_version #optional
+  pod 'BanubaMusicEditorSDK', sdk_version
+  pod 'BanubaOverlayEditorSDK', sdk_version
+  pod 'BanubaEffectPlayer', sdk_version #optional
+  pod 'BanubaSDK', sdk_version #optional
+  pod 'BanubaSDKSimple', sdk_version
+  pod 'BanubaSDKServicing', sdk_version
+  pod 'VideoEditor', sdk_version
+  pod 'BanubaUtilities', sdk_version
+  pod 'BanubaVideoEditorGallerySDK', sdk_version #optional
+  pod 'BanubaLicenseServicingSDK', sdk_version
+  pod 'BanubaVideoEditorTrimSDK', sdk_version
+
+  pod 'BNBLicenseUtils', sdk_version
+
+  pod 'VEExportSDK', sdk_version
+  pod 'VEEffectsSDK', sdk_version
+  pod 'VEPlaybackSDK', sdk_version
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end

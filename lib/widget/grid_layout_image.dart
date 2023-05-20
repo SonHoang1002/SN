@@ -4,7 +4,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widget/girdview_builder_media.dart';
+import 'package:social_network_app_mobile/widget/gridview_builder_media.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import '../theme/colors.dart';
@@ -130,7 +130,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                         medias[0]['file']?.path != null ? 'local' : 'network'));
           }
         case 2:
-          return GirdviewBuilderMedia(
+          return GridViewBuilderMedia(
               handlePress: widget.handlePress,
               crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
               aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
@@ -139,7 +139,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
           if (getAspectMedia(medias[0]) > 1) {
             return Column(
               children: [
-                GirdviewBuilderMedia(
+                GridViewBuilderMedia(
                     handlePress: widget.handlePress,
                     crossAxisCount: 1,
                     aspectRatio:
@@ -148,7 +148,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 const SizedBox(
                   height: 3,
                 ),
-                GirdviewBuilderMedia(
+                GridViewBuilderMedia(
                     handlePress: widget.handlePress,
                     crossAxisCount: 2,
                     aspectRatio: 1,
@@ -161,7 +161,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               children: [
                 SizedBox(
                   width: size.width * 0.65 - 3,
-                  child: GirdviewBuilderMedia(
+                  child: GridViewBuilderMedia(
                       handlePress: widget.handlePress,
                       crossAxisCount: 1,
                       aspectRatio: 0.682,
@@ -172,7 +172,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 ),
                 SizedBox(
                   width: size.width * 0.35,
-                  child: GirdviewBuilderMedia(
+                  child: GridViewBuilderMedia(
                       handlePress: widget.handlePress,
                       crossAxisCount: 1,
                       aspectRatio: 0.75,
@@ -184,7 +184,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
 
         case 4:
           if (getAspectMedia(medias[0]) == 1) {
-            return GirdviewBuilderMedia(
+            return GridViewBuilderMedia(
                 handlePress: widget.handlePress,
                 crossAxisCount: 2,
                 aspectRatio: 1,
@@ -195,7 +195,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               children: [
                 SizedBox(
                   width: size.width * 0.65 - 3,
-                  child: GirdviewBuilderMedia(
+                  child: GridViewBuilderMedia(
                       handlePress: widget.handlePress,
                       crossAxisCount: 1,
                       aspectRatio: 0.639,
@@ -206,7 +206,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 ),
                 SizedBox(
                   width: size.width * 0.35,
-                  child: GirdviewBuilderMedia(
+                  child: GridViewBuilderMedia(
                       handlePress: widget.handlePress,
                       crossAxisCount: 1,
                       aspectRatio: 1.06,
@@ -217,7 +217,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
           } else if (getAspectMedia(medias[0]) > 1) {
             return Column(
               children: [
-                GirdviewBuilderMedia(
+                GridViewBuilderMedia(
                     handlePress: widget.handlePress,
                     crossAxisCount: 1,
                     aspectRatio:
@@ -226,7 +226,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 const SizedBox(
                   height: 3,
                 ),
-                GirdviewBuilderMedia(
+                GridViewBuilderMedia(
                     handlePress: widget.handlePress,
                     crossAxisCount: 3,
                     aspectRatio: 1,
@@ -251,7 +251,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                             ),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: GirdviewBuilderMedia(
+                              child: GridViewBuilderMedia(
                                   handlePress: widget.handlePress,
                                   crossAxisCount: 1,
                                   aspectRatio: 0.37,
@@ -267,7 +267,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
           if (getAspectMedia(medias[0]) < 1) {
             return Column(
               children: [
-                GirdviewBuilderMedia(
+                GridViewBuilderMedia(
                     handlePress: widget.handlePress,
                     crossAxisCount: 2,
                     aspectRatio: 1,
@@ -275,7 +275,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 const SizedBox(
                   height: 3,
                 ),
-                GirdviewBuilderMedia(
+                GridViewBuilderMedia(
                     handlePress: widget.handlePress,
                     crossAxisCount: 3,
                     aspectRatio: 1,
@@ -290,7 +290,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
               children: [
                 SizedBox(
                   width: size.width * 0.5 - 1.5,
-                  child: GirdviewBuilderMedia(
+                  child: GridViewBuilderMedia(
                       handlePress: widget.handlePress,
                       crossAxisCount: 1,
                       aspectRatio: 0.995,
@@ -298,7 +298,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 ),
                 SizedBox(
                   width: size.width * 0.5 - 1.5,
-                  child: GirdviewBuilderMedia(
+                  child: GridViewBuilderMedia(
                       handlePress: widget.handlePress,
                       crossAxisCount: 1,
                       aspectRatio: 1.503,
