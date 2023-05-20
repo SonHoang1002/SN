@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/data/watch.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Page/PageCreate/page_create.dart';
@@ -24,6 +23,23 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
   @override
   void initState() {
     super.initState();
+    fetchData();
+    scrollController.addListener(() {
+      if (scrollController.offset ==
+          scrollController.position.maxScrollExtent) {
+        if (ref.read(pageListControllerProvider).pageAdmin.isNotEmpty &&
+            ref.read(pageListControllerProvider).isMorePageAdmin) {
+          String maxId =
+              ref.read(pageListControllerProvider).pageAdmin.last['score'];
+          ref
+              .read(pageListControllerProvider.notifier)
+              .getListPageAdmin({'limit': 20, 'max_id': maxId});
+        }
+      }
+    });
+  }
+
+  void fetchData() {
     Future.delayed(Duration.zero, () async {
       if (ref.read(pageListControllerProvider).pageAdmin.isEmpty) {
         await ref
@@ -46,20 +62,6 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
             .getListPageInvited('manage');
       }
       if (!mounted) return;
-    });
-
-    scrollController.addListener(() {
-      if (scrollController.offset ==
-          scrollController.position.maxScrollExtent) {
-        if (ref.read(pageListControllerProvider).pageAdmin.isNotEmpty &&
-            ref.read(pageListControllerProvider).isMorePageAdmin) {
-          String maxId =
-              ref.read(pageListControllerProvider).pageAdmin.last['score'];
-          ref
-              .read(pageListControllerProvider.notifier)
-              .getListPageAdmin({'limit': 20, 'max_id': maxId});
-        }
-      }
     });
   }
 
@@ -109,61 +111,66 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
       },
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: size.width,
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(
-                  menuButton.length,
-                  (index) => GestureDetector(
-                        onTap: () {
-                          handlePressMenu(menuButton[index]);
-                        },
-                        child: ChipMenu(
-                            icon: Icon(
-                              menuButton[index]['icon'],
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .displayLarge!
-                                  .color,
-                              size: 14,
-                            ),
-                            isSelected: false,
-                            label: menuButton[index]['name']),
-                      ))),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: Divider(
-            height: 2,
+    return RefreshIndicator(
+      onRefresh: () async {
+        fetchData();
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: size.width,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(
+                    menuButton.length,
+                    (index) => GestureDetector(
+                          onTap: () {
+                            handlePressMenu(menuButton[index]);
+                          },
+                          child: ChipMenu(
+                              icon: Icon(
+                                menuButton[index]['icon'],
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .color,
+                                size: 14,
+                              ),
+                              isSelected: false,
+                              label: menuButton[index]['name']),
+                        ))),
           ),
-        ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(12, 10, 12, 8),
-          child: Text(
-            'Trang bạn quản lý',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Divider(
+              height: 2,
+            ),
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            // physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            controller: scrollController,
-            itemCount: pagesAdmin.length,
-            itemBuilder: (context, i) {
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: PageItem(page: pagesAdmin[i]),
-              );
-            },
+          const Padding(
+            padding: EdgeInsets.fromLTRB(12, 10, 12, 8),
+            child: Text(
+              'Trang bạn quản lý',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
           ),
-        )
-      ],
+          Expanded(
+            child: ListView.builder(
+              // physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              controller: scrollController,
+              itemCount: pagesAdmin.length,
+              itemBuilder: (context, i) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: PageItem(page: pagesAdmin[i]),
+                );
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 }

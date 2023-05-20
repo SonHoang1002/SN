@@ -24,8 +24,9 @@ class NotificationState {
 }
 
 final notificationControllerProvider =
-    StateNotifierProvider<NotificationController, NotificationState>(
-        (ref) => NotificationController());
+    StateNotifierProvider<NotificationController, NotificationState>((ref) {
+  return NotificationController();
+});
 
 class NotificationController extends StateNotifier<NotificationState> {
   NotificationController() : super(const NotificationState());

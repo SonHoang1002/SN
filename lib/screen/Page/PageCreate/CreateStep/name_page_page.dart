@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/Page/PageCreate/CreateStep/category_page_page.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/bottom_navigator_button_chip.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 
 const List<String> QUESTION_NAME = [
   "Tên Trang của bạn là gì ?",
@@ -40,9 +39,9 @@ class _NamePagePageState extends State<NamePagePage> {
       onTap: (() {
         FocusManager.instance.primaryFocus!.unfocus();
       }),
-      child: Stack(alignment: Alignment.bottomCenter, children: [
+      child: Stack(children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Column(
             children: [
               Row(
@@ -82,6 +81,7 @@ class _NamePagePageState extends State<NamePagePage> {
                       setState(() {
                         _ischeckValitdatorName = true;
                       });
+                      return null;
                     }),
                     controller: nameController,
                     onChanged: (value) {
@@ -97,12 +97,11 @@ class _NamePagePageState extends State<NamePagePage> {
                     },
                     decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                          borderSide: BorderSide(color: Colors.grey, width: 1),
                         ),
-                        hintText: "Tên Trang",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        alignLabelWithHint: true,
                         labelText: "Tên Trang",
-                        labelStyle: TextStyle(color: Colors.grey),
+                        labelStyle: TextStyle(color: secondaryColor),
                         border: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8)))),
@@ -110,9 +109,8 @@ class _NamePagePageState extends State<NamePagePage> {
                 ),
               ),
               Row(
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const Text(
+                children: const [
+                  Text(
                     'Mô tả về Trang của bạn.',
                     style: TextStyle(
                         // color:  white,
@@ -138,6 +136,7 @@ class _NamePagePageState extends State<NamePagePage> {
                   setState(() {
                     _ischeckValitdatorDescription = true;
                   });
+                  return null;
                 }),
                 controller: descriptionController,
                 onChanged: (value) {
@@ -153,20 +152,19 @@ class _NamePagePageState extends State<NamePagePage> {
                 },
                 decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 2),
+                      borderSide: BorderSide(color: Colors.grey, width: 1),
                     ),
-                    hintText: "Trang này nói về",
-                    hintStyle: TextStyle(color: Colors.grey),
+                    labelText: "Trang này nói về",
+                    labelStyle: TextStyle(color: secondaryColor),
+                    alignLabelWithHint: true,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(8)))),
               ),
             ],
           ),
         ),
-
-        // bottom
-        Padding(
-          padding: const EdgeInsets.only(bottom: 20),
+        Align(
+          alignment: Alignment.bottomCenter,
           child: buildBottomNavigatorWithButtonAndChipWidget(
               context: context,
               isPassCondition: (_nameFormKey.currentState == null

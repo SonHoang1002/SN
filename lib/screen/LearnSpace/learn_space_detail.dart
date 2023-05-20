@@ -20,6 +20,8 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 
+import '../../widget/Loading/tiktok_loading.dart';
+
 class LearnSpaceDetail extends ConsumerStatefulWidget {
   final dynamic data;
   const LearnSpaceDetail({
@@ -117,678 +119,716 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: courseDetail['title'] != null
-              ? Container(
-                  height: 26,
-                  width: 26,
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(width: 0.2, color: greyColor)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(FontAwesomeIcons.angleLeft,
-                          color: Colors.white, size: 16),
-                    ],
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              height: 26,
+              width: 26,
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(width: 0.2, color: greyColor)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(FontAwesomeIcons.angleLeft,
+                      color: Colors.white, size: 16),
+                ],
+              ),
+            )),
         elevation: 0.0,
       ),
-      body: courseDetail['title'] != null
-          ? Stack(
-              children: [
-                RefreshIndicator(
-                  onRefresh: () async {
-                    ref
-                        .read(learnSpaceStateControllerProvider.notifier)
-                        .getDetailCourses(widget.data['id']);
-                  },
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30.0),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    offset: Offset(0.0, 2.0),
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
-                              ),
-                              child: ClipRRect(
-                                child: ExtendedImage.network(
-                                  courseDetail['banner'] != null
-                                      ? courseDetail['banner']['url']
-                                      : linkBannerDefault,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: () async {
+              ref
+                  .read(learnSpaceStateControllerProvider.notifier)
+                  .getDetailCourses(widget.data['id']);
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30.0),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(0.0, 2.0),
+                              blurRadius: 6.0,
                             ),
                           ],
                         ),
-                        SizedBox(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  courseDetail['title'],
-                                  style: const TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w800,
+                        child: ClipRRect(
+                          child: ExtendedImage.network(
+                            widget.data['banner'] != null
+                                ? widget.data['banner']['preview_url']
+                                : linkBannerDefault,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  courseDetail.isNotEmpty && courseDetail['title'] != null
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      courseDetail['title'],
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16.0, right: 16.0, top: 8.0),
+                              child: Row(
+                                children: [
+                                  courseDetail['course_relationships']
+                                              ['host_course'] ==
+                                          true
+                                      ? Row(
+                                          children: [
+                                            InkWell(
+                                              onTap: () {},
+                                              child: Container(
+                                                  height: 35,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.35,
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              189,
+                                                              202,
+                                                              202,
+                                                              202),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: greyColor)),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: const [
+                                                        Text(
+                                                          'Quảng cáo',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontSize: 12.0,
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ])),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                showBarModalBottomSheet(
+                                                    backgroundColor: Theme.of(
+                                                            context)
+                                                        .scaffoldBackgroundColor,
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        const InviteFriend());
+                                              },
+                                              child: Container(
+                                                  height: 35,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.4,
+                                                  decoration: BoxDecoration(
+                                                      color: isCourseInterested
+                                                          ? secondaryColor
+                                                          : const Color.fromARGB(
+                                                              189, 202, 202, 202),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: greyColor)),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                            FontAwesomeIcons
+                                                                .solidStar,
+                                                            size: 14,
+                                                            color:
+                                                                isCourseInterested
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black),
+                                                        const SizedBox(
+                                                          width: 5.0,
+                                                        ),
+                                                        Text(
+                                                          'Mời',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontSize: 12.0,
+                                                            color:
+                                                                isCourseInterested
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ])),
+                                            ),
+                                          ],
+                                        )
+                                      : Row(
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                if (!courseDetail[
+                                                        'course_relationships']
+                                                    ['participant_course']) {
+                                                  if (courseDetail['price'] !=
+                                                      0) {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (_) {
+                                                          return CupertinoAlertDialog(
+                                                            title: const Text(
+                                                                'Xác nhận thanh toán'),
+                                                            content: RichText(
+                                                                text: TextSpan(
+                                                                    text:
+                                                                        'Bạn có muốn thanh toán khoá học ',
+                                                                    style: TextStyle(
+                                                                        color: colorWord(
+                                                                            context)),
+                                                                    children: [
+                                                                  TextSpan(
+                                                                      text: courseDetail[
+                                                                              'title'] ??
+                                                                          '',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: colorWord(
+                                                                            context),
+                                                                      )),
+                                                                  TextSpan(
+                                                                      text:
+                                                                          ' với giá ',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              colorWord(context))),
+                                                                  TextSpan(
+                                                                      text: convertNumberToVND(courseDetail['price'] ~/
+                                                                              1)
+                                                                          .toString(),
+                                                                      style: TextStyle(
+                                                                          color: colorWord(
+                                                                              context),
+                                                                          fontWeight:
+                                                                              FontWeight.bold)),
+                                                                  TextSpan(
+                                                                      text:
+                                                                          ' VNĐ?',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              colorWord(context))),
+                                                                ])),
+                                                            actions: <
+                                                                CupertinoDialogAction>[
+                                                              CupertinoDialogAction(
+                                                                isDefaultAction:
+                                                                    true,
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        'Huỷ'),
+                                                              ),
+                                                              CupertinoDialogAction(
+                                                                isDefaultAction:
+                                                                    true,
+                                                                onPressed:
+                                                                    () async {
+                                                                  if (transactions[
+                                                                          'balance'] >
+                                                                      courseDetail[
+                                                                              'price'] ~/
+                                                                          1) {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    await ref
+                                                                        .read(learnSpaceStateControllerProvider
+                                                                            .notifier)
+                                                                        .updatePaymentCourse(
+                                                                            widget.data['id'],
+                                                                            context);
+                                                                    setState(
+                                                                        () {
+                                                                      courseDetail = ref
+                                                                          .read(
+                                                                              learnSpaceStateControllerProvider)
+                                                                          .detailCourse;
+                                                                    });
+                                                                  } else {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (_) {
+                                                                          return CupertinoAlertDialog(
+                                                                            title:
+                                                                                const Text('Thông báo'),
+                                                                            content:
+                                                                                const Text('Số dư trong ví không đủ để thanh toán khoá học. Vui lòng nạp thêm tiền vào ví để thanh toán khoá học.'),
+                                                                            actions: <CupertinoDialogAction>[
+                                                                              CupertinoDialogAction(
+                                                                                isDefaultAction: true,
+                                                                                onPressed: () {
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: const Text('Đóng'),
+                                                                              ),
+                                                                              CupertinoDialogAction(
+                                                                                isDefaultAction: true,
+                                                                                onPressed: () {
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: const Text('Nạp'),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        });
+                                                                  }
+                                                                },
+                                                                child: const Text(
+                                                                    'Thanh toán'),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        });
+                                                  } else {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (_) {
+                                                          return CupertinoAlertDialog(
+                                                            title: const Text(
+                                                                'Xác nhận đăng ký khoá học'),
+                                                            content: RichText(
+                                                                text: TextSpan(
+                                                                    text:
+                                                                        'Bạn có muốn đăng ký khoá học ',
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .black),
+                                                                    children: [
+                                                                  TextSpan(
+                                                                      text: courseDetail[
+                                                                              'title'] ??
+                                                                          '',
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                      )),
+                                                                  const TextSpan(
+                                                                      text:
+                                                                          ' không?',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.black)),
+                                                                ])),
+                                                            actions: <
+                                                                CupertinoDialogAction>[
+                                                              CupertinoDialogAction(
+                                                                isDefaultAction:
+                                                                    true,
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        'Huỷ'),
+                                                              ),
+                                                              CupertinoDialogAction(
+                                                                isDefaultAction:
+                                                                    true,
+                                                                onPressed:
+                                                                    () async {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  await ref
+                                                                      .read(learnSpaceStateControllerProvider
+                                                                          .notifier)
+                                                                      .updatePaymentCourse(
+                                                                          widget
+                                                                              .data['id'],
+                                                                          context);
+                                                                  setState(() {
+                                                                    courseDetail = ref
+                                                                        .read(
+                                                                            learnSpaceStateControllerProvider)
+                                                                        .detailCourse;
+                                                                  });
+                                                                },
+                                                                child: const Text(
+                                                                    'Đăng ký'),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        });
+                                                  }
+                                                }
+                                              },
+                                              child: Container(
+                                                  height: 35,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.4,
+                                                  decoration: BoxDecoration(
+                                                      color: secondaryColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: greyColor)),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                            courseDetail[
+                                                                        'course_relationships']
+                                                                    [
+                                                                    'participant_course']
+                                                                ? FontAwesomeIcons
+                                                                    .circleCheck
+                                                                : courseDetail[
+                                                                            'price'] !=
+                                                                        0
+                                                                    ? FontAwesomeIcons
+                                                                        .shoppingCart
+                                                                    : FontAwesomeIcons
+                                                                        .bookOpen,
+                                                            size: 14,
+                                                            color:
+                                                                Colors.white),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          courseDetail[
+                                                                      'course_relationships']
+                                                                  [
+                                                                  'participant_course']
+                                                              ? 'Đã tham gia'
+                                                              : courseDetail[
+                                                                          'price'] !=
+                                                                      0
+                                                                  ? 'Mua khoá học'
+                                                                  : 'Đăng ký học',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 12.0,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ])),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  isCourseInterested =
+                                                      !isCourseInterested;
+                                                });
+                                                ref
+                                                    .read(
+                                                        learnSpaceStateControllerProvider
+                                                            .notifier)
+                                                    .updateStatusCourse(
+                                                        isCourseInterested,
+                                                        widget.data['id']);
+                                              },
+                                              child: Container(
+                                                  height: 35,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.37,
+                                                  decoration: BoxDecoration(
+                                                      color: isCourseInterested
+                                                          ? secondaryColor
+                                                          : const Color.fromARGB(
+                                                              189, 202, 202, 202),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: greyColor)),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                            FontAwesomeIcons
+                                                                .solidStar,
+                                                            size: 14,
+                                                            color:
+                                                                isCourseInterested
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black),
+                                                        const SizedBox(
+                                                          width: 5.0,
+                                                        ),
+                                                        Text(
+                                                          'Quan tâm',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontSize: 12.0,
+                                                            color:
+                                                                isCourseInterested
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ])),
+                                            ),
+                                          ],
+                                        ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Container(
+                                        height: 35,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.1,
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                189, 202, 202, 202),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            border: Border.all(
+                                                width: 0.2, color: greyColor)),
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const [
+                                              Icon(FontAwesomeIcons.ellipsis,
+                                                  size: 14)
+                                            ])),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SingleChildScrollView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: List.generate(
+                                    itemChipCourse.sublist(0, 4).length,
+                                    (index) {
+                                      final isMore = itemChipCourse[index]
+                                              ['key'] ==
+                                          'more';
+                                      final isSelected = menuCourse == ""
+                                          ? itemChipCourse[index]['key'] ==
+                                              currentMenu
+                                          : itemChipCourse[index]['key'] ==
+                                              courseMenu;
+                                      return InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            courseMenu =
+                                                itemChipCourse[index]['key'];
+                                            if (itemChipCourse[index]['key'] !=
+                                                'more') {
+                                              currentMenu =
+                                                  itemChipCourse[index]['key'];
+                                            }
+                                            if (courseMenu != 'more') {
+                                              menuCourse = '';
+                                            }
+                                          });
+                                          if (isMore) {
+                                            showBarModalBottomSheet(
+                                                context: context,
+                                                backgroundColor:
+                                                    theme.isDarkMode
+                                                        ? Colors.black
+                                                        : Colors.white,
+                                                builder: (context) => SizedBox(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.25,
+                                                    child: ListView.builder(
+                                                        itemCount: itemChipCourse
+                                                            .sublist(
+                                                                4,
+                                                                itemChipCourse
+                                                                    .length)
+                                                            .length,
+                                                        itemBuilder:
+                                                            (_, newIndex) =>
+                                                                ListTile(
+                                                                  title: Text(itemChipCourse.sublist(
+                                                                          4,
+                                                                          itemChipCourse
+                                                                              .length)[newIndex]
+                                                                      [
+                                                                      'label']),
+                                                                  onTap: () {
+                                                                    setState(
+                                                                        () {
+                                                                      menuCourse =
+                                                                          itemChipCourse.sublist(
+                                                                              4,
+                                                                              itemChipCourse.length)[newIndex]['key'];
+                                                                      currentMenu =
+                                                                          '';
+                                                                    });
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                ))));
+                                          }
+                                        },
+                                        child: ChipMenu(
+                                          endIcon: isMore
+                                              ? Icon(
+                                                  itemChipCourse[index]
+                                                      ['endIcon'],
+                                                  size: 10,
+                                                  color:
+                                                      isSelected ? white : null)
+                                              : const SizedBox(),
+                                          isSelected: isSelected,
+                                          label: itemChipCourse[index]['label'],
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16.0, right: 16.0, top: 8.0),
-                          child: Row(
-                            children: [
-                              courseDetail['course_relationships']
-                                          ['host_course'] ==
-                                      true
-                                  ? Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {},
-                                          child: Container(
-                                              height: 35,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.35,
-                                              decoration: BoxDecoration(
-                                                  color: const Color.fromARGB(
-                                                      189, 202, 202, 202),
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: greyColor)),
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: const [
-                                                    Text(
-                                                      'Quảng cáo',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: 12.0,
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                  ])),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            showBarModalBottomSheet(
-                                                backgroundColor: Theme.of(
-                                                        context)
-                                                    .scaffoldBackgroundColor,
-                                                context: context,
-                                                builder: (context) =>
-                                                    const InviteFriend());
-                                          },
-                                          child: Container(
-                                              height: 35,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.4,
-                                              decoration: BoxDecoration(
-                                                  color: isCourseInterested
-                                                      ? secondaryColor
-                                                      : const Color.fromARGB(
-                                                          189, 202, 202, 202),
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: greyColor)),
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                        FontAwesomeIcons
-                                                            .solidStar,
-                                                        size: 14,
-                                                        color:
-                                                            isCourseInterested
-                                                                ? Colors.white
-                                                                : Colors.black),
-                                                    const SizedBox(
-                                                      width: 5.0,
-                                                    ),
-                                                    Text(
-                                                      'Mời',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: 12.0,
-                                                        color:
-                                                            isCourseInterested
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                  ])),
-                                        ),
-                                      ],
-                                    )
-                                  : Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            if (!courseDetail[
-                                                    'course_relationships']
-                                                ['participant_course']) {
-                                              if (courseDetail['price'] != 0) {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (_) {
-                                                      return CupertinoAlertDialog(
-                                                        title: const Text(
-                                                            'Xác nhận thanh toán'),
-                                                        content: RichText(
-                                                            text: TextSpan(
-                                                                text:
-                                                                    'Bạn có muốn thanh toán khoá học ',
-                                                                style: TextStyle(
-                                                                    color: colorWord(
-                                                                        context)),
-                                                                children: [
-                                                              TextSpan(
-                                                                  text: courseDetail[
-                                                                          'title'] ??
-                                                                      '',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: colorWord(
-                                                                        context),
-                                                                  )),
-                                                              TextSpan(
-                                                                  text:
-                                                                      ' với giá ',
-                                                                  style: TextStyle(
-                                                                      color: colorWord(
-                                                                          context))),
-                                                              TextSpan(
-                                                                  text: convertNumberToVND(
-                                                                          courseDetail['price'] ~/
-                                                                              1)
-                                                                      .toString(),
-                                                                  style: TextStyle(
-                                                                      color: colorWord(
-                                                                          context),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold)),
-                                                              TextSpan(
-                                                                  text: ' VNĐ?',
-                                                                  style: TextStyle(
-                                                                      color: colorWord(
-                                                                          context))),
-                                                            ])),
-                                                        actions: <
-                                                            CupertinoDialogAction>[
-                                                          CupertinoDialogAction(
-                                                            isDefaultAction:
-                                                                true,
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: const Text(
-                                                                'Huỷ'),
-                                                          ),
-                                                          CupertinoDialogAction(
-                                                            isDefaultAction:
-                                                                true,
-                                                            onPressed:
-                                                                () async {
-                                                              if (transactions[
-                                                                      'balance'] >
-                                                                  courseDetail[
-                                                                          'price'] ~/
-                                                                      1) {
-                                                                Navigator.pop(
-                                                                    context);
-                                                                await ref
-                                                                    .read(learnSpaceStateControllerProvider
-                                                                        .notifier)
-                                                                    .updatePaymentCourse(
-                                                                        widget.data[
-                                                                            'id'],
-                                                                        context);
-                                                                setState(() {
-                                                                  courseDetail = ref
-                                                                      .read(
-                                                                          learnSpaceStateControllerProvider)
-                                                                      .detailCourse;
-                                                                });
-                                                              } else {
-                                                                Navigator.pop(
-                                                                    context);
-                                                                showDialog(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (_) {
-                                                                      return CupertinoAlertDialog(
-                                                                        title: const Text(
-                                                                            'Thông báo'),
-                                                                        content:
-                                                                            const Text('Số dư trong ví không đủ để thanh toán khoá học. Vui lòng nạp thêm tiền vào ví để thanh toán khoá học.'),
-                                                                        actions: <
-                                                                            CupertinoDialogAction>[
-                                                                          CupertinoDialogAction(
-                                                                            isDefaultAction:
-                                                                                true,
-                                                                            onPressed:
-                                                                                () {
-                                                                              Navigator.pop(context);
-                                                                            },
-                                                                            child:
-                                                                                const Text('Đóng'),
-                                                                          ),
-                                                                          CupertinoDialogAction(
-                                                                            isDefaultAction:
-                                                                                true,
-                                                                            onPressed:
-                                                                                () {
-                                                                              Navigator.pop(context);
-                                                                            },
-                                                                            child:
-                                                                                const Text('Nạp'),
-                                                                          ),
-                                                                        ],
-                                                                      );
-                                                                    });
-                                                              }
-                                                            },
-                                                            child: const Text(
-                                                                'Thanh toán'),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    });
-                                              } else {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (_) {
-                                                      return CupertinoAlertDialog(
-                                                        title: const Text(
-                                                            'Xác nhận đăng ký khoá học'),
-                                                        content: RichText(
-                                                            text: TextSpan(
-                                                                text:
-                                                                    'Bạn có muốn đăng ký khoá học ',
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .black),
-                                                                children: [
-                                                              TextSpan(
-                                                                  text: courseDetail[
-                                                                          'title'] ??
-                                                                      '',
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                  )),
-                                                              const TextSpan(
-                                                                  text:
-                                                                      ' không?',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black)),
-                                                            ])),
-                                                        actions: <
-                                                            CupertinoDialogAction>[
-                                                          CupertinoDialogAction(
-                                                            isDefaultAction:
-                                                                true,
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: const Text(
-                                                                'Huỷ'),
-                                                          ),
-                                                          CupertinoDialogAction(
-                                                            isDefaultAction:
-                                                                true,
-                                                            onPressed:
-                                                                () async {
-                                                              Navigator.pop(
-                                                                  context);
-                                                              await ref
-                                                                  .read(learnSpaceStateControllerProvider
-                                                                      .notifier)
-                                                                  .updatePaymentCourse(
-                                                                      widget.data[
-                                                                          'id'],
-                                                                      context);
-                                                              setState(() {
-                                                                courseDetail = ref
-                                                                    .read(
-                                                                        learnSpaceStateControllerProvider)
-                                                                    .detailCourse;
-                                                              });
-                                                            },
-                                                            child: const Text(
-                                                                'Đăng ký'),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    });
-                                              }
-                                            }
-                                          },
-                                          child: Container(
-                                              height: 35,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.4,
-                                              decoration: BoxDecoration(
-                                                  color: secondaryColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: greyColor)),
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                        courseDetail[
-                                                                    'course_relationships']
-                                                                [
-                                                                'participant_course']
-                                                            ? FontAwesomeIcons
-                                                                .circleCheck
-                                                            : courseDetail[
-                                                                        'price'] !=
-                                                                    0
-                                                                ? FontAwesomeIcons
-                                                                    .shoppingCart
-                                                                : FontAwesomeIcons
-                                                                    .bookOpen,
-                                                        size: 14,
-                                                        color: Colors.white),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(
-                                                      courseDetail[
-                                                                  'course_relationships']
-                                                              [
-                                                              'participant_course']
-                                                          ? 'Đã tham gia'
-                                                          : courseDetail[
-                                                                      'price'] !=
-                                                                  0
-                                                              ? 'Mua khoá học'
-                                                              : 'Đăng ký học',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: const TextStyle(
-                                                        fontSize: 12.0,
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                  ])),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              isCourseInterested =
-                                                  !isCourseInterested;
-                                            });
-                                            ref
-                                                .read(
-                                                    learnSpaceStateControllerProvider
-                                                        .notifier)
-                                                .updateStatusCourse(
-                                                    isCourseInterested,
-                                                    widget.data['id']);
-                                          },
-                                          child: Container(
-                                              height: 35,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.37,
-                                              decoration: BoxDecoration(
-                                                  color: isCourseInterested
-                                                      ? secondaryColor
-                                                      : const Color.fromARGB(
-                                                          189, 202, 202, 202),
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: greyColor)),
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                        FontAwesomeIcons
-                                                            .solidStar,
-                                                        size: 14,
-                                                        color:
-                                                            isCourseInterested
-                                                                ? Colors.white
-                                                                : Colors.black),
-                                                    const SizedBox(
-                                                      width: 5.0,
-                                                    ),
-                                                    Text(
-                                                      'Quan tâm',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: 12.0,
-                                                        color:
-                                                            isCourseInterested
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                  ])),
-                                        ),
-                                      ],
-                                    ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                    height: 35,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.1,
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            189, 202, 202, 202),
-                                        borderRadius: BorderRadius.circular(4),
-                                        border: Border.all(
-                                            width: 0.2, color: greyColor)),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(FontAwesomeIcons.ellipsis,
-                                              size: 14)
-                                        ])),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SingleChildScrollView(
-                          physics: const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: List.generate(
-                                itemChipCourse.sublist(0, 4).length,
-                                (index) {
-                                  final isMore =
-                                      itemChipCourse[index]['key'] == 'more';
-                                  final isSelected = menuCourse == ""
-                                      ? itemChipCourse[index]['key'] ==
-                                          currentMenu
-                                      : itemChipCourse[index]['key'] ==
-                                          courseMenu;
-                                  return InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        courseMenu =
-                                            itemChipCourse[index]['key'];
-                                        if (itemChipCourse[index]['key'] !=
-                                            'more') {
-                                          currentMenu =
-                                              itemChipCourse[index]['key'];
-                                        }
-                                        if (courseMenu != 'more') {
-                                          menuCourse = '';
-                                        }
-                                      });
-                                      if (isMore) {
-                                        showBarModalBottomSheet(
-                                            context: context,
-                                            backgroundColor: Colors.white,
-                                            builder: (context) => SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.25,
-                                                child: ListView.builder(
-                                                    itemCount: itemChipCourse
-                                                        .sublist(
-                                                            4,
-                                                            itemChipCourse
-                                                                .length)
-                                                        .length,
-                                                    itemBuilder:
-                                                        (_, newIndex) =>
-                                                            ListTile(
-                                                              title: Text(itemChipCourse
-                                                                      .sublist(
-                                                                          4,
-                                                                          itemChipCourse
-                                                                              .length)[
-                                                                  newIndex]['label']),
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  menuCourse = itemChipCourse.sublist(
-                                                                          4,
-                                                                          itemChipCourse
-                                                                              .length)[
-                                                                      newIndex]['key'];
-                                                                  currentMenu =
-                                                                      '';
-                                                                });
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            ))));
-                                      }
-                                    },
-                                    child: ChipMenu(
-                                      endIcon: isMore
-                                          ? Icon(
-                                              itemChipCourse[index]['endIcon'],
-                                              size: 10,
-                                              color: isSelected ? white : null)
-                                          : const SizedBox(),
-                                      isSelected: isSelected,
-                                      label: itemChipCourse[index]['label'],
-                                    ),
-                                  );
-                                },
                               ),
                             ),
-                          ),
-                        ),
-                        currentMenu == 'intro'
-                            ? LearnSpaceIntro(
-                                courseDetail: courseDetail,
-                              )
-                            : const SizedBox.shrink(),
-                        currentMenu == 'discussion' &&
-                                (courseDetail['course_relationships']
-                                        ['host_course'] ||
-                                    courseDetail['course_relationships']
-                                        ['participant_course']) &&
-                                courseDetail['allow_discussion']
-                            ? LearnSpaceDiscusstion(postDiscussion: {
-                                "course_id": courseDetail['id']
-                              })
-                            : const SizedBox.shrink(),
-                        currentMenu == 'course'
-                            ? LearnSpaceCourse(id: courseDetail['id'])
-                            : const SizedBox.shrink(),
-                        menuCourse == 'faq'
-                            ? LearnSpaceFAQ(courseDetail: courseDetail)
-                            : const SizedBox.shrink(),
-                        menuCourse == 'review'
-                            ? LearnSpaceReview(courseDetail: courseDetail)
-                            : const SizedBox.shrink(),
-                        menuCourse == 'course_bought'
-                            ? LearnSpacePurchased(courseDetail: courseDetail)
-                            : const SizedBox.shrink(),
-                        const SizedBox(height: 70),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : const Center(
-              child: CupertinoActivityIndicator(),
+                            currentMenu == 'intro'
+                                ? LearnSpaceIntro(
+                                    courseDetail: courseDetail,
+                                  )
+                                : const SizedBox.shrink(),
+                            currentMenu == 'discussion' &&
+                                    (courseDetail['course_relationships']
+                                            ['host_course'] ||
+                                        courseDetail['course_relationships']
+                                            ['participant_course']) &&
+                                    courseDetail['allow_discussion']
+                                ? LearnSpaceDiscusstion(postDiscussion: {
+                                    "course_id": courseDetail['id']
+                                  })
+                                : const SizedBox.shrink(),
+                            currentMenu == 'course'
+                                ? LearnSpaceCourse(id: courseDetail['id'])
+                                : const SizedBox.shrink(),
+                            menuCourse == 'faq'
+                                ? LearnSpaceFAQ(courseDetail: courseDetail)
+                                : const SizedBox.shrink(),
+                            menuCourse == 'review'
+                                ? LearnSpaceReview(courseDetail: courseDetail)
+                                : const SizedBox.shrink(),
+                            menuCourse == 'course_bought'
+                                ? LearnSpacePurchased(
+                                    courseDetail: courseDetail)
+                                : const SizedBox.shrink(),
+                            const SizedBox(height: 70),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
             ),
+          ),
+          courseDetail['title'] == null
+              ? Center(
+                  child: Container(
+                    width: 52,
+                    height: 30,
+                    alignment: Alignment.center,
+                    child: const TikTokLoadingAnimation(),
+                  ),
+                )
+              : const SizedBox()
+        ],
+      ),
     );
   }
 }

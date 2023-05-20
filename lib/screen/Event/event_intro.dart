@@ -169,6 +169,28 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                             : MediaQuery.of(context).size.width * 0.91,
                         margin: const EdgeInsets.only(top: 10),
                         child: CardComponents(
+                          onTap: () {
+                            hosts[index]['account']['group']
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const PageDetail(),
+                                      settings: RouteSettings(
+                                          arguments: hosts[index]['account']
+                                                  ['id']
+                                              .toString()),
+                                    ))
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const UserPage(),
+                                      settings: RouteSettings(
+                                        arguments: {
+                                          'id': hosts[index]['account']['id']
+                                        },
+                                      ),
+                                    ));
+                          },
                           imageCard: Column(
                             children: [
                               hosts[index]['account']['group']

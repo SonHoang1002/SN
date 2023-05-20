@@ -117,7 +117,10 @@ dependencies:
   # flutter_typeahead: ^4.3.7
   extended_image: ^7.0.2
   webview_flutter: ^3.0.4
-  # flutter_image_compress: ^2.0.2 
+  # flutter_image_compress: ^2.0.2
+  web_socket_channel: ^2.4.0
+  flutter_local_notifications: ^14.0.0+2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -132,6 +135,10 @@ dev_dependencies:
   very_good_analysis: ^3.0.1
   build_runner: ^2.3.3
   freezed: ^2.3.2
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -204,6 +211,16 @@ flutter:
     - assets/MarketFC.png
     - assets/Plus_2.png
     - assets/wow-emo-2.gif
+    - assets/Noti/Noti.png
+    - assets/Noti/Friend.png
+    - assets/Noti/watch.png
+    - assets/Noti/event.png
+    - assets/Noti/moment.png
+    - assets/Noti/Page.png
+    - assets/Noti/group.png
+    - assets/Noti/post.png
+    - assets/Noti/comment.png
+    - assets/Noti/livestream.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

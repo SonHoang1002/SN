@@ -283,6 +283,31 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                         ),
                                 ],
                               ),
+                              onTap: () {
+                                hosts[index]['account']['group']
+                                    ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PageDetail(),
+                                          settings: RouteSettings(
+                                              arguments: hosts[index]['account']
+                                                      ['id']
+                                                  .toString()),
+                                        ))
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const UserPage(),
+                                          settings: RouteSettings(
+                                            arguments: {
+                                              'id': hosts[index]['account']
+                                                  ['id']
+                                            },
+                                          ),
+                                        ));
+                              },
                               textCard: Column(
                                 children: [
                                   Padding(
