@@ -40,9 +40,9 @@ class _PostState extends State<Post> {
                       post: widget.post,
                       type: widget.type,
                       function: () {
-                        setState(() {
-                          isHaveSuggest = false;
-                        });
+                        // setState(() {
+                        isHaveSuggest = false;
+                        // });
                       },
                     )
                   : const SizedBox(),
