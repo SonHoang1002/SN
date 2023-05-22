@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import AVKit
 import BanubaAudioBrowserSDK
+import flutter_local_notifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -41,7 +42,7 @@ import BanubaAudioBrowserSDK
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         let videoEditor = VideoEditorModule()
-        
+
         if let controller = window?.rootViewController as? FlutterViewController,
            let binaryMessenger = controller as? FlutterBinaryMessenger {
             
@@ -115,8 +116,12 @@ import BanubaAudioBrowserSDK
                 }
             }
         }
+        FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+        GeneratedPluginRegistrant.register(with: registry)}
         GeneratedPluginRegistrant.register(with: self)
-        
+        if #available(iOS 10.0, *) {
+        UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+        }
         // Register audio browser engine
         audioBrowserFlutterEngine.run(withEntrypoint: "audioBrowser")
         GeneratedPluginRegistrant.register(with: audioBrowserFlutterEngine)

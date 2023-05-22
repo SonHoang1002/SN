@@ -7,12 +7,12 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 import 'package:social_network_app_mobile/widget/text_readmore.dart';
 
+import '../../widget/FeedVideo/video_player_none_controller.dart';
 import '../Page/PageDetail/page_detail.dart';
 import '../UserPage/user_page.dart';
 import 'grow_detail.dart';
@@ -180,33 +180,30 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: SizedBox(
-                    height: growDetail['introduction_video'] != null &&
-                            growDetail['introduction_video']['meta'] != null &&
-                            growDetail['introduction_video']['meta']['small'] !=
-                                null
-                        ? growDetail['introduction_video']['meta']['small']
-                                    ['aspect'] <
-                                0.58
-                            ? MediaQuery.of(context).size.height - 66
-                            : null
-                        : 200,
-                    width: 500,
-                    child: FeedVideo(
-                        type: 'showFullScreen',
+                      height: growDetail['introduction_video'] != null &&
+                              growDetail['introduction_video']['meta'] !=
+                                  null &&
+                              growDetail['introduction_video']['meta']
+                                      ['small'] !=
+                                  null
+                          ? growDetail['introduction_video']['meta']['small']
+                                      ['aspect'] <
+                                  0.58
+                              ? MediaQuery.of(context).size.height - 66
+                              : null
+                          : 200,
+                      width: 500,
+                      child: VideoPlayerNoneController(
+                        isShowVolumn: true,
                         path: growDetail['introduction_video'] != null
                             ? growDetail['introduction_video']['remote_url'] !=
                                     "pending"
                                 ? growDetail['introduction_video']['remote_url']
                                 : ""
                             : "",
-                        flickMultiManager: flickMultiManager,
-                        image: growDetail['introduction_video'] != null &&
-                                growDetail['introduction_video']
-                                        ['preview_url'] !=
-                                    null
-                            ? growDetail['introduction_video']['preview_url']
-                            : ""),
-                  ),
+                        type: 'local',
+                        media: growDetail['introduction_video'],
+                      )),
                 ),
               ],
             ),

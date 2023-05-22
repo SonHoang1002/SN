@@ -11,6 +11,7 @@ import '../../../../constant/page_constants.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widget/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widget/back_icon_appbar.dart';
+import '../../../../widget/show_modal_message.dart';
 
 class CategoryPage extends StatefulWidget {
   final dynamic dataCreate;
@@ -47,7 +48,7 @@ class _CategoryPageState extends State<CategoryPage> {
     }
   }
 
-  Future handleCreatePage(data) async {
+  Future handleCreatePage(data, context) async {
     var response = await PageApi().createPage(data);
 
     if (!mounted) return;
@@ -62,6 +63,7 @@ class _CategoryPageState extends State<CategoryPage> {
             'category': categorySelected,
             ...jsonDecode(response.body)
           }));
+      showSnackbar(context, 'Tạo trang thành công');
     } else {
       _showAlertDialog(
           context, 'Tạo trang không thành công, vui lòng thử lại!');
@@ -255,7 +257,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           ...widget.dataCreate,
                           'page_category':
                               categorySelected.map((e) => e['id']).toList()
-                        });
+                        }, context);
                       },
                       loading: loadingCreate,
                       title: "Tiếp",

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class TextReadMore extends StatefulWidget {
   final String description;
@@ -54,14 +55,14 @@ class _TextReadMoreState extends State<TextReadMore> {
                           : (firstHalf + secondHalf),
                       style: TextStyle(
                         fontSize: widget.fontSize ?? 12.0,
-                        color: const Color(0xFF212121),
+                        color: colorWord(context),
                       ),
                       children: <InlineSpan>[
                         widget.isReadMore
                             ? TextSpan(
                                 text: ' Đọc thêm',
-                                style: const TextStyle(
-                                    color: Colors.black,
+                                style: TextStyle(
+                                    color: colorWord(context),
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700),
                                 recognizer: TapGestureRecognizer()
