@@ -52,6 +52,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
     int reactionsCount = widget.moment['favourites_count'] ?? 0;
     bool highLightIcon =
         widget.moment['viewer_reaction'] == 'love' ? true : false;
+    Color whiteColor = Colors.white.withOpacity(0.9);
 
     List iconsAction = [
       {
@@ -64,18 +65,18 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
         "key": "comment",
         "icon": FontAwesomeIcons.solidCommentDots,
         "count": widget.moment['replies_total'],
-        "iconHighlight": Colors.white.withOpacity(0.8)
+        "iconHighlight": whiteColor
       },
       {
         "key": "share",
         "icon": FontAwesomeIcons.share,
         "count": widget.moment['reblogs_count'],
-        "iconHighlight": Colors.white.withOpacity(0.8)
+        "iconHighlight": whiteColor
       },
       {
         "key": "menu",
         "icon": FontAwesomeIcons.ellipsis,
-        "iconHighlight": Colors.white.withOpacity(0.8)
+        "iconHighlight": whiteColor
       },
     ];
 
@@ -151,7 +152,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                 style: const TextStyle(
                                     color: white,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 14),
+                                    fontSize: 17),
                               ),
                             )
                           ],
@@ -161,11 +162,14 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                         ),
                         ExpandableTextContent(
                           content: widget.moment['content'],
-                          linkColor: Colors.white,
-                          styleContent: const TextStyle(
-                              fontSize: 13, color: white, height: 1.5),
-                          hashtagStyle: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w600),
+                          linkColor: whiteColor,
+                          styleContent: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: whiteColor,
+                              height: 1.5),
+                          hashtagStyle: TextStyle(
+                              color: whiteColor, fontWeight: FontWeight.w500),
                           handleHashtag: (name) {
                             Navigator.push(
                                 context,
@@ -194,7 +198,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                 text: 'Âm thanh   ·   ',
                                 velocity: 30,
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 13),
+                                    color: Colors.white, fontSize: 14),
                               ),
                             )
                           ],
@@ -203,7 +207,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                     ),
                   ),
                 ),
-                SizedBox(
+                Container(
+                  margin: const EdgeInsets.only(right: 4),
                   width: 80,
                   child: Column(
                     children: [
@@ -212,15 +217,15 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                         alignment: Alignment.bottomCenter,
                         children: [
                           Container(
-                            width: 46,
-                            height: 46,
+                            width: 50,
+                            height: 50,
                             decoration: BoxDecoration(
                                 border:
                                     Border.all(width: 1, color: Colors.white),
                                 shape: BoxShape.circle),
                             child: AvatarSocial(
-                                width: 45,
-                                height: 45,
+                                width: 49,
+                                height: 49,
                                 object: page ?? account,
                                 path: page != null
                                     ? page['avatar_media'] != null
@@ -229,14 +234,14 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                     : account['avatar_media']['preview_url']),
                           ),
                           Positioned(
-                              bottom: -4,
-                              right: 12,
+                              bottom: -5,
+                              right: 13,
                               child: Container(
                                 decoration: const BoxDecoration(
                                     color: Colors.red, shape: BoxShape.circle),
                                 child: const Icon(
                                   Icons.add,
-                                  size: 18,
+                                  size: 20,
                                   color: Colors.white,
                                 ),
                               ))
@@ -262,11 +267,11 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                         },
                                         child: Icon(
                                           iconsAction[index]['icon'],
-                                          size: 30,
+                                          size: 32,
                                           color: highLightIcon
                                               ? iconsAction[index]
                                                   ['iconHighlight']
-                                              : Colors.white.withOpacity(0.8),
+                                              : whiteColor,
                                         ),
                                       ),
                                       const SizedBox(
@@ -275,8 +280,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                       Text(
                                         (iconsAction[index]['count'] ?? '')
                                             .toString(),
-                                        style: const TextStyle(
-                                            color: white, fontSize: 12),
+                                        style: TextStyle(
+                                            color: whiteColor, fontSize: 14),
                                       )
                                     ],
                                   ),

@@ -71,6 +71,8 @@ class _CreatePostState extends State<CreatePost> {
       //   platform.invokeMethod(
       //       methodDemoPlayExportedVideo, exportedVideoFilePath);
       // });
+      print('response, $exportedVideoCoverPreviewPath');
+      print('response, $exportedVideoFilePath');
       if (exportedVideoCoverPreviewPath != null &&
           exportedVideoFilePath != null) {
         Navigator.push(
@@ -181,50 +183,5 @@ class _CreatePostState extends State<CreatePost> {
 
     _errorMessage = errorMessage;
     setState(() {});
-  }
-
-  void _showConfirmation(
-      BuildContext context, String message, VoidCallback block) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(message),
-        actions: [
-          MaterialButton(
-            color: Colors.red,
-            textColor: Colors.white,
-            disabledColor: Colors.grey,
-            disabledTextColor: Colors.black,
-            padding: const EdgeInsets.all(12.0),
-            splashColor: Colors.redAccent,
-            onPressed: () => {Navigator.pop(context)},
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                fontSize: 14.0,
-              ),
-            ),
-          ),
-          MaterialButton(
-            color: Colors.green,
-            textColor: Colors.white,
-            disabledColor: Colors.grey,
-            disabledTextColor: Colors.black,
-            padding: const EdgeInsets.all(12.0),
-            splashColor: Colors.greenAccent,
-            onPressed: () {
-              Navigator.pop(context);
-              block.call();
-            },
-            child: const Text(
-              'Ok',
-              style: TextStyle(
-                fontSize: 14.0,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
   }
 }

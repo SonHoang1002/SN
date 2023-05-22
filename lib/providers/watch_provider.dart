@@ -95,7 +95,7 @@ class WatchController extends StateNotifier<WatchState> {
     }
   }
 
-  updatePositonPlaying(positon) {
+  updatePositionPlaying(positon) {
     Future.delayed(Duration.zero, () {
       if (mounted) {
         state = state.copyWith(

@@ -30,9 +30,9 @@ class _AudioBrowserState extends State<AudioBrowserWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return new MediaQuery(
-      data: new MediaQueryData.fromWindow(ui.window),
-      child: new Directionality(
+    return MediaQuery(
+      data: MediaQueryData.fromWindow(ui.window),
+      child: Directionality(
         textDirection: TextDirection.rtl,
         child: Container(
           color: Colors.white,
