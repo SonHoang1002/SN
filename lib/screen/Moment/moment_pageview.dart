@@ -27,6 +27,19 @@ class MomentPageview extends ConsumerStatefulWidget {
 class _MomentPageviewState extends ConsumerState<MomentPageview>
     with AutomaticKeepAliveClientMixin {
   bool isDragSlider = false;
+  double currentPage = 0;
+  final PreloadPageController _pageController = PreloadPageController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController.addListener(() {
+      setState(() {
+        currentPage = _pageController.page!;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +82,7 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
 
     return PreloadPageView.builder(
       physics: const CustomPageViewScrollPhysics(),
-      controller: PreloadPageController(initialPage: widget.initialPage ?? 0),
+      controller: _pageController,
       itemCount: widget.momentRender.length,
       scrollDirection: Axis.vertical,
       preloadPagesCount: 5,
@@ -77,20 +90,24 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
         widget.handlePageChange(value);
       },
       itemBuilder: (context, index) {
-        return Stack(
-          children: [
-            MomentVideo(
-                moment: widget.momentRender[index], handleSlider: handleSlider),
-            isDragSlider
-                ? const SizedBox()
-                : Positioned(
-                    bottom: 15,
-                    left: 15,
-                    child: VideoDescription(
-                      moment: widget.momentRender[index],
-                    )),
-          ],
-        );
+        double opacity = 1.0 - (index - currentPage).abs().clamp(0.0, 1.0);
+        return Opacity(
+            opacity: opacity,
+            child: Stack(
+              children: [
+                MomentVideo(
+                    moment: widget.momentRender[index],
+                    handleSlider: handleSlider),
+                isDragSlider
+                    ? const SizedBox()
+                    : Positioned(
+                        bottom: 15,
+                        left: 15,
+                        child: VideoDescription(
+                          moment: widget.momentRender[index],
+                        )),
+              ],
+            ));
       },
     );
   }

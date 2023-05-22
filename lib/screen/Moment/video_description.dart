@@ -64,18 +64,18 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
         "key": "comment",
         "icon": FontAwesomeIcons.solidCommentDots,
         "count": widget.moment['replies_total'],
-        "iconHighlight": Colors.white.withOpacity(0.8)
+        "iconHighlight": Colors.white
       },
       {
         "key": "share",
         "icon": FontAwesomeIcons.share,
         "count": widget.moment['reblogs_count'],
-        "iconHighlight": Colors.white.withOpacity(0.8)
+        "iconHighlight": Colors.white
       },
       {
         "key": "menu",
         "icon": FontAwesomeIcons.ellipsis,
-        "iconHighlight": Colors.white.withOpacity(0.8)
+        "iconHighlight": Colors.white
       },
     ];
 
@@ -150,8 +150,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                     : account['display_name'],
                                 style: const TextStyle(
                                     color: white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17),
                               ),
                             )
                           ],
@@ -163,7 +163,10 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                           content: widget.moment['content'],
                           linkColor: Colors.white,
                           styleContent: const TextStyle(
-                              fontSize: 13, color: white, height: 1.5),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: white,
+                              height: 1.5),
                           hashtagStyle: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.w600),
                           handleHashtag: (name) {
@@ -194,7 +197,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                 text: 'Âm thanh   ·   ',
                                 velocity: 30,
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 13),
+                                    color: Colors.white, fontSize: 14),
                               ),
                             )
                           ],
@@ -203,7 +206,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                     ),
                   ),
                 ),
-                SizedBox(
+                Container(
+                  margin: const EdgeInsets.only(right: 4),
                   width: 80,
                   child: Column(
                     children: [
@@ -212,15 +216,15 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                         alignment: Alignment.bottomCenter,
                         children: [
                           Container(
-                            width: 46,
-                            height: 46,
+                            width: 50,
+                            height: 50,
                             decoration: BoxDecoration(
                                 border:
                                     Border.all(width: 1, color: Colors.white),
                                 shape: BoxShape.circle),
                             child: AvatarSocial(
-                                width: 45,
-                                height: 45,
+                                width: 49,
+                                height: 49,
                                 object: page ?? account,
                                 path: page != null
                                     ? page['avatar_media'] != null
@@ -229,14 +233,14 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                     : account['avatar_media']['preview_url']),
                           ),
                           Positioned(
-                              bottom: -4,
-                              right: 12,
+                              bottom: -5,
+                              right: 13,
                               child: Container(
                                 decoration: const BoxDecoration(
                                     color: Colors.red, shape: BoxShape.circle),
                                 child: const Icon(
                                   Icons.add,
-                                  size: 18,
+                                  size: 20,
                                   color: Colors.white,
                                 ),
                               ))
@@ -262,11 +266,11 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                         },
                                         child: Icon(
                                           iconsAction[index]['icon'],
-                                          size: 30,
+                                          size: 34,
                                           color: highLightIcon
                                               ? iconsAction[index]
                                                   ['iconHighlight']
-                                              : Colors.white.withOpacity(0.8),
+                                              : Colors.white,
                                         ),
                                       ),
                                       const SizedBox(
@@ -276,7 +280,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                         (iconsAction[index]['count'] ?? '')
                                             .toString(),
                                         style: const TextStyle(
-                                            color: white, fontSize: 12),
+                                            color: white, fontSize: 14),
                                       )
                                     ],
                                   ),
