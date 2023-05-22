@@ -41,16 +41,14 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
 
   void fetchData() {
     Future.delayed(Duration.zero, () async {
-      if (ref.read(pageListControllerProvider).pageAdmin.isEmpty) {
-        await ref
-            .read(pageListControllerProvider.notifier)
-            .getListPageAdmin({'limit': 20});
-      }
-      if (ref.read(pageListControllerProvider).pageLiked.isEmpty) {
-        await ref
-            .read(pageListControllerProvider.notifier)
-            .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
-      }
+      await ref
+          .read(pageListControllerProvider.notifier)
+          .getListPageAdmin({'limit': 20});
+
+      await ref
+          .read(pageListControllerProvider.notifier)
+          .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
+
       if (ref.read(pageListControllerProvider).pageInvitedLike.isEmpty) {
         await ref
             .read(pageListControllerProvider.notifier)

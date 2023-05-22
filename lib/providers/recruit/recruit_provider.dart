@@ -533,6 +533,12 @@ class RecruitController extends StateNotifier<RecruitState> {
       case 'detailRecruit':
         recruitsList = state.recruitsPast;
         break;
+      case 'recruitsPropose':
+        recruitsList = state.recruitsPropose;
+        break;
+      case 'recruitsSimilar':
+        recruitsList = state.recruitsSimilar;
+        break;
       default:
         recruitsList = state.recruits;
         break;
@@ -655,6 +661,40 @@ class RecruitController extends StateNotifier<RecruitState> {
           recruitsNew: state.recruitsNew,
           recruitsPast: [...state.recruitsPast]..[indexRecruitUpdate!] =
               eventUpdate,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+      case 'recruitsPropose':
+        state = state.copyWith(
+          recruits: state.recruits,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: [...state.recruitsPropose]..[indexRecruitUpdate!] =
+              eventUpdate,
+          recruitsInvite: state.recruitsInvite,
+          isMore: state.isMore,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+          recruitsChipMenu: state.recruitsChipMenu,
+        );
+        break;
+      case 'recruitsSimilar':
+        state = state.copyWith(
+          recruits: state.recruits,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsSimilar: [...state.recruitsSimilar]..[indexRecruitUpdate!] =
+              eventUpdate,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          isMore: state.isMore,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
           recruitsInterest: state.recruitsInterest,
           recruitsNewPast: state.recruitsNewPast,
           recruitsChipMenu: state.recruitsChipMenu,
