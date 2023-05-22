@@ -52,6 +52,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
     int reactionsCount = widget.moment['favourites_count'] ?? 0;
     bool highLightIcon =
         widget.moment['viewer_reaction'] == 'love' ? true : false;
+    Color whiteColor = Colors.white.withOpacity(0.9);
 
     List iconsAction = [
       {
@@ -64,18 +65,18 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
         "key": "comment",
         "icon": FontAwesomeIcons.solidCommentDots,
         "count": widget.moment['replies_total'],
-        "iconHighlight": Colors.white
+        "iconHighlight": whiteColor
       },
       {
         "key": "share",
         "icon": FontAwesomeIcons.share,
         "count": widget.moment['reblogs_count'],
-        "iconHighlight": Colors.white
+        "iconHighlight": whiteColor
       },
       {
         "key": "menu",
         "icon": FontAwesomeIcons.ellipsis,
-        "iconHighlight": Colors.white
+        "iconHighlight": whiteColor
       },
     ];
 
@@ -150,7 +151,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                     : account['display_name'],
                                 style: const TextStyle(
                                     color: white,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 17),
                               ),
                             )
@@ -161,14 +162,14 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                         ),
                         ExpandableTextContent(
                           content: widget.moment['content'],
-                          linkColor: Colors.white,
-                          styleContent: const TextStyle(
+                          linkColor: whiteColor,
+                          styleContent: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
-                              color: white,
+                              color: whiteColor,
                               height: 1.5),
-                          hashtagStyle: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w600),
+                          hashtagStyle: TextStyle(
+                              color: whiteColor, fontWeight: FontWeight.w500),
                           handleHashtag: (name) {
                             Navigator.push(
                                 context,
@@ -266,11 +267,11 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                         },
                                         child: Icon(
                                           iconsAction[index]['icon'],
-                                          size: 34,
+                                          size: 32,
                                           color: highLightIcon
                                               ? iconsAction[index]
                                                   ['iconHighlight']
-                                              : Colors.white,
+                                              : whiteColor,
                                         ),
                                       ),
                                       const SizedBox(
@@ -279,8 +280,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                                       Text(
                                         (iconsAction[index]['count'] ?? '')
                                             .toString(),
-                                        style: const TextStyle(
-                                            color: white, fontSize: 14),
+                                        style: TextStyle(
+                                            color: whiteColor, fontSize: 14),
                                       )
                                     ],
                                   ),

@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
-import 'package:social_network_app_mobile/providers/watch_provider.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPlayerHasController extends ConsumerStatefulWidget {
   final dynamic media;
@@ -26,12 +25,18 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
 
 class _VideoPlayerHasControllerState
     extends ConsumerState<VideoPlayerHasController> {
-  // late BetterPlayerController betterPlayerController;
+  bool isVisible = false;
 
   @override
   void initState() {
     super.initState();
     if (mounted) {
+      BetterState betterState = ref
+          .read(betterPlayerControllerProvider)
+          .firstWhere((element) => element.videoId == widget.media['id'],
+              orElse: () =>
+                  const BetterState(videoId: '', betterPlayerController: null));
+      if (betterState.videoId != '') return;
       Future.delayed(Duration.zero, () {
         ref
             .read(betterPlayerControllerProvider.notifier)
@@ -43,92 +48,35 @@ class _VideoPlayerHasControllerState
                 ),
                 widget.isHiddenControl ?? true);
       });
-      //   BetterPlayerConfiguration betterPlayerConfiguration =
-      //       BetterPlayerConfiguration(
-      //           autoPlay: true,
-      //           autoDispose: true,
-      //           controlsConfiguration: BetterPlayerControlsConfiguration(
-      //               showControls: widget.isHiddenControl ?? true,
-      //               playerTheme: BetterPlayerTheme.material,
-      //               enableFullscreen: true,
-      //               enableMute: true,
-      //               enablePlaybackSpeed: true,
-      //               enableProgressBar: true,
-      //               enableSubtitles: true,
-      //               enableQualities: true,
-      //               textColor: Colors.white,
-      //               iconsColor: Colors.white,
-      //               progressBarPlayedColor: secondaryColor,
-      //               progressBarBufferedColor: Colors.white.withOpacity(0.5),
-      //               progressBarBackgroundColor: Colors.grey,
-      //               playIcon: CupertinoIcons.play_arrow_solid,
-      //               pauseIcon: CupertinoIcons.pause_fill,
-      //               fullscreenEnableIcon: CupertinoIcons.fullscreen,
-      //               fullscreenDisableIcon: CupertinoIcons.fullscreen_exit,
-      //               controlBarColor: Colors.black.withOpacity(0.3),
-      //               unMuteIcon: CupertinoIcons.speaker_slash_fill,
-      //               muteIcon: CupertinoIcons.speaker_2_fill,
-      //               skipBackIcon: CupertinoIcons.gobackward_10,
-      //               skipForwardIcon: CupertinoIcons.goforward_10,
-      //               showControlsOnInitialize: false,
-      //               overflowModalColor: Colors.grey.shade900,
-      //               overflowModalTextColor: white,
-      //               overflowMenuIcon: CupertinoIcons.ellipsis_vertical,
-      //               overflowMenuIconsColor: white),
-      //           translations: [
-      //         BetterPlayerTranslations(
-      //           overflowMenuPlaybackSpeed: 'Tốc độ phát',
-      //           overflowMenuSubtitles: 'Phụ đề',
-      //           overflowMenuQuality: 'Chất lượng',
-      //           overflowMenuAudioTracks: 'Âm thanh',
-      //         )
-      //       ]);
-      //   BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-      //     BetterPlayerDataSourceType.network,
-      //     widget.media['remote_url'] ?? widget.media['url'],
-      //   );
-      //   betterPlayerController =
-      //       BetterPlayerController(betterPlayerConfiguration);
-
-      //   betterPlayerController.addEventsListener((event) {
-      //     if (event.betterPlayerEventType == BetterPlayerEventType.initialized &&
-      //         mounted) {
-      //       onVideoInitialized();
-      //     }
-      //   });
-
-      //   betterPlayerController.setupDataSource(dataSource);
-      // }
     }
-
-    // void onVideoInitialized() async {
-    //   var videoPlayerController = betterPlayerController.videoPlayerController;
-    //   Size? videoDimensions = videoPlayerController!.value.size;
-    //   double aspectRatio = videoDimensions!.width / videoDimensions.height;
-    //   betterPlayerController.setOverriddenAspectRatio(aspectRatio);
-    //   await betterPlayerController
-    //       .seekTo(Duration(seconds: ref.read(watchControllerProvider).position));
-    //   await betterPlayerController.play();
-
-    //   betterPlayerController.addEventsListener((event) {
-    //     if (betterPlayerController.videoPlayerController != null && mounted) {
-    //       ref.read(watchControllerProvider.notifier).updatePositionPlaying(
-    //           betterPlayerController
-    //               .videoPlayerController!.value.position.inSeconds);
-    //     }
-    //   });
-  }
-
-  @override
-  void dispose() {
-    // betterPlayerController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    BetterPlayerController betterPlayerController =
-        ref.watch(betterPlayerControllerProvider).betterPlayerController!;
-    return BetterPlayer(controller: betterPlayerController);
+    BetterPlayerController? betterPlayerController = ref
+        .watch(betterPlayerControllerProvider)
+        .firstWhere((element) => element.videoId == widget.media['id'],
+            orElse: () =>
+                const BetterState(videoId: '', betterPlayerController: null))
+        .betterPlayerController;
+
+    return betterPlayerController != null
+        ? VisibilityDetector(
+            onVisibilityChanged: (visibilityInfo) {
+              if (mounted) {
+                setState(() {
+                  isVisible = visibilityInfo.visibleFraction == 1;
+
+                  if (isVisible) {
+                    betterPlayerController.play();
+                  } else {
+                    betterPlayerController.pause();
+                  }
+                });
+              }
+            },
+            key: Key(widget.media['id']),
+            child: BetterPlayer(controller: betterPlayerController))
+        : Container();
   }
 }

@@ -23,15 +23,15 @@ class BetterState {
   }
 }
 
-class BetterPlayerControllerNotifier extends StateNotifier<BetterState> {
-  BetterPlayerControllerNotifier() : super(const BetterState());
+class BetterPlayerControllerNotifier extends StateNotifier<List<BetterState>> {
+  BetterPlayerControllerNotifier() : super(const []);
 
   void initializeBetterPlayerController(
       String videoId, BetterPlayerDataSource dataSource, isHiddenControl) {
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
-            autoPlay: true,
-            autoDispose: true,
+            autoPlay: false,
+            autoDispose: false,
             controlsConfiguration: BetterPlayerControlsConfiguration(
                 showControls: isHiddenControl,
                 playerTheme: BetterPlayerTheme.material,
@@ -68,20 +68,34 @@ class BetterPlayerControllerNotifier extends StateNotifier<BetterState> {
             overflowMenuAudioTracks: 'Âm thanh',
           )
         ]);
+    BetterPlayerController betterPlayerController = BetterPlayerController(
+      betterPlayerConfiguration,
+      betterPlayerDataSource: dataSource,
+    );
 
-    state = state.copyWith(
-        betterPlayerController: BetterPlayerController(
-          betterPlayerConfiguration,
-          betterPlayerDataSource: dataSource,
-        ),
-        videoId: videoId);
-  }
+    betterPlayerController.addEventsListener((event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.initialized &&
+          mounted) {
+        onVideoInitialized(betterPlayerController);
+      }
+    });
 
-  void disposeBetterPlayerController() {
-    state.betterPlayerController!.dispose();
+    state = state +
+        [
+          BetterState(
+              videoId: videoId, betterPlayerController: betterPlayerController)
+        ];
   }
+}
+
+void onVideoInitialized(BetterPlayerController betterPlayerController) async {
+  var videoPlayerController = betterPlayerController.videoPlayerController;
+  Size? videoDimensions = videoPlayerController!.value.size;
+  double aspectRatio = videoDimensions!.width / videoDimensions.height;
+  betterPlayerController.setOverriddenAspectRatio(aspectRatio);
+  await betterPlayerController.play();
 }
 
 final betterPlayerControllerProvider = StateNotifierProvider.autoDispose<
     BetterPlayerControllerNotifier,
-    BetterState>((ref) => BetterPlayerControllerNotifier());
+    List<BetterState>>((ref) => BetterPlayerControllerNotifier());
