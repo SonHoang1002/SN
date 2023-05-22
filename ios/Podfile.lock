@@ -176,9 +176,9 @@ PODS:
     - PINOperation (~> 1.2.1)
   - PINOperation (1.2.2)
   - PromisesObjC (2.2.0)
-  - SDWebImage (5.15.7):
-    - SDWebImage/Core (= 5.15.7)
-  - SDWebImage/Core (5.15.7)
+  - SDWebImage (5.15.8):
+    - SDWebImage/Core (= 5.15.8)
+  - SDWebImage/Core (5.15.8)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -401,7 +401,7 @@ SPEC CHECKSUMS:
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
   PINOperation: daa34d4aa1d8449089be7d405b9d974abc4724c6
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
-  SDWebImage: 25bac438318faf37e35650619ebc288a9061d292
+  SDWebImage: cb032eba469c54e0000e78bcb0a13cdde0a52798
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
