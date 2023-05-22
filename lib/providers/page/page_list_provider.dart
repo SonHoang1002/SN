@@ -57,10 +57,13 @@ class PageListController extends StateNotifier<PageListState> {
 
   getListPageAdmin(params) async {
     var response = await PageApi().fetchListPageAdmin(params);
-
+    final newListPage =
+        response.where((item) => !state.pageAdmin.contains(item)).toList();
     if (response != null) {
       state = state.copyWith(
-        pageAdmin: state.pageAdmin + response,
+        pageAdmin: params.containsKey('max_id')
+            ? [...state.pageAdmin, ...newListPage]
+            : newListPage,
         pageLiked: state.pageLiked,
         isMorePageAdmin:
             response.length < params['limit'] ? false : state.isMorePageAdmin,

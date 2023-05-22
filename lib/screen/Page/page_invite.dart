@@ -17,16 +17,13 @@ class PageInvite extends ConsumerStatefulWidget {
 
 class _PageInviteState extends ConsumerState<PageInvite> {
   Future<void> refreshData() async {
-    if (ref.read(pageListControllerProvider).pageInvitedLike.isEmpty) {
-      await ref
-          .read(pageListControllerProvider.notifier)
-          .getListPageInvited('like');
-    }
-    if (ref.read(pageListControllerProvider).pageInvitedManage.isEmpty) {
-      await ref
-          .read(pageListControllerProvider.notifier)
-          .getListPageInvited('manage');
-    }
+    await ref
+        .read(pageListControllerProvider.notifier)
+        .getListPageInvited('like');
+
+    await ref
+        .read(pageListControllerProvider.notifier)
+        .getListPageInvited('manage');
   }
 
   @override

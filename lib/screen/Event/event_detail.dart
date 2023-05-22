@@ -67,19 +67,19 @@ class _EventDetailState extends ConsumerState<EventDetail> {
   // }
 
   void loadData() async {
-    // if (eventDetail.isEmpty &&
-    //     (widget.isUseEventData != null && widget.isUseEventData!)) {
-    //   eventDetail = widget.eventDetail;
-    // } else {
-    await ref
-        .read(eventControllerProvider.notifier)
-        .getDetailEvent(widget.eventDetail['id'])
-        .then((value) {
-      setState(() {
-        eventDetail = ref.watch(eventControllerProvider).eventDetail;
+    if (eventDetail.isEmpty &&
+        (widget.isUseEventData != null && widget.isUseEventData!)) {
+      eventDetail = widget.eventDetail;
+    } else {
+      await ref
+          .read(eventControllerProvider.notifier)
+          .getDetailEvent(widget.eventDetail['id'])
+          .then((value) {
+        setState(() {
+          eventDetail = ref.watch(eventControllerProvider).eventDetail;
+        });
       });
-    });
-    // }
+    }
 
     await ref
         .read(eventControllerProvider.notifier)
@@ -461,7 +461,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                height: 280,
+                                                height: 320,
                                                 child: Column(
                                                   children: [
                                                     ListView.builder(
