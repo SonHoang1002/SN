@@ -1,5 +1,8 @@
 // const baseRoot = 'https://snapi.emso.asia';
 // const baseRootPtube = 'https://pt3.emso.vn';
+// const baseRootNovu = 'NQdDh27Faz0F';
+// const socketNovuUrl = 'wss://notification-ws.emso.vn/socket.io';
+// const getTokenNovuUrl = 'https://notification-api.emso.vn';
 
 // // const BASE_ROOT = 'https://mxh.emso.asia';
 // const tokenVideoUpload = '21fbd3b2e427d9b9bae405e6480695e6bd233e44';
@@ -18,7 +21,9 @@
 
 const baseRoot = 'https://cmc-sn.emso.vn';
 const baseRootPtube = 'https://pt3.emso.vn';
-
+const baseRootNovu = '-LgRoNshFiyj';
+const socketNovuUrl = 'wss://cmc-notification-ws.emso.vn/socket.io';
+const getTokenNovuUrl = 'https://cmc-notification-api.emso.vn';
 // const BASE_ROOT = 'https://mxh.emso.asia';
 
 const tokenVideoUpload = '21fbd3b2e427d9b9bae405e6480695e6bd233e44';
