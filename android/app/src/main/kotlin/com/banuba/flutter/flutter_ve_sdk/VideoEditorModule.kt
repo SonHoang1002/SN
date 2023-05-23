@@ -159,7 +159,8 @@ private class SampleIntegrationVeKoinModule {
 
         single<EditorConfig> {
             EditorConfig(
-                minTotalVideoDurationMs = 1500
+                minTotalVideoDurationMs = 1500,
+                stickersApiKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh"
             )
         }
 

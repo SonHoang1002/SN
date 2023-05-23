@@ -563,7 +563,7 @@
 "feature.disabled.audiobrowser" = "Default music browser is not included in your package. You can plugin your own music.";
 
 // MARK: - Hands-free
-"hands.free.video.drag.title" = "Drag to set video duration:";
+"hands.free.video.drag.title" = "Kéo để thiết lập thời gian:";
 "hands.free.btn.title" = "Start countdown";
 "hands.free.seconds" = "%@ s";
 

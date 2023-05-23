@@ -121,6 +121,7 @@ dependencies:
   web_socket_channel: ^2.4.0
   flutter_local_notifications: ^14.0.0+2
   html: ^0.15.3
+  google_fonts: ^4.0.4
 
 dev_dependencies:
   flutter_test:

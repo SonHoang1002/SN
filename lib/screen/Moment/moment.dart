@@ -39,9 +39,7 @@ class _MomentState extends ConsumerState<Moment>
             .getListMomentFollow({"limit": 10});
       });
     }
-    momentSuggests = ref.read(momentControllerProvider).momentSuggest.isEmpty
-        ? moments
-        : ref.read(momentControllerProvider).momentSuggest;
+    momentSuggests = ref.read(momentControllerProvider).momentSuggest;
     if (widget.dataAdditional != null && widget.dataAdditional.isNotEmpty) {
       momentSuggests.insert(0, widget.dataAdditional);
     }
