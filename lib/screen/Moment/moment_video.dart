@@ -140,13 +140,11 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                           ? AspectRatio(
                               aspectRatio:
                                   videoPlayerController.value.aspectRatio,
-                              child: VideoPlayer(
-                                videoPlayerController,
-                              ),
+                              child: renderVideoMoment(size,
+                                  videoPlayerController.value.aspectRatio),
                             )
-                          : VideoPlayer(
-                              videoPlayerController,
-                            ),
+                          : renderVideoMoment(
+                              size, videoPlayerController.value.aspectRatio),
                     )),
                 if (_xPosition != 0 && _yPosition != 0)
                   Positioned(
@@ -270,5 +268,16 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         ),
       ),
     );
+  }
+
+  Widget renderVideoMoment(Size size, double ratio) {
+    return VideoPlayer(
+      videoPlayerController,
+    );
+    // : ImageCacheRender(
+    //     width: size.width,
+    //     height: size.height,
+    //     path: widget.moment['media_attachments'][0]['preview_url'],
+    //   );
   }
 }
