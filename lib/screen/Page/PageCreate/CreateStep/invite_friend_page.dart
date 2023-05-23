@@ -62,9 +62,9 @@ class _InviteFriendPageState extends ConsumerState<InviteFriendPage> {
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Hãy mời bạn bè kết nối tới NAME_OF_PAGE để phát triển Trang.',
-                  style: TextStyle(fontSize: 16),
+                Text(
+                  'Hãy mời bạn bè kết nối tới ${widget.dataCreate['title']} để phát triển Trang.',
+                  style: const TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),

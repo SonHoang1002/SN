@@ -5,13 +5,13 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 
+import '../apis/events_api.dart';
+
 class InviteFriend extends StatefulWidget {
-  final dynamic inviteFriend;
   final String? id;
   final dynamic type;
   const InviteFriend({
     Key? key,
-    this.inviteFriend,
     this.id,
     this.type,
   }) : super(key: key);
@@ -24,8 +24,8 @@ class _InviteFriendState extends State<InviteFriend>
   late TabController _tabController;
   List friendInvited = [];
   List friendUnInvited = [];
-  var paramsExcluded = {"excluded_invitation_event": '109853875958872608'};
-  var paramsIncluded;
+  dynamic paramsExcluded;
+  dynamic paramsIncluded;
   List inviteSuccess = [];
   List inviteCheck = [];
 
@@ -34,11 +34,10 @@ class _InviteFriendState extends State<InviteFriend>
     if (!mounted) return;
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
     setState(() {
       switch (widget.type) {
         case 'page':
-          if (widget.id is String) {
+          if (widget.id != null) {
             paramsExcluded = {"excluded_page": widget.id ?? ''};
             paramsIncluded = {
               'included_invitation_follow_page': widget.id ?? ''
@@ -46,7 +45,10 @@ class _InviteFriendState extends State<InviteFriend>
           }
           break;
         case 'event':
-          paramsExcluded = {"excluded_invitation_event": "109853875958872608"};
+          if (widget.id != null) {
+            paramsExcluded = {"excluded_invitation_event": widget.id};
+            paramsIncluded = {"included_invitation_event": widget.id};
+          }
           break;
         default:
       }
@@ -106,6 +108,16 @@ class _InviteFriendState extends State<InviteFriend>
           });
         }
         break;
+      case 'event':
+        var res = await EventApi().sendInvitationFriendEventApi(
+            widget.id, {'target_account_ids': value});
+        if (res != null) {
+          setState(() {
+            inviteSuccess = inviteSuccess + value;
+          });
+        }
+        break;
+
       default:
         break;
     }

@@ -1,6 +1,6 @@
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,11 +10,9 @@ import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
-import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
-import 'package:social_network_app_mobile/screen/Post/PostCenter/post_media.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_friend_block.dart';
@@ -30,7 +28,6 @@ import 'package:social_network_app_mobile/widget/button_primary.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
-import 'dart:convert';
 
 class UserPage extends ConsumerStatefulWidget {
   final dynamic user;
@@ -245,7 +242,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                   pushToNextScreen(context, const UserPhotoVideo());
                 },
                 child: SizedBox(
-                  width: 118,
+                  width: 130,
                   child: ChipMenu(
                     isSelected: false,
                     label: "Ảnh/video",
