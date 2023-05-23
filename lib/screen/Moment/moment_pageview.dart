@@ -26,7 +26,6 @@ class MomentPageview extends ConsumerStatefulWidget {
 
 class _MomentPageviewState extends ConsumerState<MomentPageview>
     with AutomaticKeepAliveClientMixin {
-  bool isDragSlider = false;
   double currentPage = 0;
   final PreloadPageController _pageController = PreloadPageController();
 
@@ -74,12 +73,6 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
           .updateMomentDetail(data['typeAction'], response);
     }
 
-    handleSlider(data) {
-      setState(() {
-        isDragSlider = data;
-      });
-    }
-
     return PreloadPageView.builder(
       physics: const CustomPageViewScrollPhysics(),
       controller: _pageController,
@@ -93,20 +86,8 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
         double opacity = 1.0 - (index - currentPage).abs().clamp(0.0, 1.0);
         return Opacity(
             opacity: opacity,
-            child: Stack(
-              children: [
-                MomentVideo(
-                    moment: widget.momentRender[index],
-                    handleSlider: handleSlider),
-                isDragSlider
-                    ? const SizedBox()
-                    : Positioned(
-                        bottom: 15,
-                        left: 15,
-                        child: VideoDescription(
-                          moment: widget.momentRender[index],
-                        )),
-              ],
+            child: MomentVideo(
+              moment: widget.momentRender[index],
             ));
       },
     );

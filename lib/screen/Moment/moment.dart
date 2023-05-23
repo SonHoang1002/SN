@@ -61,6 +61,16 @@ class _MomentState extends ConsumerState<Moment>
 
     final size = MediaQuery.of(context).size;
 
+    Widget NoData = Container(
+      color: Colors.black,
+      width: size.width,
+      height: size.height,
+      child: const Center(
+        child:
+            Text("Không có dữ liệu hiển thị", style: TextStyle(color: white)),
+      ),
+    );
+
     return Scaffold(
         backgroundColor: Colors.black,
         body: Stack(children: <Widget>[
@@ -80,11 +90,7 @@ class _MomentState extends ConsumerState<Moment>
                       }
                     },
                   )
-                : Container(
-                    color: Colors.black,
-                    width: size.width,
-                    height: size.height,
-                  ),
+                : NoData,
             momentSuggests.isNotEmpty
                 ? MomentPageview(
                     type: 'suggest',
@@ -100,11 +106,7 @@ class _MomentState extends ConsumerState<Moment>
                       }
                     },
                   )
-                : Container(
-                    color: Colors.black,
-                    width: size.width,
-                    height: size.height,
-                  )
+                : NoData
           ]),
           Positioned(
               //Place it at the top, and not use the entire screen
