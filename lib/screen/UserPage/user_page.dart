@@ -65,9 +65,6 @@ class _UserPageState extends ConsumerState<UserPage> {
       });
 
       Future.delayed(Duration.zero, () async {
-        // ref.read(postControllerProvider.notifier).removeListPost('user');
-        // ref.read(userInformationProvider.notifier).removeUserInfo();
-
         List postUserNew =
             await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
                 [];
@@ -80,6 +77,7 @@ class _UserPageState extends ConsumerState<UserPage> {
             await UserPageApi().getAccountAboutInformation(id);
         var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
         var pinNew = await PostApi().getListPostPinApi(id) ?? [];
+
         setState(() {
           lifeEvent = lifeEventNew;
           postUser = postUserNew;
@@ -92,11 +90,6 @@ class _UserPageState extends ConsumerState<UserPage> {
     }
 
     scrollController.addListener(() {
-      // if (scrollController.position.maxScrollExtent < 4000 ||
-      //     (scrollController.offset).toDouble() <
-      //             scrollController.position.maxScrollExtent &&
-      //         (scrollController.offset).toDouble() >
-      //             scrollController.position.maxScrollExtent - 4000) {
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
@@ -104,9 +97,6 @@ class _UserPageState extends ConsumerState<UserPage> {
             0) {
           EasyDebounce.debounce(
               'my-debouncer', const Duration(milliseconds: 300), () {
-            // if (ref.read(postControllerProvider).postUserPage.isEmpty) return;
-            // if (id != null) {
-
             String maxId = "";
             if (ref.read(postControllerProvider).postUserPage.isEmpty) {
               maxId = postUser.last['id'];
@@ -115,10 +105,8 @@ class _UserPageState extends ConsumerState<UserPage> {
             }
             ref.read(postControllerProvider.notifier).getListPostUserPage(
                 id, {"max_id": maxId, "exclude_replies": true, "limit": 10});
-            // }
           });
         }
-        // }
       }
     });
   }
@@ -131,7 +119,6 @@ class _UserPageState extends ConsumerState<UserPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    // var userAbout = ref.watch(userInformationProvider).userMoreInfor;
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
       postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
@@ -216,22 +203,22 @@ class _UserPageState extends ConsumerState<UserPage> {
                 ),
               ),
               const CrossBar(),
-              Row(
-                children: const [
-                  SizedBox(
-                    child: ChipMenu(
-                      isSelected: true,
-                      label: "Bài viết",
-                    ),
-                  ),
-                  SizedBox(
-                    child: ChipMenu(
-                      isSelected: false,
-                      label: "Ảnh",
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: const [
+              //     SizedBox(
+              //       child: ChipMenu(
+              //         isSelected: true,
+              //         label: "Bài viết",
+              //       ),
+              //     ),
+              //     SizedBox(
+              //       child: ChipMenu(
+              //         isSelected: false,
+              //         label: "Ảnh",
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const Divider(
                 height: 20,
                 thickness: 1,
@@ -263,7 +250,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               const CrossBar(),
               InkWell(
                 onTap: () {
-                  pushToNextScreen(context, const UserPhotoVideo());
+                  pushToNextScreen(context, UserPhotoVideo(id: id));
                 },
                 child: SizedBox(
                   width: 130,
