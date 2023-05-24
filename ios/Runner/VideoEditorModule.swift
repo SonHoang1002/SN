@@ -31,18 +31,15 @@ class VideoEditorModule: VideoEditor {
             return
         }
         
-        let config = VideoEditorConfig()
+        var config = VideoEditorConfig()
         
         // Make customization here
 
-        // let gifPickerConfiguration = GifPickerConfiguration(
-        //     giphyAPIKey: "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh"
-        // )
+        config.gifPickerConfiguration.giphyAPIKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh"
         
         videoEditorSDK = BanubaVideoEditor(
             token: token ?? "",
             configuration: config,
-            // gifPickerConfiguration: gifPickerConfiguration,
             externalViewControllerFactory: self.getAppDelegate().provideCustomViewFactory()
         )
         
