@@ -24,18 +24,22 @@ class AvatarBanner extends StatelessWidget {
               height: size.width * 0.7 + 2,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(width: 0.3, color: greyColor)),
+                  border: Border.all(width: 0.1, color: greyColor)),
               child: AvatarSocial(
                   width: size.width * 0.7,
                   height: size.width * 0.7,
-                  object: {'avatar_media': post['media_attachments'][0]},
+                  object: {
+                    'avatar_media': post['media_attachments'].isNotEmpty
+                        ? post['media_attachments'][0]
+                        : {}
+                  },
                   path: path),
             ),
           )
         : Center(
             child: Container(
               decoration: BoxDecoration(
-                  border: Border.all(width: 0.3, color: greyColor)),
+                  border: Border.all(width: 0.1, color: greyColor)),
               child: Image.network(
                 path,
                 errorBuilder: (context, error, stackTrace) => const SizedBox(),

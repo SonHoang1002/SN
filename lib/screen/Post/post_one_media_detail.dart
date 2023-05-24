@@ -144,7 +144,12 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
               var status = await Permission.storage.status;
               if (!status.isGranted) {
                 await Permission.storage.request();
+                var photosStatus = await Permission.photos.status;
+                if (!photosStatus.isGranted) {
+                  await Permission.photos.request();
+                }
               }
+
               String imageUrl = postRender['media_attachments']?[0]?['url'] ??
                   postRender['url'];
               // Get the image data
@@ -153,7 +158,6 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
               var dir = await getApplicationDocumentsDirectory();
               String fileName = '${Random().nextInt(10000)}.jpg';
               File file = File('${dir.path}/$fileName');
-
               await file.writeAsBytes(response.data);
               final result =
                   await GallerySaver.saveImage('${dir.path}/$fileName');
@@ -161,7 +165,10 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
               ScaffoldMessenger.of(context1).showSnackBar(SnackBar(
                   content: result == true
                       ? const Text("Lưu ảnh thành công")
-                      : const Text("Lưu ảnh thất bại")));
+                      : result == false && status.isGranted
+                          ? const Text(
+                              "Lưu ảnh thất bại. Vui lòng cấp quyền cho ứng dụng")
+                          : const Text("Lưu ảnh thất bại")));
             },
             child: const Text(
               'Lưu ảnh',

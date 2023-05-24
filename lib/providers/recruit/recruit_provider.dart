@@ -453,7 +453,7 @@ class RecruitController extends StateNotifier<RecruitState> {
 
   getDetailRecruit(id) async {
     var response = await RecruitApi().getDetailRecruitApi(id);
-    if (response.isNotEmpty) {
+    if (response != null && response.isNotEmpty) {
       state = state.copyWith(
         detailRecruit: response,
         recruits: state.recruits,

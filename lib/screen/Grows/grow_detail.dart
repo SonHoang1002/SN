@@ -21,7 +21,8 @@ import '../../widget/show_modal_message.dart';
 
 class GrowDetail extends ConsumerStatefulWidget {
   final dynamic data;
-  const GrowDetail({super.key, this.data});
+  final bool? isUseGrowData;
+  const GrowDetail({super.key, this.data, this.isUseGrowData});
   @override
   ConsumerState<GrowDetail> createState() => _GrowDetailState();
 }
@@ -79,14 +80,19 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
   }
 
   void loadData() async {
-    await ref
-        .read(growControllerProvider.notifier)
-        .getDetailGrow(widget.data['id'])
-        .then((value) {
-      setState(() {
-        growDetail = ref.watch(growControllerProvider).detailGrow;
+    if ((  growDetail.isEmpty) &&
+        (widget.isUseGrowData == true)) {
+      growDetail = widget.data;
+    } else {
+      await ref
+          .read(growControllerProvider.notifier)
+          .getDetailGrow(widget.data['id'])
+          .then((value) {
+        setState(() {
+          growDetail = ref.watch(growControllerProvider).detailGrow;
+        });
       });
-    });
+    }
     await ref.read(growControllerProvider.notifier).getGrowTransactions({});
   }
 
@@ -220,7 +226,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             growDetail['project_relationship']
-                                                        ['host_project'] ==
+                                                        ?['host_project'] ==
                                                     false
                                                 ? Row(
                                                     crossAxisAlignment:
@@ -1098,7 +1104,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
             ),
           ),
           growDetail.isNotEmpty &&
-                  !growDetail['project_relationship']['host_project'] &&
+                  !growDetail['project_relationship']?['host_project'] &&
                   (DateTime.parse(growDetail['due_date']).isBefore(
                           DateTime.parse(DateTime.now().toString()))) ==
                       false

@@ -3,7 +3,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 
 class ButtonPrimary extends StatelessWidget {
   final String label;
-  final Icon? icon;
+  final Widget? icon;
   final Function? handlePress;
   final bool? isPrimary;
   final bool? isGrey;

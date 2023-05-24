@@ -65,18 +65,26 @@ class _UserPageState extends ConsumerState<UserPage> {
       });
 
       Future.delayed(Duration.zero, () async {
+
+        // ref.read(postControllerProvider.notifier).removeListPost('user');
+        // ref.read(userInformationProvider.notifier).removeUserInfo();
         List postUserNew =
             await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
                 [];
+        var pinNew = await PostApi().getListPostPinApi(id) ?? [];
         List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
+
         ref
             .read(postControllerProvider.notifier)
             .getListPostUserPage(id, {"exclude_replies": true, "limit": 5});
+        ref.read(postControllerProvider.notifier).getListPostPin(id);
         dynamic userDataNew = await UserPageApi().getAccountInfor(id);
         dynamic userAboutNew =
             await UserPageApi().getAccountAboutInformation(id);
         var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
+
         var pinNew = await PostApi().getListPostPinApi(id) ?? [];
+
 
         setState(() {
           lifeEvent = lifeEventNew;
@@ -122,6 +130,9 @@ class _UserPageState extends ConsumerState<UserPage> {
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
       postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
+    }
+    if (ref.watch(postControllerProvider).postsPin.isNotEmpty) {
+      pinPost = ref.read(postControllerProvider).postsPin;
     }
     return Scaffold(
       appBar: AppBar(

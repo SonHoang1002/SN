@@ -19,12 +19,14 @@ class ReefFooter extends StatelessWidget {
             flex: 1,
             child: ButtonPrimary(
               label: "Tạo",
+              colorButton: secondaryColor.withOpacity(0.3),
               icon: Icon(
                 FontAwesomeIcons.camera,
-                color: blueColor,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
                 size: size.width > 400 ? 16 : 14,
               ),
               fontSize: size.width > 400 ? 14 : 12,
+              colorText: Theme.of(context).textTheme.bodyLarge!.color,
               handlePress: () {
                 firstFunction != null ? firstFunction!() : null;
               },
@@ -33,13 +35,15 @@ class ReefFooter extends StatelessWidget {
         Flexible(
           flex: 1,
           child: ButtonPrimary(
-            label: "Thước phim của tôi",
+            label: "Khoảnh khắc của tôi",
+            colorButton: greyColor[300],
             icon: Icon(
               FontAwesomeIcons.user,
-              color: blueColor,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
               size: size.width > 400 ? 16 : 14,
             ),
             fontSize: size.width > 400 ? 14 : 12,
+            colorText: Theme.of(context).textTheme.bodyLarge!.color,
             handlePress: () {
               secondFunction != null ? secondFunction!() : null;
             },

@@ -1,6 +1,8 @@
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -72,12 +74,15 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                         file['file'],
                         fit: BoxFit.cover,
                       )
-                    : FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: file['url'],
-                        imageErrorBuilder: (context, error, stackTrace) =>
-                            const SizedBox(),
+                    : ExtendedImage.network(
+                        file['url'],
                       ),
+                // FadeInImage.memoryNetwork(
+                //     placeholder: kTransparentImage,
+                //     image: file['url'],
+                //     imageErrorBuilder: (context, error, stackTrace) =>
+                //         const SizedBox(),
+                //   ),
               ),
             ))
           else
@@ -151,7 +156,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                     margin: const EdgeInsets.all(15.0),
                     child: const Text("Không có hình ảnh nào để hiển thị"),
                   )
-                : Expanded(
+                : Flexible(
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: filesRender.length,
@@ -192,9 +197,9 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
             Container(
                 margin: const EdgeInsets.all(8.0),
                 child: ButtonPrimary(
-                    icon: const Icon(
-                      FontAwesomeIcons.camera,
-                      size: 20,
+                    icon: SvgPicture.asset(
+                      "assets/icons/add_img_file_icon.svg",
+                      height: 20,
                       color: white,
                     ),
                     label: "Thêm mới",
@@ -202,7 +207,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                       Navigator.push(
                           context,
                           CupertinoPageRoute(
-                              builder: (context) => Expanded(
+                              builder: (context) => Flexible(
                                       child: GalleryView(
                                     typePage: 'page_edit',
                                     filesSelected: filesRender,
@@ -210,16 +215,21 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                                     handleGetFiles: (type, data) {
                                       List listPath = [];
                                       List newFiles = [];
-
                                       for (var item in [
                                         ...filesRender,
                                         ...data
                                       ]) {
-                                        if (!listPath
-                                            .contains(item['file'].path)) {
+                                        if (!listPath.contains(item?['id'])) {
                                           newFiles.add(item);
-                                          listPath.add(item['file'].path);
-                                        }
+                                          listPath.add(item?['id']);
+                                        } else if (item['file'] != null) {
+                                          if (item['file'].path != null &&
+                                              !listPath.contains(
+                                                  item['file']!.path)) {
+                                            newFiles.add(item);
+                                            listPath.add(item['file']!.path);
+                                          }
+                                        } else {}
                                       }
                                       setState(() {
                                         filesRender = newFiles;

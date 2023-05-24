@@ -16,7 +16,7 @@ class MapWidgetItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4.0),
+      margin: const EdgeInsets.only(top: 5.0, right: 4.0, left: 4.0),
       child: Column(
         children: [
           SizedBox(

@@ -131,7 +131,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
       highlightColor: transparent,
       splashColor: transparent,
       onTap: () {
-        if (widget.type != postDetail) {
+        if (widget.type != postDetail && widget.type != 'edit_post') {
           pushCustomCupertinoPageRoute(
               context,
               PostDetail(
@@ -161,7 +161,8 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                       post: widget.post,
                       group: group,
                       page: page,
-                      account: account),
+                      account: account,
+                      type: widget.type),
                   const SizedBox(
                     width: 5,
                   ),
@@ -179,6 +180,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                           group: group,
                           page: page,
                           textColor: widget.textColor,
+                          type: widget.type,
                         ),
                       ),
                       Row(
@@ -285,17 +287,17 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
 }
 
 class BlockNamePost extends StatelessWidget {
-  const BlockNamePost({
-    super.key,
-    required this.account,
-    required this.description,
-    required this.mentions,
-    this.group,
-    this.page,
-    this.statusActivity,
-    this.post,
-    this.textColor,
-  });
+  const BlockNamePost(
+      {super.key,
+      required this.account,
+      required this.description,
+      required this.mentions,
+      this.group,
+      this.page,
+      this.statusActivity,
+      this.post,
+      this.textColor,
+      this.type});
   final dynamic post;
   final dynamic account;
   final String description;
@@ -304,6 +306,7 @@ class BlockNamePost extends StatelessWidget {
   final dynamic page;
   final dynamic statusActivity;
   final Color? textColor;
+  final dynamic type;
 
   @override
   Widget build(BuildContext context) {
@@ -323,8 +326,8 @@ class BlockNamePost extends StatelessWidget {
 
     TextSpan renderLikeTextSpan() {
       if (group != null) {
-        return (page["group_relationship"] != null &&
-                page["group_relationship"]?["like"] == true)
+        return (group["group_relationship"] != null &&
+                group["group_relationship"]?["like"] == true)
             ? const TextSpan(
                 text: " Đã thích", style: TextStyle(color: secondaryColor))
             : const TextSpan(
@@ -344,85 +347,85 @@ class BlockNamePost extends StatelessWidget {
     }
 
     void pushToScreen() {
-      if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
-        Navigator.pushNamed(context, '/page', arguments: page);
-      } else {
-        pushCustomCupertinoPageRoute(context, const UserPage(),
-            settings: RouteSettings(
-              arguments: {'id': account['id']},
-            ));
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => const UserPage(),
-        //       settings: RouteSettings(
-        //         arguments: {'id': account['id']},
-        //       ),
-        //     ));
+      if (type != "edit_post") {
+        if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
+          Navigator.pushNamed(context, '/page', arguments: page);
+        } else {
+          pushCustomCupertinoPageRoute(context, const UserPage(),
+              settings: RouteSettings(
+                arguments: {'id': account['id']},
+              ));
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const UserPage(),
+          //       settings: RouteSettings(
+          //         arguments: {'id': account['id']},
+          //       ),
+          //     ));
+        }
       }
     }
 
     final size = MediaQuery.of(context).size;
 
-    return Row(
+    return Wrap(
       children: [
         InkWell(
           onTap: () {
             pushToScreen();
           },
-          child: Container(
-            // constraints: BoxConstraints(maxWidth:size.width*0.7 ),
-            child: RichText(
-              text: TextSpan(
-                text: renderDisplayName(),
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: textColor ??
-                        Theme.of(context).textTheme.displayLarge!.color),
-                children: [
-                  const TextSpan(text: ' '),
-                  statusActivity.isNotEmpty
-                      ? WidgetSpan(
-                          child: ImageCacheRender(
-                            path: statusActivity['url'],
-                            width: 18.0,
-                            height: 18.0,
-                          ),
-                        )
-                      : const TextSpan(text: ''),
-                  TextSpan(
-                      text: description,
-                      style: const TextStyle(fontWeight: FontWeight.normal)),
-                  mentions.isNotEmpty
-                      ? TextSpan(text: mentions[0]['display_name'])
-                      : const TextSpan(),
-                  mentions.isNotEmpty && mentions.length >= 2
-                      ? const TextSpan(
-                          text: ' và ',
-                          style: TextStyle(fontWeight: FontWeight.normal))
-                      : const TextSpan(),
-                  mentions.isNotEmpty && mentions.length == 2
-                      ? TextSpan(
-                          text: mentions[1]['display_name'],
-                        )
-                      : const TextSpan(),
-                  mentions.isNotEmpty && mentions.length > 2
-                      ? TextSpan(
-                          text: '${mentions.length - 1} người khác',
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              pushCustomCupertinoPageRoute(
-                                  context, PageMention(mentions: mentions));
-                              // Navigator.push(
-                              //     context,
-                              //     CupertinoPageRoute(
-                              //         builder: (context) =>
-                              //             PageMention(mentions: mentions)));
-                            })
-                      : const TextSpan(),
-                ],
-              ),
+          child: RichText(
+            text: TextSpan(
+              text: renderDisplayName(),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: textColor ??
+                      Theme.of(context).textTheme.displayLarge!.color),
+              children: [
+                const TextSpan(text: ' '),
+                statusActivity.isNotEmpty
+                    ? WidgetSpan(
+                        child: ImageCacheRender(
+                          path: statusActivity['url'],
+                          width: 18.0,
+                          height: 18.0,
+                        ),
+                      )
+                    : const TextSpan(text: ''),
+                TextSpan(
+                    text: description,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.normal, fontSize: 15)),
+                mentions.isNotEmpty
+                    ? TextSpan(text: mentions[0]['display_name'])
+                    : const TextSpan(),
+                mentions.isNotEmpty && mentions.length >= 2
+                    ? const TextSpan(
+                        text: ' và ',
+                        style: TextStyle(fontWeight: FontWeight.normal))
+                    : const TextSpan(),
+                mentions.isNotEmpty && mentions.length == 2
+                    ? TextSpan(
+                        text: mentions[1]['display_name'],
+                      )
+                    : const TextSpan(),
+                mentions.isNotEmpty && mentions.length > 2
+                    ? TextSpan(
+                        text: '${mentions.length - 1} người khác',
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            pushCustomCupertinoPageRoute(
+                                context, PageMention(mentions: mentions));
+                            // Navigator.push(
+                            //     context,
+                            //     CupertinoPageRoute(
+                            //         builder: (context) =>
+                            //             PageMention(mentions: mentions)));
+                          })
+                    : const TextSpan(),
+              ],
             ),
           ),
         ),
@@ -447,26 +450,29 @@ class BlockNamePost extends StatelessWidget {
 }
 
 class AvatarPost extends StatelessWidget {
-  const AvatarPost({
-    super.key,
-    required this.account,
-    this.group,
-    this.page,
-    this.post,
-  });
+  const AvatarPost(
+      {super.key,
+      required this.account,
+      this.group,
+      this.page,
+      this.post,
+      this.type});
 
   final dynamic post;
   final dynamic group;
   final dynamic page;
   final dynamic account;
+  final dynamic type;
 
   @override
   Widget build(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
 
     void pushToScreen() {
-      if (post['place']?['id'] != page['id'] && currentRouter != '/page') {
-        Navigator.pushNamed(context, '/page', arguments: page);
+      if (type != "edit_post") {
+        if (post['place']?['id'] != page['id'] && currentRouter != '/page') {
+          Navigator.pushNamed(context, '/page', arguments: page);
+        }
       }
     }
 

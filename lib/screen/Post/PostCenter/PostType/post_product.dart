@@ -11,7 +11,8 @@ import 'package:social_network_app_mobile/widget/avatar_social.dart';
 
 class PostProduct extends StatefulWidget {
   final dynamic post;
-  const PostProduct({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostProduct({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   State<PostProduct> createState() => _PostProductState();
@@ -32,6 +33,7 @@ class _PostProductState extends State<PostProduct> {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
+        widget.type != 'edit_post' ? null : null;
         // Navigator.pushNamed(context, '/course', arguments: page);
       },
       child: Column(
