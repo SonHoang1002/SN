@@ -1,5 +1,4 @@
 import 'package:chewie/chewie.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
@@ -9,13 +8,8 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
   final dynamic media;
   final double? aspectRatio;
   final ValueNotifier<int>? videoPositionNotifier;
-  final bool? isHiddenControl;
   const VideoPlayerHasController(
-      {Key? key,
-      this.media,
-      this.isHiddenControl,
-      this.aspectRatio,
-      this.videoPositionNotifier})
+      {Key? key, this.media, this.aspectRatio, this.videoPositionNotifier})
       : super(key: key);
 
   @override
@@ -26,10 +20,13 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
 class _VideoPlayerHasControllerState
     extends ConsumerState<VideoPlayerHasController> {
   bool isVisible = false;
+  late BetterPlayerControllerNotifier betterPlayerControllerNotifier;
 
   @override
   void initState() {
     super.initState();
+    betterPlayerControllerNotifier =
+        ref.read(betterPlayerControllerProvider.notifier);
     if (mounted) {
       BetterState betterState = ref
           .read(betterPlayerControllerProvider)
@@ -41,18 +38,19 @@ class _VideoPlayerHasControllerState
 
       if (betterState.videoId != '') return;
       Future.delayed(Duration.zero, () {
-        ref
-            .read(betterPlayerControllerProvider.notifier)
-            .initializeBetterPlayerController(
-              widget.media['id'],
-              widget.media['remote_url'] ?? widget.media['url'],
-            );
+        betterPlayerControllerNotifier.initializeBetterPlayerController(
+            widget.media['id'],
+            widget.media['remote_url'] ?? widget.media['url']);
       });
     }
   }
 
   @override
   void dispose() {
+    // if (!isVisible) {
+    //   betterPlayerControllerNotifier
+    //       .disposeBetterPlayerController(widget.media['id']);
+    // }
     super.dispose();
   }
 
@@ -87,7 +85,8 @@ class _VideoPlayerHasControllerState
             child: AspectRatio(
                 aspectRatio:
                     betterState.videoPlayerController!.value.aspectRatio,
-                child: Chewie(controller: betterState.chewieController!)))
+                child: Material(
+                    child: Chewie(controller: betterState.chewieController!))))
         : Container();
   }
 }

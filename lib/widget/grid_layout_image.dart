@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_suggest.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/gridview_builder_media.dart';
 
@@ -126,7 +125,6 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                   children: [
                     VideoPlayerHasController(
                       media: medias[0],
-                      isHiddenControl: true,
                     ),
                     Positioned.fill(child: GestureDetector(
                       onTap: () {

@@ -18,6 +18,7 @@ class BetterState {
 
   BetterState copyWith({
     VideoPlayerController? betterPlayerController,
+    ChewieController? chewieController,
     String? videoId,
   }) {
     return BetterState(
@@ -32,7 +33,6 @@ class BetterPlayerControllerNotifier extends StateNotifier<List<BetterState>> {
   BetterPlayerControllerNotifier() : super(const []);
 
   void initializeBetterPlayerController(String videoId, String path) {
-    late ChewieController chewieController;
     VideoPlayerController videoPlayerController =
         VideoPlayerController.network(path);
     videoPlayerController.initialize().then((value) => state = state +
@@ -41,9 +41,23 @@ class BetterPlayerControllerNotifier extends StateNotifier<List<BetterState>> {
               videoId: videoId,
               videoPlayerController: videoPlayerController,
               chewieController: ChewieController(
+                  showControlsOnInitialize: false,
                   videoPlayerController: videoPlayerController,
                   aspectRatio: videoPlayerController.value.aspectRatio))
         ]);
+  }
+
+  void disposeBetterPlayerController(String videoId) {
+    state = state
+        .map((betterState) {
+          if (betterState.videoId == videoId) {
+            betterState.videoPlayerController?.dispose();
+            betterState.chewieController?.dispose();
+          }
+          return betterState;
+        })
+        .where((betterState) => betterState.videoId != videoId)
+        .toList();
   }
 }
 

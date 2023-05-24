@@ -98,16 +98,22 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
       } else if (key == 'share') {
         showBarModalBottomSheet(
             context: context,
+            barrierColor: Colors.transparent,
             backgroundColor: Colors.transparent,
-            builder: (context) => ScreenShare(
-                entityShare: widget.moment,
-                type: 'moment',
-                entityType: 'post'));
+            builder: (context) => SizedBox(
+                height: size.height * 0.5,
+                child: ScreenShare(
+                    entityShare: widget.moment,
+                    type: 'moment',
+                    entityType: 'post')));
       } else if (key == 'comment') {
         showBarModalBottomSheet(
             context: context,
+            barrierColor: Colors.transparent,
             backgroundColor: Colors.transparent,
-            builder: (context) => CommentPostModal(post: widget.moment));
+            builder: (context) => SizedBox(
+                height: size.height * 0.65,
+                child: CommentPostModal(post: widget.moment)));
       }
     }
 
