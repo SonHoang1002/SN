@@ -98,235 +98,343 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
       } else if (key == 'share') {
         showBarModalBottomSheet(
             context: context,
+            barrierColor: Colors.transparent,
             backgroundColor: Colors.transparent,
-            builder: (context) => ScreenShare(
-                entityShare: widget.moment,
-                type: 'moment',
-                entityType: 'post'));
+            builder: (context) => SizedBox(
+                height: size.height * 0.5,
+                child: ScreenShare(
+                    entityShare: widget.moment,
+                    type: 'moment',
+                    entityType: 'post')));
       } else if (key == 'comment') {
         showBarModalBottomSheet(
             context: context,
+            barrierColor: Colors.transparent,
             backgroundColor: Colors.transparent,
-            builder: (context) => CommentPostModal(post: widget.moment));
+            builder: (context) => SizedBox(
+                height: size.height * 0.65,
+                child: CommentPostModal(post: widget.moment)));
       }
     }
 
-    return SizedBox(
-        width: size.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
+    Color whiteOpacity = Colors.white.withOpacity(0.9);
+    Color greyOpacity = const Color.fromRGBO(33, 33, 33, 1).withOpacity(0.9);
+
+    return Column(
+      children: [
+        Stack(
+          alignment: AlignmentDirectional.bottomEnd,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  width: size.width - 90,
-                  constraints: BoxConstraints(
-                    maxHeight: size.height * 0.4,
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
+            Container(
+                padding: const EdgeInsets.only(top: 20),
+                width: size.width,
+                child: Stack(
+                  children: [
+                    Stack(
                       children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => MomentPageProfile(
-                                            object: page ?? account,
-                                            objectType: page != null
-                                                ? 'page'
-                                                : 'account')));
-                              },
-                              child: Text(
-                                page != null
-                                    ? page['title']
-                                    : account['display_name'],
-                                style: const TextStyle(
-                                    color: white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 17),
+                        Positioned.fill(
+                          bottom: 0,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: <Color>[
+                                  Colors.black.withOpacity(0.7),
+                                  Colors.black.withOpacity(0.0),
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        ExpandableTextContent(
-                          content: widget.moment['content'],
-                          linkColor: whiteColor,
-                          styleContent: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: whiteColor,
-                              height: 1.5),
-                          hashtagStyle: TextStyle(
-                              color: whiteColor, fontWeight: FontWeight.w500),
-                          handleHashtag: (name) {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) =>
-                                        MomentPageHashtag(hashtag: name)));
-                          },
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              CupertinoIcons.music_note_2,
-                              size: 15,
-                              color: Colors.white,
                             ),
-                            const SizedBox(
-                              width: 8,
+                          ),
+                        ),
+                        Container(
+                          width: size.width,
+                          margin: const EdgeInsets.only(
+                              bottom: 15, left: 15, right: 75),
+                          constraints: BoxConstraints(
+                            maxHeight: size.height * 0.4,
+                          ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                if (reactionsCount > 0)
+                                  Container(
+                                    height: 35,
+                                    margin: const EdgeInsets.only(bottom: 12),
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, right: 8.0),
+                                    decoration: BoxDecoration(
+                                        color: greyOpacity,
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/shopping_cart.png',
+                                          width: 22,
+                                        ),
+                                        const SizedBox(
+                                          width: 8.0,
+                                        ),
+                                        SizedBox(
+                                          child: Text('Xem quần áo ở đây nha',
+                                              style: TextStyle(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  color: whiteOpacity,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15)),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    MomentPageProfile(
+                                                        object: page ?? account,
+                                                        objectType: page != null
+                                                            ? 'page'
+                                                            : 'account')));
+                                      },
+                                      child: Text(
+                                        page != null
+                                            ? page['title']
+                                            : account['display_name'],
+                                        style: const TextStyle(
+                                            color: white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 17),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                ExpandableTextContent(
+                                  content: widget.moment['content'],
+                                  linkColor: whiteColor,
+                                  styleContent: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: whiteColor,
+                                      height: 1.5),
+                                  hashtagStyle: TextStyle(
+                                      color: whiteColor,
+                                      fontWeight: FontWeight.w500),
+                                  handleHashtag: (name) {
+                                    Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) =>
+                                                MomentPageHashtag(
+                                                    hashtag: name)));
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      CupertinoIcons.music_note_2,
+                                      size: 15,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                      width: size.width - 120,
+                                      child: Marquee(
+                                        text: 'Âm thanh   ·   ',
+                                        velocity: 30,
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 14),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
                             ),
-                            SizedBox(
-                              height: 20,
-                              width: size.width - 120,
-                              child: Marquee(
-                                text: 'Âm thanh   ·   ',
-                                velocity: 30,
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 14),
-                              ),
-                            )
-                          ],
-                        )
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(right: 4),
-                  width: 80,
-                  child: Column(
+                  ],
+                )),
+            Container(
+              margin: const EdgeInsets.only(right: 4, bottom: 15),
+              width: 60,
+              child: Column(
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.bottomCenter,
                     children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        alignment: Alignment.bottomCenter,
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.white),
+                            shape: BoxShape.circle),
+                        child: AvatarSocial(
+                            width: 49,
+                            height: 49,
+                            object: page ?? account,
+                            path: page != null
+                                ? page['avatar_media'] != null
+                                    ? page['avatar_media']['preview_url']
+                                    : linkAvatarDefault
+                                : account['avatar_media']['preview_url']),
+                      ),
+                      Positioned(
+                          bottom: -5,
+                          right: 13,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: Colors.red, shape: BoxShape.circle),
+                            child: const Icon(
+                              Icons.add,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ))
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: List.generate(
+                        iconsAction.length,
+                        (index) => Padding(
+                              padding: const EdgeInsets.only(bottom: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      handlePressMenu(
+                                          iconsAction[index]['key']);
+                                    },
+                                    child: Icon(
+                                      iconsAction[index]['icon'],
+                                      size: 32,
+                                      color: highLightIcon
+                                          ? iconsAction[index]['iconHighlight']
+                                          : whiteColor,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    (iconsAction[index]['count'] ?? '')
+                                        .toString(),
+                                    style: TextStyle(
+                                        color: whiteColor, fontSize: 14),
+                                  )
+                                ],
+                              ),
+                            )),
+                  ),
+                  AnimatedBuilder(
+                      animation: animationController,
+                      child: Stack(
                         children: [
                           Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 1, color: Colors.white),
-                                shape: BoxShape.circle),
+                            width: 35,
+                            height: 35,
+                            decoration:
+                                const BoxDecoration(shape: BoxShape.circle),
+                            child: Image.asset('assets/disc.png'),
+                          ),
+                          Positioned(
+                            left: 7.5,
+                            top: 7.5,
                             child: AvatarSocial(
-                                width: 49,
-                                height: 49,
+                                width: 20,
+                                height: 20,
                                 object: page ?? account,
                                 path: page != null
                                     ? page['avatar_media'] != null
                                         ? page['avatar_media']['preview_url']
                                         : linkAvatarDefault
                                     : account['avatar_media']['preview_url']),
-                          ),
-                          Positioned(
-                              bottom: -5,
-                              right: 13,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Colors.red, shape: BoxShape.circle),
-                                child: const Icon(
-                                  Icons.add,
-                                  size: 20,
-                                  color: Colors.white,
-                                ),
-                              ))
+                          )
                         ],
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: List.generate(
-                            iconsAction.length,
-                            (index) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 20.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          handlePressMenu(
-                                              iconsAction[index]['key']);
-                                        },
-                                        child: Icon(
-                                          iconsAction[index]['icon'],
-                                          size: 32,
-                                          color: highLightIcon
-                                              ? iconsAction[index]
-                                                  ['iconHighlight']
-                                              : whiteColor,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        (iconsAction[index]['count'] ?? '')
-                                            .toString(),
-                                        style: TextStyle(
-                                            color: whiteColor, fontSize: 14),
-                                      )
-                                    ],
-                                  ),
-                                )),
-                      ),
-                      AnimatedBuilder(
-                          animation: animationController,
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: 35,
-                                height: 35,
-                                decoration:
-                                    const BoxDecoration(shape: BoxShape.circle),
-                                child: Image.asset('assets/disc.png'),
-                              ),
-                              Positioned(
-                                left: 7.5,
-                                top: 7.5,
-                                child: AvatarSocial(
-                                    width: 20,
-                                    height: 20,
-                                    object: page ?? account,
-                                    path: page != null
-                                        ? page['avatar_media'] != null
-                                            ? page['avatar_media']
-                                                ['preview_url']
-                                            : linkAvatarDefault
-                                        : account['avatar_media']
-                                            ['preview_url']),
-                              )
-                            ],
-                          ),
-                          builder: (context, child) {
-                            return Transform.rotate(
-                              angle: 2 * pi * animationController.value,
-                              child: child,
-                            );
-                          })
-                    ],
-                  ),
-                )
-              ],
-            )
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: 2 * pi * animationController.value,
+                          child: child,
+                        );
+                      })
+                ],
+              ),
+            ),
           ],
-        ));
+        ),
+        if (reactionsCount > 0)
+          Container(
+            height: 40,
+            width: size.width,
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            decoration: BoxDecoration(
+              color: greyOpacity,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.search, color: whiteOpacity, size: 23),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: SizedBox(
+                        width: size.width - 80,
+                        child: RichText(
+                          maxLines: 1,
+                          text: TextSpan(
+                              text: 'Tìm kiếm',
+                              style: TextStyle(
+                                  color: whiteOpacity,
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.ellipsis),
+                              children: const [
+                                TextSpan(text: ' · '),
+                                TextSpan(
+                                    text:
+                                        'Emso Việt Nam ra mắt mạng xã hội mới')
+                              ]),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Icon(FontAwesomeIcons.chevronRight,
+                    size: 18, color: whiteOpacity)
+              ],
+            ),
+          )
+      ],
+    );
   }
 }

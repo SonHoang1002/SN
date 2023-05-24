@@ -139,6 +139,7 @@ class _MomentPageHashtagState extends State<MomentPageHashtag> {
                             context,
                             CupertinoPageRoute(
                                 builder: (context) => Material(
+                                      color: Colors.black,
                                       child: MomentPageview(
                                         type: 'hashtag',
                                         momentRender:

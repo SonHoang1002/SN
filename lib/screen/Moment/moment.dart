@@ -7,8 +7,14 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 
 class Moment extends ConsumerStatefulWidget {
   final bool? isBack;
+  final String? typePage;
   final dynamic dataAdditional;
-  const Moment({Key? key, this.isBack, this.dataAdditional}) : super(key: key);
+  const Moment({
+    Key? key,
+    this.isBack,
+    this.dataAdditional,
+    this.typePage,
+  }) : super(key: key);
 
   @override
   ConsumerState<Moment> createState() => _MomentState();
@@ -61,6 +67,16 @@ class _MomentState extends ConsumerState<Moment>
 
     final size = MediaQuery.of(context).size;
 
+    Widget NoData = Container(
+      color: Colors.black,
+      width: size.width,
+      height: size.height,
+      child: const Center(
+        child:
+            Text("Không có dữ liệu hiển thị", style: TextStyle(color: white)),
+      ),
+    );
+
     return Scaffold(
         backgroundColor: Colors.black,
         body: Stack(children: <Widget>[
@@ -68,6 +84,7 @@ class _MomentState extends ConsumerState<Moment>
             momentFollow.isNotEmpty
                 ? MomentPageview(
                     type: 'follow',
+                    typePage: widget.typePage,
                     momentRender: momentFollow,
                     handlePageChange: (value) {
                       if (value == momentFollow.length - 5) {
@@ -80,14 +97,11 @@ class _MomentState extends ConsumerState<Moment>
                       }
                     },
                   )
-                : Container(
-                    color: Colors.black,
-                    width: size.width,
-                    height: size.height,
-                  ),
+                : NoData,
             momentSuggests.isNotEmpty
                 ? MomentPageview(
                     type: 'suggest',
+                    typePage: widget.typePage,
                     momentRender: momentSuggests,
                     handlePageChange: (value) {
                       if (value == momentSuggests.length - 5) {
@@ -100,11 +114,7 @@ class _MomentState extends ConsumerState<Moment>
                       }
                     },
                   )
-                : Container(
-                    color: Colors.black,
-                    width: size.width,
-                    height: size.height,
-                  )
+                : NoData
           ]),
           Positioned(
               //Place it at the top, and not use the entire screen

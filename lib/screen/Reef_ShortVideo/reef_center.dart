@@ -55,6 +55,7 @@ class _ReefCenterState extends State<ReefCenter> {
                   ? Stack(
                       children: [
                         MomentVideo(
+                          type: 'momentFeed',
                           moment: _reefList[index],
                         ),
                         Container(
@@ -119,6 +120,7 @@ class _ReefCenterState extends State<ReefCenter> {
                     ? Stack(
                         children: [
                           MomentVideo(
+                            type: 'momentFeed',
                             moment: _reefList[index],
                           ),
                           Container(

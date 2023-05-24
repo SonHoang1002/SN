@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 
 class WatchComment extends StatefulWidget {
@@ -45,16 +46,16 @@ class _WatchCommentState extends State<WatchComment> {
           height: MediaQuery.of(context).size.height * 0.31,
           margin: const EdgeInsets.all(8.0),
           child: Center(
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: VideoPlayerNoneController(
-                  isShowVolumn: false,
-                  path: widget.post['media_attachments'][0]['remote_url'] ??
-                      widget.post['media_attachments'][0]['url'],
-                  type: 'local',
-                  media: widget.post['media_attachments'][0],
-                )),
-          ),
+              child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Hero(
+              tag: widget.post['media_attachments'][0]['remote_url'] ??
+                  widget.post['media_attachments'][0]['url'],
+              child: VideoPlayerHasController(
+                media: widget.post['media_attachments'][0],
+              ),
+            ),
+          )),
         ));
   }
 }

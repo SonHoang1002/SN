@@ -3,17 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
+import 'package:social_network_app_mobile/screen/Moment/video_description.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class MomentVideo extends ConsumerStatefulWidget {
-  const MomentVideo({
-    Key? key,
-    this.moment,
-    this.handleSlider,
-  }) : super(key: key);
+  const MomentVideo({Key? key, this.moment, this.type}) : super(key: key);
   final dynamic moment;
-  final Function? handleSlider;
+  final String? type;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -29,6 +26,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
   double _yPosition = 0;
   bool isShowPlaying = true;
   bool isVisible = false;
+  bool isDragSlider = false;
 
   bool _sliderChanging = false;
   double _sliderValue = 0;
@@ -95,6 +93,12 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
           );
   }
 
+  handleSlider(data) {
+    setState(() {
+      isDragSlider = data;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -136,13 +140,11 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                           ? AspectRatio(
                               aspectRatio:
                                   videoPlayerController.value.aspectRatio,
-                              child: VideoPlayer(
-                                videoPlayerController,
-                              ),
+                              child: renderVideoMoment(size,
+                                  videoPlayerController.value.aspectRatio),
                             )
-                          : VideoPlayer(
-                              videoPlayerController,
-                            ),
+                          : renderVideoMoment(
+                              size, videoPlayerController.value.aspectRatio),
                     )),
                 if (_xPosition != 0 && _yPosition != 0)
                   Positioned(
@@ -168,88 +170,114 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                   ),
               ],
             ),
-            _sliderChanging
-                ? Positioned(
-                    bottom: 30,
-                    child: SizedBox(
-                      width: size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            formatDuration(
-                                Duration(seconds: _sliderValue.round())),
-                            style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700),
+            if (widget.type != 'momentFeed')
+              _sliderChanging
+                  ? Positioned(
+                      bottom: 30,
+                      child: SizedBox(
+                        width: size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              formatDuration(
+                                  Duration(seconds: _sliderValue.round())),
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            const SizedBox(
+                              width: 8.0,
+                            ),
+                            Text(
+                              '/',
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            const SizedBox(
+                              width: 8.0,
+                            ),
+                            Text(
+                              formatDuration(Duration(
+                                  seconds: videoPlayerController
+                                      .value.duration.inSeconds)),
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700),
+                            )
+                          ],
+                        ),
+                      ))
+                  : const SizedBox(),
+            if (widget.type != 'momentFeed')
+              Stack(
+                children: [
+                  isDragSlider
+                      ? Container()
+                      : Positioned(
+                          bottom: 0,
+                          left: 0,
+                          child: VideoDescription(
+                            moment: widget.moment,
+                          )),
+                  Positioned(
+                      bottom: -23,
+                      left: -23,
+                      right: -23,
+                      child: SliderTheme(
+                          data: SliderThemeData(
+                            trackHeight: _sliderChanging ? 2 : 0.3,
+                            thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 1.5,
+                            ),
                           ),
-                          const SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(
-                            '/',
-                            style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          const SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(
-                            formatDuration(Duration(
-                                seconds: videoPlayerController
-                                    .value.duration.inSeconds)),
-                            style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700),
-                          )
-                        ],
-                      ),
-                    ))
-                : const SizedBox(),
-            Positioned(
-                bottom: -23,
-                left: -23,
-                right: -23,
-                child: SliderTheme(
-                    data: SliderThemeData(
-                      trackHeight: _sliderChanging ? 2 : 0.3,
-                      thumbShape: const RoundSliderThumbShape(
-                        enabledThumbRadius: 1.5,
-                      ),
-                    ),
-                    child: SizedBox(
-                      child: Slider(
-                        activeColor:
-                            Colors.white.withOpacity(_sliderChanging ? 1 : 0.8),
-                        inactiveColor: Colors.white.withOpacity(0.4),
-                        value: _sliderValue,
-                        min: 0,
-                        max: videoPlayerController.value.duration.inSeconds
-                            .toDouble(),
-                        onChanged: (value) {
-                          setState(() {
-                            _sliderChanging = true;
-                            _sliderValue = value;
-                          });
-                          widget.handleSlider!(true);
-                        },
-                        onChangeEnd: (value) {
-                          videoPlayerController
-                              .seekTo(Duration(seconds: value.toInt()));
-                          setState(() {
-                            _sliderChanging = false;
-                          });
-                          widget.handleSlider!(false);
-                        },
-                      ),
-                    )))
+                          child: SizedBox(
+                            child: Slider(
+                              activeColor: Colors.white
+                                  .withOpacity(_sliderChanging ? 1 : 0.8),
+                              inactiveColor: Colors.white.withOpacity(0.4),
+                              value: _sliderValue,
+                              min: 0,
+                              max: videoPlayerController
+                                  .value.duration.inSeconds
+                                  .toDouble(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _sliderChanging = true;
+                                  _sliderValue = value;
+                                });
+                                handleSlider(true);
+                              },
+                              onChangeEnd: (value) {
+                                videoPlayerController
+                                    .seekTo(Duration(seconds: value.toInt()));
+                                setState(() {
+                                  _sliderChanging = false;
+                                });
+                                handleSlider(false);
+                              },
+                            ),
+                          ))),
+                ],
+              ),
           ],
         ),
       ),
     );
+  }
+
+  Widget renderVideoMoment(Size size, double ratio) {
+    return VideoPlayer(
+      videoPlayerController,
+    );
+    // : ImageCacheRender(
+    //     width: size.width,
+    //     height: size.height,
+    //     path: widget.moment['media_attachments'][0]['preview_url'],
+    //   );
   }
 }

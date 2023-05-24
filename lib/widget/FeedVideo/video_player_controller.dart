@@ -1,5 +1,4 @@
-import 'package:better_player/better_player.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
@@ -9,13 +8,8 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
   final dynamic media;
   final double? aspectRatio;
   final ValueNotifier<int>? videoPositionNotifier;
-  final bool? isHiddenControl;
   const VideoPlayerHasController(
-      {Key? key,
-      this.media,
-      this.isHiddenControl,
-      this.aspectRatio,
-      this.videoPositionNotifier})
+      {Key? key, this.media, this.aspectRatio, this.videoPositionNotifier})
       : super(key: key);
 
   @override
@@ -26,41 +20,53 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
 class _VideoPlayerHasControllerState
     extends ConsumerState<VideoPlayerHasController> {
   bool isVisible = false;
+  late BetterPlayerControllerNotifier betterPlayerControllerNotifier;
 
   @override
   void initState() {
     super.initState();
+    betterPlayerControllerNotifier =
+        ref.read(betterPlayerControllerProvider.notifier);
     if (mounted) {
       BetterState betterState = ref
           .read(betterPlayerControllerProvider)
           .firstWhere((element) => element.videoId == widget.media['id'],
-              orElse: () =>
-                  const BetterState(videoId: '', betterPlayerController: null));
+              orElse: () => const BetterState(
+                  videoId: '',
+                  videoPlayerController: null,
+                  chewieController: null));
+
       if (betterState.videoId != '') return;
       Future.delayed(Duration.zero, () {
-        ref
-            .read(betterPlayerControllerProvider.notifier)
-            .initializeBetterPlayerController(
-                widget.media['id'],
-                BetterPlayerDataSource(
-                  BetterPlayerDataSourceType.network,
-                  widget.media['remote_url'] ?? widget.media['url'],
-                ),
-                widget.isHiddenControl ?? true);
+        betterPlayerControllerNotifier.initializeBetterPlayerController(
+            widget.media['id'],
+            widget.media['remote_url'] ?? widget.media['url']);
       });
     }
   }
 
   @override
+  void dispose() {
+    // if (!isVisible) {
+    //   betterPlayerControllerNotifier
+    //       .disposeBetterPlayerController(widget.media['id']);
+    // }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    BetterPlayerController? betterPlayerController = ref
+    BetterState betterState = ref
         .watch(betterPlayerControllerProvider)
         .firstWhere((element) => element.videoId == widget.media['id'],
-            orElse: () =>
-                const BetterState(videoId: '', betterPlayerController: null))
-        .betterPlayerController;
+            orElse: () => const BetterState(
+                videoId: '',
+                videoPlayerController: null,
+                chewieController: null));
 
-    return betterPlayerController != null
+    return betterState.videoPlayerController != null &&
+            betterState.videoPlayerController!.value.isInitialized &&
+            betterState.chewieController != null
         ? VisibilityDetector(
             onVisibilityChanged: (visibilityInfo) {
               if (mounted) {
@@ -68,15 +74,19 @@ class _VideoPlayerHasControllerState
                   isVisible = visibilityInfo.visibleFraction == 1;
 
                   if (isVisible) {
-                    betterPlayerController.play();
+                    betterState.videoPlayerController!.play();
                   } else {
-                    betterPlayerController.pause();
+                    betterState.videoPlayerController!.pause();
                   }
                 });
               }
             },
             key: Key(widget.media['id']),
-            child: BetterPlayer(controller: betterPlayerController))
+            child: AspectRatio(
+                aspectRatio:
+                    betterState.videoPlayerController!.value.aspectRatio,
+                child: Material(
+                    child: Chewie(controller: betterState.chewieController!))))
         : Container();
   }
 }
