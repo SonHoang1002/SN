@@ -10,6 +10,8 @@ class Post extends StatefulWidget {
   final dynamic post;
   final String? type;
   final bool? isHiddenCrossbar;
+  final bool? isHiddenFooter;
+
   final dynamic data;
   final Function? reloadFunction;
 
@@ -19,6 +21,7 @@ class Post extends StatefulWidget {
       this.type,
       this.isHiddenCrossbar,
       this.data,
+      this.isHiddenFooter,
       this.reloadFunction})
       : super(key: key);
 
@@ -67,10 +70,12 @@ class _PostState extends State<Post> {
                       setState(() {});
                     });
                   }),
-              PostFooter(
-                post: widget.post,
-                type: widget.type,
-              ),
+              widget.isHiddenFooter != null && widget.isHiddenFooter == true
+                  ? const SizedBox()
+                  : PostFooter(
+                      post: widget.post,
+                      type: widget.type,
+                    ),
               widget.isHiddenCrossbar != null && widget.isHiddenCrossbar == true
                   ? const SizedBox()
                   : const CrossBar(

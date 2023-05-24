@@ -3,16 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
-import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page_friend_block.dart';
@@ -21,13 +17,17 @@ import 'package:social_network_app_mobile/screen/UserPage/user_page_pin_post.dar
 import 'package:social_network_app_mobile/screen/UserPage/user_photo_video.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/Banner/banner_base.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
-import 'package:social_network_app_mobile/widget/chip_menu.dart';
-import 'package:social_network_app_mobile/widget/cross_bar.dart';
-import 'package:social_network_app_mobile/widget/skeleton.dart';
+
+import '../../constant/post_type.dart';
+import '../../helper/push_to_new_screen.dart';
+import '../../widget/GeneralWidget/text_content_widget.dart';
+import '../../widget/chip_menu.dart';
+import '../../widget/cross_bar.dart';
+import '../../widget/skeleton.dart';
+import '../Feed/create_post_button.dart';
 
 class UserPage extends ConsumerStatefulWidget {
   final dynamic user;
@@ -50,6 +50,7 @@ class _UserPageState extends ConsumerState<UserPage> {
   List featureContents = [];
   List friend = [];
   List pinPost = [];
+  List lifeEvent = [];
 
   @override
   void initState() {
@@ -70,6 +71,7 @@ class _UserPageState extends ConsumerState<UserPage> {
         List postUserNew =
             await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
                 [];
+        List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
         ref
             .read(postControllerProvider.notifier)
             .getListPostUserPage(id, {"exclude_replies": true, "limit": 5});
@@ -79,6 +81,7 @@ class _UserPageState extends ConsumerState<UserPage> {
         var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
         var pinNew = await PostApi().getListPostPinApi(id) ?? [];
         setState(() {
+          lifeEvent = lifeEventNew;
           postUser = postUserNew;
           userData = userDataNew;
           userAbout = userAboutNew;
@@ -128,7 +131,7 @@ class _UserPageState extends ConsumerState<UserPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    var userAbout = ref.watch(userInformationProvider).userMoreInfor;
+    // var userAbout = ref.watch(userInformationProvider).userMoreInfor;
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
       postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
@@ -213,8 +216,29 @@ class _UserPageState extends ConsumerState<UserPage> {
                 ),
               ),
               const CrossBar(),
+              Row(
+                children: const [
+                  SizedBox(
+                    child: ChipMenu(
+                      isSelected: true,
+                      label: "Bài viết",
+                    ),
+                  ),
+                  SizedBox(
+                    child: ChipMenu(
+                      isSelected: false,
+                      label: "Ảnh",
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(
+                height: 20,
+                thickness: 1,
+              ),
               UserPageInfomationBlock(
                   user: userData,
+                  lifeEvent: lifeEvent,
                   userAbout: userAbout,
                   featureContents: featureContents),
               const CrossBar(),

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/providers/me_provider.dart';
-import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
@@ -65,16 +63,25 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
                   children: List.generate(
                     widget.pinPosts.length,
                     (index) => Container(
-                      width: size.width,
+                      width: size.width * 0.85,
+                      height: size.height * 0.5,
                       margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                       padding: const EdgeInsets.only(top: 15.0, bottom: 7.0),
                       decoration: BoxDecoration(
                           border: Border.all(width: 0.3, color: greyColor),
                           borderRadius: BorderRadius.circular(12.0)),
-                      child: Post(
-                        type: postPageUser,
-                        isHiddenCrossbar: true,
-                        post: widget.pinPosts[index],
+                      child: ClipRect(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          heightFactor: 1.0,
+                          widthFactor: 1.0,
+                          child: Post(
+                            type: postPageUser,
+                            isHiddenCrossbar: true,
+                            isHiddenFooter: true,
+                            post: widget.pinPosts[index],
+                          ),
+                        ),
                       ),
                     ),
                   ),

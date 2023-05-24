@@ -178,18 +178,20 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                       height: 180.0,
                                     ),
                                   )
-                                : ClipOval(
-                                    child: ExtendedImage.network(
-                                      recruitDetail['account']
-                                                  ['avatar_media'] !=
-                                              null
-                                          ? recruitDetail['account']
-                                              ['avatar_media']['url']
-                                          : recruitDetail['account']
-                                              ['avatar_static'],
-                                      fit: BoxFit.cover,
-                                      width: 180.0,
-                                      height: 180.0,
+                                : Center(
+                                    child: ClipOval(
+                                      child: ExtendedImage.network(
+                                        recruitDetail['account']
+                                                    ['avatar_media'] !=
+                                                null
+                                            ? recruitDetail['account']
+                                                ['avatar_media']['url']
+                                            : recruitDetail['account']
+                                                ['avatar_static'],
+                                        fit: BoxFit.cover,
+                                        width: 180.0,
+                                        height: 180.0,
+                                      ),
                                     ),
                                   ),
                           ],
