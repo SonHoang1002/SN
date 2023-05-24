@@ -97,17 +97,22 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                               top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                           child: CardComponents(
                             type: 'homeScreen',
-                            imageCard: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15)),
-                              child: ExtendedImage.network(
-                                courseInvitations[index]['course']['banner'] !=
-                                        null
-                                    ? courseInvitations[index]['course']
-                                        ['banner']['url']
-                                    : linkBannerDefault,
-                                fit: BoxFit.cover,
+                            imageCard: SizedBox(
+                              height: 180,
+                              width: width,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15)),
+                                child: ExtendedImage.network(
+                                  courseInvitations[index]['course']
+                                              ['banner'] !=
+                                          null
+                                      ? courseInvitations[index]['course']
+                                          ['banner']['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                             onTap: () {

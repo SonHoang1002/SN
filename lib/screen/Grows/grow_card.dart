@@ -98,15 +98,19 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                               top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                           child: CardComponents(
                             type: 'homeScreen',
-                            imageCard: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15)),
-                              child: ExtendedImage.network(
-                                grows[indexInteresting]['banner'] != null
-                                    ? grows[indexInteresting]['banner']['url']
-                                    : linkBannerDefault,
-                                fit: BoxFit.cover,
+                            imageCard: SizedBox(
+                              height: 180,
+                              width: width,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15)),
+                                child: ExtendedImage.network(
+                                  grows[indexInteresting]['banner'] != null
+                                      ? grows[indexInteresting]['banner']['url']
+                                      : linkBannerDefault,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                             onTap: () {

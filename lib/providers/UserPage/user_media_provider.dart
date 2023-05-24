@@ -47,68 +47,76 @@ class UserMediaState {
   }
 }
 
+final userMediaControllerProvider =
+    StateNotifierProvider.autoDispose<UserMediaController, UserMediaState>(
+        (ref) {
+  return UserMediaController();
+});
+
 class UserMediaController extends StateNotifier<UserMediaState> {
   UserMediaController() : super(const UserMediaState());
 
-  getMediaUser(idUser, params, type) async {
-    switch (type) {
-      case 'photo':
-        var response = await UserPageApi().getUserMedia(idUser, params);
-        if (response != null && mounted) {
-          state = state.copyWith(
-              photoUser: state.photoUser,
-              isMorePhotoUser: state.isMorePhotoUser,
-              albumUser: state.albumUser,
-              isMoreAlbumUser: state.isMoreAlbumUser,
-              videoUser: state.videoUser,
-              isMoreVideoUser: state.isMoreVideoUser,
-              momentUser: state.momentUser,
-              isMoreMomentUser: state.isMoreMomentUser);
-        }
-        break;
-      case 'album':
-        var response = await UserPageApi().getUserMedia(idUser, params);
-        if (response != null && mounted) {
-          state = state.copyWith(
-              photoUser: state.photoUser,
-              isMorePhotoUser: state.isMorePhotoUser,
-              albumUser: state.albumUser,
-              isMoreAlbumUser: state.isMoreAlbumUser,
-              videoUser: state.videoUser,
-              isMoreVideoUser: state.isMoreVideoUser,
-              momentUser: state.momentUser,
-              isMoreMomentUser: state.isMoreMomentUser);
-        }
-        break;
-      case 'video':
-        var response = await UserPageApi().getUserMedia(idUser, params);
-        if (response != null && mounted) {
-          state = state.copyWith(
-              photoUser: state.photoUser,
-              isMorePhotoUser: state.isMorePhotoUser,
-              albumUser: state.albumUser,
-              isMoreAlbumUser: state.isMoreAlbumUser,
-              videoUser: state.videoUser,
-              isMoreVideoUser: state.isMoreVideoUser,
-              momentUser: state.momentUser,
-              isMoreMomentUser: state.isMoreMomentUser);
-        }
-        break;
-      case 'moment':
-        var response = await UserPageApi().getUserMedia(idUser, params);
-        if (response != null && mounted) {
-          state = state.copyWith(
-              photoUser: state.photoUser,
-              isMorePhotoUser: state.isMorePhotoUser,
-              albumUser: state.albumUser,
-              isMoreAlbumUser: state.isMoreAlbumUser,
-              videoUser: state.videoUser,
-              isMoreVideoUser: state.isMoreVideoUser,
-              momentUser: state.momentUser,
-              isMoreMomentUser: state.isMoreMomentUser);
-        }
-        break;
-      default:
+  getUserPhoto(id, params) async {
+    List response = await UserPageApi().getUserMedia(id, params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        photoUser: response,
+        isMorePhotoUser: state.isMorePhotoUser,
+        albumUser: state.albumUser,
+        isMoreAlbumUser: state.isMoreAlbumUser,
+        videoUser: state.videoUser,
+        isMoreVideoUser: state.isMoreVideoUser,
+        momentUser: state.momentUser,
+        isMoreMomentUser: state.isMoreMomentUser,
+      );
+    }
+  }
+
+  getUserAlbum(id, params) async {
+    List response = await UserPageApi().getUserAlbum(id, params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        photoUser: state.photoUser,
+        isMorePhotoUser: state.isMorePhotoUser,
+        albumUser: response,
+        isMoreAlbumUser: state.isMoreAlbumUser,
+        videoUser: state.videoUser,
+        isMoreVideoUser: state.isMoreVideoUser,
+        momentUser: state.momentUser,
+        isMoreMomentUser: state.isMoreMomentUser,
+      );
+    }
+  }
+
+  getUserVideo(id, params) async {
+    List response = await UserPageApi().getUserMedia(id, params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        photoUser: state.photoUser,
+        isMorePhotoUser: state.isMorePhotoUser,
+        albumUser: state.albumUser,
+        isMoreAlbumUser: state.isMoreAlbumUser,
+        videoUser: response,
+        isMoreVideoUser: state.isMoreVideoUser,
+        momentUser: state.momentUser,
+        isMoreMomentUser: state.isMoreMomentUser,
+      );
+    }
+  }
+
+  getUserMoment(id, params) async {
+    List response = await UserPageApi().getUserMedia(id, params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        photoUser: state.photoUser,
+        isMorePhotoUser: state.isMorePhotoUser,
+        albumUser: state.albumUser,
+        isMoreAlbumUser: state.isMoreAlbumUser,
+        videoUser: state.videoUser,
+        isMoreVideoUser: state.isMoreVideoUser,
+        momentUser: response,
+        isMoreMomentUser: state.isMoreMomentUser,
+      );
     }
   }
 }

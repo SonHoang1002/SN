@@ -107,14 +107,18 @@ class _LearnSpaceLibraryState extends ConsumerState<LearnSpaceLibrary> {
                                     right: 8.0,
                                     bottom: 8.0),
                                 child: CardComponents(
-                                  imageCard: ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15)),
-                                    child: ExtendedImage.network(
-                                      courseLibrary[index]['preview_url'] ??
-                                          linkBannerDefault,
-                                      fit: BoxFit.cover,
+                                  imageCard: SizedBox(
+                                    height: 180,
+                                    width: width,
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15)),
+                                      child: ExtendedImage.network(
+                                        courseLibrary[index]['preview_url'] ??
+                                            linkBannerDefault,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                   onTap: () async {

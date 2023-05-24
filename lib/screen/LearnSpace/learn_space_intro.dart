@@ -151,17 +151,20 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                         width:
                                             MediaQuery.of(context).size.width),
                                   )
-                                : ClipOval(
-                                    child: ExtendedImage.network(
-                                      courseDetail['account']['avatar_media'] !=
-                                              null
-                                          ? courseDetail['account']
-                                              ['avatar_media']['url']
-                                          : courseDetail['account']
-                                              ['avatar_static'],
-                                      fit: BoxFit.cover,
-                                      width: 180.0,
-                                      height: 180.0,
+                                : Center(
+                                    child: ClipOval(
+                                      child: ExtendedImage.network(
+                                        courseDetail['account']
+                                                    ['avatar_media'] !=
+                                                null
+                                            ? courseDetail['account']
+                                                ['avatar_media']['url']
+                                            : courseDetail['account']
+                                                ['avatar_static'],
+                                        fit: BoxFit.cover,
+                                        width: 180.0,
+                                        height: 180.0,
+                                      ),
                                     ),
                                   ),
                           ],

@@ -216,15 +216,19 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                               padding: const EdgeInsets.only(
                                   top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                               child: CardComponents(
-                                imageCard: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(15),
-                                      topRight: Radius.circular(15)),
-                                  child: ExtendedImage.network(
-                                    grows[indexOwner]['banner'] != null
-                                        ? grows[indexOwner]['banner']['url']
-                                        : linkBannerDefault,
-                                    fit: BoxFit.cover,
+                                imageCard: SizedBox(
+                                  height: 180,
+                                  width: width,
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15)),
+                                    child: ExtendedImage.network(
+                                      grows[indexOwner]['banner'] != null
+                                          ? grows[indexOwner]['banner']['url']
+                                          : linkBannerDefault,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                                 onTap: () {
@@ -324,18 +328,22 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                                       right: 8.0,
                                       bottom: 8.0),
                                   child: CardComponents(
-                                    imageCard: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(15),
-                                          topRight: Radius.circular(15)),
-                                      child: ExtendedImage.network(
-                                        growsUpcoming[indexUpcoming]
-                                                    ['banner'] !=
-                                                null
-                                            ? growsUpcoming[indexUpcoming]
-                                                ['banner']['url']
-                                            : linkBannerDefault,
-                                        fit: BoxFit.cover,
+                                    imageCard: SizedBox(
+                                      height: 180,
+                                      width: width,
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(15),
+                                            topRight: Radius.circular(15)),
+                                        child: ExtendedImage.network(
+                                          growsUpcoming[indexUpcoming]
+                                                      ['banner'] !=
+                                                  null
+                                              ? growsUpcoming[indexUpcoming]
+                                                  ['banner']['url']
+                                              : linkBannerDefault,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                     onTap: () {
@@ -441,16 +449,20 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                                       right: 8.0,
                                       bottom: 8.0),
                                   child: CardComponents(
-                                    imageCard: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(15),
-                                          topRight: Radius.circular(15)),
-                                      child: ExtendedImage.network(
-                                        growsPast[indexPast]['banner'] != null
-                                            ? growsPast[indexPast]['banner']
-                                                ['url']
-                                            : linkBannerDefault,
-                                        fit: BoxFit.cover,
+                                    imageCard: SizedBox(
+                                      height: 180,
+                                      width: width,
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(15),
+                                            topRight: Radius.circular(15)),
+                                        child: ExtendedImage.network(
+                                          growsPast[indexPast]['banner'] != null
+                                              ? growsPast[indexPast]['banner']
+                                                  ['url']
+                                              : linkBannerDefault,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                     onTap: () {

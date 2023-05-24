@@ -393,7 +393,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                     : Colors
                                                                         .white,
                                                             builder: (context) =>
-                                                                const InviteFriend());
+                                                                InviteFriend(
+                                                                    id: eventDetail[
+                                                                        'id'],
+                                                                    type:
+                                                                        'event'));
                                                       },
                                                       child: Container(
                                                           height: 32,
@@ -505,7 +509,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                             SizedBox(
                                                                               height: height * 0.9,
                                                                               width: width,
-                                                                              child: ActionEllipsis(menuSelected: iconActionEllipsis[index]),
+                                                                              child: ActionEllipsis(menuSelected: iconActionEllipsis[index], type: 'event', data: eventDetail),
                                                                             ));
                                                               } else if (iconActionEllipsis[
                                                                           index]
