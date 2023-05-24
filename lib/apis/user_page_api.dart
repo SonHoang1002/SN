@@ -13,6 +13,11 @@ class UserPageApi {
         .getRequestBase('/api/v1/accounts/$accountId/statuses', params);
   }
 
+  Future getListLifeEvent(accountId) async {
+    return await Api()
+        .getRequestBase('/api/v1/accounts/$accountId/life_events', null);
+  }
+
   Future getAccountInfor(idUser) async {
     return await Api().getRequestBase('/api/v1/accounts/$idUser', null);
   }

@@ -218,18 +218,21 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                 0.91,
                                         height: 180.0,
                                       ))
-                                  : ClipOval(
-                                      child: ExtendedImage.network(
-                                      hosts[index]['account']['avatar_media'] !=
-                                              null
-                                          ? hosts[index]['account']
-                                              ['avatar_media']['url']
-                                          : hosts[index]['account']
-                                              ['avatar_static'],
-                                      fit: BoxFit.cover,
-                                      width: 180.0,
-                                      height: 180.0,
-                                    )),
+                                  : Center(
+                                      child: ClipOval(
+                                          child: ExtendedImage.network(
+                                        hosts[index]['account']
+                                                    ['avatar_media'] !=
+                                                null
+                                            ? hosts[index]['account']
+                                                ['avatar_media']['url']
+                                            : hosts[index]['account']
+                                                ['avatar_static'],
+                                        fit: BoxFit.cover,
+                                        width: 180.0,
+                                        height: 180.0,
+                                      )),
+                                    ),
                             ],
                           ),
                           textCard: Column(

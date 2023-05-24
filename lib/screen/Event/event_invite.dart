@@ -182,17 +182,21 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                 top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                             child: CardComponents(
                               type: 'homeScreen',
-                              imageCard: ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15)),
-                                child: ImageCacheRender(
-                                  path: events[indexInteresting]['event']
-                                              ['banner'] !=
-                                          null
-                                      ? events[indexInteresting]['event']
-                                          ['banner']['url']
-                                      : linkBannerDefault,
+                              imageCard: SizedBox(
+                                height: 180,
+                                width: width,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15)),
+                                  child: ImageCacheRender(
+                                    path: events[indexInteresting]['event']
+                                                ['banner'] !=
+                                            null
+                                        ? events[indexInteresting]['event']
+                                            ['banner']['url']
+                                        : linkBannerDefault,
+                                  ),
                                 ),
                               ),
                               onTap: () {
@@ -673,17 +677,21 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                   top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                               child: CardComponents(
                                 type: 'homeScreen',
-                                imageCard: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(15),
-                                      topRight: Radius.circular(15)),
-                                  child: ImageCacheRender(
-                                    path: eventsInviteHost[indexHost]['event']
-                                                ['banner'] !=
-                                            null
-                                        ? eventsInviteHost[indexHost]['event']
-                                            ['banner']['url']
-                                        : linkBannerDefault,
+                                imageCard: SizedBox(
+                                  height: 180,
+                                  width: width,
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15)),
+                                    child: ImageCacheRender(
+                                      path: eventsInviteHost[indexHost]['event']
+                                                  ['banner'] !=
+                                              null
+                                          ? eventsInviteHost[indexHost]['event']
+                                              ['banner']['url']
+                                          : linkBannerDefault,
+                                    ),
                                   ),
                                 ),
                                 onTap: () {
