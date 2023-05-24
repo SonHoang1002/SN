@@ -21,15 +21,16 @@ import 'package:flutter/services.dart';
 ///
 class GalleryView extends StatefulWidget {
   ///
-  const GalleryView({
-    Key? key,
-    this.controller,
-    this.setting,
-    this.isMutipleFile,
-    this.handleGetFiles,
-    this.filesSelected,
-    this.typePage,
-  }) : super(key: key);
+  const GalleryView(
+      {Key? key,
+      this.controller,
+      this.setting,
+      this.isMutipleFile,
+      this.handleGetFiles,
+      this.filesSelected,
+      this.typePage,
+      this.type})
+      : super(key: key);
 
   /// Gallery controller
   final GalleryController? controller;
@@ -41,6 +42,8 @@ class GalleryView extends StatefulWidget {
   final Function? handleGetFiles;
   final List? filesSelected;
   final String? typePage;
+
+  final dynamic type;
 
   ///
   static const String name = 'GalleryView';

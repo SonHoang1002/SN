@@ -455,7 +455,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             )),
         title: InkWell(
           onTap: () {
-            if (pageData['page_relationship']['role'] == 'admin') {
+            if (pageData?['page_relationship']?['role'] == 'admin') {
               showModalSwitchRole(context, listSwitch, rolePage);
             }
           },
@@ -464,7 +464,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontSize: 15)),
-            if (pageData['page_relationship']['role'] == 'admin')
+            if (pageData?['page_relationship']?['role'] == 'admin')
               const Padding(
                 padding: EdgeInsets.only(left: 8.0),
                 child: Icon(

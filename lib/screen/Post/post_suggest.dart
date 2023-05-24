@@ -17,8 +17,8 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dar
 class PostSuggest extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
-  final Function? function;
-  const PostSuggest({Key? key, this.post, this.type, this.function})
+  final Function? renderFunction;
+  const PostSuggest({Key? key, this.post, this.type, this.renderFunction})
       : super(key: key);
 
   @override
@@ -296,7 +296,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         isShow = true;
       });
     } else {
-      widget.function != null ? widget.function!() : null;
+      widget.renderFunction != null ? widget.renderFunction!() : null;
     }
     return result;
   }

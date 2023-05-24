@@ -45,7 +45,7 @@ class GridViewBuilderMedia extends StatelessWidget {
                 ? Stack(
                     fit: StackFit.expand,
                     children: [
-                      medias[0]['subType'] == 'local'
+                      medias[indexBg]['subType'] == 'local'
                           ? Image.file(
                               medias[indexBg]['file'],
                               fit: BoxFit.cover,

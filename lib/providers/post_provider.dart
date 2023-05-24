@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -147,6 +148,13 @@ class PostController extends StateNotifier<PostState> {
     if (preType == feedPost || preType == postDetailFromFeed) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (preType == postPageUser || preType == postDetailFromUserPage) {
+      if (state.postsPin.isNotEmpty) {
+        index =
+            state.postsPin.indexWhere((element) => element['id'] == data['id']);
+        if (index != -1) {
+          state.postsPin[index] = data;
+        }
+      }
       index = state.postUserPage
           .indexWhere((element) => element['id'] == data['id']);
     }
@@ -177,7 +185,7 @@ class PostController extends StateNotifier<PostState> {
   }
 
   actionUpdateDetailInPost(dynamic type, dynamic data,
-      {dynamic preType}) async { 
+      {dynamic preType}) async {
     int index = -1;
     if (type == feedPost ||
         (preType != null && preType == postDetailFromFeed) ||
@@ -186,6 +194,13 @@ class PostController extends StateNotifier<PostState> {
     } else if (type == postPageUser ||
         (preType != null && preType == postDetailFromUserPage) ||
         (type == postMultipleMedia && preType == postPageUser)) {
+      if (state.postsPin.isNotEmpty) {
+        index =
+            state.postsPin.indexWhere((element) => element['id'] == data['id']);
+        if (index != -1) {
+          state.postsPin[index] = data;
+        }
+      }
       index = state.postUserPage
           .indexWhere((element) => element['id'] == data['id']);
     }
@@ -222,6 +237,13 @@ class PostController extends StateNotifier<PostState> {
     if (type == feedPost) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (type == postPageUser) {
+      if (state.postsPin.isNotEmpty) {
+        index =
+            state.postsPin.indexWhere((element) => element['id'] == data['id']);
+        if (index != -1) {
+          state.postsPin.removeAt(index);
+        }
+      }
       index = state.postUserPage
           .indexWhere((element) => element['id'] == data['id']);
     }
@@ -247,11 +269,37 @@ class PostController extends StateNotifier<PostState> {
     }
   }
 
+  actionFriendModerationPost(type, data) {
+    int index = -1;
+    if (type == feedPost) {
+      index = state.posts.indexWhere((element) => element['id'] == data['id']);
+      state.posts[index] = data;
+    } else if (type == postPageUser) {
+      if (state.postsPin.isNotEmpty) {
+        index =
+            state.postsPin.indexWhere((element) => element['id'] == data['id']);
+        state.postsPin[index] = data;
+      }
+      index = state.postUserPage
+          .indexWhere((element) => element['id'] == data['id']);
+      if (index != -1) {
+        state.postUserPage[index] = data;
+      }
+    }
+  }
+
   actionUpdatePost(type, data) {
     int index = -1;
     if (type == feedPost) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (type == postPageUser) {
+      if (state.postsPin.isNotEmpty) {
+        index =
+            state.postsPin.indexWhere((element) => element['id'] == data['id']);
+        if (index != -1) {
+          state.postsPin[index] = data;
+        }
+      }
       index = state.postUserPage
           .indexWhere((element) => element['id'] == data['id']);
     }
@@ -297,5 +345,13 @@ class PostController extends StateNotifier<PostState> {
           postUserPage: type == 'user' ? [] : state.posts,
           isMoreUserPage: type == 'user' ? true : false);
     }
+  }
+
+  signPollPost(dynamic pollId, dynamic params, dynamic type) async {
+    final response = await PostApi().signPollPost(pollId, params);
+  }
+
+  updatePollPost(dynamic pollId, dynamic params, dynamic type) async {
+    final response = await PostApi().updatePollPost(pollId, params);
   }
 }

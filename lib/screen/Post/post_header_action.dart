@@ -191,9 +191,8 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       } else {
         ref
             .read(postControllerProvider.notifier)
-            .actionHiddenDeletePost(widget.type, response);
+            .actionFriendModerationPost(widget.type, response);
       }
-
       if (response != null && mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context)

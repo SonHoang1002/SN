@@ -1,49 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 
 // FlutterPolls widget.
 // This widget is used to display a poll.
 // It can be used in any way and also in a [ListView] or [Column].
 class FlutterPolls extends HookWidget {
-  const FlutterPolls({
-    super.key,
-    required this.pollId,
-    this.hasVoted = false,
-    this.userVotedOptionId,
-    required this.onVoted,
-    this.loadingWidget,
-    required this.pollTitle,
-    this.heightBetweenTitleAndOptions = 10,
-    required this.pollOptions,
-    this.heightBetweenOptions,
-    this.votesText = 'bình chọn',
-    this.votesTextStyle,
-    this.metaWidget,
-    this.createdBy,
-    this.userToVote,
-    this.pollStartDate,
-    this.pollEnded = false,
-    this.pollOptionsHeight = 36,
-    this.pollOptionsWidth,
-    this.pollOptionsBorderRadius,
-    this.pollOptionsFillColor,
-    this.pollOptionsSplashColor = Colors.grey,
-    this.pollOptionsBorder,
-    this.votedPollOptionsRadius,
-    this.votedBackgroundColor = const Color(0xffEEF0EB),
-    this.votedProgressColor = const Color(0xff84D2F6),
-    this.leadingVotedProgessColor = secondaryColor,
-    this.votedCheckmark,
-    this.votedPercentageTextStyle,
-    this.votedAnimationDuration = 1000,
-  }) : _isloading = false;
-     
+  FlutterPolls(
+      {super.key,
+      required this.pollId,
+      this.hasVoted = false,
+      this.userVotedOptionId,
+      required this.onVoted,
+      this.allData,
+      this.role,
+      this.loadingWidget,
+      required this.pollTitle,
+      this.heightBetweenTitleAndOptions = 10,
+      required this.pollOptions,
+      this.heightBetweenOptions,
+      this.votesText = 'bình chọn',
+      this.votesTextStyle,
+      this.metaWidget,
+      this.createdBy,
+      this.userToVote,
+      this.pollStartDate,
+      this.pollEnded = false,
+      this.pollOptionsHeight = 36,
+      this.pollOptionsWidth,
+      this.pollOptionsBorderRadius,
+      this.pollOptionsFillColor,
+      this.pollOptionsSplashColor = Colors.grey,
+      this.pollOptionsBorder,
+      this.votedPollOptionsRadius,
+      this.votedBackgroundColor = const Color(0xffEEF0EB),
+      this.votedProgressColor = const Color(0xff84D2F6),
+      this.leadingVotedProgessColor = secondaryColor,
+      this.votedCheckmark,
+      this.votedPercentageTextStyle,
+      this.votedAnimationDuration = 1000,
+      this.removeFunction,
+      this.addSelectionFunction,
+      this.signPollPostFunction,
+      this.updatePollPost})
+      : _isloading = false;
+
   /// The id of the poll.
   /// This id is used to identify the poll.
   /// It is also used to check if a user has already voted in this poll.
   final String? pollId;
+
+  final String? role;
+
+  final dynamic allData;
 
   /// Checks if a user has already voted in this poll.
   /// If this is set to true, the user can't vote in this poll.
@@ -203,6 +216,17 @@ class FlutterPolls extends HookWidget {
   /// Visible until the [onVoted] execution is completed,
   final Widget? loadingWidget;
 
+  /// removeFunction will be called to remove poll options when role is 'Admin'
+  final Function? removeFunction;
+
+  /// addSelectionFunction will be called  to add selection for poll options when role is 'Admin'
+  final Function? addSelectionFunction;
+
+  final Function? signPollPostFunction;
+
+  final Function? updatePollPost;
+
+  TextEditingController newController = TextEditingController(text: '');
   @override
   Widget build(BuildContext context) {
     final hasPollEnded = useState(pollEnded);
@@ -232,136 +256,189 @@ class FlutterPolls extends HookWidget {
           ...pollOptions.map(
             (pollOption) {
               if (hasVoted && userVotedOptionId == null) {
-                throw ('>>>Flutter Polls: User has voted but [userVotedOption] is null.<<<');
+                throw ('>>>Having "hasVoted" property require "userVotedOptionId" property !=null<<<');
               } else {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child: userHasVoted.value || hasPollEnded.value
-                      ? Container(
-                          key: UniqueKey(),
-                          margin: EdgeInsets.only(
-                            bottom: heightBetweenOptions ?? 8,
-                          ),
-                          child: LinearPercentIndicator(
-                            width: pollOptionsWidth,
-                            lineHeight: pollOptionsHeight!,
-                            barRadius: votedPollOptionsRadius ??
-                                const Radius.circular(8),
-                            padding: EdgeInsets.zero,
-                            percent: totalVotes.value == 0
-                                ? 0
-                                : pollOption.votes / totalVotes.value,
-                            animation: true,
-                            animationDuration: votedAnimationDuration,
-                            backgroundColor: votedBackgroundColor,
-                            progressColor: pollOption.votes ==
-                                    pollOptions
-                                        .reduce(
-                                          (max, option) =>
-                                              max.votes > option.votes
-                                                  ? max
-                                                  : option,
-                                        )
-                                        .votes
-                                ? leadingVotedProgessColor
-                                : votedProgressColor,
-                            center: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                              ),
-                              child: Row(
-                                children: [
-                                  pollOption.title,
-                                  const SizedBox(width: 10),
-                                  if (votedOption.value != null &&
-                                      votedOption.value?.id == pollOption.id)
-                                    votedCheckmark ??
-                                        const Icon(
-                                          Icons.check_circle_outline_rounded,
-                                          color: Colors.black,
-                                          size: 16,
-                                        ),
-                                  const Spacer(),
-                                  Text(
-                                    totalVotes.value == 0
-                                        ? "0 $votesText"
-                                        : '${(pollOption.votes / totalVotes.value * 100).toStringAsFixed(1)}%',
-                                    style: votedPercentageTextStyle,
+                return Row(
+                  children: [
+                    Expanded(
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: userHasVoted.value || hasPollEnded.value
+                            ? InkWell(
+                                onTap: () async {
+                                  if (pollOption.votes != 0 &&
+                                      userHasVoted.value == true) {
+                                    pollOption.votes--;
+                                    totalVotes.value--;
+                                    userHasVoted.value = false;
+                                    updatePollPost != null
+                                        ? updatePollPost!({'choices': []})
+                                        : null;
+                                  }
+                                },
+                                child: Container(
+                                  key: UniqueKey(),
+                                  margin: EdgeInsets.only(
+                                    bottom: heightBetweenOptions ?? 8,
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(
-                          key: UniqueKey(),
-                          margin: EdgeInsets.only(
-                            bottom: heightBetweenOptions ?? 8,
-                          ),
-                          child: InkWell(
-                            onTap: () async {
-                              // Disables clicking while loading
-                              if (isLoading.value) return;
-
-                              votedOption.value = pollOption;
-
-                              isLoading.value = true;
-
-                              bool success = await onVoted(
-                                votedOption.value!,
-                                totalVotes.value,
-                              );
-
-                              isLoading.value = false;
-
-                              if (success) {
-                                pollOption.votes++;
-                                totalVotes.value++;
-                                userHasVoted.value = true;
-                              }
-                            },
-                            splashColor: pollOptionsSplashColor,
-                            borderRadius: pollOptionsBorderRadius ??
-                                BorderRadius.circular(
-                                  8,
-                                ),
-                            child: Container(
-                              height: pollOptionsHeight,
-                              width: pollOptionsWidth,
-                              padding: EdgeInsets.zero,
-                              decoration: BoxDecoration(
-                                color: pollOptionsFillColor,
-                                border: pollOptionsBorder ??
-                                    Border.all(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
-                                borderRadius: pollOptionsBorderRadius ??
-                                    BorderRadius.circular(
-                                      8,
-                                    ),
-                              ),
-                              child: Center(
-                                child: isLoading.value &&
-                                        pollOption.id == votedOption.value!.id
-                                    ? loadingWidget ??
-                                        const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
+                                  child: LinearPercentIndicator(
+                                    width: pollOptionsWidth,
+                                    lineHeight: pollOptionsHeight!,
+                                    barRadius: votedPollOptionsRadius ??
+                                        const Radius.circular(8),
+                                    padding: EdgeInsets.zero,
+                                    percent: totalVotes.value == 0
+                                        ? 0
+                                        : pollOption.votes / totalVotes.value,
+                                    animation: true,
+                                    animationDuration: votedAnimationDuration,
+                                    backgroundColor: votedBackgroundColor,
+                                    progressColor: pollOption.votes ==
+                                            pollOptions
+                                                .reduce(
+                                                  (max, option) =>
+                                                      max.votes > option.votes
+                                                          ? max
+                                                          : option,
+                                                )
+                                                .votes
+                                        ? leadingVotedProgessColor
+                                        : votedProgressColor,
+                                    center: Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 14,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          pollOption.title,
+                                          const SizedBox(width: 10),
+                                          // if (votedOption.value != null &&
+                                          //     votedOption.value?.id == pollOption.id)
+                                          //   votedCheckmark ??
+                                          //       const Icon(
+                                          //         Icons.check_circle_outline_rounded,
+                                          //         color: Colors.black,
+                                          //         size: 16,
+                                          //       ),
+                                          const Spacer(),
+                                          Text(
+                                            totalVotes.value == 0
+                                                ? "0 $votesText"
+                                                : '${(pollOption.votes / totalVotes.value * 100).toStringAsFixed(1)}%',
+                                            style: votedPercentageTextStyle,
                                           ),
-                                        )
-                                    : pollOption.title,
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                key: UniqueKey(),
+                                margin: EdgeInsets.only(
+                                  bottom: heightBetweenOptions ?? 8,
+                                ),
+                                child: InkWell(
+                                  onTap: () async {
+                                    // Disables clicking while loading
+                                    if (isLoading.value) return;
+                                    if (userHasVoted.value == false) {
+                                      votedOption.value = pollOption;
+                                      isLoading.value = true;
+                                      bool success = await onVoted(
+                                        votedOption.value!,
+                                        totalVotes.value,
+                                      );
+                                      isLoading.value = false;
+                                      if (success) {
+                                        pollOption.votes++;
+                                        totalVotes.value++;
+                                        userHasVoted.value = true;
+                                        // 00000000
+                                        signPollPostFunction != null
+                                            ? signPollPostFunction!({
+                                                'choices': [pollOption.id]
+                                              })
+                                            : null;
+                                      }
+                                    } else {
+                                      pollOption.votes--;
+                                      totalVotes.value--;
+                                      userHasVoted.value = false;
+                                    }
+                                  },
+                                  splashColor: pollOptionsSplashColor,
+                                  borderRadius: pollOptionsBorderRadius ??
+                                      BorderRadius.circular(
+                                        8,
+                                      ),
+                                  child: Container(
+                                    height: pollOptionsHeight,
+                                    width: pollOptionsWidth,
+                                    padding: EdgeInsets.zero,
+                                    decoration: BoxDecoration(
+                                      color: pollOptionsFillColor,
+                                      border: pollOptionsBorder ??
+                                          Border.all(
+                                            color: Colors.black,
+                                            width: 1,
+                                          ),
+                                      borderRadius: pollOptionsBorderRadius ??
+                                          BorderRadius.circular(
+                                            8,
+                                          ),
+                                    ),
+                                    child: Center(
+                                      child: isLoading.value &&
+                                              pollOption.id ==
+                                                  votedOption.value!.id
+                                          ? loadingWidget ??
+                                              const SizedBox(
+                                                height: 20,
+                                                width: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                ),
+                                              )
+                                          : pollOption.title,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
+                      ),
+                    ),
+                    // role == "Admin"
+                    //     ? InkWell(
+                    //         onTap: () {
+                    //           removeFunction != null
+                    //               ? removeFunction!(
+                    //                   pollOptions.indexOf(pollOption))
+                    //               : null;
+                    //         },
+                    //         child: const Padding(
+                    //           padding: EdgeInsets.only(left: 10),
+                    //           child: Icon(FontAwesomeIcons.xmark, size: 20),
+                    //         ),
+                    //       )
+                    //     : const SizedBox()
+                  ],
                 );
               }
             },
           ),
+        // role == "Admin"
+        //     ? _buildInputPoll(newController, "Thêm lựa chọn thăm dò ý kiến...",
+        //         onEditingComplete: () {
+        //         hiddenKeyboard(context);
+        //         addSelectionFunction != null
+        //             ? addSelectionFunction!(
+        //                 {"title": newController.text, "votes_count": 0})
+        //             : null;
+        //         newController.text = '';
+        //       })
+        //     : const SizedBox(),
         const SizedBox(height: 4),
         Row(
           children: [
@@ -381,16 +458,65 @@ class FlutterPolls extends HookWidget {
       ],
     );
   }
+
+  Widget _buildInputPoll(TextEditingController controller, String hintText,
+      {double? height,
+      TextInputType? keyboardType,
+      Function? onEditingComplete}) {
+    return Row(
+      children: [
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 5),
+            height: height ?? 40,
+            child: TextFormField(
+              controller: controller,
+              maxLines: null,
+              keyboardType: keyboardType ?? TextInputType.text,
+              onChanged: (value) {},
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    )),
+                errorBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: red),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    )),
+                focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    )),
+                prefixIcon: const Icon(
+                  FontAwesomeIcons.add,
+                  size: 20,
+                ),
+                hintText: hintText,
+              ),
+              onEditingComplete: () {
+                onEditingComplete != null ? onEditingComplete() : null;
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class PollOption {
-  PollOption({
-    this.id,
-    required this.title,
-    required this.votes,
-  });
+  PollOption(
+      {this.id,
+      required this.title,
+      required this.votes,
+      required this.pollData});
 
   final int? id;
   final Widget title;
   int votes;
+  dynamic pollData;
 }

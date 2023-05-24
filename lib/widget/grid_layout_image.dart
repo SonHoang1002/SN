@@ -99,7 +99,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                               tag: medias[0]['id'],
                               child: ExtendedImage.network(
                                 medias[0]['url'],
-                                // fit: BoxFit.fitWidth,
+                                fit: BoxFit.fitWidth,
                                 width: checkHeightAndWidthOneImage(medias)[0],
                                 height: checkHeightAndWidthOneImage(medias)[1],
                               ),

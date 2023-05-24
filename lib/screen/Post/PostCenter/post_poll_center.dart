@@ -2,23 +2,53 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/post_poll.dart';
 
-class PostPollCenter extends StatefulWidget {
+const roleAdmin = "Admin";
+const roleGuest = "Guest";
+
+class PostPollCenter extends ConsumerStatefulWidget {
   final dynamic post;
-  const PostPollCenter({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostPollCenter({Key? key, this.post, this.type}) : super(key: key);
 
   @override
-  State<PostPollCenter> createState() => _PostPollCenterState();
+  ConsumerState<PostPollCenter> createState() => _PostPollCenterState();
 }
 
-class _PostPollCenterState extends State<PostPollCenter> {
+class _PostPollCenterState extends ConsumerState<PostPollCenter> {
   bool isUserVote = false;
+  String role = roleGuest;
+  dynamic poll;
+  @override
+  void initState() {
+    super.initState();
+    poll = widget.post['poll'];
+  }
+
+  signPollPost(dynamic params) {
+    ref
+        .read(postControllerProvider.notifier)
+        .signPollPost(poll['id'], params, widget.type);
+  }
+
+  updatePollPost(dynamic params) {
+    ref
+        .read(postControllerProvider.notifier)
+        .updatePollPost(poll['id'], params, widget.type);
+  }
+
   @override
   Widget build(BuildContext context) {
-    var poll = widget.post['poll'];
+    if (ref.watch(meControllerProvider)[0]['id'] ==
+        widget.post?["account"]?["id"]) {
+      role = roleAdmin;
+    }
     var timeStamps = DateTime.parse(poll['expires_at']).millisecondsSinceEpoch -
         DateTime.now().millisecondsSinceEpoch;
 
@@ -36,10 +66,14 @@ class _PostPollCenterState extends State<PostPollCenter> {
       margin: const EdgeInsets.only(left: 15, right: 15, top: 8, bottom: 8),
       child: FlutterPolls(
         pollId: widget.post['id'],
+        role: role,
         onVoted: (PollOption pollOption, int newTotalVotes) async {
           await Future.delayed(const Duration(seconds: 1), () {});
           return true;
         },
+        allData: poll,
+        signPollPostFunction: signPollPost,
+        updatePollPost: updatePollPost,
         pollOptionsSplashColor: Theme.of(context).colorScheme.background,
         votedProgressColor: Colors.grey.withOpacity(0.3),
         votedBackgroundColor: Colors.grey.withOpacity(0.2),
@@ -53,20 +87,36 @@ class _PostPollCenterState extends State<PostPollCenter> {
           fontSize: 13,
           fontWeight: FontWeight.w600,
         ),
+        removeFunction: (int index) {
+          if (poll['options'].length >= 3) {
+            setState(() {
+              poll["options"].removeAt(index);
+            });
+          }
+        },
+        addSelectionFunction: (dynamic newOptions) {
+          setState(() {
+            poll["options"].add(newOptions);
+          });
+        },
+        hasVoted: poll['own_votes'].isNotEmpty,
         pollTitle: const Text(''),
+        userVotedOptionId:
+            poll['own_votes'].isNotEmpty ? poll['own_votes'][0] : null,
         pollOptions: poll['options'].map<PollOption>(
           (option) {
             return PollOption(
-              title: Text(
-                option['title'],
-                style: TextStyle(
-                    fontSize: 16,
-                    color: isUserVote
-                        ? blueColor
-                        : Theme.of(context).textTheme.bodyMedium!.color),
-              ),
-              votes: option['votes_count'],
-            );
+                title: Text(
+                  option['title'],
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: isUserVote
+                          ? blueColor
+                          : Theme.of(context).textTheme.bodyMedium!.color),
+                ),
+                id: poll["options"].indexOf(option),
+                votes: option['votes_count'],
+                pollData: option);
           },
         ).toList(),
         metaWidget: Row(

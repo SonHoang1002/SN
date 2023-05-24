@@ -82,6 +82,27 @@ class _PollBodyState extends State<PollBody> {
       "multiple": _settingStatusList[1],
       "options": _selectionList.map((e) => e["inputController"].text).toList(),
     };
+    {
+      // "id": "97",
+      // "expires_at": "2023-05-30T22:30:28.876+07:00",
+      // "expired": false,
+      // "multiple": true,
+      // "votes_count": 0,
+      // "voters_count": 4,
+      // "voted": true,
+      // "own_votes": [],
+      // "options": [
+      //   {
+      //     "title": "1",
+      //     "votes_count": 0
+      //   },
+      //   {
+      //     "title": "2",
+      //     "votes_count": 0
+      //   }
+      // ],
+      // "emojis": []
+    }
 
     if (_selectedTime != null && _selectedTime.isNotEmpty) {
       int timeCount;

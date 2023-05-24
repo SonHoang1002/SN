@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -17,6 +16,7 @@ import 'package:social_network_app_mobile/widget/Suggestions/suggest_center.dart
 import 'package:social_network_app_mobile/widget/Suggestions/suggest_footer.dart';
 import 'package:social_network_app_mobile/widget/Suggestions/suggest_header.dart';
 import 'package:social_network_app_mobile/widget/button_primary.dart';
+import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
 class Suggest extends ConsumerStatefulWidget {
   final dynamic type;
@@ -132,39 +132,49 @@ class _SuggestState extends ConsumerState<Suggest> {
     }
     return _isShowSuggest
         ? listData.isNotEmpty
-            ? Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    SuggestHeader(
-                      settingFunction: () {
-                        _handleSettingHeader();
-                      },
-                      closeFunction: () {
-                        setState(() {
-                          _isShowSuggest = false;
-                        });
-                      },
-                      headerWidget: widget.headerWidget,
-                      subHeaderWidget: widget.subHeaderWidget,
+            ? Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      children: [
+                        SuggestHeader(
+                          settingFunction: () {
+                            _handleSettingHeader();
+                          },
+                          closeFunction: () {
+                            setState(() {
+                              _isShowSuggest = false;
+                            });
+                          },
+                          headerWidget: widget.headerWidget,
+                          subHeaderWidget: widget.subHeaderWidget,
+                        ),
+                        buildSpacer(height: 10),
+                        SuggestCenter(
+                            type: widget.type,
+                            suggestList: listData,
+                            viewportFraction: widget.viewportFraction,
+                            loadMoreFunction: () {
+                              _loadMoreData();
+                            },
+                            reloadFunction: () {
+                              widget.reloadFunction;
+                              setState(() {});
+                            }),
+                        buildSpacer(height: 10),
+                        SuggestFooter(
+                          suggestData: listData,
+                          title: widget.footerTitle,
+                          function: () {},
+                        )
+                      ],
                     ),
-                    buildSpacer(height: 10),
-                    SuggestCenter(
-                        type: widget.type,
-                        suggestList: listData,
-                        viewportFraction: widget.viewportFraction,
-                        loadMoreFunction: () {
-                          _loadMoreData();
-                        },
-                        reloadFunction: widget.reloadFunction),
-                    buildSpacer(height: 10),
-                    SuggestFooter(
-                      suggestData: listData,
-                      title: widget.footerTitle,
-                      function: () {},
-                    )
-                  ],
-                ),
+                  ),
+                  const CrossBar(
+                    height: 5,
+                  ),
+                ],
               )
             : const SizedBox()
         : GeneralComponent(

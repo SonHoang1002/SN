@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -26,9 +27,18 @@ import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/poll_body.d
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/question_anwer.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/page_edit_media_upload.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/avatar_banner.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_course.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_poll.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_product.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_project.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_recruit.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_share_event.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_share_group.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_share_page.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/PostType/post_target.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_life_event.dart';
+import 'package:social_network_app_mobile/screen/Post/PostCenter/post_share.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
@@ -44,6 +54,8 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import '../../../providers/create_feed/feed_draft_provider.dart';
 import 'package:dio/src/multipart_file.dart';
+
+const EDIT_POST = "edit_post";
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
@@ -86,6 +98,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   @override
   void initState() {
     super.initState();
+    if (widget.post != null) {
+      _isShow = false;
+    }
     final draftContent = ref.read(draftFeedController);
     gifLink = draftContent.gifLink;
     files = draftContent.files;
@@ -104,6 +119,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             (element) => element['key'] == widget.post['visibility']);
         lifeEvent = widget.post['life_event'];
         poll = widget.post["poll"];
+        // if (widget.post['media_attachments'].isNotEmpty) {
+        files = widget.post['media_attachments'];
+        // .map((ele) {
+        //     return ele['id'];
+        //   }).toList();
+        // }
         // statusQuestion =
         //     widget.post['status_question'] ?? widget.post['status_target'];
       });
@@ -191,47 +212,56 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       case 'update_visibility':
         setState(() {
           visibility = data;
+          _isShow = false;
         });
         break;
       case 'update_content':
         setState(() {
           content = data;
+          _isShow = false;
         });
 
         if (data.length > 150) {
           setState(() {
             backgroundSelected = null;
+            _isShow = false;
           });
         }
         break;
       case 'update_friend':
         setState(() {
           friendSelected = data;
+          _isShow = false;
         });
         break;
       case 'update_background':
         setState(() {
           backgroundSelected = data;
+          _isShow = false;
         });
         break;
       case 'update_gif':
         setState(() {
           gifLink = data;
+          _isShow = false;
         });
         break;
       case 'update_status_activity':
         setState(() {
           statusActivity = data;
+          _isShow = false;
         });
         break;
       case 'update_status_question':
         setState(() {
           statusQuestion = data;
+          _isShow = false;
         });
         break;
       case 'update_checkin':
         setState(() {
           checkin = data;
+          _isShow = false;
         });
         break;
       case 'update_file':
@@ -239,29 +269,39 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         List newFiles = [];
 
         for (var item in [...files, ...data]) {
-          if (!listPath.contains(item['file'].path)) {
+          if (!listPath.contains(item?['id'])) {
             newFiles.add(item);
-            listPath.add(item['file'].path);
-          }
+            listPath.add(item?['id']);
+          } else if (item['file'] != null) {
+            if (item['file'].path != null &&
+                !listPath.contains(item['file']!.path)) {
+              newFiles.add(item);
+              listPath.add(item['file']!.path);
+            }
+          } else {}
         }
 
         setState(() {
           files = newFiles;
+          _isShow = false;
         });
         break;
       case 'update_file_description':
         setState(() {
           files = data;
+          _isShow = false;
         });
         break;
       case 'update_poll':
         setState(() {
           poll = data;
+          _isShow = false;
         });
         break;
       case 'updateLifeEvent':
         setState(() {
           lifeEvent = data;
+          _isShow = false;
         });
     }
   }
@@ -275,37 +315,42 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   handleUploadMedia(index, file) async {
-    var fileData = file['file'];
-    String fileName = fileData!.path.split('/').last;
-    FormData formData;
+    if (file['file'] != null) {
+      var fileData = file['file'];
+      String fileName = fileData!.path.split('/').last;
+      FormData formData;
 
-    dynamic response;
-    if (file['type'] == 'image') {
-      formData = FormData.fromMap({
-        "description": file['description'] ?? '',
-        "position": index + 1,
-        "file": await MultipartFile.fromFile(fileData.path, filename: fileName),
-      });
-      response = await MediaApi().uploadMediaEmso(formData);
+      dynamic response;
+      if (file['type'] == 'image') {
+        formData = FormData.fromMap({
+          "description": file['description'] ?? '',
+          "position": index + 1,
+          "file":
+              await MultipartFile.fromFile(fileData.path, filename: fileName),
+        });
+        response = await MediaApi().uploadMediaEmso(formData);
+      } else {
+        setState(() {
+          isUploadVideo = true;
+        });
+
+        var userToken = await SecureStorage().getKeyStorage("token");
+        formData = FormData.fromMap({
+          "token": userToken,
+          "channelId": '2',
+          "privacy": '1',
+          "name": fileName,
+          "mimeType": "video/mp4",
+          "position": index + 1,
+          "videofile":
+              await MultipartFile.fromFile(fileData.path, filename: fileName),
+        });
+        response = await ApiMediaPetube().uploadMediaPetube(formData);
+      }
+      return response;
     } else {
-      setState(() {
-        isUploadVideo = true;
-      });
-
-      var userToken = await SecureStorage().getKeyStorage("token");
-      formData = FormData.fromMap({
-        "token": userToken,
-        "channelId": '2',
-        "privacy": '1',
-        "name": fileName,
-        "mimeType": "video/mp4",
-        "position": index + 1,
-        "videofile":
-            await MultipartFile.fromFile(fileData.path, filename: fileName),
-      });
-      response = await ApiMediaPetube().uploadMediaPetube(formData);
+      return file;
     }
-    return response;
   }
 
   handleCreatePost() async {
@@ -400,25 +445,76 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   handleUpdatePost() async {
     context.loaderOverlay.show();
-    dynamic data = {"content": content};
-    if (widget.post['visibility'] != visibility['key']) {
-      data['visibility'] = visibility['key'];
-    }
+// Trong đó: backdated_time: khi edit date sẽ lưu dữ liệu vào trường này và dùng trường này để sắp xếp thứ tự status
+//           off_comment: tắt bật tính năng bình luận bài viết
+//           comment_moderation: Bao gồm các giá trị public, friend, tag mặc định là public
+//           Nếu để friend thì chỉ có bạn bè mới đc comment, tag thì chỉ có người đc tag mới
+//           được comment. Chỉ có bài post trong trang cá nhân mới cập đc đc field này. Trường hợp bài
+//           viết trong page thì không có giá trị friend mà thay vào là follow, khi ở chế độ follow
+//           thì chỉ những người follow page trước 24h mới đc comment
+//           hidden : tắt bật tính năng ẩn hiện bài viết
+    dynamic newData = {
+      "id": widget.post['id'],
+      "media_ids": [],
+      "sensitive": false,
+      "visibility": null,
+      "extra_body": {},
+      "place_id": null,
+      "mention_ids": null,
+      "post_type": null,
+      "status_question": {
+        "content": "Hãy viết câu hỏi của bạn...",
+        "color": {}
+      },
+      'comment_moderation': 'public',
+      "tags": [],
+      "status": content,
+      "scheduled_at": null,
+      'hidden': null,
+      'status_background_id': null
+    };
+    if (files.isNotEmpty) {
+      List<Future> listUpload = [];
+      for (var i = 0; i < files.length; i++) {
+        listUpload.add(handleUploadMedia(i, files[i]));
+      }
+      var results = await Future.wait(listUpload);
+      List mediasId = [];
+      if (results.isNotEmpty) {
+        mediasId = results.map((e) => e['id']).toList();
+      }
 
+      newData['media_ids'] = mediasId;
+    }
+    if (widget.post['visibility'] != visibility['key']) {
+      newData['visibility'] = visibility['key'];
+    }
     if (backgroundSelected != null &&
         widget.post['status_background']?['id'] != backgroundSelected['id']) {
-      data['status_background_id'] = backgroundSelected['id'];
-    }
+      if (files.isNotEmpty ||
+          checkin == null ||
+          poll == null ||
+          lifeEvent == null ||
+          widget.post['shared_event'] == null ||
+          widget.post['shared_recruit'] == null ||
+          widget.post['shared_project'] == null ||
+          widget.post['shared_course'] == null ||
+          widget.post['shared_product'] == null ||
+          widget.post['shared_page'] == null ||
+          widget.post['shared_group'] == null) {
+        newData['status_background_id'] = backgroundSelected['id'];
+      }
+    } else {}
 
     if (gifLink.isNotEmpty) {
-      data["extra_body"] = {"description": "", "link": gifLink, "title": ""};
+      newData["extra_body"] = {"description": "", "link": gifLink, "title": ""};
     }
 
     if (statusActivity != null &&
         widget.post['status_activity']?['id'] != statusActivity['id']) {
-      data = {...data, 'status_activity_id': statusActivity['id']};
+      newData = {...newData, 'status_activity_id': statusActivity['id']};
     }
-    dynamic response = await PostApi().updatePost(widget.post['id'], data);
+    dynamic response = await PostApi().updatePost(widget.post['id'], newData);
     ref
         .read(postControllerProvider.notifier)
         .actionUpdateDetailInPost(widget.type, response);
@@ -467,12 +563,15 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   handleChooseMenu(menu, subType) {
     if (menu == null) return;
-
     if (menu['key'] == 'media') {
       Navigator.push(
           context,
           CupertinoPageRoute(
               builder: (context) => GalleryView(
+                  type: widget.post != null &&
+                          widget.post['media_attachments'].isNotEmpty
+                      ? "edit_post"
+                      : null,
                   isMutipleFile: true,
                   handleGetFiles: handleUpdateData,
                   filesSelected: files)));
@@ -548,80 +647,124 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   checkSaveDraft() {
     if (checkHasContent()) {
-      return showCupertinoModalPopup(
-          context: context,
-          builder: (context) {
-            return CupertinoAlertDialog(
-              title: buildTextContent(
-                  "Lưu bài viết này dưới dạng bản nháp ?", false,
-                  fontSize: 18, isCenterLeft: false),
-              content: buildTextContent(
-                  "Nếu bỏ bây giờ, bạn sẽ mất bài viết này.", false,
-                  fontSize: 14, isCenterLeft: false),
-              actions: [
-                Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Column(children: [
-                    CupertinoButton(
-                        child: buildTextContent("Lưu bản nháp", false,
-                            fontSize: 13, isCenterLeft: false),
-                        onPressed: () {
-                          ref.read(draftFeedController.notifier).saveDraftFeed(
-                              DraftFeed(
-                                  gifLink: gifLink,
-                                  files: files,
-                                  content: content,
-                                  checkin: checkin,
-                                  previewUrlData: previewUrlData,
-                                  poll: poll));
-                          popToPreviousScreen(context);
-                          popToPreviousScreen(context);
-                        }),
-                    buildDivider(color: greyColor),
-                    CupertinoButton(
-                        child: buildTextContent("Bỏ bài viết", false,
-                            fontSize: 13, colorWord: red, isCenterLeft: false),
-                        onPressed: () {
-                          ref
-                              .read(draftFeedController.notifier)
-                              .saveDraftFeed(DraftFeed(
-                                gifLink: "",
-                                files: [],
-                                content: "",
-                                checkin: null,
-                                previewUrlData: null,
-                              ));
-                          popToPreviousScreen(context);
-                          popToPreviousScreen(context);
-                        }),
-                    buildDivider(color: greyColor),
-                    CupertinoButton(
-                        child: buildTextContent("Tiếp tục chỉnh sửa", false,
-                            fontSize: 13, isCenterLeft: false),
-                        onPressed: () {
-                          popToPreviousScreen(context);
-                        }),
-                    buildDivider(color: greyColor),
-                    CupertinoButton(
-                        child: const Text("Hủy"),
-                        onPressed: () {
-                          popToPreviousScreen(context);
-                        }),
-                  ]),
-                )
-              ],
-            );
-          });
+      if (widget.post == null) {
+        return showCupertinoModalPopup(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: buildTextContent(
+                    "Lưu bài viết này dưới dạng bản nháp ?", false,
+                    fontSize: 18, isCenterLeft: false),
+                content: buildTextContent(
+                    "Nếu bỏ bây giờ, bạn sẽ mất bài viết này.", false,
+                    fontSize: 14, isCenterLeft: false),
+                actions: [
+                  Container(
+                    height: 192,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Column(children: [
+                      CupertinoButton(
+                          child: buildTextContent("Lưu bản nháp", false,
+                              fontSize: 13, isCenterLeft: false),
+                          onPressed: () {
+                            ref
+                                .read(draftFeedController.notifier)
+                                .saveDraftFeed(DraftFeed(
+                                    gifLink: gifLink,
+                                    files: files,
+                                    content: content,
+                                    checkin: checkin,
+                                    previewUrlData: previewUrlData,
+                                    poll: poll));
+                            popToPreviousScreen(context);
+                            popToPreviousScreen(context);
+                          }),
+                      buildDivider(color: greyColor),
+                      CupertinoButton(
+                          child: buildTextContent("Bỏ bài viết", false,
+                              fontSize: 13,
+                              colorWord: red,
+                              isCenterLeft: false),
+                          onPressed: () {
+                            ref
+                                .read(draftFeedController.notifier)
+                                .saveDraftFeed(DraftFeed(
+                                  gifLink: "",
+                                  files: [],
+                                  content: "",
+                                  checkin: null,
+                                  previewUrlData: null,
+                                ));
+                            popToPreviousScreen(context);
+                            popToPreviousScreen(context);
+                          }),
+                      buildDivider(color: greyColor),
+                      CupertinoButton(
+                          child: buildTextContent("Tiếp tục chỉnh sửa", false,
+                              fontSize: 13, isCenterLeft: false),
+                          onPressed: () {
+                            popToPreviousScreen(context);
+                          }),
+                      buildDivider(color: greyColor),
+                      CupertinoButton(
+                          child: buildTextContent("Hủy", false,
+                              fontSize: 13, isCenterLeft: false),
+                          onPressed: () {
+                            popToPreviousScreen(context);
+                          }),
+                    ]),
+                  )
+                ],
+              );
+            });
+      } else {
+        return showCupertinoModalPopup(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: buildTextContent("Bỏ thay đổi?", false,
+                    fontSize: 18, isCenterLeft: false),
+                content: buildTextContent(
+                    "Nếu bạn hủy bây giờ, thay đổi của bạn sẽ bị hủy bỏ", false,
+                    fontSize: 14, isCenterLeft: false),
+                actions: [
+                  Container(
+                    height: 96,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Column(children: [
+                      CupertinoButton(
+                          child: buildTextContent("Bỏ", false,
+                              fontSize: 13,
+                              isCenterLeft: false,
+                              colorWord: red),
+                          onPressed: () {
+                            popToPreviousScreen(context);
+                            popToPreviousScreen(context);
+                          }),
+                      buildDivider(color: greyColor),
+                      CupertinoButton(
+                          child: buildTextContent("Tiếp tục chỉnh sửa", false,
+                              fontSize: 13, isCenterLeft: false),
+                          onPressed: () {
+                            popToPreviousScreen(context);
+                          }),
+                    ]),
+                  )
+                ],
+              );
+            });
+      }
     } else {
       popToPreviousScreen(context);
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     final size = MediaQuery.of(context).size;
     height = size.height;
     width = size.width;
@@ -730,102 +873,180 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     showImage: showPreviewImage,
                   )
                 : const SizedBox(),
-            Column(
+            Stack(
               children: [
-                files.isNotEmpty
-                    ? GridLayoutImage(medias: files, handlePress: (media) {})
-                    : const SizedBox(),
-                gifLink.isNotEmpty
-                    ? ImageCacheRender(
-                        path: gifLink,
-                        width: size.width,
-                      )
-                    : const SizedBox(),
-                statusQuestion != null
-                    ? PostTarget(
-                        type: statusQuestion['postType'] == 'target'
-                            ? 'target_create'
-                            : postCreateQuestionAnwer,
-                        statusQuestion: statusQuestion,
-                      )
-                    : const SizedBox(),
-                poll != null
-                    ? PostPoll(
-                        pollData: poll,
-                        functionClose: () {
-                          setState(() {
-                            poll = null;
-                          });
-                        },
-                        functionAdditional: () {
-                          pushCustomCupertinoPageRoute(
-                              context,
-                              CreateModalBaseMenu(
-                                  title: "Thăm dò ý kiến",
-                                  body: PollBody(
-                                      handleUpdateData: handleUpdateData,
-                                      poll: poll,
-                                      type: widget.type!),
-                                  buttonAppbar: const SizedBox()));
-                        },
-                      )
-                    : const SizedBox(),
-                checkin != null
-                    ? MapWidgetItem(checkin: checkin)
-                    : const SizedBox(),
-                lifeEvent != null
-                    ? PostLifeEvent(
-                        post: {'life_event': lifeEvent},
-                      )
-                    : const SizedBox(),
-                if (gifLink.isNotEmpty ||
-                    files.isNotEmpty ||
-                    statusQuestion != null ||
-                    checkin != null)
-                  Container(
-                      margin: EdgeInsets.only(
-                          top: statusQuestion != null ? 20 : 10,
-                          right: statusQuestion != null ? 20 : 10),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            files = [];
-                            gifLink = '';
-                            statusQuestion = null;
-                            checkin = null;
-                            lifeEvent = null;
-                            menuSelected = null;
-                          });
-                        },
-                        child: Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.black.withOpacity(0.5)),
-                          child: const Icon(
-                            FontAwesomeIcons.xmark,
-                            color: white,
-                            size: 20,
+                Column(
+                  children: [
+                    files.isNotEmpty
+                        ? GridLayoutImage(
+                            medias: files, handlePress: (media) {})
+                        : const SizedBox(),
+                    gifLink.isNotEmpty
+                        ? ImageCacheRender(
+                            path: gifLink,
+                            width: size.width,
+                          )
+                        : const SizedBox(),
+                    statusQuestion != null
+                        ? PostTarget(
+                            type: statusQuestion['postType'] == 'target'
+                                ? 'target_create'
+                                : postCreateQuestionAnwer,
+                            statusQuestion: statusQuestion,
+                          )
+                        : const SizedBox(),
+                    poll != null
+                        ? PostPoll(
+                            pollData: poll,
+                            functionClose: () {
+                              setState(() {
+                                poll = null;
+                              });
+                            },
+                            functionAdditional: () {
+                              pushCustomCupertinoPageRoute(
+                                  context,
+                                  CreateModalBaseMenu(
+                                      title: "Thăm dò ý kiến",
+                                      body: PollBody(
+                                          handleUpdateData: handleUpdateData,
+                                          poll: poll,
+                                          type: widget.type!),
+                                      buttonAppbar: const SizedBox()));
+                            },
+                          )
+                        : const SizedBox(),
+                    checkin != null
+                        ? MapWidgetItem(checkin: checkin)
+                        : const SizedBox(),
+                    lifeEvent != null
+                        ? PostLifeEvent(
+                            post: {'life_event': lifeEvent},
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (files.isNotEmpty)
+                      Container(
+                          margin: const EdgeInsets.only(
+                            top: 2,
+                            left: 10,
                           ),
-                        ),
-                      )),
-                if (files.isNotEmpty)
-                  Container(
-                      margin: const EdgeInsets.only(
-                        top: 2,
-                        left: 10,
-                      ),
-                      child: SizedBox(
-                        width: 100,
-                        child: ButtonPrimary(
-                          isPrimary: true,
-                          label: "Chỉnh sửa",
-                          handlePress: handlePress,
-                        ),
-                      ))
+                          child: SizedBox(
+                            width: 100,
+                            child: ButtonPrimary(
+                              isPrimary: true,
+                              label: "Chỉnh sửa",
+                              handlePress: handlePress,
+                            ),
+                          )),
+                    if (gifLink.isNotEmpty ||
+                        files.isNotEmpty ||
+                        statusQuestion != null ||
+                        checkin != null)
+                      Container(
+                          margin: EdgeInsets.only(
+                              top: statusQuestion != null ? 20 : 10,
+                              right: statusQuestion != null ? 20 : 10),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                files = [];
+                                gifLink = '';
+                                statusQuestion = null;
+                                checkin = null;
+                                lifeEvent = null;
+                                menuSelected = null;
+                              });
+                            },
+                            child: Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.black.withOpacity(0.5)),
+                              child: const Icon(
+                                FontAwesomeIcons.xmark,
+                                color: white,
+                                size: 20,
+                              ),
+                            ),
+                          )),
+                  ],
+                )
               ],
             ),
+
+            widget.post != null && widget.post?['shared_course'] != null
+                ? PostCourse(
+                    post: widget.post,
+                    type: EDIT_POST,
+                  )
+                : const SizedBox(),
+            widget.post != null && widget.post?['shared_project'] != null
+                ? PostProject(
+                    post: widget.post,
+                    type: EDIT_POST,
+                  )
+                : const SizedBox(),
+            widget.post != null && widget.post?['shared_recruit'] != null
+                ? PostRecruit(
+                    post: widget.post,
+                    type: EDIT_POST,
+                  )
+                : const SizedBox(),
+            widget.post != null && widget.post['shared_group'] != null
+                ? PostShareGroup(
+                    post: widget.post,
+                    type: EDIT_POST,
+                  )
+                : const SizedBox(),
+            widget.post != null && widget.post['shared_page'] != null
+                ? PostSharePage(
+                    post: widget.post,
+                    type: EDIT_POST,
+                  )
+                : const SizedBox(),
+            widget.post != null && widget.post['reblog'] != null
+                ? PostShare(
+                    post: widget.post,
+                    type: EDIT_POST,
+                  )
+                : const SizedBox(),
+            // add navi to product when have market place
+            widget.post != null && widget.post?['shared_product'] != null
+                ? PostProduct(
+                    post: widget.post,
+                    type: EDIT_POST,
+                  )
+                : const SizedBox(),
+            widget.post != null && widget.post?['shared_event'] != null
+                ? PostShareEvent(
+                    post: widget.post,
+                    type: EDIT_POST,
+                  )
+                : const SizedBox(),
+            widget.post != null && widget.post['post_type'] != null
+                ? ([postAvatarAccount, postBannerAccount]
+                        .contains(widget.post['post_type'])
+                    ? AvatarBanner(
+                        postType: widget.post['post_type'], post: widget.post)
+                    : [postTarget, postVisibleQuestion]
+                            .contains(widget.post['post_type'])
+                        ? PostTarget(
+                            post: widget.post,
+                            type:
+                                widget.post['post_type'] == postVisibleQuestion
+                                    ? postQuestionAnwer
+                                    : postTarget,
+                            statusQuestion: widget.post['status_question'],
+                          )
+                        : const SizedBox())
+                : const SizedBox(),
+
             Container(
               height: 80,
               color: transparent,
@@ -1253,6 +1474,7 @@ class PreviewUrlPost extends StatelessWidget {
                 ? Image.network(
                     detailData["url"] ?? linkBannerDefault,
                     height: 200.0,
+                    fit: BoxFit.cover,
                     width: size.width,
                   )
                 : const SizedBox(),

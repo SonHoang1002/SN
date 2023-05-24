@@ -10,7 +10,8 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widg
 
 class PostShareEvent extends StatelessWidget {
   final dynamic post;
-  const PostShareEvent({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostShareEvent({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +20,13 @@ class PostShareEvent extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-                builder: (context) =>
-                    EventDetail(eventDetail: event, isUseEventData: true)));
+        type != 'edit_post'
+            ? Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) =>
+                        EventDetail(eventDetail: event, isUseEventData: true)))
+            : null;
       },
       child: Column(
         children: [

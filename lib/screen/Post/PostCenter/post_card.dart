@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -14,7 +15,9 @@ class PostCard extends StatelessWidget {
   final dynamic post;
   Axis axis;
   Border? border;
-  PostCard({Key? key, this.post, this.axis = Axis.vertical, this.border})
+  final dynamic type;
+  PostCard(
+      {Key? key, this.post, this.axis = Axis.vertical, this.border, this.type})
       : super(key: key);
 
   @override
@@ -22,7 +25,6 @@ class PostCard extends StatelessWidget {
     bool isVertical = (axis == Axis.vertical);
     var card = post['card'];
     var size = MediaQuery.of(context).size;
-
     return card != null
         ? (card['provider_name'] != null && card['provider_name'] != 'GIPHY') ||
                 card['link'] != null
@@ -35,21 +37,25 @@ class PostCard extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () async {
-                    if (await canLaunchUrl(
-                        Uri.parse(card['link'] ?? card['url']))) {
-                      await launchUrl(Uri.parse(card['link'] ?? card['url']));
-                    } else {
-                      return;
+                    if (type != "edit_post") {
+                      if (await canLaunchUrl(
+                          Uri.parse(card['link'] ?? card['url']))) {
+                        await launchUrl(Uri.parse(card['link'] ?? card['url']));
+                      } else {
+                        return;
+                      }
                     }
                   },
                   child: isVertical
                       ? Column(
                           children: [
-                            ImageCacheRender(
-                                path: card['image'] ??
+                            ExtendedImage.network(
+                                card['image'] ??
                                     card['url'] ??
-                                    card['link'],
+                                    card['link'] ??
+                                    linkBannerDefault,
                                 height: 250,
+                                // fit: BoxFit.cover,
                                 width: size.width),
                             Container(
                               width: size.width,
@@ -103,10 +109,12 @@ class PostCard extends StatelessWidget {
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(20),
                                   bottomLeft: Radius.circular(20)),
-                              child: ImageCacheRender(
-                                  path: card['image'] ??
+                              child: ExtendedImage.network(
+                                  card['image'] ??
                                       card['url'] ??
-                                      card['link'],
+                                      card['link'] ??
+                                      linkBannerDefault,
+                                  // fit: BoxFit.cover,
                                   height: 80.0,
                                   width: 80.0),
                             ),

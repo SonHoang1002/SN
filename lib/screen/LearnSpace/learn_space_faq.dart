@@ -54,7 +54,7 @@ class _LearnSpaceFAQState extends ConsumerState<LearnSpaceFAQ> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Câu hỏi thường gặp'),
-              widget.courseDetail['course_relationships']['host_course']
+              widget.courseDetail['course_relationships']?['host_course']
                   ? TextButton(
                       onPressed: () {
                         _textQuestion.clear();

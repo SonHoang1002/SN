@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +18,9 @@ import '../../widget/Loading/tiktok_loading.dart';
 
 class RecruitDetail extends ConsumerStatefulWidget {
   final dynamic data;
-  const RecruitDetail({Key? key, this.data}) : super(key: key);
+  final bool? isUseRecruitData;
+  const RecruitDetail({Key? key, this.data, this.isUseRecruitData})
+      : super(key: key);
 
   @override
   ConsumerState<RecruitDetail> createState() => _RecruitDetailState();
@@ -40,9 +44,18 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   }
 
   void loadData() async {
-    await ref
-        .read(recruitControllerProvider.notifier)
-        .getDetailRecruit(widget.data['id']);
+    if ((recruitDetail.isEmpty) && (widget.isUseRecruitData == true)) {
+      recruitDetail = widget.data;
+    } else {
+      await ref
+          .read(recruitControllerProvider.notifier)
+          .getDetailRecruit(widget.data['id'])
+          .then((value) {
+        recruitDetail = ref.read(recruitControllerProvider).detailRecruit;
+      });
+    }
+    isRecruitInterested =
+        widget.data['recruit_relationships']['follow_recruit'];
     await ref
         .read(recruitControllerProvider.notifier)
         .getListRecruitPropose({'exclude_current_user': true, 'limit': 5});
@@ -52,9 +65,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
       'limit': 5,
       'time': 'upcoming'
     });
-    recruitDetail = ref.read(recruitControllerProvider).detailRecruit;
-    isRecruitInterested =
-        widget.data['recruit_relationships']['follow_recruit'];
+
     setState(() {});
   }
 
@@ -66,7 +77,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   // }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
