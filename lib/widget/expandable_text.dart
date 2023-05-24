@@ -2,6 +2,7 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:html/parser.dart';
 
 class ExpandableTextContent extends StatelessWidget {
   final String content;
@@ -24,7 +25,7 @@ class ExpandableTextContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpandableText(
-      content,
+      parse(content).body!.text,
       expandText: 'Xem thêm',
       collapseText: 'Thu gọn',
       style: styleContent,
@@ -46,7 +47,8 @@ class ExpandableTextContent extends StatelessWidget {
           return;
         }
       },
-      urlStyle: const TextStyle(color: secondaryColor),
+      urlStyle:
+          const TextStyle(color: secondaryColor, fontWeight: FontWeight.w600),
     );
   }
 }

@@ -1,11 +1,11 @@
-import 'dart:convert';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/screen/Moment/moment.dart';
+import 'package:social_network_app_mobile/screen/Watch/watch_suggest.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/gridview_builder_media.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 import '../theme/colors.dart';
 
@@ -122,12 +122,43 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                         1
                     ? size.width
                     : null,
-                child: VideoPlayerNoneController(
-                    path: path,
-                    media: medias[0],
-                    post: widget.post,
-                    type:
-                        medias[0]['file']?.path != null ? 'local' : 'network'));
+                child: Stack(
+                  children: [
+                    VideoPlayerHasController(
+                      media: medias[0],
+                      isHiddenControl: true,
+                    ),
+                    Positioned.fill(child: GestureDetector(
+                      onTap: () {
+                        medias[0]['file']?.path != null
+                            ? null
+                            : widget.post != null &&
+                                    widget.post["post_type"] != null &&
+                                    widget.post["post_type"] == 'moment'
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Moment(
+                                              dataAdditional: widget.post,
+                                            )))
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => WatchSuggest(
+                                            post: widget.post,
+                                            media: medias[0])));
+                      },
+                    ))
+                  ],
+                )
+                // VideoPlayerNoneController(
+                //     path: path,
+                //     media: medias[0],
+                //     post: widget.post,
+                //     type: medias[0]['file']?.path != null
+                //         ? 'local'
+                //         : 'network')
+                );
           }
         case 2:
           return GridViewBuilderMedia(

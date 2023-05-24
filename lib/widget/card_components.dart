@@ -42,18 +42,18 @@ class CardComponents extends StatelessWidget {
                   : Colors.grey,
               width: 0.5,
             ),
-            borderRadius: const BorderRadius.all(Radius.circular(15))),
-        clipBehavior: Clip.antiAlias,
+            borderRadius: type == 'avatarFriend'
+                ? const BorderRadius.all(Radius.circular(8))
+                : const BorderRadius.all(Radius.circular(15))),
         child: InkWell(
           onTap: onTap,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 184,
-                child: Stack(
+          child: IntrinsicHeight(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
                   children: [
-                    Positioned.fill(child: imageCard),
+                    SizedBox(child: Positioned.fill(child: imageCard)),
                     type == 'homeScreen'
                         ? Stack(
                             children: [
@@ -113,14 +113,14 @@ class CardComponents extends StatelessWidget {
                         : Container(),
                   ],
                 ),
-              ),
-              SizedBox(
-                child: textCard ?? const SizedBox(),
-              ),
-              SizedBox(
-                child: buttonCard ?? const SizedBox(),
-              )
-            ],
+                SizedBox(
+                  child: textCard ?? const SizedBox(),
+                ),
+                SizedBox(
+                  child: buttonCard ?? const SizedBox(),
+                )
+              ],
+            ),
           ),
         ),
       ),

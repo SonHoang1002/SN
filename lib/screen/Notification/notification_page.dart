@@ -50,9 +50,13 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         case 'event_invitation_host':
           return status['event']?['page']?['title'] ?? account['display_name'];
         case 'status':
-          return status['group']?['title'] ??
-              status['page']?['title'] ??
-              account['display_name'];
+          if (status != null) {
+            return status['group']?['title'] ??
+                status['page']?['title'] ??
+                account['display_name'];
+          } else {
+            return account['display_name'];
+          }
 
         default:
           return account['display_name'];
@@ -160,47 +164,53 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
               ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận:' : 'bài viết:'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content']}'
         };
       } else if (type == 'status') {
-        if (status['reblog'] != null) {
-          return {
-            'textNone':
-                ' đã chia sẻ một bài viết ${status['reblog']?['page'] != null || status['reblog']?['group'] != null ? 'trong' : ''}'
-          };
-        } else if (status['page_owner'] != null) {
-          return {
-            'textNone': status['post_type'] == 'event_shared}'
-                ? ' đã tạo một sự kiện '
-                : ' có một bài viết mới: ${status['content']} '
-          };
-        } else if (status['group'] != null || status['page'] != null) {
-          if (noti['account']['relationship'] != null &&
-              noti['account']['relationship']['friendship_status'] ==
-                  'ARE_FRIENDS') {
+        if (status != null) {
+          if (status['reblog'] != null) {
+            return {
+              'textNone':
+                  ' đã chia sẻ một bài viết ${status['reblog']?['page'] != null || status['reblog']?['group'] != null ? 'trong' : ''}'
+            };
+          } else if (status['page_owner'] != null) {
             return {
               'textNone': status['post_type'] == 'event_shared}'
-                  ? ' đã tạo một sự kiện trong '
-                  : ' có tạo bài viết trong ',
-              'textBold': status['post_type'] == 'event_shared}'
-                  ? '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}'
-                  : '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}'
+                  ? ' đã tạo một sự kiện '
+                  : ' có một bài viết mới: ${status['content']} '
             };
+          } else if (status['group'] != null || status['page'] != null) {
+            if (noti['account']['relationship'] != null &&
+                noti['account']['relationship']['friendship_status'] ==
+                    'ARE_FRIENDS') {
+              return {
+                'textNone': status['post_type'] == 'event_shared}'
+                    ? ' đã tạo một sự kiện trong '
+                    : ' có tạo bài viết trong ',
+                'textBold': status['post_type'] == 'event_shared}'
+                    ? '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}'
+                    : '${status['group'] != null ? 'nhóm' : 'trang'} ${status['group'] != null ? status['group']['title'] : status['page']['title']}'
+              };
+            } else {
+              return {
+                'textNone': status['post_type'] == 'event_shared}'
+                    ? ' có sự kiện mới: ${status['content'] ?? ""}'
+                    : ' có bài viết mới: ${status['content'] ?? ""}'
+              };
+            }
+          } else if (status['post_type'] == 'moment') {
+            return {'textNone': ' đã đăng một khoảnh khắc mới'};
+          } else if (status['post_type'] == 'watch') {
+            return {'textNone': ' đã đăng một video mới trong watch'};
+          } else if (status['post_type'] == 'question') {
+            return {'textNone': ' đã đặt một câu hỏi'};
+          } else if (status['post_type'] == 'target') {
+            return {'textNone': ' đã đặt một mục tiêu mới'};
           } else {
             return {
-              'textNone': status['post_type'] == 'event_shared}'
-                  ? ' có sự kiện mới: ${status['content'] ?? ""}'
-                  : ' có bài viết mới: ${status['content'] ?? ""}'
+              'textNone': ' đã tạo bài viết mới ${status['content'] ?? ""}'
             };
           }
-        } else if (status['post_type'] == 'moment') {
-          return {'textNone': ' đã đăng một khoảnh khắc mới'};
-        } else if (status['post_type'] == 'watch') {
-          return {'textNone': ' đã đăng một video mới trong watch'};
-        } else if (status['post_type'] == 'question') {
-          return {'textNone': ' đã đặt một câu hỏi'};
-        } else if (status['post_type'] == 'target') {
-          return {'textNone': ' đã đặt một mục tiêu mới'};
-        } else {
-          return {'textNone': ' đã tạo bài viết mới ${status['content']}'};
         }
+      } else {
+        return {'textNone': ' đã tạo bài viết mới'};
       }
     }
 
@@ -215,19 +225,24 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         case 'mention':
           return 'assets/Noti/Friend.png';
         case 'status':
-          if (status['group'] != null) {
-            return 'assets/Noti/group.png';
-          } else if (status['page'] != null) {
-            return 'assets/Noti/Page.png';
-          } else if (status['post_type'] == 'event_shared') {
-            return 'assets/Noti/event.png';
-          } else if (status['post_type'] == 'watch') {
-            return 'assets/Noti/watch.png';
-          } else if (status['post_type'] == 'moment') {
-            return 'assets/Noti/moment.png';
+          if (status != null) {
+            if (status?['group'] != null) {
+              return 'assets/Noti/group.png';
+            } else if (status?['page'] != null) {
+              return 'assets/Noti/Page.png';
+            } else if (status?['post_type'] == 'event_shared') {
+              return 'assets/Noti/event.png';
+            } else if (status?['post_type'] == 'watch') {
+              return 'assets/Noti/watch.png';
+            } else if (status?['post_type'] == 'moment') {
+              return 'assets/Noti/moment.png';
+            } else {
+              return 'assets/Noti/post.png';
+            }
           } else {
             return 'assets/Noti/post.png';
           }
+
         case 'friendship_request':
         case 'accept_friendship_request':
           return 'assets/Noti/Friend.png';

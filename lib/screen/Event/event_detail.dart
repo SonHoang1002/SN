@@ -68,6 +68,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
   void loadData() async {
     if (eventDetail.isEmpty && (widget.isUseEventData == true)) {
+
       eventDetail = widget.eventDetail;
     } else {
       await ref
@@ -392,7 +393,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                     : Colors
                                                                         .white,
                                                             builder: (context) =>
-                                                                const InviteFriend());
+                                                                InviteFriend(
+                                                                    id: eventDetail[
+                                                                        'id'],
+                                                                    type:
+                                                                        'event'));
                                                       },
                                                       child: Container(
                                                           height: 32,
@@ -460,7 +465,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                height: 280,
+                                                height: 320,
                                                 child: Column(
                                                   children: [
                                                     ListView.builder(
@@ -504,7 +509,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                             SizedBox(
                                                                               height: height * 0.9,
                                                                               width: width,
-                                                                              child: ActionEllipsis(menuSelected: iconActionEllipsis[index]),
+                                                                              child: ActionEllipsis(menuSelected: iconActionEllipsis[index], type: 'event', data: eventDetail),
                                                                             ));
                                                               } else if (iconActionEllipsis[
                                                                           index]

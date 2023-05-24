@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../apis/config.dart';
 import '../apis/me_api.dart';
 
 class WebSocketService {
@@ -14,9 +15,9 @@ class WebSocketService {
     try {
       var res = await MeApi().fetchDataMeApi();
       final response = await Dio().post(
-        'https://notification-api.emso.vn/v1/widgets/session/initialize',
+        '$getTokenNovuUrl/v1/widgets/session/initialize',
         data: {
-          "applicationIdentifier": "NQdDh27Faz0F",
+          "applicationIdentifier": baseRootNovu,
           "subscriberId": res['id'].toString(),
           "hmacHash": null,
         },
@@ -33,7 +34,7 @@ class WebSocketService {
     if (res['data']['token'] != null) {
       webSocketChannel = WebSocketChannel.connect(
         Uri.parse(
-          'wss://notification-ws.emso.vn/socket.io/?token=${res['data']['token']}&EIO=3&transport=websocket',
+          '$socketNovuUrl/?token=${res['data']['token']}&EIO=3&transport=websocket',
         ),
       );
       setupPeriodicSending();

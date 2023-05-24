@@ -18,7 +18,7 @@ import '../Page/PageDetail/page_detail.dart';
 import '../UserPage/user_page.dart';
 
 class RecruitIntro extends ConsumerStatefulWidget {
-  final recruitDetail;
+  final dynamic recruitDetail;
   const RecruitIntro({super.key, required this.recruitDetail});
 
   @override
@@ -178,18 +178,20 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                       height: 180.0,
                                     ),
                                   )
-                                : ClipOval(
-                                    child: ExtendedImage.network(
-                                      recruitDetail['account']
-                                                  ['avatar_media'] !=
-                                              null
-                                          ? recruitDetail['account']
-                                              ['avatar_media']['url']
-                                          : recruitDetail['account']
-                                              ['avatar_static'],
-                                      fit: BoxFit.cover,
-                                      width: 180.0,
-                                      height: 180.0,
+                                : Center(
+                                    child: ClipOval(
+                                      child: ExtendedImage.network(
+                                        recruitDetail['account']
+                                                    ['avatar_media'] !=
+                                                null
+                                            ? recruitDetail['account']
+                                                ['avatar_media']['url']
+                                            : recruitDetail['account']
+                                                ['avatar_static'],
+                                        fit: BoxFit.cover,
+                                        width: 180.0,
+                                        height: 180.0,
+                                      ),
                                     ),
                                   ),
                           ],
@@ -431,29 +433,49 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                             alignment: Alignment.bottomLeft,
                                             child: InkWell(
                                               onTap: () {
-                                                // if (grows[indexSuggest][
-                                                //             'project_relationship']
-                                                //         [
-                                                //         'follow_project'] ==
-                                                //     true) {
-                                                //   ref
-                                                //       .read(
-                                                //           growControllerProvider
-                                                //               .notifier)
-                                                //       .updateStatusHost(
-                                                //           grows[indexSuggest]
-                                                //               ['id'],
-                                                //           false);
-                                                // } else {
-                                                //   ref
-                                                //       .read(
-                                                //           growControllerProvider
-                                                //               .notifier)
-                                                //       .updateStatusHost(
-                                                //           grows[indexSuggest]
-                                                //               ['id'],
-                                                //           true);
-                                                // }
+                                                if (recruitsPropose[
+                                                                indexPropose][
+                                                            'recruit_relationships']
+                                                        ['follow_recruit'] ==
+                                                    true) {
+                                                  setState(() {
+                                                    recruitsPropose[
+                                                                indexPropose][
+                                                            'recruit_relationships']
+                                                        [
+                                                        'follow_recruit'] = false;
+                                                    ref
+                                                        .read(
+                                                            recruitControllerProvider
+                                                                .notifier)
+                                                        .updateStatusRecruit(
+                                                            false,
+                                                            recruitsPropose[
+                                                                    indexPropose]
+                                                                ['id'],
+                                                            name:
+                                                                'recruitsPropose');
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    recruitsPropose[
+                                                                indexPropose][
+                                                            'recruit_relationships']
+                                                        [
+                                                        'follow_recruit'] = true;
+                                                    ref
+                                                        .read(
+                                                            recruitControllerProvider
+                                                                .notifier)
+                                                        .updateStatusRecruit(
+                                                            true,
+                                                            recruitsPropose[
+                                                                    indexPropose]
+                                                                ['id'],
+                                                            name:
+                                                                'recruitsPropose');
+                                                  });
+                                                }
                                               },
                                               child: Container(
                                                 height: 33,
@@ -462,20 +484,14 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                                         .width *
                                                     0.37,
                                                 decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                        189, 202, 202, 202),
-                                                    // color: grows[indexSuggest]
-                                                    //                 ['project_relationship'][
-                                                    //             'follow_project'] ==
-                                                    //         true
-                                                    //     ? secondaryColor
-                                                    //         .withOpacity(
-                                                    //             0.45)
-                                                    //     : const Color.fromARGB(
-                                                    //         189,
-                                                    //         202,
-                                                    //         202,
-                                                    //         202),
+                                                    color: recruitsPropose[
+                                                                    indexPropose]
+                                                                [
+                                                                'recruit_relationships']
+                                                            ['follow_recruit']
+                                                        ? secondaryColor
+                                                        : const Color.fromARGB(
+                                                            189, 202, 202, 202),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             6),
@@ -485,20 +501,20 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Icon(
                                                         FontAwesomeIcons
                                                             .solidStar,
-                                                        // color: grows[indexSuggest]
-                                                        //                 [
-                                                        //                 'project_relationship']
-                                                        //             [
-                                                        //             'follow_project'] ==
-                                                        //         true
-                                                        //     ? secondaryColor
-                                                        //     : Colors.black,
+                                                        color: recruitsPropose[
+                                                                        indexPropose]
+                                                                    [
+                                                                    'recruit_relationships']
+                                                                [
+                                                                'follow_recruit']
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                         size: 14),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 5.0,
                                                     ),
                                                     Text(
@@ -507,19 +523,19 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         fontSize: 12.0,
-                                                        // color: grows[indexSuggest]
-                                                        //                 [
-                                                        //                 'project_relationship']
-                                                        //             [
-                                                        //             'follow_project'] ==
-                                                        //         true
-                                                        //     ? secondaryColor
-                                                        //     : Colors.black,
+                                                        color: recruitsPropose[
+                                                                        indexPropose]
+                                                                    [
+                                                                    'recruit_relationships']
+                                                                [
+                                                                'follow_recruit']
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                       ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 3.0,
                                                     ),
                                                   ],
@@ -711,29 +727,49 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                             alignment: Alignment.bottomLeft,
                                             child: InkWell(
                                               onTap: () {
-                                                // if (grows[indexSuggest][
-                                                //             'project_relationship']
-                                                //         [
-                                                //         'follow_project'] ==
-                                                //     true) {
-                                                //   ref
-                                                //       .read(
-                                                //           growControllerProvider
-                                                //               .notifier)
-                                                //       .updateStatusHost(
-                                                //           grows[indexSuggest]
-                                                //               ['id'],
-                                                //           false);
-                                                // } else {
-                                                //   ref
-                                                //       .read(
-                                                //           growControllerProvider
-                                                //               .notifier)
-                                                //       .updateStatusHost(
-                                                //           grows[indexSuggest]
-                                                //               ['id'],
-                                                //           true);
-                                                // }
+                                                if (recruitsSimilar[
+                                                                indexSimilar][
+                                                            'recruit_relationships']
+                                                        ['follow_recruit'] ==
+                                                    true) {
+                                                  setState(() {
+                                                    ref
+                                                        .read(
+                                                            recruitControllerProvider
+                                                                .notifier)
+                                                        .updateStatusRecruit(
+                                                            false,
+                                                            recruitsSimilar[
+                                                                    indexSimilar]
+                                                                ['id'],
+                                                            name:
+                                                                'recruitsSimilar');
+                                                    recruitsSimilar[
+                                                                indexSimilar][
+                                                            'recruit_relationships']
+                                                        [
+                                                        'follow_recruit'] = false;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    ref
+                                                        .read(
+                                                            recruitControllerProvider
+                                                                .notifier)
+                                                        .updateStatusRecruit(
+                                                            true,
+                                                            recruitsSimilar[
+                                                                    indexSimilar]
+                                                                ['id'],
+                                                            name:
+                                                                'recruitsSimilar');
+                                                    recruitsSimilar[
+                                                                indexSimilar][
+                                                            'recruit_relationships']
+                                                        [
+                                                        'follow_recruit'] = true;
+                                                  });
+                                                }
                                               },
                                               child: Container(
                                                 height: 33,
@@ -742,20 +778,14 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                                         .width *
                                                     0.37,
                                                 decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                        189, 202, 202, 202),
-                                                    // color: grows[indexSuggest]
-                                                    //                 ['project_relationship'][
-                                                    //             'follow_project'] ==
-                                                    //         true
-                                                    //     ? secondaryColor
-                                                    //         .withOpacity(
-                                                    //             0.45)
-                                                    //     : const Color.fromARGB(
-                                                    //         189,
-                                                    //         202,
-                                                    //         202,
-                                                    //         202),
+                                                    color: recruitsSimilar[
+                                                                    indexSimilar]
+                                                                [
+                                                                'recruit_relationships']
+                                                            ['follow_recruit']
+                                                        ? secondaryColor
+                                                        : const Color.fromARGB(
+                                                            189, 202, 202, 202),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             6),
@@ -765,20 +795,20 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Icon(
                                                         FontAwesomeIcons
                                                             .solidStar,
-                                                        // color: grows[indexSuggest]
-                                                        //                 [
-                                                        //                 'project_relationship']
-                                                        //             [
-                                                        //             'follow_project'] ==
-                                                        //         true
-                                                        //     ? secondaryColor
-                                                        //     : Colors.black,
+                                                        color: recruitsSimilar[
+                                                                        indexSimilar]
+                                                                    [
+                                                                    'recruit_relationships']
+                                                                [
+                                                                'follow_recruit']
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                         size: 14),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 5.0,
                                                     ),
                                                     Text(
@@ -787,19 +817,19 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                         fontSize: 12.0,
-                                                        // color: grows[indexSuggest]
-                                                        //                 [
-                                                        //                 'project_relationship']
-                                                        //             [
-                                                        //             'follow_project'] ==
-                                                        //         true
-                                                        //     ? secondaryColor
-                                                        //     : Colors.black,
+                                                        color: recruitsSimilar[
+                                                                        indexSimilar]
+                                                                    [
+                                                                    'recruit_relationships']
+                                                                [
+                                                                'follow_recruit']
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                       ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 3.0,
                                                     ),
                                                   ],

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/providers/UserPage/user_information_provider.dart';
 import 'package:social_network_app_mobile/screen/UserPage/page_friend_user.dart';
 import 'package:social_network_app_mobile/screen/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widget/card_components.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 import 'package:social_network_app_mobile/widget/text_action.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
@@ -93,66 +93,63 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                       height: 8.0,
                     ),
                     GridView.builder(
-                        shrinkWrap: true,
-                        primary: false,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisSpacing: 5,
-                                mainAxisSpacing: 7,
-                                crossAxisCount: 3,
-                                childAspectRatio: 0.8),
-                        itemCount: widget.friends.sublist(0, 6).length,
-                        itemBuilder: (context, index) => InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => UserPage(),
-                                      settings: RouteSettings(
-                                        arguments: {
-                                          'id': widget.friends[index]['id']
-                                        },
-                                      ),
-                                    ));
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: theme.themeMode == ThemeMode.dark
-                                        ? Theme.of(context).cardColor
-                                        : const Color(0xfff1f2f5)),
-                                child: Column(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(10.0),
-                                          topRight: Radius.circular(10.0)),
-                                      child: ImageCacheRender(
-                                          height: size.width / 3 - 20,
-                                          width: size.width / 3 - 15,
-                                          path: widget.friends[index]
-                                                      ['avatar_media']
-                                                  ?['preview_url'] ??
-                                              linkAvatarDefault),
-                                    ),
-                                    const SizedBox(
-                                      height: 8.0,
-                                    ),
-                                    SizedBox(
-                                      width: size.width / 3 - 20,
-                                      child: Text(
-                                        '${widget.friends[index]['display_name']}',
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500,
-                                            overflow: TextOverflow.ellipsis),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                      shrinkWrap: true,
+                      primary: false,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisSpacing: 0,
+                              mainAxisSpacing: 7,
+                              crossAxisCount: 3,
+                              childAspectRatio: 0.75),
+                      itemCount: widget.friends.sublist(0, 6).length,
+                      itemBuilder: (context, index) => InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UserPage(),
+                              settings: RouteSettings(
+                                arguments: {
+                                  'id': widget.friends[index]['id'],
+                                },
                               ),
-                            ))
+                            ),
+                          );
+                        },
+                        child: CardComponents(
+                          type: 'avatarFriend',
+                          imageCard: SizedBox(
+                            height: 110.0,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                topRight: Radius.circular(8),
+                              ),
+                              child: ImageCacheRender(
+                                path: widget.friends[index]['avatar_media']
+                                        ?['preview_url'] ??
+                                    linkAvatarDefault,
+                              ),
+                            ),
+                          ),
+                          textCard: Container(
+                            padding: const EdgeInsets.only(
+                              top: 12.0,
+                              left: 10,
+                              right: 10,
+                            ),
+                            child: Text(
+                              '${widget.friends[index]['display_name']}',
+                              maxLines: 2,
+                              style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ],

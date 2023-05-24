@@ -127,10 +127,12 @@ class RenderPhoto extends StatefulWidget {
   final List photoData;
   final Function? action;
   final bool hasTitle;
+  final dynamic type;
   const RenderPhoto(
       {super.key,
       required this.photoData,
       this.action,
+      this.type,
       required this.hasTitle});
 
   @override
@@ -165,78 +167,89 @@ class _RenderPhotoState extends State<RenderPhoto> {
             mainAxisSpacing: 7,
             crossAxisCount: 3,
             childAspectRatio: 0.8),
-        itemCount: widget.photoData.length,
+        itemCount: widget.photoData.length + (widget.type != null ? 1 : 0),
         itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: theme.themeMode == ThemeMode.dark
-                    ? Theme.of(context).cardColor
-                    : const Color(0xfff1f2f5)),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-              child: InkWell(
-                onTap: () {
-                  if (widget.action != null) {
-                    widget.action!(widget.photoData[index]);
-                  } else {
-                    fetchApiPostMedia(widget.photoData[index]['id']);
-                  }
+          if (widget.type != null && index == 0) {
+            if (widget.type != null) {
+              return ElevatedButton(
+                onPressed: () {
+                  // Xử lý sự kiện khi nhấn nút "Thêm ảnh"
                 },
-                child: !widget.hasTitle
-                    ? ImageCacheRender(
-                        height: size.width / 3 - 20,
-                        width: size.width / 3 - 20,
-                        path: widget.photoData[index]?['preview_url'] ??
-                            widget.photoData[index]?['url'] ??
-                            widget.photoData[index]?['media_attachment']
-                                ['preview_url'] ??
-                            widget.photoData[index]?['media_attachment']['url'])
-                    : Stack(
-                        alignment: Alignment.bottomCenter,
-                        fit: StackFit.expand,
-                        children: [
-                          SizedBox(
-                            child: ImageCacheRender(
-                                height: size.width / 3 - 20,
-                                width: size.width / 3 - 20,
-                                path: widget.photoData[index]?['preview_url'] ??
-                                    widget.photoData[index]?['url'] ??
-                                    widget.photoData[index]?['media_attachment']
-                                        ['preview_url'] ??
-                                    widget.photoData[index]?['media_attachment']
-                                        ['url']),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            child: Container(
-                                width: size.width / 3 - 10,
-                                height: 33,
-                                padding: const EdgeInsets.fromLTRB(8, 11, 0, 2),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      const Color(0xFFFFFFFF).withOpacity(0.05),
-                                      const Color(0xFF000000).withOpacity(0.7)
-                                    ],
+                child: const Icon(Icons.add),
+              );
+            } else {
+              return const SizedBox.shrink(); // Ẩn nút "Thêm ảnh" cho loại khác
+            }
+          } else {
+            final photoItem =
+                widget.photoData[widget.type != null ? index - 1 : index];
+            final previewUrl = photoItem?['preview_url'] ??
+                photoItem?['url'] ??
+                photoItem?['media_attachment']?['preview_url'] ??
+                photoItem?['media_attachment']['url'];
+            return Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: theme.themeMode == ThemeMode.dark
+                      ? Theme.of(context).cardColor
+                      : const Color(0xfff1f2f5)),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                child: InkWell(
+                  onTap: () {
+                    if (widget.action != null) {
+                      widget.action!(widget.photoData[index]);
+                    } else {
+                      fetchApiPostMedia(widget.photoData[index]['id']);
+                    }
+                  },
+                  child: !widget.hasTitle
+                      ? ImageCacheRender(
+                          height: size.width / 3 - 20,
+                          width: size.width / 3 - 20,
+                          path: previewUrl)
+                      : Stack(
+                          alignment: Alignment.bottomCenter,
+                          fit: StackFit.expand,
+                          children: [
+                            SizedBox(
+                              child: ImageCacheRender(
+                                  height: size.width / 3 - 20,
+                                  width: size.width / 3 - 20,
+                                  path: previewUrl),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              child: Container(
+                                  width: size.width / 3,
+                                  height: 33,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 11, 0, 2),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        const Color(0xFFFFFFFF)
+                                            .withOpacity(0.05),
+                                        const Color(0xFF000000).withOpacity(0.3)
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  widget.photoData[index]['title'],
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .scaffoldBackgroundColor,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500),
-                                )),
-                          )
-                        ],
-                      ),
+                                  child: Text(
+                                    photoItem['title'],
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500),
+                                  )),
+                            )
+                          ],
+                        ),
+                ),
               ),
-            ),
-          );
+            );
+          }
         });
   }
 }
