@@ -50,7 +50,7 @@ class PagePermissionComment extends StatelessWidget {
                 listOptions.length,
                 (index) => InkWell(
                       borderRadius: BorderRadius.circular(10.0),
-                      onTap: () {
+                      onTap: () { 
                         handleUpdate(listOptions[index]['key']);
                       },
                       child: Container(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'api_root.dart';
 
 class PostApi {
@@ -89,5 +91,14 @@ class PostApi {
   Future postCompleteTarget(dynamic postId) async {
     return await Api()
         .postRequestBase('/api/v1/statuses/$postId/complete_target', null);
+  }
+
+  Future signPollPost(dynamic pollId, dynamic params) async {
+    return await Api().postRequestBase('/api/v1/polls/$pollId/votes', params);
+  }
+
+  Future updatePollPost(dynamic pollId, dynamic params) async {
+    return await Api()
+        .patchRequestBase('/api/v1/polls/$pollId/votes/123', params);
   }
 }

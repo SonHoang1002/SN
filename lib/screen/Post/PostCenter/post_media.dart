@@ -26,62 +26,64 @@ class PostMedia extends StatelessWidget {
     List medias = post['media_attachments'] ?? [];
 
     handlePress(media) {
-      if (checkIsImage(media)) {
-        if (medias.length == 1) {
-          pushCustomVerticalPageRoute(
-              context,
-              PostOneMediaDetail(
-                  postMedia: post,
+      if (type != "edit_post") {
+        if (checkIsImage(media)) {
+          if (medias.length == 1) {
+            pushCustomVerticalPageRoute(
+                context,
+                PostOneMediaDetail(
+                    postMedia: post,
+                    post: post,
+                    type: type,
+                    preType: preType,
+                    backFunction: () {
+                      backFunction != null ? backFunction!() : null;
+                    },
+                    reloadFunction: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        reloadFunction != null ? reloadFunction!() : null;
+                      });
+                    }),
+                opaque: false);
+          } else if (medias.length > 1) {
+            int initialIndex =
+                medias.indexWhere((element) => element['id'] == media['id']);
+            pushCustomCupertinoPageRoute(
+                context,
+                PostMutipleMediaDetail(
                   post: post,
-                  type: type,
+                  initialIndex: initialIndex,
                   preType: preType,
-                  backFunction: () {
-                    backFunction != null ? backFunction!() : null;
-                  },
-                  reloadFunction: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      reloadFunction != null ? reloadFunction!() : null;
-                    });
-                  }),
-              opaque: false);
-        } else if (medias.length > 1) {
-          int initialIndex =
-              medias.indexWhere((element) => element['id'] == media['id']);
-          pushCustomCupertinoPageRoute(
-              context,
-              PostMutipleMediaDetail(
-                post: post,
-                initialIndex: initialIndex,
-                preType: preType,
-              ),
-              opaque: false);
-          //  pushCustomPageRoute(
-          // context,
-          // CreateModalBaseMenu(
-          //     title: 'Bài viết',
-          //     body: PostMutipleMediaDetail(
-          //       post: post,
-          //       initialIndex: initialIndex,
-          //     ),
-          //     buttonAppbar: const SizedBox()),
-          // opaque: false);
+                ),
+                opaque: false);
+            //  pushCustomPageRoute(
+            // context,
+            // CreateModalBaseMenu(
+            //     title: 'Bài viết',
+            //     body: PostMutipleMediaDetail(
+            //       post: post,
+            //       initialIndex: initialIndex,
+            //     ),
+            //     buttonAppbar: const SizedBox()),
+            // opaque: false);
+          } else {
+            pushCustomCupertinoPageRoute(
+                context,
+                PostDetail(
+                  post: post,
+                  preType: type,
+                ));
+            // Navigator.push(
+            //     context,
+            //     CupertinoPageRoute(
+            //         builder: (context) => PostDetail(
+            //               post: post,
+            //               preType: type,
+            //             )));
+          }
         } else {
-          pushCustomCupertinoPageRoute(
-              context,
-              PostDetail(
-                post: post,
-                preType: type,
-              ));
-          // Navigator.push(
-          //     context,
-          //     CupertinoPageRoute(
-          //         builder: (context) => PostDetail(
-          //               post: post,
-          //               preType: type,
-          //             )));
+          return;
         }
-      } else {
-        return;
       }
     }
 

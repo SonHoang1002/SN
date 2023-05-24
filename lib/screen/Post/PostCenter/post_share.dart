@@ -7,7 +7,8 @@ import 'post_center.dart';
 
 class PostShare extends StatelessWidget {
   final dynamic post;
-  const PostShare({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostShare({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +21,8 @@ class PostShare extends StatelessWidget {
           BoxDecoration(border: Border.all(width: 0.2, color: greyColor)),
       child: Column(
         children: [
-          PostHeader(post: postReblogRender, type: postReblog),
-          PostCenter(post: postReblogRender),
+          PostHeader(post: postReblogRender, type: type ?? postReblog),
+          PostCenter(post: postReblogRender,type: type,),
         ],
       ),
     );

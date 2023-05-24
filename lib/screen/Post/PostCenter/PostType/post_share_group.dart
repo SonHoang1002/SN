@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class PostShareGroup extends StatelessWidget {
   final dynamic post;
-  const PostShareGroup({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostShareGroup({Key? key, this.post,this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +19,9 @@ class PostShareGroup extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigator.pushNamed(context, '/group', arguments: group);
+            type != "edit_post"
+            ? null
+            : null;
       },
       child: Column(
         children: [
@@ -28,8 +33,9 @@ class PostShareGroup extends StatelessWidget {
                   border:
                       Border(top: BorderSide(width: 0.4, color: greyColor))),
               child: ExtendedImage.network(
-                group['banner']?['preview_url'] ?? '',
+                group['banner']?['preview_url'] ?? linkBannerDefault,
                 height: 200,
+                width: size.width,
                 filterQuality: FilterQuality.high,
                 fit: BoxFit.cover,
               )),

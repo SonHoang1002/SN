@@ -24,10 +24,8 @@ import '../../widget/Loading/tiktok_loading.dart';
 
 class LearnSpaceDetail extends ConsumerStatefulWidget {
   final dynamic data;
-  const LearnSpaceDetail({
-    super.key,
-    this.data,
-  });
+  final bool? isUseLearnData;
+  const LearnSpaceDetail({super.key, this.data, this.isUseLearnData});
 
   @override
   ConsumerState<LearnSpaceDetail> createState() => _LearnSpaceDetailState();
@@ -53,16 +51,23 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   }
 
   void loadData() async {
-    await ref
-        .read(learnSpaceStateControllerProvider.notifier)
-        .getDetailCourses(widget.data['id'])
-        .then((value) {
-      setState(() {
-        courseDetail = ref.read(learnSpaceStateControllerProvider).detailCourse;
+    if (courseDetail.isEmpty && (widget.isUseLearnData == true)) {
+      courseDetail = widget.data;
         isCourseInterested =
-            courseDetail['course_relationships']['follow_course'];
+              courseDetail['course_relationships']['follow_course'];
+    } else {
+      await ref
+          .read(learnSpaceStateControllerProvider.notifier)
+          .getDetailCourses(widget.data['id'])
+          .then((value) {
+        setState(() {
+          courseDetail =
+              ref.read(learnSpaceStateControllerProvider).detailCourse;
+          isCourseInterested =
+              courseDetail['course_relationships']['follow_course'];
+        });
       });
-    });
+    }
     await ref
         .read(learnSpaceStateControllerProvider.notifier)
         .getListCoursesSimilar({'only_current_user': true, 'limit': 5});
@@ -110,6 +115,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   ];
   @override
   Widget build(BuildContext context) {
+    courseDetail ??= widget.data;
     final theme = pv.Provider.of<ThemeManager>(context);
     var transactions = ref.watch(growControllerProvider).growTransactions;
 
@@ -207,7 +213,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                   left: 16.0, right: 16.0, top: 8.0),
                               child: Row(
                                 children: [
-                                  courseDetail['course_relationships']
+                                  courseDetail['course_relationships']?
                                               ['host_course'] ==
                                           true
                                       ? Row(
@@ -788,7 +794,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                 : const SizedBox.shrink(),
                             currentMenu == 'discussion' &&
                                     (courseDetail['course_relationships']
-                                            ['host_course'] ||
+                                            ?['host_course'] ||
                                         courseDetail['course_relationships']
                                             ['participant_course']) &&
                                     courseDetail['allow_discussion']

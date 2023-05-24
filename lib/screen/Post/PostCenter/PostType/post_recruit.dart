@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/refractor_time.dart';
+import 'package:social_network_app_mobile/screen/Recruit/recuit_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 
 class PostRecruit extends StatelessWidget {
   final dynamic post;
-  const PostRecruit({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostRecruit({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,14 @@ class PostRecruit extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
-        // Navigator.pushNamed(context, '/course', arguments: page);
+        type != 'edit_post'
+            ? pushCustomCupertinoPageRoute(
+                context,
+                RecruitDetail(
+                  data: recruit,
+                  isUseRecruitData: true,
+                ))
+            : null;
       },
       child: Column(
         children: [

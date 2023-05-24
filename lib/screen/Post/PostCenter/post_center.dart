@@ -89,52 +89,53 @@ class _PostCenterState extends State<PostCenter> {
                           : null;
                     },
                     reloadFunction: () {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        widget.reloadFunction != null
-                            ? widget.reloadFunction!()
-                            : null;
-                      });
+                      widget.reloadFunction != null
+                          ? widget.reloadFunction!()
+                          : null;
                     }),
+            //
             widget.post['card'] != null &&
                     widget.post['media_attachments'].length == 0
-                ? PostCard(post: widget.post)
+                ? PostCard(post: widget.post, type: widget.type)
                 : const SizedBox(),
             widget.post['poll'] != null
-                ? PostPollCenter(post: widget.post)
+                ? PostPollCenter(post: widget.post, type: widget.type)
                 : const SizedBox(),
             widget.post['life_event'] != null
                 ? PostLifeEvent(post: widget.post)
                 : const SizedBox(),
+            //have not group detail
             widget.post['shared_group'] != null
-                ? PostShareGroup(post: widget.post)
+                ? PostShareGroup(post: widget.post, type: widget.type)
                 : const SizedBox(),
             widget.post['shared_page'] != null
-                ? PostSharePage(post: widget.post)
+                ? PostSharePage(post: widget.post, type: widget.type)
                 : const SizedBox(),
             widget.post['reblog'] != null
-                ? PostShare(post: widget.post)
+                ? PostShare(post: widget.post, type: widget.type)
                 : const SizedBox(),
             widget.post['place'] != null
                 ? MapWidgetItem(checkin: widget.post['place'])
                 : const SizedBox(),
             widget.post['shared_course'] != null
-                ? PostCourse(post: widget.post)
+                ? PostCourse(post: widget.post, type: widget.type)
                 : const SizedBox(),
             widget.post['shared_project'] != null
-                ? PostProject(post: widget.post)
+                ? PostProject(
+                    post: widget.post,
+                    type: widget.type,
+                  )
                 : const SizedBox(),
             widget.post['shared_recruit'] != null
-                ? PostRecruit(post: widget.post)
+                ? PostRecruit(post: widget.post, type: widget.type)
                 : const SizedBox(),
+            // add navi to product when have market place
             widget.post['shared_product'] != null
-                ? PostProduct(post: widget.post)
+                ? PostProduct(post: widget.post, type: widget.type)
                 : const SizedBox(),
             widget.post['shared_event'] != null
-                ? PostShareEvent(post: widget.post)
+                ? PostShareEvent(post: widget.post, type: widget.type)
                 : const SizedBox(),
-            // "shared_product": null,
-            // "shared_page": null,
-            // "shared_group": null,
             postType != '' ? renderPostType(postType) : const SizedBox(),
           ],
         ));

@@ -41,11 +41,27 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
   double? beginPositonY = 0;
   double? updatePositonY = 0;
   String closeDirection = "";
+  List medias = [];
   // tránh conflict giữa cử chỉ drag outside lên rồi xuống
   ScrollDirection? beginDirection;
   @override
   void initState() {
     super.initState();
+    // fake form reaction
+    List tempMedias = widget.post['media_attachments'];
+    tempMedias.forEach((element) {
+      element["reaction"] = [
+        {"type": "like", "likes_count": 0},
+        {"type": "haha", "hahas_count": 0},
+        {"type": "angry", "angrys_count": 0},
+        {"type": "love", "loves_count": 0},
+        {"type": "sad", "sads_count": 0},
+        {"type": "wow", "wows_count": 0},
+        {"type": "yay", "yays_count": 0}
+      ];
+      medias.add(element);
+    });
+    //
     beginPositonY = 0;
     updatePositonY = 0;
     _scrollParentController = ScrollController();
@@ -205,9 +221,10 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
 
   ValueNotifier<bool> showBgContainer = ValueNotifier(true);
 
+  
   @override
   Widget build(BuildContext context) {
-    List medias = widget.post['media_attachments'];
+    medias = widget.post['media_attachments'];
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
@@ -337,7 +354,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                 closeDirection = closeBottomToTop;
                               });
                             });
-                          } else { 
+                          } else {
                             if (beginDirection != null) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 setState(() {
@@ -355,7 +372,9 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                         Flexible(
                             flex: 1,
                             child: Container(
-                              color:isDragOutside ? transparent:Theme.of(context).scaffoldBackgroundColor,
+                              color: isDragOutside
+                                  ? transparent
+                                  : Theme.of(context).scaffoldBackgroundColor,
                               child: SingleChildScrollView(
                                 physics: !isDragOutside
                                     ? const BouncingScrollPhysics()
@@ -441,7 +460,8 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                                               key: Key(
                                                                   medias[index]
                                                                       ['id']),
-                                                              fit: BoxFit.cover,
+                                                              fit: BoxFit
+                                                                  .fitHeight,
                                                               width: MediaQuery.of(
                                                                       context)
                                                                   .size

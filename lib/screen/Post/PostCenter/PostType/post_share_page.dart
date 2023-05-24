@@ -10,7 +10,8 @@ import 'package:social_network_app_mobile/widget/image_cache.dart';
 
 class PostSharePage extends StatelessWidget {
   final dynamic post;
-  const PostSharePage({Key? key, this.post}) : super(key: key);
+  final dynamic type;
+  const PostSharePage({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,9 @@ class PostSharePage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/page', arguments: page);
+        type != "edit_post"
+            ? Navigator.pushNamed(context, '/page', arguments: page)
+            : null;
       },
       child: Column(
         children: [
@@ -33,6 +36,7 @@ class PostSharePage extends StatelessWidget {
               height: 200,
               filterQuality: FilterQuality.high,
               fit: BoxFit.cover,
+              width: size.width,
             ),
           ),
           Container(

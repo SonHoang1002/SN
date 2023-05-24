@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -62,7 +63,7 @@ class _ReefCenterState extends State<ReefCenter> {
                             color: transparent)
                       ],
                     )
-                  : Image.network(
+                  : ExtendedImage.network(
                       _reefList[index]["media_attachments"][0]["preview_url"],
                       fit: BoxFit.fitHeight,
                     ),
@@ -128,7 +129,9 @@ class _ReefCenterState extends State<ReefCenter> {
                       )
                     : Image.network(
                         _reefList[index]["media_attachments"][0]["preview_url"],
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.cover,
+                        height: size.height * 0.52,
+                        width: size.width * 0.55,
                       ),
               ),
             ),

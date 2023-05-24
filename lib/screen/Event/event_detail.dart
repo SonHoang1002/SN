@@ -67,19 +67,18 @@ class _EventDetailState extends ConsumerState<EventDetail> {
   // }
 
   void loadData() async {
-    // if (eventDetail.isEmpty &&
-    //     (widget.isUseEventData != null && widget.isUseEventData!)) {
-    //   eventDetail = widget.eventDetail;
-    // } else {
-    await ref
-        .read(eventControllerProvider.notifier)
-        .getDetailEvent(widget.eventDetail['id'])
-        .then((value) {
-      setState(() {
-        eventDetail = ref.watch(eventControllerProvider).eventDetail;
+    if (eventDetail.isEmpty && (widget.isUseEventData == true)) {
+      eventDetail = widget.eventDetail;
+    } else {
+      await ref
+          .read(eventControllerProvider.notifier)
+          .getDetailEvent(widget.eventDetail['id'])
+          .then((value) {
+        setState(() {
+          eventDetail = ref.watch(eventControllerProvider).eventDetail;
+        });
       });
-    });
-    // }
+    }
 
     await ref
         .read(eventControllerProvider.notifier)
@@ -239,7 +238,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                           child: Row(
                                             children: !eventDetail[
                                                         'event_relationship']
-                                                    ['host_event']
+                                                    ?['host_event']
                                                 ? [
                                                     Container(
                                                         height: 32,
@@ -903,7 +902,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                 )),
           ),
           eventDetail.isNotEmpty &&
-                  !eventDetail['event_relationship']['host_event']
+                  !eventDetail['event_relationship']?['host_event']
               ? Visibility(
                   visible: _isVisible,
                   child: Positioned(

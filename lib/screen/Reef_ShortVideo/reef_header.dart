@@ -20,7 +20,7 @@ class ReefHeader extends StatelessWidget {
               size: 18,
             ),
             buildSpacer(width: 5),
-            buildTextContent("Reef và video ngắn", true, fontSize: 17)
+            buildTextContent("Khoảnh khắc", true, fontSize: 17)
           ],
         ),
         GestureDetector(

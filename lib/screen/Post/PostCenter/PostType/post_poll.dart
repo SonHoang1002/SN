@@ -21,20 +21,24 @@ class PostPoll extends StatelessWidget {
       child: Stack(children: [
         GestureDetector(
           onTap: () {
-            functionAdditional != null ? functionAdditional!() : null;
+            pollData['id'] == null
+                ? functionAdditional != null
+                    ? functionAdditional!()
+                    : null
+                : null;
           },
           child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7),
                   border: Border.all(width: 0.4, color: greyColor)),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 6.0, vertical: 13),
+              padding: const EdgeInsets.fromLTRB(6.0, 15, 6.0, 12),
               margin: const EdgeInsets.fromLTRB(8.0, 15, 8, 0),
               child: Column(
                 children: [
                   SizedBox(
-                    height: pollData["options"].length * 50.0,
+                    // height: pollData["options"].length * 50.0,
                     child: ListView.builder(
+                        shrinkWrap: true,
                         itemCount: pollData["options"].length,
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
@@ -44,21 +48,26 @@ class PostPoll extends StatelessWidget {
                             decoration: const BoxDecoration(),
                             child: _buildInputPoll(
                                 index,
-                                TextEditingController(text: data ),
+                                TextEditingController(
+                                    text:
+                                        data is String ? data : data['title']),
                                 "Lựa chọn ${index + 1}"),
                           );
                         }),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        border: Border.all(width: 0.4, color: greyColor)),
-                    padding: const EdgeInsets.all(10),
-                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: buildTextContent(
-                        "+ Thêm lựa chọn thăm dò ý kiến...", false,
-                        fontSize: 17),
-                  ),
+                  // pollData['id'] == null
+                  //     ?
+                       Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(width: 0.4, color: greyColor)),
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.fromLTRB(8, 5, 8, 3),
+                          child: buildTextContent(
+                              "+ Thêm lựa chọn thăm dò ý kiến...", false,
+                              fontSize: 17),
+                        )
+                      // : const SizedBox(),
                 ],
               )),
         ),
@@ -66,7 +75,11 @@ class PostPoll extends StatelessWidget {
           alignment: Alignment.topRight,
           child: GestureDetector(
             onTap: () {
-              functionClose != null ? functionClose!() : null;
+              pollData['id'] == null
+                  ? functionClose != null
+                      ? functionClose!()
+                      : null
+                  : null;
             },
             child: Container(
               width: 30,
@@ -107,6 +120,11 @@ class PostPoll extends StatelessWidget {
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
                 enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    )),
+                focusedBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                     borderRadius: BorderRadius.all(
                       Radius.circular(5),
