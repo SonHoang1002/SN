@@ -147,7 +147,7 @@ class _HomeState extends ConsumerState<Home>
 
     List<Widget> pages = [
       const Feed(),
-      const Moment(),
+      const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
       const MainMarketPage(false)

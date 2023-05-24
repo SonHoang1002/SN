@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_video.dart';
-import 'package:social_network_app_mobile/screen/Moment/video_description.dart';
+import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 
 class MomentPageview extends ConsumerStatefulWidget {
   final List momentRender;
   final Function handlePageChange;
   final int? initialPage;
   final String type;
+  final String? typePage;
 
   const MomentPageview(
       {Key? key,
       required this.type,
       required this.momentRender,
       required this.handlePageChange,
-      this.initialPage})
+      this.initialPage,
+      this.typePage})
       : super(key: key);
 
   @override
@@ -27,11 +30,16 @@ class MomentPageview extends ConsumerStatefulWidget {
 class _MomentPageviewState extends ConsumerState<MomentPageview>
     with AutomaticKeepAliveClientMixin {
   double currentPage = 0;
-  final PreloadPageController _pageController = PreloadPageController();
+  late PreloadPageController _pageController;
 
   @override
   void initState() {
     super.initState();
+
+    currentPage = widget.initialPage?.toDouble() ?? 0;
+
+    _pageController =
+        PreloadPageController(initialPage: widget.initialPage ?? 0);
 
     _pageController.addListener(() {
       setState(() {
@@ -73,6 +81,69 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
           .updateMomentDetail(data['typeAction'], response);
     }
 
+    return widget.typePage != null && widget.typePage == 'home'
+        ? RenderPageView(
+            pageController: _pageController,
+            currentPage: currentPage,
+            widget: widget)
+        : Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height - 80,
+                child: RenderPageView(
+                    pageController: _pageController,
+                    currentPage: currentPage,
+                    widget: widget),
+              ),
+              GestureDetector(
+                onTap: () {
+                  showBarModalBottomSheet(
+                      context: context,
+                      barrierColor: Colors.transparent,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.65,
+                          child: CommentPostModal(
+                              post: widget.momentRender[currentPage.toInt()])));
+                },
+                child: Container(
+                    height: 80,
+                    padding: const EdgeInsets.only(left: 15, bottom: 10),
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                    ),
+                    child: Row(
+                      children: [
+                        Text("Thêm bình luận...",
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    )),
+              ),
+            ],
+          );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
+
+class RenderPageView extends StatelessWidget {
+  const RenderPageView({
+    super.key,
+    required PreloadPageController pageController,
+    required this.widget,
+    required this.currentPage,
+  }) : _pageController = pageController;
+
+  final PreloadPageController _pageController;
+  final MomentPageview widget;
+  final double currentPage;
+
+  @override
+  Widget build(BuildContext context) {
     return PreloadPageView.builder(
       physics: const CustomPageViewScrollPhysics(),
       controller: _pageController,
@@ -92,9 +163,6 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
       },
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class CustomPageViewScrollPhysics extends ScrollPhysics {

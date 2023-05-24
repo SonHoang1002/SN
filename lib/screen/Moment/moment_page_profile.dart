@@ -170,6 +170,7 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
                           context,
                           CupertinoPageRoute(
                               builder: (context) => Material(
+                                    color: Colors.black,
                                     child: MomentPageview(
                                       type: 'profile',
                                       momentRender: listVideos,

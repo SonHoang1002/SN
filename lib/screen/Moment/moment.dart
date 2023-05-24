@@ -7,8 +7,14 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 
 class Moment extends ConsumerStatefulWidget {
   final bool? isBack;
+  final String? typePage;
   final dynamic dataAdditional;
-  const Moment({Key? key, this.isBack, this.dataAdditional}) : super(key: key);
+  const Moment({
+    Key? key,
+    this.isBack,
+    this.dataAdditional,
+    this.typePage,
+  }) : super(key: key);
 
   @override
   ConsumerState<Moment> createState() => _MomentState();
@@ -78,6 +84,7 @@ class _MomentState extends ConsumerState<Moment>
             momentFollow.isNotEmpty
                 ? MomentPageview(
                     type: 'follow',
+                    typePage: widget.typePage,
                     momentRender: momentFollow,
                     handlePageChange: (value) {
                       if (value == momentFollow.length - 5) {
@@ -94,6 +101,7 @@ class _MomentState extends ConsumerState<Moment>
             momentSuggests.isNotEmpty
                 ? MomentPageview(
                     type: 'suggest',
+                    typePage: widget.typePage,
                     momentRender: momentSuggests,
                     handlePageChange: (value) {
                       if (value == momentSuggests.length - 5) {
