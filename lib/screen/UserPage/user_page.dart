@@ -65,7 +65,6 @@ class _UserPageState extends ConsumerState<UserPage> {
       });
 
       Future.delayed(Duration.zero, () async {
-
         // ref.read(postControllerProvider.notifier).removeListPost('user');
         // ref.read(userInformationProvider.notifier).removeUserInfo();
         List postUserNew =
@@ -82,9 +81,6 @@ class _UserPageState extends ConsumerState<UserPage> {
         dynamic userAboutNew =
             await UserPageApi().getAccountAboutInformation(id);
         var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
-
-        var pinNew = await PostApi().getListPostPinApi(id) ?? [];
-
 
         setState(() {
           lifeEvent = lifeEventNew;
