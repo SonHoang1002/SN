@@ -132,7 +132,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      grows[indexInteresting]['title'],
+                                      grows[indexInteresting]['title'].trim(),
                                       maxLines: 2,
                                       style: const TextStyle(
                                         fontSize: 16.0,

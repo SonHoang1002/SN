@@ -10,33 +10,39 @@ class UserInformationState {
   final List friends;
   final List friendsNear;
   final List featureContent;
+  final List userLifeEvent;
 
-  const UserInformationState(
-      {this.userInfor = const {},
-      this.userMoreInfor = const {},
-      this.friends = const [],
-      this.friendsNear = const [],
-      this.featureContent = const []});
+  const UserInformationState({
+    this.userInfor = const {},
+    this.userMoreInfor = const {},
+    this.friends = const [],
+    this.friendsNear = const [],
+    this.featureContent = const [],
+    this.userLifeEvent = const [],
+  });
 
-  UserInformationState copyWith(
-      {dynamic userInfor = const {},
-      dynamic userMoreInfor = const {},
-      List friends = const [],
-      List friendsNear = const [],
-      List featureContent = const []}) {
+  UserInformationState copyWith({
+    dynamic userInfor = const {},
+    dynamic userMoreInfor = const {},
+    List friends = const [],
+    List friendsNear = const [],
+    List featureContent = const [],
+    List userLifeEvent = const [],
+  }) {
     return UserInformationState(
-        userInfor: userInfor,
-        userMoreInfor: userMoreInfor,
-        friends: friends,
-        friendsNear: friendsNear,
-        featureContent: featureContent);
+      userInfor: userInfor,
+      userMoreInfor: userMoreInfor,
+      friends: friends,
+      friendsNear: friendsNear,
+      featureContent: featureContent,
+      userLifeEvent: userLifeEvent,
+    );
   }
 }
 
 final userInformationProvider = StateNotifierProvider.autoDispose<
     UserInformationController, UserInformationState>((ref) {
   ref.read(meControllerProvider);
-
   return UserInformationController();
 });
 
@@ -45,33 +51,75 @@ class UserInformationController extends StateNotifier<UserInformationState> {
 
   getUserInformation(idUser) async {
     var response = await UserPageApi().getAccountInfor(idUser);
-
     if (response != null && mounted) {
       state = state.copyWith(
-          userInfor: response,
-          userMoreInfor: state.userMoreInfor,
-          friends: state.friends,
-          friendsNear: state.friendsNear,
-          featureContent: state.featureContent);
+        userInfor: response,
+        userMoreInfor: state.userMoreInfor,
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: state.userLifeEvent,
+      );
+    } else {
+      state = state.copyWith(
+        userInfor: response,
+        userMoreInfor: state.userMoreInfor,
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: state.userLifeEvent,
+      );
+    }
+  }
+
+  getUserLifeEvent(idUser) async {
+    List response = await UserPageApi().getListLifeEvent(idUser);
+    if (response.isNotEmpty && mounted) {
+      state = state.copyWith(
+        userInfor: state.userInfor,
+        userMoreInfor: state.userMoreInfor,
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: response,
+      );
+    } else {
+      state = state.copyWith(
+        userInfor: state.userInfor,
+        userMoreInfor: state.userMoreInfor,
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: response,
+      );
     }
   }
 
   getUserMoreInformation(idUser) async {
     var response = await UserPageApi().getAccountAboutInformation(idUser);
-
     if (response != null && mounted) {
       state = state.copyWith(
-          userInfor: state.userInfor,
-          userMoreInfor: response,
-          friends: state.friends,
-          friendsNear: state.friendsNear,
-          featureContent: state.featureContent);
+        userInfor: state.userInfor,
+        userMoreInfor: response,
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: state.userLifeEvent,
+      );
+    } else {
+      state = state.copyWith(
+        userInfor: state.userInfor,
+        userMoreInfor: response,
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: state.userLifeEvent,
+      );
     }
   }
 
   getUserFriend(idUser, params) async {
     var response = await UserPageApi().getUserFriend(idUser, params);
-
     if (response != null && mounted) {
       state = state.copyWith(
           userInfor: state.userInfor,
@@ -88,14 +136,24 @@ class UserInformationController extends StateNotifier<UserInformationState> {
 
   getUserFeatureContent(idUser) async {
     var response = await UserPageApi().getUserFeatureContent(idUser);
-
     if (response != null && mounted) {
       state = state.copyWith(
-          userInfor: state.userInfor,
-          userMoreInfor: state.userMoreInfor,
-          friends: state.friends,
-          friendsNear: state.friendsNear,
-          featureContent: response);
+        userInfor: state.userInfor,
+        userMoreInfor: state.userMoreInfor,
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: response,
+        userLifeEvent: state.userLifeEvent,
+      );
+    } else {
+      state = state.copyWith(
+        userInfor: state.userInfor,
+        userMoreInfor: state.userMoreInfor,
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: response,
+        userLifeEvent: state.userLifeEvent,
+      );
     }
   }
 
