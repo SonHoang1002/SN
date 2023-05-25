@@ -53,7 +53,7 @@ class CardComponents extends StatelessWidget {
               children: [
                 Stack(
                   children: [
-                    SizedBox(child: Positioned.fill(child: imageCard)),
+                    SizedBox(child: imageCard ?? const SizedBox()),
                     type == 'homeScreen'
                         ? Stack(
                             children: [
