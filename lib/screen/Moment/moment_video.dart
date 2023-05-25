@@ -61,9 +61,9 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
 
   @override
   void dispose() {
+    super.dispose();
     _animationController.dispose();
     videoPlayerController.dispose();
-    super.dispose();
   }
 
   _handleOnDoubleTap(TapDownDetails tapDetails) {
