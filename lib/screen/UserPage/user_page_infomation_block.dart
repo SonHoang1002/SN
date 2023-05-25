@@ -24,9 +24,15 @@ class UserPageInfomationBlock extends StatelessWidget {
       : super(key: key);
   String renderContent(dynamic data) {
     if (data['life_event']['school_type'] == "HIGH_SCHOOL") {
-      return '${data['life_event']['currently'] ? "Đã học" : "Học"} tại ${data['life_event']['company']}';
+      if (data['life_event']['place'] != null) {
+        return '${data?['life_event']?['name']} tại ${data['life_event']['place']['title']}';
+      } else {
+        return '${data?['life_event']?['currently'] == true ? "Đã học" : "Học"} tại ${data['life_event']['company'] ?? data['life_event']['name']}';
+      }
     } else if (data['life_event']['school_type'] == "UNIVERSITY") {
-      return '${data['life_event']['currently'] ? "Từng học" : "Học"} tại ${data['life_event']['company']}';
+      return '${data?['life_event']?['currently'] == true ? "Từng học" : "Học"} tại ${data['life_event']['company'] ?? data['life_event']['name']}';
+    } else if (data['life_event']['position'] != null) {
+      return '${data?['life_event']?['position']} tại ${data['life_event']['company']}';
     } else {
       return data['life_event']['company'] ?? '';
     }
@@ -34,7 +40,7 @@ class UserPageInfomationBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    dynamic generalInformation = userAbout['general_information'];
+    dynamic generalInformation = userAbout?['general_information'];
     List hobbies = userAbout['hobbies'] ?? [];
     final theme = Provider.of<ThemeManager>(context);
     final size = MediaQuery.of(context).size;
