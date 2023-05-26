@@ -18,11 +18,18 @@ class _WatchRenderState extends ConsumerState<WatchRender>
     with AutomaticKeepAliveClientMixin {
   String menuSelected = 'watch_home';
 
+  @override
+  void initState() {
+    super.initState();
+    fetchDataWatch(menuSelected, {'limit': 3});
+  }
+
   void fetchDataWatch(type, params) {
-    bool isFetchData = ref.read(watchControllerProvider).watchSuggest.isEmpty &&
-            menuSelected == 'watch_home' ||
-        ref.read(watchControllerProvider).watchFollow.isEmpty &&
-            menuSelected == 'watch_follow';
+    bool isFetchData =
+        (ref.read(watchControllerProvider).watchSuggest.isEmpty &&
+                menuSelected == 'watch_home') ||
+            (ref.read(watchControllerProvider).watchFollow.isEmpty &&
+                menuSelected == 'watch_follow');
 
     if (isFetchData || params['max_id'] != null) {
       if (type == 'watch_home') {

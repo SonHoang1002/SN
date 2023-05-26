@@ -93,7 +93,8 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         const TextSpan(text: "Album  "),
         TextSpan(text: widget.post?["album"]["title"], style: bold)
       ];
-    } else if (widget.post?["replies"].length != 0 &&
+    } else if (widget.post?["replies"] != null &&
+        widget.post?["replies"].length != 0 &&
         widget.post?["replies"]
                 .firstWhere((e) => e["suggested_by"] == 'friend') !=
             null) {
