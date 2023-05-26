@@ -72,6 +72,7 @@ class _PostPollCenterState extends ConsumerState<PostPollCenter> {
           return true;
         },
         allData: poll,
+        multipleVote: poll['multiple'] == true,
         signPollPostFunction: signPollPost,
         updatePollPost: updatePollPost,
         pollOptionsSplashColor: Theme.of(context).colorScheme.background,
@@ -102,7 +103,7 @@ class _PostPollCenterState extends ConsumerState<PostPollCenter> {
         hasVoted: poll['own_votes'].isNotEmpty,
         pollTitle: const Text(''),
         userVotedOptionId:
-            poll['own_votes'].isNotEmpty ? poll['own_votes'][0] : null,
+            poll['own_votes'].isNotEmpty ? poll['own_votes'] : [],
         pollOptions: poll['options'].map<PollOption>(
           (option) {
             return PollOption(

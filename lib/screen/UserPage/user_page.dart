@@ -65,8 +65,6 @@ class _UserPageState extends ConsumerState<UserPage> {
       });
 
       Future.delayed(Duration.zero, () async {
-        // ref.read(postControllerProvider.notifier).removeListPost('user');
-        // ref.read(userInformationProvider.notifier).removeUserInfo();
         List postUserNew =
             await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
                 [];
@@ -103,7 +101,9 @@ class _UserPageState extends ConsumerState<UserPage> {
               'my-debouncer', const Duration(milliseconds: 300), () {
             String maxId = "";
             if (ref.read(postControllerProvider).postUserPage.isEmpty) {
-              maxId = postUser.last['id'];
+              if (postUser.isNotEmpty) {
+                maxId = postUser.last['id'];
+              }
             } else {
               maxId = ref.read(postControllerProvider).postUserPage.last['id'];
             }

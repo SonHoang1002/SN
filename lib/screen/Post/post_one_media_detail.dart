@@ -541,22 +541,25 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                           PostFooterInformation(
                             post: userData,
                             preType: checkPreType(),
+                            indexImagePost: widget.currentIndex,
                           ),
                           buildDivider(),
                           SizedBox(
                             height: 40,
                             child: PostFooterButton(
-                                post: userData,
-                                type: postMultipleMedia,
-                                preType: checkPreType(),
-                                reloadFunction: () {
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    widget.reloadFunction != null
-                                        ? widget.reloadFunction!()
-                                        : null;
-                                  });
-                                }),
+                              post: userData,
+                              type: postMultipleMedia,
+                              preType: checkPreType(),
+                              reloadFunction: () {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  widget.reloadFunction != null
+                                      ? widget.reloadFunction!()
+                                      : null;
+                                });
+                              },
+                              indexImage: widget.currentIndex,
+                            ),
                           )
                         ],
                       ),

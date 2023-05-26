@@ -24,9 +24,9 @@ class UserPageInfomationBlock extends StatelessWidget {
       : super(key: key);
   String renderContent(dynamic data) {
     if (data['life_event']['school_type'] == "HIGH_SCHOOL") {
-      return '${data['life_event']['currently'] ? "Đã học" : "Học"} tại ${data['life_event']['company']}';
+      return '${data?['life_event']?['currently'] == true ? "Đã học" : "Học"} tại ${data['life_event']['company'] ?? "abc"}';
     } else if (data['life_event']['school_type'] == "UNIVERSITY") {
-      return '${data['life_event']['currently'] ? "Từng học" : "Học"} tại ${data['life_event']['company']}';
+      return '${data['life_event']?['currently'] == true ? "Từng học" : "Học"} tại ${data['life_event']['company'] ?? "abc"}';
     } else {
       return data['life_event']['company'] ?? '';
     }
@@ -34,8 +34,8 @@ class UserPageInfomationBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    dynamic generalInformation = userAbout['general_information'];
-    List hobbies = userAbout['hobbies'] ?? [];
+    dynamic generalInformation = userAbout?['general_information'];
+    List hobbies = userAbout?['hobbies'] ?? [];
     final theme = Provider.of<ThemeManager>(context);
     final size = MediaQuery.of(context).size;
     return generalInformation == null
@@ -64,7 +64,9 @@ class UserPageInfomationBlock extends StatelessWidget {
                           itemCount: lifeEvent.length,
                           itemBuilder: (context, index) {
                             if (lifeEvent[index]['life_event']['visibility'] !=
-                                'private') {
+                                    'private' &&
+                                lifeEvent[index]['life_event']['company'] !=
+                                    null) {
                               return ListTile(
                                 // minLeadingWidth: 20,
                                 dense: true,

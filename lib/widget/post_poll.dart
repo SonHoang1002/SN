@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helpers/helpers/extensions/extensions.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -12,9 +13,10 @@ import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widg
 class FlutterPolls extends HookWidget {
   FlutterPolls(
       {super.key,
+      this.multipleVote,
       required this.pollId,
       this.hasVoted = false,
-      this.userVotedOptionId,
+      required this.userVotedOptionId,
       required this.onVoted,
       this.allData,
       this.role,
@@ -54,6 +56,8 @@ class FlutterPolls extends HookWidget {
   /// It is also used to check if a user has already voted in this poll.
   final String? pollId;
 
+  final bool? multipleVote;
+
   final String? role;
 
   final dynamic allData;
@@ -71,7 +75,7 @@ class FlutterPolls extends HookWidget {
 
   /// If a user has already voted in this poll.
   /// It is ignored if [hasVoted] is set to false or not set at all.
-  final int? userVotedOptionId;
+  final List<dynamic> userVotedOptionId;
 
   /// An asynchronous callback for HTTP call feature
   /// Called when the user votes for an option.
@@ -227,23 +231,137 @@ class FlutterPolls extends HookWidget {
   final Function? updatePollPost;
 
   TextEditingController newController = TextEditingController(text: '');
+
+  List<PollOption> _initPollOptions() {
+    List<PollOption> mainList = [];
+    for (int i = 0; i < pollOptions.length; i++) {
+      for (int y = 0; y < userVotedOptionId.length; y++) {
+        if (pollOptions[i].id == userVotedOptionId[y]) {
+          mainList.add(pollOptions[i]);
+        }
+      }
+    }
+    return mainList;
+  }
+
   @override
   Widget build(BuildContext context) {
     final hasPollEnded = useState(pollEnded);
     final userHasVoted = useState(hasVoted);
     final isLoading = useState(_isloading);
-    final votedOption = useState<PollOption?>(hasVoted == false
-        ? null
-        : pollOptions
-            .where(
-              (pollOption) => pollOption.id == userVotedOptionId,
-            )
-            .toList()
-            .first);
+    final votedOptions = useState<List<PollOption>?>(
+        hasVoted == false ? [] : _initPollOptions());
     final totalVotes = useState<int>(pollOptions.fold(
       0,
       (acc, option) => acc + option.votes,
     ));
+
+    double caculatePercent(int index, PollOption pollOption) {
+      final options =
+          allData['options'].map((ele) => ele['votes_count']).toList();
+      print("options ${options}");
+      int sum = options.reduce((value, element) => value + element);
+      double result;
+      if (votedOptions.value!.contains(pollOption)) {
+        result = ((allData['options'][index]['votes_count'] + 1) /
+            (sum + votedOptions.value!.length));
+        print("ressult 123 $result");
+        return result;
+      } else {
+        result = (allData['options'][index]['votes_count'] /
+            (sum + votedOptions.value!.length));
+        print("ressult yryt  $result");
+        return result;
+      }
+    }
+
+    handleActionVote(PollOption pollOption) async {
+      // multi false
+      if (multipleVote == false) {
+        //nguoi dung chon vote
+        if (isLoading.value) return;
+        if (userHasVoted.value == false || votedOptions.value!.isEmpty) {
+          !votedOptions.value!.contains(pollOption)
+              ? votedOptions.value!.add(pollOption)
+              : null;
+          isLoading.value = true;
+          bool success = await onVoted(
+            pollOption,
+            totalVotes.value,
+          );
+          isLoading.value = false;
+          if (success) {
+            pollOption.votes++;
+            userHasVoted.value = true;
+            totalVotes.value++;
+            signPollPostFunction != null
+                ? signPollPostFunction!({
+                    'choices': [pollOption.id]
+                  })
+                : null;
+          }
+        } else {
+          !votedOptions.value!.contains(pollOption)
+              ? votedOptions.value!.remove(pollOption)
+              : null;
+          pollOption.votes--;
+          userHasVoted.value = false;
+          totalVotes.value--;
+          updatePollPost != null
+              ? updatePollPost!(
+                  {'choices': votedOptions.value!.map((e) => e.id).toList()})
+              : null;
+        }
+      } else {
+        // nguoi dung muon vote
+        if (pollOption.votes == 0) {
+          bool _pollOptionsIsEmpty = votedOptions.value!.isEmpty;
+          if (votedOptions.value!.isEmpty) {
+            totalVotes.value != 0 ? totalVotes.value++ : null;
+          }
+          !votedOptions.value!.contains(pollOption)
+              ? votedOptions.value!.add(pollOption)
+              : null;
+          isLoading.value = true;
+          bool success = await onVoted(
+            pollOption,
+            totalVotes.value,
+          );
+          isLoading.value = false;
+          if (success) {
+            pollOption.votes++;
+            userHasVoted.value = true;
+            _pollOptionsIsEmpty
+                ? signPollPostFunction != null
+                    ? signPollPostFunction!({
+                        'choices': votedOptions.value!.map((e) => e.id).toList()
+                      })
+                    : null
+                : updatePollPost != null
+                    ? updatePollPost!({
+                        'choices': votedOptions.value!.map((e) => e.id).toList()
+                      })
+                    : null;
+          }
+          // nguoi dung muon huy vote
+        } else {
+          pollOption.votes--;
+          !votedOptions.value!.contains(pollOption)
+              ? votedOptions.value!.remove(pollOption)
+              : null;
+          if (votedOptions.value!.isEmpty) {
+            userHasVoted.value = false;
+            totalVotes.value--;
+            updatePollPost != null ? updatePollPost!({'choices': []}) : null;
+          } else {
+            updatePollPost != null
+                ? updatePollPost!(
+                    {'choices': votedOptions.value!.map((e) => e.id).toList()})
+                : null;
+          }
+        }
+      }
+    }
 
     return Column(
       key: ValueKey(pollId),
@@ -255,6 +373,7 @@ class FlutterPolls extends HookWidget {
         else
           ...pollOptions.map(
             (pollOption) {
+              int index = pollOptions.indexOf(pollOption);
               if (hasVoted && userVotedOptionId == null) {
                 throw ('>>>Having "hasVoted" property require "userVotedOptionId" property !=null<<<');
               } else {
@@ -266,15 +385,7 @@ class FlutterPolls extends HookWidget {
                         child: userHasVoted.value || hasPollEnded.value
                             ? InkWell(
                                 onTap: () async {
-                                  if (pollOption.votes != 0 &&
-                                      userHasVoted.value == true) {
-                                    pollOption.votes--;
-                                    totalVotes.value--;
-                                    userHasVoted.value = false;
-                                    updatePollPost != null
-                                        ? updatePollPost!({'choices': []})
-                                        : null;
-                                  }
+                                  handleActionVote(pollOption);
                                 },
                                 child: Container(
                                   key: UniqueKey(),
@@ -293,17 +404,23 @@ class FlutterPolls extends HookWidget {
                                     animation: true,
                                     animationDuration: votedAnimationDuration,
                                     backgroundColor: votedBackgroundColor,
-                                    progressColor: pollOption.votes ==
-                                            pollOptions
-                                                .reduce(
-                                                  (max, option) =>
-                                                      max.votes > option.votes
-                                                          ? max
-                                                          : option,
-                                                )
-                                                .votes
-                                        ? leadingVotedProgessColor
-                                        : votedProgressColor,
+                                    progressColor:
+                                        // votedOptions.value!
+                                        //         .map((e) => e.id)
+                                        //         .toList()
+                                        //         .contains(pollOption.id)
+                                        pollOption.votes ==
+                                                pollOptions
+                                                    .reduce(
+                                                      (max, option) =>
+                                                          max.votes >
+                                                                  option.votes
+                                                              ? max
+                                                              : option,
+                                                    )
+                                                    .votes
+                                            ? leadingVotedProgessColor
+                                            : votedProgressColor,
                                     center: Container(
                                       width: double.infinity,
                                       padding: const EdgeInsets.symmetric(
@@ -313,8 +430,8 @@ class FlutterPolls extends HookWidget {
                                         children: [
                                           pollOption.title,
                                           const SizedBox(width: 10),
-                                          // if (votedOption.value != null &&
-                                          //     votedOption.value?.id == pollOption.id)
+                                          // if (votedOptions.value != null &&
+                                          //     votedOptions.value?.id == pollOption.id)
                                           //   votedCheckmark ??
                                           //       const Icon(
                                           //         Icons.check_circle_outline_rounded,
@@ -325,7 +442,7 @@ class FlutterPolls extends HookWidget {
                                           Text(
                                             totalVotes.value == 0
                                                 ? "0 $votesText"
-                                                : '${(pollOption.votes / totalVotes.value * 100).toStringAsFixed(1)}%',
+                                                : '${(caculatePercent(pollOptions.indexOf(pollOption), pollOption) * 100).toStringAsFixed(1)}%',
                                             style: votedPercentageTextStyle,
                                           ),
                                         ],
@@ -341,32 +458,31 @@ class FlutterPolls extends HookWidget {
                                 ),
                                 child: InkWell(
                                   onTap: () async {
-                                    // Disables clicking while loading
-                                    if (isLoading.value) return;
-                                    if (userHasVoted.value == false) {
-                                      votedOption.value = pollOption;
-                                      isLoading.value = true;
-                                      bool success = await onVoted(
-                                        votedOption.value!,
-                                        totalVotes.value,
-                                      );
-                                      isLoading.value = false;
-                                      if (success) {
-                                        pollOption.votes++;
-                                        totalVotes.value++;
-                                        userHasVoted.value = true;
-                                        // 00000000
-                                        signPollPostFunction != null
-                                            ? signPollPostFunction!({
-                                                'choices': [pollOption.id]
-                                              })
-                                            : null;
-                                      }
-                                    } else {
-                                      pollOption.votes--;
-                                      totalVotes.value--;
-                                      userHasVoted.value = false;
-                                    }
+                                    handleActionVote(pollOption);
+                                    // if (isLoading.value) return;
+                                    // if (userHasVoted.value == false) {
+                                    //   votedOptions.value!.add(pollOption);
+                                    //   isLoading.value = true;
+                                    //   bool success = await onVoted(
+                                    //     pollOption,
+                                    //     totalVotes.value,
+                                    //   );
+                                    //   isLoading.value = false;
+                                    //   if (success) {
+                                    //     pollOption.votes++;
+                                    //     userHasVoted.value = true;
+                                    //     if (votedOptions.value!.isEmpty) {
+                                    //       totalVotes.value != 0
+                                    //           ? totalVotes.value++
+                                    //           : null;
+                                    //       signPollPostFunction != null
+                                    //           ? signPollPostFunction!({
+                                    //               'choices': [pollOption.id]
+                                    //             })
+                                    //           : null;
+                                    //     }
+                                    //   }
+                                    // }
                                   },
                                   splashColor: pollOptionsSplashColor,
                                   borderRadius: pollOptionsBorderRadius ??
@@ -391,8 +507,10 @@ class FlutterPolls extends HookWidget {
                                     ),
                                     child: Center(
                                       child: isLoading.value &&
-                                              pollOption.id ==
-                                                  votedOption.value!.id
+                                              votedOptions.value!
+                                                  .map((e) => e.id)
+                                                  .toList()
+                                                  .contains(pollOption.id)
                                           ? loadingWidget ??
                                               const SizedBox(
                                                 height: 20,

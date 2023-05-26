@@ -46,22 +46,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
   ScrollDirection? beginDirection;
   @override
   void initState() {
-    super.initState();
-    // fake form reaction
-    List tempMedias = widget.post['media_attachments'];
-    tempMedias.forEach((element) {
-      element["reaction"] = [
-        {"type": "like", "likes_count": 0},
-        {"type": "haha", "hahas_count": 0},
-        {"type": "angry", "angrys_count": 0},
-        {"type": "love", "loves_count": 0},
-        {"type": "sad", "sads_count": 0},
-        {"type": "wow", "wows_count": 0},
-        {"type": "yay", "yays_count": 0}
-      ];
-      medias.add(element);
-    });
-    //
+    super.initState(); 
     beginPositonY = 0;
     updatePositonY = 0;
     _scrollParentController = ScrollController();
@@ -221,7 +206,10 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
 
   ValueNotifier<bool> showBgContainer = ValueNotifier(true);
 
-  
+  reloadDetailFunction() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     medias = widget.post['media_attachments'];
@@ -454,32 +442,39 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                                         Hero(
                                                           tag: medias[index]
                                                               ['id'],
-                                                          child: ExtendedImage.network(
-                                                              medias[index]
-                                                                  ['url'],
-                                                              key: Key(
-                                                                  medias[index]
-                                                                      ['id']),
-                                                              fit: BoxFit
-                                                                  .fitHeight,
-                                                              width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width,
-                                                              height: double.parse(medias[index]
-                                                                              ['meta']
-                                                                          ["small"]
-                                                                      ["height"]
-                                                                  .toString())),
+                                                          child: ExtendedImage
+                                                              .network(
+                                                            medias[index]
+                                                                ['url'],
+                                                            key: Key(
+                                                                medias[index]
+                                                                    ['id']),
+                                                            // fit: BoxFit
+                                                            //     .fitWidth,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            // height: double.parse(medias[index]
+                                                            //                 ['meta']
+                                                            //             ["small"]
+                                                            //         ["height"]
+                                                            //     .toString()
+                                                            // )
+                                                          ),
                                                         ),
                                                       ],
                                                     )),
                                                 PostFooter(
-                                                  post: mediaData ??
-                                                      medias[index],
-                                                  type: postMultipleMedia,
-                                                  preType: widget.preType,
-                                                ),
+                                                    post: widget.post,
+                                                    // mediaData ??
+                                                    //     medias[index],
+                                                    type: postMultipleMedia,
+                                                    preType: widget.preType,
+                                                    indexOfImage: index,
+                                                    reloadDetailFunction:
+                                                        reloadDetailFunction),
                                                 const CrossBar(
                                                   height: 5,
                                                   onlyTop: 5,

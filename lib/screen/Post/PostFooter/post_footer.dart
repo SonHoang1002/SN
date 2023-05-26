@@ -15,7 +15,15 @@ class PostFooter extends StatelessWidget {
   final dynamic post;
   final dynamic type;
   final dynamic preType;
-  const PostFooter({Key? key, this.post, this.type, this.preType})
+  final int? indexOfImage;
+  final Function? reloadDetailFunction;
+  const PostFooter(
+      {Key? key,
+      this.post,
+      this.type,
+      this.preType,
+      this.indexOfImage,
+      this.reloadDetailFunction})
       : super(key: key);
 
   @override
@@ -60,6 +68,7 @@ class PostFooter extends StatelessWidget {
                   post: post,
                   type: type,
                   // preType: checkPreType(),
+                  indexImagePost: indexOfImage,
                 )),
         Container(
           height: 1,
@@ -69,10 +78,11 @@ class PostFooter extends StatelessWidget {
           decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3)),
         ),
         PostFooterButton(
-          post: post,
-          type: type,
-          preType: preType,
-        ),
+            post: post,
+            type: type,
+            preType: preType,
+            indexImage: indexOfImage,
+            reloadDetailFunction: reloadDetailFunction),
         type != postDetail
             ? const SizedBox()
             : Column(

@@ -11,9 +11,7 @@ showCustomBottomSheet(BuildContext context, double height, String title,
     bool? isBarrierTransparent = false,
     bool? isHaveHeader = true,
     IconData? iconData}) {
-  final bgColor1 = ThemeMode.dark == true
-      ? Theme.of(context).cardColor
-      : const Color(0xfff1f2f5);
+  final bgColor1 = Theme.of(context).scaffoldBackgroundColor;
   showModalBottomSheet(
       enableDrag: true,
       context: context,

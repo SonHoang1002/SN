@@ -8,8 +8,13 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
   final dynamic media;
   final double? aspectRatio;
   final ValueNotifier<int>? videoPositionNotifier;
+  final bool? isHiddenControl;
   const VideoPlayerHasController(
-      {Key? key, this.media, this.aspectRatio, this.videoPositionNotifier})
+      {Key? key,
+      this.media,
+      this.isHiddenControl,
+      this.aspectRatio,
+      this.videoPositionNotifier})
       : super(key: key);
 
   @override
@@ -60,9 +65,7 @@ class _VideoPlayerHasControllerState
         .watch(betterPlayerControllerProvider)
         .firstWhere((element) => element.videoId == widget.media['id'],
             orElse: () => const BetterState(
-                videoId: '',
-                videoPlayerController: null,
-                chewieController: null));
+                videoPlayerController: null, chewieController: null));
 
     return betterState.videoPlayerController != null &&
             betterState.videoPlayerController!.value.isInitialized &&
@@ -70,15 +73,7 @@ class _VideoPlayerHasControllerState
         ? VisibilityDetector(
             onVisibilityChanged: (visibilityInfo) {
               if (mounted) {
-                setState(() {
-                  isVisible = visibilityInfo.visibleFraction == 1;
-
-                  if (isVisible) {
-                    betterState.videoPlayerController!.play();
-                  } else {
-                    betterState.videoPlayerController!.pause();
-                  }
-                });
+                setState(() {});
               }
             },
             key: Key(widget.media['id']),
