@@ -62,13 +62,16 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
               child: Column(
                 children: [
                   Visibility(
+                    maintainAnimation: true,
+                    maintainState: true,
                     visible: !focusNode.hasFocus,
                     child: const Text('123'),
                   ),
                   Visibility(
                     visible: focusNode.hasFocus,
-                    maintainState: true,
+                    maintainSize: true,
                     maintainAnimation: true,
+                    maintainState: true,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: Row(
@@ -293,6 +296,9 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                   ),
                   Visibility(
                     visible: !focusNode.hasFocus,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
                     child: Container(
                         decoration: BoxDecoration(
                             color: Theme.of(context).cardColor,

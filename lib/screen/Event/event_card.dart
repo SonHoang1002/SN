@@ -516,12 +516,12 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                 .scaffoldBackgroundColor,
                                             builder: (context) =>
                                                 SingleChildScrollView(
-                                                    primary: true,
                                                     padding: EdgeInsets.only(
                                                         bottom: MediaQuery.of(
-                                                                context)
-                                                            .viewInsets
-                                                            .bottom),
+                                                                    context)
+                                                                .viewInsets
+                                                                .bottom *
+                                                            0.35),
                                                     child:
                                                         const ShareModalBottom()));
                                       },
