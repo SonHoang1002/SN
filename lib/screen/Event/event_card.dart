@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
@@ -509,16 +510,20 @@ class _EventCardState extends ConsumerState<EventCard> {
                                     alignment: Alignment.bottomRight,
                                     child: InkWell(
                                       onTap: () {
-                                        showModalBottomSheet(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.vertical(
-                                                top: Radius.circular(10),
-                                              ),
-                                            ),
+                                        showBarModalBottomSheet(
                                             context: context,
+                                            backgroundColor: Theme.of(context)
+                                                .scaffoldBackgroundColor,
                                             builder: (context) =>
-                                                const ShareModalBottom());
+                                                SingleChildScrollView(
+                                                    primary: true,
+                                                    padding: EdgeInsets.only(
+                                                        bottom: MediaQuery.of(
+                                                                context)
+                                                            .viewInsets
+                                                            .bottom),
+                                                    child:
+                                                        const ShareModalBottom()));
                                       },
                                       child: Container(
                                         height: 32,
