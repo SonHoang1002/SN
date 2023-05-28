@@ -1,9 +1,15 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/widget/show_modal_message.dart';
 
+import '../apis/post_api.dart';
+import '../constant/common.dart';
+import '../providers/share_action/share_provider.dart';
 import '../theme/colors.dart';
+import 'appbar_title.dart';
 import 'avatar_social.dart';
 
 class ShareModalBottom extends ConsumerStatefulWidget {
@@ -39,14 +45,60 @@ List iconShareModal = [
 
 class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
   FocusNode focusNode = FocusNode();
-
+  String renderShareType = '';
+  dynamic shareGroupSelected = {};
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () {
+      ref
+          .read(shareControllerProvider.notifier)
+          .getShareGroup({"tab": "join", "limit": 5});
+    });
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  // String renderShareType(String type) {
+  //   switch (type) {
+  //     case 'group':
+  //       renderShareType = 'group';
+  //       break;
+  //     default:
+  //       renderShareType = '';
+  //       break;
+  //   }
+  // }
+
+  String renderTitle(type) {
+    switch (type) {
+      case "event":
+        return '${widget.data['account']['display_name']} đã tạo một sự kiện.';
+      default:
+        return '';
+    }
+  }
+
+  Future handleShare(data, context) async {
+    try {
+      Navigator.of(context).pop();
+      showSnackbar(context, 'chia sẻ thành công');
+      var res = await PostApi().createStatus({
+        "shared_event_id": data['id'],
+        "status": "",
+        "visibility": "public"
+      });
+    } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
+    List shareGroup = ref.watch(shareControllerProvider).shareGroup;
+
     var meData = ref.watch(meControllerProvider)[0];
     var size = MediaQuery.of(context).size;
     return GestureDetector(
@@ -65,15 +117,43 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                     maintainAnimation: true,
                     maintainState: true,
                     visible: !focusNode.hasFocus,
-                    child: const Text('123'),
+                    child: Row(children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: ExtendedImage.network(
+                            widget.data['banner'] != null
+                                ? widget.data['banner']['url']
+                                : linkBannerDefault,
+                            fit: BoxFit.cover,
+                            width: 44,
+                            height: 44),
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            renderTitle(widget.type),
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.normal),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            widget.data['account']['display_name'],
+                            style: const TextStyle(color: Colors.grey),
+                          )
+                        ],
+                      )
+                    ]),
                   ),
                   Visibility(
                     visible: focusNode.hasFocus,
-                    maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
+                      padding: focusNode.hasFocus
+                          ? const EdgeInsets.only(bottom: 16.0)
+                          : EdgeInsets.zero,
                       child: Row(
                         children: [
                           GestureDetector(
@@ -93,12 +173,18 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                           const Text(
                             'Chia sẻ',
                             style: TextStyle(
-                                fontSize: 16.0, fontWeight: FontWeight.w600),
+                                fontSize: 20.0, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
                     ),
                   ),
+                  !focusNode.hasFocus
+                      ? const Divider(
+                          height: 20,
+                          thickness: 1,
+                        )
+                      : const SizedBox(),
                   Container(
                     decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
@@ -137,11 +223,13 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                     Row(
                                       children: [
                                         GestureDetector(
-                                            onTap: () {},
+                                            onTap: () {
+                                              focusNode.requestFocus();
+                                            },
                                             child: Container(
                                               height: 24,
                                               margin: const EdgeInsets.fromLTRB(
-                                                  10, 0, 6, 10),
+                                                  10, 0, 6, 0),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius:
@@ -155,20 +243,22 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                                 child: Row(
                                                   mainAxisSize:
                                                       MainAxisSize.min,
-                                                  children: const [
+                                                  children: [
                                                     Text(
-                                                      'Bảng feed',
-                                                      style: TextStyle(
+                                                      shareGroupSelected[
+                                                              'title'] ??
+                                                          'Bảng feed',
+                                                      style: const TextStyle(
                                                         fontSize: 12.0,
                                                         color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                       ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 3.0,
                                                     ),
-                                                    Padding(
+                                                    const Padding(
                                                       padding: EdgeInsets.only(
                                                           bottom: 8.0),
                                                       child: Icon(
@@ -186,7 +276,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                           child: Container(
                                             height: 24,
                                             margin: const EdgeInsets.fromLTRB(
-                                                2, 0, 6, 10),
+                                                2, 0, 6, 0),
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
@@ -198,8 +288,8 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                               padding: const EdgeInsets.only(
                                                   left: 8.0, right: 8.0),
                                               child: Row(
-                                                children: const [
-                                                  Padding(
+                                                children: [
+                                                  const Padding(
                                                     padding: EdgeInsets.only(
                                                         bottom: 2.0),
                                                     child: Icon(
@@ -208,21 +298,24 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                                         color: Colors.black,
                                                         size: 10),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 5.0,
                                                   ),
                                                   Text(
-                                                    'Bạn bè',
-                                                    style: TextStyle(
+                                                    'Thành viên nhóm Thành viên nhóm ${shareGroupSelected['title'] ?? 'Bạn bè'}',
+                                                    maxLines: 1,
+                                                    style: const TextStyle(
                                                         fontSize: 12.0,
                                                         fontWeight:
                                                             FontWeight.w700,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         color: Colors.black),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 3.0,
                                                   ),
-                                                  Padding(
+                                                  const Padding(
                                                     padding: EdgeInsets.only(
                                                         bottom: 8.0),
                                                     child: Center(
@@ -247,22 +340,30 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          padding: const EdgeInsets.only(
+                            left: 8.0,
+                            right: 8.0,
+                          ),
                           child: TextFormField(
                             focusNode: focusNode,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             minLines: 1,
                             decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Hãy nói gì đó về nội dung này...'),
+                              border: InputBorder.none,
+                              hintText: 'Hãy nói gì đó về nội dung này...',
+                              hintStyle: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.normal),
+                            ),
                           ),
                         ),
                         Container(
                           alignment: Alignment.centerRight,
                           margin: const EdgeInsets.only(right: 10, bottom: 12),
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              handleShare(widget.data, context);
+                            },
                             child: Container(
                               height: 30,
                               padding: const EdgeInsets.only(left: 8, right: 8),
@@ -307,7 +408,26 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                           children: List.generate(
                             iconShareModal.length,
                             (index) => GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                if (iconShareModal[index]['key'] ==
+                                    'share-group') {
+                                  showModalBottomSheet(
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(10),
+                                        ),
+                                      ),
+                                      context: context,
+                                      builder: (context) => ShareGroup(
+                                            shareGroup: shareGroup,
+                                            onItemSelected: (value) {
+                                              setState(() {
+                                                shareGroupSelected = value;
+                                              });
+                                            },
+                                          ));
+                                }
+                              },
                               child: Row(
                                 children: [
                                   Padding(
@@ -353,5 +473,49 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                 ],
               ))),
     );
+  }
+}
+
+class ShareGroup extends StatefulWidget {
+  final dynamic shareGroup;
+  final Function? onItemSelected;
+  const ShareGroup({super.key, this.shareGroup, this.onItemSelected});
+
+  @override
+  State<ShareGroup> createState() => _ShareGroupState();
+}
+
+class _ShareGroupState extends State<ShareGroup> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const AppBarTitle(title: 'Nhóm'),
+          centerTitle: true,
+        ),
+        body: ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.shareGroup.length,
+            itemBuilder: (context, int index) {
+              return ListTile(
+                leading: ClipOval(
+                  child: ExtendedImage.network(
+                      widget.shareGroup[index]['banner'] != null
+                          ? widget.shareGroup[index]['banner']['preview_url']
+                          : linkBannerDefault,
+                      width: 48,
+                      height: 48),
+                ),
+                title: Text(widget.shareGroup[index]['title']),
+                subtitle: const Divider(
+                  height: 10,
+                  thickness: 1,
+                ),
+                onTap: () {
+                  widget.onItemSelected!(widget.shareGroup[index]);
+                  Navigator.of(context).pop();
+                },
+              );
+            }));
   }
 }

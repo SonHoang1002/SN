@@ -522,8 +522,10 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                                 .viewInsets
                                                                 .bottom *
                                                             0.35),
-                                                    child:
-                                                        const ShareModalBottom()));
+                                                    child: ShareModalBottom(
+                                                        data: events[
+                                                            indexInteresting],
+                                                        type: 'event')));
                                       },
                                       child: Container(
                                         height: 32,
