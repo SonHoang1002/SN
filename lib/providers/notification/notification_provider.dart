@@ -33,6 +33,7 @@ class NotificationController extends StateNotifier<NotificationState> {
 
   getListNotifications(params) async {
     List response = await NotificationsApi().getListNotifications(params);
+    if (params == null) return;
     if (response.isNotEmpty) {
       final newList = response
           .where((item) => !state.notifications.contains(item))

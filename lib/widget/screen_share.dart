@@ -379,6 +379,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                           ListView.builder(
                               itemCount: menuShare.length,
                               shrinkWrap: true,
+                              primary: false,
                               itemBuilder: (context, index) => InkWell(
                                     onTap: () {
                                       handlePress(menuShare[index]['key']);

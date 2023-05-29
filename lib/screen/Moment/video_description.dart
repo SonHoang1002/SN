@@ -101,7 +101,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
             barrierColor: Colors.transparent,
             backgroundColor: Colors.transparent,
             builder: (context) => SizedBox(
-                height: size.height * 0.5,
+                height: size.height * 0.7,
                 child: ScreenShare(
                     entityShare: widget.moment,
                     type: 'moment',
@@ -112,7 +112,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
             barrierColor: Colors.transparent,
             backgroundColor: Colors.transparent,
             builder: (context) => SizedBox(
-                height: size.height * 0.65,
+                height: size.height * 0.7,
                 child: CommentPostModal(post: widget.moment)));
       }
     }

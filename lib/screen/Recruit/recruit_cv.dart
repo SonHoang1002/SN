@@ -83,6 +83,7 @@ class _RecruitCVState extends ConsumerState<RecruitCV> {
                               child: ExtendedImage.network(
                                 recruitsCV[index]['template'] ??
                                     linkBannerDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),

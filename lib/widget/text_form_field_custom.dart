@@ -66,7 +66,9 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: widget.type == postWatchDetail
+              ? Colors.grey.withOpacity(0.2)
+              : Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.only(left: 10),
@@ -81,7 +83,9 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
             minLines: widget.minLines,
             initialValue: widget.initialValue,
             autofocus: widget.autofocus,
-            cursorColor: Theme.of(context).textTheme.displayLarge?.color,
+            cursorColor: widget.type == postWatchDetail
+                ? white
+                : Theme.of(context).textTheme.displayLarge?.color,
             onChanged: (value) {
               widget.handleGetValue!(value);
             },
@@ -102,11 +106,16 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
                   const EdgeInsets.only(right: 40, top: 10, bottom: 10),
               hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
             ),
+            style: TextStyle(
+              color:
+                  widget.type == postWatchDetail ? white : null, // Màu nội dung
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10, bottom: 8),
-            child: widget.suffixIcon,
-          ),
+          if (widget.type != postWatchDetail)
+            Padding(
+              padding: const EdgeInsets.only(right: 10, bottom: 8),
+              child: widget.suffixIcon,
+            ),
         ]),
       ),
     );

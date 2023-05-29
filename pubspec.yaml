@@ -129,6 +129,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.3.56 
   device_info_plus: ^8.0.0
   timelines: ^0.1.0 
+  like_button: ^2.0.5
 
 dev_dependencies:
   flutter_test:

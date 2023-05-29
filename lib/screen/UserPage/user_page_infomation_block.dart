@@ -24,9 +24,15 @@ class UserPageInfomationBlock extends StatelessWidget {
       : super(key: key);
   String renderContent(dynamic data) {
     if (data['life_event']['school_type'] == "HIGH_SCHOOL") {
-      return '${data?['life_event']?['currently'] == true ? "Đã học" : "Học"} tại ${data['life_event']['company'] ?? "abc"}';
+      if (data['life_event']['place'] != null) {
+        return '${data?['life_event']?['name']} tại ${data['life_event']['place']['title']}';
+      } else {
+        return '${data?['life_event']?['currently'] == true ? "Đã học" : "Học"} tại ${data['life_event']['company'] ?? data['life_event']['name']}';
+      }
     } else if (data['life_event']['school_type'] == "UNIVERSITY") {
-      return '${data['life_event']?['currently'] == true ? "Từng học" : "Học"} tại ${data['life_event']['company'] ?? "abc"}';
+      return '${data?['life_event']?['currently'] == true ? "Từng học" : "Học"} tại ${data['life_event']['company'] ?? data['life_event']['name']}';
+    } else if (data['life_event']['position'] != null) {
+      return '${data?['life_event']?['position']} tại ${data['life_event']['company']}';
     } else {
       return data['life_event']['company'] ?? '';
     }

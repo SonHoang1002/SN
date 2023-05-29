@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:social_network_app_mobile/widget/image_cache.dart';

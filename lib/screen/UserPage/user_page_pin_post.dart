@@ -64,7 +64,7 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
                     widget.pinPosts.length,
                     (index) => Container(
                       width: size.width * 0.85,
-                      height: size.height * 0.48,
+                      height: size.height * 0.4,
                       margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                       padding: const EdgeInsets.only(top: 15.0, bottom: 7.0),
                       decoration: BoxDecoration(

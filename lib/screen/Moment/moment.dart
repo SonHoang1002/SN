@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/data/moment.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -26,7 +25,6 @@ class _MomentState extends ConsumerState<Moment>
   PageController controller =
       PageController(viewportFraction: 1, keepPage: true);
   bool isPlay = false;
-  List momentSuggests = [];
 
   @override
   void initState() {
@@ -45,10 +43,6 @@ class _MomentState extends ConsumerState<Moment>
             .getListMomentFollow({"limit": 10});
       });
     }
-    momentSuggests = ref.read(momentControllerProvider).momentSuggest;
-    if (widget.dataAdditional != null && widget.dataAdditional.isNotEmpty) {
-      momentSuggests.insert(0, widget.dataAdditional);
-    }
   }
 
   @override
@@ -64,6 +58,14 @@ class _MomentState extends ConsumerState<Moment>
     ];
 
     List momentFollow = ref.watch(momentControllerProvider).momentFollow;
+    List momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
+    if (widget.dataAdditional != null && widget.dataAdditional.isNotEmpty) {
+      if (momentSuggests.isNotEmpty &&
+          momentSuggests[0]['id'] == widget.dataAdditional['id']) {
+      } else {
+        momentSuggests.insert(0, widget.dataAdditional);
+      }
+    }
 
     final size = MediaQuery.of(context).size;
 
