@@ -17,7 +17,12 @@ class ProductsController extends StateNotifier<ProductsState> {
   ProductsController() : super(ProductsState());
 
   getProducts() async {
-    List<dynamic> response = await ProductsApi().getProductsApi() ?? [];
+    List<dynamic> response = await ProductsApi().getProductsApi();
+    state = state.copyWith(response);
+  }
+
+  getUserProductList(dynamic pageId) async {
+    List<dynamic> response = await ProductsApi().getUserProductList(pageId);
     state = state.copyWith(response);
   }
 
@@ -29,7 +34,8 @@ class ProductsController extends StateNotifier<ProductsState> {
     state = state.copyWith(newData);
   }
 
-  createProduct(Map<String, dynamic> data) async {
+  dynamic createProduct(dynamic data) async {
     final response = await ProductsApi().postCreateProductApi(data);
+    return response;
   }
 }

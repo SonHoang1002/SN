@@ -23,12 +23,20 @@ class CartProductsController extends StateNotifier<CartProductsState> {
     state = state.copyWith(newList);
   }
 
-  updateCartQuantity(dynamic data) async {
-    final response = await CartProductApi().updateQuantityProductApi(data);
+  updateCartQuantity(dynamic id, dynamic data) async {
+    final response = await CartProductApi().updateQuantityProductApi(id, data);
   }
 
   deleteCartProduct(dynamic id, dynamic data) async {
     final response = await CartProductApi().deleteCartProductApi(id, data);
+  }
+
+  dynamic getCartCounter(List<dynamic> cartList) {
+    dynamic counter = 0;
+    cartList.forEach((element) {
+      counter += element["items"].length;
+    });
+    return counter;
   }
 }
 
@@ -39,28 +47,3 @@ class CartProductsState {
     return CartProductsState(listCart: list);
   }
 }
-
-// final checkBoxCartProductsProvider =
-
-//     StateNotifierProvider<CheckBoxCartProductsController, CheckBoxCartProductsState>(
-//         (ref) => CheckBoxCartProductsController());
-
-// class CheckBoxCartProductsController extends StateNotifier<CheckBoxCartProductsState> {
-//   CheckBoxCartProductsController() : super(CheckBoxCartProductsState());
-
-//   initCheckBoxCartProductList() async {
-//     state = state.copyWith([]);
-//   }
-
-//   updateCheckBoxCartProductList(List<dynamic> newCheckBoxList) async { 
-//     state = state.copyWith(newCheckBoxList);
-//   }
-
-// }
-// class CheckBoxCartProductsState {
-//   List<dynamic> listCartCheckbox;
-//   CheckBoxCartProductsState({this.listCartCheckbox = const []});
-//   CheckBoxCartProductsState copyWith(List<dynamic> list) {
-//     return CheckBoxCartProductsState(listCartCheckbox: list);
-//   }
-// }

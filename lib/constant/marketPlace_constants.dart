@@ -551,15 +551,15 @@ class MainMarketPageConstants {
     "key": "",
     "data": [
       {
-        "title": "Mới nhất",
+        "text": "Mới nhất",
         "icon": Icons.usb_rounded,
       },
       {
-        "title": "Bán chạy",
+        "text": "Bán chạy",
         "icon": Icons.usb_rounded,
       },
       {
-        "title": "Giá",
+        "text": "Giá",
         "icon": Icons.usb_rounded,
         "sub_selections": ["Cao đến thấp", "Thấp đến cao"]
       },
@@ -629,10 +629,9 @@ class PersonalMarketPlaceConstants {
         "icon": FontAwesomeIcons.star,
       },
       {
-        "title": "Đơn hàng của tôi",
+        "title": "Đơn mua của tôi",
         "icon": FontAwesomeIcons.bagShopping,
       },
-     
     ]
   };
 }
@@ -641,7 +640,6 @@ class DetailProductMarketConstants {
   static List<String> DETAIL_PRODUCT_MARKET_CONTENTS = [
     "Giới thiệu",
     "Đánh giá",
-    "Danh sách đã mua"
   ];
 
   static Map<String, dynamic> DETAIL_PRODUCT_MARKET_SHARE_SELECTIONS = {
@@ -1380,30 +1378,40 @@ class UpdateProductMarketConstants {
 
 class OrderProductMarketConstant {
   static List<Map<String, dynamic>> ORDER_PRODUCT_MARKET_TAB_LIST = [
-    {
-      "key": "all",
-      "title": "Tất cả",
-    },
+    // {
+    //   "key": "all",
+    //   "icon": MarketPlaceConstants.PATH_ICON + "add_img_file_icon.svg",
+    //   "title": "Tất cả",
+    // },
     {
       "key": "pending",
-      "title": "Chờ thanh toán",
+      "icon": MarketPlaceConstants.PATH_ICON + "pending.png",
+      "title": "Chờ thanh toán  ",
     },
     {
       "key": "delivered",
+      "icon": MarketPlaceConstants.PATH_ICON + "delivered.png",
       "title": "Vận chuyển",
     },
     {
       "key": "shipping",
+      "icon": MarketPlaceConstants.PATH_ICON + "shipping.png",
       "title": "Đang giao",
     },
     {
       "key": "finish",
+      "icon": MarketPlaceConstants.PATH_ICON + "finish.png",
       "title": "Hoàn thành",
     },
     {
       "key": "cancelled",
-      "title": "Đã hủy",
+      "icon": MarketPlaceConstants.PATH_ICON + "cancelled.png",
+      "title": "Đã hủy        ",
     },
-    {"key": "return", "title": "Trả hàng/ Hoàn tiền"},
+    {
+      "key": "return",
+      "icon": MarketPlaceConstants.PATH_ICON + "return.png",
+      "title": "Trả hàng/ Hoàn tiền"
+    },
   ];
 }
