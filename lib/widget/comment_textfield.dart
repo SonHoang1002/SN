@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -12,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:social_network_app_mobile/apis/create_post_apis/preview_url_post_api.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
@@ -35,10 +33,12 @@ class CommentTextfield extends StatefulHookConsumerWidget {
   final dynamic commentSelected;
   final Function? getCommentSelected;
   final String? type;
+  final bool? autoFocus;
 
   const CommentTextfield(
       {Key? key,
       this.type,
+      this.autoFocus,
       this.handleComment,
       this.commentNode,
       this.commentSelected,
@@ -122,7 +122,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     useEffect(
       () {
         if (widget.commentSelected != null &&
@@ -199,9 +199,9 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       });
     }
 
-    handleClickMention(data) { 
+    handleClickMention(data) {
       //Should show notification
-      if (listMentionsSelected.length > 30) return; 
+      if (listMentionsSelected.length > 30) return;
       String message =
           '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
       textController.text = message;
@@ -217,7 +217,6 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         listMentions = [];
         content = message;
         contentWithId = messageWithId;
-
       });
       setState(() {
         listMentionsSelected = [...listMentionsSelected, data];
@@ -314,7 +313,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       hiddenKeyboard(context);
     }
 
-    checkVisibileSubmit() {
+    checkVisibleSubmit() {
       if (textController.text.trim().isNotEmpty) return true;
       if (linkEmojiSticky.isNotEmpty) return true;
       if (files.isNotEmpty) return true;
@@ -325,9 +324,15 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         decoration: BoxDecoration(
             color: widget.type == postWatch
                 ? Colors.grey.shade900
-                : Theme.of(context).scaffoldBackgroundColor,
-            border:
-                const Border(top: BorderSide(width: 0.3, color: greyColor))),
+                : widget.type == postWatchDetail
+                    ? Colors.transparent
+                    : Theme.of(context).scaffoldBackgroundColor,
+            border: Border(
+                top: BorderSide(
+                    width: 0.3,
+                    color: widget.type == postWatchDetail
+                        ? Colors.transparent
+                        : greyColor))),
         padding: const EdgeInsets.only(
             top: 8.0, left: 8.0, right: 8.0, bottom: 15.0),
         child: Column(
@@ -435,21 +440,22 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   )
                 : const SizedBox(),
             Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => GalleryView(
-                              filesSelected: files,
-                              handleGetFiles: handleGetFiles)));
-                },
-                child: const Icon(
-                  FontAwesomeIcons.camera,
-                  color: secondaryColor,
-                  size: 20,
+              if (widget.type != postWatchDetail)
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => GalleryView(
+                                filesSelected: files,
+                                handleGetFiles: handleGetFiles)));
+                  },
+                  child: const Icon(
+                    FontAwesomeIcons.camera,
+                    color: secondaryColor,
+                    size: 20,
+                  ),
                 ),
-              ),
               const SizedBox(
                 width: 8.0,
               ),
@@ -459,7 +465,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 isDense: true,
                 minLines: 1,
                 maxLines: 5,
-                autofocus: true,
+                autofocus: widget.autoFocus ?? true,
                 hintText: "Viết bình luận...",
                 textController: textController,
                 focusNode: widget.commentNode,
@@ -477,7 +483,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
               const SizedBox(
                 width: 8.0,
               ),
-              checkVisibileSubmit()
+              checkVisibleSubmit()
                   ? GestureDetector(
                       onTap: !isComment
                           ? () {
@@ -543,4 +549,3 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         functionGetEmoji: functionGetEmoji);
   }
 }
- 

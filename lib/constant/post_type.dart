@@ -24,5 +24,6 @@ String postDetail = 'post_detail';
 String postDetailFromFeed = 'post_detail_from_feed';
 String postDetailFromUserPage = "post_detail_from_userpage";
 String postWatch = 'post_watch';
+String postWatchDetail = 'post_watch_detail';
 String suggestFriends = 'suggest_friend';
 String suggestGroups = 'suggest_group';

@@ -2,7 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
+
 import 'package:video_player/video_player.dart';
 
 @immutable
@@ -32,7 +32,8 @@ class BetterState {
 class BetterPlayerControllerNotifier extends StateNotifier<List<BetterState>> {
   BetterPlayerControllerNotifier() : super(const []);
 
-  void initializeBetterPlayerController(String videoId, String path) {
+  void initializeBetterPlayerController(
+      String videoId, String path, Widget? overlay) {
     VideoPlayerController videoPlayerController =
         VideoPlayerController.network(path);
     videoPlayerController.initialize().then((value) => state = state +
@@ -41,6 +42,9 @@ class BetterPlayerControllerNotifier extends StateNotifier<List<BetterState>> {
               videoId: videoId,
               videoPlayerController: videoPlayerController,
               chewieController: ChewieController(
+                  placeholder: const SizedBox(),
+                  looping: true,
+                  overlay: overlay ?? const SizedBox(),
                   showControlsOnInitialize: false,
                   videoPlayerController: videoPlayerController,
                   aspectRatio: videoPlayerController.value.aspectRatio))

@@ -15,7 +15,8 @@ class WatchHome extends ConsumerStatefulWidget {
   _WatchHomeState createState() => _WatchHomeState();
 }
 
-class _WatchHomeState extends ConsumerState<WatchHome> {
+class _WatchHomeState extends ConsumerState<WatchHome>
+    with AutomaticKeepAliveClientMixin {
   final scrollController = ScrollController();
 
   @override
@@ -35,10 +36,12 @@ class _WatchHomeState extends ConsumerState<WatchHome> {
   @override
   void dispose() {
     super.dispose();
+    scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     List watchData = widget.type == 'watch_home'
         ? ref.watch(watchControllerProvider).watchSuggest
         : ref.watch(watchControllerProvider).watchFollow;
@@ -58,10 +61,13 @@ class _WatchHomeState extends ConsumerState<WatchHome> {
                       post: watchData[index],
                       type: postWatch,
                     )),
-            SkeletonCustom().postSkeleton(context)
+            // SkeletonCustom().postSkeleton(context)
           ],
         ),
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

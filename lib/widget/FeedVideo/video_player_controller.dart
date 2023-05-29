@@ -6,14 +6,16 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPlayerHasController extends ConsumerStatefulWidget {
   final dynamic media;
+  final Widget? overlayWidget;
   final double? aspectRatio;
   final ValueNotifier<int>? videoPositionNotifier;
   final bool? isHiddenControl;
   const VideoPlayerHasController(
       {Key? key,
       this.media,
-      this.isHiddenControl,
+      this.overlayWidget,
       this.aspectRatio,
+      this.isHiddenControl,
       this.videoPositionNotifier})
       : super(key: key);
 
@@ -45,7 +47,8 @@ class _VideoPlayerHasControllerState
       Future.delayed(Duration.zero, () {
         betterPlayerControllerNotifier.initializeBetterPlayerController(
             widget.media['id'],
-            widget.media['remote_url'] ?? widget.media['url']);
+            widget.media['remote_url'] ?? widget.media['url'],
+            widget.overlayWidget);
       });
     }
   }

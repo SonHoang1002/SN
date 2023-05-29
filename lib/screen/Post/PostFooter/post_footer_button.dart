@@ -83,13 +83,6 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                 post: widget.post,
                 preType: widget.type,
               ));
-          // Navigator.push(
-          //     context,
-          //     CupertinoPageRoute(
-          //         builder: (context) => PostDetail(
-          //               post: widget.post,
-          //               preType: widget.type,
-          //             )));
         } else if (widget.type == postMultipleMedia) {
           showBarModalBottomSheet(
               context: context,

@@ -59,22 +59,25 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Bạn bè',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 17),
-                            ),
-                            const SizedBox(
-                              height: 2.0,
-                            ),
-                            if (widget.user != null)
-                              TextDescription(
-                                  description:
-                                      "${widget.user['friends_count']} bạn bè")
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Bạn bè',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 17),
+                              ),
+                              const SizedBox(
+                                height: 2.0,
+                              ),
+                              if (widget.user != null)
+                                TextDescription(
+                                    description:
+                                        "${widget.user['friends_count']} bạn bè")
+                            ],
+                          ),
                         ),
                         TextAction(
                           title: "Xem tất cả bạn bè",
