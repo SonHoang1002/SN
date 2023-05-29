@@ -1,9 +1,9 @@
 // ignore_for_file: unnecessary_brace_in_string_interps
 
 import 'dart:convert';
-import 'package:market_place/constant/config.dart';
-import 'package:http/http.dart' as http;
-import 'package:market_place/screens/Auth/storage.dart';
+import 'package:social_network_app_mobile/constant/config.dart';
+import 'package:http/http.dart' as http; 
+import 'package:social_network_app_mobile/screens/Auth/storage.dart';
 
 class ApiUser {
   Future<dynamic> getDataUserApi(token) async {
@@ -91,8 +91,7 @@ class ApiUser {
 
   Future<dynamic> updateAccountSettingApi(key, value) async {
     try {
-      var body = jsonEncode({key: value});
-      print(body);
+      var body = jsonEncode({key: value}); 
       var token = await SecureStorage().getKeyStorage("token");
       var response = await http.post(
           Uri.parse('${urlSocialNetwork}/api/v1/account_settings'),

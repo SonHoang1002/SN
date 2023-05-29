@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:market_place/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class AlertDialogApp extends StatelessWidget {
   final String title;

@@ -185,14 +185,14 @@ class PostController extends StateNotifier<PostState> {
   }
 
   actionUpdateDetailInPost(dynamic type, dynamic data,
-      {dynamic preType}) async {
+      {dynamic preType}) async { 
     int index = -1;
     if (type == feedPost ||
-        (preType != null && preType == postDetailFromFeed) ||
+        (preType == postDetailFromFeed) ||
         (type == postMultipleMedia && preType == feedPost)) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
     } else if (type == postPageUser ||
-        (preType != null && preType == postDetailFromUserPage) ||
+        (preType == postDetailFromUserPage) ||
         (type == postMultipleMedia && preType == postPageUser)) {
       if (state.postsPin.isNotEmpty) {
         index =

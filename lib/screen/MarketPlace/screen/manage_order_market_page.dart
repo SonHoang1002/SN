@@ -291,14 +291,14 @@ class _ManageOrderMarketPageState extends ConsumerState<ManageOrderMarketPage> {
       nextStatus = "shipping";
       _orderData![index]["status"] = nextStatus;
       setState(() {});
-      final response = await OrderApis().updateStatusOrderApi(
+      final response = await OrderApis().updateStatusSellerOrderApi(
           _orderData![index]["id"], {"status": nextStatus});
     }
     if (key == "shipping") {
       nextStatus = "delivered";
       _orderData![index]["status"] = nextStatus;
       setState(() {});
-      final response = await OrderApis().updateStatusOrderApi(
+      final response = await OrderApis().updateStatusSellerOrderApi(
           _orderData![index]["id"], {"status": nextStatus});
     }
     setState(() {});

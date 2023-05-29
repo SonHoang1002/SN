@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+
+import '../../screen/MarketPlace/widgets/button_for_market_widget.dart';
 
 buildMessageDialog(BuildContext context, String title, {Function? oKFunction}) {
   final width = MediaQuery.of(context).size.width;

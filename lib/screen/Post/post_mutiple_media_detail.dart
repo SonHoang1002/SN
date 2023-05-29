@@ -5,9 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
@@ -20,20 +22,24 @@ import 'package:social_network_app_mobile/widget/cross_bar.dart';
 const String closeTopToBottom = "topToBottom";
 const String closeBottomToTop = "bottomToTop";
 
-class PostMutipleMediaDetail extends StatefulWidget {
+class PostMutipleMediaDetail extends ConsumerStatefulWidget {
   final int? initialIndex;
   final dynamic post;
   final dynamic preType;
-  const PostMutipleMediaDetail(
-      {Key? key, this.post, this.preType, this.initialIndex})
-      : super(key: key);
+  const PostMutipleMediaDetail({
+    Key? key,
+    this.post,
+    this.preType,
+    this.initialIndex,
+  }) : super(key: key);
 
   @override
-  State<PostMutipleMediaDetail> createState() =>
+  ConsumerState<PostMutipleMediaDetail> createState() =>
       _PostMutipleMediaDetail1State();
 }
 
-class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
+class _PostMutipleMediaDetail1State
+    extends ConsumerState<PostMutipleMediaDetail> {
   late ScrollController _scrollParentController;
   bool isDragOutside = false;
   bool canDragOutside = false;
@@ -46,7 +52,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
   ScrollDirection? beginDirection;
   @override
   void initState() {
-    super.initState(); 
+    super.initState();
     beginPositonY = 0;
     updatePositonY = 0;
     _scrollParentController = ScrollController();
@@ -57,6 +63,11 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
         duration: const Duration(milliseconds: 1),
         curve: Curves.easeInOut,
       );
+    });
+    Future.delayed(Duration.zero, () {
+      ref
+          .read(currentPostControllerProvider.notifier)
+          .saveCurrentPost(widget.post);
     });
 
     _scrollParentController.addListener(() {
@@ -206,13 +217,14 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
 
   ValueNotifier<bool> showBgContainer = ValueNotifier(true);
 
-  reloadDetailFunction() {
+  reloadDetailFunction() { 
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    medias = widget.post['media_attachments'];
+    dynamic postData = ref.watch(currentPostControllerProvider).currentPost;
+    medias = postData['media_attachments'];
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
@@ -382,18 +394,19 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                           height: 12.0,
                                         ),
                                         PostHeader(
-                                            post: widget.post,
+                                            post: postData,
                                             type: postMultipleMedia),
                                         const SizedBox(
                                           height: 12.0,
                                         ),
-                                        PostContent(post: widget.post),
+                                        PostContent(post: postData),
                                         const SizedBox(
                                           height: 12.0,
                                         ),
                                         PostFooter(
-                                          post: widget.post,
+                                          post: postData,
                                           type: postMultipleMedia,
+                                          preType: widget.preType,
                                         ),
                                         const CrossBar(
                                           height: 5,
@@ -424,7 +437,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                                                   index,
                                                               medias:
                                                                   medias, //list anh
-                                                              post: widget.post,
+                                                              post: postData,
                                                               postMedia: medias[
                                                                   index], // anh hien tai dang duoc chon
                                                               type:
@@ -467,7 +480,7 @@ class _PostMutipleMediaDetail1State extends State<PostMutipleMediaDetail> {
                                                       ],
                                                     )),
                                                 PostFooter(
-                                                    post: widget.post,
+                                                    post: postData,
                                                     // mediaData ??
                                                     //     medias[index],
                                                     type: postMultipleMedia,

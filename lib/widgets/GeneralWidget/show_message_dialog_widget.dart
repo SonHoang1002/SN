@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:market_place/helpers/routes.dart';
-import 'package:market_place/screens/MarketPlace/widgets/market_button_widget.dart';
-import 'package:market_place/theme/colors.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/market_button_widget.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 buildMessageDialog(BuildContext context, String title,
     {bool? oneButton = false, Function? oKFunction}) {

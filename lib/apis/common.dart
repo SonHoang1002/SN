@@ -1,9 +1,9 @@
 // ignore_for_file: unnecessary_brace_in_string_interps
 
 import 'dart:convert';
-import 'package:market_place/constant/config.dart';
+import 'package:social_network_app_mobile/constant/config.dart';
 import 'package:http/http.dart' as http;
-import 'package:market_place/screens/Auth/storage.dart';
+import 'package:social_network_app_mobile/screens/Auth/storage.dart';
 
 class ApiCommons {
   Future<dynamic> fetchDataGifApi(params) async {

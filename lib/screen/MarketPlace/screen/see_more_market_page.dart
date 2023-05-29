@@ -72,8 +72,7 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
                         itemCount: _seeMoreProductList!.length,
                         itemBuilder: (context, index) {
                           return buildProductItem(
-                              context: context,
-                              width: width,
+                              context: context, 
                               data: _seeMoreProductList?[index]);
                         }),
                   ),

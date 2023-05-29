@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:helpers/helpers/extensions/extensions.dart';
+// import 'package:helpers/helpers/extensions/extensions.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -258,19 +258,16 @@ class FlutterPolls extends HookWidget {
 
     double caculatePercent(int index, PollOption pollOption) {
       final options =
-          allData['options'].map((ele) => ele['votes_count']).toList();
-      print("options ${options}");
+          allData['options'].map((ele) => ele['votes_count']).toList(); 
       int sum = options.reduce((value, element) => value + element);
       double result;
       if (votedOptions.value!.contains(pollOption)) {
         result = ((allData['options'][index]['votes_count'] + 1) /
-            (sum + votedOptions.value!.length));
-        print("ressult 123 $result");
+            (sum + votedOptions.value!.length)); 
         return result;
       } else {
         result = (allData['options'][index]['votes_count'] /
-            (sum + votedOptions.value!.length));
-        print("ressult yryt  $result");
+            (sum + votedOptions.value!.length)); 
         return result;
       }
     }

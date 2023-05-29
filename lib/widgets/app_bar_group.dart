@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:market_place/constant/config.dart';
+import 'package:social_network_app_mobile/constant/config.dart';
 
 import 'messenger_app_bar/app_bar_network_rounded_image.dart';
 

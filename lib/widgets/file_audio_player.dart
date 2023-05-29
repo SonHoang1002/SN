@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:market_place/helpers/common.dart';
+import 'package:audioplayers/audioplayers.dart'; 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 
 class FileAudioPlayer extends StatefulWidget {
   final String path;

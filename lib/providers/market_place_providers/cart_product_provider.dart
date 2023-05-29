@@ -23,8 +23,8 @@ class CartProductsController extends StateNotifier<CartProductsState> {
     state = state.copyWith(newList);
   }
 
-  updateCartQuantity(dynamic id, dynamic data) async {
-    final response = await CartProductApi().updateQuantityProductApi(id, data);
+  updateCartQuantity( dynamic data) async {
+    final response = await CartProductApi().updateQuantityProductApi( data);
   }
 
   deleteCartProduct(dynamic id, dynamic data) async {

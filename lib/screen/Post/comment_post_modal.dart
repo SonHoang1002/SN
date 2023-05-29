@@ -25,8 +25,14 @@ class CommentPostModal extends ConsumerStatefulWidget {
   final dynamic type;
   final dynamic preType;
   final int? indexImagePost;
+  final Function? reloadFunction;
   const CommentPostModal(
-      {Key? key, this.post, this.type, this.preType, this.indexImagePost})
+      {Key? key,
+      this.post,
+      this.type,
+      this.preType,
+      this.indexImagePost,
+      this.reloadFunction})
       : super(key: key);
 
   @override
@@ -214,9 +220,10 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
         commentChild = data['type'] == 'child' ? newCommentPreview : null;
       });
       _updatePostCount(
-          addtionalIfChild: data['type'] == 'child' &&
-                  data['typeStatus'] != 'editChild' &&
-                  data['typeStatus'] != "editComment"
+          addtionalIfChild: (data['type'] == 'child' &&
+                      data['typeStatus'] != 'editChild' &&
+                      data['typeStatus'] != "editComment") ||
+                  widget.indexImagePost != null
               ? 1
               : 0);
 
@@ -276,11 +283,13 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
           postComment = dataCommentUpdate;
           commentChild = newComment;
         });
-        if (newComment != null) {
+        if (newComment != null) { 
           _updatePostCount(
-              addtionalIfChild: data['type'] == 'child' &&
+              addtionalIfChild: (data['type'] == 'child' &&
                       data['typeStatus'] != 'editChild' &&
-                      data['typeStatus'] != "editComment"
+                      data['typeStatus'] != "editComment")
+                  //     ||
+                  // widget.indexImagePost != null
                   ? 1
                   : 0);
         }
@@ -412,6 +421,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
         postComment = dataPreComment;
         commentChild = data['type'] == 'child' ? newCommentPreview : null;
       });
+
       _updatePostCount(
           addtionalIfChild: data['type'] == 'child' &&
                   data['typeStatus'] != 'editChild' &&
@@ -493,68 +503,93 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
     });
   }
 
-  handleDeleteComment(post) {
+  handleDeleteComment(post) { 
     if (post != null) {
-      if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
-        List newPostComment = postComment
-            .where((element) => element['id'] != post['id'])
-            .toList();
-        setState(() {
-          postComment = newPostComment;
-        });
-        _updatePostCount();
-        return;
-      } else if (post['in_reply_to_id'] != null) {
-        // cap nhat so luong khi xoa cmt con
-
-        postComment.forEach((element) {
-          if (element['id'] == post['in_reply_to_id']) {
-            setState(() {
-              postComment = postComment;
-            });
-            _updatePostCount(subIfChild: 1);
+      if (widget.indexImagePost != null) { 
+        if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
+          List newPostComment = postComment
+              .where((element) => element['id'] != post['id'])
+              .toList();
+          setState(() {
+            postComment = newPostComment;
+          });
+          _updatePostCount(subIfChild: 1);
+          return;
+        } else if (post['in_reply_to_id'] != null) {
+          // cap nhat so luong khi xoa cmt con
+          postComment.forEach((element) {
+            if (element['id'] == post['in_reply_to_id']) {
+              setState(() {
+                postComment = postComment;
+              });
+              _updatePostCount(subIfChild: 1);
+            }
+          });
+        } else {
+          if (post != null) {
+            if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
+              List newPostComment = postComment
+                  .where((element) => element['id'] != post['id'])
+                  .toList();
+              setState(() {
+                postComment = newPostComment;
+              });
+              _updatePostCount();
+              return;
+            } else if (post['in_reply_to_id'] != null) {
+              // cap nhat so luong khi xoa cmt con
+              postComment.forEach((element) {
+                if (element['id'] == post['in_reply_to_id']) {
+                  setState(() {
+                    postComment = postComment;
+                  });
+                  _updatePostCount(subIfChild: 1);
+                }
+              });
+            }
           }
-        });
+        }
       }
     }
   }
 
-  _updatePostCount({int? addtionalIfChild, int? subIfChild}) async {
-    print("00000000000000000");
+  _updatePostCount({int addtionalIfChild = 0, int subIfChild = 0}) async {
     if (widget.indexImagePost != null) {
-      print("123123423");
-      int countAdditionalIfChild = addtionalIfChild ?? 0;
-      int countSubIfChild = subIfChild ?? 0;
       dynamic updateCountPostData = widget.post;
-      updateCountPostData['media_attachments'][widget.indexImagePost]
-              ['status_media']['replies_total'] =
-          (updateCountPostData['media_attachments'][widget.indexImagePost]
-                  ['status_media']['replies_total'] +
-              countAdditionalIfChild -
-              countSubIfChild);
-      print(
-          "${widget.indexImagePost}------------- ${updateCountPostData['media_attachments'][widget.indexImagePost]['status_media']['replies_total']}");
+      if (updateCountPostData['media_attachments'][widget.indexImagePost]
+                  ['status_media']['replies_total'] ==
+              0 &&
+          subIfChild != 0) {
+      } else {
+        updateCountPostData['media_attachments'][widget.indexImagePost]
+                ['status_media']['replies_total'] =
+            (updateCountPostData['media_attachments'][widget.indexImagePost]
+                    ['status_media']['replies_total'] +
+                addtionalIfChild -
+                subIfChild);
+      }
       ref
           .read(postControllerProvider.notifier)
           .actionUpdatePostCount(widget.preType, updateCountPostData);
-      //  ref
-      //       .read(currentPostControllerProvider.notifier)
-      //       .saveCurrentPost(updateCountPostData);
+      ref
+          .read(currentPostControllerProvider.notifier)
+          .saveCurrentPost(updateCountPostData);
+    } else {
+      dynamic updateCountPostData = widget.post;
+      dynamic count = postComment.length;
+      postComment.forEach((element) {
+        count += element["replies_total"];
+      });
+      updateCountPostData['replies_total'] =
+          count + addtionalIfChild - subIfChild;
+      ref
+          .read(postControllerProvider.notifier)
+          .actionUpdatePostCount(widget.preType, updateCountPostData);
+      ref
+          .read(currentPostControllerProvider.notifier)
+          .saveCurrentPost(updateCountPostData);
     }
-    int countAdditionalIfChild = addtionalIfChild ?? 0;
-    int countSubIfChild = subIfChild ?? 0;
-    dynamic updateCountPostData = widget.post;
-    dynamic count = postComment.length;
-    // Future.delayed(const Duration(seconds: 3), () {
-    postComment.forEach((element) {
-      count += element["replies_total"];
-    });
-    updateCountPostData['replies_total'] =
-        count + countAdditionalIfChild - countSubIfChild;
-    ref
-        .read(postControllerProvider.notifier)
-        .actionUpdatePostCount(widget.preType, updateCountPostData);
-    // });
+    widget.reloadFunction != null ? widget.reloadFunction!() : null;
   }
 
   checkPreType() {

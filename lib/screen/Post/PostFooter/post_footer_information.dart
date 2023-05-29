@@ -109,15 +109,17 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
 
     double setHeight() {
       double height = 5;
-      if (((widget.post['favourites_count'] ?? 0) > 0 ||
-              (widget.post['replies_total'] ?? 0) > 0) ||
-          (widget.indexImagePost != null &&
-              ((widget.post['media_attachments']?[widget.indexImagePost]
-                          ['status_media']['favourites_count'] >
-                      0) ||
-                  (widget.post['media_attachments']?[widget.indexImagePost]
-                          ['status_media']['replies_total'] >
-                      0)))) {
+      if ((widget.indexImagePost != null)) {
+        if (((widget.post['media_attachments']?[widget.indexImagePost]
+                    ['status_media']['favourites_count'] >
+                0) ||
+            (widget.post['media_attachments']?[widget.indexImagePost]
+                    ['status_media']['replies_total'] >
+                0))) {
+          height = 40;
+        }
+      } else if (((widget.post['favourites_count'] ?? 0) > 0 ||
+          (widget.post['replies_total'] ?? 0) > 0)) {
         height = 40;
       }
       return height;
@@ -141,10 +143,7 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
       // }
 
       return padding;
-    }
-
-    // print("widget.post ${jsonEncode(widget.post)}");
-
+    } 
     return Container(
       height: setHeight(),
       padding: setPadding(),
@@ -196,7 +195,7 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
                       ],
                     )
                   : const SizedBox(),
-              widget.type == postDetail
+              (widget.indexImagePost == null && widget.type == postDetail)
                   ? const SizedBox()
                   : Row(
                       children: [

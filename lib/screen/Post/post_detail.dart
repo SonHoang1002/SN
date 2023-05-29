@@ -414,9 +414,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                           post: postData,
                           type: postDetail,
                           preType: checkPreType(),
-                          reloadDetailFunction: () {
-                            setState(() {});
-                          },
+                          // reloadDetailFunction: () {
+                          //   setState(() {});
+                          // },
                         ),
                         const SizedBox(
                           height: 8,

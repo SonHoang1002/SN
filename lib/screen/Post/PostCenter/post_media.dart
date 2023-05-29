@@ -54,18 +54,13 @@ class PostMedia extends StatelessWidget {
                   post: post,
                   initialIndex: initialIndex,
                   preType: preType,
+                  // reloadPostFunction: () {
+                  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+                  //       reloadFunction != null ? reloadFunction!() : null;
+                  //     });
+                  //   }
                 ),
-                opaque: false);
-            //  pushCustomPageRoute(
-            // context,
-            // CreateModalBaseMenu(
-            //     title: 'Bài viết',
-            //     body: PostMutipleMediaDetail(
-            //       post: post,
-            //       initialIndex: initialIndex,
-            //     ),
-            //     buttonAppbar: const SizedBox()),
-            // opaque: false);
+                opaque: false); 
           } else {
             pushCustomCupertinoPageRoute(
                 context,

@@ -98,6 +98,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                     post: widget.post,
                     preType: widget.preType,
                     indexImagePost: widget.indexImage,
+                    reloadFunction: widget.reloadDetailFunction,
                   ));
         } else if (widget.type == postWatch) {
           Navigator.push(

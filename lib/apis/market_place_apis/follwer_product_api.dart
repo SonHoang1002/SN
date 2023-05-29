@@ -1,4 +1,4 @@
-import 'package:market_place/apis/api_root.dart';
+import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class FollwerProductsApi {
   Future postFollwerProductsApi(dynamic id) async {

@@ -1,13 +1,12 @@
 import 'package:social_network_app_mobile/apis/api_root.dart';
 
-class DeliveryAddressApis{
+class DeliveryAddressApis {
   Future postDeliveryAddressApi(dynamic data) async {
     return await Api().postRequestBase("/api/v1/delivery_addresses", data);
-    // https://mangxahoi.atlassian.net/wiki/spaces/SN/pages/23298051/Th+m+s+a+x+a+a+ch+giao+h+ng
   }
 
-  Future updateDeliveryAddressApi(dynamic data) async {
-    return await Api().patchRequestBase("/api/v1/delivery_addresses/2", data);
+  Future updateDeliveryAddressApi(dynamic id, dynamic data) async {
+    return await Api().patchRequestBase("/api/v1/delivery_addresses/$id", data);
   }
 
   Future getDeliveryAddressApi() async {

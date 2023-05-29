@@ -1,11 +1,8 @@
 // ignore_for_file: unnecessary_brace_in_string_interps
 
 import 'dart:convert';
-import 'dart:io';
-import 'package:market_place/constant/config.dart';
-import 'package:http/http.dart' as http;
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:market_place/screens/Auth/storage.dart';
+import 'package:social_network_app_mobile/constant/config.dart';
+import 'package:http/http.dart' as http; 
 
 class ApiAuthen {
   Future<dynamic> loginChatSocialApi(data) async {

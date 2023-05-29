@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:preload_page_view/preload_page_view.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
-import 'package:social_network_app_mobile/widget/video_player.dart';
-
-import '../../../../widget/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/image_cache.dart';
+import 'package:social_network_app_mobile/widgets/video_render_player.dart';
 
 class PreviewVideoImage extends StatefulWidget {
   final List<dynamic> src;
@@ -57,11 +56,11 @@ class _PreviewVideoImageComsumerState extends State<PreviewVideoImage> {
         final data = widget.src[index];
         return data.endsWith(".mp4")
             ? Center(
-              child: Container(
-                  height: 350,
-                  width: 250,
-                  child: VideoPlayerRender(path: data)),
-            )
+                child: SizedBox(
+                    height: 350,
+                    width: 250,
+                    child: VideoPlayerRender(path: data)),
+              )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -72,13 +71,6 @@ class _PreviewVideoImageComsumerState extends State<PreviewVideoImage> {
                   ),
                 ],
               );
-
-        //          Container(
-        //   width: MediaQuery.of(context).size.width,
-        //   height: 200,
-        //   margin: const EdgeInsets.all(5.0),
-        //   child: Image.network(images[index], fit: BoxFit.fitWidth),
-        // );
       },
       onPageChanged: (index) {
         setState(() {

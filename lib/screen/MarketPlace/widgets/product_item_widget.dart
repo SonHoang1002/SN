@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
+import 'package:social_network_app_mobile/constant/get_min_max_price.dart';
+import 'package:social_network_app_mobile/helper/common.dart'; 
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/widgets/rating_star_widget.dart';
-
-import '../../../helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import '../../../theme/colors.dart';
-import '../../../widget/GeneralWidget/spacer_widget.dart';
-import '../../../widget/GeneralWidget/text_content_widget.dart';
-import '../../../widget/image_cache.dart';
+
 Widget buildProductItem(
-    {required BuildContext context,
-    required double width,
-    required dynamic data}) {
+    {required BuildContext context, required dynamic data}) {
   final List<dynamic> prices = getMinAndMaxPrice(data["product_variants"]);
-  double childWidth = width * 0.45;
+  double childWidth = MediaQuery.of(context).size.width * 0.45;
   return InkWell(
     onTap: () {
       pushToNextScreen(
           context,
           DetailProductMarketPage(
+            simpleData: data,
             id: data["id"],
           ));
     },
     child: Container(
       height: 230,
+      width: childWidth,
       margin: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
       decoration: BoxDecoration(
-          // color: greyColor.shade100,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(width: 0.4, color: greyColor)),
       child:
@@ -65,9 +65,9 @@ Widget buildProductItem(
                   padding: const EdgeInsets.only(left: 10),
                   child: buildTextContent(
                     prices[0] == prices[1]
-                        ? "₫${prices[0].toString()}"
-                        : "₫${prices[0].toString()} - ₫${prices[1].toString()} ",
-                    false,
+                        ? "₫${formatCurrency(prices[0])}"
+                        : "₫${formatCurrency(prices[0])} - ₫${formatCurrency(prices[1])} ",
+                    true,
                     fontSize: 13,
                     colorWord: red,
                   ),
