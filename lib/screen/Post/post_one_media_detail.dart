@@ -316,6 +316,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                     cacheGesture: false,
                                     inPageView: true);
                               },
+                              
                               onDoubleTap: (state) {
                                 if (state.gestureDetails!.totalScale == 1.0) {
                                   state.handleDoubleTap(
