@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,11 +43,27 @@ List iconShareModal = [
     "icon": FontAwesomeIcons.arrowUpRightFromSquare
   },
 ];
+List shareAction = [
+  {
+    "key": "feed",
+    "label": "Bảng feed",
+  },
+  {
+    "key": "friend-timelines",
+    "label": "Dòng thời gian bạn bè",
+    "icon": FontAwesomeIcons.users
+  },
+  {"key": "share-group", "label": "Nhóm", "icon": FontAwesomeIcons.users},
+];
 
 class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
   FocusNode focusNode = FocusNode();
   String renderShareType = '';
   dynamic shareGroupSelected = {};
+  dynamic shareFriendSelected = {};
+  TextEditingController valueStatus = TextEditingController(text: '');
+
+  String shareModalSelected = 'feed';
   @override
   void initState() {
     super.initState();
@@ -54,51 +71,97 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
       ref
           .read(shareControllerProvider.notifier)
           .getShareGroup({"tab": "join", "limit": 5});
+      ref.read(shareControllerProvider.notifier).getShareFriend({"limit": 10});
     });
   }
 
   @override
   void dispose() {
     focusNode.dispose();
+    valueStatus.dispose();
     super.dispose();
   }
-
-  // String renderShareType(String type) {
-  //   switch (type) {
-  //     case 'group':
-  //       renderShareType = 'group';
-  //       break;
-  //     default:
-  //       renderShareType = '';
-  //       break;
-  //   }
-  // }
 
   String renderTitle(type) {
     switch (type) {
       case "event":
         return '${widget.data['account']['display_name']} đã tạo một sự kiện.';
+      case "grow":
+        return '${widget.data['account']['display_name']} đã tạo một dự án.';
+      case "recruit":
+        return '${widget.data['account']['display_name']} đã tạo tuyển dụng.';
+      case "course":
+        return '${widget.data['account']['display_name']} đã tạo một khoá học.';
       default:
         return '';
     }
   }
 
+  dynamic renderParams(type) {
+    switch (type) {
+      case "event":
+        return {
+          "shared_event_id": widget.data['id'],
+          "status": valueStatus.text != "" ? valueStatus.text : '',
+          "visibility": "public"
+        };
+      case "grow":
+        return {
+          "shared_project_id": widget.data['id'],
+          "status": valueStatus.text != "" ? valueStatus.text : '',
+          "visibility": "public"
+        };
+      case "recruit":
+        return {
+          "shared_recruit_id": widget.data['id'],
+          "status": valueStatus.text != "" ? valueStatus.text : '',
+          "visibility": "public"
+        };
+      case "course":
+        return {
+          "shared_course_id": widget.data['id'],
+          "status": valueStatus.text != "" ? valueStatus.text : '',
+          "visibility": "public"
+        };
+      default:
+        return {};
+    }
+  }
+
   Future handleShare(data, context) async {
     try {
-      Navigator.of(context).pop();
+      switch (renderShareType) {
+        case 'group':
+          var res = await PostApi().createStatus({
+            "group_id": shareGroupSelected['id'],
+            ...renderParams(widget.type),
+          });
+          break;
+        case 'friend':
+          var res = await PostApi().createStatus({
+            "target_account_id": shareFriendSelected['id'],
+            ...renderParams(widget.type),
+          });
+          break;
+        default:
+          var res = await PostApi().createStatus(renderParams(widget.type));
+          break;
+      }
       showSnackbar(context, 'chia sẻ thành công');
-      var res = await PostApi().createStatus({
-        "shared_event_id": data['id'],
-        "status": "",
-        "visibility": "public"
-      });
-    } catch (e) {}
+    } on DioError catch (e) {
+      showSnackbar(
+        context,
+        e.response!.data['error'].toString(),
+      );
+    } finally {
+      if (context != null) {
+        Navigator.of(context).pop();
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    List shareGroup = ref.watch(shareControllerProvider).shareGroup;
-
     var meData = ref.watch(meControllerProvider)[0];
     var size = MediaQuery.of(context).size;
     return GestureDetector(
@@ -220,16 +283,364 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                         ),
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        GestureDetector(
+                                    if (shareGroupSelected['title'] != null &&
+                                            shareGroupSelected['title']
+                                                    .length >=
+                                                10 ||
+                                        shareFriendSelected['display_name'] !=
+                                            null)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
                                             onTap: () {
-                                              focusNode.requestFocus();
+                                              showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return SharePlace(
+                                                      meData: meData,
+                                                      shareModalSelected:
+                                                          shareModalSelected,
+                                                      onItemSelected:
+                                                          (valuePlace) {
+                                                        if (valuePlace ==
+                                                            'share-group') {
+                                                          showModalBottomSheet(
+                                                              shape:
+                                                                  const RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .vertical(
+                                                                  top: Radius
+                                                                      .circular(
+                                                                          10),
+                                                                ),
+                                                              ),
+                                                              context: context,
+                                                              builder:
+                                                                  (context) =>
+                                                                      ShareGroup(
+                                                                        selectedIndex:
+                                                                            shareGroupSelected['id'],
+                                                                        onItemSelected:
+                                                                            (value) {
+                                                                          setState(
+                                                                              () {
+                                                                            shareGroupSelected =
+                                                                                value;
+                                                                            renderShareType =
+                                                                                'group';
+                                                                            shareModalSelected =
+                                                                                valuePlace;
+                                                                          });
+                                                                        },
+                                                                      ));
+                                                        }
+                                                        if (valuePlace ==
+                                                            'friend-timelines') {
+                                                          showModalBottomSheet(
+                                                              shape:
+                                                                  const RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .vertical(
+                                                                  top: Radius
+                                                                      .circular(
+                                                                          10),
+                                                                ),
+                                                              ),
+                                                              context: context,
+                                                              builder:
+                                                                  (context) =>
+                                                                      ShareFriend(
+                                                                        selectedIndex:
+                                                                            shareFriendSelected['id'],
+                                                                        onItemSelected:
+                                                                            (value) {
+                                                                          setState(
+                                                                              () {
+                                                                            shareFriendSelected =
+                                                                                value;
+                                                                            renderShareType =
+                                                                                'friend';
+                                                                            shareModalSelected =
+                                                                                valuePlace;
+                                                                          });
+                                                                        },
+                                                                      ));
+                                                        }
+                                                      },
+                                                    );
+                                                  });
                                             },
                                             child: Container(
                                               height: 24,
                                               margin: const EdgeInsets.fromLTRB(
                                                   10, 0, 6, 0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: greyColor),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0, right: 8.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      shareGroupSelected[
+                                                                  'title'] !=
+                                                              null
+                                                          ? shareGroupSelected[
+                                                                          'title']
+                                                                      .length >=
+                                                                  30
+                                                              ? shareGroupSelected[
+                                                                          'title']
+                                                                      .substring(
+                                                                          0,
+                                                                          30) +
+                                                                  '...'
+                                                              : shareGroupSelected[
+                                                                  'title']
+                                                          : shareFriendSelected[
+                                                                      'display_name'] !=
+                                                                  null
+                                                              ? 'Dòng thời gian ${shareFriendSelected['display_name']}'
+                                                              : 'Bảng feed',
+                                                      maxLines: 1,
+                                                      style: const TextStyle(
+                                                        fontSize: 12.0,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 3.0),
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 8.0),
+                                                      child: Icon(
+                                                        FontAwesomeIcons
+                                                            .sortDown,
+                                                        color: Colors.black,
+                                                        size: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {},
+                                            child: Container(
+                                              height: 24,
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  10, 10, 10, 0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: greyColor),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0, right: 8.0),
+                                                child: Row(
+                                                  children: [
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2.0),
+                                                      child: Icon(
+                                                        FontAwesomeIcons
+                                                            .userGroup,
+                                                        color: Colors.black,
+                                                        size: 10,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 5.0),
+                                                    Text(
+                                                      shareGroupSelected[
+                                                                  'title'] !=
+                                                              null
+                                                          ? shareGroupSelected[
+                                                                          'title']
+                                                                      .length >=
+                                                                  24
+                                                              ? 'Thành viên nhóm ${shareGroupSelected['title'].substring(0, 24)}...'
+                                                              : 'Thành viên nhóm ${shareGroupSelected['title']}'
+                                                          : shareFriendSelected[
+                                                                      'display_name'] !=
+                                                                  null
+                                                              ? 'Bạn bè của ${shareFriendSelected['display_name']}'
+                                                              : 'Bạn bè',
+                                                      maxLines: 1,
+                                                      style: const TextStyle(
+                                                        fontSize: 12.0,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 3.0),
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 8.0),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          FontAwesomeIcons
+                                                              .sortDown,
+                                                          color: Colors.black,
+                                                          size: 12,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    else
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return SharePlace(
+                                                        meData: meData,
+                                                        shareModalSelected:
+                                                            shareModalSelected,
+                                                        onItemSelected:
+                                                            (valuePalace) {
+                                                          if (valuePalace ==
+                                                              'share-group') {
+                                                            showModalBottomSheet(
+                                                                shape:
+                                                                    const RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .vertical(
+                                                                    top: Radius
+                                                                        .circular(
+                                                                            10),
+                                                                  ),
+                                                                ),
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        ShareGroup(
+                                                                          selectedIndex:
+                                                                              shareGroupSelected['id'],
+                                                                          onItemSelected:
+                                                                              (value) {
+                                                                            setState(() {
+                                                                              shareGroupSelected = value;
+                                                                              renderShareType = 'group';
+                                                                              shareModalSelected = valuePalace;
+                                                                            });
+                                                                          },
+                                                                        ));
+                                                          }
+                                                          if (valuePalace ==
+                                                              'friend-timelines') {
+                                                            showModalBottomSheet(
+                                                                shape:
+                                                                    const RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .vertical(
+                                                                    top: Radius
+                                                                        .circular(
+                                                                            10),
+                                                                  ),
+                                                                ),
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        ShareFriend(
+                                                                          onItemSelected:
+                                                                              (value) {
+                                                                            setState(() {
+                                                                              shareFriendSelected = value;
+                                                                              renderShareType = 'friend';
+                                                                              shareModalSelected = valuePalace;
+                                                                            });
+                                                                          },
+                                                                        ));
+                                                          }
+                                                        },
+                                                      );
+                                                    });
+                                              },
+                                              child: Container(
+                                                height: 24,
+                                                margin:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 0, 6, 0),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: greyColor)),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0,
+                                                          right: 8.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        shareGroupSelected[
+                                                                'title'] ??
+                                                            'Bảng feed',
+                                                        style: const TextStyle(
+                                                          fontSize: 12.0,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 3.0,
+                                                      ),
+                                                      const Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 8.0),
+                                                        child: Icon(
+                                                            FontAwesomeIcons
+                                                                .sortDown,
+                                                            color: Colors.black,
+                                                            size: 12),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )),
+                                          GestureDetector(
+                                            onTap: () {},
+                                            child: Container(
+                                              height: 24,
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  2, 0, 6, 0),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius:
@@ -241,19 +652,33 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                                 padding: const EdgeInsets.only(
                                                     left: 8.0, right: 8.0),
                                                 child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
                                                   children: [
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2.0),
+                                                      child: Icon(
+                                                          FontAwesomeIcons
+                                                              .userGroup,
+                                                          color: Colors.black,
+                                                          size: 10),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 5.0,
+                                                    ),
                                                     Text(
                                                       shareGroupSelected[
-                                                              'title'] ??
-                                                          'Bảng feed',
+                                                                  'title'] !=
+                                                              null
+                                                          ? 'Thành viên nhóm ${shareGroupSelected['title']}'
+                                                          : 'Bạn bè',
+                                                      maxLines: 1,
                                                       style: const TextStyle(
-                                                        fontSize: 12.0,
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
+                                                          fontSize: 12.0,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          color: Colors.black),
                                                     ),
                                                     const SizedBox(
                                                       width: 3.0,
@@ -261,78 +686,21 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                                     const Padding(
                                                       padding: EdgeInsets.only(
                                                           bottom: 8.0),
-                                                      child: Icon(
-                                                          FontAwesomeIcons
-                                                              .sortDown,
-                                                          color: Colors.black,
-                                                          size: 12),
+                                                      child: Center(
+                                                        child: Icon(
+                                                            FontAwesomeIcons
+                                                                .sortDown,
+                                                            color: Colors.black,
+                                                            size: 12),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            )),
-                                        GestureDetector(
-                                          onTap: () {},
-                                          child: Container(
-                                            height: 24,
-                                            margin: const EdgeInsets.fromLTRB(
-                                                2, 0, 6, 0),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                                border: Border.all(
-                                                    width: 0.2,
-                                                    color: greyColor)),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0, right: 8.0),
-                                              child: Row(
-                                                children: [
-                                                  const Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 2.0),
-                                                    child: Icon(
-                                                        FontAwesomeIcons
-                                                            .userGroup,
-                                                        color: Colors.black,
-                                                        size: 10),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 5.0,
-                                                  ),
-                                                  Text(
-                                                    'Thành viên nhóm Thành viên nhóm ${shareGroupSelected['title'] ?? 'Bạn bè'}',
-                                                    maxLines: 1,
-                                                    style: const TextStyle(
-                                                        fontSize: 12.0,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        color: Colors.black),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 3.0,
-                                                  ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 8.0),
-                                                    child: Center(
-                                                      child: Icon(
-                                                          FontAwesomeIcons
-                                                              .sortDown,
-                                                          color: Colors.black,
-                                                          size: 12),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    )
+                                        ],
+                                      )
                                   ],
                                 ),
                               )
@@ -346,6 +714,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                           ),
                           child: TextFormField(
                             focusNode: focusNode,
+                            controller: valueStatus,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             minLines: 1,
@@ -419,10 +788,12 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                       ),
                                       context: context,
                                       builder: (context) => ShareGroup(
-                                            shareGroup: shareGroup,
+                                            selectedIndex:
+                                                shareGroupSelected['id'],
                                             onItemSelected: (value) {
                                               setState(() {
                                                 shareGroupSelected = value;
+                                                renderShareType = 'group';
                                               });
                                             },
                                           ));
@@ -476,18 +847,30 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
   }
 }
 
-class ShareGroup extends StatefulWidget {
+class ShareGroup extends ConsumerStatefulWidget {
   final dynamic shareGroup;
   final Function? onItemSelected;
-  const ShareGroup({super.key, this.shareGroup, this.onItemSelected});
+  final String? selectedIndex;
+  const ShareGroup(
+      {super.key, this.shareGroup, this.onItemSelected, this.selectedIndex});
 
   @override
-  State<ShareGroup> createState() => _ShareGroupState();
+  ConsumerState<ShareGroup> createState() => _ShareGroupState();
 }
 
-class _ShareGroupState extends State<ShareGroup> {
+class _ShareGroupState extends ConsumerState<ShareGroup> {
+  String selectedIndex = '';
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.selectedIndex ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
+    List shareGroup = ref.watch(shareControllerProvider).shareGroup;
+
     return Scaffold(
         appBar: AppBar(
           title: const AppBarTitle(title: 'Nhóm'),
@@ -495,27 +878,209 @@ class _ShareGroupState extends State<ShareGroup> {
         ),
         body: ListView.builder(
             shrinkWrap: true,
-            itemCount: widget.shareGroup.length,
+            itemCount: shareGroup.length,
             itemBuilder: (context, int index) {
-              return ListTile(
-                leading: ClipOval(
-                  child: ExtendedImage.network(
-                      widget.shareGroup[index]['banner'] != null
-                          ? widget.shareGroup[index]['banner']['preview_url']
-                          : linkBannerDefault,
-                      width: 48,
-                      height: 48),
-                ),
-                title: Text(widget.shareGroup[index]['title']),
-                subtitle: const Divider(
-                  height: 10,
-                  thickness: 1,
-                ),
-                onTap: () {
-                  widget.onItemSelected!(widget.shareGroup[index]);
-                  Navigator.of(context).pop();
-                },
+              return Column(
+                children: [
+                  ListTile(
+                    dense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 0.0),
+                    visualDensity:
+                        const VisualDensity(horizontal: -4, vertical: -4),
+                    leading: FittedBox(
+                      child: ClipOval(
+                        child: ExtendedImage.network(
+                          shareGroup[index]['banner'] != null
+                              ? shareGroup[index]['banner']['preview_url']
+                              : linkBannerDefault,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    title: Text(shareGroup[index]['title']),
+                    trailing: selectedIndex == shareGroup[index]['id']
+                        ? const Icon(FontAwesomeIcons.check,
+                            size: 12, color: Colors.blue)
+                        : null,
+                    onTap: () {
+                      widget.onItemSelected!(shareGroup[index]);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  const Divider(
+                    indent: 55,
+                    thickness: 1,
+                  ),
+                ],
               );
             }));
+  }
+}
+
+class SharePlace extends StatefulWidget {
+  final dynamic meData;
+  final String? shareModalSelected;
+  final Function? onItemSelected;
+  const SharePlace({
+    super.key,
+    this.onItemSelected,
+    this.meData,
+    this.shareModalSelected,
+  });
+
+  @override
+  State<SharePlace> createState() => _SharePlaceState();
+}
+
+class _SharePlaceState extends State<SharePlace> {
+  String selectedIndex = '';
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = shareAction.firstWhere(
+        (element) => element['key'] == widget.shareModalSelected)['key'];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const AppBarTitle(title: 'Chọn điểm đến'),
+          centerTitle: true,
+        ),
+        body: ListView.builder(
+            shrinkWrap: true,
+            itemCount: shareAction.length,
+            itemBuilder: (context, int index) {
+              return Column(
+                children: [
+                  ListTile(
+                    dense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 0.0),
+                    visualDensity:
+                        const VisualDensity(horizontal: -4, vertical: -4),
+                    leading: shareAction[index]['icon'] != null
+                        ? FittedBox(child: Icon(shareAction[index]['icon']))
+                        : FittedBox(
+                            child: ClipOval(
+                                child: ExtendedImage.network(
+                              widget.meData['avatar_media'] != null
+                                  ? widget.meData['avatar_media']['preview_url']
+                                  : widget.meData['avatar_static'],
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                            )),
+                          ),
+                    title: Text(shareAction[index]['label']),
+                    trailing: selectedIndex == shareAction[index]['key']
+                        ? const Padding(
+                            padding: EdgeInsets.only(right: 12.0),
+                            child: Icon(
+                              FontAwesomeIcons.check,
+                              size: 12,
+                              color: Colors.blue,
+                            ),
+                          )
+                        : null,
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = shareAction[index]['key'];
+                        Navigator.of(context).pop();
+                        widget.onItemSelected!(shareAction[index]['key']);
+                      });
+                    },
+                  ),
+                  const Divider(
+                    indent: 55,
+                    thickness: 1,
+                  ),
+                ],
+              );
+            }));
+  }
+}
+
+class ShareFriend extends ConsumerStatefulWidget {
+  final dynamic shareFriend;
+  final Function? onItemSelected;
+  final String? selectedIndex;
+  const ShareFriend(
+      {super.key, this.shareFriend, this.onItemSelected, this.selectedIndex});
+
+  @override
+  ConsumerState<ShareFriend> createState() => _ShareFriendState();
+}
+
+class _ShareFriendState extends ConsumerState<ShareFriend> {
+  String selectedIndex = '';
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.selectedIndex ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List shareFriend = ref.watch(shareControllerProvider).shareFriend;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const AppBarTitle(title: 'Dòng thời gian của bạn bè'),
+        centerTitle: true,
+      ),
+      body: ListView.builder(
+        shrinkWrap: true,
+        itemCount: shareFriend.length,
+        itemBuilder: (context, int index) {
+          return Column(
+            children: [
+              ListTile(
+                dense: true,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+                visualDensity:
+                    const VisualDensity(horizontal: -4, vertical: -4),
+                leading: FittedBox(
+                  child: ClipOval(
+                    child: ExtendedImage.network(
+                      shareFriend[index]['avatar_media'] != null
+                          ? shareFriend[index]['avatar_media']['preview_url']
+                          : linkAvatarDefault,
+                      width: 48,
+                      height: 48,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                title: Text(shareFriend[index]['display_name']),
+                trailing: Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: selectedIndex == shareFriend[index]['id']
+                      ? const Icon(FontAwesomeIcons.check,
+                          size: 12, color: Colors.blue)
+                      : null,
+                ),
+                onTap: () {
+                  setState(() {
+                    selectedIndex = shareFriend[index]['id'];
+                    Navigator.of(context).pop();
+                    widget.onItemSelected!(shareFriend[index]);
+                  });
+                },
+              ),
+              const Divider(
+                indent: 55,
+                thickness: 1,
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }
