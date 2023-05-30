@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:like_button/like_button.dart';
@@ -36,10 +35,12 @@ class _WatchDetailState extends State<WatchDetail>
   dynamic commentSelected;
   dynamic commentChild;
   List postComment = [];
+  bool isHiddenAction = false;
 
   @override
   void initState() {
     super.initState();
+    getListCommentPost(widget.post['id'], {"sort_by": "newest"});
     _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
   }
 
@@ -49,29 +50,11 @@ class _WatchDetailState extends State<WatchDetail>
     super.dispose();
   }
 
-  fetchDataPostDetail() async {
-    dynamic response;
-    if (['video', 'image'].contains(widget.post['type'])) {
-      response = await PostApi().getPostDetailMedia(widget.post['id']);
-    } else {
-      response = widget.post;
-    }
-
-    if (response != null) {
-      setState(() {
-        postDetail = response;
-      });
-
-      getListCommentPost(response['id'], {"sort_by": "newest"});
-    }
-  }
-
   Future getListCommentPost(postId, params) async {
     setState(() {
       isLoadComment = true;
     });
     List newList = await PostApi().getListCommentPost(postId, params) ?? [];
-    print(newList);
     if (mounted) {
       setState(() {
         isLoadComment = false;
@@ -80,11 +63,271 @@ class _WatchDetailState extends State<WatchDetail>
     }
   }
 
+  void updateHiddenAction() {
+    setState(() {
+      isHiddenAction = !isHiddenAction;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // String averageColor = widget.media['meta']['original']['average_color'];
+    final size = MediaQuery.of(context).size;
+    return GestureDetector(
+      onTap: () {
+        hiddenKeyboard(context);
+      },
+      child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          body: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(widget.media['preview_remote_url'] ??
+                      widget.media['preview_url']),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: SafeArea(
+                    child: Dismissible(
+                        direction: DismissDirection.vertical,
+                        key: Key(widget.media['id'].toString()),
+                        resizeDuration: const Duration(milliseconds: 1),
+                        onDismissed: (direction) {
+                          Navigator.pop(context);
+                        },
+                        child: Stack(
+                          children: [
+                            Hero(
+                              tag: widget.media['remote_url'] ??
+                                  widget.media['url'],
+                              child: isHiddenAction
+                                  ? Center(
+                                      child: VideoPlayerHasController(
+                                        media: widget.media,
+                                      ),
+                                    )
+                                  : VideoPlayerHasController(
+                                      media: widget.media,
+                                    ),
+                            ),
+                            if (!isHiddenAction)
+                              Container(
+                                margin: const EdgeInsets.only(top: 20),
+                                child: PostHeader(
+                                    post: widget.post,
+                                    textColor: white,
+                                    type: postDetail),
+                              ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 15, right: 15),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  if (!isHiddenAction)
+                                    Container(
+                                      constraints: BoxConstraints(
+                                          maxHeight: 1 * size.height / 3),
+                                      child: TabBarView(
+                                          controller: _tabController,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 20),
+                                                  child: PostContent(
+                                                    post: widget.post,
+                                                    textColor: white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            ListComment(
+                                                postComment: postComment,
+                                                commentChild: commentChild,
+                                                commentNode: commentNode,
+                                                commentSelected:
+                                                    commentSelected)
+                                          ]),
+                                    ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      RotateIcon(
+                                          updateHiddenAction:
+                                              updateHiddenAction),
+                                      if (!isHiddenAction)
+                                        TabBar(
+                                            isScrollable: true,
+                                            controller: _tabController,
+                                            onTap: (index) {},
+                                            indicator: const BoxDecoration(),
+                                            indicatorWeight: 0,
+                                            labelColor: Colors.white,
+                                            unselectedLabelColor:
+                                                Colors.white.withOpacity(0.5),
+                                            indicatorSize:
+                                                TabBarIndicatorSize.label,
+                                            tabs: const [
+                                              Tab(
+                                                text: "Tổng quan",
+                                              ),
+                                              Tab(
+                                                text: "Bình luận",
+                                              )
+                                            ]),
+                                    ],
+                                  ),
+                                  BottomAction(
+                                      widget: widget,
+                                      isHiddenAction: isHiddenAction)
+                                ],
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                ),
+              ))),
+    );
+  }
 
+  @override
+  bool get wantKeepAlive => true;
+}
+
+class RotateIcon extends StatefulWidget {
+  final Function updateHiddenAction;
+  const RotateIcon({
+    super.key,
+    required this.updateHiddenAction,
+  });
+
+  @override
+  State<RotateIcon> createState() => _RotateIconState();
+}
+
+class _RotateIconState extends State<RotateIcon>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  bool _isRotated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _animation =
+        Tween<double>(begin: 0, end: 180).animate(_animationController);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleRotation() {
+    setState(() {
+      _isRotated = !_isRotated;
+      if (_isRotated) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    });
+    widget.updateHiddenAction();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _toggleRotation();
+      },
+      child: Container(
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.grey.withOpacity(0.3),
+        ),
+        child: AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
+              return Transform.rotate(
+                  angle: _animation.value * (3.1415926535 / 180),
+                  child: const Icon(FontAwesomeIcons.chevronDown,
+                      size: 15, color: white));
+            }),
+      ),
+    );
+  }
+}
+
+class ListComment extends StatelessWidget {
+  const ListComment({
+    super.key,
+    required this.postComment,
+    required this.commentChild,
+    required this.commentNode,
+    required this.commentSelected,
+  });
+
+  final List postComment;
+  final dynamic commentChild;
+  final FocusNode commentNode;
+  final dynamic commentSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        shrinkWrap: true,
+        reverse: true,
+        itemCount: postComment.length,
+        itemBuilder: ((context, index) {
+          return CommentTree(
+              key: Key(postComment[index]['id']),
+              type: postWatchDetail,
+              commentChildCreate:
+                  postComment[index]['id'] == commentChild?['in_reply_to_id']
+                      ? commentChild
+                      : null,
+              commentNode: commentNode,
+              commentSelected: commentSelected,
+              commentParent: postComment[index],
+              getCommentSelected: () {},
+              handleDeleteComment: () {});
+        }));
+  }
+}
+
+class BottomAction extends StatelessWidget {
+  final bool isHiddenAction;
+  const BottomAction({
+    super.key,
+    required this.widget,
+    required this.isHiddenAction,
+  });
+
+  final WatchDetail widget;
+
+  @override
+  Widget build(BuildContext context) {
     double getSizeGif(type) {
       if (type == 'tym') return 60;
       if (type == 'hug') return 55;
@@ -92,233 +335,63 @@ class _WatchDetailState extends State<WatchDetail>
       return 40;
     }
 
-    return GestureDetector(
-      onTap: () {
-        hiddenKeyboard(context);
-      },
-      child: Scaffold(
-          body: Column(
-        children: [
-          Expanded(
-            child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(widget.media['preview_remote_url'] ??
-                        widget.media['preview_url']),
-                    fit: BoxFit.cover,
+    const listReaction = ['like', 'tym', 'hug', 'haha', 'wow', 'cry', 'mad'];
+
+    return !isHiddenAction
+        ? SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    showBarModalBottomSheet(
+                        context: context,
+                        barrierColor: Colors.transparent,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: ScreenShare(
+                                entityShare: widget.post,
+                                type: 'post',
+                                entityType: 'post')));
+                  },
+                  child: Icon(
+                    FontAwesomeIcons.share,
+                    color: Colors.white.withOpacity(0.8),
+                    size: 24,
                   ),
                 ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: SafeArea(
-                      child: Column(
-                        children: [
-                          PostHeader(
-                              post: widget.post,
-                              textColor: white,
-                              type: postDetail),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Dismissible(
-                              direction: DismissDirection.vertical,
-                              key: const Key('page2'),
-                              resizeDuration: const Duration(milliseconds: 1),
-                              onDismissed: (direction) {
-                                Navigator.pop(context);
-                              },
-                              child: Hero(
-                                tag: widget.media['remote_url'] ??
-                                    widget.media['url'],
-                                child: VideoPlayerHasController(
-                                  media: widget.media,
-                                ),
-                              )),
-                          Expanded(
-                            child: TabBarView(
-                                controller: _tabController,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 20),
-                                    child: PostContent(
-                                      post: widget.post,
-                                      textColor: white,
-                                    ),
-                                  ),
-                                  SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ListView.builder(
-                                            primary: false,
-                                            shrinkWrap: true,
-                                            itemCount: postComment.length,
-                                            itemBuilder: ((context, index) =>
-                                                CommentTree(
-                                                    key: Key(
-                                                        postComment[index][
-                                                            'id']),
-                                                    type: postWatch,
-                                                    commentChildCreate:
-                                                        postComment[
-                                                                        index]
-                                                                    ['id'] ==
-                                                                commentChild?[
-                                                                    'in_reply_to_id']
-                                                            ? commentChild
-                                                            : null,
-                                                    commentNode: commentNode,
-                                                    commentSelected:
-                                                        commentSelected,
-                                                    commentParent:
-                                                        postComment[index],
-                                                    getCommentSelected: () {},
-                                                    handleDeleteComment:
-                                                        () {}))),
-                                      ],
-                                    ),
-                                  ),
-                                ]),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 12, left: 12, right: 12),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 34,
-                                        height: 34,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.grey.withOpacity(0.3),
-                                        ),
-                                        child: const Icon(
-                                            FontAwesomeIcons.chevronDown,
-                                            size: 15,
-                                            color: white),
-                                      ),
-                                      TabBar(
-                                          isScrollable: true,
-                                          controller: _tabController,
-                                          onTap: (index) {},
-                                          indicator: const BoxDecoration(),
-                                          indicatorWeight: 0,
-                                          labelColor: Colors.white,
-                                          unselectedLabelColor:
-                                              Colors.white.withOpacity(0.5),
-                                          indicatorSize:
-                                              TabBarIndicatorSize.label,
-                                          tabs: const [
-                                            Tab(
-                                              text: "Tổng quan",
-                                            ),
-                                            Tab(
-                                              text: "Bình luận",
-                                            )
-                                          ]),
-                                    ],
-                                  ),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            showBarModalBottomSheet(
-                                                context: context,
-                                                barrierColor:
-                                                    Colors.transparent,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                builder: (context) => SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.7,
-                                                    child: ScreenShare(
-                                                        entityShare:
-                                                            widget.post,
-                                                        type: 'post',
-                                                        entityType: 'post')));
-                                          },
-                                          child: Icon(
-                                            FontAwesomeIcons.share,
-                                            color:
-                                                Colors.white.withOpacity(0.8),
-                                            size: 24,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              70,
-                                          child: CommentTextfield(
-                                              autoFocus: false,
-                                              type: postWatchDetail,
-                                              commentSelected: null,
-                                              getCommentSelected: () {},
-                                              commentNode: null,
-                                              handleComment: () {}),
-                                        ),
-                                        ...[
-                                          'like',
-                                          'tym',
-                                          'hug',
-                                          'haha',
-                                          'wow',
-                                          'cry',
-                                          'mad'
-                                        ].map((String el) => Container(
-                                            margin: EdgeInsets.only(
-                                                left: 2,
-                                                right: 2,
-                                                bottom: el == 'hug' ? 10 : 0),
-                                            child: LikeButton(
-                                              size: getSizeGif(el),
-                                              circleColor: const CircleColor(
-                                                  start: primaryColor,
-                                                  end: secondaryColor),
-                                              bubblesColor: const BubblesColor(
-                                                dotPrimaryColor: primaryColor,
-                                                dotSecondaryColor:
-                                                    secondaryColor,
-                                              ),
-                                              likeBuilder: (bool isLiked) {
-                                                return renderGif('gif', el,
-                                                    size: getSizeGif(el));
-                                              },
-                                            )))
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 70,
+                  child: CommentTextfield(
+                      autoFocus: false,
+                      type: postWatchDetail,
+                      commentSelected: null,
+                      getCommentSelected: () {},
+                      commentNode: null,
+                      handleComment: () {}),
+                ),
+                ...listReaction.map((String el) => Container(
+                    margin: EdgeInsets.only(
+                        left: 2, right: 2, bottom: el == 'hug' ? 10 : 0),
+                    child: LikeButton(
+                      size: getSizeGif(el),
+                      circleColor: const CircleColor(
+                          start: primaryColor, end: secondaryColor),
+                      bubblesColor: const BubblesColor(
+                        dotPrimaryColor: primaryColor,
+                        dotSecondaryColor: secondaryColor,
                       ),
-                    ),
-                  ),
-                )),
-          ),
-        ],
-      )),
-    );
+                      likeBuilder: (bool isLiked) {
+                        return renderGif('gif', el, size: getSizeGif(el));
+                      },
+                    )))
+              ],
+            ),
+          )
+        : const SizedBox(
+            height: 71,
+          );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
