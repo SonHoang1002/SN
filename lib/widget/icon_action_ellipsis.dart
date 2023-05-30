@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widget/modal_invite_friend.dart';
 import 'package:social_network_app_mobile/widget/report_category.dart';
+import 'package:social_network_app_mobile/widget/share_modal_bottom.dart';
 
 class ActionEllipsis extends StatelessWidget {
   final dynamic menuSelected;
@@ -23,6 +24,10 @@ class ActionEllipsis extends StatelessWidget {
       case 'report':
         return const ReportCategory(entityReport: 'event', entityType: "event");
       case 'share':
+        return SingleChildScrollView(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom * 0.35),
+            child: ShareModalBottom(type: type, data: data));
       default:
         return const SizedBox();
     }

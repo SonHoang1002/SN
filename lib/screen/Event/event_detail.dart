@@ -68,7 +68,6 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
   void loadData() async {
     if (eventDetail.isEmpty && (widget.isUseEventData == true)) {
-
       eventDetail = widget.eventDetail;
     } else {
       await ref
@@ -507,7 +506,6 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                     builder:
                                                                         (context) =>
                                                                             SizedBox(
-                                                                              height: height * 0.9,
                                                                               width: width,
                                                                               child: ActionEllipsis(menuSelected: iconActionEllipsis[index], type: 'event', data: eventDetail),
                                                                             ));

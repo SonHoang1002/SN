@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 class BoxQuickUpdate extends StatelessWidget {
   final String? title;
@@ -26,18 +26,11 @@ class BoxQuickUpdate extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
 
-    String modeTheme = theme.themeMode == ThemeMode.dark
-        ? 'dark'
-        : theme.themeMode == ThemeMode.light
-            ? 'light'
-            : 'system';
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0),
-          color: modeTheme == 'dark'
-              ? Colors.grey.shade800
-              : Colors.grey.shade100),
+          color: theme.isDarkMode ? Theme.of(context).cardColor : Colors.white),
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 3),
       child: Column(
         children: [

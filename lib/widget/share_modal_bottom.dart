@@ -89,7 +89,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
       case "grow":
         return '${widget.data['account']['display_name']} đã tạo một dự án.';
       case "recruit":
-        return '${widget.data['account']['display_name']} đã tạo tuyển dụng.';
+        return '${widget.data['account']['display_name']} đã tạo một tuyển dụng.';
       case "course":
         return '${widget.data['account']['display_name']} đã tạo một khoá học.';
       default:
