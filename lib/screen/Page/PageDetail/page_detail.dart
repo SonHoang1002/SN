@@ -58,6 +58,25 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ModalRoute.of(context)?.settings.arguments != null) {
+        var arguments = ModalRoute.of(context)?.settings.arguments;
+        if (arguments is String) {
+          ref
+              .read(pageControllerProvider.notifier)
+              .getPageDetail(arguments)
+              .then((value) {
+            if (mounted) {
+              setState(() {
+                pageData = ref.read(pageControllerProvider).pageDetail;
+              });
+            }
+          });
+        } else {
+          setState(() {
+            pageData = arguments;
+          });
+        }
+      }
       final RenderBox renderBox =
           _widgetKey.currentContext?.findRenderObject() as RenderBox;
       if (mounted) {
@@ -72,7 +91,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           Duration.zero,
           () => ref
               .read(pageControllerProvider.notifier)
-              .getListPagePined(pageData['id']));
+              .getListPagePined(pageData?['id']));
     }
 
     scrollController.addListener(() {
@@ -169,51 +188,59 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     });
   }
 
-  Widget renderTab() {
-    switch (menuSelected) {
-      case 'home_page':
-        return Column(
-          children: [
-            AboutPage(
-                aboutPage: pageData,
-                isQuickShow: true,
-                changeMenuSelected: () {
-                  if (mounted) {
-                    setState(() {
-                      menuSelected = 'about_page';
-                    });
-                  }
-                }),
-            const SizedBox(height: 8),
-            const PagePinPost(),
-            FeedPage(pageData),
-          ],
-        );
-      case 'group_page':
-        return GroupPage(pageData);
-      case 'review_page':
-        return ReviewPage(pageData);
-      case 'about_page':
-        return AboutPage(aboutPage: pageData);
-      case 'photo_page':
-        return PhotoPage(
-            handleTypeMedia: (value) {
-              if (mounted) {
-                setState(() {
-                  typeMedia = value;
-                });
-              }
-            },
-            pageData: pageData,
-            typeMedia: typeMedia);
-      case 'video_page':
-        return VideoPage(pageData: pageData);
-      default:
-        return const SizedBox();
+  Widget renderTab(data) {
+    if (data != null) {
+      switch (menuSelected) {
+        case 'home_page':
+          return Column(
+            children: [
+              AboutPage(
+                  aboutPage: data,
+                  isQuickShow: true,
+                  changeMenuSelected: () {
+                    if (mounted) {
+                      setState(() {
+                        menuSelected = 'about_page';
+                      });
+                    }
+                  }),
+              const SizedBox(height: 8),
+              const PagePinPost(),
+              FeedPage(pageData: data),
+            ],
+          );
+        case 'group_page':
+          return GroupPage(data);
+        case 'review_page':
+          return ReviewPage(data);
+        case 'about_page':
+          return AboutPage(aboutPage: data);
+        case 'photo_page':
+          return PhotoPage(
+              handleTypeMedia: (value) {
+                if (mounted) {
+                  setState(() {
+                    typeMedia = value;
+                  });
+                }
+              },
+              pageData: data,
+              typeMedia: typeMedia);
+        case 'video_page':
+          return VideoPage(pageData: data);
+        default:
+          return const SizedBox();
+      }
     }
+    return const SizedBox();
   }
 
-  Widget getBody(size, modeTheme) {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Widget getBody(size, modeTheme, data) {
     return SingleChildScrollView(
         controller: scrollController,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -282,7 +309,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
               ],
             ),
           ),
-          renderTab()
+          renderTab(data)
         ]));
   }
 
@@ -409,25 +436,6 @@ class _PageDetailState extends ConsumerState<PageDetail> {
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)?.settings.arguments != null) {
-      var arguments = ModalRoute.of(context)?.settings.arguments;
-      if (arguments is String) {
-        ref
-            .read(pageControllerProvider.notifier)
-            .getPageDetail(arguments)
-            .then((value) {
-          if (mounted) {
-            setState(() {
-              pageData = ref.watch(pageControllerProvider).pageDetail;
-            });
-          }
-        });
-      } else {
-        setState(() {
-          pageData = arguments;
-        });
-      }
-    }
     final theme = pv.Provider.of<ThemeManager>(context);
     var meData = ref.watch(meControllerProvider);
     var rolePage = ref.watch(pageControllerProvider).rolePage;
@@ -460,7 +468,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             }
           },
           child: Wrap(children: [
-            Text(rolePage ? pageData!['title'] : meData[0]['display_name'],
+            Text(rolePage ? '${pageData?['title']}' : meData[0]['display_name'],
                 style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontSize: 15)),
@@ -497,7 +505,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         ],
       ),
       body: Stack(children: [
-        getBody(size, modeTheme),
+        getBody(size, modeTheme, pageData),
         if (showHeaderTabFixed)
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
