@@ -244,7 +244,10 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                                     : isCropping
                                         ? const Center(
                                             child: CupertinoActivityIndicator())
-                                        : Image.file(files!)),
+                                        : Image.file(
+                                            files!,
+                                            fit: BoxFit.cover,
+                                          )),
                           Positioned(
                             bottom: 8,
                             right: 12,
