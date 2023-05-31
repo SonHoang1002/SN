@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:like_button/like_button.dart';
+import 'package:miniplayer/miniplayer.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -15,16 +17,23 @@ import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controll
 import 'package:social_network_app_mobile/widget/comment_textfield.dart';
 import 'package:social_network_app_mobile/widget/screen_share.dart';
 
-class WatchDetail extends StatefulWidget {
+final selectedVideoProvider = StateProvider<dynamic>((ref) => null);
+
+final miniPlayerControllerProvider =
+    StateProvider.autoDispose<MiniplayerController>(
+  (ref) => MiniplayerController(),
+);
+
+class WatchDetail extends ConsumerStatefulWidget {
   final dynamic media;
   final dynamic post;
   const WatchDetail({Key? key, this.media, this.post}) : super(key: key);
 
   @override
-  State<WatchDetail> createState() => _WatchDetailState();
+  ConsumerState<WatchDetail> createState() => _WatchDetailState();
 }
 
-class _WatchDetailState extends State<WatchDetail>
+class _WatchDetailState extends ConsumerState<WatchDetail>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   double topPosition = 0;
   double leftPosition = 0;
@@ -97,6 +106,12 @@ class _WatchDetailState extends State<WatchDetail>
                         key: Key(widget.media['id'].toString()),
                         resizeDuration: const Duration(milliseconds: 1),
                         onDismissed: (direction) {
+                          ref
+                              .read(selectedVideoProvider.notifier)
+                              .update((state) => widget.post);
+                          ref
+                              .read(miniPlayerControllerProvider)
+                              .animateToHeight(state: PanelState.MIN);
                           Navigator.pop(context);
                         },
                         child: Stack(

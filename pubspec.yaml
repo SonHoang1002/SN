@@ -120,6 +120,7 @@ dependencies:
   google_fonts: ^4.0.4
   chewie: ^1.5.0
   like_button: ^2.0.5
+  miniplayer: ^1.0.1
 
 dev_dependencies:
   flutter_test:
