@@ -22,10 +22,6 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Mục đích sử dụng vị trí người dùng là để hiển thị các sự kiện và bạn bè gần đó, cũng như cung cấp nội dung địa phương cho người dùng.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Mục đích sử dụng vị trí người dùng khi ứng dụng đang hoạt động là để hiển thị các sự kiện và bạn bè gần đó, cũng như tùy chỉnh trải nghiệm người dùng dựa trên vị trí hiện tại của họ.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -57,6 +53,10 @@
 	<string>Play using while you are hiking</string>
 	<key>NSCameraUsageDescription</key>
 	<string>App requires access to your camera to allow you to take a photo of your ID to process your request</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Mục đích sử dụng vị trí người dùng là để hiển thị các sự kiện và bạn bè gần đó, cũng như cung cấp nội dung địa phương cho người dùng.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Mục đích sử dụng vị trí người dùng khi ứng dụng đang hoạt động là để hiển thị các sự kiện và bạn bè gần đó, cũng như tùy chỉnh trải nghiệm người dùng dựa trên vị trí hiện tại của họ.</string>
 	<key>NSLocationWhenUseUsageDescription </key>
 	<string>Your location allows you to view restaurants in delivery range of your address</string>
 	<key>NSMicrophoneUsageDescription</key>
