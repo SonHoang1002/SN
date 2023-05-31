@@ -217,300 +217,302 @@ class _PostMutipleMediaDetail1State
 
   ValueNotifier<bool> showBgContainer = ValueNotifier(true);
 
-  reloadDetailFunction() { 
+  reloadDetailFunction() {
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    dynamic postData = ref.watch(currentPostControllerProvider).currentPost;
-    medias = postData['media_attachments'];
+    dynamic postData =
+        ref.watch(currentPostControllerProvider).currentPost ?? widget.post;
+    if (postData.isNotEmpty) {
+      medias = postData['media_attachments'];
+    }
+
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
     return Scaffold(
         appBar: isHaveAppbar ? buildAppbar() as PreferredSizeWidget : null,
         backgroundColor: transparent,
-        body: SafeArea(
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            height: closeDirection == "" ? height : 0,
-            width: width,
-            curve: Curves.easeInOut,
-            transform: Matrix4.translationValues(
-                0,
-                closeDirection == closeBottomToTop
-                    ? -height
-                    : closeDirection == closeTopToBottom
-                        ? height
-                        : 0,
-                0),
-            onEnd: () {
-              popToPreviousScreen(context);
-            },
-            child: Stack(
-              children: [
-                // ValueListenableBuilder<bool>(
-                //     valueListenable: showBgContainer,
-                //     builder: (ctx, state, child) {
-                //       if (state) {
-                //         return Container(
-                //           height: height,
-                //           width: width,
-                //           color: Theme.of(context).scaffoldBackgroundColor,
-                //         );
-                //       } else {
-                //         return const SizedBox();
-                //       }
-                //     }),
+        body: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          height: closeDirection == "" ? height : 0,
+          width: width,
+          curve: Curves.easeInOut,
+          transform: Matrix4.translationValues(
+              0,
+              closeDirection == closeBottomToTop
+                  ? -height
+                  : closeDirection == closeTopToBottom
+                      ? height
+                      : 0,
+              0),
+          onEnd: () {
+            popToPreviousScreen(context);
+          },
+          child: Stack(
+            children: [
+              // ValueListenableBuilder<bool>(
+              //     valueListenable: showBgContainer,
+              //     builder: (ctx, state, child) {
+              //       if (state) {
+              //         return Container(
+              //           height: height,
+              //           width: width,
+              //           color: Theme.of(context).scaffoldBackgroundColor,
+              //         );
+              //       } else {
+              //         return const SizedBox();
+              //       }
+              //     }),
 
-                Container(
-                  margin: EdgeInsets.only(
-                    top: (beginDirection == ScrollDirection.forward &&
-                            (updatePositonY! - beginPositonY!) > 0
-                        ? (updatePositonY! - beginPositonY!)
-                        : 0),
-                    bottom: (beginDirection == ScrollDirection.reverse &&
-                            (updatePositonY! - beginPositonY!) < 0
-                        ? (updatePositonY! - beginPositonY!).abs()
-                        : 0),
-                  ),
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (notification) {
-                      if (notification is OverscrollNotification) {}
-                      if (notification is UserScrollNotification) {}
-                      if (notification is DraggableScrollableNotification) {}
-                      if (notification is ScrollMetricsNotification) {}
-                      if (notification is ScrollStartNotification) {
-                        if (_scrollParentController.offset == 0.0 ||
-                            _scrollParentController.offset ==
-                                _scrollParentController
-                                    .position.maxScrollExtent) {
-                          // WidgetsBinding.instance.addPostFrameCallback((_) {
+              Container(
+                margin: EdgeInsets.only(
+                  top: (beginDirection == ScrollDirection.forward &&
+                          (updatePositonY! - beginPositonY!) > 0
+                      ? (updatePositonY! - beginPositonY!)
+                      : 0),
+                  bottom: (beginDirection == ScrollDirection.reverse &&
+                          (updatePositonY! - beginPositonY!) < 0
+                      ? (updatePositonY! - beginPositonY!).abs()
+                      : 0),
+                ),
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    if (notification is OverscrollNotification) {}
+                    if (notification is UserScrollNotification) {}
+                    if (notification is DraggableScrollableNotification) {}
+                    if (notification is ScrollMetricsNotification) {}
+                    if (notification is ScrollStartNotification) {
+                      if (_scrollParentController.offset == 0.0 ||
+                          _scrollParentController.offset ==
+                              _scrollParentController
+                                  .position.maxScrollExtent) {
+                        // WidgetsBinding.instance.addPostFrameCallback((_) {
+                        setState(() {
+                          canDragOutside = true;
+                          beginPositonY = notification.dragDetails != null
+                              ? notification.dragDetails!.globalPosition.dy
+                              : 0;
+                          updatePositonY = notification.dragDetails != null
+                              ? notification.dragDetails!.globalPosition.dy
+                              : 0;
+                        });
+                        // });
+                      } else {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
                           setState(() {
-                            canDragOutside = true;
-                            beginPositonY = notification.dragDetails != null
-                                ? notification.dragDetails!.globalPosition.dy
-                                : 0;
+                            canDragOutside = false;
+                          });
+                        });
+                      }
+                    }
+                    if (notification is ScrollUpdateNotification) {
+                      if (isDragOutside) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          setState(() {
                             updatePositonY = notification.dragDetails != null
                                 ? notification.dragDetails!.globalPosition.dy
-                                : 0;
+                                : updatePositonY;
+                            beginDirection ??= _scrollParentController
+                                .position.userScrollDirection;
                           });
-                          // });
-                        } else {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            setState(() {
-                              canDragOutside = false;
-                            });
-                          });
-                        }
+                        });
                       }
-                      if (notification is ScrollUpdateNotification) {
-                        if (isDragOutside) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            setState(() {
-                              updatePositonY = notification.dragDetails != null
-                                  ? notification.dragDetails!.globalPosition.dy
-                                  : updatePositonY;
-                              beginDirection ??= _scrollParentController
-                                  .position.userScrollDirection;
-                            });
+                    }
+                    if (notification is ScrollEndNotification) {
+                      if (
+                          // (updatePositonY! - beginPositonY!)>0 &&
+                          (updatePositonY! - beginPositonY!).abs() < 50
+                          //  || (updatePositonY! - beginPositonY!)<0 && (updatePositonY! - beginPositonY!) > -100
+                          ) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          setState(() {
+                            isDragOutside = false;
+                            showBgContainer.value = true;
+                            updatePositonY = 0;
+                            beginPositonY = 0;
+                            isHaveAppbar = true;
+                            beginDirection = null;
                           });
-                        }
-                      }
-                      if (notification is ScrollEndNotification) {
-                        if (
-                            // (updatePositonY! - beginPositonY!)>0 &&
-                            (updatePositonY! - beginPositonY!).abs() < 50
-                            //  || (updatePositonY! - beginPositonY!)<0 && (updatePositonY! - beginPositonY!) > -100
-                            ) {
+                        });
+                      } else {
+                        if (beginDirection == ScrollDirection.forward &&
+                            (updatePositonY! - beginPositonY!) > 0) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             setState(() {
-                              isDragOutside = false;
+                              // isDragOutside = false;
                               showBgContainer.value = true;
-                              updatePositonY = 0;
-                              beginPositonY = 0;
-                              isHaveAppbar = true;
-                              beginDirection = null;
+                              closeDirection = closeTopToBottom;
+                            });
+                          });
+                        } else if (beginDirection ==
+                                ScrollDirection.reverse &&
+                            (updatePositonY! - beginPositonY!) < 0) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              // isDragOutside = false;
+                              showBgContainer.value = true;
+                              closeDirection = closeBottomToTop;
                             });
                           });
                         } else {
-                          if (beginDirection == ScrollDirection.forward &&
-                              (updatePositonY! - beginPositonY!) > 0) {
+                          if (beginDirection != null) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               setState(() {
-                                // isDragOutside = false;
-                                showBgContainer.value = true;
-                                closeDirection = closeTopToBottom;
+                                beginDirection = null;
                               });
                             });
-                          } else if (beginDirection ==
-                                  ScrollDirection.reverse &&
-                              (updatePositonY! - beginPositonY!) < 0) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              setState(() {
-                                // isDragOutside = false;
-                                showBgContainer.value = true;
-                                closeDirection = closeBottomToTop;
-                              });
-                            });
-                          } else {
-                            if (beginDirection != null) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                setState(() {
-                                  beginDirection = null;
-                                });
-                              });
-                            }
                           }
                         }
                       }
-                      return true;
-                    },
-                    child: Column(
-                      children: [
-                        Flexible(
-                            flex: 1,
-                            child: Container(
-                              color: isDragOutside
-                                  ? transparent
-                                  : Theme.of(context).scaffoldBackgroundColor,
-                              child: SingleChildScrollView(
-                                physics: !isDragOutside
-                                    ? const BouncingScrollPhysics()
-                                    : const CustomBouncingScrollPhysics(),
-                                controller: _scrollParentController,
-                                child: Container(
-                                  color:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        isDragOutside
-                                            ? buildAppbar()
-                                            : const SizedBox(),
-                                        const SizedBox(
-                                          height: 12.0,
-                                        ),
-                                        PostHeader(
-                                            post: postData,
-                                            type: postMultipleMedia),
-                                        const SizedBox(
-                                          height: 12.0,
-                                        ),
-                                        PostContent(post: postData),
-                                        const SizedBox(
-                                          height: 12.0,
-                                        ),
-                                        PostFooter(
+                    }
+                    return true;
+                  },
+                  child: Column(
+                    children: [
+                      Flexible(
+                          flex: 1,
+                          child: Container(
+                            color: isDragOutside
+                                ? transparent
+                                : Theme.of(context).scaffoldBackgroundColor,
+                            child: SingleChildScrollView(
+                              physics: !isDragOutside
+                                  ? const BouncingScrollPhysics()
+                                  : const CustomBouncingScrollPhysics(),
+                              controller: _scrollParentController,
+                              child: Container(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      isDragOutside
+                                          ? buildAppbar()
+                                          : const SizedBox(),
+                                      const SizedBox(
+                                        height: 12.0,
+                                      ),
+                                      PostHeader(
                                           post: postData,
-                                          type: postMultipleMedia,
-                                          preType: widget.preType,
-                                        ),
-                                        const CrossBar(
-                                          height: 5,
-                                          onlyTop: 5,
-                                          onlyBottom: 0,
-                                        ),
-                                        Column(
-                                          children: List.generate(medias.length,
-                                              (index) {
-                                            dynamic mediaData;
-                                            // while(mediaData==null){
-                                            // Future.delayed(Duration.zero, () async {
-                                            //   mediaData = await PostApi()
-                                            //       .getPostDetailMedia(
-                                            //           medias[index]['id']);
-                                            // });
-                                            // }
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                GestureDetector(
-                                                    onTap: () {
-                                                      pushCustomVerticalPageRoute(
-                                                          context,
-                                                          PostOneMediaDetail(
-                                                              currentIndex:
-                                                                  index,
-                                                              medias:
-                                                                  medias, //list anh
-                                                              post: postData,
-                                                              postMedia: medias[
-                                                                  index], // anh hien tai dang duoc chon
-                                                              type:
-                                                                  postMultipleMedia,
-                                                              preType: widget
-                                                                  .preType,
-                                                              backFunction: () {
-                                                                popToPreviousScreen(
-                                                                    context);
-                                                              }),
-                                                          opaque: false);
-                                                    },
-                                                    child: Stack(
-                                                      children: [
-                                                        Hero(
-                                                          tag: medias[index]
-                                                              ['id'],
-                                                          child: ExtendedImage
-                                                              .network(
-                                                            medias[index]
-                                                                ['url'],
-                                                            key: Key(
-                                                                medias[index]
-                                                                    ['id']),
-                                                            // fit: BoxFit
-                                                            //     .fitWidth,
-                                                            width:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                            // height: double.parse(medias[index]
-                                                            //                 ['meta']
-                                                            //             ["small"]
-                                                            //         ["height"]
-                                                            //     .toString()
-                                                            // )
-                                                          ),
+                                          type: postMultipleMedia),
+                                      const SizedBox(
+                                        height: 12.0,
+                                      ),
+                                      PostContent(post: postData),
+                                      const SizedBox(
+                                        height: 12.0,
+                                      ),
+                                      PostFooter(
+                                        post: postData,
+                                        type: postMultipleMedia,
+                                        preType: widget.preType,
+                                      ),
+                                      const CrossBar(
+                                        height: 5,
+                                        onlyTop: 5,
+                                        onlyBottom: 0,
+                                      ),
+                                      Column(
+                                        children: List.generate(medias.length,
+                                            (index) {
+                                          dynamic mediaData;
+                                          // while(mediaData==null){
+                                          // Future.delayed(Duration.zero, () async {
+                                          //   mediaData = await PostApi()
+                                          //       .getPostDetailMedia(
+                                          //           medias[index]['id']);
+                                          // });
+                                          // }
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    pushCustomVerticalPageRoute(
+                                                        context,
+                                                        PostOneMediaDetail(
+                                                            currentIndex:
+                                                                index,
+                                                            medias:
+                                                                medias, //list anh
+                                                            post: postData,
+                                                            postMedia: medias[
+                                                                index], // anh hien tai dang duoc chon
+                                                            type:
+                                                                postMultipleMedia,
+                                                            preType: widget
+                                                                .preType,
+                                                            backFunction: () {
+                                                              popToPreviousScreen(
+                                                                  context);
+                                                            }),
+                                                        opaque: false);
+                                                  },
+                                                  child: Stack(
+                                                    children: [
+                                                      Hero(
+                                                        tag: medias[index]
+                                                            ['id'],
+                                                        child: ExtendedImage
+                                                            .network(
+                                                          medias[index]
+                                                              ['url'],
+                                                          key: Key(
+                                                              medias[index]
+                                                                  ['id']),
+                                                          // fit: BoxFit
+                                                          //     .fitWidth,
+                                                          width:
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width,
+                                                          // height: double.parse(medias[index]
+                                                          //                 ['meta']
+                                                          //             ["small"]
+                                                          //         ["height"]
+                                                          //     .toString()
+                                                          // )
                                                         ),
-                                                      ],
-                                                    )),
-                                                PostFooter(
-                                                    post: postData,
-                                                    // mediaData ??
-                                                    //     medias[index],
-                                                    type: postMultipleMedia,
-                                                    preType: widget.preType,
-                                                    indexOfImage: index,
-                                                    reloadDetailFunction:
-                                                        reloadDetailFunction),
-                                                const CrossBar(
-                                                  height: 5,
-                                                  onlyTop: 5,
-                                                  onlyBottom: 0,
-                                                ),
-                                              ],
-                                            );
-                                          }),
-                                        ),
-                                        Container(
-                                          color: transparent,
-                                          height: 20,
-                                        )
-                                      ]),
-                                ),
+                                                      ),
+                                                    ],
+                                                  )),
+                                              PostFooter(
+                                                  post: postData,
+                                                  // mediaData ??
+                                                  //     medias[index],
+                                                  type: postMultipleMedia,
+                                                  preType: widget.preType,
+                                                  indexOfImage: index,
+                                                  reloadDetailFunction:
+                                                      reloadDetailFunction),
+                                              const CrossBar(
+                                                height: 5,
+                                                onlyTop: 5,
+                                                onlyBottom: 0,
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                      ),
+                                      Container(
+                                        color: transparent,
+                                        height: 20,
+                                      )
+                                    ]),
                               ),
-                            )),
-                      ],
-                    ),
+                            ),
+                          )),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }

@@ -376,7 +376,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                 ),
               )
             : SizedBox(
-                height: 40,
+                height: 30,
                 child: buildTextContent(suggestReactionContent, false,
                     isCenterLeft: false),
               ));

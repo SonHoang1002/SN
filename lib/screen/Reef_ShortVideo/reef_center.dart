@@ -31,59 +31,6 @@ class _ReefCenterState extends State<ReefCenter> {
     );
   }
 
-  Widget buildCarousel(List _reefList, Size size) {
-    return CarouselSlider(
-      items: _reefList.map((child) {
-        int index = _reefList.indexOf(child);
-        return GestureDetector(
-          onTap: () {
-            pushToNextScreen(
-                context,
-                Moment(
-                  dataAdditional: _reefList[index],
-                ));
-          },
-          child: Container(
-            height: size.height * 0.52,
-            width: size.width * 0.55,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: greyColor, width: 0.3)),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: currentActiveVideo == index
-                  ? Stack(
-                      children: [
-                        MomentVideo(
-                          type: 'momentFeed',
-                          moment: _reefList[index],
-                        ),
-                        Container(
-                            height: size.height * 0.52,
-                            width: size.width * 0.55,
-                            color: transparent)
-                      ],
-                    )
-                  : ExtendedImage.network(
-                      _reefList[index]["media_attachments"][0]["preview_url"],
-                      fit: BoxFit.fitHeight,
-                    ),
-            ),
-          ),
-        );
-      }).toList(),
-      options: CarouselOptions(
-          enableInfiniteScroll: false,
-          viewportFraction: 0.6,
-          height: size.height * 0.52,
-          onPageChanged: (value, reason) {
-            setState(() {
-              currentActiveVideo = value;
-            });
-          }),
-    );
-  }
-
   Widget buildPageView(List _reefList, Size size) {
     return SizedBox(
       height: size.height * 0.52,
@@ -104,6 +51,7 @@ class _ReefCenterState extends State<ReefCenter> {
                   context,
                   Moment(
                     dataAdditional: _reefList[index],
+                    isBack: true,
                   ));
             },
             child: Container(
@@ -122,6 +70,7 @@ class _ReefCenterState extends State<ReefCenter> {
                           MomentVideo(
                             type: 'momentFeed',
                             moment: _reefList[index],
+                            isPlayBack: true,
                           ),
                           Container(
                               height: size.height * 0.52,
@@ -157,6 +106,61 @@ class _ReefCenterState extends State<ReefCenter> {
           });
         },
       ),
+    );
+  }
+
+  Widget buildCarousel(List _reefList, Size size) {
+    return CarouselSlider(
+      items: _reefList.map((child) {
+        int index = _reefList.indexOf(child);
+        bool isPlayBack = true;
+        return GestureDetector(
+          onTap: () {
+            pushToNextScreen(
+                context,
+                Moment(
+                  dataAdditional: _reefList[index],
+                ));
+          },
+          child: Container(
+            height: size.height * 0.52,
+            width: size.width * 0.55,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: greyColor, width: 0.3)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: currentActiveVideo == index
+                  ? Stack(
+                      children: [
+                        MomentVideo(
+                          type: 'momentFeed',
+                          moment: _reefList[index],
+                          isPlayBack: true,
+                        ),
+                        Container(
+                            height: size.height * 0.52,
+                            width: size.width * 0.55,
+                            color: transparent)
+                      ],
+                    )
+                  : ExtendedImage.network(
+                      _reefList[index]["media_attachments"][0]["preview_url"],
+                      fit: BoxFit.fitHeight,
+                    ),
+            ),
+          ),
+        );
+      }).toList(),
+      options: CarouselOptions(
+          enableInfiniteScroll: false,
+          viewportFraction: 0.6,
+          height: size.height * 0.52,
+          onPageChanged: (value, reason) {
+            setState(() {
+              currentActiveVideo = value;
+            });
+          }),
     );
   }
 }

@@ -283,7 +283,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
           postComment = dataCommentUpdate;
           commentChild = newComment;
         });
-        if (newComment != null) { 
+        if (newComment != null) {
           _updatePostCount(
               addtionalIfChild: (data['type'] == 'child' &&
                       data['typeStatus'] != 'editChild' &&
@@ -505,7 +505,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
 
   handleDeleteComment(post) { 
     if (post != null) {
-      if (widget.indexImagePost != null) { 
+      if (widget.indexImagePost != null) {
         if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
           List newPostComment = postComment
               .where((element) => element['id'] != post['id'])
@@ -525,36 +525,34 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
               _updatePostCount(subIfChild: 1);
             }
           });
-        } else {
-          if (post != null) {
-            if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
-              List newPostComment = postComment
-                  .where((element) => element['id'] != post['id'])
-                  .toList();
+        }
+      } else {
+        if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
+          List newPostComment = postComment
+              .where((element) => element['id'] != post['id'])
+              .toList();
+          setState(() {
+            postComment = newPostComment;
+          });
+          _updatePostCount();
+          return;
+        } else if (post['in_reply_to_id'] != null) {
+          // cap nhat so luong khi xoa cmt con
+          postComment.forEach((element) {
+            if (element['id'] == post['in_reply_to_id']) {
               setState(() {
-                postComment = newPostComment;
+                postComment = postComment;
               });
-              _updatePostCount();
-              return;
-            } else if (post['in_reply_to_id'] != null) {
-              // cap nhat so luong khi xoa cmt con
-              postComment.forEach((element) {
-                if (element['id'] == post['in_reply_to_id']) {
-                  setState(() {
-                    postComment = postComment;
-                  });
-                  _updatePostCount(subIfChild: 1);
-                }
-              });
+              _updatePostCount(subIfChild: 1);
             }
-          }
+          });
         }
       }
     }
   }
 
   _updatePostCount({int addtionalIfChild = 0, int subIfChild = 0}) async {
-    if (widget.indexImagePost != null) {
+    if (widget.indexImagePost != null) { 
       dynamic updateCountPostData = widget.post;
       if (updateCountPostData['media_attachments'][widget.indexImagePost]
                   ['status_media']['replies_total'] ==
@@ -574,7 +572,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       ref
           .read(currentPostControllerProvider.notifier)
           .saveCurrentPost(updateCountPostData);
-    } else {
+    } else { 
       dynamic updateCountPostData = widget.post;
       dynamic count = postComment.length;
       postComment.forEach((element) {
@@ -632,21 +630,19 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
             title: 'Bình luận',
             textColor: widget.type == postWatch ? Colors.white : null,
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: InkWell(
-                child: Icon(
-                  FontAwesomeIcons.xmark,
-                  color: Theme.of(context).textTheme.bodyLarge!.color,
-                  size: 20,
-                ),
-                onTap: () {
-                  popToPreviousScreen(context);
-                },
+          leading: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: InkWell(
+              child: Icon(
+                FontAwesomeIcons.chevronLeft,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
+                size: 20,
               ),
-            )
-          ],
+              onTap: () {
+                popToPreviousScreen(context);
+              },
+            ),
+          ),
         ),
         body: Container(
           decoration: const BoxDecoration(
