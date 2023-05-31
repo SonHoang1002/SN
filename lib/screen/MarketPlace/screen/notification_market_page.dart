@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
-import '../../../../widget/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
+import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/messenger_app_bar/app_bar_title.dart';
 
+// ignore: must_be_immutable
 class NotificationMarketPage extends StatelessWidget {
   NotificationMarketPage({super.key});
   double width = 0;
@@ -22,7 +23,7 @@ class NotificationMarketPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               BackIconAppbar(),
-              AppBarTitle(title: "Thông báo"),
+              AppBarTitle(text: "Thông báo"),
               SizedBox()
             ],
           ),
@@ -44,7 +45,6 @@ class NotificationMarketPage extends StatelessWidget {
                 ],
               ),
             ),
-            //
           ],
         ));
   }

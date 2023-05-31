@@ -11,12 +11,22 @@ import 'package:social_network_app_mobile/screen/Post/post_list_share.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/reaction_list.dart';
 
+
 class PostFooter extends StatelessWidget {
   final dynamic post;
   final dynamic type;
   final dynamic preType;
-  const PostFooter({Key? key, this.post, this.type, this.preType})
+  final int? indexOfImage;
+  final Function? reloadDetailFunction;
+  const PostFooter(
+      {Key? key,
+      this.post,
+      this.type,
+      this.preType,
+      this.indexOfImage,
+      this.reloadDetailFunction})
       : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,41 +35,30 @@ class PostFooter extends StatelessWidget {
         type == postDetail
             ? const SizedBox()
             : InkWell(
-                onTap: ![postDetail, postMultipleMedia].contains(type)
-                    ? () {
-                        pushCustomCupertinoPageRoute(
-                            context,
-                            PostDetail(
-                              post: post,
-                              preType: type,
-                            ));
-                        // Navigator.push(
-                        //     context,
-                        //     CupertinoPageRoute(
-                        //         builder: (context) => PostDetail(
-                        //               post: post,
-                        //               preType: type,
-                        // )));
-                      }
-                    : () {
-                        pushCustomCupertinoPageRoute(
-                            context,
-                            CommentPostModal(
-                              post: post,
-                              preType: type,
-                            ));
-                        // Navigator.push(
-                        //     context,
-                        //     CupertinoPageRoute(
-                        //         builder: (context) => CommentPostModal(
-                        //               post: post,
-                        //               preType: type,
-                        //             )));
-                      },
+                onTap: () {
+                  ![postDetail, postMultipleMedia].contains(type)
+                      ? pushCustomCupertinoPageRoute(
+                          context,
+                          PostDetail(
+                            post: post,
+                            preType: type,
+                            indexImagePost: indexOfImage,
+                          ))
+                      : showBarModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => CommentPostModal(
+                                post: post,
+                                preType: preType,
+                                indexImagePost: indexOfImage,
+                                reloadFunction: reloadDetailFunction,
+                              ));
+                },
                 child: PostFooterInformation(
                   post: post,
                   type: type,
                   // preType: checkPreType(),
+                  indexImagePost: indexOfImage,
                 )),
         Container(
           height: 1,
@@ -69,10 +68,11 @@ class PostFooter extends StatelessWidget {
           decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3)),
         ),
         PostFooterButton(
-          post: post,
-          type: type,
-          preType: preType,
-        ),
+            post: post,
+            type: type,
+            preType: preType,
+            indexImage: indexOfImage,
+            reloadDetailFunction: reloadDetailFunction),
         type != postDetail
             ? const SizedBox()
             : Column(
@@ -131,3 +131,6 @@ class PostFooter extends StatelessWidget {
     );
   }
 }
+
+
+

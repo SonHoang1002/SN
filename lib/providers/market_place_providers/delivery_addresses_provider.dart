@@ -26,8 +26,9 @@ class DeliveryAddressController extends StateNotifier<DeliveryAddressState> {
     state = state.copyWith(response);
   }
 
-  updateDeliveryAddress(dynamic data) async {
-    final response = await DeliveryAddressApis().updateDeliveryAddressApi(data);
+  updateDeliveryAddress(dynamic id, dynamic data) async {
+    final response =
+        await DeliveryAddressApis().updateDeliveryAddressApi(id, data);
     state = state.copyWith(response);
   }
 

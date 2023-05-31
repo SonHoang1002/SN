@@ -106,9 +106,9 @@ class _DetailProductMarketPageComsumerState
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              BackIconAppbar(),
-              AppBarTitle(title: "Chi tiết sản phẩm"),
+            children:  [
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Chi tiết sản phẩm"),
               CartWidget(),
             ],
           ),

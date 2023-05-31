@@ -21,6 +21,45 @@ class OrderController extends StateNotifier<OrderState> {
       state = state.copyWith([]);
       return;
     }
-    state = state.copyWith(response); 
+    state = state.copyWith(response.cast<Map<String, dynamic>>().toList());
+  }
+
+  getBuyerOrder() async {
+    final response = await OrderApis().getBuySellerOrderApi();
+    if (response == null) {
+      state = state.copyWith([]);
+      return;
+    }
+    state = state.copyWith(response.cast<Map<String, dynamic>>().toList());
+  }
+}
+
+// buyer
+class BuyerOrderState {
+  List<Map<String, dynamic>> buyerOrder;
+  BuyerOrderState({this.buyerOrder = const []});
+  BuyerOrderState copyWith(List<Map<String, dynamic>> newOrder) {
+    return BuyerOrderState(buyerOrder: newOrder);
+  }
+}
+
+final orderBuyerProvider =
+    StateNotifierProvider<BuyerOrderController, BuyerOrderState>(
+        (ref) => BuyerOrderController());
+
+class BuyerOrderController extends StateNotifier<BuyerOrderState> {
+  BuyerOrderController() : super(BuyerOrderState());
+
+  getBuyerOrder({dynamic limit}) async {
+    final response = await OrderApis().getBuySellerOrderApi();
+    if (response == null) {
+      state = state.copyWith([]);
+      return;
+    }
+    state = state.copyWith(response.cast<Map<String, dynamic>>().toList());
+  }
+
+  createBuyerOrder(dynamic data) async {
+    final response = await OrderApis().createBuyerOrderApi(data);
   }
 }

@@ -1,11 +1,17 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/EditImage/edit_img_main.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/gallery/gallery_view.dart';
@@ -29,15 +35,18 @@ class PageEditMediaUpload extends StatefulWidget {
 
 class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
   late FlickMultiManager flickMultiManager;
+  // data để hiển thị
   List filesRender = [];
+  //data để lưu
+  List newFileRender = [];
 
   @override
   void initState() {
     super.initState();
-
     if (widget.files.isNotEmpty) {
       setState(() {
         filesRender = widget.files;
+        newFileRender = widget.files;
       });
     }
 
@@ -49,6 +58,30 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
     super.dispose();
   }
 
+  _updateData(int index, dynamic newData) async {
+    if (newData != null) {
+      final newImage = await uint8ListToFile(
+          newData['newUint8ListFile'], newData['file'].path);
+
+      setState(() {
+        filesRender[index] = newData;
+        newFileRender[index]['file'] = newImage;
+      });
+    }
+  }
+
+  File uint8ListToFile(Uint8List data, String fileName) {
+    File file = File(fileName);
+    file.writeAsBytesSync(data, mode: FileMode.write);
+    return file;
+  }
+
+  Future<Uint8List> fileToUint8List(String assetPath) async {
+    final ByteData byteData = await rootBundle.load(assetPath);
+    final Uint8List uint8List = byteData.buffer.asUint8List();
+    return uint8List;
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -56,35 +89,57 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
       return media['type'] == 'image' ? true : false;
     }
 
-    renderMedia(index, file) {
+    Widget renderMedia(index) {
+      final file = filesRender[index];
+
       return Column(
         children: [
           if (checkIsImage(file))
-            ClipRect(
-                child: Align(
-              alignment: Alignment.topCenter,
-              heightFactor:
-                  (file['aspect'] ?? file['meta']['original']['aspect']) < 0.4
-                      ? 0.6
-                      : 1,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: file['subType'] == 'local'
-                    ? Image.file(
-                        file['file'],
-                        fit: BoxFit.cover,
-                      )
-                    : ExtendedImage.network(
-                        file['url'],
-                      ),
-                // FadeInImage.memoryNetwork(
-                //     placeholder: kTransparentImage,
-                //     image: file['url'],
-                //     imageErrorBuilder: (context, error, stackTrace) =>
-                //         const SizedBox(),
-                //   ),
-              ),
-            ))
+            GestureDetector(
+              onTap: () {
+                pushToNextScreen(
+                    context,
+                    EditImageMain(
+                        imageData: filesRender[index],
+                        index: index,
+                        updateData: (int index, dynamic newData) async {
+                          setState(() {
+                            filesRender[index] = null;
+                          });
+                          _updateData(index, newData);
+                        }));
+              },
+              child: ClipRect(
+                  child: Align(
+                alignment: Alignment.topCenter,
+                heightFactor:
+                    (file['aspect'] ?? file['meta']['original']['aspect']) < 0.4
+                        ? 0.6
+                        : 1,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: file['subType'] == 'local'
+                      ? file['newUint8ListFile'] != null
+                          ? Image.memory(
+                              file['newUint8ListFile'],
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              file['file'].path,
+                              fit: BoxFit.cover,
+                            )
+                      : ExtendedImage.network(
+                          file['url'],
+                        ),
+                  // FadeInImage.memoryNetwork(
+                  //     placeholder: kTransparentImage,
+                  //     image: file['url'],
+                  //     imageErrorBuilder: (context, error, stackTrace) =>
+                  //         const SizedBox(),
+                  //   ),
+                ),
+              )),
+            )
           else
             Padding(
               padding: const EdgeInsets.only(top: 8),
@@ -142,7 +197,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                 label: "Xong",
                 handlePress: () {
                   widget.handleUpdateData(
-                      'update_file_description', filesRender);
+                      'update_file_description', newFileRender);
                   Navigator.pop(context);
                 },
               )
@@ -162,7 +217,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                         itemCount: filesRender.length,
                         itemBuilder: (context, index) => Stack(
                               children: [
-                                renderMedia(index, filesRender[index]),
+                                renderMedia(index),
                                 Positioned(
                                     right: 15,
                                     top: 15,

@@ -8,9 +8,11 @@ import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class MomentVideo extends ConsumerStatefulWidget {
-  const MomentVideo({Key? key, this.moment, this.type}) : super(key: key);
   final dynamic moment;
   final String? type;
+  final bool? isPlayBack;
+  const MomentVideo({Key? key, this.moment, this.type, this.isPlayBack})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -32,6 +34,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
   double _sliderValue = 0;
 
   dynamic imageThumbnail;
+  Timer? timer;
 
   @override
   void initState() {
@@ -45,6 +48,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
       ..initialize().then((value) {
         videoPlayerController.setVolume(1);
         videoPlayerController.setLooping(true);
+
         setState(() {
           isShowPlaying = false;
         });
@@ -56,7 +60,22 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                 videoPlayerController.value.position.inSeconds.toDouble();
           });
         }
+        if (widget.isPlayBack == true) {
+          _setTimer();
+        }
       });
+  }
+
+  void _setTimer() {
+    timer = Timer.periodic(const Duration(milliseconds: 250), (_) {
+      if (videoPlayerController.value.isPlaying) {
+        if (videoPlayerController.value.position >=
+            const Duration(seconds: 4)) {
+          videoPlayerController.seekTo(Duration.zero);
+          videoPlayerController.play();
+        }
+      }
+    });
   }
 
   @override
@@ -64,6 +83,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
     super.dispose();
     _animationController.dispose();
     videoPlayerController.dispose();
+    timer?.cancel();
   }
 
   _handleOnDoubleTap(TapDownDetails tapDetails) {

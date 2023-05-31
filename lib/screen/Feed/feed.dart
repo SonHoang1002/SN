@@ -12,12 +12,14 @@ import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
 import 'package:social_network_app_mobile/screen/Reef_ShortVideo/reef.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/Suggestions/suggest.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 import 'package:social_network_app_mobile/widget/skeleton.dart';
 import 'package:social_network_app_mobile/widget/text_description.dart';
+import 'package:provider/provider.dart' as pv;
 
 class Feed extends ConsumerStatefulWidget {
   const Feed({Key? key}) : super(key: key);
@@ -79,6 +81,7 @@ class _FeedState extends ConsumerState<Feed> {
   Widget build(BuildContext context) {
     List posts = List.from(ref.watch(postControllerProvider).posts);
     bool isMore = ref.watch(postControllerProvider).isMore;
+    final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
@@ -86,94 +89,103 @@ class _FeedState extends ConsumerState<Feed> {
               .read(postControllerProvider.notifier)
               .refreshListPost(paramsConfig);
         },
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Column(
-            children: [
-              CreatePostButton(
-                preType: feedPost,
-              ),
-              const CrossBar(
-                height: 5,
-              ),
-              posts.length == 5 || isMore == false
-                  ? Column(
-                      children: const [
-                        Reef(),
-                        CrossBar(
-                          height: 5,
-                        ),
-                      ],
-                    )
-                  : const SizedBox(),
-              posts.length == 20 || isMore == false
-                  ? Suggest(
-                      type: suggestGroups,
-                      headerWidget: Image.asset(
-                        'assets/icon/logo_app.png',
-                        height: 20,
-                      ),
-                      subHeaderWidget: Column(children: [
-                        buildSpacer(height: 5),
-                        buildTextContent(
-                            ref.watch(meControllerProvider)[0]['display_name'] +
-                                " ơi, bạn có thể sẽ thích các nhóm sau ",
-                            true,
-                            fontSize: 17),
-                        buildSpacer(height: 5),
-                        buildTextContent(
-                            "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
-                            false,
-                            fontSize: 16),
-                      ]),
-                      reloadFunction: () {
-                        setState(() {});
-                      },
-                      footerTitle: "Khám phá thêm nhóm")
-                  : const SizedBox(),
-              posts.length == 40 || isMore == false
-                  ? Suggest(
-                      type: suggestFriends,
-                      headerWidget: buildTextContent(
-                          "Những người bạn có thể biết", true,
-                          fontSize: 17),
-                      reloadFunction: () {
-                        setState(() {});
-                      },
-                      footerTitle: "Xem thêm")
-                  : const SizedBox(),
-              ListView.builder(
-                  shrinkWrap: true,
-                  primary: false,
-                  itemCount: posts.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index < posts.length) {
-                      return Post(
-                        type: feedPost,
-                        post: posts[index],
-                        reloadFunction: () {
-                          setState(() {});
-                        },
-                      );
-                    } else {
-                      return isMore == true
-                          ? Center(
-                              child: SkeletonCustom().postSkeleton(context),
-                            )
-                          : const SizedBox();
-                    }
-                  }),
-              isMore
-                  ? Center(
-                      child: SkeletonCustom().postSkeleton(context),
-                    )
-                  : const Center(
-                      child: TextDescription(
-                          description: "Bạn đã xem hết các bài viết mới rồi"),
-                    )
-            ],
-          ),
-        ),
+        child: (ref.watch(meControllerProvider).isNotEmpty &&
+                ref.watch(meControllerProvider)[0] != null)
+            ? SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
+                  children: [
+                    CreatePostButton(
+                      preType: feedPost,
+                    ),
+                    const CrossBar(
+                      height: 5,
+                    ),
+                    posts.length == 5 || isMore == false
+                        ? Column(
+                            children: const [
+                              Reef(),
+                              CrossBar(
+                                height: 5,
+                              ),
+                            ],
+                          )
+                        : const SizedBox(),
+                    posts.length == 20 || isMore == false
+                        ? Suggest(
+                            type: suggestGroups,
+                            headerWidget: Image.asset(
+                              'assets/icon/logo_app.png',
+                              height: 20,
+                            ),
+                            subHeaderWidget: Column(children: [
+                              buildSpacer(height: 5),
+                              buildTextContent(
+                                  ref.watch(meControllerProvider)[0]
+                                          ['display_name'] +
+                                      " ơi, bạn có thể sẽ thích các nhóm sau ",
+                                  true,
+                                  fontSize: 17),
+                              buildSpacer(height: 5),
+                              buildTextContent(
+                                  "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
+                                  false,
+                                  fontSize: 16),
+                            ]),
+                            reloadFunction: () {
+                              setState(() {});
+                            },
+                            footerTitle: "Khám phá thêm nhóm")
+                        : const SizedBox(),
+                    posts.length == 40 || isMore == false
+                        ? Suggest(
+                            type: suggestFriends,
+                            headerWidget: buildTextContent(
+                                "Những người bạn có thể biết", true,
+                                fontSize: 17),
+                            reloadFunction: () {
+                              setState(() {});
+                            },
+                            footerTitle: "Xem thêm")
+                        : const SizedBox(),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        primary: false,
+                        itemCount: posts.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index < posts.length) {
+                            return Post(
+                              type: feedPost,
+                              post: posts[index],
+                              reloadFunction: () {
+                                setState(() {});
+                              },
+                            );
+                          } else {
+                            return isMore == true
+                                ? Center(
+                                    child:
+                                        SkeletonCustom().postSkeleton(context),
+                                  )
+                                : const SizedBox();
+                          }
+                        }),
+                    isMore
+                        ? Center(
+                            child: SkeletonCustom().postSkeleton(context),
+                          )
+                        : const Center(
+                            child: TextDescription(
+                                description:
+                                    "Bạn đã xem hết các bài viết mới rồi"),
+                          )
+                  ],
+                ),
+              )
+            : Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: CupertinoActivityIndicator(
+                    color: theme.isDarkMode ? Colors.white : Colors.black)),
       ),
     );
   }

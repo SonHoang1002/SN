@@ -70,7 +70,9 @@ class UserPageInfomationBlock extends StatelessWidget {
                           itemCount: lifeEvent.length,
                           itemBuilder: (context, index) {
                             if (lifeEvent[index]['life_event']['visibility'] !=
-                                'private') {
+                                    'private' &&
+                                lifeEvent[index]['life_event']['company'] !=
+                                    null) {
                               return ListTile(
                                 // minLeadingWidth: 20,
                                 dense: true,

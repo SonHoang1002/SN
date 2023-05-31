@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/follwer_product_api.dart';
+// import 'package:social_network_app_mobile/apis/market_place_apis/follwer_product_api.dart';
 
 final interestProductsProvider =
     StateNotifierProvider<InterestProductsController, InterestProductsState>(
@@ -18,17 +20,18 @@ class InterestProductsController extends StateNotifier<InterestProductsState> {
 
   deleleInterestProductItem(dynamic id) async {
     List<dynamic> interestList = state.listInterest;
-    List<dynamic> interestList1 = state.listInterest;
     for (int i = 0; i < interestList.length; i++) {
       if (interestList[i]["id"] == id) {
         interestList.removeAt(i);
         return;
       }
     }
-    interestList1.whereNot((element) {
-      return element["id"] == id;
-    }); 
     state = state.copyWith(interestList);
+  }
+
+  getFollwerProduct() async {
+    final response = await FollwerProductsApi().getFollwerProductsApi();
+    state = state.copyWith(response);
   }
 }
 

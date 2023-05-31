@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get_time_ago/get_time_ago.dart';
-import 'package:helpers/helpers/extensions/extensions.dart';
+// import 'package:helpers/helpers/extensions/extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -316,6 +316,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                     cacheGesture: false,
                                     inPageView: true);
                               },
+                              
                               onDoubleTap: (state) {
                                 if (state.gestureDetails!.totalScale == 1.0) {
                                   state.handleDoubleTap(
@@ -416,9 +417,9 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                widget.backFunction != null
-                                    ? widget.backFunction!()
-                                    : null;
+                                // widget.backFunction != null
+                                //     ? widget.backFunction!()
+                                //     : null;
                                 popToPreviousScreen(context);
                               },
                               child: Container(
@@ -541,22 +542,25 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                           PostFooterInformation(
                             post: userData,
                             preType: checkPreType(),
+                            indexImagePost: widget.currentIndex,
                           ),
                           buildDivider(),
                           SizedBox(
                             height: 40,
                             child: PostFooterButton(
-                                post: userData,
-                                type: postMultipleMedia,
-                                preType: checkPreType(),
-                                reloadFunction: () {
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    widget.reloadFunction != null
-                                        ? widget.reloadFunction!()
-                                        : null;
-                                  });
-                                }),
+                              post: userData,
+                              type: postMultipleMedia,
+                              preType: checkPreType(),
+                              reloadFunction: () {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  widget.reloadFunction != null
+                                      ? widget.reloadFunction!()
+                                      : null;
+                                });
+                              },
+                              indexImage: widget.currentIndex,
+                            ),
                           )
                         ],
                       ),

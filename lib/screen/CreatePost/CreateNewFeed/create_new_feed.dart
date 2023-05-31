@@ -274,11 +274,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             listPath.add(item?['id']);
           } else if (item['file'] != null) {
             if (item['file'].path != null &&
-                !listPath.contains(item['file']!.path)) {
+                (!listPath.contains(item['file']!.path))) {
               newFiles.add(item);
               listPath.add(item['file']!.path);
             }
           } else {}
+        }
+        if (![1, 2].contains(newFiles.length)) {
+          newFiles.removeAt(0);
         }
 
         setState(() {
@@ -764,7 +767,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     height = size.height;
     width = size.width;

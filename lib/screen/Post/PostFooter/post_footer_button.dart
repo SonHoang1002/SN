@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -24,14 +26,17 @@ class PostFooterButton extends ConsumerStatefulWidget {
   final String? preType;
   final Function? backFunction;
   final Function? reloadFunction;
-
+  final int? indexImage;
+  final Function? reloadDetailFunction;
   const PostFooterButton(
       {Key? key,
       this.post,
       this.type,
       this.backFunction,
       this.reloadFunction,
-      this.preType})
+      this.preType,
+      this.indexImage,
+      this.reloadDetailFunction})
       : super(key: key);
 
   @override
@@ -62,7 +67,13 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         "label": "Chia sẻ",
       }
     ];
-    String viewerReaction = widget.post['viewer_reaction'] ?? '';
+    String viewerReaction = (widget.indexImage != null &&
+            widget.post['media_attachments'].isNotEmpty
+        ? (widget.post['media_attachments'][widget.indexImage]?['status_media']
+                ?['viewer_reaction'] ??
+            '')
+        : (widget.post['viewer_reaction'] ?? ""));
+
     handlePress(key) {
       if (key == 'comment') {
         if (![postDetail, postMultipleMedia, postWatch].contains(widget.type)) {
@@ -79,6 +90,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
               builder: (context) => CommentPostModal(
                     post: widget.post,
                     preType: widget.preType,
+                    indexImagePost: widget.indexImage,
+                    reloadFunction: widget.reloadDetailFunction,
                   ));
         } else if (widget.type == postWatch) {
           Navigator.push(
@@ -98,66 +111,146 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     }
 
     handleReaction(react) async {
-      var newPost = widget.post;
-      List newFavourites = newPost['reactions'];
+      if (widget.type == postMultipleMedia &&
+          widget.post['media_attachments'].isNotEmpty &&
+          widget.indexImage != null) {
+        var newPost = widget.post;
+        List newFavourites = newPost['media_attachments'][widget.indexImage]
+            ['status_media']?['reactions'];
+        int index = newPost['media_attachments'][widget.indexImage]
+                ['status_media']?['reactions']
+            .indexWhere((element) => element['type'] == react);
+        int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
+            ? (newPost['media_attachments'][widget.indexImage]['status_media']
+                    ?['reactions'])
+                .indexWhere((element) => element['type'] == viewerReaction)
+            : -1;
+        if (index >= 0) {
+          newPost['media_attachments'][widget.indexImage]['status_media']
+              ?['reactions'][index] = {
+            "type": react,
+            "${react}s_count": newFavourites[index]['${react}s_count'] + 1
+          };
+        }
+        if (indexCurrent >= 0) {
+          newPost['media_attachments'][widget.indexImage]['status_media']
+              ?['reactions'][indexCurrent] = {
+            "type": viewerReaction,
+            "${viewerReaction}s_count":
+                newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
+          };
+        }
 
-      int index = newPost['reactions']
-          .indexWhere((element) => element['type'] == react);
-      int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
-          ? newPost['reactions']
-              .indexWhere((element) => element['type'] == viewerReaction)
-          : -1;
-      if (index >= 0) {
-        newFavourites[index] = {
-          "type": react,
-          "${react}s_count": newFavourites[index]['${react}s_count'] + 1
-        };
-      }
-
-      if (indexCurrent >= 0) {
-        newFavourites[indexCurrent] = {
-          "type": viewerReaction,
-          "${viewerReaction}s_count":
-              newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
-        };
-      }
-
-      if (react != null) {
-        dynamic data = {"custom_vote_type": react};
-        newPost = {
-          ...newPost,
-          "favourites_count": newPost['viewer_reaction'] != null
-              ? newPost['favourites_count']
-              : newPost['favourites_count'] + 1,
-          "viewer_reaction": react,
-          "reactions": newFavourites
-        };
-        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
-            widget.type, newPost,
-            preType: widget.preType);
-        ref
-            .read(currentPostControllerProvider.notifier)
-            .saveCurrentPost(newPost);
-
-        await PostApi().reactionPostApi(widget.post['id'], data);
+        if (react != null) {
+          dynamic data = {"custom_vote_type": react};
+          newPost['media_attachments'][widget.indexImage]['status_media']
+              ['favourites_count'] = newPost['media_attachments']
+                      [widget.indexImage]['status_media']?['viewer_reaction'] !=
+                  null
+              ? (newPost['media_attachments'][widget.indexImage]
+                  ?['status_media']['favourites_count'])
+              : (newPost['media_attachments'][widget.indexImage]['status_media']
+                      ?['favourites_count']) +
+                  1;
+          newPost['media_attachments'][widget.indexImage]['status_media']
+              ?['viewer_reaction'] = react;
+          newPost['media_attachments'][widget.indexImage]['status_media']
+              ?['reactions'] = newFavourites;
+          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+              widget.type, newPost,
+              preType: widget.preType);
+          ref
+              .read(currentPostControllerProvider.notifier)
+              .saveCurrentPost(newPost);
+          // await PostApi().reactionPostApi(widget.post['id'], data);
+        } else {
+          newPost['media_attachments'][widget.indexImage]['status_media']
+              ['favourites_count'] = newPost['media_attachments']
+                      [widget.indexImage]['status_media']['viewer_reaction'] !=
+                  null
+              ? newPost['media_attachments'][widget.indexImage]['status_media']
+                      ['favourites_count'] -
+                  1
+              : newPost['media_attachments'][widget.indexImage]['status_media']
+                  ['favourites_count'];
+          newPost['media_attachments'][widget.indexImage]['status_media']
+              ?['viewer_reaction'] = null;
+          newPost['media_attachments'][widget.indexImage]['status_media']
+              ?['reactions'] = newFavourites;
+          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+              widget.type, newPost,
+              preType: widget.preType);
+          ref
+              .read(currentPostControllerProvider.notifier)
+              .saveCurrentPost(newPost);
+          // await PostApi().unReactionPostApi(widget.post['id']);
+        }
+        widget.reloadDetailFunction != null
+            ? widget.reloadDetailFunction!()
+            : null;
+        widget.reloadFunction != null ? widget.reloadFunction!() : null;
       } else {
-        newPost = {
-          ...newPost,
-          "favourites_count": newPost['favourites_count'] != null
-              ? newPost['favourites_count'] - 1
-              : newPost['favourites_count'],
-          "viewer_reaction": null,
-          "reactions": newFavourites
-        };
-        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
-            widget.type, newPost,
-            preType: widget.preType);
-        ref
-            .read(currentPostControllerProvider.notifier)
-            .saveCurrentPost(newPost);
-        await PostApi().unReactionPostApi(widget.post['id']);
+        var newPost = widget.post;
+        List newFavourites = newPost['reactions'];
+
+        int index = newPost['reactions']
+            .indexWhere((element) => element['type'] == react);
+        int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
+            ? newPost['reactions']
+                .indexWhere((element) => element['type'] == viewerReaction)
+            : -1;
+        if (index >= 0) {
+          newFavourites[index] = {
+            "type": react,
+            "${react}s_count": newFavourites[index]['${react}s_count'] + 1
+          };
+        }
+
+        if (indexCurrent >= 0) {
+          newFavourites[indexCurrent] = {
+            "type": viewerReaction,
+            "${viewerReaction}s_count":
+                newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
+          };
+        }
+
+        if (react != null) {
+          dynamic data = {"custom_vote_type": react};
+          newPost = {
+            ...newPost,
+            "favourites_count": newPost['viewer_reaction'] != null
+                ? newPost['favourites_count']
+                : newPost['favourites_count'] + 1,
+            "viewer_reaction": react,
+            "reactions": newFavourites
+          };
+          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+              widget.type, newPost,
+              preType: widget.preType);
+          ref
+              .read(currentPostControllerProvider.notifier)
+              .saveCurrentPost(newPost);
+
+          await PostApi().reactionPostApi(widget.post['id'], data);
+        } else {
+          newPost = {
+            ...newPost,
+            "favourites_count": newPost['favourites_count'] != null
+                ? newPost['favourites_count'] - 1
+                : newPost['favourites_count'],
+            "viewer_reaction": null,
+            "reactions": newFavourites
+          };
+          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+              widget.type, newPost,
+              preType: widget.preType);
+          ref
+              .read(currentPostControllerProvider.notifier)
+              .saveCurrentPost(newPost);
+          await PostApi().unReactionPostApi(widget.post['id']);
+        }
+        widget.reloadFunction != null ? widget.reloadFunction!() : null;
       }
-      widget.reloadFunction != null ? widget.reloadFunction!() : null;
     }
 
     handlePressButton() {
@@ -283,7 +376,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                 ),
               )
             : SizedBox(
-                height: 40,
+                height: 30,
                 child: buildTextContent(suggestReactionContent, false,
                     isCenterLeft: false),
               ));

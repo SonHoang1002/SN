@@ -40,6 +40,7 @@ class VideoEditorModule: VideoEditor {
         videoEditorSDK = BanubaVideoEditor(
             token: token ?? "",
             configuration: config,
+            // gifPickerConfiguration: gifPickerConfiguration,
             externalViewControllerFactory: self.getAppDelegate().provideCustomViewFactory()
         )
         

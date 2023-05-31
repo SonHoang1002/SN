@@ -7,7 +7,6 @@ final pageListProvider =
 
 class PageListController extends StateNotifier<PageListState> {
   PageListController() : super(PageListState());
-
   getPageList() async {
     final response = await PageListApi().getPageListApi();
     state = state.copyWith(response);

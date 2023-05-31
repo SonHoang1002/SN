@@ -9,22 +9,55 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 
-class PostFooterInformation extends ConsumerWidget {
+class PostFooterInformation extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
   final dynamic preType;
-  const PostFooterInformation({Key? key, this.post, this.type, this.preType})
+  final int? indexImagePost;
+  PostFooterInformation(
+      {Key? key, this.post, this.type, this.preType, this.indexImagePost})
       : super(key: key);
+  @override
+  ConsumerState<PostFooterInformation> createState() =>
+      _PostFooterInformationState();
+}
+
+class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
+  dynamic favourites;
+  late String viewerReaction;
+  late String textRender;
+  late int? reactionsCount;
+  late List reactions;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     dynamic meData = ref.read(meControllerProvider)[0];
     const style = TextStyle(color: greyColor, fontSize: 15);
-    dynamic favourites = post['favourites'];
-    String viewerReaction = post['viewer_reaction'] ?? '';
-    String textRender = '${shortenLargeNumber(post?['favourites_count'] ?? 0)}';
-    int reactionsCount = post['favourites_count'] ?? 0;
-    List reactions = post['reactions'] ?? [];
+
+    if (widget.indexImagePost != null) {
+      viewerReaction = (widget.post['media_attachments'].isNotEmpty
+          ? (widget.post['media_attachments'][widget.indexImagePost]
+                  ?['status_media']?['viewer_reaction'] ??
+              '')
+          : (widget.post['viewer_reaction'] ?? ""));
+      favourites = widget.post['media_attachments'][widget.indexImagePost]
+          ?['status_media']?['favourites'];
+      textRender =
+          '${shortenLargeNumber(widget.post['media_attachments'][widget.indexImagePost]?['status_media']['favourites_count'] ?? 0)}';
+      reactionsCount = widget.post['media_attachments'][widget.indexImagePost]
+              ?['status_media']?['favourites_count'] ??
+          0;
+      reactions = widget.post['media_attachments'][widget.indexImagePost]
+              ?['status_media']['reactions'] ??
+          [];
+    } else {
+      favourites = widget.post['favourites'];
+      viewerReaction = widget.post['viewer_reaction'] ?? '';
+      textRender =
+          '${shortenLargeNumber(widget.post?['favourites_count'] ?? 0)}';
+      reactionsCount = widget.post?['favourites_count'] ?? 0;
+      reactions = widget.post['reactions'] ?? [];
+    }
 
     List sortReactions = reactions
         .map((element) => {
@@ -39,19 +72,18 @@ class PostFooterInformation extends ConsumerWidget {
       );
 
     List renderListReactions = sortReactions.reversed.toList();
-
     if (viewerReaction.isNotEmpty) {
       if (favourites != null && favourites.length == 2) {
         textRender =
-            'Bạn, ${meData['id'] == favourites[0]['account']['id'] ? favourites[1]['account']['display_name'] : favourites[0]['account']['display_name']}${reactionsCount > 2 ? ' và ${shortenLargeNumber(reactionsCount - 2)} người khác' : ''}';
+            'Bạn, ${meData['id'] == favourites[0]['account']['id'] ? favourites[1]['account']['display_name'] : favourites[0]['account']['display_name']}${reactionsCount! > 2 ? ' và ${shortenLargeNumber(reactionsCount! - 2)} người khác' : ''}';
       } else {
         textRender =
-            'Bạn ${reactionsCount > 1 ? 'và ${shortenLargeNumber(reactionsCount - 1)} người khác' : ''}';
+            'Bạn ${reactionsCount! > 1 ? 'và ${shortenLargeNumber(reactionsCount! - 1)} người khác' : ''}';
       }
     }
 
     renderImage(link, key) {
-      double size = key == 'love'
+      double size = (key == 'love')
           ? 24
           : ['angry', 'sad', 'like'].contains(key)
               ? key == 'yay'
@@ -77,8 +109,17 @@ class PostFooterInformation extends ConsumerWidget {
 
     double setHeight() {
       double height = 5;
-      if ((post['favourites_count'] ?? 0) > 0 ||
-          (post['replies_total'] ?? 0) > 0) {
+      if ((widget.indexImagePost != null)) {
+        if (((widget.post['media_attachments']?[widget.indexImagePost]
+                    ['status_media']['favourites_count'] >
+                0) ||
+            (widget.post['media_attachments']?[widget.indexImagePost]
+                    ['status_media']['replies_total'] >
+                0))) {
+          height = 40;
+        }
+      } else if (((widget.post['favourites_count'] ?? 0) > 0 ||
+          (widget.post['replies_total'] ?? 0) > 0)) {
         height = 40;
       }
       return height;
@@ -102,8 +143,7 @@ class PostFooterInformation extends ConsumerWidget {
       // }
 
       return padding;
-    }
-
+    } 
     return Container(
       height: setHeight(),
       padding: setPadding(),
@@ -117,7 +157,12 @@ class PostFooterInformation extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              (post['favourites_count'] ?? 0) > 0
+              ((widget.indexImagePost != null
+                          ? (widget.post['media_attachments']
+                                  [widget.indexImagePost]['status_media']
+                              ['favourites_count'])
+                          : (widget.post['favourites_count'])) >
+                      0)
                   ? Row(
                       children: [
                         renderListReactions.isNotEmpty
@@ -150,16 +195,21 @@ class PostFooterInformation extends ConsumerWidget {
                       ],
                     )
                   : const SizedBox(),
-              type == postDetail
+              (widget.indexImagePost == null && widget.type == postDetail)
                   ? const SizedBox()
                   : Row(
                       children: [
-                        (post['replies_total'] ?? 0) > 0
+                        (widget.indexImagePost != null
+                                    ? (widget.post['media_attachments']
+                                            [widget.indexImagePost]
+                                        ['status_media']['replies_total'])
+                                    : widget.post['replies_total']) >
+                                0
                             ? Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "${shortenLargeNumber(post['replies_total'])}",
+                                    "${shortenLargeNumber(widget.indexImagePost != null ? (widget.post['media_attachments'][widget.indexImagePost]['status_media']['replies_total']) : widget.post['replies_total'])}",
                                     style: style,
                                   ),
                                   const SizedBox(
@@ -176,11 +226,17 @@ class PostFooterInformation extends ConsumerWidget {
                         const SizedBox(
                           width: 10,
                         ),
-                        (post['reblogs_count'] ?? 0) > 0
+                        (widget.indexImagePost != null
+                                    ? (widget.post['media_attachments']
+                                                [widget.indexImagePost]
+                                            ['status_media']['reblogs_count'] ??
+                                        0)
+                                    : widget.post['reblogs_count'] ?? 0) >
+                                0
                             ? Row(
                                 children: [
                                   Text(
-                                    '${shortenLargeNumber(post['reblogs_count'])}',
+                                    '${shortenLargeNumber(widget.indexImagePost != null ? (widget.post['media_attachments'][widget.indexImagePost]['status_media']['reblogs_count'] ?? 0) : widget.post['reblogs_count'] ?? 0)}',
                                     style: style,
                                   ),
                                   const Icon(

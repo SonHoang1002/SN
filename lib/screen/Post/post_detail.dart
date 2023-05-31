@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,21 +14,27 @@ import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
-import 'package:social_network_app_mobile/screen/Post/post_header.dart'; 
+import 'package:social_network_app_mobile/screen/Post/post_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widget/comment_textfield.dart';
 
+
 import 'comment_tree.dart';
+
 
 class PostDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic preType;
-  const PostDetail({Key? key, this.preType, this.post}) : super(key: key);
+  final int? indexImagePost;
+  const PostDetail({Key? key, this.preType, this.post, this.indexImagePost})
+      : super(key: key);
+
 
   @override
   ConsumerState<PostDetail> createState() => _PostDetailState();
 }
+
 
 class _PostDetailState extends ConsumerState<PostDetail> {
   List postComment = [];
@@ -37,7 +44,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   dynamic commentChild;
   dynamic postData;
 
+
   dynamic preUpdateData;
+
 
   Future getListCommentPost(postId, params) async {
     setState(() {
@@ -51,6 +60,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       });
     }
   }
+
 
   Future handleComment(data, previewLinkText) async {
     if (!mounted) return;
@@ -148,7 +158,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       "status_target": null
     };
 
+
     List dataPreComment = [];
+
 
     if (data['type'] == 'parent' && data['typeStatus'] == null) {
       //Comment parent
@@ -175,6 +187,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       dataPreComment = newListUpdate;
     }
 
+
     setState(() {
       postComment = dataPreComment;
       commentChild = data['type'] == 'child' ? newCommentPreview : null;
@@ -185,6 +198,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                 data['typeStatus'] != "editComment"
             ? 1
             : 0);
+
 
     dynamic newComment;
     // cal api
@@ -211,10 +225,12 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       }
     }
 
+
     if (mounted && newComment != null) {
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newComment['id']);
       List newListUpdate = [];
+
 
       if (indexComment > -1) {
         newListUpdate = postComment.sublist(0, indexComment) +
@@ -222,7 +238,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
             postComment.sublist(indexComment + 1);
       }
 
+
       List dataCommentUpdate = postComment;
+
 
       if (data['type'] == 'parent' && data['typeStatus'] == null) {
         //Comment parent
@@ -253,11 +271,13 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     }
   }
 
+
   getCommentSelected(comment) {
     setState(() {
       commentSelected = comment;
     });
   }
+
 
   handleDeleteComment(post) {
     if (post != null) {
@@ -273,6 +293,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       } else if (post['in_reply_to_id'] != null) {
         // cap nhat so luong khi xoa cmt con
 
+
         postComment.forEach((element) {
           if (element['id'] == post['in_reply_to_id']) {
             setState(() {
@@ -284,6 +305,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       }
     }
   }
+
 
   _updatePostCount({int? addtionalIfChild, int? subIfChild}) {
     int countAdditionalIfChild = addtionalIfChild ?? 0;
@@ -299,6 +321,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         .read(postControllerProvider.notifier)
         .actionUpdatePostCount(widget.preType, updateCountPostData);
   }
+
 
   @override
   void initState() {
@@ -316,6 +339,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     //   }
     // });
 
+
     // ref.read(postControllerProvider).posts.forEach((element) {
     //   if (element['id'] == widget.post['id']) {
     //     postData = element;
@@ -332,10 +356,12 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         ref.read(currentPostControllerProvider).currentPost ?? widget.post;
   }
 
+
   @override
   void dispose() {
     super.dispose();
   }
+
 
   checkPreType() {
     dynamic _preType = widget.preType;
@@ -351,6 +377,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       return null;
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -411,9 +438,13 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                           },
                         ),
                         PostFooter(
-                            post: postData,
-                            type: postDetail,
-                            preType: checkPreType()),
+                          post: postData,
+                          type: postDetail,
+                          preType: checkPreType(),
+                          // reloadDetailFunction: () {
+                          //   setState(() {});
+                          // },
+                        ),
                         const SizedBox(
                           height: 8,
                         ),
@@ -490,3 +521,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     );
   }
 }
+
+
+

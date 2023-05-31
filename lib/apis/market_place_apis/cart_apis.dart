@@ -5,8 +5,9 @@ class CartProductApi {
     return await Api().postRequestBase("/api/v1/shopping_carts", data);
   }
 
-  Future updateQuantityProductApi(dynamic data) async {
+  Future updateQuantityProductApi( dynamic data) async {
     return await Api().patchRequestBase("/api/v1/shopping_carts/2", data);
+    // return await Api().patchRequestBase("/api/v1/shopping_carts/$id", data);
   }
 
   Future getCartProductApi() async {

@@ -113,3 +113,106 @@ String formatDateTimeToStringDateTimeYear(DateTime dateTime) {
 String convertISO8086toLTime(DateTime dateTime) {
   return DateFormat('HH:mm').format(dateTime);
 }
+
+String formatTimeMediaPlayer(Duration duration) {
+  String twoDigits(int n) => n.toString().padLeft(2, "0");
+
+  final hours = twoDigits(duration.inHours);
+  final minutes = twoDigits(duration.inMinutes.remainder(60));
+  final seconds = twoDigits(duration.inSeconds.remainder(60));
+
+  return [if (duration.inHours > 0) hours, minutes, seconds].join(':');
+}
+
+classifyTypeMessage(message) {
+  if (message['urls'] != null && message['urls'].length > 0) {
+    if (message['urls'].elementAt(0)["headers"] != null &&
+        message['urls'].elementAt(0)["headers"]["contentType"] ==
+            'text/html;charset=utf-8') {
+      return 'link';
+    } else if (message['urls'].elementAt(0)["headers"] != null &&
+            message['urls'].elementAt(0)["headers"]["contentType"] ==
+                'image/gif' ||
+        message['urls'].elementAt(0)['url'].contains('giphy')) {
+      if (message['urls'].elementAt(0)['url'].contains('mojitok')) {
+        return 'sticky';
+      } else {
+        return 'gif';
+      }
+    } else if (message['msg'].contains('mojitok') &&
+        message['msg'].contains('gif')) {
+      return 'sticky';
+    } else if (message['urls'].elementAt(0)["ignoreParse"] == true) {
+      return 'reply';
+    } else {
+      return 'text';
+    }
+  } else if (message['file'] != null) {
+    return message['file']['type']?.split('/').elementAt(0) ?? 'message';
+  } else {
+    return "message";
+  }
+}
+
+// ignore: unnecessary_question_mark
+renderMessageText(text, listMention, objectItem) {
+  if (listMention['t'] == 'p') {
+    List members = listMention['members'] ?? [];
+    String newText = text;
+    for (var element in [
+      {
+        "_id": "111111111111111111",
+        "name": "Tất cả",
+      },
+      ...members
+    ]) {
+      newText = newText.replaceAll('@${element['_id']}', '@${element['name']}');
+    }
+    return newText;
+  } else {
+    if (objectItem != null && classifyTypeMessage(objectItem) == 'reply') {
+      return text.toString().split(' ').sublist(2).join(' ');
+    } else {
+      return text;
+    }
+  }
+}
+
+String readTimestamp(int timestamp, String firstText) {
+  var now = DateTime.now();
+  var format = DateFormat('HH:mm a');
+  var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+  var diff = now.difference(date);
+  var time = '';
+
+  if (diff.inSeconds <= 0 ||
+      diff.inSeconds > 0 && diff.inMinutes == 0 ||
+      diff.inMinutes > 0 && diff.inHours == 0 ||
+      diff.inHours > 0 && diff.inDays == 0) {
+    if (diff.inHours > 0 && diff.inHours < 24) {
+      time = '$firstText ${diff.inHours} giờ trước';
+    } else if (diff.inMinutes > 1 && diff.inMinutes < 60) {
+      time = '$firstText ${diff.inMinutes} phút trước';
+    } else {
+      time = format.format(date);
+    }
+  } else if (diff.inDays > 0 && diff.inDays < 7) {
+    if (diff.inDays == 1) {
+      time = '$firstText ${diff.inDays} ngày trước';
+    } else {
+      time = '$firstText ${diff.inDays} ngày trước';
+    }
+  } else {
+    if (diff.inDays == 7) {
+      time = '$firstText ${(diff.inDays / 7).floor()} tuần trước';
+    } else {
+      time = '$firstText ${(diff.inDays / 7).floor()} tuần trước';
+    }
+  }
+
+  return time;
+}
+String formatCurrency(dynamic number) {
+  final formatter = NumberFormat('#,##0', 'vi_VN');
+  return formatter.format(int.parse(number.toStringAsFixed(0)));
+}

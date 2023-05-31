@@ -67,6 +67,12 @@ class _UserPageState extends ConsumerState<UserPage> {
       });
 
       Future.delayed(Duration.zero, () async {
+        List postUserNew =
+            await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
+                [];
+        var pinNew = await PostApi().getListPostPinApi(id) ?? [];
+        List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
+
         ref
             .read(postControllerProvider.notifier)
             .getListPostUserPage(id, {"limit": 3, "exclude_replies": true});
@@ -75,7 +81,6 @@ class _UserPageState extends ConsumerState<UserPage> {
         ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
         ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
         var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
-        var pinNew = await PostApi().getListPostPinApi(id) ?? [];
         setState(() {
           userData = ref.watch(userInformationProvider).userInfor;
           userAbout = ref.watch(userInformationProvider).userMoreInfor;
@@ -97,7 +102,9 @@ class _UserPageState extends ConsumerState<UserPage> {
               'my-debouncer', const Duration(milliseconds: 300), () {
             String maxId = "";
             if (ref.read(postControllerProvider).postUserPage.isEmpty) {
-              maxId = postUser.last['id'];
+              if (postUser.isNotEmpty) {
+                maxId = postUser.last['id'];
+              }
             } else {
               maxId = ref.read(postControllerProvider).postUserPage.last['id'];
             }

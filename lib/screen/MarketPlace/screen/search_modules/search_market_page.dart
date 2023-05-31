@@ -2,19 +2,21 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/apis/market_place_apis/search_product_api.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/cart_market_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_market_page.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/search_product_provider.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/screen/detail_product_page.dart';
 import 'package:social_network_app_mobile/screen/MarketPlace/screen/search_modules/category_search_page.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
-import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widget/image_cache.dart';
+import 'package:social_network_app_mobile/screen/MarketPlace/widgets/cart_widget.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/search_product_api.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import '../../../../theme/colors.dart';
-import '../../../../widget/GeneralWidget/information_component_widget.dart';
-import '../../../../widget/back_icon_appbar.dart';
 
 class SearchMarketPage extends ConsumerStatefulWidget {
   const SearchMarketPage({super.key});
@@ -26,17 +28,34 @@ class SearchMarketPage extends ConsumerStatefulWidget {
 class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
   late double width = 0;
   late double height = 0;
-  List filteredProductList = [];
+  List _filteredProductList = [];
+  List _historyProductList = [];
   final TextEditingController _searchController =
       TextEditingController(text: "");
+  FocusNode _focusNode = FocusNode();
+  bool _isExpand = false;
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () async {
+      _focusNode.requestFocus();
+      final a = ref.read(searchedHistoryProvider.notifier).getHistorySearch();
+    });
+    // Future.wait([_initData()]);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _filteredProductList = [];
+  }
+
+  Future _initData() async {
+    if (_historyProductList == null || _historyProductList.isEmpty) {
+      setState(() {
+        _historyProductList = ref.watch(searchedHistoryProvider).listSearched;
+      });
+    }
   }
 
   @override
@@ -44,6 +63,7 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
+    Future.wait([_initData()]);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -54,19 +74,11 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
           children: [
             const BackIconAppbar(),
             Expanded(child: _customSearchInput(context, _searchController)),
-            InkWell(
-              onTap: () {
-                pushToNextScreen(context, const CartMarketPage());
-              },
-              child: const Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Icon(
-                  FontAwesomeIcons.cartArrowDown,
-                  size: 18,
-                  color: Colors.black,
-                ),
-              ),
-            )
+            const SizedBox(
+              width: 10,
+            ),
+            CartWidget(
+                iconColor: Theme.of(context).textTheme.displayLarge!.color),
           ],
         ),
       ),
@@ -94,7 +106,7 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
     final response = await SearchProductsApi().searchProduct(data);
     if (response != null) {
       setState(() {
-        filteredProductList = response;
+        _filteredProductList = response;
       });
     }
   }
@@ -103,13 +115,14 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
       BuildContext context, TextEditingController searchController) {
     return Container(
         width: double.infinity,
-        height: 30,
-        padding: const EdgeInsets.only(top: 2, left: 5, bottom: 5),
+        height: 45,
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
         decoration: BoxDecoration(
             color: Theme.of(context).canvasColor,
             border: Border.all(width: 0.2, color: greyColor),
             borderRadius: BorderRadius.circular(5)),
         child: TextFormField(
+            focusNode: _focusNode,
             controller: searchController,
             onChanged: (value) {
               _filterSearchList(value);
@@ -118,6 +131,7 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
             decoration: InputDecoration(
                 hintText: "Tìm kiếm trên Marketplace",
                 hintStyle: const TextStyle(fontSize: 13),
+                contentPadding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
                 border: InputBorder.none,
                 prefixIcon: InkWell(
                   onTap: () {},
@@ -143,7 +157,7 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
                                   color: transparent, shape: BoxShape.circle),
                               child: Icon(
                                 FontAwesomeIcons.xmark,
-                                size: 15,
+                                size: 16,
                                 color: Theme.of(context)
                                     .textTheme
                                     .displayLarge!
@@ -152,11 +166,12 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
                             ),
                           )
                         : const SizedBox(),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
                       child: Icon(
                         FontAwesomeIcons.camera,
-                        size: 14,
+                        size: 16,
+                        color: Theme.of(context).textTheme.displayLarge!.color,
                       ),
                     )
                   ],
@@ -175,33 +190,47 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(children: [
                 // tim kiem gan day
-                filteredProductList == null || filteredProductList.isEmpty
+                _filteredProductList == null || _filteredProductList.isEmpty
                     ? Column(
-                        children: [
-                          Column(
-                            children: List.generate(
-                                1,
-                                (index) => Column(
-                                      children: [
-                                        _buildSearchItem(
-                                          {"title": "Không có dữ liệu "},
-                                        ),
-                                        buildDivider(
-                                            color: greyColor, height: 10)
-                                      ],
-                                    )),
-                          )
-                        ],
+                        children: List.generate(
+                            _isExpand ? _historyProductList.length : 3,
+                            (index) {
+                          return Column(children: [
+                            _buildSearchItem(_historyProductList.isNotEmpty &&
+                                    _historyProductList[index]
+                                            ["search_params"] !=
+                                        null
+                                ? _historyProductList[index]
+                                : {
+                                    "id": null,
+                                    "search_params": "Không có dữ liệu"
+                                  }),
+                            buildDivider(color: greyColor, height: 10),
+                            !_isExpand && index == 2
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: buildTextContentButton(
+                                        "Xem thêm", false,
+                                        fontSize: 13,
+                                        isCenterLeft: false, function: () {
+                                      setState(() {
+                                        _isExpand = true;
+                                      });
+                                    }),
+                                  )
+                                : const SizedBox()
+                          ]);
+                        }),
                       )
                     : Column(
                         children: [
                           Column(
                             children: List.generate(
-                                filteredProductList.length,
+                                _filteredProductList.length,
                                 (index) => Column(
                                       children: [
                                         _buildSearchItem(
-                                            filteredProductList[index]),
+                                            _filteredProductList[index]),
                                         buildDivider(
                                             color: greyColor, height: 10)
                                       ],
@@ -236,20 +265,14 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
                               height: 40,
                               width: 40,
                               margin: const EdgeInsets.only(right: 5),
-                              // padding: const EdgeInsets.all(5),
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: Image.asset(data[index]["icon"]))),
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           function: () async {
-                            // Future.wait(
-                            //   [_filterSearchList(data[index]["title"])],
-                            // );
-                            // await _filterSearchList(data[index]["title"]);
                             pushToNextScreen(
                                 context,
                                 CategorySearchPage(
-                                    // categoryList: filteredProductList,
                                     title: data[index]["title"]));
                           },
                         );
@@ -268,9 +291,13 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
   Widget _buildSearchItem(dynamic data, {bool isHaveClose = false}) {
     return InkWell(
       onTap: () {
-        pushToNextScreen(context, DetailProductMarketPage(id: data["id"]));
+        if (data["id"] != null) {
+          pushToNextScreen(context,
+              DetailProductMarketPage(simpleData: data, id: data["id"]));
+        }
       },
-      child: Padding(
+      child: Container(
+        width: width,
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -293,9 +320,9 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
                         ),
                 ),
                 SizedBox(
-                  width: isHaveClose ? width * 0.7 : width * 0.8,
+                  width: isHaveClose ? width * 0.69 : width * 0.79,
                   child: buildTextContent(
-                    "${data["title"]}",
+                    "${data["title"] ?? data["search_params"]} ",
                     false,
                     fontSize: 17,
                     overflow: TextOverflow.ellipsis,
