@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class ButtonPrimary extends StatelessWidget {
-  final String label;
+  final String? label;
   final Widget? icon;
   final Function? handlePress;
   final bool? isPrimary;
@@ -14,7 +14,7 @@ class ButtonPrimary extends StatelessWidget {
 
   const ButtonPrimary(
       {Key? key,
-      required this.label,
+      this.label,
       this.handlePress,
       this.icon,
       this.isPrimary,
@@ -50,20 +50,22 @@ class ButtonPrimary extends StatelessWidget {
           children: [
             icon ?? const SizedBox(),
             SizedBox(
-              width: icon != null ? 6 : 0,
+              width: icon != null && label != null ? 6 : 0,
             ),
-            Text(
-              label,
-              style: TextStyle(
-                  color: colorText ??
-                      (isGrey == true
-                          ? Theme.of(context).textTheme.bodyLarge?.color
-                          : handlePress != null
-                              ? white
-                              : null),
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w500),
-            ),
+            label != null
+                ? Text(
+                    label!,
+                    style: TextStyle(
+                        color: colorText ??
+                            (isGrey == true
+                                ? Theme.of(context).textTheme.bodyLarge?.color
+                                : handlePress != null
+                                    ? white
+                                    : null),
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.w500),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),

@@ -1,8 +1,9 @@
 // ignore: implementation_imports
-import 'package:flutter/src/widgets/basic.dart';
-// ignore: implementation_imports
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/widget/box-quick-update.dart';
+
+import '../../../theme/theme_manager.dart';
 
 class BoxQuickUpdatePage extends StatefulWidget {
   const BoxQuickUpdatePage({super.key});
@@ -42,6 +43,8 @@ class _BoxQuickUpdatePageState extends State<BoxQuickUpdatePage> {
   ];
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeManager>(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: BoxQuickUpdate(

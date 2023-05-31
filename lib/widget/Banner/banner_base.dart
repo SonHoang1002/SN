@@ -30,7 +30,7 @@ class _BannerBaseState extends State<BannerBase> {
   Widget build(BuildContext context) {
     String path = widget.object?['banner']?['preview_url'] ?? linkBannerDefault;
     String pathAvatar =
-        widget.object['avatar_media']?['preview_url'] ?? linkAvatarDefault;
+        widget.object?['avatar_media']?['preview_url'] ?? linkAvatarDefault;
     String title =
         widget.object?['display_name'] ?? widget.object?['title'] ?? '';
     String subTitle =
@@ -198,8 +198,9 @@ class _BannerBaseState extends State<BannerBase> {
                                       width: 32,
                                       height: 32,
                                       decoration: BoxDecoration(
-                                          color:
-                                              Theme.of(context).backgroundColor,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
                                           shape: BoxShape.circle),
                                       child: Icon(
                                         listMenu[index]['icon'],
