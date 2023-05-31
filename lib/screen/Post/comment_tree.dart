@@ -256,6 +256,7 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
                   key: Key(data.content.toString()),
                   widget: widget,
                   data: data,
+                  type: widget.type,
                   getCommentSelected: widget.getCommentSelected!,
                   handleUpdatePost: handleUpdatePost,
                   commentNode: widget.commentNode,
@@ -269,6 +270,7 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
             key: Key(widget.commentParent['id']),
             widget: widget,
             data: data,
+            type: widget.type,
             getCommentSelected: widget.getCommentSelected!,
             handleUpdatePost: handleUpdatePost,
             commentNode: widget.commentNode,
@@ -287,11 +289,13 @@ class BoxComment extends StatefulHookConsumerWidget {
   final Function? getCommentSelected;
   final FocusNode? commentNode;
   final Function? handleUpdatePost;
+  final String? type;
 
   const BoxComment(
       {super.key,
       required this.widget,
       required this.data,
+      this.type,
       this.post,
       this.getCommentSelected,
       this.commentNode,
@@ -580,11 +584,16 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                         decoration: BoxDecoration(
                             color: widget.widget.type == postWatch
                                 ? Colors.grey.shade800
-                                : widget.widget.commentSelected != null &&
-                                        widget.widget.commentSelected!['id'] ==
-                                            postRender['id']
-                                    ? secondaryColorSelected
-                                    : Theme.of(context).colorScheme.background,
+                                : widget.widget.type == postWatchDetail
+                                    ? Colors.white.withOpacity(0.5)
+                                    : widget.widget.commentSelected != null &&
+                                            widget.widget
+                                                    .commentSelected!['id'] ==
+                                                postRender['id']
+                                        ? secondaryColorSelected
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .background,
                             borderRadius: BorderRadius.circular(15)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

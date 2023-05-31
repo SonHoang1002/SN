@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:miniplayer/miniplayer.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
@@ -16,12 +14,14 @@ import 'package:social_network_app_mobile/screen/Menu/menu.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
 import 'package:social_network_app_mobile/screen/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screen/Search/search.dart';
+import 'package:social_network_app_mobile/screen/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import 'package:social_network_app_mobile/screen/Feed/feed.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widget/appbar_title.dart';
 import 'package:provider/provider.dart' as pv;
 
@@ -224,8 +224,6 @@ class _HomeState extends ConsumerState<Home>
               )))
     ];
 
-    var meData = ref.watch(meControllerProvider);
-
     return Scaffold(
       drawer: _selectedIndex == 1 || _selectedIndex == 4
           ? null
@@ -244,10 +242,90 @@ class _HomeState extends ConsumerState<Home>
               actions: actions.elementAt(_selectedIndex),
               title: titles.elementAt(_selectedIndex),
             ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: pages,
-      ),
+      body: Consumer(builder: (context, ref, _) {
+        final selectedVideo = ref.watch(selectedVideoProvider);
+        final miniPlayerController = ref.watch(miniPlayerControllerProvider);
+
+        return Stack(
+          children: [
+            IndexedStack(index: _selectedIndex, children: pages),
+            if (selectedVideo != null)
+              Miniplayer(
+                controller: miniPlayerController,
+                minHeight: 80,
+                maxHeight: size.height,
+                builder: (height, percentage) {
+                  return Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: VideoPlayerHasController(
+                                type: 'miniPlayer',
+                                media: selectedVideo['media_attachments'][0],
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        selectedVideo['content'],
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        selectedVideo['account']
+                                                ['displayName'] ??
+                                            selectedVideo['page']['title'] ??
+                                            '',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.play_arrow),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => WatchDetail(
+                                              post: selectedVideo,
+                                              media: selectedVideo[
+                                                  'media_attachments'][0],
+                                            )));
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () {
+                                ref
+                                    .read(selectedVideoProvider.notifier)
+                                    .update((state) => null);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+          ],
+        );
+      }),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: primaryColor,
         unselectedItemColor: greyColor,

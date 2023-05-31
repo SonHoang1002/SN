@@ -126,8 +126,7 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                 child: Stack(
                   children: [
                     VideoPlayerHasController(
-                      media: medias[0],
-                    ),
+                        media: medias[0], hasDispose: true),
                     Positioned.fill(child: GestureDetector(
                       onTap: () {
                         medias[0]['file']?.path != null

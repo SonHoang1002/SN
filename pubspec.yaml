@@ -131,6 +131,9 @@ dependencies:
   like_button: ^2.0.5 
   flutter_typeahead: ^4.6.0 
   matrix_gesture_detector: 0.2.0-nullsafety.1
+  like_button: ^2.0.5
+  miniplayer: ^1.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

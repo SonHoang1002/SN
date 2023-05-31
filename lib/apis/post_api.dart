@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:dio/dio.dart';
 
 import 'api_root.dart';
 
@@ -20,7 +20,11 @@ class PostApi {
   }
 
   Future createStatus(data) async {
-    return await Api().postRequestBase('/api/v1/statuses', data);
+    try {
+      return await Api().postRequestBase('/api/v1/statuses', data);
+    } on DioError {
+      rethrow;
+    }
   }
 
   Future updatePost(postId, data) async {

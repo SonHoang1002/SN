@@ -61,7 +61,11 @@ class _WatchHomeState extends ConsumerState<WatchHome>
                       post: watchData[index],
                       type: postWatch,
                     )),
-            // SkeletonCustom().postSkeleton(context)
+            watchData.isEmpty
+                ? const Center(
+                    child: Text('Không có dữ liệu hiển thị'),
+                  )
+                : SkeletonCustom().postSkeleton(context)
           ],
         ),
       ),

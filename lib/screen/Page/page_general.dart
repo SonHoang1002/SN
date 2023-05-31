@@ -39,28 +39,25 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
     });
   }
 
-  void fetchData() {
-    Future.delayed(Duration.zero, () async {
+  void fetchData() async {
+    await ref
+        .read(pageListControllerProvider.notifier)
+        .getListPageAdmin({'limit': 20});
+
+    await ref
+        .read(pageListControllerProvider.notifier)
+        .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
+
+    if (ref.read(pageListControllerProvider).pageInvitedLike.isEmpty) {
       await ref
           .read(pageListControllerProvider.notifier)
-          .getListPageAdmin({'limit': 20});
-
+          .getListPageInvited('like');
+    }
+    if (ref.read(pageListControllerProvider).pageInvitedManage.isEmpty) {
       await ref
           .read(pageListControllerProvider.notifier)
-          .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
-
-      if (ref.read(pageListControllerProvider).pageInvitedLike.isEmpty) {
-        await ref
-            .read(pageListControllerProvider.notifier)
-            .getListPageInvited('like');
-      }
-      if (ref.read(pageListControllerProvider).pageInvitedManage.isEmpty) {
-        await ref
-            .read(pageListControllerProvider.notifier)
-            .getListPageInvited('manage');
-      }
-      if (!mounted) return;
-    });
+          .getListPageInvited('manage');
+    }
   }
 
   @override

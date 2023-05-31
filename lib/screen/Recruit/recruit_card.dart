@@ -271,7 +271,9 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                             ),
                                             context: context,
                                             builder: (context) =>
-                                                const ShareModalBottom());
+                                                ShareModalBottom(
+                                                    data: recruits[index],
+                                                    type: 'recruit'));
                                       },
                                       child: Container(
                                         height: 32,

@@ -198,8 +198,9 @@ class _BannerBaseState extends State<BannerBase> {
                                       width: 32,
                                       height: 32,
                                       decoration: BoxDecoration(
-                                          color:
-                                              Theme.of(context).backgroundColor,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
                                           shape: BoxShape.circle),
                                       child: Icon(
                                         listMenu[index]['icon'],

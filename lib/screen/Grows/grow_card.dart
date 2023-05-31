@@ -346,7 +346,10 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                             ),
                                             context: context,
                                             builder: (context) =>
-                                                const ShareModalBottom());
+                                                ShareModalBottom(
+                                                    data:
+                                                        grows[indexInteresting],
+                                                    type: 'grow'));
                                       },
                                       child: Container(
                                         height: 32,

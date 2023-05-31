@@ -78,8 +78,8 @@ class _PostState extends State<Post> {
                   ? const SizedBox()
                   : const CrossBar(
                       height: 5,
-                      // margin: 8,
-                      onlyBottom: 12, onlyTop: 6,
+                      onlyBottom: 12,
+                      onlyTop: 6,
                     ),
             ],
           )

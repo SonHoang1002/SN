@@ -472,7 +472,9 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                             ),
                                             context: context,
                                             builder: (context) =>
-                                                const ShareModalBottom());
+                                                ShareModalBottom(
+                                                    data: course[index],
+                                                    type: 'course'));
                                       },
                                       child: Container(
                                         height: 32,
