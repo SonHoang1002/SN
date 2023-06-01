@@ -56,16 +56,6 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     });
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   if (mounted) {
-  //     setState(() {
-  //       eventDetail = ref.watch(eventControllerProvider).eventDetail;
-  //     });
-  //   }
-  // }
-
   void loadData() async {
     if (eventDetail.isEmpty && (widget.isUseEventData == true)) {
       eventDetail = widget.eventDetail;
@@ -99,6 +89,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
   @override
   Widget build(BuildContext context) {
+    print(eventDetail);
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
@@ -136,7 +127,12 @@ class _EventDetailState extends ConsumerState<EventDetail> {
             onRefresh: () async {
               await ref
                   .read(eventControllerProvider.notifier)
-                  .getDetailEvent(widget.eventDetail['id']);
+                  .getDetailEvent(widget.eventDetail['id'])
+                  .then((value) {
+                setState(() {
+                  eventDetail = ref.watch(eventControllerProvider).eventDetail;
+                });
+              });
             },
             child: SingleChildScrollView(
                 controller: _scrollController,
@@ -233,7 +229,12 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                       eventDetail['id'],
                                                       {'status': ''});
                                             }
-                                            setState(() {});
+                                            setState(() {
+                                              eventDetail = ref
+                                                  .watch(
+                                                      eventControllerProvider)
+                                                  .eventDetail;
+                                            });
                                           },
                                           child: Row(
                                             children: !eventDetail[
@@ -317,6 +318,12 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                   'status': ''
                                                                 });
                                                           }
+                                                          setState(() {
+                                                            eventDetail = ref
+                                                                .watch(
+                                                                    eventControllerProvider)
+                                                                .eventDetail;
+                                                          });
                                                         },
                                                         child: Container(
                                                           height: 32,

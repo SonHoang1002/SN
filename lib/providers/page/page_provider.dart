@@ -134,6 +134,63 @@ class PageController extends StateNotifier<PageState> {
     }
   }
 
+  updateLikePageDetail(id, type) async {
+    type == "like"
+        ? await PageApi().likePageSuggestion(id)
+        : await PageApi().unLikePageSuggestion(id);
+    switch (type) {
+      case "like":
+        state = state.copyWith(
+            pageDetail: {
+              ...state.pageDetail,
+              'page_relationship': {
+                ...state.pageDetail['page_relationship'],
+                'like': true
+              }
+            },
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+        break;
+      case "unlike":
+        state = state.copyWith(
+            pageDetail: {
+              ...state.pageDetail,
+              'page_relationship': {
+                ...state.pageDetail['page_relationship'],
+                'like': false
+              }
+            },
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+        break;
+      default:
+    }
+  }
+
   getListPageGroup(params, id) async {
     var response = await PageApi().getListGroupPageApi(params, id);
     if (response != null) {

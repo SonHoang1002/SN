@@ -98,6 +98,14 @@ class PageApi {
         .postRequestBase('/api/v1/pages/$idPage/feedbacks', params);
   }
 
+  Future likePageSuggestion(idPage) async {
+    return await Api().postRequestBase('/api/v1/pages/$idPage/likes', null);
+  }
+
+  Future unLikePageSuggestion(idPage) async {
+    return await Api().postRequestBase('/api/v1/pages/$idPage/unlikes', null);
+  }
+
   Future handleLikeFollowPage(idPage, action) async {
     return await Api().postRequestBase('/api/v1/pages/$idPage/$action', null);
   }
