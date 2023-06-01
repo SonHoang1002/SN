@@ -12,6 +12,10 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/pages", params);
   }
 
+  fetchListPageSuggest(params) async {
+    return await Api().getRequestBase("/api/v1/suggestions/page", params);
+  }
+
   fetchPageDetail(id) async {
     return await Api().getRequestBase("/api/v1/pages/$id", null);
   }

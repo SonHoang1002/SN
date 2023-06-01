@@ -254,29 +254,22 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ButtonPrimary(
-                      icon: const Icon(
-                        FontAwesomeIcons.pen,
-                        size: 16,
-                        color: white,
-                      ),
                       label: "Nhắn tin",
                       handlePress: () {},
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      padding: const EdgeInsets.symmetric(horizontal: 35),
                     ),
                     ButtonPrimary(
-                      icon: const Icon(
-                        FontAwesomeIcons.pen,
-                        size: 16,
-                        color: white,
-                      ),
                       colorButton:
                           modeTheme == 'dark' ? greyColor.shade800 : greyColor,
                       label: "Thích",
                       handlePress: () {},
-                      padding: const EdgeInsets.symmetric(horizontal: 28),
+                      padding: const EdgeInsets.symmetric(horizontal: 35),
                     ),
                     ButtonPrimary(
-                      label: "···",
+                      colorButton:
+                          modeTheme == 'dark' ? greyColor.shade800 : greyColor,
+                      icon: const Icon(FontAwesomeIcons.ellipsis,
+                          size: 16, color: Colors.white),
                       handlePress: () {},
                     ),
                   ],
@@ -441,11 +434,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     var rolePage = ref.watch(pageControllerProvider).rolePage;
     List listSwitch = [meData[0], pageData];
 
-    String modeTheme = theme.themeMode == ThemeMode.dark
-        ? 'dark'
-        : theme.themeMode == ThemeMode.light
-            ? 'light'
-            : 'system';
+    String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
