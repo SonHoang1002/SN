@@ -135,9 +135,6 @@ class PageController extends StateNotifier<PageState> {
   }
 
   updateLikePageDetail(id, type) async {
-    type == "like"
-        ? await PageApi().likePageSuggestion(id)
-        : await PageApi().unLikePageSuggestion(id);
     switch (type) {
       case "like":
         state = state.copyWith(
@@ -189,6 +186,9 @@ class PageController extends StateNotifier<PageState> {
         break;
       default:
     }
+    type == "like"
+        ? await PageApi().likePageSuggestion(id)
+        : await PageApi().unLikePageSuggestion(id);
   }
 
   getListPageGroup(params, id) async {

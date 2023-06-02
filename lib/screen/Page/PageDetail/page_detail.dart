@@ -75,6 +75,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         } else {
           setState(() {
             pageData = arguments;
+            ref
+                .read(pageControllerProvider.notifier)
+                .getPageDetail(pageData['id']);
           });
         }
       }
@@ -91,7 +94,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
       Future.delayed(
           Duration.zero,
           () => ref.read(pageControllerProvider.notifier).getListPagePined(
-              arguments is String ? arguments : pageData?['id']));
+              arguments is String && arguments != null
+                  ? arguments
+                  : pageData?['id']));
     }
 
     scrollController.addListener(() {
@@ -117,8 +122,12 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             Map<String, dynamic> paramsFeedPage = {
               "limit": 5,
               "exclude_replies": true,
-              'page_id': arguments is String ? arguments : pageData?['id'],
-              'page_owner_id': arguments is String ? arguments : pageData?['id']
+              'page_id': arguments is String && arguments != null
+                  ? arguments
+                  : pageData?['id'],
+              'page_owner_id': arguments is String && arguments != null
+                  ? arguments
+                  : pageData?['id']
             };
             if (ref.read(pageControllerProvider).pageFeed.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreFeed) {
@@ -126,7 +135,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   ref.read(pageControllerProvider).pageFeed.last['score'];
               ref.read(pageControllerProvider.notifier).getListPageFeed(
                   {"max_id": maxId, ...paramsFeedPage},
-                  arguments is String ? arguments : pageData?['id']);
+                  arguments is String && arguments != null
+                      ? arguments
+                      : pageData?['id']);
             }
             break;
           case 'group_page':
@@ -135,10 +146,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 ref.read(pageControllerProvider).isMoreGroup) {
               String maxId =
                   ref.read(pageControllerProvider).pageFeed.last['score'];
-              ref.read(pageControllerProvider.notifier).getListPageGroup({
-                ...paramsGroupPage,
-                "max_id": maxId,
-              }, arguments is String ? arguments : pageData?['id']);
+              ref.read(pageControllerProvider.notifier).getListPageGroup(
+                  {
+                    ...paramsGroupPage,
+                    "max_id": maxId,
+                  },
+                  arguments is String && arguments != null
+                      ? arguments
+                      : pageData?['id']);
             }
             break;
           case 'review_page':
@@ -146,7 +161,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 ref.read(pageControllerProvider).isMoreReview) {
               ref.read(pageControllerProvider.notifier).getListPageReview(
                   {'page': '$pageReview'},
-                  arguments is String ? arguments : pageData?['id']);
+                  arguments is String && arguments != null
+                      ? arguments
+                      : pageData?['id']);
               setState(() {
                 pageReview =
                     ref.read(pageControllerProvider).pageReview.length ~/ 20 +
@@ -163,7 +180,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
 
               ref.read(pageControllerProvider.notifier).getListPageMedia(
                   {"max_id": maxId, "limit": 20, 'media_type': 'image'},
-                  arguments is String ? arguments : pageData?['id']);
+                  arguments is String && arguments != null
+                      ? arguments
+                      : pageData?['id']);
             } else if (ref.read(pageControllerProvider).pageAlbum.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreAlbum &&
                 typeMedia == 'album') {
@@ -171,7 +190,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   ref.read(pageControllerProvider).pageAlbum.last['id'];
               ref.read(pageControllerProvider.notifier).getListPageAlbum(
                   {"max_id": maxId, "limit": 20},
-                  arguments is String ? arguments : pageData?['id']);
+                  arguments is String && arguments != null
+                      ? arguments
+                      : pageData?['id']);
             }
             break;
           case 'video_page':
@@ -181,7 +202,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   ref.read(pageControllerProvider).pageVideo.last['id'];
               ref.read(pageControllerProvider.notifier).getListPageMedia(
                   {'media_type': 'video', 'limit': 10, "max_id": maxId},
-                  arguments is String ? arguments : pageData?['id']);
+                  arguments is String && arguments != null
+                      ? arguments
+                      : pageData?['id']);
             }
             break;
           default:
@@ -249,7 +272,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           Column(
             key: _widgetKey,
             children: [
-              BannerBase(object: pageData, objectMore: null),
+              BannerBase(object: data, objectMore: null),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -268,7 +291,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
                             : greyColor,
-                        label: pageData?['page_relationship']?['like'] == true
+                        label: data?['page_relationship']?['like'] == true
                             ? "Đã thích"
                             : "Thích",
                         handlePress: () {
@@ -279,6 +302,10 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                   pageData['page_relationship']['like'] == true
                                       ? 'unlike'
                                       : 'like');
+                          setState(() {
+                            pageData =
+                                ref.read(pageControllerProvider).pageDetail;
+                          });
                         },
                       ),
                     ),
@@ -455,7 +482,6 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     var meData = ref.watch(meControllerProvider);
     var rolePage = ref.watch(pageControllerProvider).rolePage;
     List listSwitch = [meData[0], pageData];
-
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     final size = MediaQuery.of(context).size;
 
@@ -463,7 +489,10 @@ class _PageDetailState extends ConsumerState<PageDetail> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        titleSpacing: pageData['title'].length >= 32 ? 0 : null,
+        titleSpacing:
+            pageData?['title'] != null && pageData?['title'].length >= 32
+                ? 0
+                : null,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: InkWell(
             onTap: () {
@@ -483,9 +512,10 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
                 rolePage
-                    ? (pageData['title'].length >= 32
-                        ? '${pageData['title'].substring(0, 32)}...'
-                        : pageData['title'])
+                    ? (pageData?['title'] != null &&
+                            pageData?['title'].length >= 32
+                        ? '${pageData?['title'].substring(0, 32)}...'
+                        : pageData?['title'] ?? "")
                     : meData[0]['display_name'],
                 style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
