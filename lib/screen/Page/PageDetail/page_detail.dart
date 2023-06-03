@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,6 +12,7 @@ import 'package:social_network_app_mobile/screen/Page/PageDetail/about_page.dart
 import 'package:social_network_app_mobile/screen/Page/PageDetail/box_quick_update_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/feed_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/group_page.dart';
+import 'package:social_network_app_mobile/screen/Page/PageDetail/page_ellipsis.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/page_pinned_post.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/photo_page.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/review_page.dart';
@@ -265,6 +267,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     super.dispose();
   }
 
+
+
   Widget getBody(size, modeTheme, data) {
     return SingleChildScrollView(
         controller: scrollController,
@@ -318,7 +322,13 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                             : greyColor,
                         icon: const Icon(FontAwesomeIcons.ellipsis,
                             size: 16, color: Colors.white),
-                        handlePress: () {},
+                        handlePress: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (_) => const PageEllipsis()),
+                          );
+                        },
                       ),
                     ),
                   ],
