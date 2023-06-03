@@ -12,6 +12,10 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/pages", params);
   }
 
+  fetchListPageSuggest(params) async {
+    return await Api().getRequestBase("/api/v1/suggestions/page", params);
+  }
+
   fetchPageDetail(id) async {
     return await Api().getRequestBase("/api/v1/pages/$id", null);
   }
@@ -92,6 +96,14 @@ class PageApi {
   Future handleReviewPageApi(idPage, params) async {
     return await Api()
         .postRequestBase('/api/v1/pages/$idPage/feedbacks', params);
+  }
+
+  Future likePageSuggestion(idPage) async {
+    return await Api().postRequestBase('/api/v1/pages/$idPage/likes', null);
+  }
+
+  Future unLikePageSuggestion(idPage) async {
+    return await Api().postRequestBase('/api/v1/pages/$idPage/unlikes', null);
   }
 
   Future handleLikeFollowPage(idPage, action) async {

@@ -133,6 +133,9 @@ dependencies:
   like_button: ^2.0.5 
   miniplayer: ^1.0.1 
   perfect_freehand: ^1.0.4
+  emso_icons:
+    git:
+      url: https://github.com/EMSO-group/flutter_emso_icons
 
 dev_dependencies:
   flutter_test:
@@ -236,6 +239,18 @@ flutter:
     - assets/Noti/post.png
     - assets/Noti/comment.png
     - assets/Noti/livestream.png
+    - assets/pages/profileReport.png
+    - assets/pages/activityLog.png
+    - assets/pages/addAction.png
+    - assets/pages/block.png
+    - assets/pages/boxArchives.png
+    - assets/pages/edit.png
+    - assets/pages/inviteFriend.png
+    - assets/pages/privateCenter.png
+    - assets/pages/reviewPost.png
+    - assets/pages/search.png
+    - assets/pages/settingPage.png
+    - assets/pages/viewmode.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
