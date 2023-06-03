@@ -130,8 +130,9 @@ dependencies:
   timelines: ^0.1.0
   flutter_typeahead: ^4.6.0
   matrix_gesture_detector: 0.2.0-nullsafety.1
-  like_button: ^2.0.5
-  miniplayer: ^1.0.1
+  like_button: ^2.0.5 
+  miniplayer: ^1.0.1 
+  perfect_freehand: ^1.0.4
 
 dev_dependencies:
   flutter_test:
@@ -166,6 +167,7 @@ flutter:
   assets:
     - assets/audio/
     - assets/images/
+    - assets/effect_frame/
     - assets/sounds/
     - assets/images_and_video.png
     - assets/camera_menu.png

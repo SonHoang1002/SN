@@ -264,8 +264,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     return GestureDetector(
         onTap: () {
           setState(() {
-            suggestReactionContent = "";
-            // suggestReactionStatus = false;
+            suggestReactionContent = ""; 
           });
         },
         child: suggestReactionContent == ""

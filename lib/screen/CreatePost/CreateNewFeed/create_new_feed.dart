@@ -16,7 +16,9 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/CreateNewFeed/create_feed_status.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/checkin.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/MenuBody/emoji_activity.dart';
@@ -41,6 +43,7 @@ import 'package:social_network_app_mobile/screen/Post/PostCenter/post_life_event
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_share.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/EditImage/edit_img_main.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/Map/map_widget_item.dart';
@@ -61,7 +64,13 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
   final dynamic postDiscussion;
-  const CreateNewFeed({Key? key, this.post, this.type, this.postDiscussion})
+  final Function? reloadFunction;
+  const CreateNewFeed(
+      {Key? key,
+      this.post,
+      this.type,
+      this.postDiscussion,
+      this.reloadFunction})
       : super(key: key);
 
   @override
@@ -95,6 +104,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool showPreviewImage = true;
   ScrollController menuController = ScrollController();
   bool isMenuMinExtent = true;
+
+  GlobalKey _heightKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -207,7 +218,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     });
   }
 
-  handleUpdateData(type, data) {
+  handleUpdateData(
+    String type,
+    dynamic data,
+  ) {
     switch (type) {
       case 'update_visibility':
         setState(() {
@@ -268,7 +282,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         List listPath = [];
         List newFiles = [];
 
-        for (var item in [...files, ...data]) {
+        for (var item in data) {
           if (!listPath.contains(item?['id'])) {
             newFiles.add(item);
             listPath.add(item?['id']);
@@ -278,12 +292,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
               newFiles.add(item);
               listPath.add(item['file']!.path);
             }
-          } else {}
+          }
         }
-        if (![1, 2].contains(newFiles.length)) {
-          newFiles.removeAt(0);
-        }
-
         setState(() {
           files = newFiles;
           _isShow = false;
@@ -291,9 +301,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         break;
       case 'update_file_description':
         setState(() {
-          files = data;
+          if (files.length == 1) {
+            files = [data];
+          } else {
+            files = data;
+          }
           _isShow = false;
         });
+
         break;
       case 'update_poll':
         setState(() {
@@ -309,12 +324,20 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
   }
 
-  handlePress() {
-    Navigator.push(
+  handleEditOneImage() {
+    // Navigator.push(
+    //     context,
+    //     CupertinoPageRoute(
+    //         builder: ((context) => PageEditMediaUpload(
+    //             files: files, handleUpdateData: handleUpdateData))));
+    pushToNextScreen(
         context,
-        CupertinoPageRoute(
-            builder: ((context) => PageEditMediaUpload(
-                files: files, handleUpdateData: handleUpdateData))));
+        EditImageMain(
+            imageData: files,
+            index: 0,
+            updateData: (String type, dynamic newData) async {
+              handleUpdateData(type, newData);
+            }));
   }
 
   handleUploadMedia(index, file) async {
@@ -356,25 +379,79 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
   }
 
-  handleCreatePost() async {
-    context.loaderOverlay.show();
-    var data = {"status": content, "visibility": visibility['key']};
+  dynamic _createFakeData() {
+    dynamic meData = ref.watch(meControllerProvider)[0];
+    dynamic _fakeData = {
+      "created_at": "${DateTime.now()}+07:00",
+      "backdated_time": "${DateTime.now()}+07:00",
+      "processing": "isProcessing",
+      
+      "account": {
+        "id": meData['id'],
+        "username": meData['username'],
+        "display_name": meData['display_name'],
+        "avatar_static": meData['avatar_static'],
+        "gender": meData['gender'],
+        "earn_money": meData['earn_money'],
+        "certified": meData['certified'],
+        "avatar_media": meData['avatar_media'],
+        "banner": meData['banner'],
+      },
+    };
 
+    if (files.isNotEmpty) {
+      _fakeData['media_attachments'] = files;
+    }
+    if (checkin != null) {
+      _fakeData['place'] = checkin;
+    }
+    if (statusActivity != null) {
+      _fakeData['status_activity'] = statusActivity;
+    }
+    if (content != null) {
+      _fakeData['content'] = content;
+    }
+    if (gifLink != null && gifLink != "") {
+      _fakeData['card']['link'] = gifLink;
+    }
+    if (backgroundSelected != null) {
+      _fakeData['status_background'] = backgroundSelected;
+    }
+    if (visibility != null) {
+      _fakeData['visibility'] = visibility['key'];
+    }
+    if (lifeEvent != null) {
+      _fakeData['life_event'] = lifeEvent;
+    }
+    if (poll != null) {
+      _fakeData['poll'] = poll;
+    }
+    return _fakeData;
+  }
+  handleCreatePost() async {
+    double processingPostHeight = _heightKey.currentContext!.size!.height;
+    ref
+        .read(processingPostController.notifier)
+        .setPostionPost(processingPostHeight);
+    Navigator.pop(context);
+    String? type = widget.type ?? feedPost;
+    ref
+        .read(postControllerProvider.notifier)
+        .createUpdatePost(type, _createFakeData());
+    // prepare data for api
+    var data = {"status": content, "visibility": visibility['key']};
     if (backgroundSelected != null) {
       data = {...data, 'status_background_id': backgroundSelected['id']};
     }
-
     if (gifLink.isNotEmpty) {
       data = {
         ...data,
         "extra_body": {"description": "", "link": gifLink, "title": ""}
       };
     }
-
     if (statusActivity != null) {
       data = {...data, 'status_activity_id': statusActivity['id']};
     }
-
     if (friendSelected.isNotEmpty) {
       data = {
         ...data,
@@ -384,7 +461,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     if (poll != null) {
       data = {...data, 'poll': poll};
     }
-
     if (statusQuestion != null) {
       data = {
         ...data,
@@ -397,11 +473,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         }
       };
     }
-
     if (checkin != null) {
       data = {...data, 'place_id': checkin['id']};
     }
-
     if (files.isNotEmpty) {
       List<Future> listUpload = [];
       for (var i = 0; i < files.length; i++) {
@@ -412,10 +486,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       if (results.isNotEmpty) {
         mediasId = results.map((e) => e['id']).toList();
       }
-
       data = {...data, "media_ids": mediasId};
     }
-
     if (lifeEvent != null) {
       data = {...data, "life_event": lifeEvent};
     }
@@ -423,27 +495,23 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       data = {...data, ...postDiscussion};
     }
     var response = await PostApi().createStatus(data);
-
     if (response != null) {
-      if (context.mounted) {
-        context.loaderOverlay.hide();
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(isUploadVideo
-                ? "Video trong bài viết đang được xử lý"
-                : "Tạo bài viết thành công")));
-      }
+      // if (context.mounted) {
+      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //       content: Text(isUploadVideo
+      //           ? "Video trong bài viết đang được xử lý"
+      //           : "Tạo bài viết thành công")));
+      // }
       if (isUploadVideo) {
         setState(() {
           isUploadVideo = false;
         });
       } else {
-        String? type = widget.type ?? feedPost;
-        ref
-            .read(postControllerProvider.notifier)
-            .createUpdatePost(type, response);
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(type, response)
+            : null;
       }
-    } else {}
+    }
   }
 
   handleUpdatePost() async {
@@ -663,7 +731,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     fontSize: 14, isCenterLeft: false),
                 actions: [
                   Container(
-                    height: 192,
+                    height: 195,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(7),
                     ),
@@ -852,6 +920,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   Widget mainBody() {
     final size = MediaQuery.of(context).size;
     return Container(
+      key: _heightKey,
       // decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
       child: SingleChildScrollView(
         child: Column(
@@ -882,7 +951,16 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                   children: [
                     files.isNotEmpty
                         ? GridLayoutImage(
-                            medias: files, handlePress: (media) {})
+                            medias: files,
+                            handlePress: (media) {
+                              if (files.length > 1) {
+                                pushCustomCupertinoPageRoute(
+                                    context,
+                                    PageEditMediaUpload(
+                                        files: files,
+                                        handleUpdateData: handleUpdateData));
+                              }
+                            })
                         : const SizedBox(),
                     gifLink.isNotEmpty
                         ? ImageCacheRender(
@@ -932,20 +1010,27 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (files.isNotEmpty)
-                      Container(
-                          margin: const EdgeInsets.only(
-                            top: 2,
-                            left: 10,
-                          ),
-                          child: SizedBox(
-                            width: 100,
-                            child: ButtonPrimary(
-                              isPrimary: true,
-                              label: "Chỉnh sửa",
-                              handlePress: handlePress,
+                    files.length == 1
+                        ? Container(
+                            margin: const EdgeInsets.only(
+                              top: 2,
+                              left: 10,
                             ),
-                          )),
+                            child: SizedBox(
+                              child: ButtonPrimary(
+                                isPrimary: true,
+                                label: "Chỉnh sửa",
+                                handlePress: handleEditOneImage,
+                                colorButton: blackColor,
+                                fontSize: 12,
+                                icon: Image.asset(
+                                  "assets/icons/edit_create_feed_icon.png",
+                                  height: 12,
+                                  width: 12,
+                                ),
+                              ),
+                            ))
+                        : const SizedBox(),
                     if (gifLink.isNotEmpty ||
                         files.isNotEmpty ||
                         statusQuestion != null ||
@@ -1049,7 +1134,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                           )
                         : const SizedBox())
                 : const SizedBox(),
-
             Container(
               height: 80,
               color: transparent,

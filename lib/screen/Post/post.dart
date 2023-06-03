@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screen/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screen/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screen/Post/post_header.dart';
-import 'package:social_network_app_mobile/screen/Post/post_suggest.dart';
+import 'package:social_network_app_mobile/screen/Post/post_suggest.dart'; 
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widget/Posts/processing_indicator_widget.dart';
 import 'package:social_network_app_mobile/widget/cross_bar.dart';
 
-class Post extends StatefulWidget {
+class Post extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
   final bool? isHiddenCrossbar;
@@ -26,49 +31,80 @@ class Post extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<Post> createState() => _PostState();
+  ConsumerState<Post> createState() => _PostState();
 }
 
-class _PostState extends State<Post> {
+class _PostState extends ConsumerState<Post> {
   bool isHaveSuggest = true;
 
   @override
   Widget build(BuildContext context) {
+    final meData = ref.watch(meControllerProvider)[0];
     return widget.post != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              widget.type != postPageUser
+              // widget.type != postPageUser &&
+                      widget.post['account']['id'] != meData['id']
                   ? PostSuggest(
                       post: widget.post,
                       type: widget.type,
                       renderFunction: () {
-                        isHaveSuggest = false;
+                        // WidgetsBinding.instance.addPostFrameCallback((_) {
+                        //   isHaveSuggest = false;
+                        // });
                       },
                     )
                   : const SizedBox(),
-              PostHeader(
-                post: widget.post,
-                type: widget.type,
-                isHaveAction:
-                    widget.type != postPageUser ? !isHaveSuggest : true,
-                reloadFunction: () {
-                  setState(() {});
-                },
+              widget.post['processing'] == "isProcessing"
+                  ? CustomLinearProgressIndicator()
+                  : const SizedBox(),
+              Stack(
+                children: [
+                  Column(
+                    children: [
+                      PostHeader(
+                        post: widget.post,
+                        type: widget.type,
+                        // isHaveAction:
+                        //     widget.type != postPageUser ? !isHaveSuggest : true,
+                        reloadFunction: () {
+                          setState(() {});
+                        },
+                      ),
+                      PostCenter(
+                          post: widget.post,
+                          type: widget.type,
+                          data: widget.data,
+                          reloadFunction: () {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              widget.reloadFunction != null
+                                  ? widget.reloadFunction!()
+                                  : null;
+                              setState(() {});
+                            });
+                          }),
+                    ],
+                  ),
+                  widget.post['processing'] == "isProcessing"
+                      ? Container(
+                          height: ref
+                                      .watch(processingPostController)
+                                      .heightOfProcessingPost !=
+                                  0
+                              ? (ref
+                                      .watch(processingPostController)
+                                      .heightOfProcessingPost -
+                                  80)
+                              : 0,
+                          color: greyColor.withOpacity(0.4),
+                        )
+                      : const SizedBox()
+                ],
               ),
-              PostCenter(
-                  post: widget.post,
-                  type: widget.type,
-                  data: widget.data,
-                  reloadFunction: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      widget.reloadFunction != null
-                          ? widget.reloadFunction!()
-                          : null;
-                      setState(() {});
-                    });
-                  }),
-              widget.isHiddenFooter != null && widget.isHiddenFooter == true
+              (widget.isHiddenFooter != null &&
+                          widget.isHiddenFooter == true) ||
+                      widget.post['processing'] == "isProcessing"
                   ? const SizedBox()
                   : PostFooter(
                       post: widget.post,

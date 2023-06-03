@@ -116,6 +116,15 @@ class _UserPageState extends ConsumerState<UserPage> {
     });
   }
 
+  _reloadFunction(dynamic type,dynamic newData) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(postControllerProvider.notifier)
+          .changeProcessingPost(type, newData);
+      setState(() {});
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -226,7 +235,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           const SizedBox(
             height: 12.0,
           ),
-          CreatePostButton(preType: postPageUser),
+          CreatePostButton(preType: postPageUser, reloadFunction: _reloadFunction,),
           const CrossBar(),
           InkWell(
             onTap: () {

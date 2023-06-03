@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/screen/Post/PageReference/page_mention.dart';
@@ -49,6 +50,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final meData = ref.watch(meControllerProvider)[0];
     var size = MediaQuery.of(context).size;
     var account = widget.post['account'] ?? {};
     var group = widget.post['group'];
@@ -223,7 +225,8 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                   )
                 ],
               ),
-              widget.isHaveAction == true
+              // widget.isHaveAction == true
+              widget.post['account']['id'] == meData['id']
                   ? (![postReblog, postMultipleMedia].contains(widget.type))
                       ? Row(
                           children: [
@@ -253,8 +256,10 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                             SizedBox(
                               width: widget.type != postDetail ? 10 : 0,
                             ),
-                            ![postDetail, postPageUser].contains(widget.type)
-                                ? InkWell(
+                            [postDetail, postPageUser].contains(widget.type) ||
+                                    widget.post['account']['id'] == meData['id']
+                                ? const SizedBox()
+                                : InkWell(
                                     onTap: () async {
                                       final data = {"hidden": true};
                                       await PostApi()
@@ -270,7 +275,6 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                       color: greyColor,
                                     ),
                                   )
-                                : const SizedBox()
                           ],
                         )
                       : const SizedBox()
@@ -355,20 +359,11 @@ class BlockNamePost extends StatelessWidget {
               settings: RouteSettings(
                 arguments: {'id': account['id']},
               ));
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => const UserPage(),
-          //       settings: RouteSettings(
-          //         arguments: {'id': account['id']},
-          //       ),
-          //     ));
         }
       }
     }
 
     final size = MediaQuery.of(context).size;
-
     return Wrap(
       children: [
         InkWell(
