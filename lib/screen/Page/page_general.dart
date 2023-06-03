@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screen/Page/PageCreate/page_create.dart';
+import 'package:social_network_app_mobile/screen/Page/page_discover.dart';
 import 'package:social_network_app_mobile/screen/Page/page_invite.dart';
 import 'package:social_network_app_mobile/screen/Page/page_liked.dart';
 import 'package:social_network_app_mobile/widget/chip_menu.dart';
@@ -43,7 +44,9 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
     await ref
         .read(pageListControllerProvider.notifier)
         .getListPageAdmin({'limit': 20});
-
+    await ref
+        .read(pageListControllerProvider.notifier)
+        .getListPageSuggest({'limit': 10});
     await ref
         .read(pageListControllerProvider.notifier)
         .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
@@ -77,6 +80,9 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
         case 'invite_page':
           body = const PageInvite();
           break;
+        case 'page_discover':
+          body = const PageDiscover();
+          break;
       }
 
       Navigator.push(
@@ -95,14 +101,19 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
         'icon': FontAwesomeIcons.circlePlus
       },
       {
-        'key': 'liked_page',
-        'name': 'Trang đã thích',
-        'icon': FontAwesomeIcons.solidThumbsUp
+        'key': 'page_discover',
+        'name': 'Khám phá',
+        'icon': FontAwesomeIcons.compass,
       },
       {
         'key': 'invite_page',
         'name': 'Lời mời',
         'icon': FontAwesomeIcons.userPlus
+      },
+      {
+        'key': 'liked_page',
+        'name': 'Trang đã thích',
+        'icon': FontAwesomeIcons.solidThumbsUp
       },
     ];
 
@@ -115,26 +126,29 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
         children: [
           SizedBox(
             width: size.width,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(
-                    menuButton.length,
-                    (index) => GestureDetector(
-                          onTap: () {
-                            handlePressMenu(menuButton[index]);
-                          },
-                          child: ChipMenu(
-                              icon: Icon(
-                                menuButton[index]['icon'],
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .displayLarge!
-                                    .color,
-                                size: 14,
-                              ),
-                              isSelected: false,
-                              label: menuButton[index]['name']),
-                        ))),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(
+                      menuButton.length,
+                      (index) => GestureDetector(
+                            onTap: () {
+                              handlePressMenu(menuButton[index]);
+                            },
+                            child: ChipMenu(
+                                icon: Icon(
+                                  menuButton[index]['icon'],
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge!
+                                      .color,
+                                  size: 14,
+                                ),
+                                isSelected: false,
+                                label: menuButton[index]['name']),
+                          ))),
+            ),
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8),

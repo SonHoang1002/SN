@@ -17,34 +17,46 @@ class PageListState {
   final List pageInvitedManage;
   final bool isMorePageInvitedManage;
 
-  const PageListState(
-      {this.pageAdmin = const [],
-      this.pageLiked = const [],
-      this.pageInvitedLike = const [],
-      this.pageInvitedManage = const [],
-      this.isMorePageAdmin = true,
-      this.isMorePageLiked = true,
-      this.isMorePageInvitedLike = true,
-      this.isMorePageInvitedManage = true});
+  final List pageSuggestions;
+  final bool isMorePageSuggestions;
 
-  PageListState copyWith(
-      {List pageAdmin = const [],
-      List pageLiked = const [],
-      List pageInvitedLike = const [],
-      List pageInvitedManage = const [],
-      bool isMorePageAdmin = true,
-      bool isMorePageLiked = true,
-      bool isMorePageInvitedLike = true,
-      bool isMorePageInvitedManage = true}) {
+  const PageListState({
+    this.pageAdmin = const [],
+    this.pageLiked = const [],
+    this.pageInvitedLike = const [],
+    this.pageInvitedManage = const [],
+    this.pageSuggestions = const [],
+    this.isMorePageAdmin = true,
+    this.isMorePageLiked = true,
+    this.isMorePageInvitedLike = true,
+    this.isMorePageInvitedManage = true,
+    this.isMorePageSuggestions = true,
+  });
+
+  PageListState copyWith({
+    List pageAdmin = const [],
+    List pageLiked = const [],
+    List pageInvitedLike = const [],
+    List pageInvitedManage = const [],
+    List pageSuggestions = const [],
+    bool isMorePageAdmin = true,
+    bool isMorePageLiked = true,
+    bool isMorePageInvitedLike = true,
+    bool isMorePageInvitedManage = true,
+    bool isMorePageSuggestions = true,
+  }) {
     return PageListState(
-        pageAdmin: pageAdmin,
-        pageLiked: pageLiked,
-        isMorePageAdmin: isMorePageAdmin,
-        isMorePageLiked: isMorePageLiked,
-        pageInvitedLike: pageInvitedLike,
-        isMorePageInvitedLike: isMorePageInvitedLike,
-        pageInvitedManage: pageInvitedManage,
-        isMorePageInvitedManage: isMorePageInvitedManage);
+      pageAdmin: pageAdmin,
+      pageLiked: pageLiked,
+      isMorePageAdmin: isMorePageAdmin,
+      isMorePageLiked: isMorePageLiked,
+      pageInvitedLike: pageInvitedLike,
+      isMorePageInvitedLike: isMorePageInvitedLike,
+      pageInvitedManage: pageInvitedManage,
+      isMorePageInvitedManage: isMorePageInvitedManage,
+      pageSuggestions: pageSuggestions,
+      isMorePageSuggestions: isMorePageSuggestions,
+    );
   }
 }
 
@@ -72,6 +84,8 @@ class PageListController extends StateNotifier<PageListState> {
         isMorePageInvitedLike: state.isMorePageInvitedLike,
         pageInvitedManage: state.pageInvitedManage,
         isMorePageInvitedManage: state.isMorePageInvitedManage,
+        pageSuggestions: state.pageSuggestions,
+        isMorePageSuggestions: state.isMorePageSuggestions,
       );
     }
   }
@@ -91,6 +105,46 @@ class PageListController extends StateNotifier<PageListState> {
         isMorePageInvitedLike: state.isMorePageInvitedLike,
         pageInvitedManage: state.pageInvitedManage,
         isMorePageInvitedManage: state.isMorePageInvitedManage,
+        pageSuggestions: state.pageSuggestions,
+        isMorePageSuggestions: state.isMorePageSuggestions,
+      );
+    }
+  }
+
+  getListPageSuggest(params) async {
+    List response = await PageApi().fetchListPageSuggest(params);
+    if (response.isNotEmpty) {
+      final newList = response
+          .where((item) => !state.pageSuggestions
+              .any((suggestion) => suggestion['id'] == item['id']))
+          .toList();
+      state = state.copyWith(
+        pageLiked: state.pageLiked,
+        pageAdmin: state.pageAdmin,
+        isMorePageLiked: state.isMorePageLiked,
+        isMorePageAdmin: state.isMorePageAdmin,
+        pageInvitedLike: state.pageInvitedLike,
+        isMorePageInvitedLike: state.isMorePageInvitedLike,
+        pageInvitedManage: state.pageInvitedManage,
+        isMorePageInvitedManage: state.isMorePageInvitedManage,
+        pageSuggestions: params.containsKey('max_id')
+            ? [...state.pageSuggestions, ...newList]
+            : newList,
+        isMorePageSuggestions:
+            response.length < params['limit'] ? false : state.isMorePageAdmin,
+      );
+    } else {
+      state = state.copyWith(
+        pageLiked: state.pageLiked,
+        pageAdmin: state.pageAdmin,
+        isMorePageLiked: state.isMorePageLiked,
+        isMorePageAdmin: state.isMorePageAdmin,
+        pageInvitedLike: state.pageInvitedLike,
+        isMorePageInvitedLike: state.isMorePageInvitedLike,
+        pageInvitedManage: state.pageInvitedManage,
+        isMorePageInvitedManage: state.isMorePageInvitedManage,
+        pageSuggestions: response,
+        isMorePageSuggestions: false,
       );
     }
   }
@@ -109,6 +163,8 @@ class PageListController extends StateNotifier<PageListState> {
           isMorePageInvitedLike: state.isMorePageInvitedLike,
           pageInvitedManage: state.pageInvitedManage,
           isMorePageInvitedManage: state.isMorePageInvitedManage,
+          pageSuggestions: state.pageSuggestions,
+          isMorePageSuggestions: state.isMorePageSuggestions,
         );
       }
     } else if (type == 'manage') {
@@ -123,6 +179,8 @@ class PageListController extends StateNotifier<PageListState> {
           isMorePageInvitedLike: state.isMorePageInvitedLike,
           pageInvitedManage: state.pageInvitedManage + response['data'],
           isMorePageInvitedManage: state.isMorePageInvitedManage,
+          pageSuggestions: state.pageSuggestions,
+          isMorePageSuggestions: state.isMorePageSuggestions,
         );
       }
     }
@@ -164,6 +222,8 @@ class PageListController extends StateNotifier<PageListState> {
       isMorePageInvitedLike: state.isMorePageInvitedLike,
       pageInvitedManage: state.pageInvitedManage,
       isMorePageInvitedManage: state.isMorePageInvitedManage,
+      pageSuggestions: state.pageSuggestions,
+      isMorePageSuggestions: state.isMorePageSuggestions,
     );
   }
 
@@ -177,6 +237,62 @@ class PageListController extends StateNotifier<PageListState> {
       isMorePageInvitedLike: state.isMorePageInvitedLike,
       pageInvitedManage: state.pageInvitedManage,
       isMorePageInvitedManage: state.isMorePageInvitedManage,
+      pageSuggestions: state.pageSuggestions,
+      isMorePageSuggestions: state.isMorePageSuggestions,
     );
+  }
+
+  likePageSuggestion(id, type) async {
+    switch (type) {
+      case "like":
+        final index = state.pageSuggestions
+            .indexWhere((element) => element['id'] == id.toString());
+        final dataPageSuggest = state.pageSuggestions[index];
+        var updatedPageSuggestions = {
+          ...dataPageSuggest,
+          'page_relationship': {
+            ...(dataPageSuggest['page_relationship'] ?? {}),
+            'like': type == 'like' ? true : false,
+          },
+        };
+        state = state.copyWith(
+          pageLiked: state.pageLiked,
+          pageAdmin: state.pageAdmin,
+          isMorePageLiked: state.isMorePageLiked,
+          isMorePageAdmin: state.isMorePageAdmin,
+          pageInvitedLike: state.pageInvitedLike,
+          isMorePageInvitedLike: state.isMorePageInvitedLike,
+          pageInvitedManage: state.pageInvitedManage,
+          isMorePageInvitedManage: state.isMorePageInvitedManage,
+          pageSuggestions: [
+            ...state.pageSuggestions.sublist(0, index),
+            updatedPageSuggestions,
+            ...state.pageSuggestions.sublist(index + 1),
+          ],
+          isMorePageSuggestions: state.isMorePageSuggestions,
+        );
+        break;
+      case "filter":
+        state = state.copyWith(
+          pageLiked: state.pageLiked,
+          pageAdmin: state.pageAdmin,
+          isMorePageLiked: state.isMorePageLiked,
+          isMorePageAdmin: state.isMorePageAdmin,
+          pageInvitedLike: state.pageInvitedLike,
+          isMorePageInvitedLike: state.isMorePageInvitedLike,
+          pageInvitedManage: state.pageInvitedManage,
+          isMorePageInvitedManage: state.isMorePageInvitedManage,
+          pageSuggestions: state.pageSuggestions
+              .where((element) => element['id'] != id.toString())
+              .toList(),
+          isMorePageSuggestions: state.isMorePageSuggestions,
+        );
+        break;
+      default:
+        break;
+    }
+    type == "like"
+        ? await PageApi().likePageSuggestion(id)
+        : await PageApi().unLikePageSuggestion(id);
   }
 }

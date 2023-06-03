@@ -94,9 +94,6 @@ class _BannerBaseState extends State<BannerBase> {
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
           ),
         ),
-        const SizedBox(
-          height: 20,
-        )
       ],
     );
   }
