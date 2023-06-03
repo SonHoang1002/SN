@@ -1,8 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Moment/moment.dart';
-import 'package:social_network_app_mobile/screen/Post/post_header.dart';
 import 'package:social_network_app_mobile/screen/Watch/watch_suggest.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/divider_widget.dart';
@@ -49,31 +47,9 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
       }
     }
 
-    /// return List[width,height]
-    List<double?> checkHeightAndWidthOneImage(medias) {
-      final size = MediaQuery.of(context).size;
-      List<double?> values = [null, null];
-      double width =
-          double.parse(medias[0]['meta']['small']['width'].toString());
-      double height =
-          double.parse(medias[0]['meta']['small']['height'].toString());
-      values[0] = size.width;
-      if (width < height) {
-        //anh doc
-        if (height > 400) {
-          values[1] = height;
-        } else {
-          values[1] = 400;
-        }
-      } else {
-        // anh ngang
-      }
-
-      return values;
-    }
-
     renderLayoutMedia(medias) {
       final size = MediaQuery.of(context).size;
+
       switch (medias.length) {
         case 1:
           if (checkIsImage(medias[0])) {
@@ -93,17 +69,18 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     children: [
                       buildDivider(color: greyColor),
                       medias[0]['subType'] == 'local'
-                          ? Image.file(
-                              medias[0]['file'],
-                              fit: BoxFit.cover,
-                            )
+                          ? medias[0]['newUint8ListFile'] != null
+                              ? Image.memory(medias[0]['newUint8ListFile'],    fit: BoxFit.cover,)
+                              : Image.file(
+                                  medias[0]['file'],
+                                  fit: BoxFit.cover,
+                                )
                           : Hero(
                               tag: medias[0]['id'],
                               child: ExtendedImage.network(
-                                medias[0]['url'],
+                                medias[0]['url'] ?? medias[0]['preview_url'],
                                 fit: BoxFit.fitWidth,
-                                width: checkHeightAndWidthOneImage(medias)[0],
-                                height: checkHeightAndWidthOneImage(medias)[1],
+                                width: size.width,
                               ),
                             ),
                       buildDivider(color: greyColor),

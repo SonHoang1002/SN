@@ -38,7 +38,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
   // data để hiển thị
   List filesRender = [];
   //data để lưu
-  List newFileRender = [];
+  // List newFileRender = [];
 
   @override
   void initState() {
@@ -46,10 +46,9 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
     if (widget.files.isNotEmpty) {
       setState(() {
         filesRender = widget.files;
-        newFileRender = widget.files;
+        // newFileRender = widget.files;
       });
     }
-
     flickMultiManager = FlickMultiManager();
   }
 
@@ -65,7 +64,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
 
       setState(() {
         filesRender[index] = newData;
-        newFileRender[index]['file'] = newImage;
+        // newFileRender[index]['file'] = newImage;
       });
     }
   }
@@ -91,7 +90,6 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
 
     Widget renderMedia(index) {
       final file = filesRender[index];
-
       return Column(
         children: [
           if (checkIsImage(file))
@@ -100,12 +98,9 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                 pushToNextScreen(
                     context,
                     EditImageMain(
-                        imageData: filesRender[index],
+                        imageData: filesRender,
                         index: index,
-                        updateData: (int index, dynamic newData) async {
-                          setState(() {
-                            filesRender[index] = null;
-                          });
+                        updateData: (String type, dynamic newData) async {
                           _updateData(index, newData);
                         }));
               },
@@ -120,16 +115,25 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                   padding: const EdgeInsets.only(top: 8),
                   child: file['subType'] == 'local'
                       ? file['newUint8ListFile'] != null
-                          ? Image.memory(
-                              file['newUint8ListFile'],
-                              fit: BoxFit.cover,
+                          ? Hero(
+                              tag: index,
+                              child: Image.memory(
+                                file['newUint8ListFile'],
+                                fit: BoxFit.cover,
+                              ),
                             )
-                          : Image.asset(
-                              file['file'].path,
-                              fit: BoxFit.cover,
+                          : Hero(
+                              tag: index,
+                              child: Image.file(
+                                File(file['file'].path),
+                                fit: BoxFit.cover,
+                              ),
                             )
-                      : ExtendedImage.network(
-                          file['url'],
+                      : Hero(
+                          tag: file['id']?? index,
+                          child: ExtendedImage.network(
+                            file['url'],
+                          ),
                         ),
                   // FadeInImage.memoryNetwork(
                   //     placeholder: kTransparentImage,
@@ -197,7 +201,9 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                 label: "Xong",
                 handlePress: () {
                   widget.handleUpdateData(
-                      'update_file_description', newFileRender);
+                      // 'update_file_description', newFileRender);
+                      'update_file_description',
+                      filesRender);
                   Navigator.pop(context);
                 },
               )
@@ -270,10 +276,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                                     handleGetFiles: (type, data) {
                                       List listPath = [];
                                       List newFiles = [];
-                                      for (var item in [
-                                        ...filesRender,
-                                        ...data
-                                      ]) {
+                                      for (var item in data) {
                                         if (!listPath.contains(item?['id'])) {
                                           newFiles.add(item);
                                           listPath.add(item?['id']);

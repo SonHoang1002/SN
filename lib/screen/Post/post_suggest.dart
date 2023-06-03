@@ -40,7 +40,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Widget suggestContent = _buildSuggestContent();
-    return isShow
+    return isShow && widget.post['account']['id']!=meData['id']
         ? Column(
             children: [
               Container(

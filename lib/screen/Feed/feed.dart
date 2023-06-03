@@ -11,7 +11,7 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screen/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screen/Post/post.dart';
-import 'package:social_network_app_mobile/screen/Reef_ShortVideo/reef.dart';
+import 'package:social_network_app_mobile/screen/Reef_ShortVideo/reef.dart'; 
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
@@ -31,7 +31,7 @@ class Feed extends ConsumerStatefulWidget {
 class _FeedState extends ConsumerState<Feed> {
   final scrollController = ScrollController();
   var paramsConfig = {"limit": 3, "exclude_replies": true};
-
+  double heightOfProcessingPost = 0;
   @override
   void initState() {
     if (!mounted) return;
@@ -77,6 +77,16 @@ class _FeedState extends ConsumerState<Feed> {
     });
   }
 
+  // avoid bug look up ...
+  _reloadFeedFunction(dynamic type, dynamic newData) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(postControllerProvider.notifier)
+          .changeProcessingPost(type, newData);
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List posts = List.from(ref.watch(postControllerProvider).posts);
@@ -97,6 +107,7 @@ class _FeedState extends ConsumerState<Feed> {
                   children: [
                     CreatePostButton(
                       preType: feedPost,
+                      reloadFunction: _reloadFeedFunction,
                     ),
                     const CrossBar(
                       height: 5,
