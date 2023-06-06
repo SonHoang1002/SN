@@ -20,7 +20,8 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
       this.type,
       this.overlayWidget,
       this.aspectRatio,
-      this.hasDispose,this.isHiddenControl,
+      this.hasDispose,
+      this.isHiddenControl,
       this.videoPositionNotifier})
       : super(key: key);
 
@@ -51,7 +52,7 @@ class _VideoPlayerHasControllerState
       if (betterState.videoId != '') return;
       Future.delayed(Duration.zero, () {
         betterPlayerControllerNotifier.initializeBetterPlayerController(
-            widget.media['id'],
+            widget.media['id'] ?? "1111",
             widget.media['remote_url'] ?? widget.media['url'],
             widget.overlayWidget);
       });

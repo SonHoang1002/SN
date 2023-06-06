@@ -299,7 +299,8 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                           child: Hero(
                             tag: postRender['media_attachments']?[index]
                                     ?['id'] ??
-                                postRender['id'],
+                                postRender['id'] ??
+                                index,
                             child: ExtendedImage.network(
                               pathImg,
                               fit: BoxFit.contain,
@@ -316,7 +317,6 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                     cacheGesture: false,
                                     inPageView: true);
                               },
-                              
                               onDoubleTap: (state) {
                                 if (state.gestureDetails!.totalScale == 1.0) {
                                   state.handleDoubleTap(

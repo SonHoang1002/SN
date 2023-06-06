@@ -46,10 +46,9 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
             : 1 / media['meta']['original']['aspect'];
       }
     }
-
     renderLayoutMedia(medias) {
       final size = MediaQuery.of(context).size;
-
+      
       switch (medias.length) {
         case 1:
           if (checkIsImage(medias[0])) {
@@ -69,18 +68,16 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     children: [
                       buildDivider(color: greyColor),
                       medias[0]['subType'] == 'local'
-                          ? medias[0]['newUint8ListFile'] != null
-                              ? Image.memory(medias[0]['newUint8ListFile'],    fit: BoxFit.cover,)
-                              : Image.file(
-                                  medias[0]['file'],
-                                  fit: BoxFit.cover,
-                                )
+                          ? Image.file(
+                              medias[0]['file'],
+                              fit: BoxFit.cover,
+                            )
                           : Hero(
                               tag: medias[0]['id'],
                               child: ExtendedImage.network(
                                 medias[0]['url'] ?? medias[0]['preview_url'],
                                 fit: BoxFit.fitWidth,
-                                width: size.width,
+                                width: size.width, 
                               ),
                             ),
                       buildDivider(color: greyColor),

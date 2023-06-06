@@ -249,7 +249,7 @@ class _PostMutipleMediaDetail1State
                       : 0,
               0),
           onEnd: () {
-            popToPreviousScreen(context);
+            Navigator.pop(context);
           },
           child: Stack(
             children: [
@@ -266,7 +266,6 @@ class _PostMutipleMediaDetail1State
               //         return const SizedBox();
               //       }
               //     }),
-
               Container(
                 margin: EdgeInsets.only(
                   top: (beginDirection == ScrollDirection.forward &&
@@ -347,8 +346,7 @@ class _PostMutipleMediaDetail1State
                               closeDirection = closeTopToBottom;
                             });
                           });
-                        } else if (beginDirection ==
-                                ScrollDirection.reverse &&
+                        } else if (beginDirection == ScrollDirection.reverse &&
                             (updatePositonY! - beginPositonY!) < 0) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             setState(() {
@@ -419,14 +417,6 @@ class _PostMutipleMediaDetail1State
                                       Column(
                                         children: List.generate(medias.length,
                                             (index) {
-                                          dynamic mediaData;
-                                          // while(mediaData==null){
-                                          // Future.delayed(Duration.zero, () async {
-                                          //   mediaData = await PostApi()
-                                          //       .getPostDetailMedia(
-                                          //           medias[index]['id']);
-                                          // });
-                                          // }
                                           return Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -436,8 +426,7 @@ class _PostMutipleMediaDetail1State
                                                     pushCustomVerticalPageRoute(
                                                         context,
                                                         PostOneMediaDetail(
-                                                            currentIndex:
-                                                                index,
+                                                            currentIndex: index,
                                                             medias:
                                                                 medias, //list anh
                                                             post: postData,
@@ -445,8 +434,8 @@ class _PostMutipleMediaDetail1State
                                                                 index], // anh hien tai dang duoc chon
                                                             type:
                                                                 postMultipleMedia,
-                                                            preType: widget
-                                                                .preType,
+                                                            preType:
+                                                                widget.preType,
                                                             backFunction: () {
                                                               popToPreviousScreen(
                                                                   context);
@@ -455,31 +444,42 @@ class _PostMutipleMediaDetail1State
                                                   },
                                                   child: Stack(
                                                     children: [
-                                                      Hero(
-                                                        tag: medias[index]
-                                                            ['id'],
-                                                        child: ExtendedImage
-                                                            .network(
-                                                          medias[index]
-                                                              ['url'],
-                                                          key: Key(
+                                                      !isDragOutside
+                                                          ? Hero(
+                                                              tag: 
+                                                              // medias[index]
+                                                              //         ['id'] ??
+                                                                  index,
+                                                              child:
+                                                                  ExtendedImage
+                                                                      .network(
+                                                                medias[index]
+                                                                    ['url'],
+                                                                key: Key(medias[
+                                                                        index]
+                                                                    ['id']),
+                                                                // fit: BoxFit
+                                                                //     .fitWidth,
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                              ))
+                                                          : ExtendedImage
+                                                              .network(
                                                               medias[index]
-                                                                  ['id']),
-                                                          // fit: BoxFit
-                                                          //     .fitWidth,
-                                                          width:
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width,
-                                                          // height: double.parse(medias[index]
-                                                          //                 ['meta']
-                                                          //             ["small"]
-                                                          //         ["height"]
-                                                          //     .toString()
-                                                          // )
-                                                        ),
-                                                      ),
+                                                                  ['url'],
+                                                              key: Key(
+                                                                  medias[index]
+                                                                      ['id']),
+                                                              // fit: BoxFit
+                                                              //     .fitWidth,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                            ),
                                                     ],
                                                   )),
                                               PostFooter(

@@ -571,7 +571,7 @@ class _MyOrderPage1State extends ConsumerState<MyOrderPage1> {
       case "return":
         return _orderTabCount == null
             ? "0"
-            : _orderTabCount!["return_count"].toString();
+            : _orderTabCount!["return_count"].toString()??"0";
       default:
         return "0";
     }

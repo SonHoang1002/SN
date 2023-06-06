@@ -24,9 +24,13 @@ import 'package:transparent_image/transparent_image.dart';
 class PageEditMediaUpload extends StatefulWidget {
   final List files;
   final Function handleUpdateData;
+  final dynamic post;
 
   const PageEditMediaUpload(
-      {Key? key, required this.files, required this.handleUpdateData})
+      {Key? key,
+      required this.files,
+      required this.handleUpdateData,
+      this.post})
       : super(key: key);
 
   @override
@@ -81,6 +85,19 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
     return uint8List;
   }
 
+  navigatorFunction(int index) {
+    widget.post == null
+        ? pushToNextScreen(
+            context,
+            EditImageMain(
+                imageData: filesRender,
+                index: index,
+                updateData: (String type, dynamic newData) async {
+                  _updateData(index, newData);
+                }))
+        : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -95,54 +112,52 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
           if (checkIsImage(file))
             GestureDetector(
               onTap: () {
-                pushToNextScreen(
-                    context,
-                    EditImageMain(
-                        imageData: filesRender,
-                        index: index,
-                        updateData: (String type, dynamic newData) async {
-                          _updateData(index, newData);
-                        }));
+                navigatorFunction(index);
               },
-              child: ClipRect(
-                  child: Align(
-                alignment: Alignment.topCenter,
-                heightFactor:
-                    (file['aspect'] ?? file['meta']['original']['aspect']) < 0.4
-                        ? 0.6
-                        : 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: file['subType'] == 'local'
-                      ? file['newUint8ListFile'] != null
-                          ? Hero(
-                              tag: index,
-                              child: Image.memory(
-                                file['newUint8ListFile'],
-                                fit: BoxFit.cover,
-                              ),
-                            )
+              child: Stack(
+                children: [
+                  ClipRect(
+                      child: Align(
+                    alignment: Alignment.topCenter,
+                    heightFactor:
+                        (file['aspect'] ?? file['meta']['original']['aspect']) <
+                                0.4
+                            ? 0.6
+                            : 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: file['subType'] == 'local'
+                          ? file['newUint8ListFile'] != null
+                              ? Hero(
+                                  tag: index,
+                                  child: Image.memory(
+                                    file['newUint8ListFile'],
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Hero(
+                                  tag: index,
+                                  child: Image.file(
+                                    File(file['file'].path),
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
                           : Hero(
-                              tag: index,
-                              child: Image.file(
-                                File(file['file'].path),
-                                fit: BoxFit.cover,
+                              tag: file['id'] ?? index,
+                              child: ExtendedImage.network(
+                                file['url'],
                               ),
-                            )
-                      : Hero(
-                          tag: file['id']?? index,
-                          child: ExtendedImage.network(
-                            file['url'],
-                          ),
-                        ),
-                  // FadeInImage.memoryNetwork(
-                  //     placeholder: kTransparentImage,
-                  //     image: file['url'],
-                  //     imageErrorBuilder: (context, error, stackTrace) =>
-                  //         const SizedBox(),
-                  //   ),
-                ),
-              )),
+                            ),
+                      // FadeInImage.memoryNetwork(
+                      //     placeholder: kTransparentImage,
+                      //     image: file['url'],
+                      //     imageErrorBuilder: (context, error, stackTrace) =>
+                      //         const SizedBox(),
+                      //   ),
+                    ),
+                  )),
+                ],
+              ),
             )
           else
             Padding(
@@ -224,35 +239,96 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                         itemBuilder: (context, index) => Stack(
                               children: [
                                 renderMedia(index),
-                                Positioned(
-                                    right: 15,
-                                    top: 15,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        List filesUpdate = [
-                                          ...filesRender.sublist(0, index),
-                                          ...filesRender.sublist(index + 1)
-                                        ];
-
-                                        setState(() {
-                                          filesRender = filesUpdate;
-                                        });
-                                      },
-                                      child: Container(
-                                        width: 28,
-                                        height: 28,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color:
-                                                Colors.black.withOpacity(0.5)),
-                                        child: const Icon(
-                                          FontAwesomeIcons.xmark,
-                                          color: white,
-                                          size: 20,
-                                        ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      widget.post == null
+                                          ? Container(
+                                              margin: const EdgeInsets.only(
+                                                top: 2,
+                                              ),
+                                              child: ButtonPrimary(
+                                                isPrimary: true,
+                                                label: "Chỉnh sửa",
+                                                handlePress: () {
+                                                  navigatorFunction(index);
+                                                },
+                                                colorButton: blackColor,
+                                                fontSize: 12,
+                                                icon: Image.asset(
+                                                  "assets/icons/edit_create_feed_icon.png",
+                                                  height: 12,
+                                                  width: 12,
+                                                ),
+                                              ))
+                                          : const SizedBox(),
+                                      Row(
+                                        children: [
+                                          widget.post == null
+                                              ? Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 20),
+                                                  child: GestureDetector(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      width: 28,
+                                                      height: 28,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          color: Colors.black
+                                                              .withOpacity(
+                                                                  0.5)),
+                                                      child: const Icon(
+                                                        FontAwesomeIcons
+                                                            .ellipsis,
+                                                        color: white,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  ))
+                                              : const SizedBox(),
+                                          Positioned(
+                                              right: 15,
+                                              top: 15,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  List filesUpdate = [
+                                                    ...filesRender.sublist(
+                                                        0, index),
+                                                    ...filesRender
+                                                        .sublist(index + 1)
+                                                  ];
+                                                  setState(() {
+                                                    filesRender = filesUpdate;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  width: 28,
+                                                  height: 28,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.black
+                                                          .withOpacity(0.5)),
+                                                  child: const Icon(
+                                                    FontAwesomeIcons.xmark,
+                                                    color: white,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                              )),
+                                        ],
                                       ),
-                                    ))
+                                    ],
+                                  ),
+                                )
                               ],
                             ))),
             Container(

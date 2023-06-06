@@ -1,5 +1,6 @@
+import 'dart:ffi';
 import 'dart:io';
-
+import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,21 +10,26 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:perfect_freehand/perfect_freehand.dart';
 import 'package:social_network_app_mobile/data/emoji_activity.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/gender_login_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/EditImage/crop_image/edit_img_crop.dart';
 import 'package:social_network_app_mobile/widget/EditImage/drag_object/matrix_gesture_detector_custom.dart';
+import 'package:social_network_app_mobile/widget/EditImage/textfield_disable_glass.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widget/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widget/search_input.dart';
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'package:image/image.dart' as img;
 
 import 'draw_image/sketcher.dart';
 import 'draw_image/stroke.dart';
 import 'draw_image/stroke_options.dart';
+
+import 'dart:math' as math;
 
 class EditImageMain extends StatefulWidget {
   dynamic imageData;
@@ -165,23 +171,29 @@ class _EditImageMainState extends State<EditImageMain> {
   bool? _saveSelection;
   dynamic _imageData;
 
-  List<Widget> _overlayWidget = [];
+  List<dynamic> _overlayWidget = [];
   GlobalKey _imageKey = GlobalKey();
   GlobalKey _globalKey = GlobalKey();
 
   List<ValueNotifier<Matrix4>> notifiers = [];
 
   bool _isShowDeleteArea = false;
-  bool _drawComplete = false;
   bool _isCanDeleteObject = false;
 
   // crop property
   File? cropImage;
   Uint8List? _cropImageUnit8List;
   // word property
-  List<TextEditingController> _wordControllers = [
-    TextEditingController(text: '')
+  List<dynamic> _dataProperties = [
+    // {
+    //   "controller": TextEditingController(text: ''),
+    //   "color": ValueNotifier<Color>(white),
+    //   "fontSize": ValueNotifier<Color>(17),
+    //   "focus_node": FocusNode()
+    // }
   ];
+  double? fontSizeValue;
+  dynamic _selectedOverlayObject;
   // emoji property
   List<dynamic>? _emojiSelectionItems = [];
   // draw property
@@ -200,6 +212,7 @@ class _EditImageMainState extends State<EditImageMain> {
   bool _isOpenAnimationSelections = false;
 
   chooseMenu(dynamic key, {int index = -1}) async {
+    hiddenKeyboard(context);
     resetSelectionMenu();
     switch (key) {
       case "close":
@@ -222,25 +235,25 @@ class _EditImageMainState extends State<EditImageMain> {
         });
         Uint8List imageBytes = await fileToUint8List(_imageData['file']);
         // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditImageCrop(
-              image: imageBytes,
-              onChange: (value) {},
-              completeFunction: (value) async {
-                if (value != null) {
-                  final newFile =
-                      await uint8ListToFile(value, _imageData['file'].path);
-                  setState(() {
-                    _imageData['file'] = newFile;
-                    _cropImageUnit8List = value;
-                  });
-                }
-              },
-            ),
-          ),
-        );
+        showBarModalBottomSheet(
+            enableDrag: false,
+            context: context,
+            isDismissible: false,
+            builder: (ctx) {
+              return EditImageCrop(
+                image: imageBytes,
+                completeFunction: (value) async {
+                  if (value != null) {
+                    final newFile =
+                        uint8ListToFile(value, _imageData['file'].path);
+                    setState(() {
+                      _imageData['file'] = newFile;
+                      _cropImageUnit8List = value;
+                    });
+                  }
+                },
+              );
+            });
         break;
       case "emoji":
         setState(() {
@@ -253,18 +266,26 @@ class _EditImageMainState extends State<EditImageMain> {
           setState(() {
             _wordSelection = true;
             notifiers.add(ValueNotifier(Matrix4.identity()));
-            _wordControllers.add(TextEditingController(text: ""));
-            _overlayWidget.add(_buildWordWidget(_wordControllers.length - 1));
+            _dataProperties.add({
+              "key": "word",
+              "controller": TextEditingController(text: ""),
+              "color": ValueNotifier<Color>(white),
+              "fontSize": ValueNotifier<double>(25.0),
+              "focus_node": FocusNode()
+            });
+            _overlayWidget.add({
+              "key": "word",
+              // "index": _dataProperties.length - 1,
+              // "widget": _buildTextFormField(_dataProperties.length - 1)
+              "widget": _buildTextFormField(_dataProperties.last)
+            });
+            _selectedOverlayObject = _dataProperties.last;
           });
         }
         break;
       case "draw":
         setState(() {
           _lineSelection = true;
-          // notifiers.add(ValueNotifier(Matrix4.zero()));
-          // _overlayWidget.add(Stack(
-          //   children: [buildAllPaths(context), buildCurrentPath(context)],
-          // ));
         });
         break;
       case "animation":
@@ -315,22 +336,37 @@ class _EditImageMainState extends State<EditImageMain> {
     }
   }
 
-  // capture image to render final image
   Future<Uint8List> _capturePng() async {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    // get height of image
     final imageRenderObject = _imageKey.currentContext?.findRenderObject();
+    double imageHeight = 0;
     if (imageRenderObject is RenderBox) {
-      final imageHeight = imageRenderObject.size.height;
+      imageHeight = imageRenderObject.size.height;
     }
     try {
+      // render capture Image and convert to Byte Data
       RenderRepaintBoundary boundary = _globalKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ui.Image image = await boundary.toImage(pixelRatio: 1.0);
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      int startPixelY = (screenHeight / 2 - imageHeight / 2).toInt();
+      // convert byteData to Image( to crop )
+      img.Image originalImage =
+          img.decodeImage(byteData!.buffer.asUint8List())!;
+      img.Image croppedImage = img.copyCrop(originalImage,
+          x: 0,
+          y: startPixelY - 45, // unexpected height,I don't know why ??
+          width: screenWidth.toInt(),
+          height: imageHeight.toInt());
+      // encode to Uint8List
+      Uint8List pngBytes = img.encodePng(croppedImage);
       return pngBytes;
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 
@@ -486,9 +522,8 @@ class _EditImageMainState extends State<EditImageMain> {
 
   Widget buildToolbar() {
     final size = MediaQuery.of(context).size;
-    return Positioned(
-        top: size.height * 0.6,
-        right: 5.0,
+    return Container(
+        margin: EdgeInsets.only(top: size.height * 0.6, right: 5.0),
         child: Container(
           color: white.withOpacity(0.2),
           child: Column(
@@ -515,34 +550,11 @@ class _EditImageMainState extends State<EditImageMain> {
                             options.size = value;
                           })
                         }),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  child: Row(
-                      children: drawColorList.map(
-                    (e) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _drawSelectionColor = e;
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: e,
-                              borderRadius: BorderRadius.circular(10),
-                              border: _drawSelectionColor == e
-                                  ? Border.all(
-                                      color: secondaryColor, width: 0.4)
-                                  : null),
-                          height: 20,
-                          width: 20,
-                        ),
-                      );
-                    },
-                  ).toList()),
-                ),
+                _buildColorSelections(function: (dynamic color) {
+                  setState(() {
+                    _drawSelectionColor = color;
+                  });
+                }),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -632,7 +644,7 @@ class _EditImageMainState extends State<EditImageMain> {
     cropImage = null;
     _cropImageUnit8List = null;
     // word property
-    _wordControllers = [];
+    _dataProperties = [];
     // emoji property
     _emojiSelectionItems = [];
     super.dispose();
@@ -646,124 +658,146 @@ class _EditImageMainState extends State<EditImageMain> {
       backgroundColor: blackColor,
       body: SafeArea(
         child: Stack(children: [
-          RepaintBoundary(
-            key: _globalKey,
-            child: Container(
-              // height: size.height * 0.8,
-              // margin: EdgeInsets.symmetric(vertical: size.height * 0.1),
-              child: Stack(
-                children: [
-                  Center(
-                      key: ValueKey(
-                          _cropImageUnit8List != null ? 'true' : 'false'),
-                      child: Stack(
-                        children: [
-                          ColorFiltered(
-                            colorFilter: ui.ColorFilter.matrix([
-                              1, 0, 0, 0, (brightness * 70) / 100, // Red color
-                              0, 1, 0, 0,
-                              (brightness * 70) / 100, // Green color
-                              0, 0, 1, 0, (brightness * 70) / 100, // Blue color
-                              0, 0, 0, 1, 0, // Alpha color
-                            ]),
-                            child: _cropImageUnit8List != null
-                                ? Image.memory(
-                                    _cropImageUnit8List!,
-                                    key: _imageKey,
-                                    fit: BoxFit.fitWidth,
-                                    width: size.width,
-                                  )
-                                : _imageData['file'] != null
-                                    ? ExtendedImage.file(
-                                        File(_imageData['file'].path),
-                                        key: _imageKey,
-                                        fit: BoxFit.fitWidth,
-                                        width: size.width,
-                                      )
-                                    : const SizedBox(),
-                          ),
-                        ],
-                      )),
-                  _selectedFrame != null
-                      ? Image.asset(_selectedFrame!,
-                          fit: BoxFit.fitWidth, width: size.width)
-                      : const SizedBox(),
-                  // show drawing board
-                  Stack(
-                    children: [
-                      buildAllPaths(context),
-                      _lineSelection == true
-                          ? buildCurrentPath(context)
-                          : const SizedBox()
-                    ],
-                  ),
-                  // show drag object
-                  Stack(
-                    children: _overlayWidget.map((e) {
-                      final index = _overlayWidget.indexOf(e);
-                      return Listener(
-                        onPointerMove: (event) {
-                          Offset deletePoint =
-                              Offset(size.width / 2, size.height * 0.8);
-                          Rect rect =
-                              Rect.fromCircle(center: deletePoint, radius: 50);
-                          if (rect.contains(event.position)) {
-                            setState(() {
-                              _isCanDeleteObject = true;
-                            });
-                          } else {
-                            if (_isCanDeleteObject == true) {
+          InkWell(
+            onTap: () {
+              hiddenKeyboard(context);
+            },
+            child: RepaintBoundary(
+              key: _globalKey,
+              child: Container(
+                // height: size.height * 0.8,
+                // margin: EdgeInsets.symmetric(vertical: size.height * 0.1),
+                child: Stack(
+                  children: [
+                    Center(
+                        key: ValueKey(
+                            _cropImageUnit8List != null ? 'true' : 'false'),
+                        child: Stack(
+                          children: [
+                            ColorFiltered(
+                              colorFilter: ui.ColorFilter.matrix([
+                                1, 0, 0, 0,
+                                (brightness * 70) / 100, // Red color
+                                0, 1, 0, 0,
+                                (brightness * 70) / 100, // Green color
+                                0, 0, 1, 0,
+                                (brightness * 70) / 100, // Blue color
+                                0, 0, 0, 1, 0, // Alpha color
+                              ]),
+                              child: _cropImageUnit8List != null
+                                  ? Image.memory(
+                                      _cropImageUnit8List!,
+                                      key: _imageKey,
+                                      fit: BoxFit.fitWidth,
+                                      width: size.width,
+                                    )
+                                  : _imageData['file'] != null
+                                      ? ExtendedImage.file(
+                                          File(_imageData['file'].path),
+                                          key: _imageKey,
+                                          fit: BoxFit.fitWidth,
+                                          width: size.width,
+                                        )
+                                      : const SizedBox(),
+                            ),
+                          ],
+                        )),
+                    _selectedFrame != null
+                        ? Image.asset(_selectedFrame!,
+                            fit: BoxFit.fitWidth, width: size.width)
+                        : const SizedBox(),
+                    // show drawing board
+                    Stack(
+                      children: [
+                        buildAllPaths(context),
+                        _lineSelection == true
+                            ? buildCurrentPath(context)
+                            : const SizedBox()
+                      ],
+                    ),
+                    // show drag object
+                    Stack(
+                      children: _overlayWidget.map((e) {
+                        final index = _overlayWidget.indexOf(e);
+                        return Listener(
+                          onPointerMove: (event) {
+                            Offset deletePoint =
+                                Offset(size.width / 2, size.height * 0.8);
+                            Rect rect = Rect.fromCircle(
+                                center: deletePoint, radius: 50);
+                            if (rect.contains(event.position)) {
                               setState(() {
+                                _isCanDeleteObject = true;
+                              });
+                            } else {
+                              if (_isCanDeleteObject == true) {
+                                setState(() {
+                                  _isCanDeleteObject = false;
+                                });
+                              }
+                            }
+                          },
+                          onPointerDown: (details) {
+                            setState(() {
+                              _selectedOverlayObject = _dataProperties[index];
+                            });
+                          },
+                          onPointerUp: (event) {
+                            if (_isCanDeleteObject) {
+                              setState(() {
+                                _dataProperties.removeAt(index);
+                                _overlayWidget.removeAt(index);
+                                notifiers.removeAt(index);
+                                _selectedOverlayObject = null;
                                 _isCanDeleteObject = false;
                               });
                             }
-                          }
-                        },
-                        onPointerUp: (event) {
-                          if (_isCanDeleteObject) {
-                            setState(() {
-                              _overlayWidget.removeAt(index);
-                              notifiers.removeAt(index);
-                              _isCanDeleteObject = false;
-                            });
-                          }
-                        },
-                        child: MatrixGestureDetector(
-                          onMatrixUpdate: (matrix, translationDeltaMatrix,
-                              scaleDeltaMatrix, rotationDeltaMatrix) {
-                            setState(() {
-                              notifiers[index].value = matrix;
-                            });
                           },
-                          onScaleStart: () {
-                            setState(() {
-                              _isShowDeleteArea = true;
-                            });
-                          },
-                          onScaleEnd: () {
-                            setState(() {
-                              _isShowDeleteArea = false;
-                            });
-                          },
-                          child: AnimatedBuilder(
+                          child: MatrixGestureDetector(
+                            onMatrixUpdate: (matrix, translationDeltaMatrix,
+                                scaleDeltaMatrix, rotationDeltaMatrix) {
+                              setState(() {
+                                notifiers[index].value = matrix;
+                              });
+                            },
+                            onScaleStart: () {
+                              setState(() {
+                                _isShowDeleteArea = true;
+                              });
+                            },
+                            onScaleEnd: () {
+                              setState(() {
+                                _isShowDeleteArea = false;
+                              });
+                            },
+                            child: AnimatedBuilder(
                               animation: notifiers[index],
-                              builder: (ctx, child) {
+                              builder: (context, child) {
+                                final matrix = notifiers[index].value;
+                                final rotationAngle = math.atan2(0, 0); 
                                 return Transform(
-                                  transform: notifiers[index].value,
+                                  transform: matrix,
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: FittedBox(
                                       fit: BoxFit.contain,
-                                      child: e,
+                                      child: RotatedBox(
+                                        quarterTurns:
+                                            rotationAngle ~/ (math.pi / 2),
+                                        // quarterTurns: 3,
+                                        child: e['widget'],
+                                      ),
                                     ),
                                   ),
                                 );
-                              }),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
+                              },
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -834,6 +868,7 @@ class _EditImageMainState extends State<EditImageMain> {
                   ),
                 )
               : const SizedBox(),
+          //menu
           _lineSelection == true ||
                   _isShowDeleteArea ||
                   _brightnessSelection == true
@@ -917,6 +952,53 @@ class _EditImageMainState extends State<EditImageMain> {
                                   ),
                                 )
                               : const SizedBox(),
+                          _selectedOverlayObject != null &&
+                                  _selectedOverlayObject['key'] == "word"
+                              ? Column(
+                                  children: [
+                                    buildTextContent("Cỡ chữ", false,
+                                        colorWord: white, isCenterLeft: false),
+                                    Slider(
+                                      value: double.parse(
+                                          _selectedOverlayObject['fontSize']
+                                              .value
+                                              .toString()),
+                                      min: 10,
+                                      max: 40,
+                                      activeColor: white,
+                                      inactiveColor: white.withOpacity(0.1),
+                                      divisions: 100,
+                                      label: _selectedOverlayObject['fontSize']
+                                          .value
+                                          .toInt()
+                                          .toString(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedOverlayObject['fontSize']
+                                              .value = value;
+                                          int index = _dataProperties
+                                              .indexOf(_selectedOverlayObject);
+                                          _dataProperties[index]['fontSize']
+                                              .value = value;
+                                        });
+                                      },
+                                      semanticFormatterCallback: (value) =>
+                                          value.round().toString(),
+                                    ),
+                                    _buildColorSelections(
+                                        function: (dynamic color) {
+                                      setState(() {
+                                        _selectedOverlayObject['color'].value =
+                                            color;
+                                        int index = _dataProperties
+                                            .indexOf(_selectedOverlayObject);
+                                        _dataProperties[index]['color'].value =
+                                            color;
+                                      });
+                                    }),
+                                  ],
+                                )
+                              : const SizedBox(),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children:
@@ -969,31 +1051,71 @@ class _EditImageMainState extends State<EditImageMain> {
     );
   }
 
-// word
-  Widget _buildWordWidget(int index) {
-    return _buildTextFormField(index);
+  Widget _buildColorSelections({Function? function}) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+          children: drawColorList.map(
+        (e) {
+          return GestureDetector(
+            onTap: () {
+              function != null ? function(e) : null;
+            },
+            child: Container(
+              margin: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: e,
+                borderRadius: BorderRadius.circular(10),
+                // border: _drawSelectionColor == e
+                //     ? Border.all(
+                //         color: secondaryColor, width: 0.4)
+                //     : null
+              ),
+              height: 20,
+              width: 20,
+            ),
+          );
+        },
+      ).toList()),
+    );
   }
 
-  Widget _buildTextFormField(int index) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: TextFormField(
-        onChanged: (value) {},
-        maxLines: null,
-        // expands: true,
-        controller: _wordControllers[index],
-        autofocus: true,
-        style: const TextStyle(fontSize: 30, color: Colors.white),
-        decoration: const InputDecoration(
-          contentPadding:
-              EdgeInsets.only(left: 15, bottom: 10, top: 10, right: 15),
-          border: InputBorder.none,
-          hintText: "Bắt đầu nhập",
-          hintStyle: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w400, fontSize: 30),
-        ),
-      ),
-    );
+  Widget _buildTextFormField(dynamic data) {
+    return ValueListenableBuilder<double>(
+        valueListenable: data['fontSize'],
+        builder: (context, value, child) {
+          return ValueListenableBuilder<Color>(
+              valueListenable: data['color'],
+              builder: (context, value, child) {
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: TextFormField(
+                    onChanged: (value) {},
+                    maxLines: null,
+                    enableInteractiveSelection:
+                        false, // dissable magnifing glass
+                    // selectionControls: CustomTextSelectionControls(),
+                    focusNode: data["focus_node"],
+                    controller: data['controller'],
+                    autofocus: true,
+                    style: TextStyle(
+                        fontSize: data['fontSize'].value,
+                        color: data['color'].value),
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.only(
+                          left: 15, bottom: 10, top: 10, right: 15),
+                      border: InputBorder.none,
+                      hintText: "Bắt đầu nhập",
+                      hintStyle: TextStyle(
+                          color: white,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 30),
+                    ),
+                  ),
+                );
+              });
+        });
   }
 
 // music
@@ -1079,7 +1201,7 @@ class _EditImageMainState extends State<EditImageMain> {
                             onTap: () {
                               chooseEmojiItem(index);
                             },
-                            child: Container(
+                            child: SizedBox(
                               height: 50,
                               width: 50,
                               child: ExtendedImage.network(
@@ -1097,9 +1219,14 @@ class _EditImageMainState extends State<EditImageMain> {
   chooseEmojiItem(int index) {
     setState(() {
       _emojiSelectionItems!.add([index]);
-      _overlayWidget.add(
-          ExtendedImage.network(emojis[index]['url'], height: 50, width: 50));
+      _dataProperties.add({"key": "emoji", "id": emojis[index]['id']});
+      _overlayWidget.add({
+        "key": "emoji",
+        "widget":
+            ExtendedImage.network(emojis[index]['url'], height: 50, width: 50)
+      });
       notifiers.add(ValueNotifier(Matrix4.identity()));
+      _selectedOverlayObject = _dataProperties.last;
     });
     popToPreviousScreen(context);
   }

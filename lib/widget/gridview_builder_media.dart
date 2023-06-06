@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
@@ -35,7 +36,7 @@ class GridViewBuilderMedia extends StatelessWidget {
             crossAxisCount: crossAxisCount,
             childAspectRatio: aspectRatio),
         itemCount: medias.length,
-        itemBuilder: (context, indexBg) { 
+        itemBuilder: (context, indexBg) {
           return GestureDetector(
               onTap: () {
                 if (handlePress != null) {
@@ -63,9 +64,9 @@ class GridViewBuilderMedia extends StatelessWidget {
                                     ),
                                   )
                             : Hero(
-                                tag: medias[indexBg]['id']?? indexBg,
-                                child: ImageCacheRender(
-                                    path: medias[indexBg]['url'])),
+                                tag: medias[indexBg]['id'] ?? indexBg,
+                                child: ExtendedImage.network(
+                                    medias[indexBg]['url'])),
                         imageRemain != null &&
                                 imageRemain! > 0 &&
                                 indexBg + 1 == medias.length

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/common.dart'; 
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -234,7 +235,7 @@ class _OrderProductMarketPageState
                   width: 35,
                   child: _selectedPage != null
                       ? ImageCacheRender(
-                          path: _selectedPage["avatar_media"]["url"])
+                          path: _selectedPage["avatar_media"]?["url"]??linkBannerDefault )
                       : Container(
                           color: greyColor,
                         )),

@@ -374,6 +374,11 @@ class GalleryController extends ValueNotifier<GalleryValue> {
   set value(GalleryValue newValue) {
     if (!_internal || value == newValue) return;
     super.value = newValue;
+    //newValue :    GalleryValue(
+    //   selectedEntities: [AssetEntity(id: 4A46AE09-3A7C-4032-8E8A-299794BAE89F/L0/001 , type: AssetType.image)],
+    //   isAlbumVisible: false,
+    //   enableMultiSelection: false
+    // )
     _internal = false;
   }
 

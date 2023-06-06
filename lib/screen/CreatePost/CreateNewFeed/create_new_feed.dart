@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/apis/create_post_apis/preview_url_post_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
@@ -340,12 +342,41 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             }));
   }
 
+  Future<File> overwriteImage(Uint8List data, String imagePath) async {
+    // Tạo một thư mục tạm để lưu trữ ảnh ghi đè
+    final tempDir = await getTemporaryDirectory();
+    final tempImagePath = '${tempDir.path}/temp_image.png';
+
+    // Ghi dữ liệu từ Uint8List vào file ảnh tạm
+    final tempFile = File(tempImagePath);
+    await tempFile.writeAsBytes(data);
+
+    // Đọc ảnh gốc từ đường dẫn imagePath
+    final originalImageFile = File(imagePath);
+
+    // Kiểm tra nếu ảnh gốc tồn tại
+    if (await originalImageFile.exists()) {
+      // Ghi đè ảnh gốc bằng ảnh từ Uint8List
+      await originalImageFile.writeAsBytes(await tempFile.readAsBytes());
+      await tempFile.delete();
+      return originalImageFile;
+    } else {
+      throw Exception('Không tìm thấy ảnh gốc');
+    }
+  }
+
   handleUploadMedia(index, file) async {
     if (file['file'] != null) {
-      var fileData = file['file'];
+      var fileData;
+      if (file['newUint8ListFile'] != null) {
+        fileData =
+            await overwriteImage(file['newUint8ListFile'], file['file'].path);
+      } else {
+        fileData = file['file'];
+      }
+
       String fileName = fileData!.path.split('/').last;
       FormData formData;
-
       dynamic response;
       if (file['type'] == 'image') {
         formData = FormData.fromMap({
@@ -385,7 +416,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       "created_at": "${DateTime.now()}+07:00",
       "backdated_time": "${DateTime.now()}+07:00",
       "processing": "isProcessing",
-      
       "account": {
         "id": meData['id'],
         "username": meData['username'],
@@ -428,6 +458,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
     return _fakeData;
   }
+
   handleCreatePost() async {
     double processingPostHeight = _heightKey.currentContext!.size!.height;
     ref
@@ -496,12 +527,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
     var response = await PostApi().createStatus(data);
     if (response != null) {
-      // if (context.mounted) {
-      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //       content: Text(isUploadVideo
-      //           ? "Video trong bài viết đang được xử lý"
-      //           : "Tạo bài viết thành công")));
-      // }
       if (isUploadVideo) {
         setState(() {
           isUploadVideo = false;
@@ -542,7 +567,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       "status": content,
       "scheduled_at": null,
       'hidden': null,
-      'status_background_id': null
+      'status_background_id': widget.post['status_background']?['id'] ?? null
     };
     if (files.isNotEmpty) {
       List<Future> listUpload = [];
@@ -554,28 +579,29 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       if (results.isNotEmpty) {
         mediasId = results.map((e) => e['id']).toList();
       }
-
       newData['media_ids'] = mediasId;
     }
     if (widget.post['visibility'] != visibility['key']) {
       newData['visibility'] = visibility['key'];
     }
-    if (backgroundSelected != null &&
-        widget.post['status_background']?['id'] != backgroundSelected['id']) {
-      if (files.isNotEmpty ||
-          checkin == null ||
-          poll == null ||
-          lifeEvent == null ||
-          widget.post['shared_event'] == null ||
-          widget.post['shared_recruit'] == null ||
-          widget.post['shared_project'] == null ||
-          widget.post['shared_course'] == null ||
-          widget.post['shared_product'] == null ||
-          widget.post['shared_page'] == null ||
-          widget.post['shared_group'] == null) {
-        newData['status_background_id'] = backgroundSelected['id'];
-      }
-    } else {}
+    // if (backgroundSelected != null &&
+    //     widget.post['status_background']?['id'] != backgroundSelected['id']) {
+    //   if (files.isNotEmpty ||
+    //       checkin == null ||
+    //       poll == null ||
+    //       lifeEvent == null ||
+    //       widget.post['shared_event'] == null ||
+    //       widget.post['shared_recruit'] == null ||
+    //       widget.post['shared_project'] == null ||
+    //       widget.post['shared_course'] == null ||
+    //       widget.post['shared_product'] == null ||
+    //       widget.post['shared_page'] == null ||
+    //       widget.post['shared_group'] == null) {
+    //     newData['status_background_id'] = backgroundSelected['id'];
+    //   }
+    // } else {}
+    newData['status_background_id'] =
+        backgroundSelected != null ? backgroundSelected['id'] : null;
 
     if (gifLink.isNotEmpty) {
       newData["extra_body"] = {"description": "", "link": gifLink, "title": ""};
@@ -802,7 +828,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     fontSize: 14, isCenterLeft: false),
                 actions: [
                   Container(
-                    height: 96,
+                    height: 97,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(7),
                     ),
@@ -951,12 +977,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                   children: [
                     files.isNotEmpty
                         ? GridLayoutImage(
+                            post: widget.post,
                             medias: files,
                             handlePress: (media) {
                               if (files.length > 1) {
                                 pushCustomCupertinoPageRoute(
                                     context,
                                     PageEditMediaUpload(
+                                        post: widget.post,
                                         files: files,
                                         handleUpdateData: handleUpdateData));
                               }
@@ -1010,7 +1038,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    files.length == 1
+                    files.length == 1 && widget.post == null
                         ? Container(
                             margin: const EdgeInsets.only(
                               top: 2,
@@ -1144,6 +1172,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     );
   }
 
+  // color
   Widget getBottomSheet() {
     return Column(
       children: [
@@ -1283,7 +1312,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         ),
         // zoom in options
         Container(
-            height: 60,
+            height: 60 + 30,
             width: MediaQuery.of(context).size.width,
             decoration:
                 getDecoration(Theme.of(context).scaffoldBackgroundColor),

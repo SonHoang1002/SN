@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:mime/mime.dart';
+import 'package:social_network_app_mobile/app.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/drishya_picker.dart';
 import 'package:social_network_app_mobile/widget/PickImageVideo/src/animations/animations.dart';
@@ -160,8 +161,6 @@ class _GalleryViewState extends State<GalleryView> {
               .copyWith(panelSetting: panelSetting),
           handleGetFiles: widget.handleGetFiles),
     );
-
-    //
   }
 }
 
@@ -314,6 +313,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   void _onSelectionClear() {
     _controller.clearSelection();
     widget.handleGetFiles!('update_file', []);
+    Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
 

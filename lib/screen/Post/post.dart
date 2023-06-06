@@ -57,7 +57,7 @@ class _PostState extends ConsumerState<Post> {
                     )
                   : const SizedBox(),
               widget.post['processing'] == "isProcessing"
-                  ? CustomLinearProgressIndicator()
+                  ? const CustomLinearProgressIndicator()
                   : const SizedBox(),
               Stack(
                 children: [
