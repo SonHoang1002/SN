@@ -3,15 +3,21 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-class MyVideoPlayer extends StatefulWidget {
+class VideoPlayerRender extends StatefulWidget {
   final String path;
-  const MyVideoPlayer({Key? key, required this.path}) : super(key: key);
+  final bool? autoPlay;
+  const VideoPlayerRender({
+    Key? key,
+    required this.path,
+    this.autoPlay,
+  }) : super(key: key);
 
   @override
-  _MyVideoPlayerState createState() => _MyVideoPlayerState();
+  // ignore: library_private_types_in_public_api
+  _VideoPlayerRenderState createState() => _VideoPlayerRenderState();
 }
 
-class _MyVideoPlayerState extends State<MyVideoPlayer> {
+class _VideoPlayerRenderState extends State<VideoPlayerRender> {
   late FlickManager flickManager;
   @override
   void initState() {
@@ -20,6 +26,7 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
     super.initState();
     try {
       flickManager = FlickManager(
+        autoPlay: widget.autoPlay ?? false,
         videoPlayerController: VideoPlayerController.network(
           widget.path,
         ),
@@ -31,17 +38,23 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: FlickVideoPlayer(
-            flickManager: flickManager,
-            flickVideoWithControls: const FlickVideoWithControls(
-              closedCaptionTextStyle: TextStyle(fontSize: 8),
-              controls: FlickPortraitControls(),
-            ),
-            flickVideoWithControlsFullscreen: const FlickVideoWithControls(
-              controls: FlickLandscapeControls(),
-            )));
+    return FlickVideoPlayer(
+      flickManager: flickManager,
+      flickVideoWithControls: FlickVideoWithControls(
+        videoFit: BoxFit.fitHeight,
+        controls: FlickPortraitControls(
+          progressBarSettings:
+              FlickProgressBarSettings(playedColor: Colors.green),
+        ),
+      ),
+      // flickVideoWithControls: const FlickVideoWithControls(
+      //   closedCaptionTextStyle: TextStyle(fontSize: 8),
+      //   controls: FlickPortraitControls(),
+      // ),
+      // flickVideoWithControlsFullscreen: const FlickVideoWithControls(
+      //   controls: FlickLandscapeControls(),
+      // )
+    );
   }
 
   @override

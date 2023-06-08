@@ -6,23 +6,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
-import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/onboarding_login_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/main_market_page.dart';
-import 'package:social_network_app_mobile/screen/Menu/menu.dart';
-import 'package:social_network_app_mobile/screen/Moment/moment.dart';
-import 'package:social_network_app_mobile/screen/Notification/notification_page.dart';
-import 'package:social_network_app_mobile/screen/Search/search.dart';
-import 'package:social_network_app_mobile/screen/Watch/WatchDetail/watch_detail.dart';
-import 'package:social_network_app_mobile/screen/Watch/watch.dart';
+import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
+import 'package:social_network_app_mobile/screens/Menu/menu.dart';
+import 'package:social_network_app_mobile/screens/Moment/moment.dart';
+import 'package:social_network_app_mobile/screens/Notification/notification_page.dart';
+import 'package:social_network_app_mobile/screens/Search/search.dart';
+import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
+import 'package:social_network_app_mobile/screens/Watch/watch.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
-import 'package:social_network_app_mobile/screen/Feed/feed.dart';
+import 'package:social_network_app_mobile/screens/Feed/feed.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
+import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:provider/provider.dart' as pv;
 
 class Home extends ConsumerStatefulWidget {

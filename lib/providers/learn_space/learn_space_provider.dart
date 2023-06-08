@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/learn_space_api.dart';
-import 'package:social_network_app_mobile/widget/show_modal_message.dart';
+import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
 @immutable
 class LearnSpaceState {

@@ -10,9 +10,10 @@ class GeneralComponent extends StatelessWidget {
   final double? borderRadiusValue;
   final int? suffixFlexValue;
   final int? preffixFlexValue;
+  final Color? borderColor;
+
   final Function? function;
   final bool? isHaveBorder;
-  final Color? borderColor;
 
   const GeneralComponent(this.contentWidget,
       {super.key,
@@ -24,8 +25,7 @@ class GeneralComponent extends StatelessWidget {
       this.suffixFlexValue,
       this.preffixFlexValue,
       this.function,
-      this.isHaveBorder,
-      this.borderColor});
+      this.isHaveBorder,this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +38,9 @@ class GeneralComponent extends StatelessWidget {
           Wrap(
             children: [
               Container(
+                  // height: 77,
+                  // color: Colors.red,
+                  // margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   padding: padding ?? EdgeInsets.fromLTRB(10, 10, 10, 10),
                   decoration: BoxDecoration(
                       color: changeBackground ?? Colors.grey[900],
@@ -69,15 +72,17 @@ class GeneralComponent extends StatelessWidget {
                             children: [
                               Flexible(
                                 flex: 20,
-                                child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: contentWidget.map((itemWidget) {
-                                      return itemWidget;
-                                    }).toList()),
+                                child: Container(
+                                  child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: contentWidget.map((itemWidget) {
+                                        return itemWidget;
+                                      }).toList()),
+                                ),
                               ),
                               suffixWidget != null
                                   ? Flexible(
