@@ -1062,7 +1062,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.5,
+                                              0.475,
                                           decoration: BoxDecoration(
                                               color: const Color.fromARGB(
                                                   189, 202, 202, 202),

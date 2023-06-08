@@ -97,7 +97,6 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                           padding: const EdgeInsets.only(
                               top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                           child: CardComponents(
-                            type: 'homeScreen',
                             imageCard: SizedBox(
                               height: 180,
                               width: width,

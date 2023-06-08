@@ -53,8 +53,8 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   void loadData() async {
     if (courseDetail.isEmpty && (widget.isUseLearnData == true)) {
       courseDetail = widget.data;
-        isCourseInterested =
-              courseDetail['course_relationships']['follow_course'];
+      isCourseInterested =
+          courseDetail['course_relationships']['follow_course'];
     } else {
       await ref
           .read(learnSpaceStateControllerProvider.notifier)
@@ -213,8 +213,8 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                   left: 16.0, right: 16.0, top: 8.0),
                               child: Row(
                                 children: [
-                                  courseDetail['course_relationships']?
-                                              ['host_course'] ==
+                                  courseDetail['course_relationships']
+                                              ?['host_course'] ==
                                           true
                                       ? Row(
                                           children: [
@@ -673,7 +673,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                         height: 35,
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.1,
+                                                0.08,
                                         decoration: BoxDecoration(
                                             color: const Color.fromARGB(
                                                 189, 202, 202, 202),

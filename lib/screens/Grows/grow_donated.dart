@@ -199,7 +199,6 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
                                                             'follow_project'] ==
                                                         true
                                                     ? secondaryColor
-                                                        .withOpacity(0.45)
                                                     : const Color.fromARGB(
                                                         189, 202, 202, 202),
                                                 borderRadius:
@@ -217,7 +216,7 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
                                                                 [
                                                                 'follow_project'] ==
                                                             true
-                                                        ? secondaryColor
+                                                        ? Colors.white
                                                         : Colors.black,
                                                     size: 14),
                                                 const SizedBox(
@@ -233,7 +232,7 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
                                                                 [
                                                                 'follow_project'] ==
                                                             true
-                                                        ? secondaryColor
+                                                        ? Colors.white
                                                         : Colors.black,
                                                     fontWeight: FontWeight.w700,
                                                   ),
@@ -264,7 +263,10 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
                                               ),
                                               context: context,
                                               builder: (context) =>
-                                                  const ShareModalBottom());
+                                                  ShareModalBottom(
+                                                    type: 'grow',
+                                                    data: grows[indexOwner],
+                                                  ));
                                         },
                                         child: Container(
                                           height: 32,

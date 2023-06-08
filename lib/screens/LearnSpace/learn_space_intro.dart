@@ -585,17 +585,21 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             child: InkWell(
                                               onTap: () {
                                                 showModalBottomSheet(
-                                                    shape:
-                                                        const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.vertical(
-                                                        top:
-                                                            Radius.circular(10),
-                                                      ),
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                      top: Radius.circular(10),
                                                     ),
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        const ShareModalBottom());
+                                                  ),
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      ShareModalBottom(
+                                                    type: 'course',
+                                                    data: coursePropose[
+                                                        indexPropose],
+                                                  ),
+                                                );
                                               },
                                               child: Container(
                                                 height: 33,
@@ -878,17 +882,20 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                             child: InkWell(
                                               onTap: () {
                                                 showModalBottomSheet(
-                                                    shape:
-                                                        const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.vertical(
-                                                        top:
-                                                            Radius.circular(10),
-                                                      ),
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                      top: Radius.circular(10),
                                                     ),
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        const ShareModalBottom());
+                                                  ),
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      ShareModalBottom(
+                                                          type: 'course',
+                                                          data: courseSimilar[
+                                                              indexSimilar]),
+                                                );
                                               },
                                               child: Container(
                                                 height: 33,

@@ -89,7 +89,6 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
   @override
   Widget build(BuildContext context) {
-    print(eventDetail);
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
@@ -599,7 +598,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.1,
+                                                0.08,
                                             decoration: BoxDecoration(
                                                 color: const Color.fromARGB(
                                                     189, 202, 202, 202),
@@ -849,7 +848,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .width *
-                                                            0.44,
+                                                            0.42,
                                                     decoration: BoxDecoration(
                                                         color: !eventAction
                                                             ? secondaryColor
