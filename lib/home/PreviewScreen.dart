@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
-import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/onboarding_login_page.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
 import '../theme/colors.dart';

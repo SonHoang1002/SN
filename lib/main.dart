@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/app.dart';
-import 'package:social_network_app_mobile/service/notification_service.dart';
+import 'package:social_network_app_mobile/services/notification_service.dart';
 
 void main() async {
   // if (!Platform.isWindows) {
