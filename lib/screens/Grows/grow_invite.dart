@@ -778,16 +778,19 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                       child: InkWell(
                                         onTap: () {
                                           showModalBottomSheet(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                  top: Radius.circular(10),
-                                                ),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(10),
                                               ),
-                                              context: context,
-                                              builder: (context) =>
-                                                  const ShareModalBottom());
+                                            ),
+                                            context: context,
+                                            builder: (context) =>
+                                                ShareModalBottom(
+                                                    type: 'grow',
+                                                    data: growsInviteHost[
+                                                        indexHost]),
+                                          );
                                         },
                                         child: Container(
                                           height: 32,

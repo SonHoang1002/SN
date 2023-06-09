@@ -385,11 +385,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                 color: eventDetail['event_relationship']
                                                                             [
                                                                             'status'] ==
-                                                                        'interested'
+                                                                        'going'
                                                                     ? Colors
-                                                                        .black
+                                                                        .white
                                                                     : Colors
-                                                                        .white,
+                                                                        .black,
                                                               ),
                                                               const SizedBox(
                                                                 width: 3.0,
@@ -409,11 +409,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                   color: eventDetail['event_relationship']
                                                                               [
                                                                               'status'] ==
-                                                                          'interested'
+                                                                          'going'
                                                                       ? Colors
-                                                                          .black
+                                                                          .white
                                                                       : Colors
-                                                                          .white,
+                                                                          .black,
                                                                 ),
                                                               ),
                                                             ],
@@ -1059,17 +1059,18 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                        eventDetail['event_relationship']
-                                                    ['status'] !=
-                                                'going'
-                                            ? FontAwesomeIcons.clipboardQuestion
-                                            : FontAwesomeIcons.circleCheck,
-                                        size: 14,
-                                        color: eventDetail['event_relationship']
-                                                    ['status'] ==
-                                                'interested'
-                                            ? Colors.black
-                                            : Colors.white),
+                                      eventDetail['event_relationship']
+                                                  ['status'] !=
+                                              'going'
+                                          ? FontAwesomeIcons.clipboardQuestion
+                                          : FontAwesomeIcons.circleCheck,
+                                      size: 14,
+                                      color: eventDetail['event_relationship']
+                                                  ['status'] ==
+                                              'going'
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                     const SizedBox(
                                       width: 3.0,
                                     ),
@@ -1081,9 +1082,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                         fontWeight: FontWeight.w700,
                                         color: eventDetail['event_relationship']
                                                     ['status'] ==
-                                                'interested'
-                                            ? Colors.black
-                                            : Colors.white,
+                                                'going'
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                     ),
                                   ],

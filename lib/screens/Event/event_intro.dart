@@ -894,7 +894,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               ),
                                               context: context,
                                               builder: (context) =>
-                                                  const ShareModalBottom());
+                                                  ShareModalBottom(
+                                                      type: 'event',
+                                                      data: eventsSuggested[
+                                                          indexSuggest]));
                                         },
                                         child: Container(
                                           height: 33,
