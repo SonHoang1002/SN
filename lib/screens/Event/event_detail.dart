@@ -267,11 +267,20 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .center,
-                                                          children: const [
+                                                          children: [
                                                             Icon(
-                                                                FontAwesomeIcons
-                                                                    .solidStar,
-                                                                size: 14),
+                                                              FontAwesomeIcons
+                                                                  .solidStar,
+                                                              size: 14,
+                                                              color: eventDetail[
+                                                                              'event_relationship']
+                                                                          [
+                                                                          'status'] !=
+                                                                      'interested'
+                                                                  ? Colors.black
+                                                                  : Colors
+                                                                      .white,
+                                                            ),
                                                             SizedBox(
                                                               width: 5.0,
                                                             ),
@@ -285,6 +294,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700,
+                                                                color: eventDetail['event_relationship']
+                                                                            [
+                                                                            'status'] !=
+                                                                        'interested'
+                                                                    ? Colors
+                                                                        .black
+                                                                    : Colors
+                                                                        .white,
                                                               ),
                                                             ),
                                                           ],
@@ -356,19 +373,28 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                     .center,
                                                             children: [
                                                               Icon(
-                                                                  eventDetail['event_relationship']
-                                                                              [
-                                                                              'status'] !=
-                                                                          'going'
-                                                                      ? FontAwesomeIcons
-                                                                          .clipboardQuestion
-                                                                      : FontAwesomeIcons
-                                                                          .circleCheck,
-                                                                  size: 14),
+                                                                eventDetail['event_relationship']
+                                                                            [
+                                                                            'status'] !=
+                                                                        'going'
+                                                                    ? FontAwesomeIcons
+                                                                        .clipboardQuestion
+                                                                    : FontAwesomeIcons
+                                                                        .circleCheck,
+                                                                size: 14,
+                                                                color: eventDetail['event_relationship']
+                                                                            [
+                                                                            'status'] ==
+                                                                        'interested'
+                                                                    ? Colors
+                                                                        .black
+                                                                    : Colors
+                                                                        .white,
+                                                              ),
                                                               const SizedBox(
                                                                 width: 3.0,
                                                               ),
-                                                              const Text(
+                                                              Text(
                                                                 'Sẽ tham gia',
                                                                 textAlign:
                                                                     TextAlign
@@ -380,6 +406,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w700,
+                                                                  color: eventDetail['event_relationship']
+                                                                              [
+                                                                              'status'] ==
+                                                                          'interested'
+                                                                      ? Colors
+                                                                          .black
+                                                                      : Colors
+                                                                          .white,
                                                                 ),
                                                               ),
                                                             ],
@@ -961,9 +995,15 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Icon(FontAwesomeIcons.solidStar,
-                                            size: 14),
+                                            size: 14,
+                                            color:
+                                                eventDetail['event_relationship']
+                                                            ['status'] !=
+                                                        'interested'
+                                                    ? Colors.black
+                                                    : Colors.white),
                                         SizedBox(
                                           width: 5.0,
                                         ),
@@ -973,6 +1013,12 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                           style: TextStyle(
                                             fontSize: 12.0,
                                             fontWeight: FontWeight.w700,
+                                            color:
+                                                eventDetail['event_relationship']
+                                                            ['status'] !=
+                                                        'interested'
+                                                    ? Colors.black
+                                                    : Colors.white,
                                           ),
                                         ),
                                       ],
@@ -1018,16 +1064,26 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                 'going'
                                             ? FontAwesomeIcons.clipboardQuestion
                                             : FontAwesomeIcons.circleCheck,
-                                        size: 14),
+                                        size: 14,
+                                        color: eventDetail['event_relationship']
+                                                    ['status'] ==
+                                                'interested'
+                                            ? Colors.black
+                                            : Colors.white),
                                     const SizedBox(
                                       width: 3.0,
                                     ),
-                                    const Text(
+                                    Text(
                                       'Sẽ tham gia',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.w700,
+                                        color: eventDetail['event_relationship']
+                                                    ['status'] ==
+                                                'interested'
+                                            ? Colors.black
+                                            : Colors.white,
                                       ),
                                     ),
                                   ],

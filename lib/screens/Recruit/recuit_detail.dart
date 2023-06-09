@@ -2,15 +2,18 @@ import 'dart:convert';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/recruit/recruit_provider.dart';
 import 'package:social_network_app_mobile/screens/Recruit/recruit_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widgets/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
 
 import '../../constant/common.dart';
@@ -77,7 +80,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   // }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -282,7 +285,136 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                     width: 10,
                                   ),
                                   InkWell(
-                                    onTap: () {},
+                                    // recruitDetail
+                                    onTap: () {
+                                      showBarModalBottomSheet(
+                                        backgroundColor: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                        context: context,
+                                        builder: (context) => Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 8.0, top: 15.0),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: 320,
+                                          child: Column(
+                                            children: [
+                                              ListView.builder(
+                                                scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount:
+                                                    iconActionEllipsis.length,
+                                                itemBuilder: ((context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10.0),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                        if (iconActionEllipsis[
+                                                                        index]
+                                                                    ['key'] !=
+                                                                'save' &&
+                                                            iconActionEllipsis[
+                                                                        index]
+                                                                    ['key'] !=
+                                                                'copy') {
+                                                          showBarModalBottomSheet(
+                                                              backgroundColor:
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .scaffoldBackgroundColor,
+                                                              context: context,
+                                                              builder:
+                                                                  (context) =>
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width,
+                                                                        child: ActionEllipsis(
+                                                                            menuSelected: iconActionEllipsis[
+                                                                                index],
+                                                                            type:
+                                                                                'event',
+                                                                            data:
+                                                                                recruitDetail),
+                                                                      ));
+                                                        } else if (iconActionEllipsis[
+                                                                index]['key'] ==
+                                                            'copy') {
+                                                          Clipboard.setData(ClipboardData(
+                                                              text: recruitDetail
+                                                                  ? 'https://sn.emso.vn/event/${recruitDetail['id']}/about'
+                                                                  : 'https://sn.emso.vn/event/${recruitDetail['id']}/discussion'));
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  const SnackBar(
+                                                            content: Text(
+                                                                'Sao chép thành công'),
+                                                            duration: Duration(
+                                                                seconds: 3),
+                                                            backgroundColor:
+                                                                secondaryColor,
+                                                          ));
+                                                        } else {
+                                                          const SizedBox();
+                                                        }
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 4.0,
+                                                                bottom: 4.0),
+                                                        child: Row(
+                                                          children: [
+                                                            CircleAvatar(
+                                                              radius: 18.0,
+                                                              backgroundColor:
+                                                                  greyColor[
+                                                                      350],
+                                                              child: Icon(
+                                                                iconActionEllipsis[
+                                                                        index]
+                                                                    ["icon"],
+                                                                size: 18.0,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          10.0),
+                                                              child: Text(
+                                                                  iconActionEllipsis[
+                                                                          index]
+                                                                      ["label"],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500)),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     child: Container(
                                         height: 35,
                                         width:

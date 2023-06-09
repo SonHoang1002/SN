@@ -1,11 +1,13 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
@@ -18,6 +20,7 @@ import 'package:social_network_app_mobile/screens/LearnSpace/learn_space_review.
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
+import 'package:social_network_app_mobile/widgets/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
 
 import '../../widgets/Loading/tiktok_loading.dart';
@@ -668,7 +671,135 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                     width: 10,
                                   ),
                                   InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      showBarModalBottomSheet(
+                                        backgroundColor: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                        context: context,
+                                        builder: (context) => Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 8.0, top: 15.0),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: 320,
+                                          child: Column(
+                                            children: [
+                                              ListView.builder(
+                                                scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount:
+                                                    iconActionEllipsis.length,
+                                                itemBuilder: ((context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10.0),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                        if (iconActionEllipsis[
+                                                                        index]
+                                                                    ['key'] !=
+                                                                'save' &&
+                                                            iconActionEllipsis[
+                                                                        index]
+                                                                    ['key'] !=
+                                                                'copy') {
+                                                          showBarModalBottomSheet(
+                                                              backgroundColor:
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .scaffoldBackgroundColor,
+                                                              context: context,
+                                                              builder:
+                                                                  (context) =>
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width,
+                                                                        child: ActionEllipsis(
+                                                                            menuSelected: iconActionEllipsis[
+                                                                                index],
+                                                                            type:
+                                                                                'event',
+                                                                            data:
+                                                                                courseDetail),
+                                                                      ));
+                                                        } else if (iconActionEllipsis[
+                                                                index]['key'] ==
+                                                            'copy') {
+                                                          Clipboard.setData(ClipboardData(
+                                                              text: courseDetail
+                                                                  ? 'https://sn.emso.vn/event/${courseDetail['id']}/about'
+                                                                  : 'https://sn.emso.vn/event/${courseDetail['id']}/discussion'));
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  const SnackBar(
+                                                            content: Text(
+                                                                'Sao chép thành công'),
+                                                            duration: Duration(
+                                                                seconds: 3),
+                                                            backgroundColor:
+                                                                secondaryColor,
+                                                          ));
+                                                        } else {
+                                                          const SizedBox();
+                                                        }
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 4.0,
+                                                                bottom: 4.0),
+                                                        child: Row(
+                                                          children: [
+                                                            CircleAvatar(
+                                                              radius: 18.0,
+                                                              backgroundColor:
+                                                                  greyColor[
+                                                                      350],
+                                                              child: Icon(
+                                                                iconActionEllipsis[
+                                                                        index]
+                                                                    ["icon"],
+                                                                size: 18.0,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          10.0),
+                                                              child: Text(
+                                                                  iconActionEllipsis[
+                                                                          index]
+                                                                      ["label"],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500)),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     child: Container(
                                         height: 35,
                                         width:

@@ -473,19 +473,16 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                             const EdgeInsets
                                                                     .only(
                                                                 bottom: 3.0),
-                                                        child: Icon(
+                                                        child: const Icon(
                                                             FontAwesomeIcons
                                                                 .solidStar,
-                                                            color: theme
-                                                                    .isDarkMode
-                                                                ? Colors.white
-                                                                : secondaryColor,
+                                                            color: Colors.white,
                                                             size: 14),
                                                       ),
                                                       const SizedBox(
                                                         width: 5.0,
                                                       ),
-                                                      Text(
+                                                      const Text(
                                                         'Quan tâm',
                                                         textAlign:
                                                             TextAlign.center,
@@ -493,10 +490,8 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                             fontSize: 12.0,
                                                             fontWeight:
                                                                 FontWeight.w700,
-                                                            color: theme
-                                                                    .isDarkMode
-                                                                ? Colors.white
-                                                                : secondaryColor),
+                                                            color:
+                                                                Colors.white),
                                                       ),
                                                       const SizedBox(
                                                         width: 5.0,
@@ -526,15 +521,13 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                           Icon(
                                                               FontAwesomeIcons
                                                                   .circleCheck,
-                                                              color: theme
-                                                                      .isDarkMode
-                                                                  ? Colors.white
-                                                                  : secondaryColor,
+                                                              color:
+                                                                  Colors.white,
                                                               size: 14),
                                                           const SizedBox(
                                                             width: 5.0,
                                                           ),
-                                                          Text(
+                                                          const Text(
                                                             'Sẽ tham gia',
                                                             textAlign: TextAlign
                                                                 .center,
@@ -543,11 +536,8 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700,
-                                                                color: theme
-                                                                        .isDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : secondaryColor),
+                                                                color: Colors
+                                                                    .white),
                                                           ),
                                                           const SizedBox(
                                                             width: 5.0,

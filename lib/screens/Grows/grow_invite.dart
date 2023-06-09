@@ -299,7 +299,6 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                                             'follow_project'] ==
                                                         true
                                                     ? secondaryColor
-                                                        .withOpacity(0.45)
                                                     : const Color.fromARGB(
                                                         189, 202, 202, 202),
                                                 borderRadius:
@@ -320,7 +319,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                                                 [
                                                                 'follow_project'] ==
                                                             true
-                                                        ? secondaryColor
+                                                        ? Colors.white
                                                         : Colors.black,
                                                     size: 14),
                                                 const SizedBox(
@@ -339,7 +338,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                                                 [
                                                                 'follow_project'] ==
                                                             true
-                                                        ? secondaryColor
+                                                        ? Colors.white
                                                         : Colors.black,
                                                     fontWeight: FontWeight.w700,
                                                   ),
