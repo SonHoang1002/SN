@@ -16,6 +16,10 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/suggestions/page", params);
   }
 
+  blockPage(data) async {
+    return await Api().postRequestBase("/api/v1/block_pages", data);
+  }
+
   fetchPageDetail(id) async {
     return await Api().getRequestBase("/api/v1/pages/$id", null);
   }

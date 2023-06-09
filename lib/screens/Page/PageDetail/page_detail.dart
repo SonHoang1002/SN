@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -267,30 +266,36 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     super.dispose();
   }
 
-
-
-  Widget getBody(size, modeTheme, data) {
+  Widget getBody(size, modeTheme, data, rolePage) {
     return SingleChildScrollView(
         controller: scrollController,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Column(
             key: _widgetKey,
             children: [
-              BannerBase(object: data, objectMore: null),
+              BannerBase(object: data, objectMore: null, rolePage: rolePage),
+              const SizedBox(
+                height: 10,
+              ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
                 child: Row(
                   children: [
                     SizedBox(
                       width: 150,
+                      height: 35,
                       child: ButtonPrimary(
                         label: "Nhắn tin",
+                        fontSize: 14,
                         handlePress: () {},
                       ),
                     ),
                     const SizedBox(width: 10),
                     SizedBox(
                       width: 150,
+                      height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
@@ -298,6 +303,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                         label: data?['page_relationship']?['like'] == true
                             ? "Đã thích"
                             : "Thích",
+                        fontSize: 14,
                         handlePress: () {
                           ref
                               .read(pageControllerProvider.notifier)
@@ -316,6 +322,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                     const SizedBox(width: 10),
                     SizedBox(
                       width: 50,
+                      height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
@@ -326,7 +333,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                           Navigator.push(
                             context,
                             CupertinoPageRoute(
-                                builder: (_) => const PageEllipsis()),
+                                builder: (_) => PageEllipsis(
+                                    data: pageData, rolePage: rolePage)),
                           );
                         },
                       ),
@@ -494,7 +502,6 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     List listSwitch = [meData[0], pageData];
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     final size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -541,16 +548,6 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           ]),
         ),
         actions: [
-          SizedBox(
-            width: 38,
-            height: 38,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: SvgPicture.asset(
-                modeTheme == 'dark' ? 'assets/ChatDM.svg' : 'assets/chat.svg',
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.all(11.0),
             child: Icon(
@@ -561,17 +558,19 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           )
         ],
       ),
-      body: Stack(children: [
-        getBody(size, modeTheme, pageData),
-        if (showHeaderTabFixed)
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-            decoration:
-                BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-            child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal, child: headerTab()),
-          ),
-      ]),
+      body: Stack(
+        children: [
+          getBody(size, modeTheme, pageData, rolePage),
+          if (showHeaderTabFixed)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor),
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal, child: headerTab()),
+            ),
+        ],
+      ),
     );
   }
 }
