@@ -57,6 +57,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         });
       }
     }
+
     Object? arguments;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ModalRoute.of(context)?.settings.arguments != null) {
@@ -99,9 +100,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   ? arguments
                   : pageData?['id']));
     }
-
     scrollController.addListener(() {
-      if (scrollController.offset >= headerTabToTop &&
+      var rolePage = ref.watch(pageControllerProvider).rolePage;
+      if (scrollController.offset >=
+              headerTabToTop +
+                  (pageData?['page_relationship']?['role'] == 'admin' &&
+                          rolePage
+                      ? 247
+                      : 0) &&
           showHeaderTabFixed == false) {
         if (mounted) {
           setState(() {
@@ -284,7 +290,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 150,
+                      width: 154.5,
                       height: 35,
                       child: ButtonPrimary(
                         label: "Nhắn tin",
@@ -294,7 +300,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                     ),
                     const SizedBox(width: 10),
                     SizedBox(
-                      width: 150,
+                      width: 154.5,
                       height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'
@@ -307,7 +313,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                         handlePress: () {
                           ref
                               .read(pageControllerProvider.notifier)
-                              .updateLikePageDetail(
+                              .updateLikeFollowPageDetail(
                                   pageData['id'],
                                   pageData['page_relationship']['like'] == true
                                       ? 'unlike'
@@ -348,7 +354,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   thickness: 1,
                 ),
               ),
-              const BoxQuickUpdatePage(),
+              data?['page_relationship']?['role'] == 'admin' && rolePage
+                  ? const BoxQuickUpdatePage()
+                  : const SizedBox(),
               const CrossBar(
                 height: 5,
                 margin: 10,
@@ -454,11 +462,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                           width: 36,
                                           height: 36,
                                           path: listSwitch[index]
-                                                      ['avatar_media']
+                                                      ?['avatar_media']
                                                   ?['show_url'] ??
-                                              listSwitch[index]['avatar_media']
+                                              listSwitch[index]?['avatar_media']
                                                   ?['preview_url'] ??
-                                              listSwitch[index]['avatar_media']
+                                              listSwitch[index]?['avatar_media']
                                                   ?['url'] ??
                                               linkAvatarDefault),
                                       const SizedBox(
@@ -466,7 +474,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                       ),
                                       Text(
                                         listSwitch[index]?['display_name'] ??
-                                            listSwitch[index]?['title'],
+                                            listSwitch[index]?['title'] ??
+                                            "",
                                         style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w500),
@@ -494,14 +503,24 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             ));
   }
 
+  bool isModalOpen = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     var meData = ref.watch(meControllerProvider);
     var rolePage = ref.watch(pageControllerProvider).rolePage;
-    List listSwitch = [meData[0], pageData];
+    List<dynamic> listSwitch = [meData[0], pageData];
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     final size = MediaQuery.of(context).size;
+
+    if (!isModalOpen && pageData?['page_relationship']?['role'] == 'admin') {
+      isModalOpen = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showModalSwitchRole(context, listSwitch, rolePage);
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -512,41 +531,27 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 : null,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              FontAwesomeIcons.angleLeft,
-              size: 18,
-              color: Theme.of(context).textTheme.titleLarge?.color,
-            )),
-        title: InkWell(
           onTap: () {
-            if (pageData?['page_relationship']?['role'] == 'admin') {
-              showModalSwitchRole(context, listSwitch, rolePage);
-            }
+            Navigator.pop(context);
           },
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-                rolePage
-                    ? (pageData?['title'] != null &&
-                            pageData?['title'].length >= 32
-                        ? '${pageData?['title'].substring(0, 32)}...'
-                        : pageData?['title'] ?? "")
-                    : meData[0]['display_name'],
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontSize: 15)),
-            if (pageData?['page_relationship']?['role'] == 'admin')
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(
-                  FontAwesomeIcons.angleDown,
-                  size: 18,
-                ),
-              )
-          ]),
+          child: Icon(
+            FontAwesomeIcons.angleLeft,
+            size: 18,
+            color: Theme.of(context).textTheme.titleLarge?.color,
+          ),
         ),
+        title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(
+              rolePage
+                  ? (pageData?['title'] != null &&
+                          pageData?['title'].length >= 32
+                      ? '${pageData?['title'].substring(0, 32)}...'
+                      : pageData?['title'] ?? "")
+                  : meData[0]['display_name'],
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  fontSize: 15)),
+        ]),
         actions: [
           Padding(
             padding: const EdgeInsets.all(11.0),

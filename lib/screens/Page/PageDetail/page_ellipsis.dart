@@ -1,113 +1,124 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/screens/Page/PageDetail/page_search.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/report_category.dart';
 
 import '../../../apis/config.dart';
 import '../../../apis/page_api.dart';
+import '../../../providers/page/page_provider.dart';
 import '../../../theme/theme_manager.dart';
 import '../../../widgets/button_primary.dart';
 import '../../../widgets/modal_invite_friend.dart';
 import '../../../widgets/show_modal_message.dart';
 
-class PageEllipsis extends StatefulWidget {
+class PageEllipsis extends ConsumerStatefulWidget {
   final dynamic data;
   final bool? rolePage;
   const PageEllipsis({Key? key, this.data, this.rolePage}) : super(key: key);
 
   @override
-  State<PageEllipsis> createState() => _PageEllipsisState();
+  ConsumerState<PageEllipsis> createState() => _PageEllipsisState();
 }
 
-class _PageEllipsisState extends State<PageEllipsis> {
+class _PageEllipsisState extends ConsumerState<PageEllipsis> {
   List<Map<String, dynamic>> pageEllipsis = [];
+  dynamic dataPage = {};
 
   @override
   void initState() {
     super.initState();
-    pageEllipsis = !widget.rolePage!
-        ? [
-            {
-              "key": "report",
-              "label": "Báo cáo trang cá nhân",
-              "icon": "assets/pages/profileReport.png",
-            },
-            {
-              "key": "block",
-              "label": "Chặn",
-              "icon": "assets/pages/block.png",
-            },
-            {
-              "key": "search",
-              "label": "Tìm kiếm",
-              "icon": "assets/pages/search.png",
-            },
-            {
-              "key": "invite",
-              "label": "Mời bạn bè",
-              "icon": "assets/pages/inviteFriend.png",
-            },
-            {
-              "key": "follow",
-              "label": widget.data['page_relationship']['following'] == true
-                  ? "Đang theo dõi"
-                  : "Theo dõi",
-              "icon": widget.data['page_relationship']['following'] == true
-                  ? "assets/pages/pageFollowing.png"
-                  : "assets/pages/inviteFriend.png",
-            },
-          ]
-        : [
-            {
-              "key": "edit",
-              "label": "Chỉnh sửa",
-              "icon": "assets/pages/edit.png",
-            },
-            {
-              "key": "action",
-              "label": "Thêm nút hành động",
-              "icon": "assets/pages/addAction.png",
-            },
-            {
-              "key": "archives",
-              "label": "Kho lưu trữ",
-              "icon": "assets/pages/boxArchives.png",
-            },
-            {
-              "key": "activity",
-              "label": "Nhật ký hoạt động",
-              "icon": "assets/pages/activityLog.png",
-            },
-            {
-              "key": "setting",
-              "label": "Cài đặt Trang và gắn thẻ",
-              "icon": "assets/pages/settingPage.png",
-            },
-            {
-              "key": "review",
-              "label": "Cài đặt Trang và gắn thẻ",
-              "icon": "assets/pages/reviewPost.png",
-            },
-            {
-              "key": "private",
-              "label": "Trung tâm quyền riêng tư",
-              "icon": "assets/pages/privateCenter.png",
-            },
-            {
-              "key": "search",
-              "label": "Tìm kiếm",
-              "icon": "assets/pages/search.png",
-            },
-            {
-              "key": "invite",
-              "label": "Mời bạn bè",
-              "icon": "assets/pages/inviteFriend.png",
-            },
-          ];
+    dataPage = widget.data;
+    updatePageEllipsis();
+  }
+
+  void updatePageEllipsis() {
+    setState(() {
+      pageEllipsis = !widget.rolePage!
+          ? [
+              {
+                "key": "report",
+                "label": "Báo cáo trang cá nhân",
+                "icon": "assets/pages/profileReport.png",
+              },
+              {
+                "key": "block",
+                "label": "Chặn",
+                "icon": "assets/pages/block.png",
+              },
+              {
+                "key": "search",
+                "label": "Tìm kiếm",
+                "icon": "assets/pages/search.png",
+              },
+              {
+                "key": "invite",
+                "label": "Mời bạn bè",
+                "icon": "assets/pages/inviteFriend.png",
+              },
+              {
+                "key": "follow",
+                "label": dataPage['page_relationship']['following'] == true
+                    ? "Đang theo dõi"
+                    : "Theo dõi",
+                "icon": dataPage['page_relationship']['following'] == true
+                    ? "assets/pages/pageFollowing.png"
+                    : "assets/pages/inviteFriend.png",
+              },
+            ]
+          : [
+              {
+                "key": "edit",
+                "label": "Chỉnh sửa",
+                "icon": "assets/pages/edit.png",
+              },
+              {
+                "key": "action",
+                "label": "Thêm nút hành động",
+                "icon": "assets/pages/addAction.png",
+              },
+              // {
+              //   "key": "archives",
+              //   "label": "Kho lưu trữ",
+              //   "icon": "assets/pages/boxArchives.png",
+              // },
+              {
+                "key": "activity",
+                "label": "Nhật ký hoạt động",
+                "icon": "assets/pages/activityLog.png",
+              },
+              {
+                "key": "setting",
+                "label": "Cài đặt Trang và gắn thẻ",
+                "icon": "assets/pages/settingPage.png",
+              },
+              {
+                "key": "review",
+                "label": "Xem lại bài viết và thẻ",
+                "icon": "assets/pages/reviewPost.png",
+              },
+              {
+                "key": "private",
+                "label": "Trung tâm quyền riêng tư",
+                "icon": "assets/pages/privateCenter.png",
+              },
+              {
+                "key": "search",
+                "label": "Tìm kiếm",
+                "icon": "assets/pages/search.png",
+              },
+              {
+                "key": "invite",
+                "label": "Mời bạn bè",
+                "icon": "assets/pages/inviteFriend.png",
+              },
+            ];
+    });
   }
 
   void handlePress(key, context, index) {
@@ -126,7 +137,9 @@ class _PageEllipsisState extends State<PageEllipsis> {
         break;
       case 'search':
         Navigator.push(
-            context, CupertinoPageRoute(builder: (context) => Container()));
+            context,
+            CupertinoPageRoute(
+                builder: (context) => PageSearch(data: dataPage)));
         break;
       case 'block':
         showCupertinoModalPopup(
@@ -174,6 +187,25 @@ class _PageEllipsisState extends State<PageEllipsis> {
             ],
           ),
         );
+        break;
+      case 'follow':
+        ref.read(pageControllerProvider.notifier).updateLikeFollowPageDetail(
+            widget.data['id'],
+            widget.data['page_relationship']['following'] == true
+                ? 'unfollow'
+                : 'follow');
+        setState(() {
+          dataPage = {
+            ...dataPage,
+            'page_relationship': {
+              ...dataPage['page_relationship'],
+              'following': dataPage['page_relationship']['following'] == true
+                  ? false
+                  : true
+            }
+          };
+        });
+        updatePageEllipsis();
         break;
       default:
     }

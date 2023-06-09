@@ -140,7 +140,7 @@ class PageController extends StateNotifier<PageState> {
     }
   }
 
-  updateLikePageDetail(id, type) async {
+  updateLikeFollowPageDetail(id, type) async {
     switch (type) {
       case "like":
         state = state.copyWith(
@@ -165,6 +165,7 @@ class PageController extends StateNotifier<PageState> {
             isMoreVideo: state.isMoreVideo,
             pageGroup: state.pageGroup,
             isMoreGroup: state.isMoreGroup);
+        await PageApi().likePageSuggestion(id);
         break;
       case "unlike":
         state = state.copyWith(
@@ -189,12 +190,60 @@ class PageController extends StateNotifier<PageState> {
             isMoreVideo: state.isMoreVideo,
             pageGroup: state.pageGroup,
             isMoreGroup: state.isMoreGroup);
+        await PageApi().unLikePageSuggestion(id);
+        break;
+      case "follow":
+        state = state.copyWith(
+            pageDetail: {
+              ...state.pageDetail,
+              'page_relationship': {
+                ...state.pageDetail['page_relationship'],
+                'following': true
+              }
+            },
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+        await PageApi().followPage(id);
+        break;
+      case "unfollow":
+        state = state.copyWith(
+            pageDetail: {
+              ...state.pageDetail,
+              'page_relationship': {
+                ...state.pageDetail['page_relationship'],
+                'following': false
+              }
+            },
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+        await PageApi().unfollowPage(id);
         break;
       default:
     }
-    type == "like"
-        ? await PageApi().likePageSuggestion(id)
-        : await PageApi().unLikePageSuggestion(id);
   }
 
   getListPageGroup(params, id) async {

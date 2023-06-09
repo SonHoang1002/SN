@@ -24,6 +24,19 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/pages/$id", null);
   }
 
+  fetchSearchPageDetail(id, params) async {
+    return await Api()
+        .getRequestBase("/api/v1/timelines/page/$id/search", params);
+  }
+
+  followPage(id) async {
+    return await Api().getRequestBase("/api/v1/pages/$id/follows", null);
+  }
+
+  unfollowPage(id) async {
+    return await Api().getRequestBase("/api/v1/pages/$id/follows", null);
+  }
+
   fetchListPageLiked(params, id) async {
     return await Api()
         .getRequestBase("/api/v1/accounts/$id/page_likes", params);
