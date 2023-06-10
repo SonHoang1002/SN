@@ -93,7 +93,7 @@ class _RecruitNewsPastState extends ConsumerState<RecruitNewsPast> {
                         padding: const EdgeInsets.only(
                             top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                         child: CardComponents(
-                          type: 'homeScreen',
+                          // type: 'homeScreen',
                           imageCard: SizedBox(
                             height: 180,
                             width: width,
@@ -259,14 +259,17 @@ class _RecruitNewsPastState extends ConsumerState<RecruitNewsPast> {
                                   child: InkWell(
                                     onTap: () {
                                       showModalBottomSheet(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(10),
-                                            ),
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(10),
                                           ),
-                                          context: context,
-                                          builder: (context) =>
-                                              const ShareModalBottom());
+                                        ),
+                                        context: context,
+                                        builder: (context) => ShareModalBottom(
+                                          data: recruits[index],
+                                          type: 'recruit',
+                                        ),
+                                      );
                                     },
                                     child: Container(
                                       height: 32,

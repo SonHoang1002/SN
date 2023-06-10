@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -58,6 +57,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         });
       }
     }
+
     Object? arguments;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ModalRoute.of(context)?.settings.arguments != null) {
@@ -93,16 +93,36 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     });
 
     if (ref.read(pageControllerProvider).pagePined.isEmpty) {
-      Future.delayed(
-          Duration.zero,
-          () => ref.read(pageControllerProvider.notifier).getListPagePined(
-              arguments is String && arguments != null
-                  ? arguments
-                  : pageData?['id']));
+      Map<String, dynamic> paramsFeedPage = {
+        "limit": 5,
+        "exclude_replies": true,
+        'page_id': arguments is String && arguments != null
+            ? arguments
+            : pageData?['id'],
+        'page_owner_id': arguments is String && arguments != null
+            ? arguments
+            : pageData?['id']
+      };
+      Future.delayed(Duration.zero, () {
+        ref.read(pageControllerProvider.notifier).getListPagePined(
+            arguments is String && arguments != null
+                ? arguments
+                : pageData?['id']);
+        ref.read(pageControllerProvider.notifier).getListPageFeed(
+            paramsFeedPage,
+            arguments is String && arguments != null
+                ? arguments
+                : pageData?['id']);
+      });
     }
-
     scrollController.addListener(() {
-      if (scrollController.offset >= headerTabToTop &&
+      var rolePage = ref.watch(pageControllerProvider).rolePage;
+      if (scrollController.offset >=
+              headerTabToTop +
+                  (pageData?['page_relationship']?['role'] == 'admin' &&
+                          rolePage
+                      ? 247
+                      : 0) &&
           showHeaderTabFixed == false) {
         if (mounted) {
           setState(() {
@@ -118,28 +138,22 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         }
       }
       if (scrollController.offset ==
-          scrollController.position.maxScrollExtent) {
+              scrollController.position.maxScrollExtent &&
+          showHeaderTabFixed) {
         switch (menuSelected) {
           case 'home_page':
             Map<String, dynamic> paramsFeedPage = {
               "limit": 5,
               "exclude_replies": true,
-              'page_id': arguments is String && arguments != null
-                  ? arguments
-                  : pageData?['id'],
-              'page_owner_id': arguments is String && arguments != null
-                  ? arguments
-                  : pageData?['id']
+              'page_id': pageData?['id'],
+              'page_owner_id': pageData?['id']
             };
             if (ref.read(pageControllerProvider).pageFeed.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreFeed) {
               String maxId =
                   ref.read(pageControllerProvider).pageFeed.last['score'];
               ref.read(pageControllerProvider.notifier).getListPageFeed(
-                  {"max_id": maxId, ...paramsFeedPage},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+                  {"max_id": maxId, ...paramsFeedPage}, pageData?['id']);
             }
             break;
           case 'group_page':
@@ -148,24 +162,18 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 ref.read(pageControllerProvider).isMoreGroup) {
               String maxId =
                   ref.read(pageControllerProvider).pageFeed.last['score'];
-              ref.read(pageControllerProvider.notifier).getListPageGroup(
-                  {
-                    ...paramsGroupPage,
-                    "max_id": maxId,
-                  },
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+              ref.read(pageControllerProvider.notifier).getListPageGroup({
+                ...paramsGroupPage,
+                "max_id": maxId,
+              }, pageData?['id']);
             }
             break;
           case 'review_page':
             if (ref.read(pageControllerProvider).pageReview.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreReview) {
-              ref.read(pageControllerProvider.notifier).getListPageReview(
-                  {'page': '$pageReview'},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+              ref
+                  .read(pageControllerProvider.notifier)
+                  .getListPageReview({'page': '$pageReview'}, pageData?['id']);
               setState(() {
                 pageReview =
                     ref.read(pageControllerProvider).pageReview.length ~/ 20 +
@@ -182,19 +190,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
 
               ref.read(pageControllerProvider.notifier).getListPageMedia(
                   {"max_id": maxId, "limit": 20, 'media_type': 'image'},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+                  pageData?['id']);
             } else if (ref.read(pageControllerProvider).pageAlbum.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreAlbum &&
                 typeMedia == 'album') {
               String maxId =
                   ref.read(pageControllerProvider).pageAlbum.last['id'];
               ref.read(pageControllerProvider.notifier).getListPageAlbum(
-                  {"max_id": maxId, "limit": 20},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+                  {"max_id": maxId, "limit": 20}, pageData?['id']);
             }
             break;
           case 'video_page':
@@ -204,9 +207,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   ref.read(pageControllerProvider).pageVideo.last['id'];
               ref.read(pageControllerProvider.notifier).getListPageMedia(
                   {'media_type': 'video', 'limit': 10, "max_id": maxId},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+                  pageData?['id']);
             }
             break;
           default:
@@ -267,30 +268,46 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     super.dispose();
   }
 
+  void handleChangeDependencies(dynamic value) {
+    setState(() {
+      pageData = value;
+    });
+  }
 
-
-  Widget getBody(size, modeTheme, data) {
+  Widget getBody(size, modeTheme, data, rolePage) {
     return SingleChildScrollView(
         controller: scrollController,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Column(
             key: _widgetKey,
             children: [
-              BannerBase(object: data, objectMore: null),
+              BannerBase(
+                  object: data,
+                  objectMore: null,
+                  rolePage: rolePage,
+                  handleChangeDependencies: handleChangeDependencies),
+              const SizedBox(
+                height: 10,
+              ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 150,
+                      width: 154.5,
+                      height: 35,
                       child: ButtonPrimary(
                         label: "Nhắn tin",
+                        fontSize: 14,
                         handlePress: () {},
                       ),
                     ),
                     const SizedBox(width: 10),
                     SizedBox(
-                      width: 150,
+                      width: 154.5,
+                      height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
@@ -298,10 +315,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                         label: data?['page_relationship']?['like'] == true
                             ? "Đã thích"
                             : "Thích",
+                        fontSize: 14,
                         handlePress: () {
                           ref
                               .read(pageControllerProvider.notifier)
-                              .updateLikePageDetail(
+                              .updateLikeFollowPageDetail(
                                   pageData['id'],
                                   pageData['page_relationship']['like'] == true
                                       ? 'unlike'
@@ -316,6 +334,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                     const SizedBox(width: 10),
                     SizedBox(
                       width: 50,
+                      height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
@@ -326,7 +345,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                           Navigator.push(
                             context,
                             CupertinoPageRoute(
-                                builder: (_) => const PageEllipsis()),
+                                builder: (_) => PageEllipsis(
+                                    data: pageData, rolePage: rolePage)),
                           );
                         },
                       ),
@@ -340,7 +360,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   thickness: 1,
                 ),
               ),
-              const BoxQuickUpdatePage(),
+              data?['page_relationship']?['role'] == 'admin' && rolePage
+                  ? const BoxQuickUpdatePage()
+                  : const SizedBox(),
               const CrossBar(
                 height: 5,
                 margin: 10,
@@ -446,11 +468,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                           width: 36,
                                           height: 36,
                                           path: listSwitch[index]
-                                                      ['avatar_media']
+                                                      ?['avatar_media']
                                                   ?['show_url'] ??
-                                              listSwitch[index]['avatar_media']
+                                              listSwitch[index]?['avatar_media']
                                                   ?['preview_url'] ??
-                                              listSwitch[index]['avatar_media']
+                                              listSwitch[index]?['avatar_media']
                                                   ?['url'] ??
                                               linkAvatarDefault),
                                       const SizedBox(
@@ -458,7 +480,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                       ),
                                       Text(
                                         listSwitch[index]?['display_name'] ??
-                                            listSwitch[index]?['title'],
+                                            listSwitch[index]?['title'] ??
+                                            "",
                                         style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w500),
@@ -486,14 +509,23 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             ));
   }
 
+  bool isModalOpen = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     var meData = ref.watch(meControllerProvider);
     var rolePage = ref.watch(pageControllerProvider).rolePage;
-    List listSwitch = [meData[0], pageData];
+    List<dynamic> listSwitch = [meData[0], pageData];
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     final size = MediaQuery.of(context).size;
+
+    if (!isModalOpen && pageData?['page_relationship']?['role'] == 'admin') {
+      isModalOpen = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showModalSwitchRole(context, listSwitch, rolePage);
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -505,52 +537,28 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 : null,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              FontAwesomeIcons.angleLeft,
-              size: 18,
-              color: Theme.of(context).textTheme.titleLarge?.color,
-            )),
-        title: InkWell(
           onTap: () {
-            if (pageData?['page_relationship']?['role'] == 'admin') {
-              showModalSwitchRole(context, listSwitch, rolePage);
-            }
+            Navigator.pop(context);
           },
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-                rolePage
-                    ? (pageData?['title'] != null &&
-                            pageData?['title'].length >= 32
-                        ? '${pageData?['title'].substring(0, 32)}...'
-                        : pageData?['title'] ?? "")
-                    : meData[0]['display_name'],
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontSize: 15)),
-            if (pageData?['page_relationship']?['role'] == 'admin')
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(
-                  FontAwesomeIcons.angleDown,
-                  size: 18,
-                ),
-              )
-          ]),
-        ),
-        actions: [
-          SizedBox(
-            width: 38,
-            height: 38,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: SvgPicture.asset(
-                modeTheme == 'dark' ? 'assets/ChatDM.svg' : 'assets/chat.svg',
-              ),
-            ),
+          child: Icon(
+            FontAwesomeIcons.angleLeft,
+            size: 18,
+            color: Theme.of(context).textTheme.titleLarge?.color,
           ),
+        ),
+        title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(
+              rolePage
+                  ? (pageData?['title'] != null &&
+                          pageData?['title'].length >= 32
+                      ? '${pageData?['title'].substring(0, 32)}...'
+                      : pageData?['title'] ?? "")
+                  : meData[0]['display_name'],
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  fontSize: 15)),
+        ]),
+        actions: [
           Padding(
             padding: const EdgeInsets.all(11.0),
             child: Icon(
@@ -561,17 +569,19 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           )
         ],
       ),
-      body: Stack(children: [
-        getBody(size, modeTheme, pageData),
-        if (showHeaderTabFixed)
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-            decoration:
-                BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-            child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal, child: headerTab()),
-          ),
-      ]),
+      body: Stack(
+        children: [
+          getBody(size, modeTheme, pageData, rolePage),
+          if (showHeaderTabFixed)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor),
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal, child: headerTab()),
+            ),
+        ],
+      ),
     );
   }
 }

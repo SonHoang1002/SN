@@ -6,6 +6,8 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
+import '../../constant/common.dart';
+
 class CreatePostButton extends ConsumerWidget {
   final dynamic postDiscussion;
   final dynamic preType;

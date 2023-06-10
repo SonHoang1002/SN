@@ -751,6 +751,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                     style: TextStyle(
                                       fontSize: 12.0,
                                       fontWeight: FontWeight.w700,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ],

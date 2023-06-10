@@ -181,7 +181,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                             padding: const EdgeInsets.only(
                                 top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                             child: CardComponents(
-                              type: 'homeScreen',
+                              // type: 'homeScreen',
                               imageCard: SizedBox(
                                 height: 180,
                                 width: width,
@@ -473,19 +473,16 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                             const EdgeInsets
                                                                     .only(
                                                                 bottom: 3.0),
-                                                        child: Icon(
+                                                        child: const Icon(
                                                             FontAwesomeIcons
                                                                 .solidStar,
-                                                            color: theme
-                                                                    .isDarkMode
-                                                                ? Colors.white
-                                                                : secondaryColor,
+                                                            color: Colors.white,
                                                             size: 14),
                                                       ),
                                                       const SizedBox(
                                                         width: 5.0,
                                                       ),
-                                                      Text(
+                                                      const Text(
                                                         'Quan tâm',
                                                         textAlign:
                                                             TextAlign.center,
@@ -493,10 +490,8 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                             fontSize: 12.0,
                                                             fontWeight:
                                                                 FontWeight.w700,
-                                                            color: theme
-                                                                    .isDarkMode
-                                                                ? Colors.white
-                                                                : secondaryColor),
+                                                            color:
+                                                                Colors.white),
                                                       ),
                                                       const SizedBox(
                                                         width: 5.0,
@@ -526,15 +521,13 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                           Icon(
                                                               FontAwesomeIcons
                                                                   .circleCheck,
-                                                              color: theme
-                                                                      .isDarkMode
-                                                                  ? Colors.white
-                                                                  : secondaryColor,
+                                                              color:
+                                                                  Colors.white,
                                                               size: 14),
                                                           const SizedBox(
                                                             width: 5.0,
                                                           ),
-                                                          Text(
+                                                          const Text(
                                                             'Sẽ tham gia',
                                                             textAlign: TextAlign
                                                                 .center,
@@ -543,11 +536,8 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700,
-                                                                color: theme
-                                                                        .isDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : secondaryColor),
+                                                                color: Colors
+                                                                    .white),
                                                           ),
                                                           const SizedBox(
                                                             width: 5.0,
@@ -628,7 +618,10 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                               ),
                                               context: context,
                                               builder: (context) =>
-                                                  const ShareModalBottom());
+                                                  ShareModalBottom(
+                                                      type: 'event',
+                                                      data: events[
+                                                          indexInteresting]));
                                         },
                                         child: Container(
                                           height: 32,
@@ -1101,16 +1094,21 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                         child: InkWell(
                                           onTap: () {
                                             showModalBottomSheet(
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.vertical(
-                                                    top: Radius.circular(10),
-                                                  ),
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                  top: Radius.circular(10),
                                                 ),
-                                                context: context,
-                                                builder: (context) =>
-                                                    const ShareModalBottom());
+                                              ),
+                                              context: context,
+                                              builder: (context) =>
+                                                  ShareModalBottom(
+                                                type: 'event',
+                                                data:
+                                                    eventsInviteHost[indexHost],
+                                              ),
+                                            );
                                           },
                                           child: Container(
                                             height: 32,

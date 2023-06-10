@@ -134,6 +134,10 @@ class PageListController extends StateNotifier<PageListState> {
             response.length < params['limit'] ? false : state.isMorePageAdmin,
       );
     } else {
+      final newList = response
+          .where((item) => !state.pageSuggestions
+              .any((suggestion) => suggestion['id'] == item['id']))
+          .toList();
       state = state.copyWith(
         pageLiked: state.pageLiked,
         pageAdmin: state.pageAdmin,
@@ -143,7 +147,9 @@ class PageListController extends StateNotifier<PageListState> {
         isMorePageInvitedLike: state.isMorePageInvitedLike,
         pageInvitedManage: state.pageInvitedManage,
         isMorePageInvitedManage: state.isMorePageInvitedManage,
-        pageSuggestions: response,
+        pageSuggestions: params.containsKey('max_id')
+            ? [...state.pageSuggestions, ...newList]
+            : newList,
         isMorePageSuggestions: false,
       );
     }

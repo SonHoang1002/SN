@@ -89,7 +89,6 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
   @override
   Widget build(BuildContext context) {
-    print(eventDetail);
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
@@ -268,11 +267,20 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .center,
-                                                          children: const [
+                                                          children: [
                                                             Icon(
-                                                                FontAwesomeIcons
-                                                                    .solidStar,
-                                                                size: 14),
+                                                              FontAwesomeIcons
+                                                                  .solidStar,
+                                                              size: 14,
+                                                              color: eventDetail[
+                                                                              'event_relationship']
+                                                                          [
+                                                                          'status'] !=
+                                                                      'interested'
+                                                                  ? Colors.black
+                                                                  : Colors
+                                                                      .white,
+                                                            ),
                                                             SizedBox(
                                                               width: 5.0,
                                                             ),
@@ -286,6 +294,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700,
+                                                                color: eventDetail['event_relationship']
+                                                                            [
+                                                                            'status'] !=
+                                                                        'interested'
+                                                                    ? Colors
+                                                                        .black
+                                                                    : Colors
+                                                                        .white,
                                                               ),
                                                             ),
                                                           ],
@@ -357,19 +373,28 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                     .center,
                                                             children: [
                                                               Icon(
-                                                                  eventDetail['event_relationship']
-                                                                              [
-                                                                              'status'] !=
-                                                                          'going'
-                                                                      ? FontAwesomeIcons
-                                                                          .clipboardQuestion
-                                                                      : FontAwesomeIcons
-                                                                          .circleCheck,
-                                                                  size: 14),
+                                                                eventDetail['event_relationship']
+                                                                            [
+                                                                            'status'] !=
+                                                                        'going'
+                                                                    ? FontAwesomeIcons
+                                                                        .clipboardQuestion
+                                                                    : FontAwesomeIcons
+                                                                        .circleCheck,
+                                                                size: 14,
+                                                                color: eventDetail['event_relationship']
+                                                                            [
+                                                                            'status'] ==
+                                                                        'going'
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                              ),
                                                               const SizedBox(
                                                                 width: 3.0,
                                                               ),
-                                                              const Text(
+                                                              Text(
                                                                 'Sẽ tham gia',
                                                                 textAlign:
                                                                     TextAlign
@@ -381,6 +406,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w700,
+                                                                  color: eventDetail['event_relationship']
+                                                                              [
+                                                                              'status'] ==
+                                                                          'going'
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
                                                                 ),
                                                               ),
                                                             ],
@@ -599,7 +632,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.1,
+                                                0.08,
                                             decoration: BoxDecoration(
                                                 color: const Color.fromARGB(
                                                     189, 202, 202, 202),
@@ -849,7 +882,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .width *
-                                                            0.44,
+                                                            0.42,
                                                     decoration: BoxDecoration(
                                                         color: !eventAction
                                                             ? secondaryColor
@@ -962,9 +995,15 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Icon(FontAwesomeIcons.solidStar,
-                                            size: 14),
+                                            size: 14,
+                                            color:
+                                                eventDetail['event_relationship']
+                                                            ['status'] !=
+                                                        'interested'
+                                                    ? Colors.black
+                                                    : Colors.white),
                                         SizedBox(
                                           width: 5.0,
                                         ),
@@ -974,6 +1013,12 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                           style: TextStyle(
                                             fontSize: 12.0,
                                             fontWeight: FontWeight.w700,
+                                            color:
+                                                eventDetail['event_relationship']
+                                                            ['status'] !=
+                                                        'interested'
+                                                    ? Colors.black
+                                                    : Colors.white,
                                           ),
                                         ),
                                       ],
@@ -1014,21 +1059,32 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                        eventDetail['event_relationship']
-                                                    ['status'] !=
-                                                'going'
-                                            ? FontAwesomeIcons.clipboardQuestion
-                                            : FontAwesomeIcons.circleCheck,
-                                        size: 14),
+                                      eventDetail['event_relationship']
+                                                  ['status'] !=
+                                              'going'
+                                          ? FontAwesomeIcons.clipboardQuestion
+                                          : FontAwesomeIcons.circleCheck,
+                                      size: 14,
+                                      color: eventDetail['event_relationship']
+                                                  ['status'] ==
+                                              'going'
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                     const SizedBox(
                                       width: 3.0,
                                     ),
-                                    const Text(
+                                    Text(
                                       'Sẽ tham gia',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.w700,
+                                        color: eventDetail['event_relationship']
+                                                    ['status'] ==
+                                                'going'
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                     ),
                                   ],

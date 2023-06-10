@@ -584,7 +584,6 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                                           ['follow_project'] ==
                                                       true
                                                   ? secondaryColor
-                                                      .withOpacity(0.45)
                                                   : const Color.fromARGB(
                                                       189, 202, 202, 202),
                                               borderRadius:
@@ -602,7 +601,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                                               [
                                                               'follow_project'] ==
                                                           true
-                                                      ? secondaryColor
+                                                      ? Colors.white
                                                       : Colors.black,
                                                   size: 14),
                                               const SizedBox(
@@ -618,7 +617,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                                               [
                                                               'follow_project'] ==
                                                           true
-                                                      ? secondaryColor
+                                                      ? Colors.white
                                                       : Colors.black,
                                                   fontWeight: FontWeight.w700,
                                                 ),
@@ -639,16 +638,18 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                       child: InkWell(
                                         onTap: () {
                                           showModalBottomSheet(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                  top: Radius.circular(10),
-                                                ),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(10),
                                               ),
-                                              context: context,
-                                              builder: (context) =>
-                                                  const ShareModalBottom());
+                                            ),
+                                            context: context,
+                                            builder: (context) =>
+                                                ShareModalBottom(
+                                                    type: 'grow',
+                                                    data: grows[indexSuggest]),
+                                          );
                                         },
                                         child: Container(
                                           height: 33,
