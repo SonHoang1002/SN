@@ -89,7 +89,6 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
   @override
   Widget build(BuildContext context) {
-    print(eventDetail);
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;

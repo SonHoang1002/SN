@@ -11,7 +11,10 @@ class ButtonPrimary extends StatelessWidget {
   final Color? colorButton;
   final Color? colorText;
   final double? fontSize;
-
+  final Color? colorBorder;
+  final MainAxisSize? min;
+  final MaterialStateProperty<Size?>? minimumSize;
+  final MaterialStateProperty<EdgeInsetsGeometry?>? paddingButton;
   const ButtonPrimary(
       {Key? key,
       this.label,
@@ -21,7 +24,11 @@ class ButtonPrimary extends StatelessWidget {
       this.padding,
       this.colorButton,
       this.colorText,
+      this.colorBorder,
+      this.min,
+      this.paddingButton,
       this.isGrey,
+      this.minimumSize,
       this.fontSize = 14})
       : super(key: key);
 
@@ -33,20 +40,34 @@ class ButtonPrimary extends StatelessWidget {
               handlePress!();
             }
           : null,
-      style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          backgroundColor: colorButton ??
+      style: ButtonStyle(
+        minimumSize: minimumSize,
+        padding: paddingButton,
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: BorderSide(
+              width: 1.0,
+              color: colorBorder != null ? colorBorder! : Colors.transparent,
+            ),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all(
+          colorButton ??
               (isGrey == true
                   ? greyColorOutlined
                   : ![null, false].contains(isPrimary)
                       ? primaryColor
                       : secondaryColor),
-          elevation: 0),
+        ),
+        elevation: MaterialStateProperty.all(0),
+      ),
       child: Padding(
         padding: padding ?? EdgeInsets.zero,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: min ?? MainAxisSize.max,
           children: [
             icon ?? const SizedBox(),
             SizedBox(

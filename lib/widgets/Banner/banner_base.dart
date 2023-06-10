@@ -16,7 +16,10 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 class BannerBase extends StatefulWidget {
   final dynamic object;
   final dynamic objectMore;
-  const BannerBase({Key? key, required this.object, this.objectMore})
+  final bool? rolePage;
+  final Function? handleChangeDependencies;
+  const BannerBase(
+      {Key? key, required this.object, this.objectMore, this.rolePage, this.handleChangeDependencies})
       : super(key: key);
 
   @override
@@ -72,7 +75,9 @@ class _BannerBaseState extends State<BannerBase> {
                                 onTap: () {
                                   showModal(context, 'avatar');
                                 },
-                                child: const CameraIcon(),
+                                child: widget.rolePage!
+                                    ? const CameraIcon()
+                                    : const SizedBox(),
                               ))
                         ],
                       ))),
@@ -83,7 +88,9 @@ class _BannerBaseState extends State<BannerBase> {
                       onTap: () {
                         showModal(context, 'banner');
                       },
-                      child: const CameraIcon())),
+                      child: widget.rolePage!
+                          ? const CameraIcon()
+                          : const SizedBox())),
             ],
           ),
         ),
@@ -91,7 +98,7 @@ class _BannerBaseState extends State<BannerBase> {
           width: size.width - 30,
           child: Text(
             '$title ${subTitle != '' ? '($subTitle)' : ''}',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
           ),
         ),
       ],
@@ -139,7 +146,6 @@ class _BannerBaseState extends State<BannerBase> {
         setState(() {
           image = File(pickedFile.path);
         });
-
         // ignore: use_build_context_synchronously
         await Navigator.push(
             context,
@@ -148,6 +154,7 @@ class _BannerBaseState extends State<BannerBase> {
                     typePage: typePage,
                     entityObj: widget.object,
                     entityType: 'file',
+                    handleChangeDependencies: widget.handleChangeDependencies,
                     file: File(pickedFile.path))));
       }
     }
