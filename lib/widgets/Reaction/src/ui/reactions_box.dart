@@ -431,7 +431,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
       child: Container(
         margin: EdgeInsets.only(bottom: setBottomMarginBox()),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).canvasColor,
           borderRadius: BorderRadius.circular(30.0),
           border: Border.all(color: Colors.grey.shade300, width: 0.3),
           boxShadow: [

@@ -137,6 +137,7 @@ dependencies:
   emso_icons:
     git:
       url: https://github.com/EMSO-group/flutter_emso_icons
+  connectivity: ^3.0.6
 
 dev_dependencies:
   flutter_test:
@@ -194,7 +195,6 @@ flutter:
     - assets/home.svg
     - assets/HomeFC.svg
     - assets/notification.svg
-    - assets/blood.svg
     - assets/blood.png
     - assets/event.svg
     - assets/friend.svg

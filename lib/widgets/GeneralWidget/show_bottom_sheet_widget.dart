@@ -10,7 +10,8 @@ showCustomBottomSheet(BuildContext context, double height, String title,
     Color? bgColor,
     bool? isBarrierTransparent = false,
     bool? isHaveHeader = true,
-    IconData? iconData}) {
+    IconData? iconData,
+    bool? isHaveCloseButton = true}) {
   final bgColor1 = Theme.of(context).scaffoldBackgroundColor;
   showModalBottomSheet(
       enableDrag: true,
@@ -53,23 +54,23 @@ showCustomBottomSheet(BuildContext context, double height, String title,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
-                            iconData ?? FontAwesomeIcons.close,
-                            // color: white,
-                            // size: 15,
-                          ),
-                        ),
+                        isHaveCloseButton!
+                            ? GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(
+                                  iconData ?? FontAwesomeIcons.close,
+                                  // color: white,
+                                  // size: 15,
+                                ),
+                              )
+                            : const SizedBox(),
                         Text(
                           title,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              // color: white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox()
                       ],

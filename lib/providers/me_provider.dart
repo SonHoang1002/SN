@@ -35,7 +35,7 @@ class MeController extends StateNotifier<List> {
         "id": response['id'],
         "name": response['display_name'],
         "show_url": response['avatar_media']?['show_url'] ??
-            response['avatar_media']['preview_url'],
+            response['avatar_media']?['preview_url'],
         "token": token,
         "username": response['username'],
         "theme": newTheme

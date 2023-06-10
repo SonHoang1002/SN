@@ -48,7 +48,7 @@ class _CreateFeedStatusHeaderState
             ? widget.entity['avatar_media']['preview_url']
             : linkAvatarDefault;
       } else {
-        return meData['avatar_media']['preview_url'] ?? linkAvatarDefault;
+        return meData?['avatar_media']?['preview_url'] ?? linkAvatarDefault;
       }
     }
 

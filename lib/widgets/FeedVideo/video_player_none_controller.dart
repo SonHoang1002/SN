@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
@@ -42,7 +44,7 @@ class _VideoPlayerNoneControllerState
 
     videoPlayerController = (widget.path.startsWith('http')
         ? VideoPlayerController.network(widget.path)
-        : VideoPlayerController.asset(widget.path))
+        : VideoPlayerController.file(File(widget.path)))
       ..initialize().then((value) {
         if (widget.isShowVolumn != null && widget.isShowVolumn == false) {
           videoPlayerController.seekTo(
@@ -69,7 +71,7 @@ class _VideoPlayerNoneControllerState
               if (isVisible) {
                 videoPlayerController.play();
                 if (ref.read(watchControllerProvider).mediaSelected?['id'] ==
-                    widget.media['id']) {
+                    (widget.media?['id']?? 0 )) {
                   videoPlayerController.seekTo(Duration(
                       seconds: ref.read(watchControllerProvider).position));
                 } else {
@@ -83,7 +85,7 @@ class _VideoPlayerNoneControllerState
             });
           }
         },
-        key: Key(widget.media['id'] ?? widget.path),
+        key: Key(widget.media?['id'] ?? widget.path ??'111'),
         child: Stack(
           children: [
             GestureDetector(

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
@@ -42,8 +43,7 @@ class CreatePostButton extends ConsumerWidget {
                       height: 40,
                       object: ref.watch(meControllerProvider)[0],
                       path: ref.watch(meControllerProvider)[0]['avatar_media']
-                              ['preview_url'] ??
-                          linkAvatarDefault),
+                          ?['preview_url']??linkAvatarDefault),
                   const SizedBox(
                     width: 10,
                   ),

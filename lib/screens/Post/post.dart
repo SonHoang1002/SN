@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
-import 'package:social_network_app_mobile/screens/Post/post_suggest.dart'; 
+import 'package:social_network_app_mobile/screens/Post/post_suggest.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Posts/processing_indicator_widget.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -16,7 +19,6 @@ class Post extends ConsumerStatefulWidget {
   final String? type;
   final bool? isHiddenCrossbar;
   final bool? isHiddenFooter;
-
   final dynamic data;
   final Function? reloadFunction;
 
@@ -36,27 +38,48 @@ class Post extends ConsumerStatefulWidget {
 
 class _PostState extends ConsumerState<Post> {
   bool isHaveSuggest = true;
+  final ValueNotifier<bool> _isShowCommentBox = ValueNotifier(false);
+  dynamic newPost;
+  dynamic currentPost;
+  _changeShowCommentBox() {
+    setState(() {
+      _isShowCommentBox.value = true;
+    });
+  }
+
+  updateNewPost() {
+    setState(() {
+      currentPost = ref.watch(currentPostControllerProvider).currentPost;
+    });
+  }
+
+  @override
+  void initState() {
+    currentPost ??= widget.post;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final meData = ref.watch(meControllerProvider)[0];
-    return widget.post != null
+    return currentPost != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // widget.type != postPageUser &&
-                      widget.post['account']['id'] != meData['id']
+              currentPost['account']['id'] != meData['id']
                   ? PostSuggest(
-                      post: widget.post,
+                      post: currentPost,
                       type: widget.type,
                       renderFunction: () {
                         // WidgetsBinding.instance.addPostFrameCallback((_) {
-                        //   isHaveSuggest = false;
+                        isHaveSuggest = false;
                         // });
                       },
+                      updateDataFunction: updateNewPost,
                     )
                   : const SizedBox(),
-              widget.post['processing'] == "isProcessing"
+              currentPost['processing'] == "isProcessing"
                   ? const CustomLinearProgressIndicator()
                   : const SizedBox(),
               Stack(
@@ -64,16 +87,16 @@ class _PostState extends ConsumerState<Post> {
                   Column(
                     children: [
                       PostHeader(
-                        post: widget.post,
-                        type: widget.type,
-                        // isHaveAction:
-                        //     widget.type != postPageUser ? !isHaveSuggest : true,
-                        reloadFunction: () {
-                          setState(() {});
-                        },
-                      ),
+                          post: currentPost,
+                          type: widget.type,
+                          // isHaveAction:
+                          //     widget.type != postPageUser ? !isHaveSuggest : true,
+                          reloadFunction: () {
+                            setState(() {});
+                          },
+                          updateDataFunction: updateNewPost),
                       PostCenter(
-                          post: widget.post,
+                          post: currentPost,
                           type: widget.type,
                           data: widget.data,
                           reloadFunction: () {
@@ -83,10 +106,14 @@ class _PostState extends ConsumerState<Post> {
                                   : null;
                               setState(() {});
                             });
+                          },
+                          updateDataFunction: updateNewPost,
+                          showCmtBoxFunction: () {
+                            _changeShowCommentBox();
                           }),
                     ],
                   ),
-                  widget.post['processing'] == "isProcessing"
+                  currentPost['processing'] == "isProcessing"
                       ? Container(
                           height: ref
                                       .watch(processingPostController)
@@ -104,11 +131,13 @@ class _PostState extends ConsumerState<Post> {
               ),
               (widget.isHiddenFooter != null &&
                           widget.isHiddenFooter == true) ||
-                      widget.post['processing'] == "isProcessing"
+                      currentPost['processing'] == "isProcessing"
                   ? const SizedBox()
                   : PostFooter(
-                      post: widget.post,
+                      post: currentPost,
                       type: widget.type,
+                      updateDataFunction: updateNewPost,
+                      isShowCommentBox: _isShowCommentBox.value,
                     ),
               widget.isHiddenCrossbar != null && widget.isHiddenCrossbar == true
                   ? const SizedBox()

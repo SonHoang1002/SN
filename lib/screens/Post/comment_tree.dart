@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:comment_tree/comment_tree.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,8 @@ class CommentTree extends StatefulHookConsumerWidget {
       this.commentSelected,
       this.commentChildCreate,
       this.handleDeleteComment,
-      this.preType})
+      this.preType,
+      this.boxCommentReplyFunction})
       : super(key: key);
 
   final dynamic commentChildCreate;
@@ -55,6 +57,7 @@ class CommentTree extends StatefulHookConsumerWidget {
   final FocusNode? commentNode;
   final Function? getCommentSelected;
   final Function? handleDeleteComment;
+  final Function? boxCommentReplyFunction;
 
   @override
   ConsumerState<CommentTree> createState() => _CommentTreeState();
@@ -260,6 +263,7 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
                   getCommentSelected: widget.getCommentSelected!,
                   handleUpdatePost: handleUpdatePost,
                   commentNode: widget.commentNode,
+                  boxCommentReplyFunction: widget.boxCommentReplyFunction,
                   post: postChildComment.firstWhere(
                       (element) => element['id'] == data.content,
                       orElse: () => null),
@@ -273,6 +277,7 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
             type: widget.type,
             getCommentSelected: widget.getCommentSelected!,
             handleUpdatePost: handleUpdatePost,
+            boxCommentReplyFunction: widget.boxCommentReplyFunction,
             commentNode: widget.commentNode,
             post: widget.commentParent,
           );
@@ -290,6 +295,7 @@ class BoxComment extends StatefulHookConsumerWidget {
   final FocusNode? commentNode;
   final Function? handleUpdatePost;
   final String? type;
+  final Function? boxCommentReplyFunction;
 
   const BoxComment(
       {super.key,
@@ -299,7 +305,8 @@ class BoxComment extends StatefulHookConsumerWidget {
       this.post,
       this.getCommentSelected,
       this.commentNode,
-      this.handleUpdatePost});
+      this.handleUpdatePost,
+      this.boxCommentReplyFunction});
 
   @override
   ConsumerState<BoxComment> createState() => _BoxCommentState();
@@ -743,6 +750,9 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                                             .requestFocus();
                                         widget.widget
                                             .getCommentSelected!(postRender);
+                                        widget.boxCommentReplyFunction != null
+                                            ? widget.boxCommentReplyFunction!()
+                                            : null;
                                       },
                                       child: const Text('Trả lời')),
                                   const SizedBox(
@@ -956,10 +966,10 @@ class _PostMediaCommentState extends State<PostMediaComment> {
     List medias = widget.post['media_attachments'] ?? [];
     final size = MediaQuery.of(context).size;
     renderCard() {
-      if (card['image'] == null) return const SizedBox();
+      // if (card['image'] == null) return const SizedBox();
       if (card['description'] == 'sticky') {
-        return ImageCacheRender(
-          path: card['link'],
+        return ExtendedImage.network(
+          card['link'],
           width: 90.0,
           height: 90.0,
         );
@@ -968,8 +978,8 @@ class _PostMediaCommentState extends State<PostMediaComment> {
           margin: const EdgeInsets.only(top: 5.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: ImageCacheRender(
-              path: card['link'],
+            child: ExtendedImage.network(
+              card['link'],
             ),
           ),
         );

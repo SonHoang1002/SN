@@ -1,13 +1,15 @@
 import 'dart:convert';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/split_link.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
@@ -16,25 +18,31 @@ import 'package:social_network_app_mobile/screens/Post/PostCenter/post_center.da
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/comment_textfield.dart';
 
-
 import 'comment_tree.dart';
-
 
 class PostDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic preType;
   final int? indexImagePost;
-  const PostDetail({Key? key, this.preType, this.post, this.indexImagePost})
+  final Function? updateDataFunction;
+  const PostDetail(
+      {Key? key,
+      this.preType,
+      this.post,
+      this.indexImagePost,
+      this.updateDataFunction})
       : super(key: key);
-
 
   @override
   ConsumerState<PostDetail> createState() => _PostDetailState();
 }
-
 
 class _PostDetailState extends ConsumerState<PostDetail> {
   List postComment = [];
@@ -43,10 +51,28 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   dynamic commentSelected;
   dynamic commentChild;
   dynamic postData;
-
-
   dynamic preUpdateData;
-
+  List<dynamic> filterCommentList = [
+    {
+      'key': "fit",
+      "title": "Phù hợp nhất",
+      "description":
+          "Hiển thị bình luận của bạn bè và những bình luận có nhiều tương tá nhất trước tiên"
+    },
+    {
+      'key': "new",
+      "title": "Mới nhất",
+      "description":
+          "Hiển thị bình luận mới nhất trước tiên. Một số bình luận đã được lọc ra"
+    },
+    {
+      'key': "all",
+      "title": "Tất cả bình luận",
+      "description":
+          "Hiển thị tất cả bình luận, bao gồm cả nội dung có thể là spam. Những bình luận phù hợp nhất sẽ hiển thị đầu tiên"
+    },
+  ];
+  dynamic _filterSelection;
 
   Future getListCommentPost(postId, params) async {
     setState(() {
@@ -60,7 +86,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       });
     }
   }
-
 
   Future handleComment(data, previewLinkText) async {
     if (!mounted) return;
@@ -158,9 +183,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       "status_target": null
     };
 
-
     List dataPreComment = [];
-
 
     if (data['type'] == 'parent' && data['typeStatus'] == null) {
       //Comment parent
@@ -187,7 +210,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       dataPreComment = newListUpdate;
     }
 
-
     setState(() {
       postComment = dataPreComment;
       commentChild = data['type'] == 'child' ? newCommentPreview : null;
@@ -198,7 +220,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                 data['typeStatus'] != "editComment"
             ? 1
             : 0);
-
 
     dynamic newComment;
     // cal api
@@ -225,12 +246,10 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       }
     }
 
-
     if (mounted && newComment != null) {
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newComment['id']);
       List newListUpdate = [];
-
 
       if (indexComment > -1) {
         newListUpdate = postComment.sublist(0, indexComment) +
@@ -238,9 +257,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
             postComment.sublist(indexComment + 1);
       }
 
-
       List dataCommentUpdate = postComment;
-
 
       if (data['type'] == 'parent' && data['typeStatus'] == null) {
         //Comment parent
@@ -271,13 +288,11 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     }
   }
 
-
   getCommentSelected(comment) {
     setState(() {
       commentSelected = comment;
     });
   }
-
 
   handleDeleteComment(post) {
     if (post != null) {
@@ -293,7 +308,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       } else if (post['in_reply_to_id'] != null) {
         // cap nhat so luong khi xoa cmt con
 
-
         postComment.forEach((element) {
           if (element['id'] == post['in_reply_to_id']) {
             setState(() {
@@ -305,7 +319,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       }
     }
   }
-
 
   _updatePostCount({int? addtionalIfChild, int? subIfChild}) {
     int countAdditionalIfChild = addtionalIfChild ?? 0;
@@ -320,8 +333,11 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     ref
         .read(postControllerProvider.notifier)
         .actionUpdatePostCount(widget.preType, updateCountPostData);
+    ref
+        .read(currentPostControllerProvider.notifier)
+        .saveCurrentPost(updateCountPostData);
+    widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
   }
-
 
   @override
   void initState() {
@@ -332,13 +348,13 @@ class _PostDetailState extends ConsumerState<PostDetail> {
           .saveCurrentPost(widget.post);
     });
     getListCommentPost(widget.post['id'], {"sort_by": "newest"});
+    _filterSelection = filterCommentList[0];
     // ref.read(postControllerProvider).postUserPage.forEach((element) {
     //   if (element['id'] == widget.post['id']) {
     //     postData = element;
     //     return;
     //   }
     // });
-
 
     // ref.read(postControllerProvider).posts.forEach((element) {
     //   if (element['id'] == widget.post['id']) {
@@ -356,12 +372,10 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         ref.read(currentPostControllerProvider).currentPost ?? widget.post;
   }
 
-
   @override
   void dispose() {
     super.dispose();
   }
-
 
   checkPreType() {
     dynamic _preType = widget.preType;
@@ -377,7 +391,6 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       return null;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -421,32 +434,56 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         PostCenter(
-                          post: postData,
-                          type: postDetail,
-                          preType: checkPreType(),
-                          backFunction: () async {
-                            List newList = [];
-                            while (newList.isEmpty) {
-                              newList = await PostApi().getListCommentPost(
-                                      widget.post["id"],
-                                      {"sort_by": "newest"}) ??
-                                  [];
-                            }
-                            setState(() {
-                              postComment = newList;
-                            });
-                          },
-                        ),
+                            post: postData,
+                            type: postDetail,
+                            preType: checkPreType(),
+                            backFunction: () async {
+                              List newList = [];
+                              while (newList.isEmpty) {
+                                newList = await PostApi().getListCommentPost(
+                                        widget.post["id"],
+                                        {"sort_by": "newest"}) ??
+                                    [];
+                              }
+                              setState(() {
+                                postComment = newList;
+                              });
+                            },
+                            updateDataFunction: widget.updateDataFunction),
                         PostFooter(
-                          post: postData,
-                          type: postDetail,
-                          preType: checkPreType(),
-                          // reloadDetailFunction: () {
-                          //   setState(() {});
-                          // },
-                        ),
+                            post: postData,
+                            type: postDetail,
+                            preType: checkPreType(),
+                            // reloadDetailFunction: () {
+                            //   setState(() {});
+                            // },
+                            updateDataFunction: widget.updateDataFunction),
                         const SizedBox(
                           height: 8,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            buildFilterCommentSelectionBottomSheet();
+                          },
+                          child: Row(
+                            children: [
+                              buildSpacer(width: 10),
+                              buildTextContent(_filterSelection['title'], false,
+                                  colorWord: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color),
+                              buildSpacer(width: 7),
+                              Icon(
+                                FontAwesomeIcons.chevronDown,
+                                size: 15,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
+                              )
+                            ],
+                          ),
                         ),
                         ListView.builder(
                             primary: false,
@@ -520,7 +557,59 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       ),
     );
   }
+
+  _callApiFilterComment(dynamic key) {}
+
+  buildFilterCommentSelectionBottomSheet() {
+    showCustomBottomSheet(context, 365, "Sắp xếp theo",
+        isHaveCloseButton: false,
+        bgColor: Colors.grey[300], widget: StatefulBuilder(
+      builder: (ctx, setStatefull) {
+        return ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: filterCommentList.length,
+            itemBuilder: (context, index) {
+              final data = filterCommentList[index];
+              return InkWell(
+                child: Column(
+                  children: [
+                    GeneralComponent(
+                      [
+                        buildTextContent(data["title"], true),
+                        buildSpacer(height: 5),
+                        buildTextContent(data["description"], false,
+                            colorWord: greyColor),
+                      ],
+                      changeBackground: transparent,
+                      padding: const EdgeInsets.all(5),
+                      suffixWidget: Radio(
+                        groupValue: _filterSelection['key'],
+                        value: data['key'],
+                        onChanged: (value) async {
+                          setState(() {
+                            _filterSelection = data;
+                          });
+                          setStatefull(() {});
+                          await _callApiFilterComment(data['key']);
+                          popToPreviousScreen(context);
+                        },
+                      ),
+                      function: () async {
+                        setState(() {
+                          _filterSelection = data;
+                        });
+                        setStatefull(() {});
+                        await _callApiFilterComment(data['key']);
+                        popToPreviousScreen(context);
+                      },
+                    ),
+                    buildSpacer(height: 10)
+                  ],
+                ),
+              );
+            });
+      },
+    ));
+  }
 }
-
-
-

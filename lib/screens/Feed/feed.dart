@@ -11,7 +11,7 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
-import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef.dart'; 
+import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -80,9 +80,7 @@ class _FeedState extends ConsumerState<Feed> {
   // avoid bug look up ...
   _reloadFeedFunction(dynamic type, dynamic newData) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(postControllerProvider.notifier)
-          .changeProcessingPost(type, newData);
+      ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
       setState(() {});
     });
   }

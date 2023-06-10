@@ -18,7 +18,13 @@ class PostSuggest extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
   final Function? renderFunction;
-  const PostSuggest({Key? key, this.post, this.type, this.renderFunction})
+  final Function? updateDataFunction;
+  const PostSuggest(
+      {Key? key,
+      this.post,
+      this.type,
+      this.renderFunction,
+      this.updateDataFunction})
       : super(key: key);
 
   @override
@@ -40,7 +46,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Widget suggestContent = _buildSuggestContent();
-    return isShow && widget.post['account']['id']!=meData['id']
+    return isShow && widget.post['account']['id'] != meData['id']
         ? Column(
             children: [
               Container(

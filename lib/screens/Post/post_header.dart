@@ -28,13 +28,14 @@ class PostHeader extends ConsumerStatefulWidget {
   final Color? textColor;
   final bool? isHaveAction;
   final Function? reloadFunction;
+  final Function? updateDataFunction;
   const PostHeader(
       {Key? key,
       this.post,
       this.type,
       this.textColor,
       this.isHaveAction,
-      this.reloadFunction})
+      this.reloadFunction,this.updateDataFunction})
       : super(key: key);
 
   @override
@@ -139,6 +140,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
               PostDetail(
                 post: widget.post,
                 preType: widget.type,
+                updateDataFunction:widget.updateDataFunction
               ));
           // Navigator.push(
           //     context,
@@ -201,7 +203,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                 children: [
                                   Text(
                                     GetTimeAgo.parse(DateTime.parse(
-                                        widget.post['created_at'])),
+                                        widget.post?['created_at'])),
                                     style: const TextStyle(
                                         color: greyColor, fontSize: 12),
                                   ),

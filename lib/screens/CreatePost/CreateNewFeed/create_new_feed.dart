@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/apis/create_post_apis/preview_url_post_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
@@ -47,6 +48,7 @@ import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/EditImage/edit_img_main.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/Map/map_widget_item.dart';
 import 'package:social_network_app_mobile/widgets/PickImageVideo/src/gallery/src/gallery_view.dart';
@@ -96,6 +98,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   dynamic poll;
 
   bool isUploadVideo = false;
+  bool showMap = true;
 
   bool _isShow = true;
   bool isActiveBackground = false;
@@ -108,6 +111,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool isMenuMinExtent = true;
 
   GlobalKey _heightKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -327,11 +331,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   handleEditOneImage() {
-    // Navigator.push(
-    //     context,
-    //     CupertinoPageRoute(
-    //         builder: ((context) => PageEditMediaUpload(
-    //             files: files, handleUpdateData: handleUpdateData))));
     pushToNextScreen(
         context,
         EditImageMain(
@@ -342,26 +341,26 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             }));
   }
 
-  Future<File> overwriteImage(Uint8List data, String imagePath) async {
+  Future<File> overrideImage(Uint8List data, String imagePath) async {
     // Tạo một thư mục tạm để lưu trữ ảnh ghi đè
-    final tempDir = await getTemporaryDirectory();
-    final tempImagePath = '${tempDir.path}/temp_image.png';
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final tempImagePath = '${tempDir.path}/temp_image.png';
 
-    // Ghi dữ liệu từ Uint8List vào file ảnh tạm
-    final tempFile = File(tempImagePath);
-    await tempFile.writeAsBytes(data);
+      // Ghi dữ liệu từ Uint8List vào file ảnh tạm
+      final tempFile = File(tempImagePath);
+      await tempFile.writeAsBytes(data);
+      // Đọc ảnh gốc từ đường dẫn imagePath
+      // final originalImageFile = File(imagePath);
 
-    // Đọc ảnh gốc từ đường dẫn imagePath
-    final originalImageFile = File(imagePath);
-
-    // Kiểm tra nếu ảnh gốc tồn tại
-    if (await originalImageFile.exists()) {
-      // Ghi đè ảnh gốc bằng ảnh từ Uint8List
-      await originalImageFile.writeAsBytes(await tempFile.readAsBytes());
-      await tempFile.delete();
-      return originalImageFile;
-    } else {
-      throw Exception('Không tìm thấy ảnh gốc');
+      // Kiểm tra nếu ảnh gốc tồn tại
+      // if (await originalImageFile.exists()) {
+      //   // Ghi đè ảnh gốc bằng ảnh từ Uint8List
+      //   await originalImageFile.writeAsBytes(await tempFile.readAsBytes());
+      //   await tempFile.delete();
+      return tempFile;
+    } catch (e) {
+      throw e.toString();
     }
   }
 
@@ -370,11 +369,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       var fileData;
       if (file['newUint8ListFile'] != null) {
         fileData =
-            await overwriteImage(file['newUint8ListFile'], file['file'].path);
+            await overrideImage(file['newUint8ListFile'], file['file'].path);
       } else {
         fileData = file['file'];
       }
-
       String fileName = fileData!.path.split('/').last;
       FormData formData;
       dynamic response;
@@ -532,9 +530,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           isUploadVideo = false;
         });
       } else {
-        widget.reloadFunction != null
-            ? widget.reloadFunction!(type, response)
-            : null;
+        widget.reloadFunction != null ? widget.reloadFunction!(response) : null;
       }
     }
   }
@@ -625,7 +621,13 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   checkVisiblePress() {
-    if (content.trim().isNotEmpty) {
+    if (gifLink.isNotEmpty ||
+        files.isNotEmpty ||
+        content.trim().isNotEmpty ||
+        checkin != null ||
+        previewUrlData != null ||
+        poll != null ||
+        statusQuestion != null) {
       return true;
     } else {
       return false;
@@ -638,7 +640,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         content.length > 150 ||
         checkin != null ||
         previewUrlData != null ||
-        poll != null) {
+        poll != null ||
+        statusQuestion != null) {
       return false;
     } else {
       return true;
@@ -1025,7 +1028,13 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                             },
                           )
                         : const SizedBox(),
-                    checkin != null
+                    checkin != null &&
+                            (files.isEmpty &&
+                                gifLink == "" &&
+                                poll == null &&
+                                statusQuestion == null &&
+                                lifeEvent == null) &&
+                            showMap
                         ? MapWidgetItem(checkin: checkin)
                         : const SizedBox(),
                     lifeEvent != null
@@ -1059,10 +1068,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                               ),
                             ))
                         : const SizedBox(),
-                    if (gifLink.isNotEmpty ||
+                    if ((gifLink.isNotEmpty ||
                         files.isNotEmpty ||
                         statusQuestion != null ||
-                        checkin != null)
+                        (checkin != null && showMap)))
                       Container(
                           margin: EdgeInsets.only(
                               top: statusQuestion != null ? 20 : 10,
@@ -1073,9 +1082,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                 files = [];
                                 gifLink = '';
                                 statusQuestion = null;
-                                checkin = null;
                                 lifeEvent = null;
                                 menuSelected = null;
+                                showMap = false;
                               });
                             },
                             child: Container(
@@ -1273,27 +1282,19 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                     setState(() {
                                       isActiveBackground = false;
                                     });
-                                    showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        barrierColor: Colors.transparent,
-                                        clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(10))),
-                                        builder: (BuildContext context) {
-                                          return PostBackground(
-                                            backgroundSelected:
-                                                backgroundSelected,
-                                            updateBackgroundSelected:
-                                                (background) {
-                                              handleUpdateData(
-                                                  'update_background',
-                                                  background);
-                                            },
-                                          );
-                                        });
+                                    showCustomBottomSheet(
+                                        context, 500, "Chọn màu nền",
+                                        isHaveCloseButton: false,
+                                        widget: PostBackground(
+                                          backgroundSelected:
+                                              backgroundSelected,
+                                          updateBackgroundSelected:
+                                              (background) {
+                                            handleUpdateData(
+                                                'update_background',
+                                                background);
+                                          },
+                                        ));
                                   },
                                   child: const WrapBackground(
                                     widgetChild: Icon(
