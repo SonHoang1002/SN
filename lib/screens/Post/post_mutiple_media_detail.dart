@@ -26,12 +26,14 @@ class PostMutipleMediaDetail extends ConsumerStatefulWidget {
   final int? initialIndex;
   final dynamic post;
   final dynamic preType;
-  const PostMutipleMediaDetail({
-    Key? key,
-    this.post,
-    this.preType,
-    this.initialIndex,
-  }) : super(key: key);
+  final Function? updateDataFunction;
+  const PostMutipleMediaDetail(
+      {Key? key,
+      this.post,
+      this.preType,
+      this.initialIndex,
+      this.updateDataFunction})
+      : super(key: key);
 
   @override
   ConsumerState<PostMutipleMediaDetail> createState() =>
@@ -446,25 +448,29 @@ class _PostMutipleMediaDetail1State
                                                     children: [
                                                       !isDragOutside
                                                           ? Hero(
-                                                              tag: 
-                                                              // medias[index]
-                                                              //         ['id'] ??
+                                                              tag:
+                                                                  // medias[index]
+                                                                  //         ['id'] ??
                                                                   index,
-                                                              child:
-                                                                  ExtendedImage
-                                                                      .network(
-                                                                medias[index]
-                                                                    ['url'],
-                                                                key: Key(medias[
-                                                                        index]
-                                                                    ['id']),
-                                                                // fit: BoxFit
-                                                                //     .fitWidth,
-                                                                width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                              ))
+                                                              child: ExtendedImage.network(
+                                                                  medias[index]
+                                                                      ['url'],
+                                                                  key: Key(medias[
+                                                                          index]
+                                                                      ['id']),
+                                                                  // fit: BoxFit
+                                                                  //     .fitWidth,
+                                                                  width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                                  loadStateChanged:
+                                                                      (ExtendedImageState
+                                                                          state) {
+                                                                _buildLoadingExtendexImage(
+                                                                    state,
+                                                                    index);
+                                                              }))
                                                           : ExtendedImage
                                                               .network(
                                                               medias[index]
@@ -472,13 +478,17 @@ class _PostMutipleMediaDetail1State
                                                               key: Key(
                                                                   medias[index]
                                                                       ['id']),
-                                                              // fit: BoxFit
-                                                              //     .fitWidth,
                                                               width:
                                                                   MediaQuery.of(
                                                                           context)
                                                                       .size
                                                                       .width,
+                                                              loadStateChanged:
+                                                                  (state) {
+                                                                _buildLoadingExtendexImage(
+                                                                    state,
+                                                                    index);
+                                                              },
                                                             ),
                                                     ],
                                                   )),
@@ -515,6 +525,20 @@ class _PostMutipleMediaDetail1State
             ],
           ),
         ));
+  }
+
+  Widget? _buildLoadingExtendexImage(state, index) {
+    if (state.extendedImageLoadState != LoadState.completed) {
+      return Container(
+        height: double.parse(
+            (medias[index]?['meta']?['small']?['height'] ?? 400).toString()),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: greyColor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(10.0)),
+      );
+    }
+    return null;
   }
 
   Widget buildAppbar() {

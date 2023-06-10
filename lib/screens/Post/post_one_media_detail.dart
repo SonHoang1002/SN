@@ -61,6 +61,7 @@ class PostOneMediaDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
   final dynamic preType;
+  final Function? updateDataFunction;
   const PostOneMediaDetail(
       {Key? key,
       this.postMedia,
@@ -70,7 +71,8 @@ class PostOneMediaDetail extends ConsumerStatefulWidget {
       this.reloadFunction,
       this.post,
       this.type,
-      this.preType})
+      this.preType,
+      this.updateDataFunction})
       : super(key: key);
 
   @override
@@ -543,6 +545,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                             post: userData,
                             preType: checkPreType(),
                             indexImagePost: widget.currentIndex,
+                            updateDataFunction:widget.updateDataFunction
                           ),
                           buildDivider(),
                           SizedBox(
@@ -558,7 +561,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                       ? widget.reloadFunction!()
                                       : null;
                                 });
-                              },
+                              },updateDataFunction:widget.updateDataFunction,
                               indexImage: widget.currentIndex,
                             ),
                           )

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -5,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/apis/api_root.dart';
+import 'package:social_network_app_mobile/apis/moment_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_page_hashtag.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_page_profile.dart';
@@ -28,6 +32,10 @@ class VideoDescription extends ConsumerStatefulWidget {
 class _VideoDescriptionState extends ConsumerState<VideoDescription>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
+  bool _isFollowing = false;
+  bool showTick = false;
+  bool isWidgetExpanded = false;
+  bool isEyeVisible = false;
 
   @override
   void initState() {
@@ -35,12 +43,50 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 5));
     animationController.repeat();
+    if (widget.moment?['account_relationships']?['following'] == true ||
+        widget.moment?["account"]?['relationships']?['following'] == true) {
+      _isFollowing = true;
+    }
   }
 
   @override
   void dispose() {
     animationController.dispose();
     super.dispose();
+  }
+
+  checkMomentFollow() async {
+    var response;
+    var id;
+    if (widget.moment['page'] != null &&
+        widget.moment['page_owner']['id'] != widget.moment['page']['id']) {
+      // id là pageId
+      id = widget.moment['page']['id'];
+      response = await Api().postRequestBase("/api/v1/pages/$id/likes", null);
+    } else if (widget.moment['group'] != null &&
+        widget.moment['group_owner']['id'] != widget.moment['group']['id']) {
+      id = widget.moment['group']['id'];
+      response =
+          await Api().postRequestBase("/api/v1/groups/$id/accounts", null);
+    } else {
+      // id là userId
+      id = widget.moment['account']['id'];
+      response =
+          await Api().postRequestBase("/api/v1/accounts/$id/follow", null);
+    }
+    if (response != null && response['id'] == id) {
+      setState(() {
+        isWidgetExpanded = !isWidgetExpanded;
+        isEyeVisible = !isWidgetExpanded;
+      });
+      if (isWidgetExpanded) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          setState(() {
+            isEyeVisible = false;
+          });
+        });
+      }
+    }
   }
 
   @override
@@ -290,28 +336,58 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription>
                         decoration: BoxDecoration(
                             border: Border.all(width: 1, color: Colors.white),
                             shape: BoxShape.circle),
-                        child: AvatarSocial(
-                            width: 49,
-                            height: 49,
-                            object: page ?? account,
-                            path: page != null
-                                ? page['avatar_media'] != null
-                                    ? page['avatar_media']['preview_url']
-                                    : linkAvatarDefault
-                                : account['avatar_media']['preview_url']),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => MomentPageProfile(
+                                        object: page ?? account,
+                                        objectType: page != null
+                                            ? 'page'
+                                            : 'account')));
+                          },
+                          child: AvatarSocial(
+                              width: 49,
+                              height: 49,
+                              object: page ?? account,
+                              path: page != null
+                                  ? page['avatar_media'] != null
+                                      ? page['avatar_media']['preview_url']
+                                      : linkAvatarDefault
+                                  : account['avatar_media']['preview_url']),
+                        ),
                       ),
-                      Positioned(
-                          bottom: -5,
-                          right: 13,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.red, shape: BoxShape.circle),
-                            child: const Icon(
-                              Icons.add,
-                              size: 20,
-                              color: Colors.white,
+                      AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        opacity: isEyeVisible ? 1.0 : 0.0,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          height: isWidgetExpanded ? 0 : 30,
+                          width: isWidgetExpanded ? 0 : 30,
+                          child: GestureDetector(
+                            onTap: () {
+                              checkMomentFollow();
+                            },
+                            child: Positioned(
+                              bottom: -5,
+                              right: 13,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.remove_red_eye,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ))
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   const SizedBox(

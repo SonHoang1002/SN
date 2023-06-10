@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -90,8 +91,8 @@ class _EmojiActivityState extends State<EmojiActivity>
                     children: [
                       Row(
                         children: [
-                          ImageCacheRender(
-                            path: widget.statusActivity['url'],
+                          ExtendedImage.network(
+                            widget.statusActivity['url'],
                             width: 20.0,
                             height: 20.0,
                           ),
@@ -232,19 +233,17 @@ class _ItemState extends State<Item> {
           widget.handleUpdateData('update_status_activity', widget.item);
           if (widget.subType == 'child') {
             if (widget.typePage == 'menu_out') {
-              Navigator.of(context)
-                 .pop();
+              Navigator.of(context).pop();
             } else {
               Navigator.of(context)
-                 ..pop()
+                ..pop()
                 ..pop();
             }
           } else {
             if (widget.typePage == 'menu_out') {
               Navigator.of(context).pop();
             } else {
-              Navigator.of(context)
-                .pop();
+              Navigator.of(context).pop();
             }
           }
         }
@@ -260,11 +259,18 @@ class _ItemState extends State<Item> {
           children: [
             Row(
               children: [
-                ImageCacheRender(
-                  path: widget.item['url'],
-                  width: 20.0,
-                  height: 20.0,
-                ),
+                ExtendedImage.network(widget.item['url'],
+                    width: 20.0,
+                    height: 20.0, loadStateChanged: (ExtendedImageState state) {
+                  if (state.extendedImageLoadState != LoadState.completed) {
+                    return Container(
+                      height: 20.0,
+                      width: 20.0,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0)),
+                    );
+                  }
+                }),
                 const SizedBox(
                   width: 8,
                 ),

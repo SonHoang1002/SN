@@ -1,16 +1,18 @@
+import 'dart:io';
+
 import 'package:flick_video_player/flick_video_player.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/file.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerRender extends StatefulWidget {
-  final String path;
+  final dynamic path;
   final bool? autoPlay;
-  const VideoPlayerRender({
-    Key? key,
-    required this.path,
-    this.autoPlay,
-  }) : super(key: key);
+  final bool? isAssetsSrc;
+  const VideoPlayerRender(
+      {Key? key, required this.path, this.autoPlay, this.isAssetsSrc})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -18,7 +20,7 @@ class VideoPlayerRender extends StatefulWidget {
 }
 
 class _VideoPlayerRenderState extends State<VideoPlayerRender> {
-  late FlickManager flickManager;
+  FlickManager? flickManager;
   @override
   void initState() {
     if (!mounted) return;
@@ -27,9 +29,11 @@ class _VideoPlayerRenderState extends State<VideoPlayerRender> {
     try {
       flickManager = FlickManager(
         autoPlay: widget.autoPlay ?? false,
-        videoPlayerController: VideoPlayerController.network(
-          widget.path,
-        ),
+        videoPlayerController: widget.isAssetsSrc == true
+            ? VideoPlayerController.file(widget.path['file'])
+            : VideoPlayerController.network(
+                widget.path,
+              ),
       );
     } catch (e) {
       print(e.toString());
@@ -39,7 +43,15 @@ class _VideoPlayerRenderState extends State<VideoPlayerRender> {
   @override
   Widget build(BuildContext context) {
     return FlickVideoPlayer(
-      flickManager: flickManager,
+      flickManager: flickManager ??
+          FlickManager(
+            autoPlay: widget.autoPlay ?? false,
+            videoPlayerController: widget.isAssetsSrc == true
+                ? VideoPlayerController.file(widget.path['file'])
+                : VideoPlayerController.network(
+                    widget.path,
+                  ),
+          ),
       flickVideoWithControls: FlickVideoWithControls(
         videoFit: BoxFit.fitHeight,
         controls: FlickPortraitControls(
@@ -59,7 +71,7 @@ class _VideoPlayerRenderState extends State<VideoPlayerRender> {
 
   @override
   void dispose() {
-    flickManager.dispose();
+    flickManager?.dispose();
     super.dispose();
   }
 }

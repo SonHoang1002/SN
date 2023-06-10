@@ -11,22 +11,24 @@ import 'package:social_network_app_mobile/screens/Post/post_list_share.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/reaction_list.dart';
 
-
 class PostFooter extends StatelessWidget {
   final dynamic post;
   final dynamic type;
   final dynamic preType;
   final int? indexOfImage;
   final Function? reloadDetailFunction;
+  final bool? isShowCommentBox;
+  final Function? updateDataFunction;
   const PostFooter(
       {Key? key,
       this.post,
       this.type,
       this.preType,
       this.indexOfImage,
-      this.reloadDetailFunction})
+      this.reloadDetailFunction,
+      this.isShowCommentBox,
+      this.updateDataFunction})
       : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +42,10 @@ class PostFooter extends StatelessWidget {
                       ? pushCustomCupertinoPageRoute(
                           context,
                           PostDetail(
-                            post: post,
-                            preType: type,
-                            indexImagePost: indexOfImage,
-                          ))
+                              post: post,
+                              preType: type,
+                              indexImagePost: indexOfImage,
+                              updateDataFunction: updateDataFunction))
                       : showBarModalBottomSheet(
                           context: context,
                           backgroundColor: Colors.transparent,
@@ -55,11 +57,11 @@ class PostFooter extends StatelessWidget {
                               ));
                 },
                 child: PostFooterInformation(
-                  post: post,
-                  type: type,
-                  // preType: checkPreType(),
-                  indexImagePost: indexOfImage,
-                )),
+                    post: post,
+                    type: type,
+                    // preType: checkPreType(),
+                    indexImagePost: indexOfImage,
+                    updateDataFunction: updateDataFunction)),
         Container(
           height: 1,
           margin: type == postDetail
@@ -72,7 +74,9 @@ class PostFooter extends StatelessWidget {
             type: type,
             preType: preType,
             indexImage: indexOfImage,
-            reloadDetailFunction: reloadDetailFunction),
+            isShowCommentBox: isShowCommentBox,
+            reloadDetailFunction: reloadDetailFunction,
+            updateDataFunction: updateDataFunction),
         type != postDetail
             ? const SizedBox()
             : Column(
@@ -92,7 +96,10 @@ class PostFooter extends StatelessWidget {
                             backgroundColor: Colors.transparent,
                             builder: (context) => ReactionList(post: post));
                       },
-                      child: PostFooterInformation(post: post, type: type)),
+                      child: PostFooterInformation(
+                          post: post,
+                          type: type,
+                          updateDataFunction: updateDataFunction)),
                   (post['reblogs_count'] ?? 0) > 0
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,6 +138,3 @@ class PostFooter extends StatelessWidget {
     );
   }
 }
-
-
-

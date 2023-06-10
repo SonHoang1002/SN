@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
@@ -24,6 +26,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -36,6 +39,7 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  bool isShowSnackBar = false;
 
   void _onItemTapped(int index) {
     if (index == 2) {
@@ -69,6 +73,9 @@ class _HomeState extends ConsumerState<Home>
               MaterialPageRoute(
                   builder: ((context) => const OnboardingLoginPage())));
         }
+      });
+      Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+        ref.read(connectivityControllerProvider.notifier).checkConnectivity();
       });
     }
   }
@@ -104,6 +111,18 @@ class _HomeState extends ConsumerState<Home>
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Search()));
     }
+  }
+
+  _buildSnackBar(String title) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(title),
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(9)))),
+    );
   }
 
   @override
@@ -224,6 +243,23 @@ class _HomeState extends ConsumerState<Home>
               )))
     ];
 
+    if (ref.watch(connectivityControllerProvider).connectWifi == false &&
+        !isShowSnackBar) {
+      WidgetsBinding.instance.addPostFrameCallback((_) { 
+        _buildSnackBar("Không có kết nối mạng");
+        setState(() {
+          isShowSnackBar = true;
+        });
+      });
+    } else if (ref.watch(connectivityControllerProvider).connectWifi == true &&
+        isShowSnackBar) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _buildSnackBar("Đã khôi phục kết nối mạng");
+        setState(() {
+          isShowSnackBar = false;
+        });
+      });
+    }
     return Scaffold(
       drawer: _selectedIndex == 1 || _selectedIndex == 4
           ? null

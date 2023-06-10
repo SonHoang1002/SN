@@ -70,7 +70,8 @@ class _UserPageState extends ConsumerState<UserPage> {
         List postUserNew =
             await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
                 [];
-        var pinNew = await PostApi().getListPostPinApi(id) ?? [];
+
+        ref.read(postControllerProvider.notifier).getListPostPin(id);
         List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
 
         ref
@@ -86,7 +87,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           userAbout = ref.watch(userInformationProvider).userMoreInfor;
           lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
           postUser = ref.watch(postControllerProvider).postUserPage;
-          pinPost = pinNew;
+          pinPost = ref.watch(postControllerProvider).postsPin;
           friend = friendNew;
         });
       });
@@ -116,11 +117,9 @@ class _UserPageState extends ConsumerState<UserPage> {
     });
   }
 
-  _reloadFunction(dynamic type,dynamic newData) {
+  _reloadFunction(dynamic newData) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(postControllerProvider.notifier)
-          .changeProcessingPost(type, newData);
+      ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
       setState(() {});
     });
   }
@@ -235,7 +234,12 @@ class _UserPageState extends ConsumerState<UserPage> {
           const SizedBox(
             height: 12.0,
           ),
-          CreatePostButton(preType: postPageUser, reloadFunction: _reloadFunction,),
+          CreatePostButton(
+            preType: postPageUser,
+            reloadFunction: (dynamic newData) {
+              _reloadFunction(newData);
+            },
+          ),
           const CrossBar(),
           InkWell(
             onTap: () {
@@ -282,6 +286,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    pinPost = ref.read(postControllerProvider).postsPin;
     return Scaffold(
       appBar: buildAppBar(context),
       body: RefreshIndicator(

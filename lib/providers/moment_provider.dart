@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/apis/moment_api.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
@@ -118,5 +122,27 @@ class MomentController extends StateNotifier<MomentState> {
                   state.momentSuggest.sublist(index + 1)
               : state.momentSuggest);
     }
+  }
+
+  // user: theo doi
+  // group : gui loi moi tham gia
+  // page : thich nhom
+  followMoment(
+    dynamic type,
+    dynamic id,
+  ) async {
+    var response;
+    if (type == momentUser) {
+      // id là userId
+      response =
+          await Api().postRequestBase("/api/v1/accounts/$id/follow", null);
+    } else if (type == momentPage) {
+      // id là pageId
+      response = await Api().postRequestBase("/api/v1/pages/$id/likes", null);
+    } else if (type == momentGroup) {
+      response =
+          await Api().postRequestBase("/api/v1/groups/$id/accounts", null);
+    }
+    
   }
 }

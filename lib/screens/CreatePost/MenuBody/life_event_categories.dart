@@ -196,7 +196,10 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
                             ? SvgPicture.network(
                                 listData[index]['url'],
                                 width: 24.0,
-                                color: secondaryColor,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               )
                             : const SizedBox(),
                         Container(

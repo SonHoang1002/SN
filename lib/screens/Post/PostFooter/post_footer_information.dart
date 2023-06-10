@@ -14,8 +14,14 @@ class PostFooterInformation extends ConsumerStatefulWidget {
   final String? type;
   final dynamic preType;
   final int? indexImagePost;
+  final Function? updateDataFunction;
   PostFooterInformation(
-      {Key? key, this.post, this.type, this.preType, this.indexImagePost})
+      {Key? key,
+      this.post,
+      this.type,
+      this.preType,
+      this.indexImagePost,
+      this.updateDataFunction})
       : super(key: key);
   @override
   ConsumerState<PostFooterInformation> createState() =>
@@ -143,7 +149,8 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
       // }
 
       return padding;
-    } 
+    }
+
     return Container(
       height: setHeight(),
       padding: setPadding(),

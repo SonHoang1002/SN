@@ -11,11 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/PickImageVideo/src/gallery/src/gallery_view.dart';
@@ -34,6 +36,7 @@ class CommentTextfield extends StatefulHookConsumerWidget {
   final Function? getCommentSelected;
   final String? type;
   final bool? autoFocus;
+  final bool? isOnBoxComment;
 
   const CommentTextfield(
       {Key? key,
@@ -42,7 +45,8 @@ class CommentTextfield extends StatefulHookConsumerWidget {
       this.handleComment,
       this.commentNode,
       this.commentSelected,
-      this.getCommentSelected})
+      this.getCommentSelected,
+      this.isOnBoxComment = false})
       : super(key: key);
 
   @override
@@ -122,7 +126,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     useEffect(
       () {
         if (widget.commentSelected != null &&
@@ -181,6 +185,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         linkEmojiSticky = link;
       });
       widget.commentNode!.requestFocus();
+      widget.isOnBoxComment == true ? popToPreviousScreen(context) : null;
     }
 
     handleGetComment(value) async {
@@ -308,7 +313,9 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
         linkEmojiSticky = '';
         listMentionsSelected = [];
       });
-      widget.getCommentSelected!(null);
+      widget.getCommentSelected != null
+          ? widget.getCommentSelected!(null)
+          : null;
       // ignore: use_build_context_synchronously
       hiddenKeyboard(context);
     }
@@ -321,20 +328,22 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
     }
 
     return Container(
-        decoration: BoxDecoration(
-            color: widget.type == postWatch
-                ? Colors.grey.shade900
-                : widget.type == postWatchDetail
-                    ? Colors.transparent
-                    : Theme.of(context).scaffoldBackgroundColor,
-            border: Border(
-                top: BorderSide(
-                    width: 0.3,
-                    color: widget.type == postWatchDetail
+        decoration: !widget.isOnBoxComment!
+            ? BoxDecoration(
+                color: widget.type == postWatch
+                    ? Colors.grey.shade900
+                    : widget.type == postWatchDetail
                         ? Colors.transparent
-                        : greyColor))),
-        padding: const EdgeInsets.only(
-            top: 8.0, left: 8.0, right: 8.0, bottom: 15.0),
+                        : Theme.of(context).scaffoldBackgroundColor,
+                border: Border(
+                    top: BorderSide(
+                        width: 0.3,
+                        color: widget.type == postWatchDetail
+                            ? Colors.transparent
+                            : greyColor)))
+            : null,
+        // padding: const EdgeInsets.only(
+        //     top: 8.0, left: 8.0, right: 8.0, bottom: 15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -440,7 +449,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   )
                 : const SizedBox(),
             Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              if (widget.type != postWatchDetail)
+              if (widget.type != postWatchDetail && !widget.isOnBoxComment!)
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -473,6 +482,9 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 suffixIcon: InkWell(
                     onTap: () {
                       handleClickIcon();
+                      widget.isOnBoxComment == true
+                          ? handleShowEmojiBottomSheet(functionGetEmoji)
+                          : null;
                     },
                     child: Icon(
                       FontAwesomeIcons.solidFaceSmile,
@@ -522,7 +534,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     )
                   : const SizedBox()
             ]),
-            isShowEmoji
+            isShowEmoji && widget.isOnBoxComment == false
                 ? DraggableBottomSheet(
                     minExtent: 250,
                     useSafeArea: false,
@@ -540,6 +552,18 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 : const SizedBox(),
           ],
         ));
+  }
+
+  handleShowEmojiBottomSheet(Function functionGetEmoji) {
+    showBarModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return EmojiModalBottom(
+            type: widget.type,
+            height: heightModal,
+            functionGetEmoji: functionGetEmoji);
+      },
+    );
   }
 
   Widget contentEmoji(functionGetEmoji) {

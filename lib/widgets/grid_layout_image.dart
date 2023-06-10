@@ -1,10 +1,14 @@
+import 'package:chewie/chewie.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/gridview_builder_media.dart';
+import 'package:social_network_app_mobile/widgets/video_player.dart';
+import 'package:video_player/video_player.dart';
 
 import '../theme/colors.dart';
 
@@ -12,8 +16,13 @@ class GridLayoutImage extends StatefulWidget {
   final List medias;
   final Function handlePress;
   final dynamic post;
+  final Function? updateDataFunction;
   const GridLayoutImage(
-      {Key? key, required this.medias, required this.handlePress, this.post})
+      {Key? key,
+      required this.medias,
+      required this.handlePress,
+      this.post,
+      this.updateDataFunction})
       : super(key: key);
 
   @override
@@ -46,9 +55,10 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
             : 1 / media['meta']['original']['aspect'];
       }
     }
+
     renderLayoutMedia(medias) {
       final size = MediaQuery.of(context).size;
-      
+
       switch (medias.length) {
         case 1:
           if (checkIsImage(medias[0])) {
@@ -68,16 +78,21 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     children: [
                       buildDivider(color: greyColor),
                       medias[0]['subType'] == 'local'
-                          ? Image.file(
-                              medias[0]['file'],
-                              fit: BoxFit.cover,
-                            )
+                          ? medias[0]['newUint8ListFile'] != null
+                              ? Image.memory(
+                                  medias[0]['newUint8ListFile'],
+                                  fit: BoxFit.fitWidth,
+                                )
+                              : Image.file(
+                                  medias[0]['file'],
+                                  fit: BoxFit.cover,
+                                )
                           : Hero(
                               tag: medias[0]['id'],
                               child: ExtendedImage.network(
                                 medias[0]['url'] ?? medias[0]['preview_url'],
                                 fit: BoxFit.fitWidth,
-                                width: size.width, 
+                                width: size.width,
                               ),
                             ),
                       buildDivider(color: greyColor),
@@ -99,8 +114,13 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                     : null,
                 child: Stack(
                   children: [
-                    VideoPlayerHasController(
-                        media: medias[0], hasDispose: true),
+                    medias[0]['file'] != null
+                        ? VideoPlayerNoneController(
+                            path: medias[0]['file'].path,
+                            type: "local",
+                          )
+                        : VideoPlayerHasController(
+                            media: medias[0], hasDispose: true),
                     Positioned.fill(child: GestureDetector(
                       onTap: () {
                         medias[0]['file']?.path != null

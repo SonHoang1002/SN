@@ -179,6 +179,7 @@ class _EditImageMainState extends State<EditImageMain> {
 
   bool _isShowDeleteArea = false;
   bool _isCanDeleteObject = false;
+  Rect? rect;
 
   // crop property
   File? cropImage;
@@ -275,6 +276,7 @@ class _EditImageMainState extends State<EditImageMain> {
             });
             _overlayWidget.add({
               "key": "word",
+              "visible": true,
               // "index": _dataProperties.length - 1,
               // "widget": _buildTextFormField(_dataProperties.length - 1)
               "widget": _buildTextFormField(_dataProperties.last)
@@ -653,6 +655,10 @@ class _EditImageMainState extends State<EditImageMain> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    if (rect == null) {
+      Offset deletePoint = Offset(size.width / 2, size.height * 0.8);
+      rect = Rect.fromCircle(center: deletePoint, radius: 50);
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: blackColor,
@@ -719,81 +725,85 @@ class _EditImageMainState extends State<EditImageMain> {
                     Stack(
                       children: _overlayWidget.map((e) {
                         final index = _overlayWidget.indexOf(e);
-                        return Listener(
-                          onPointerMove: (event) {
-                            Offset deletePoint =
-                                Offset(size.width / 2, size.height * 0.8);
-                            Rect rect = Rect.fromCircle(
-                                center: deletePoint, radius: 50);
-                            if (rect.contains(event.position)) {
-                              setState(() {
-                                _isCanDeleteObject = true;
-                              });
-                            } else {
-                              if (_isCanDeleteObject == true) {
-                                setState(() {
-                                  _isCanDeleteObject = false;
-                                });
-                              }
-                            }
-                          },
-                          onPointerDown: (details) {
-                            setState(() {
-                              _selectedOverlayObject = _dataProperties[index];
-                            });
-                          },
-                          onPointerUp: (event) {
-                            if (_isCanDeleteObject) {
-                              setState(() {
-                                _dataProperties.removeAt(index);
-                                _overlayWidget.removeAt(index);
-                                notifiers.removeAt(index);
-                                _selectedOverlayObject = null;
-                                _isCanDeleteObject = false;
-                              });
-                            }
-                          },
-                          child: MatrixGestureDetector(
-                            onMatrixUpdate: (matrix, translationDeltaMatrix,
-                                scaleDeltaMatrix, rotationDeltaMatrix) {
-                              setState(() {
-                                notifiers[index].value = matrix;
-                              });
-                            },
-                            onScaleStart: () {
-                              setState(() {
-                                _isShowDeleteArea = true;
-                              });
-                            },
-                            onScaleEnd: () {
-                              setState(() {
-                                _isShowDeleteArea = false;
-                              });
-                            },
-                            child: AnimatedBuilder(
-                              animation: notifiers[index],
-                              builder: (context, child) {
-                                final matrix = notifiers[index].value;
-                                final rotationAngle = math.atan2(0, 0); 
-                                return Transform(
-                                  transform: matrix,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: RotatedBox(
-                                        quarterTurns:
-                                            rotationAngle ~/ (math.pi / 2),
-                                        // quarterTurns: 3,
-                                        child: e['widget'],
-                                      ),
-                                    ),
+                        return e != null &&
+                                notifiers[index].value != Matrix4.zero() &&
+                                _dataProperties[index] != null
+                            ? Listener(
+                                onPointerMove: (event) {
+                                  if (rect!.contains(event.position)) {
+                                    setState(() {
+                                      _isCanDeleteObject = true;
+                                    });
+                                  } else {
+                                    if (_isCanDeleteObject == true) {
+                                      setState(() {
+                                        _isCanDeleteObject = false;
+                                      });
+                                    }
+                                  }
+                                },
+                                onPointerDown: (details) {
+                                  setState(() {
+                                    _selectedOverlayObject =
+                                        _dataProperties[index];
+                                  });
+                                },
+                                onPointerUp: (event) {
+                                  if (_isCanDeleteObject) {
+                                    setState(() {
+                                      _selectedOverlayObject = null;
+                                      _overlayWidget[index] = null;
+                                      notifiers[index] =
+                                          ValueNotifier(Matrix4.zero());
+                                      _dataProperties[index] = null;
+                                      _isCanDeleteObject = false;
+                                    });
+                                  }
+                                },
+                                child: MatrixGestureDetector(
+                                  onMatrixUpdate: (matrix,
+                                      translationDeltaMatrix,
+                                      scaleDeltaMatrix,
+                                      rotationDeltaMatrix) {
+                                    setState(() {
+                                      notifiers[index].value = matrix;
+                                    });
+                                  },
+                                  onScaleStart: () {
+                                    setState(() {
+                                      _isShowDeleteArea = true;
+                                    });
+                                  },
+                                  onScaleEnd: () {
+                                    setState(() {
+                                      _isShowDeleteArea = false;
+                                    });
+                                  },
+                                  child: AnimatedBuilder(
+                                    animation: notifiers[index],
+                                    builder: (context, child) {
+                                      final matrix = notifiers[index].value;
+                                      final rotationAngle = math.atan2(0, 0);
+                                      return Transform(
+                                        transform: matrix,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: RotatedBox(
+                                              quarterTurns: rotationAngle ~/
+                                                  (math.pi / 2),
+                                              // quarterTurns: 3,
+                                              child: e['widget'],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
-                          ),
-                        );
+                                ),
+                              )
+                            : const SizedBox();
                       }).toList(),
                     ),
                   ],
@@ -956,35 +966,6 @@ class _EditImageMainState extends State<EditImageMain> {
                                   _selectedOverlayObject['key'] == "word"
                               ? Column(
                                   children: [
-                                    buildTextContent("Cỡ chữ", false,
-                                        colorWord: white, isCenterLeft: false),
-                                    Slider(
-                                      value: double.parse(
-                                          _selectedOverlayObject['fontSize']
-                                              .value
-                                              .toString()),
-                                      min: 10,
-                                      max: 40,
-                                      activeColor: white,
-                                      inactiveColor: white.withOpacity(0.1),
-                                      divisions: 100,
-                                      label: _selectedOverlayObject['fontSize']
-                                          .value
-                                          .toInt()
-                                          .toString(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _selectedOverlayObject['fontSize']
-                                              .value = value;
-                                          int index = _dataProperties
-                                              .indexOf(_selectedOverlayObject);
-                                          _dataProperties[index]['fontSize']
-                                              .value = value;
-                                        });
-                                      },
-                                      semanticFormatterCallback: (value) =>
-                                          value.round().toString(),
-                                    ),
                                     _buildColorSelections(
                                         function: (dynamic color) {
                                       setState(() {
@@ -1088,7 +1069,8 @@ class _EditImageMainState extends State<EditImageMain> {
           return ValueListenableBuilder<Color>(
               valueListenable: data['color'],
               builder: (context, value, child) {
-                return SizedBox(
+                return Container(
+                  alignment: Alignment.center,
                   width: MediaQuery.of(context).size.width,
                   child: TextFormField(
                     onChanged: (value) {},
@@ -1222,6 +1204,7 @@ class _EditImageMainState extends State<EditImageMain> {
       _dataProperties.add({"key": "emoji", "id": emojis[index]['id']});
       _overlayWidget.add({
         "key": "emoji",
+        'visible': true,
         "widget":
             ExtendedImage.network(emojis[index]['url'], height: 50, width: 50)
       });

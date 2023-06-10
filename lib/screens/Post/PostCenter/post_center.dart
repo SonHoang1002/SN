@@ -26,6 +26,8 @@ class PostCenter extends StatefulWidget {
   final dynamic preType;
   final Function? backFunction;
   final Function? reloadFunction;
+  final Function? showCmtBoxFunction;
+  final Function? updateDataFunction;
   const PostCenter(
       {Key? key,
       this.post,
@@ -33,7 +35,8 @@ class PostCenter extends StatefulWidget {
       this.data,
       this.preType,
       this.backFunction,
-      this.reloadFunction})
+      this.reloadFunction,
+      this.showCmtBoxFunction,this.updateDataFunction})
       : super(key: key);
 
   @override
@@ -88,11 +91,13 @@ class _PostCenterState extends State<PostCenter> {
                           ? widget.backFunction!()
                           : null;
                     },
+                    updateDataFunction:widget.updateDataFunction,
                     reloadFunction: () {
                       widget.reloadFunction != null
                           ? widget.reloadFunction!()
                           : null;
-                    }),
+                    },
+                    showCmtBoxFunction: widget.showCmtBoxFunction),
             //
             widget.post['card'] != null &&
                     widget.post['media_attachments'].length == 0
@@ -114,7 +119,22 @@ class _PostCenterState extends State<PostCenter> {
             widget.post['reblog'] != null
                 ? PostShare(post: widget.post, type: widget.type)
                 : const SizedBox(),
-            widget.post['place'] != null
+            widget.post['place'] != null &&
+                    (widget.post['card'] == null &&
+                        widget.post['media_attachments'].isEmpty &&
+                        widget.post['poll'] == null &&
+                        widget.post['life_event'] == null &&
+                        widget.post['shared_group'] == null &&
+                        widget.post['shared_page'] == null &&
+                        widget.post['reblog'] == null &&
+                        widget.post['shared_course'] == null &&
+                        widget.post['shared_project'] == null &&
+                        widget.post['shared_recruit'] == null &&
+                        widget.post['shared_product'] == null &&
+                        widget.post['shared_event'] == null &&
+                        ![postAvatarAccount, postBannerAccount]
+                            .contains(postType) &&
+                        ![postTarget, postVisibleQuestion].contains(postType))
                 ? MapWidgetItem(checkin: widget.post['place'])
                 : const SizedBox(),
             widget.post['shared_course'] != null
