@@ -216,13 +216,6 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    pageData = ref.read(pageControllerProvider).pageDetail;
-    setState(() {});
-    super.didChangeDependencies();
-  }
-
   Widget renderTab(data) {
     if (data != null) {
       switch (menuSelected) {
@@ -275,6 +268,12 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     super.dispose();
   }
 
+  void handleChangeDependencies(dynamic value) {
+    setState(() {
+      pageData = value;
+    });
+  }
+
   Widget getBody(size, modeTheme, data, rolePage) {
     return SingleChildScrollView(
         controller: scrollController,
@@ -282,7 +281,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           Column(
             key: _widgetKey,
             children: [
-              BannerBase(object: data, objectMore: null, rolePage: rolePage),
+              BannerBase(
+                  object: data,
+                  objectMore: null,
+                  rolePage: rolePage,
+                  handleChangeDependencies: handleChangeDependencies),
               const SizedBox(
                 height: 10,
               ),

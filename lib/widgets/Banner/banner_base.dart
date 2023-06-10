@@ -17,8 +17,9 @@ class BannerBase extends StatefulWidget {
   final dynamic object;
   final dynamic objectMore;
   final bool? rolePage;
+  final Function? handleChangeDependencies;
   const BannerBase(
-      {Key? key, required this.object, this.objectMore, this.rolePage})
+      {Key? key, required this.object, this.objectMore, this.rolePage, this.handleChangeDependencies})
       : super(key: key);
 
   @override
@@ -153,6 +154,7 @@ class _BannerBaseState extends State<BannerBase> {
                     typePage: typePage,
                     entityObj: widget.object,
                     entityType: 'file',
+                    handleChangeDependencies: widget.handleChangeDependencies,
                     file: File(pickedFile.path))));
       }
     }

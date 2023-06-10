@@ -23,12 +23,14 @@ class PageEditMediaProfile extends ConsumerStatefulWidget {
   final dynamic entityObj;
   final dynamic file;
   final String entityType;
+  final Function? handleChangeDependencies;
 
   const PageEditMediaProfile(
       {Key? key,
       required this.typePage,
       this.entityObj,
       this.file,
+      this.handleChangeDependencies,
       required this.entityType})
       : super(key: key);
 
@@ -75,15 +77,17 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
       if (response != null) {
         setState(() {
           isClick = false;
+          widget.handleChangeDependencies!(response);
+
           ref.read(pageControllerProvider.notifier).updateMedata(response);
         });
+
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       }
     }
 
     handleUpdateData(type, data) {
-      print(type);
       if (mounted) {
         avatar = widget.typePage == 'avatar'
             ? {...(avatar ?? {}), '$type': data}
@@ -154,6 +158,8 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
+  final GlobalKey _widgetKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -196,6 +202,7 @@ class _BannerWidgetState extends State<BannerWidget> {
     }
 
     return Column(
+      key: _widgetKey,
       children: [
         Container(
           constraints: const BoxConstraints(minHeight: 290),
