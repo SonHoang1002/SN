@@ -284,7 +284,11 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const [
-                                    Icon(FontAwesomeIcons.user, size: 14),
+                                    Icon(
+                                      FontAwesomeIcons.user,
+                                      size: 14,
+                                      color: Colors.black,
+                                    ),
                                     SizedBox(
                                       width: 5.0,
                                     ),
@@ -294,6 +298,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                       style: TextStyle(
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.w700,
+                                        color: Colors.black,
                                       ),
                                     ),
                                     SizedBox(
@@ -551,17 +556,21 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                             child: InkWell(
                                               onTap: () {
                                                 showModalBottomSheet(
-                                                    shape:
-                                                        const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.vertical(
-                                                        top:
-                                                            Radius.circular(10),
-                                                      ),
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                      top: Radius.circular(10),
                                                     ),
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        const ShareModalBottom());
+                                                  ),
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      ShareModalBottom(
+                                                    data: recruitsPropose[
+                                                        indexPropose],
+                                                    type: 'recruit',
+                                                  ),
+                                                );
                                               },
                                               child: Container(
                                                 height: 33,
@@ -845,17 +854,21 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                             child: InkWell(
                                               onTap: () {
                                                 showModalBottomSheet(
-                                                    shape:
-                                                        const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.vertical(
-                                                        top:
-                                                            Radius.circular(10),
-                                                      ),
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                      top: Radius.circular(10),
                                                     ),
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        const ShareModalBottom());
+                                                  ),
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      ShareModalBottom(
+                                                    type: 'recruit',
+                                                    data: recruitsSimilar[
+                                                        indexSimilar],
+                                                  ),
+                                                );
                                               },
                                               child: Container(
                                                 height: 33,

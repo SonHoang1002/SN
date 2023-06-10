@@ -80,8 +80,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
   }
 
   void loadData() async {
-    if ((  growDetail.isEmpty) &&
-        (widget.isUseGrowData == true)) {
+    if ((growDetail.isEmpty) && (widget.isUseGrowData == true)) {
       growDetail = widget.data;
     } else {
       await ref
@@ -385,16 +384,15 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                         },
                                                         child: Container(
                                                             height: 32,
-                                                            width: MediaQuery.of(context)
-                                                                    .size
-                                                                    .width *
-                                                                0.36,
+                                                            width:
+                                                                MediaQuery.of(context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.36,
                                                             decoration: BoxDecoration(
                                                                 color: growButtonFollower ==
                                                                         true
                                                                     ? secondaryColor
-                                                                        .withOpacity(
-                                                                            0.45)
                                                                     : const Color.fromARGB(
                                                                         189,
                                                                         202,
@@ -406,7 +404,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                             4),
                                                                 border: Border.all(
                                                                     width: 0.2,
-                                                                    color: greyColor)),
+                                                                    color:
+                                                                        greyColor)),
                                                             child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
@@ -417,7 +416,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                         .solidStar,
                                                                     color: growButtonFollower ==
                                                                             true
-                                                                        ? secondaryColor
+                                                                        ? Colors
+                                                                            .white
                                                                         : Colors
                                                                             .black,
                                                                     size: 14),
@@ -435,7 +435,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                         12.0,
                                                                     color: growButtonFollower ==
                                                                             true
-                                                                        ? secondaryColor
+                                                                        ? Colors
+                                                                            .white
                                                                         : Colors
                                                                             .black,
                                                                     fontWeight:
@@ -460,17 +461,21 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                       InkWell(
                                                         onTap: () {
                                                           showBarModalBottomSheet(
-                                                              context: context,
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              builder: (context) => SizedBox(
-                                                                  height: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height *
-                                                                      0.9,
-                                                                  child:
-                                                                      const InviteFriend()));
+                                                            context: context,
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            builder:
+                                                                (context) =>
+                                                                    SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.9,
+                                                              child:
+                                                                  const InviteFriend(),
+                                                            ),
+                                                          );
                                                         },
                                                         child: Container(
                                                             height: 32,
@@ -596,7 +601,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                           MediaQuery.of(context)
                                                               .size
                                                               .width,
-                                                      height: 250,
+                                                      height: 300,
                                                       child: Column(
                                                         children: [
                                                           ListView.builder(
@@ -1129,7 +1134,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                             } else {
                               return Container(
                                 height: 35,
-                                width: MediaQuery.of(context).size.width * 0.43,
+                                width: MediaQuery.of(context).size.width *
+                                    0.38, // 0.4 overflow
                                 decoration: BoxDecoration(
                                   color: secondaryColor,
                                   borderRadius: BorderRadius.circular(4),

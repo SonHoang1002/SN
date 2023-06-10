@@ -894,7 +894,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               ),
                                               context: context,
                                               builder: (context) =>
-                                                  const ShareModalBottom());
+                                                  ShareModalBottom(
+                                                      type: 'event',
+                                                      data: eventsSuggested[
+                                                          indexSuggest]));
                                         },
                                         child: Container(
                                           height: 33,
@@ -1062,7 +1065,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.5,
+                                              0.475,
                                           decoration: BoxDecoration(
                                               color: const Color.fromARGB(
                                                   189, 202, 202, 202),

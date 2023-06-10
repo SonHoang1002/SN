@@ -92,7 +92,7 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
                           padding: const EdgeInsets.only(
                               top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                           child: CardComponents(
-                            type: 'homeScreen',
+                            // type: 'homeScreen',
                             imageCard: SizedBox(
                               height: 180,
                               width: width,
@@ -505,7 +505,10 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
                                             ),
                                             context: context,
                                             builder: (context) =>
-                                                const ShareModalBottom());
+                                                ShareModalBottom(
+                                                    type: 'event',
+                                                    data: events[
+                                                        indexInteresting]));
                                       },
                                       child: Container(
                                         height: 32,

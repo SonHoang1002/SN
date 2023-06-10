@@ -188,7 +188,6 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                                                           ['follow_project'] ==
                                                       true
                                                   ? secondaryColor
-                                                      .withOpacity(0.45)
                                                   : const Color.fromARGB(
                                                       189, 202, 202, 202),
                                               borderRadius:
@@ -206,7 +205,7 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                                                               [
                                                               'follow_project'] ==
                                                           true
-                                                      ? secondaryColor
+                                                      ? Colors.white
                                                       : Colors.black,
                                                   size: 14),
                                               const SizedBox(
@@ -222,7 +221,7 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                                                               [
                                                               'follow_project'] ==
                                                           true
-                                                      ? secondaryColor
+                                                      ? Colors.white
                                                       : Colors.black,
                                                   fontWeight: FontWeight.w700,
                                                 ),
@@ -252,7 +251,10 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
                                             ),
                                             context: context,
                                             builder: (context) =>
-                                                const ShareModalBottom());
+                                                ShareModalBottom(
+                                                  type: 'grow',
+                                                  data: grows[indexOwner],
+                                                ));
                                       },
                                       child: Container(
                                         height: 32,

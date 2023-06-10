@@ -241,3 +241,41 @@ List userMediaMenu = [
   {"key": "video", "label": "Video"},
   {"key": "moment", "label": "Khoảnh khắc"},
 ];
+
+List musicMenu = [
+  {
+    "key": "discovery",
+    "label": "Khám phá",
+    "icon": "",
+  },
+  {
+    "key": "charts",
+    "label": "Bảng xếp hạng",
+    "icon": "",
+  },
+  {
+    "key": "search_music",
+    "label": "Tìm kiếm",
+    "icon": "",
+  },
+  {
+    "key": "my_playlist",
+    "label": "Danh sách của tôi",
+    "icon": "",
+  },
+  {
+    "key": "create_album_mv",
+    "label": "Tạo mới Album/MV",
+    "icon": "",
+  },
+  {
+    "key": "artist",
+    "label": "Nghệ sĩ",
+    "icon": "",
+  },
+  {
+    "key": "album",
+    "label": "Album",
+    "icon": "",
+  }
+];

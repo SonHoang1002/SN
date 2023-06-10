@@ -182,7 +182,6 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                             padding: const EdgeInsets.only(
                                 top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
                             child: CardComponents(
-                              type: 'homeScreen',
                               imageCard: SizedBox(
                                 height: 180,
                                 width: width,
@@ -300,7 +299,6 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                                             'follow_project'] ==
                                                         true
                                                     ? secondaryColor
-                                                        .withOpacity(0.45)
                                                     : const Color.fromARGB(
                                                         189, 202, 202, 202),
                                                 borderRadius:
@@ -321,7 +319,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                                                 [
                                                                 'follow_project'] ==
                                                             true
-                                                        ? secondaryColor
+                                                        ? Colors.white
                                                         : Colors.black,
                                                     size: 14),
                                                 const SizedBox(
@@ -340,7 +338,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                                                 [
                                                                 'follow_project'] ==
                                                             true
-                                                        ? secondaryColor
+                                                        ? Colors.white
                                                         : Colors.black,
                                                     fontWeight: FontWeight.w700,
                                                   ),
@@ -362,16 +360,19 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                       child: InkWell(
                                         onTap: () {
                                           showModalBottomSheet(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                  top: Radius.circular(10),
-                                                ),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(10),
                                               ),
-                                              context: context,
-                                              builder: (context) =>
-                                                  const ShareModalBottom());
+                                            ),
+                                            context: context,
+                                            builder: (context) =>
+                                                ShareModalBottom(
+                                              type: 'grow',
+                                              data: grows[indexInteresting],
+                                            ),
+                                          );
                                         },
                                         child: Container(
                                           height: 32,
@@ -777,16 +778,19 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                       child: InkWell(
                                         onTap: () {
                                           showModalBottomSheet(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                  top: Radius.circular(10),
-                                                ),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(10),
                                               ),
-                                              context: context,
-                                              builder: (context) =>
-                                                  const ShareModalBottom());
+                                            ),
+                                            context: context,
+                                            builder: (context) =>
+                                                ShareModalBottom(
+                                                    type: 'grow',
+                                                    data: growsInviteHost[
+                                                        indexHost]),
+                                          );
                                         },
                                         child: Container(
                                           height: 32,
