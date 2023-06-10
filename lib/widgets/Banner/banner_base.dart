@@ -145,7 +145,6 @@ class _BannerBaseState extends State<BannerBase> {
         setState(() {
           image = File(pickedFile.path);
         });
-
         // ignore: use_build_context_synchronously
         await Navigator.push(
             context,

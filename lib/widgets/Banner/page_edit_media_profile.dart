@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_frames.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -16,6 +14,9 @@ import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
+
+import '../../apis/page_api.dart' as page;
+import '../../providers/page/page_provider.dart';
 
 class PageEditMediaProfile extends ConsumerStatefulWidget {
   final String typePage;
@@ -38,7 +39,7 @@ class PageEditMediaProfile extends ConsumerStatefulWidget {
 
 class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
   dynamic avatar;
-  dynamic header;
+  dynamic banner;
   bool isClick = false;
 
   TextEditingController controller = TextEditingController();
@@ -49,47 +50,47 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
 
     handleUpdateMediaProfile() async {
       String fileName = '';
-      final base64String;
+      final String base64String;
       var fileData =
-          widget.typePage == 'avatar' ? avatar['file'] : header['file'];
+          widget.typePage == 'avatar' ? avatar['file'] : banner['file'];
 
       if (fileData != null) {
         fileName = fileData?.path?.split('/')?.last;
         final bytes = await fileData.readAsBytes();
         base64String = base64.encode(bytes);
       }
-
       FormData formData = FormData.fromMap({
-        (widget.typePage == 'avatar' ? 'avatar' : 'header'): {
-          "id": widget.typePage == 'avatar' ? avatar['id'] : header['id'],
+        (widget.typePage == 'avatar' ? 'avatar' : 'banner'): {
+          "id": widget.typePage == 'avatar' ? avatar['id'] : banner['id'],
           "status": avatar?['status'],
           "frame_id": avatar?['frame_id'],
           "file": fileData != null
               ? await MultipartFile.fromFile(fileData.path, filename: fileName)
               : null,
-          // "show_url": base64String
+          // "show_url": 'data:image/png;base64,$base64String'
         }
       });
-      var response = await UserPageCredentical().updateCredentialUser(formData);
-
+      var response =
+          await page.PageApi().pagePostMedia(formData, widget.entityObj['id']);
       if (response != null) {
         setState(() {
           isClick = false;
+          ref.read(pageControllerProvider.notifier).updateMedata(response);
         });
-        ref.read(meControllerProvider.notifier).updateMedata(response);
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       }
     }
 
     handleUpdateData(type, data) {
+      print(type);
       if (mounted) {
         avatar = widget.typePage == 'avatar'
             ? {...(avatar ?? {}), '$type': data}
             : avatar;
-        header = widget.typePage != 'avatar'
-            ? {...(header ?? {}), '$type': data}
-            : header;
+        banner = widget.typePage != 'avatar'
+            ? {...(banner ?? {}), '$type': data}
+            : banner;
       }
     }
 

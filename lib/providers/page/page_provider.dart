@@ -140,6 +140,29 @@ class PageController extends StateNotifier<PageState> {
     }
   }
 
+  updateMedata(data) {
+    if (data != null) {
+      if (mounted) {
+        state = state.copyWith(
+            pageDetail: data,
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: false,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+      }
+    }
+  }
+
   updateLikeFollowPageDetail(id, type) async {
     switch (type) {
       case "like":
@@ -418,6 +441,5 @@ class PageController extends StateNotifier<PageState> {
           pageGroup: state.pageGroup,
           isMoreGroup: state.isMoreGroup);
     }
-    print(state.rolePage);
   }
 }

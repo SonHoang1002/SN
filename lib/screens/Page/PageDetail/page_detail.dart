@@ -93,12 +93,27 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     });
 
     if (ref.read(pageControllerProvider).pagePined.isEmpty) {
-      Future.delayed(
-          Duration.zero,
-          () => ref.read(pageControllerProvider.notifier).getListPagePined(
-              arguments is String && arguments != null
-                  ? arguments
-                  : pageData?['id']));
+      Map<String, dynamic> paramsFeedPage = {
+        "limit": 5,
+        "exclude_replies": true,
+        'page_id': arguments is String && arguments != null
+            ? arguments
+            : pageData?['id'],
+        'page_owner_id': arguments is String && arguments != null
+            ? arguments
+            : pageData?['id']
+      };
+      Future.delayed(Duration.zero, () {
+        ref.read(pageControllerProvider.notifier).getListPagePined(
+            arguments is String && arguments != null
+                ? arguments
+                : pageData?['id']);
+        ref.read(pageControllerProvider.notifier).getListPageFeed(
+            paramsFeedPage,
+            arguments is String && arguments != null
+                ? arguments
+                : pageData?['id']);
+      });
     }
     scrollController.addListener(() {
       var rolePage = ref.watch(pageControllerProvider).rolePage;
@@ -123,28 +138,22 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         }
       }
       if (scrollController.offset ==
-          scrollController.position.maxScrollExtent) {
+              scrollController.position.maxScrollExtent &&
+          showHeaderTabFixed) {
         switch (menuSelected) {
           case 'home_page':
             Map<String, dynamic> paramsFeedPage = {
               "limit": 5,
               "exclude_replies": true,
-              'page_id': arguments is String && arguments != null
-                  ? arguments
-                  : pageData?['id'],
-              'page_owner_id': arguments is String && arguments != null
-                  ? arguments
-                  : pageData?['id']
+              'page_id': pageData?['id'],
+              'page_owner_id': pageData?['id']
             };
             if (ref.read(pageControllerProvider).pageFeed.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreFeed) {
               String maxId =
                   ref.read(pageControllerProvider).pageFeed.last['score'];
               ref.read(pageControllerProvider.notifier).getListPageFeed(
-                  {"max_id": maxId, ...paramsFeedPage},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+                  {"max_id": maxId, ...paramsFeedPage}, pageData?['id']);
             }
             break;
           case 'group_page':
@@ -153,24 +162,18 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 ref.read(pageControllerProvider).isMoreGroup) {
               String maxId =
                   ref.read(pageControllerProvider).pageFeed.last['score'];
-              ref.read(pageControllerProvider.notifier).getListPageGroup(
-                  {
-                    ...paramsGroupPage,
-                    "max_id": maxId,
-                  },
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+              ref.read(pageControllerProvider.notifier).getListPageGroup({
+                ...paramsGroupPage,
+                "max_id": maxId,
+              }, pageData?['id']);
             }
             break;
           case 'review_page':
             if (ref.read(pageControllerProvider).pageReview.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreReview) {
-              ref.read(pageControllerProvider.notifier).getListPageReview(
-                  {'page': '$pageReview'},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+              ref
+                  .read(pageControllerProvider.notifier)
+                  .getListPageReview({'page': '$pageReview'}, pageData?['id']);
               setState(() {
                 pageReview =
                     ref.read(pageControllerProvider).pageReview.length ~/ 20 +
@@ -187,19 +190,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
 
               ref.read(pageControllerProvider.notifier).getListPageMedia(
                   {"max_id": maxId, "limit": 20, 'media_type': 'image'},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+                  pageData?['id']);
             } else if (ref.read(pageControllerProvider).pageAlbum.isNotEmpty &&
                 ref.read(pageControllerProvider).isMoreAlbum &&
                 typeMedia == 'album') {
               String maxId =
                   ref.read(pageControllerProvider).pageAlbum.last['id'];
               ref.read(pageControllerProvider.notifier).getListPageAlbum(
-                  {"max_id": maxId, "limit": 20},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+                  {"max_id": maxId, "limit": 20}, pageData?['id']);
             }
             break;
           case 'video_page':
@@ -209,15 +207,20 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   ref.read(pageControllerProvider).pageVideo.last['id'];
               ref.read(pageControllerProvider.notifier).getListPageMedia(
                   {'media_type': 'video', 'limit': 10, "max_id": maxId},
-                  arguments is String && arguments != null
-                      ? arguments
-                      : pageData?['id']);
+                  pageData?['id']);
             }
             break;
           default:
         }
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    pageData = ref.read(pageControllerProvider).pageDetail;
+    setState(() {});
+    super.didChangeDependencies();
   }
 
   Widget renderTab(data) {
