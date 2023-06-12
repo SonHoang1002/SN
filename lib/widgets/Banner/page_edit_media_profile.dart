@@ -23,6 +23,7 @@ class PageEditMediaProfile extends ConsumerStatefulWidget {
   final dynamic entityObj;
   final dynamic file;
   final String entityType;
+  final String? type;
   final Function? handleChangeDependencies;
 
   const PageEditMediaProfile(
@@ -30,6 +31,7 @@ class PageEditMediaProfile extends ConsumerStatefulWidget {
       required this.typePage,
       this.entityObj,
       this.file,
+      this.type,
       this.handleChangeDependencies,
       required this.entityType})
       : super(key: key);
@@ -72,8 +74,17 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
           // "show_url": 'data:image/png;base64,$base64String'
         }
       });
-      var response =
-          await page.PageApi().pagePostMedia(formData, widget.entityObj['id']);
+
+      // ignore: prefer_typing_uninitialized_variables
+      var response;
+      if (widget.type == 'page') {
+        response = await page.PageApi()
+            .pagePostMedia(formData, widget.entityObj['id']);
+      } else {
+        response = null;
+      }
+
+      // await page.PageApi().pagePostMedia(formData, widget.entityObj['id']);
       if (response != null) {
         setState(() {
           isClick = false;
