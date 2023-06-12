@@ -467,7 +467,9 @@ class AvatarPost extends StatelessWidget {
 
     void pushToScreen() {
       if (type != "edit_post") {
-        if (post['place']?['id'] != page['id'] && currentRouter != '/page') {
+        if (page != null &&
+            post['place']?['id'] != page['id'] &&
+            currentRouter != '/page') {
           Navigator.pushNamed(context, '/page', arguments: page);
         }
       }

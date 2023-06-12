@@ -1,18 +1,16 @@
-import 'package:chewie/chewie.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/gridview_builder_media.dart';
-import 'package:social_network_app_mobile/widgets/video_player.dart';
-import 'package:video_player/video_player.dart';
 
 import '../theme/colors.dart';
 
-class GridLayoutImage extends StatefulWidget {
+class GridLayoutImage extends ConsumerStatefulWidget {
   final List medias;
   final Function handlePress;
   final dynamic post;
@@ -26,20 +24,10 @@ class GridLayoutImage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<GridLayoutImage> createState() => _GridLayoutImageState();
+  ConsumerState<GridLayoutImage> createState() => _GridLayoutImageState();
 }
 
-class _GridLayoutImageState extends State<GridLayoutImage> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
   @override
   Widget build(BuildContext context) {
     checkIsImage(media) {
@@ -112,47 +100,35 @@ class _GridLayoutImageState extends State<GridLayoutImage> {
                         1
                     ? size.width
                     : null,
-                child: Stack(
-                  children: [
-                    medias[0]['file'] != null
-                        ? VideoPlayerNoneController(
-                            path: medias[0]['file'].path,
-                            type: "local",
-                          )
-                        : VideoPlayerHasController(
-                            media: medias[0], hasDispose: true),
-                    Positioned.fill(child: GestureDetector(
-                      onTap: () {
-                        medias[0]['file']?.path != null
-                            ? null
-                            : widget.post != null &&
-                                    widget.post["post_type"] != null &&
-                                    widget.post["post_type"] == 'moment'
-                                ? Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Moment(
-                                              dataAdditional: widget.post,
-                                            )))
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => WatchSuggest(
-                                            post: widget.post,
-                                            media: medias[0])));
-                      },
-                    ))
-                  ],
-                )
-                // VideoPlayerNoneController(
-                //     path: path,
-                //     media: medias[0],
-                //     post: widget.post,
-                //     type: medias[0]['file']?.path != null
-                //         ? 'local'
-                //         : 'network')
-                );
+                child: medias[0]['file'] != null
+                    ? VideoPlayerNoneController(
+                        path: medias[0]['file'].path,
+                        type: "local",
+                      )
+                    : VideoPlayerHasController(
+                        media: medias[0],
+                        handleAction: () {
+                          medias[0]['file']?.path != null
+                              ? null
+                              : widget.post != null &&
+                                      widget.post["post_type"] != null &&
+                                      widget.post["post_type"] == 'moment'
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Moment(
+                                                dataAdditional: widget.post,
+                                              )))
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => WatchSuggest(
+                                              post: widget.post,
+                                              media: medias[0])));
+                        },
+                      ));
           }
+
         case 2:
           return GridViewBuilderMedia(
               handlePress: widget.handlePress,

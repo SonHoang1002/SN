@@ -1,5 +1,4 @@
 import 'package:chewie/chewie.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,42 +28,22 @@ class BetterState {
   }
 }
 
-class BetterPlayerControllerNotifier extends StateNotifier<List<BetterState>> {
-  BetterPlayerControllerNotifier() : super(const []);
+class BetterPlayerControllerNotifier extends StateNotifier<BetterState> {
+  BetterPlayerControllerNotifier()
+      : super(const BetterState(
+            chewieController: null, videoPlayerController: null, videoId: ''));
 
   void initializeBetterPlayerController(
-      String videoId, String path, Widget? overlay) {
-    VideoPlayerController videoPlayerController =
-        VideoPlayerController.network(path);
-    videoPlayerController.initialize().then((value) => state = state +
-        [
-          BetterState(
-              videoId: videoId,
-              videoPlayerController: videoPlayerController,
-              chewieController: ChewieController(
-                  placeholder: const SizedBox(),
-                  looping: true,
-                  overlay: overlay ?? const SizedBox(),
-                  showControlsOnInitialize: false,
-                  videoPlayerController: videoPlayerController,
-                  aspectRatio: videoPlayerController.value.aspectRatio))
-        ]);
-  }
-
-  void disposeBetterPlayerController(String videoId) {
-    state = state
-        .map((betterState) {
-          if (betterState.videoId == videoId) {
-            betterState.videoPlayerController?.dispose();
-            betterState.chewieController?.dispose();
-          }
-          return betterState;
-        })
-        .where((betterState) => betterState.videoId != videoId)
-        .toList();
+      String videoId,
+      VideoPlayerController videoPlayerController,
+      ChewieController chewieController) {
+    state = BetterState(
+        videoId: videoId,
+        videoPlayerController: videoPlayerController,
+        chewieController: chewieController);
   }
 }
 
-final betterPlayerControllerProvider = StateNotifierProvider.autoDispose<
-    BetterPlayerControllerNotifier,
-    List<BetterState>>((ref) => BetterPlayerControllerNotifier());
+final betterPlayerControllerProvider =
+    StateNotifierProvider<BetterPlayerControllerNotifier, BetterState>(
+        (ref) => BetterPlayerControllerNotifier());

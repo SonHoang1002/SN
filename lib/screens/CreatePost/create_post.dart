@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create_moment.dart';
@@ -71,8 +70,6 @@ class _CreatePostState extends State<CreatePost> {
       //   platform.invokeMethod(
       //       methodDemoPlayExportedVideo, exportedVideoFilePath);
       // });
-      print('response, $exportedVideoCoverPreviewPath');
-      print('response, $exportedVideoFilePath');
       if (exportedVideoCoverPreviewPath != null &&
           exportedVideoFilePath != null) {
         Navigator.push(
