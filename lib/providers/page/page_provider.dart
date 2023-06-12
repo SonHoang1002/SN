@@ -240,6 +240,114 @@ class PageController extends StateNotifier<PageState> {
     }
   }
 
+  //
+  createPostFeedPage(newPost) {
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: [newPost] + state.pageFeed,
+          isMoreFeed: true,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          pageDetail: state.pageDetail,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
+    }
+  }
+
+  changeProcessingPost(dynamic newData) {
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: [
+            ...state.pageFeed.sublist(0, 0),
+            newData,
+            ...state.pageFeed.sublist(1)
+          ],
+          isMoreFeed: true,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          pageDetail: state.pageDetail,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
+    }
+  }
+
+  actionHiddenDeletePost(type, data) {
+    int index = -1;
+    index = state.pageFeed.indexWhere((element) => element['id'] == data['id']);
+    print("index $index");
+    if (index < 0) return;
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: [
+            ...state.pageFeed.sublist(0, index),
+            ...state.pageFeed.sublist(index + 1)
+          ],
+          isMoreFeed: true,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          pageDetail: state.pageDetail,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
+    }
+  }
+
+  actionUpdateDetailInPost(
+    dynamic type,
+    dynamic newData,
+  ) async {
+    int index = -1;
+    index = state.pageFeed
+        .indexWhere((element) => element['id'] == newData['id']);
+    if (index < 0) return;
+
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: [
+            ...state.pageFeed.sublist(0, index),
+            newData,
+            ...state.pageFeed.sublist(index + 1)
+          ],
+          isMoreFeed: true,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          pageDetail: state.pageDetail,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
+    }
+  }
+
   getListPagePined(id) async {
     var response = await PageApi().getListPostPagePinedApi(id);
     if (response != null) {

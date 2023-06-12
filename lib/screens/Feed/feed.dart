@@ -79,6 +79,10 @@ class _FeedState extends ConsumerState<Feed> {
 
   // avoid bug look up ...
   _reloadFeedFunction(dynamic type, dynamic newData) {
+    if (type == null && newData == null) {
+      setState(() {});
+      return;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
       setState(() {});
@@ -87,7 +91,7 @@ class _FeedState extends ConsumerState<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    List posts = List.from(ref.watch(postControllerProvider).posts);
+    List posts = List.from(ref.read(postControllerProvider).posts);
     bool isMore = ref.watch(postControllerProvider).isMore;
     final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(

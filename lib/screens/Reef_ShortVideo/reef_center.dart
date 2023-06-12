@@ -33,7 +33,7 @@ class _ReefCenterState extends State<ReefCenter> {
 
   Widget buildPageView(List _reefList, Size size) {
     return SizedBox(
-      height: size.height * 0.52,
+      height: size.height * 0.5,
       child: PageView.builder(
         controller: PageController(
           viewportFraction: 0.6,

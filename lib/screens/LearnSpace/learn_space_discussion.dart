@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
@@ -44,6 +45,19 @@ class _LearnSpaceDiscusstionState extends ConsumerState<LearnSpaceDiscusstion> {
     });
   }
 
+  _reloadFeedFunction(dynamic type, dynamic newData) {
+    if (type == null && newData == null) {
+      setState(() {});
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(learnSpaceStateControllerProvider.notifier)
+          .changeProcessingPostLearnSpace(newData);
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List coursePosts = ref.watch(learnSpaceStateControllerProvider).coursePosts;
@@ -56,7 +70,11 @@ class _LearnSpaceDiscusstionState extends ConsumerState<LearnSpaceDiscusstion> {
           child: Text('Bài viết',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
-        CreatePostButton(postDiscussion: widget.postDiscussion),
+        CreatePostButton(
+          postDiscussion: widget.postDiscussion,
+          preType: postLearnSpace,
+          reloadFunction: _reloadFeedFunction,
+        ),
         _buildDivider(),
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
@@ -68,7 +86,10 @@ class _LearnSpaceDiscusstionState extends ConsumerState<LearnSpaceDiscusstion> {
               primary: false,
               itemCount: coursePosts.length,
               itemBuilder: (context, index) {
-                return Post(post: coursePosts[index]);
+                return Post(
+                  post: coursePosts[index],
+                  type: postLearnSpace,
+                );
               }),
         )
       ],

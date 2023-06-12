@@ -26,6 +26,7 @@ class GridViewBuilderMedia extends StatelessWidget {
       return media['type'] == 'image' ? true : false;
     }
 
+    final size = MediaQuery.of(context).size;
     return GridView.builder(
         shrinkWrap: true,
         primary: false,
@@ -53,7 +54,8 @@ class GridViewBuilderMedia extends StatelessWidget {
                                     tag: indexBg,
                                     child: Image.memory(
                                       medias[indexBg]['newUint8ListFile'],
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fitWidth,
+                                      width: size.width,
                                     ),
                                   )
                                 : Hero(
@@ -66,7 +68,10 @@ class GridViewBuilderMedia extends StatelessWidget {
                             : Hero(
                                 tag: medias[indexBg]['id'] ?? indexBg,
                                 child: ExtendedImage.network(
-                                    medias[indexBg]['url'])),
+                                  medias[indexBg]['url'],
+                                  fit: BoxFit.cover,
+                                  width: size.width,
+                                )),
                         imageRemain != null &&
                                 imageRemain! > 0 &&
                                 indexBg + 1 == medias.length

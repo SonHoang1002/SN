@@ -10,7 +10,9 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
@@ -368,10 +370,20 @@ class AlertDialogDelete extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     handleDeletePost(key) async {
       var response = await PostApi().deletePostApi(post!['id']);
-
-      ref
-          .read(postControllerProvider.notifier)
-          .actionHiddenDeletePost(type, post);
+      print("type  from handleUpdatePost ${type}");
+      if (type == postLearnSpace) {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .actionHiddenDeletePost(type, post);
+      } else if (type == postPage) {
+        ref
+            .read(pageControllerProvider.notifier)
+            .actionHiddenDeletePost(type, post);
+      } else {
+        ref
+            .read(postControllerProvider.notifier)
+            .actionHiddenDeletePost(type, post);
+      }
 
       if (response != null) {
         // ignore: use_build_context_synchronously

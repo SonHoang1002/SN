@@ -20,6 +20,8 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widgets/box_mention.dart';
 import 'package:social_network_app_mobile/widgets/emoji_modal_bottom.dart';
@@ -126,7 +128,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     useEffect(
       () {
         if (widget.commentSelected != null &&
@@ -335,18 +337,19 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     : widget.type == postWatchDetail
                         ? Colors.transparent
                         : Theme.of(context).scaffoldBackgroundColor,
-                border: Border(
-                    top: BorderSide(
-                        width: 0.3,
-                        color: widget.type == postWatchDetail
-                            ? Colors.transparent
-                            : greyColor)))
-            : null,
-        // padding: const EdgeInsets.only(
-        //     top: 8.0, left: 8.0, right: 8.0, bottom: 15.0),
+                // border: Border(
+                //     top: BorderSide(
+                //         width: 0.3,
+                //         color: widget.type == postWatchDetail
+                //             ? Colors.transparent
+                //             : greyColor)
+                            // )
+                            )
+            : null, 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            !widget.isOnBoxComment! ? buildDivider(color: greyColor,bottom: 10):const SizedBox(), 
             listMentions.isNotEmpty && content.isNotEmpty
                 ? BoxMention(
                     listData: listMentions,
@@ -448,92 +451,95 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     ],
                   )
                 : const SizedBox(),
-            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              if (widget.type != postWatchDetail && !widget.isOnBoxComment!)
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => GalleryView(
-                                filesSelected: files,
-                                handleGetFiles: handleGetFiles)));
-                  },
-                  child: const Icon(
-                    FontAwesomeIcons.camera,
-                    color: secondaryColor,
-                    size: 20,
-                  ),
-                ),
-              const SizedBox(
-                width: 8.0,
-              ),
-              Expanded(
-                  child: TextFormFieldCustom(
-                type: widget.type,
-                isDense: true,
-                minLines: 1,
-                maxLines: 5,
-                autofocus: widget.autoFocus ?? true,
-                hintText: "Viết bình luận...",
-                textController: textController,
-                focusNode: widget.commentNode,
-                handleGetValue: (value) => handleGetComment(value),
-                suffixIcon: InkWell(
+            Container(
+              margin:!widget.isOnBoxComment!? const EdgeInsets.symmetric(horizontal: 10):null,
+              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                if (widget.type != postWatchDetail && !widget.isOnBoxComment!)
+                  GestureDetector(
                     onTap: () {
-                      handleClickIcon();
-                      widget.isOnBoxComment == true
-                          ? handleShowEmojiBottomSheet(functionGetEmoji)
-                          : null;
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => GalleryView(
+                                  filesSelected: files,
+                                  handleGetFiles: handleGetFiles)));
                     },
-                    child: Icon(
-                      FontAwesomeIcons.solidFaceSmile,
+                    child: const Icon(
+                      FontAwesomeIcons.camera,
+                      color: secondaryColor,
                       size: 20,
-                      color: isShowEmoji ? secondaryColor : greyColor,
-                    )),
-              )),
-              const SizedBox(
-                width: 8.0,
-              ),
-              checkVisibleSubmit()
-                  ? GestureDetector(
-                      onTap: !isComment
-                          ? () {
-                              setState(() {
-                                isComment = true;
-                              });
-                              handleActionComment();
-                            }
-                          : null,
-                      child: Transform.rotate(
-                        angle: pi / 4,
-                        child: const Icon(
-                          CupertinoIcons.paperplane_fill,
-                          color: secondaryColor,
-                        ),
-                      ),
-                    )
-                  : const SizedBox(),
-              widget.commentSelected != null
-                  ? Row(
-                      children: [
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            widget.getCommentSelected!(null);
-                          },
+                    ),
+                  ),
+                const SizedBox(
+                  width: 8.0,
+                ),
+                Expanded(
+                    child: TextFormFieldCustom(
+                  type: widget.type,
+                  isDense: true,
+                  minLines: 1,
+                  maxLines: 5,
+                  autofocus: widget.autoFocus ?? true,
+                  hintText: "Viết bình luận...",
+                  textController: textController,
+                  focusNode: widget.commentNode,
+                  handleGetValue: (value) => handleGetComment(value),
+                  suffixIcon: InkWell(
+                      onTap: () {
+                        handleClickIcon();
+                        widget.isOnBoxComment == true
+                            ? handleShowEmojiBottomSheet(functionGetEmoji)
+                            : null;
+                      },
+                      child: Icon(
+                        FontAwesomeIcons.solidFaceSmile,
+                        size: 20,
+                        color: isShowEmoji ? secondaryColor : greyColor,
+                      )),
+                )),
+                const SizedBox(
+                  width: 8.0,
+                ),
+                checkVisibleSubmit()
+                    ? GestureDetector(
+                        onTap: !isComment
+                            ? () {
+                                setState(() {
+                                  isComment = true;
+                                });
+                                handleActionComment();
+                              }
+                            : null,
+                        child: Transform.rotate(
+                          angle: pi / 4,
                           child: const Icon(
-                            FontAwesomeIcons.xmark,
+                            CupertinoIcons.paperplane_fill,
                             color: secondaryColor,
-                            size: 20,
                           ),
-                        )
-                      ],
-                    )
-                  : const SizedBox()
-            ]),
+                        ),
+                      )
+                    : const SizedBox(),
+                widget.commentSelected != null
+                    ? Row(
+                        children: [
+                          const SizedBox(
+                            width: 8.0,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              widget.getCommentSelected!(null);
+                            },
+                            child: const Icon(
+                              FontAwesomeIcons.xmark,
+                              color: secondaryColor,
+                              size: 20,
+                            ),
+                          )
+                        ],
+                      )
+                    : const SizedBox()
+              ]),
+            ),
             isShowEmoji && widget.isOnBoxComment == false
                 ? DraggableBottomSheet(
                     minExtent: 250,

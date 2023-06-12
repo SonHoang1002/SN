@@ -542,11 +542,10 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                             ),
                           ),
                           PostFooterInformation(
-                            post: userData,
-                            preType: checkPreType(),
-                            indexImagePost: widget.currentIndex,
-                            updateDataFunction:widget.updateDataFunction
-                          ),
+                              post: userData,
+                              preType: checkPreType(),
+                              indexImagePost: widget.currentIndex,
+                              updateDataFunction: widget.updateDataFunction),
                           buildDivider(),
                           SizedBox(
                             height: 40,
@@ -561,7 +560,8 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                       ? widget.reloadFunction!()
                                       : null;
                                 });
-                              },updateDataFunction:widget.updateDataFunction,
+                              },
+                              updateDataFunction: widget.updateDataFunction,
                               indexImage: widget.currentIndex,
                             ),
                           )
