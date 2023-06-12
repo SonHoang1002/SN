@@ -33,7 +33,7 @@ class _ReefCenterState extends State<ReefCenter> {
 
   Widget buildPageView(List _reefList, Size size) {
     return SizedBox(
-      height: size.height * 0.52,
+      height: size.height * 0.5,
       child: PageView.builder(
         controller: PageController(
           viewportFraction: 0.6,
@@ -73,7 +73,7 @@ class _ReefCenterState extends State<ReefCenter> {
                             isPlayBack: true,
                           ),
                           Container(
-                              height: size.height * 0.52,
+                              height: size.height * 0.5,
                               width: size.width * 0.55,
                               color: transparent)
                         ],
@@ -81,7 +81,7 @@ class _ReefCenterState extends State<ReefCenter> {
                     : Image.network(
                         _reefList[index]["media_attachments"][0]["preview_url"],
                         fit: BoxFit.cover,
-                        height: size.height * 0.52,
+                        height: size.height * 0.5,
                         width: size.width * 0.55,
                       ),
               ),

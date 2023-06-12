@@ -100,7 +100,7 @@ class _PostCenterState extends State<PostCenter> {
                     showCmtBoxFunction: widget.showCmtBoxFunction),
             //
             widget.post['card'] != null &&
-                    widget.post['media_attachments'].length == 0
+                    (widget.post['media_attachments'].isEmpty)
                 ? PostCard(post: widget.post, type: widget.type)
                 : const SizedBox(),
             widget.post['poll'] != null

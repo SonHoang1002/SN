@@ -50,6 +50,17 @@ class _FeedPageState extends ConsumerState<FeedPage> {
     super.dispose();
   }
 
+ 
+    _reloadFunction(dynamic type, dynamic newData) {
+    if (type == null && newData == null) {
+      setState(() {});
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(pageControllerProvider.notifier).changeProcessingPost(newData);
+      setState(() {});
+    });
+  }
   @override
   Widget build(BuildContext context) {
     List feedPage = ref.watch(pageControllerProvider).pageFeed;
@@ -57,7 +68,11 @@ class _FeedPageState extends ConsumerState<FeedPage> {
 
     return Column(
       children: [
-        const CreatePostButton(),
+        CreatePostButton(
+          preType: postPage,
+          reloadFunction: _reloadFunction,
+          pageData: widget.pageData,
+        ),
         const CrossBar(height: 5),
         ListView.builder(
           shrinkWrap: true,
@@ -65,7 +80,7 @@ class _FeedPageState extends ConsumerState<FeedPage> {
           itemCount: feedPage.length + 1,
           itemBuilder: (context, index) {
             if (index < feedPage.length) {
-              return Post(type: feedPost, post: feedPage[index]);
+              return Post(type: postPage, post: feedPage[index]);
             } else {
               return isMoreFeed == true
                   ? Center(child: SkeletonCustom().postSkeleton(context))

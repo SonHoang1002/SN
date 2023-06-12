@@ -448,22 +448,21 @@ class _PostMutipleMediaDetail1State
                                                     children: [
                                                       !isDragOutside
                                                           ? Hero(
-                                                              tag:
-                                                                  // medias[index]
-                                                                  //         ['id'] ??
+                                                              tag: 
+                                                              // medias[index]
+                                                              //         ['id'] ??
                                                                   index,
                                                               child: ExtendedImage.network(
                                                                   medias[index]
                                                                       ['url'],
-                                                                  key: Key(medias[
-                                                                          index]
+                                                                  key: Key(medias[index]
                                                                       ['id']),
-                                                                  // fit: BoxFit
-                                                                  //     .fitWidth,
-                                                                  width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
+                                                                  fit: BoxFit
+                                                                      .fitWidth,
+                                                                  width:
+                                                                      MediaQuery.of(context)
+                                                                          .size
+                                                                          .width,
                                                                   loadStateChanged:
                                                                       (ExtendedImageState
                                                                           state) {
@@ -471,13 +470,14 @@ class _PostMutipleMediaDetail1State
                                                                     state,
                                                                     index);
                                                               }))
-                                                          : ExtendedImage
-                                                              .network(
+                                                          : ExtendedImage.network(
                                                               medias[index]
                                                                   ['url'],
                                                               key: Key(
                                                                   medias[index]
                                                                       ['id']),
+                                                              fit: BoxFit
+                                                                  .fitWidth,
                                                               width:
                                                                   MediaQuery.of(
                                                                           context)

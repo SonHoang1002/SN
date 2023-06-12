@@ -1,6 +1,4 @@
-import 'dart:ffi';
 import 'dart:io';
-import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +10,9 @@ import 'package:perfect_freehand/perfect_freehand.dart';
 import 'package:social_network_app_mobile/data/emoji_activity.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/gender_login_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/EditImage/crop_image/edit_img_crop.dart';
 import 'package:social_network_app_mobile/widgets/EditImage/drag_object/matrix_gesture_detector_custom.dart';
-import 'package:social_network_app_mobile/widgets/EditImage/textfield_disable_glass.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -185,14 +181,7 @@ class _EditImageMainState extends State<EditImageMain> {
   File? cropImage;
   Uint8List? _cropImageUnit8List;
   // word property
-  List<dynamic> _dataProperties = [
-    // {
-    //   "controller": TextEditingController(text: ''),
-    //   "color": ValueNotifier<Color>(white),
-    //   "fontSize": ValueNotifier<Color>(17),
-    //   "focus_node": FocusNode()
-    // }
-  ];
+  List<dynamic> _dataProperties = [];
   double? fontSizeValue;
   dynamic _selectedOverlayObject;
   // emoji property
@@ -670,144 +659,140 @@ class _EditImageMainState extends State<EditImageMain> {
             },
             child: RepaintBoundary(
               key: _globalKey,
-              child: Container(
-                // height: size.height * 0.8,
-                // margin: EdgeInsets.symmetric(vertical: size.height * 0.1),
-                child: Stack(
-                  children: [
-                    Center(
-                        key: ValueKey(
-                            _cropImageUnit8List != null ? 'true' : 'false'),
-                        child: Stack(
-                          children: [
-                            ColorFiltered(
-                              colorFilter: ui.ColorFilter.matrix([
-                                1, 0, 0, 0,
-                                (brightness * 70) / 100, // Red color
-                                0, 1, 0, 0,
-                                (brightness * 70) / 100, // Green color
-                                0, 0, 1, 0,
-                                (brightness * 70) / 100, // Blue color
-                                0, 0, 0, 1, 0, // Alpha color
-                              ]),
-                              child: _cropImageUnit8List != null
-                                  ? Image.memory(
-                                      _cropImageUnit8List!,
-                                      key: _imageKey,
-                                      fit: BoxFit.fitWidth,
-                                      width: size.width,
-                                    )
-                                  : _imageData['file'] != null
-                                      ? ExtendedImage.file(
-                                          File(_imageData['file'].path),
-                                          key: _imageKey,
-                                          fit: BoxFit.fitWidth,
-                                          width: size.width,
-                                        )
-                                      : const SizedBox(),
-                            ),
-                          ],
-                        )),
-                    _selectedFrame != null
-                        ? Image.asset(_selectedFrame!,
-                            fit: BoxFit.fitWidth, width: size.width)
-                        : const SizedBox(),
-                    // show drawing board
-                    Stack(
-                      children: [
-                        buildAllPaths(context),
-                        _lineSelection == true
-                            ? buildCurrentPath(context)
-                            : const SizedBox()
-                      ],
-                    ),
-                    // show drag object
-                    Stack(
-                      children: _overlayWidget.map((e) {
-                        final index = _overlayWidget.indexOf(e);
-                        return e != null &&
-                                notifiers[index].value != Matrix4.zero() &&
-                                _dataProperties[index] != null
-                            ? Listener(
-                                onPointerMove: (event) {
-                                  if (rect!.contains(event.position)) {
-                                    setState(() {
-                                      _isCanDeleteObject = true;
-                                    });
-                                  } else {
-                                    if (_isCanDeleteObject == true) {
-                                      setState(() {
-                                        _isCanDeleteObject = false;
-                                      });
-                                    }
-                                  }
-                                },
-                                onPointerDown: (details) {
+              child: Stack(
+                children: [
+                  Center(
+                      key: ValueKey(
+                          _cropImageUnit8List != null ? 'true' : 'false'),
+                      child: Stack(
+                        children: [
+                          ColorFiltered(
+                            colorFilter: ui.ColorFilter.matrix([
+                              1, 0, 0, 0,
+                              (brightness * 70) / 100, // Red color
+                              0, 1, 0, 0,
+                              (brightness * 70) / 100, // Green color
+                              0, 0, 1, 0,
+                              (brightness * 70) / 100, // Blue color
+                              0, 0, 0, 1, 0, // Alpha color
+                            ]),
+                            child: _cropImageUnit8List != null
+                                ? Image.memory(
+                                    _cropImageUnit8List!,
+                                    key: _imageKey,
+                                    fit: BoxFit.fitWidth,
+                                    width: size.width,
+                                  )
+                                : _imageData['file'] != null
+                                    ? ExtendedImage.file(
+                                        File(_imageData['file'].path),
+                                        key: _imageKey,
+                                        fit: BoxFit.fitWidth,
+                                        width: size.width,
+                                      )
+                                    : const SizedBox(),
+                          ),
+                        ],
+                      )),
+                  _selectedFrame != null
+                      ? Image.asset(_selectedFrame!,
+                          fit: BoxFit.fitWidth, width: size.width)
+                      : const SizedBox(),
+                  // show drawing board
+                  Stack(
+                    children: [
+                      buildAllPaths(context),
+                      _lineSelection == true
+                          ? buildCurrentPath(context)
+                          : const SizedBox()
+                    ],
+                  ),
+                  // show drag object
+                  Stack(
+                    children: _overlayWidget.map((e) {
+                      final index = _overlayWidget.indexOf(e);
+                      return e != null &&
+                              notifiers[index].value != Matrix4.zero() &&
+                              _dataProperties[index] != null
+                          ? Listener(
+                              onPointerMove: (event) {
+                                if (rect!.contains(event.position)) {
                                   setState(() {
-                                    _selectedOverlayObject =
-                                        _dataProperties[index];
+                                    _isCanDeleteObject = true;
                                   });
-                                },
-                                onPointerUp: (event) {
-                                  if (_isCanDeleteObject) {
+                                } else {
+                                  if (_isCanDeleteObject == true) {
                                     setState(() {
-                                      _selectedOverlayObject = null;
-                                      _overlayWidget[index] = null;
-                                      notifiers[index] =
-                                          ValueNotifier(Matrix4.zero());
-                                      _dataProperties[index] = null;
                                       _isCanDeleteObject = false;
                                     });
                                   }
+                                }
+                              },
+                              onPointerDown: (details) {
+                                setState(() {
+                                  _selectedOverlayObject =
+                                      _dataProperties[index];
+                                });
+                              },
+                              onPointerUp: (event) {
+                                if (_isCanDeleteObject) {
+                                  setState(() {
+                                    _selectedOverlayObject = null;
+                                    _overlayWidget[index] = null;
+                                    notifiers[index] =
+                                        ValueNotifier(Matrix4.zero());
+                                    _dataProperties[index] = null;
+                                    _isCanDeleteObject = false;
+                                  });
+                                }
+                              },
+                              child: MatrixGestureDetector(
+                                onMatrixUpdate: (matrix,
+                                    translationDeltaMatrix,
+                                    scaleDeltaMatrix,
+                                    rotationDeltaMatrix) {
+                                  setState(() {
+                                    notifiers[index].value = matrix;
+                                  });
                                 },
-                                child: MatrixGestureDetector(
-                                  onMatrixUpdate: (matrix,
-                                      translationDeltaMatrix,
-                                      scaleDeltaMatrix,
-                                      rotationDeltaMatrix) {
-                                    setState(() {
-                                      notifiers[index].value = matrix;
-                                    });
-                                  },
-                                  onScaleStart: () {
-                                    setState(() {
-                                      _isShowDeleteArea = true;
-                                    });
-                                  },
-                                  onScaleEnd: () {
-                                    setState(() {
-                                      _isShowDeleteArea = false;
-                                    });
-                                  },
-                                  child: AnimatedBuilder(
-                                    animation: notifiers[index],
-                                    builder: (context, child) {
-                                      final matrix = notifiers[index].value;
-                                      final rotationAngle = math.atan2(0, 0);
-                                      return Transform(
-                                        transform: matrix,
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: RotatedBox(
-                                              quarterTurns: rotationAngle ~/
-                                                  (math.pi / 2),
-                                              // quarterTurns: 3,
-                                              child: e['widget'],
-                                            ),
+                                onScaleStart: () {
+                                  setState(() {
+                                    _isShowDeleteArea = true;
+                                  });
+                                },
+                                onScaleEnd: () {
+                                  setState(() {
+                                    _isShowDeleteArea = false;
+                                  });
+                                },
+                                child: AnimatedBuilder(
+                                  animation: notifiers[index],
+                                  builder: (context, child) {
+                                    final matrix = notifiers[index].value;
+                                    final rotationAngle = math.atan2(0, 0);
+                                    return Transform(
+                                      transform: matrix,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: RotatedBox(
+                                            quarterTurns: rotationAngle ~/
+                                                (math.pi / 2),
+                                            // quarterTurns: 3,
+                                            child: e['widget'],
                                           ),
                                         ),
-                                      );
-                                    },
-                                  ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              )
-                            : const SizedBox();
-                      }).toList(),
-                    ),
-                  ],
-                ),
+                              ),
+                            )
+                          : const SizedBox();
+                    }).toList(),
+                  ),
+                ],
               ),
             ),
           ),

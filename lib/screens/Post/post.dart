@@ -39,8 +39,10 @@ class Post extends ConsumerStatefulWidget {
 class _PostState extends ConsumerState<Post> {
   bool isHaveSuggest = true;
   final ValueNotifier<bool> _isShowCommentBox = ValueNotifier(false);
-  dynamic newPost;
   dynamic currentPost;
+  // tranh truong hop tao bai viet moi nhung khong co hieu ung cho va co the reaction o cac loai post khac o cac phan he khac
+  bool isNeedInitPost = true;
+
   _changeShowCommentBox() {
     setState(() {
       _isShowCommentBox.value = true;
@@ -49,25 +51,29 @@ class _PostState extends ConsumerState<Post> {
 
   updateNewPost() {
     setState(() {
+      isNeedInitPost = false;
       currentPost = ref.watch(currentPostControllerProvider).currentPost;
     });
   }
 
   @override
   void initState() {
-    currentPost ??= widget.post;
+    setState(() {
+      currentPost = widget.post;
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final meData = ref.watch(meControllerProvider)[0];
+    isNeedInitPost ? currentPost = widget.post : null;
     return currentPost != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // widget.type != postPageUser &&
-              currentPost['account']['id'] != meData['id']
+              currentPost?['account']?['id'] != meData['id']
                   ? PostSuggest(
                       post: currentPost,
                       type: widget.type,

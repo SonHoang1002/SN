@@ -1,4 +1,3 @@
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,12 +5,12 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class ConnectivityState {
-  final bool connectWifi;
+  final bool connectInternet;
 
-  const ConnectivityState({this.connectWifi = true});
+  const ConnectivityState({this.connectInternet = true});
 
-  ConnectivityState copyWith({bool connectWifi = true}) {
-    return ConnectivityState(connectWifi: connectWifi);
+  ConnectivityState copyWith({bool connectInternet = true}) {
+    return ConnectivityState(connectInternet: connectInternet);
   }
 }
 
@@ -26,10 +25,11 @@ class ConnectivityProvider extends StateNotifier<ConnectivityState> {
   ConnectivityProvider() : super(const ConnectivityState());
   checkConnectivity() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.wifi) {
-      state = state.copyWith(connectWifi: true);
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+      state = state.copyWith(connectInternet: true);
     } else {
-      state = state.copyWith(connectWifi: false);
+      state = state.copyWith(connectInternet: false);
     }
   }
 }
