@@ -7,22 +7,26 @@ class SearchState {
   final List searchHistory;
   final dynamic search;
   final dynamic searchDetail;
+  final bool isLoading;
 
   const SearchState({
     this.searchHistory = const [],
     this.search = const {},
     this.searchDetail = const {},
+    this.isLoading = true,
   });
 
   SearchState copyWith({
     List searchHistory = const [],
     dynamic search = const {},
     dynamic searchDetail = const {},
+    bool isLoading = true,
   }) {
     return SearchState(
       searchHistory: searchHistory,
       search: search,
       searchDetail: searchDetail,
+      isLoading: isLoading,
     );
   }
 }
@@ -32,7 +36,7 @@ final searchControllerProvider =
         (ref) => SearchController());
 
 class SearchController extends StateNotifier<SearchState> {
-  SearchController() : super(const SearchState());
+  SearchController() : super(SearchState());
 
   getSearchHistory(params) async {
     List response = await SearchApi().getListSearchHistoriesApi(params);
@@ -41,6 +45,7 @@ class SearchController extends StateNotifier<SearchState> {
         searchHistory: response,
         search: state.search,
         searchDetail: state.searchDetail,
+        isLoading: true,
       );
     }
   }
@@ -57,6 +62,7 @@ class SearchController extends StateNotifier<SearchState> {
                 response['statuses'].isNotEmpty
             ? response
             : {},
+        isLoading: false,
       );
     }
   }
