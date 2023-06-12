@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,11 +26,36 @@ class _SearchResultPageDetailState
     extends ConsumerState<SearchResultPageDetail> {
   @override
   Widget build(BuildContext context) {
+    // var searchDetail = {};
+    // var searchStatusDetail = [];
+    // var searchAccountDetail = [];
+    // var searchGroupDetail = [];
+    // var searchPageDetail = [];
+
+    // Future.delayed(const Duration(milliseconds: 100), () {
+    //   searchDetail = ref.watch(searchControllerProvider).searchDetail;
+    //   searchStatusDetail = searchDetail['statuses'];
+    //   searchAccountDetail = searchDetail['accounts'];
+    //   searchGroupDetail = searchDetail['groups'];
+    //   searchPageDetail = searchDetail['pages'];
+    //   setState(() {});
+    // });
+
     var searchDetail = ref.watch(searchControllerProvider).searchDetail;
+    var isLoading = ref.watch(searchControllerProvider).isLoading;
     var searchStatusDetail = searchDetail?['statuses'];
     var searchAccountDetail = searchDetail?['accounts'];
     var searchGroupDetail = searchDetail?['groups'];
     var searchPageDetail = searchDetail?['pages'];
+
+    // searchDetail.isEmpty
+    //               ? const Center(child: CupertinoActivityIndicator())
+    //               : searchStatusDetail.isEmpty &&
+    //                       searchAccountDetail.isEmpty &&
+    //                       searchGroupDetail.isEmpty &&
+    //                       searchPageDetail.isEmpty
+    //                   ? const Center(child: Text('Không có dữ liệu'))
+    //                   :
 
     return Scaffold(
       appBar: AppBar(
@@ -83,56 +109,66 @@ class _SearchResultPageDetailState
               'Trang'
             ].toList(),
             childTab: [
-              searchDetail.isEmpty
-                  ? const Text('Không có dữ liệu')
-                  : SingleChildScrollView(
-                      child: Container(
-                        margin: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 10.0,
+              searchDetail.isEmpty || isLoading
+                  ? const Center(child: CupertinoActivityIndicator())
+                  : searchStatusDetail.isEmpty &&
+                          searchAccountDetail.isEmpty &&
+                          searchGroupDetail.isEmpty &&
+                          searchPageDetail.isEmpty
+                      ? const Center(child: Text('Không có dữ liệu'))
+                      : SingleChildScrollView(
+                          child: Container(
+                            margin: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                const Text(
+                                  'Tài khoản',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                AccountWidget(
+                                    searchAccountDetail: searchAccountDetail),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                const Text(
+                                  'Nhóm',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                GroupWidget(
+                                    searchGroupDetail: searchGroupDetail),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                const Text(
+                                  'Trang',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                PageWidget(searchPageDetail: searchPageDetail),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                const Text(
+                                  'Bài viết',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                StatusWidget(
+                                    searchStatusDetail: searchStatusDetail),
+                              ],
                             ),
-                            const Text(
-                              'Tài khoản',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
-                            ),
-                            AccountWidget(
-                                searchAccountDetail: searchAccountDetail),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            const Text(
-                              'Nhóm',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
-                            ),
-                            GroupWidget(searchGroupDetail: searchGroupDetail),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            const Text(
-                              'Trang',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
-                            ),
-                            PageWidget(searchPageDetail: searchPageDetail),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            const Text(
-                              'Bài viết',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
-                            ),
-                            StatusWidget(
-                                searchStatusDetail: searchStatusDetail),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
               SingleChildScrollView(
                 child: AccountWidget(searchAccountDetail: searchAccountDetail),
               ),
