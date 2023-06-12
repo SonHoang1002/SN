@@ -19,7 +19,6 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
-import '../../apis/post_api.dart';
 import '../../apis/user_page_api.dart';
 import '../../constant/post_type.dart';
 import '../../helper/push_to_new_screen.dart';
@@ -173,7 +172,11 @@ class _UserPageState extends ConsumerState<UserPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BannerBase(object: userData, objectMore: userAbout),
+          BannerBase(
+            object: userData,
+            objectMore: userAbout,
+            type: 'user',
+          ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Row(

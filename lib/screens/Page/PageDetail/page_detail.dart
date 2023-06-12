@@ -284,7 +284,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
               BannerBase(
                   object: data,
                   objectMore: null,
-                  rolePage: rolePage,
+                  role: rolePage,
+                  type: 'page',
                   handleChangeDependencies: handleChangeDependencies),
               const SizedBox(
                 height: 10,

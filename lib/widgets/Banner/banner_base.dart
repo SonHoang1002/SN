@@ -16,10 +16,16 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 class BannerBase extends StatefulWidget {
   final dynamic object;
   final dynamic objectMore;
-  final bool? rolePage;
+  final bool? role;
+  final String? type;
   final Function? handleChangeDependencies;
   const BannerBase(
-      {Key? key, required this.object, this.objectMore, this.rolePage, this.handleChangeDependencies})
+      {Key? key,
+      required this.object,
+      this.objectMore,
+      this.role,
+      this.type,
+      this.handleChangeDependencies})
       : super(key: key);
 
   @override
@@ -75,7 +81,7 @@ class _BannerBaseState extends State<BannerBase> {
                                 onTap: () {
                                   showModal(context, 'avatar');
                                 },
-                                child: widget.rolePage!
+                                child: widget.role != null && widget.role!
                                     ? const CameraIcon()
                                     : const SizedBox(),
                               ))
@@ -88,7 +94,7 @@ class _BannerBaseState extends State<BannerBase> {
                       onTap: () {
                         showModal(context, 'banner');
                       },
-                      child: widget.rolePage!
+                      child: widget.role != null && widget.role!
                           ? const CameraIcon()
                           : const SizedBox())),
             ],
@@ -154,6 +160,7 @@ class _BannerBaseState extends State<BannerBase> {
                     typePage: typePage,
                     entityObj: widget.object,
                     entityType: 'file',
+                    type: widget.type,
                     handleChangeDependencies: widget.handleChangeDependencies,
                     file: File(pickedFile.path))));
       }
