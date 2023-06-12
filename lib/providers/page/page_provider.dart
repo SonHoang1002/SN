@@ -289,8 +289,7 @@ class PageController extends StateNotifier<PageState> {
 
   actionHiddenDeletePost(type, data) {
     int index = -1;
-    index = state.pageFeed.indexWhere((element) => element['id'] == data['id']);
-    print("index $index");
+    index = state.pageFeed.indexWhere((element) => element['id'] == data['id']); 
     if (index < 0) return;
     if (mounted) {
       state = state.copyWith(
