@@ -418,6 +418,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       "created_at": "${DateTime.now()}+07:00",
       "backdated_time": "${DateTime.now()}+07:00",
       "processing": "isProcessing",
+      "media_attachments": [],
       "account": {
         "id": meData['id'],
         "username": meData['username'],
@@ -445,7 +446,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       };
       _fakeData['page_owner'] = _fakeData['page'];
     }
-
+    if (previewUrlData != null) {
+      _fakeData['card'] = previewUrlData;
+    }
     if (files.isNotEmpty) {
       _fakeData['media_attachments'] = files;
     }
@@ -554,7 +557,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       data = {...data, "life_event": lifeEvent};
     }
     if (postDiscussion != null) {
-      data = {...data, ...postDiscussion};
+      data['course_id'] = widget.postDiscussion['course_id'];
     }
     if (widget.pageData != null) {
       data['page_id'] = widget.pageData['id'];
@@ -567,11 +570,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           isUploadVideo = false;
         });
       } else {
-        // WidgetsBinding.instance.addPostFrameCallback((_) {
-        //   ref
-        //       .read(postControllerProvider.notifier)
-        //       .createUpdatePost(type, response);
-        // });
+        // chưa check xem link gửi có xấu độc hay không nên lấy luôn link để hiển thị
+        // đợi ghép socket thông báo post xấu độc hay không
+        if (previewUrlData != null && response['card'] == null) {
+          response['card'] = previewUrlData;
+        }
         widget.reloadFunction != null
             ? widget.reloadFunction!(type, response)
             : null;
@@ -651,19 +654,27 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         widget.post['status_activity']?['id'] != statusActivity['id']) {
       newData = {...newData, 'status_activity_id': statusActivity['id']};
     }
+    if (widget.pageData != null) {
+      newData['page_owner'] = widget.pageData['page_owner'];
+      newData['page'] = widget.pageData['page'];
+    }
+
+    if (widget.postDiscussion != null) {
+      newData['course_id'] = widget.postDiscussion['course_id'];
+    }
     dynamic response = await PostApi().updatePost(widget.post['id'], newData);
-    if(widget.type == postPage){
+    if (widget.type == postPage) {
       ref
-        .read(pageControllerProvider.notifier)
-        .actionUpdateDetailInPost(widget.type, response);
-    }else if(widget.type ==postLearnSpace){
+          .read(pageControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, response);
+    } else if (widget.type == postLearnSpace) {
       ref
-        .read(learnSpaceStateControllerProvider.notifier)
-        .actionUpdateDetailInPost(widget.type, response);
-    }else{
+          .read(learnSpaceStateControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, response);
+    } else {
       ref
-        .read(postControllerProvider.notifier)
-        .actionUpdateDetailInPost(widget.type, response);
+          .read(postControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, response);
     }
 
     if (response != null && mounted) {
@@ -919,7 +930,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   @override
   Widget build(BuildContext context) {
-    print("widget.type  ${widget.type}");
     final size = MediaQuery.of(context).size;
     height = size.height;
     width = size.width;

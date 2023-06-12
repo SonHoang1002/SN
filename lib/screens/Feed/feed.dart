@@ -93,7 +93,7 @@ class _FeedState extends ConsumerState<Feed> {
   Widget build(BuildContext context) {
     List posts = List.from(ref.read(postControllerProvider).posts);
     bool isMore = ref.watch(postControllerProvider).isMore;
-    final theme = pv.Provider.of<ThemeManager>(context);
+    final theme = pv.Provider.of<ThemeManager>(context); 
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {

@@ -31,6 +31,7 @@ class CreatePostButton extends ConsumerWidget {
                       type: preType,
                       pageData: pageData,
                       reloadFunction: reloadFunction,
+                      postDiscussion: postDiscussion,
                     ))));
       },
       child: Container(
