@@ -3,11 +3,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
+import 'package:social_network_app_mobile/screen/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/service/notification_service.dart';
 import 'package:social_network_app_mobile/service/web_socket_service.dart';
+import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'home/PreviewScreen.dart';
@@ -39,6 +42,7 @@ class MaterialAppWithTheme extends ConsumerStatefulWidget {
 class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   late WebSocketChannel webSocketChannel;
   StreamSubscription<dynamic>? subscription;
+
   @override
   void initState() {
     if (!mounted) return;
@@ -271,15 +275,99 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
-
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      themeMode: theme.themeMode,
-      theme: MyThemes.lightTheme,
-      darkTheme: MyThemes.darkTheme,
-      initialRoute: '/',
-      routes: routes,
+    final selectedVideo = ref.watch(selectedVideoProvider);
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          MaterialApp(
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            themeMode: theme.themeMode,
+            theme: MyThemes.lightTheme,
+            darkTheme: MyThemes.darkTheme,
+            initialRoute: '/',
+            routes: routes,
+          ),
+          if (selectedVideo != null)
+            Positioned(
+              bottom: 100,
+              left: 10,
+              child: Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10)),
+                              child: VideoPlayerNoneController(
+                                media: selectedVideo['media_attachments'][0],
+                                type: 'miniPlayer',
+                                path: selectedVideo['media_attachments'][0]
+                                    ['remote_url'],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                                width: 100,
+                                child: Marquee(
+                                  text: selectedVideo['content'] ?? '',
+                                  velocity: 30,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  selectedVideo['account']['display_name'] ??
+                                      selectedVideo['page']['title'] ??
+                                      '',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.play_arrow),
+                          onPressed: () {},
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            ref
+                                .read(selectedVideoProvider.notifier)
+                                .update((state) => null);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
+        ],
+      ),
     );
   }
 }

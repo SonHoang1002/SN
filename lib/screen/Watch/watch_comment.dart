@@ -3,7 +3,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screen/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/widget/FeedVideo/video_player_controller.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
 
 class WatchComment extends StatefulWidget {
   final dynamic post;

@@ -21,7 +21,7 @@ class ProductParentCategoriesController
 
   getParentProductCategories() async {
     final response = await CategoryProductApis().getParentCategoryProductApi();
-    state = state.copyWith(list: response);
+    state = state.copyWith(list: response ?? []);
   }
 }
 

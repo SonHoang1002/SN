@@ -14,8 +14,10 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
   final dynamic post;
   final double? aspectRatio;
   final bool? isShowVolumn;
+  final Duration? timeStart;
   const VideoPlayerNoneController(
       {Key? key,
+      this.timeStart,
       required this.path,
       required this.type,
       this.media,
@@ -49,6 +51,9 @@ class _VideoPlayerNoneControllerState
               Duration(seconds: ref.read(watchControllerProvider).position));
         }
         videoPlayerController.setLooping(true);
+        if (widget.timeStart != null) {
+          videoPlayerController.seekTo(widget.timeStart!);
+        }
       })
       ..addListener(() {
         if (mounted) {
