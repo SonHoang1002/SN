@@ -34,6 +34,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  csslib: 0.17.0
   provider: ^6.0.5
   font_awesome_flutter: ^10.3.0
   flutter_svg: ^1.1.6
@@ -132,6 +133,11 @@ dependencies:
   matrix_gesture_detector: 0.2.0-nullsafety.1
   like_button: ^2.0.5
   miniplayer: ^1.0.1
+  perfect_freehand: ^1.0.4
+  emso_icons:
+    git:
+      url: https://github.com/EMSO-group/flutter_emso_icons
+  connectivity: ^3.0.6
 
 dev_dependencies:
   flutter_test:
@@ -166,6 +172,7 @@ flutter:
   assets:
     - assets/audio/
     - assets/images/
+    - assets/effect_frame/
     - assets/sounds/
     - assets/images_and_video.png
     - assets/camera_menu.png
@@ -188,7 +195,6 @@ flutter:
     - assets/home.svg
     - assets/HomeFC.svg
     - assets/notification.svg
-    - assets/blood.svg
     - assets/blood.png
     - assets/event.svg
     - assets/friend.svg
@@ -224,17 +230,8 @@ flutter:
     - assets/MarketFC.png
     - assets/Plus_2.png
     - assets/wow-emo-2.gif
-    - assets/Noti/Noti.png
-    - assets/Noti/Friend.png
-    - assets/Noti/watch.png
-    - assets/Noti/event.png
-    - assets/Noti/moment.png
-    - assets/Noti/Page.png
-    - assets/Noti/group.png
-    - assets/Noti/post.png
-    - assets/Noti/comment.png
-    - assets/Noti/livestream.png
-
+    - assets/Noti/
+    - assets/pages/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

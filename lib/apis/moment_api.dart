@@ -21,4 +21,15 @@ class MomentApi {
     return await Api()
         .postRequestBase('/api/v1/statuses/$id/unfavourite', null);
   }
+   Future followMomentUser(id) async {
+    return await Api().postRequestBase("/api/v1/accounts/$id/follow", null);
+  }
+   Future followMomentPage(id) async {
+    return await Api().postRequestBase("/api/v1/pages/$id/likes", null);
+  }
+   Future followMomentGroup(id) async {
+    return await Api().postRequestBase("/api/v1/groups/$id/accounts", null);
+  }
+
+   
 }

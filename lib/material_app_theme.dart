@@ -7,17 +7,17 @@ import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
-import 'package:social_network_app_mobile/screen/Watch/WatchDetail/watch_detail.dart';
-import 'package:social_network_app_mobile/service/notification_service.dart';
-import 'package:social_network_app_mobile/service/web_socket_service.dart';
-import 'package:social_network_app_mobile/widget/FeedVideo/video_player_none_controller.dart';
+import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
+import 'package:social_network_app_mobile/services/notification_service.dart';
+import 'package:social_network_app_mobile/services/web_socket_service.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'home/PreviewScreen.dart';
 import 'home/home.dart';
-import 'screen/Login/LoginCreateModules/onboarding_login_page.dart';
-import 'screen/Page/PageDetail/page_detail.dart';
-import 'screen/UserPage/user_page.dart';
+import 'screens/Login/LoginCreateModules/onboarding_login_page.dart';
+import 'screens/Page/PageDetail/page_detail.dart';
+import 'screens/UserPage/user_page.dart';
 import 'theme/theme_manager.dart';
 
 var routes = <String, WidgetBuilder>{

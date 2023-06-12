@@ -4,7 +4,7 @@ import '../../theme/colors.dart';
 
 Widget buildDivider(
     {double? left,
-    double? height=10,
+    double? height = 1,
     double? top,
     double? right,
     double? bottom,

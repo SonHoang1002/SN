@@ -20,56 +20,62 @@ class PageState {
   final List pageGroup;
   final bool isMoreGroup;
   final dynamic pageDetail;
+  final List pageSearch;
 
-  const PageState(
-      {this.rolePage = true,
-      this.pageFeed = const [],
-      this.isMoreFeed = true,
-      this.pageReview = const [],
-      this.isMoreReview = true,
-      this.pagePined = const [],
-      this.pagePhoto = const [],
-      this.isMorePhoto = true,
-      this.pageAlbum = const [],
-      this.isMoreAlbum = true,
-      this.pageVideo = const [],
-      this.isMoreVideo = true,
-      this.pageGroup = const [],
-      this.pageDetail = const {},
-      this.isMoreGroup = true});
+  const PageState({
+    this.rolePage = true,
+    this.pageFeed = const [],
+    this.isMoreFeed = true,
+    this.pageReview = const [],
+    this.isMoreReview = true,
+    this.pagePined = const [],
+    this.pagePhoto = const [],
+    this.isMorePhoto = true,
+    this.pageAlbum = const [],
+    this.isMoreAlbum = true,
+    this.pageVideo = const [],
+    this.isMoreVideo = true,
+    this.pageGroup = const [],
+    this.pageDetail = const {},
+    this.isMoreGroup = true,
+    this.pageSearch = const [],
+  });
 
-  PageState copyWith(
-      {bool rolePage = true,
-      List pageFeed = const [],
-      bool isMoreFeed = true,
-      List pageReview = const [],
-      bool isMoreReview = true,
-      List pagePined = const [],
-      List pagePhoto = const [],
-      bool isMorePhoto = true,
-      List pageAlbum = const [],
-      bool isMoreAlbum = true,
-      List pageVideo = const [],
-      bool isMoreVideo = true,
-      List pageGroup = const [],
-      dynamic pageDetail = const {},
-      bool isMoreGroup = true}) {
+  PageState copyWith({
+    bool rolePage = true,
+    List pageFeed = const [],
+    bool isMoreFeed = true,
+    List pageReview = const [],
+    bool isMoreReview = true,
+    List pagePined = const [],
+    List pagePhoto = const [],
+    bool isMorePhoto = true,
+    List pageAlbum = const [],
+    bool isMoreAlbum = true,
+    List pageVideo = const [],
+    bool isMoreVideo = true,
+    List pageGroup = const [],
+    dynamic pageDetail = const {},
+    bool isMoreGroup = true,
+    List pageSearch = const [],
+  }) {
     return PageState(
-        rolePage: rolePage,
-        pageFeed: pageFeed,
-        isMoreFeed: isMoreFeed,
-        pageReview: pageReview,
-        isMoreReview: isMoreReview,
-        pagePined: pagePined,
-        pagePhoto: pagePhoto,
-        isMorePhoto: isMorePhoto,
-        pageAlbum: pageAlbum,
-        isMoreAlbum: isMoreAlbum,
-        pageVideo: pageVideo,
-        isMoreVideo: isMoreVideo,
-        pageGroup: pageGroup,
-        pageDetail: pageDetail,
-        isMoreGroup: isMoreGroup);
+      rolePage: rolePage,
+      pageFeed: pageFeed,
+      isMoreFeed: isMoreFeed,
+      pageReview: pageReview,
+      isMoreReview: isMoreReview,
+      pagePined: pagePined,
+      pagePhoto: pagePhoto,
+      isMorePhoto: isMorePhoto,
+      pageAlbum: pageAlbum,
+      isMoreAlbum: isMoreAlbum,
+      pageVideo: pageVideo,
+      isMoreVideo: isMoreVideo,
+      pageGroup: pageGroup,
+      pageDetail: pageDetail,
+      isMoreGroup: isMoreGroup,
+    );
   }
 }
 
@@ -131,6 +137,135 @@ class PageController extends StateNotifier<PageState> {
             pageGroup: state.pageGroup,
             isMoreGroup: state.isMoreGroup);
       }
+    }
+  }
+
+  updateMedata(data) {
+    if (data != null) {
+      if (mounted) {
+        state = state.copyWith(
+            pageDetail: data,
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: false,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+      }
+    }
+  }
+
+  updateLikeFollowPageDetail(id, type) async {
+    switch (type) {
+      case "like":
+        state = state.copyWith(
+            pageDetail: {
+              ...state.pageDetail,
+              'page_relationship': {
+                ...state.pageDetail['page_relationship'],
+                'like': true
+              }
+            },
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+        await PageApi().likePageSuggestion(id);
+        break;
+      case "unlike":
+        state = state.copyWith(
+            pageDetail: {
+              ...state.pageDetail,
+              'page_relationship': {
+                ...state.pageDetail['page_relationship'],
+                'like': false
+              }
+            },
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+        await PageApi().unLikePageSuggestion(id);
+        break;
+      case "follow":
+        state = state.copyWith(
+            pageDetail: {
+              ...state.pageDetail,
+              'page_relationship': {
+                ...state.pageDetail['page_relationship'],
+                'following': true
+              }
+            },
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+        await PageApi().followPage(id);
+        break;
+      case "unfollow":
+        state = state.copyWith(
+            pageDetail: {
+              ...state.pageDetail,
+              'page_relationship': {
+                ...state.pageDetail['page_relationship'],
+                'following': false
+              }
+            },
+            rolePage: state.rolePage,
+            pageFeed: state.pageFeed,
+            isMoreFeed: state.isMoreFeed,
+            pageReview: state.pageReview,
+            isMoreReview: state.isMoreReview,
+            pagePined: state.pagePined,
+            pagePhoto: state.pagePhoto,
+            isMorePhoto: state.isMorePhoto,
+            pageAlbum: state.pageAlbum,
+            isMoreAlbum: state.isMoreAlbum,
+            pageVideo: state.pageVideo,
+            isMoreVideo: state.isMoreVideo,
+            pageGroup: state.pageGroup,
+            isMoreGroup: state.isMoreGroup);
+        await PageApi().unfollowPage(id);
+        break;
+      default:
     }
   }
 

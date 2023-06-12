@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widget/Posts/opaque_cupertino_route.dart';
+import 'package:social_network_app_mobile/widgets/Posts/opaque_cupertino_route.dart';
 
 pushToNextScreen(BuildContext context, Widget newScreen) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => newScreen));

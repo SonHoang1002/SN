@@ -33,10 +33,8 @@ class MeController extends StateNotifier<List> {
       var newAccount = {
         "id": response['id'],
         "name": response['display_name'],
-        "show_url": response['avatar_media'] != null
-            ? response['avatar_media']['show_url'] ??
-                response['avatar_media']['preview_url']
-            : '',
+        "show_url": response['avatar_media']?['show_url'] ??
+            response['avatar_media']?['preview_url'],
         "token": token,
         "username": response['username'],
         "theme": newTheme

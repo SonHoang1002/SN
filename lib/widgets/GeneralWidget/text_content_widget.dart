@@ -7,9 +7,14 @@ Widget buildTextContent(String title, bool isBold,
     int? maxLines,
     bool? isItalic = false,
     TextOverflow? overflow,
-    IconData? iconData}) {
+    IconData? iconData,
+    FontWeight? fontWeight,
+    EdgeInsets margin = EdgeInsets.zero,
+    EdgeInsets padding = EdgeInsets.zero}) {
   return Container(
     alignment: isCenterLeft! ? Alignment.centerLeft : Alignment.center,
+    margin: margin,
+    padding: padding,
     child: Wrap(
       children: [
         iconData != null
@@ -27,10 +32,11 @@ Widget buildTextContent(String title, bool isBold,
           textAlign: isCenterLeft ? TextAlign.start : TextAlign.center,
           overflow: overflow ?? TextOverflow.visible,
           style: TextStyle(
-              color: colorWord,
-              fontStyle: isItalic! ? FontStyle.italic : FontStyle.normal,
-              fontSize: fontSize ?? 17,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+            color: colorWord,
+            fontStyle: isItalic! ? FontStyle.italic : FontStyle.normal,
+            fontSize: fontSize ?? 17,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          ),
         ),
       ],
     ),

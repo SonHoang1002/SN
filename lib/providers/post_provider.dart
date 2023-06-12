@@ -124,6 +124,27 @@ class PostController extends StateNotifier<PostState> {
     }
   }
 
+  // only apply for first post of list post from post screen
+  // Recently, create post from feed or userpage also show other page. Therefore, we should update on two page
+  changeProcessingPost(dynamic newData) {
+    if (mounted) {
+      state = state.copyWith(
+          postsPin: state.postsPin,
+          posts: [
+            ...state.posts.sublist(0, 0),
+            newData,
+            ...state.posts.sublist(1)
+          ],
+          isMore: state.isMore,
+          postUserPage: [
+            ...state.posts.sublist(0, 0),
+            newData,
+            ...state.posts.sublist(1)
+          ],
+          isMoreUserPage: state.isMoreUserPage);
+    }
+  }
+
   actionPinPost(type, post) async {
     if (mounted) {
       state = state.copyWith(
@@ -185,7 +206,7 @@ class PostController extends StateNotifier<PostState> {
   }
 
   actionUpdateDetailInPost(dynamic type, dynamic data,
-      {dynamic preType}) async { 
+      {dynamic preType}) async {
     int index = -1;
     if (type == feedPost ||
         (preType == postDetailFromFeed) ||
