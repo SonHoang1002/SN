@@ -269,9 +269,13 @@ class _PageDetailState extends ConsumerState<PageDetail> {
   }
 
   void handleChangeDependencies(dynamic value) {
-    setState(() {
-      pageData = value;
-    });
+    if (value != null) {
+      if (mounted) {
+        setState(() {
+          pageData = value;
+        });
+      }
+    }
   }
 
   Widget getBody(size, modeTheme, data, rolePage) {

@@ -141,6 +141,8 @@ class _BannerBaseState extends State<BannerBase> {
                   typePage: typePage,
                   entityObj: widget.object,
                   entityType: type,
+                  handleChangeDependencies: widget.handleChangeDependencies,
+                  type: widget.type,
                   file: entity)));
     }
 
@@ -180,8 +182,10 @@ class _BannerBaseState extends State<BannerBase> {
         showBarModalBottomSheet(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             context: context,
-            builder: (context) =>
-                PagePickFrames(handleAction: handleChooseMedia));
+            builder: (context) => SingleChildScrollView(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: PagePickFrames(handleAction: handleChooseMedia)));
       }
     }
 
