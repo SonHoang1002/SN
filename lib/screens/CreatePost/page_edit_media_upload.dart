@@ -293,9 +293,9 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
                                                     ),
                                                   ))
                                               : const SizedBox(),
-                                          Positioned(
-                                              right: 15,
-                                              top: 15,
+                                          Container(
+                                              margin: const EdgeInsets.only(
+                                                  right: 15, top: 15),
                                               child: GestureDetector(
                                                 onTap: () {
                                                   List filesUpdate = [

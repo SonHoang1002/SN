@@ -18,6 +18,7 @@ class CreateFeedStatus extends StatefulWidget {
   final Function handleUpdateData;
   final List friendSelected;
   final Function handleGetPreviewUrl;
+  final dynamic pageData;
   const CreateFeedStatus(
       {Key? key,
       required this.visibility,
@@ -28,7 +29,8 @@ class CreateFeedStatus extends StatefulWidget {
       this.statusActivity,
       required this.friendSelected,
       this.checkin,
-      this.content})
+      this.content,
+      this.pageData})
       : super(key: key);
 
   @override
@@ -91,6 +93,9 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
               statusActivity: widget.statusActivity,
               visibility: widget.visibility,
               handleUpdateData: widget.handleUpdateData,
+              entity: widget.pageData != null
+                  ? {...widget.pageData, "entityType": "page"}
+                  : null,
             ),
           ),
           Container(

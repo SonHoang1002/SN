@@ -12,8 +12,13 @@ class CreatePostButton extends ConsumerWidget {
   final dynamic postDiscussion;
   final dynamic preType;
   final Function? reloadFunction;
+  final dynamic pageData;
   const CreatePostButton(
-      {Key? key, this.postDiscussion, this.preType, this.reloadFunction})
+      {Key? key,
+      this.postDiscussion,
+      this.preType,
+      this.reloadFunction,
+      this.pageData})
       : super(key: key);
 
   @override
@@ -26,8 +31,9 @@ class CreatePostButton extends ConsumerWidget {
             CupertinoPageRoute(
                 builder: ((context) => CreateNewFeed(
                       type: preType,
-                      postDiscussion: postDiscussion,
+                      pageData: pageData,
                       reloadFunction: reloadFunction,
+                      postDiscussion: postDiscussion,
                     ))));
       },
       child: Container(
@@ -42,8 +48,12 @@ class CreatePostButton extends ConsumerWidget {
                       width: 40,
                       height: 40,
                       object: ref.watch(meControllerProvider)[0],
-                      path: ref.watch(meControllerProvider)[0]['avatar_media']
-                          ?['preview_url']??linkAvatarDefault),
+                      path: pageData != null
+                          ? (pageData?['avatar_media']?["preview_url"]) ??
+                              linkAvatarDefault
+                          : (ref.watch(meControllerProvider)[0]['avatar_media']
+                                  ?['preview_url'] ??
+                              linkAvatarDefault)),
                   const SizedBox(
                     width: 10,
                   ),

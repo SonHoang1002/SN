@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/page_detail.dart';
@@ -17,6 +18,8 @@ import 'package:social_network_app_mobile/screens/Post/PageReference/page_mentio
 import 'package:social_network_app_mobile/screens/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
@@ -35,7 +38,8 @@ class PostHeader extends ConsumerStatefulWidget {
       this.type,
       this.textColor,
       this.isHaveAction,
-      this.reloadFunction,this.updateDataFunction})
+      this.reloadFunction,
+      this.updateDataFunction})
       : super(key: key);
 
   @override
@@ -138,10 +142,9 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
           pushCustomCupertinoPageRoute(
               context,
               PostDetail(
-                post: widget.post,
-                preType: widget.type,
-                updateDataFunction:widget.updateDataFunction
-              ));
+                  post: widget.post,
+                  preType: widget.type,
+                  updateDataFunction: widget.updateDataFunction));
           // Navigator.push(
           //     context,
           //     CupertinoPageRoute(
@@ -199,11 +202,35 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                         fontWeight: FontWeight.w600,
                                       ))
                                   : const SizedBox(),
+                                  buildSpacer(height: 3),
                               Row(
                                 children: [
+                                  widget.post['page_owner'] != null &&
+                                          widget.post['page'] != null &&
+                                          widget.post?['page_owner']
+                                                      ?['page_relationship']
+                                                  ?['role'] ==
+                                              "admin" &&
+                                          widget.type != postDetail
+                                      ? Row(
+                                          children: [
+                                            buildTextContent(
+                                                "Người đăng: ", true,
+                                                fontSize: 14,
+                                                colorWord: blackColor),
+                                            buildTextContent(
+                                                widget.post['account']
+                                                        ['display_name'] +
+                                                    " · ",
+                                                true,
+                                                colorWord: greyColor,
+                                                fontSize: 13)
+                                          ],
+                                        )
+                                      : const SizedBox(),
                                   Text(
-                                    GetTimeAgo.parse(DateTime.parse(
-                                        widget.post?['created_at'])),
+                                    getRefractorTime(
+                                        widget.post?['created_at']),
                                     style: const TextStyle(
                                         color: greyColor, fontSize: 12),
                                   ),
@@ -228,7 +255,12 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                 ],
               ),
               // widget.isHaveAction == true
-              widget.post['account']['id'] == meData['id']
+              widget.post['account']['id'] == meData['id'] ||
+                      (widget.post['page'] != null &&
+                          widget.post['page_owner'] != null &&
+                          widget.post['page_owner']['page_relationship']
+                                  ['role'] ==
+                              "admin")
                   ? (![postReblog, postMultipleMedia].contains(widget.type))
                       ? Row(
                           children: [
@@ -498,9 +530,8 @@ class AvatarPost extends StatelessWidget {
                           onError: (exception, stackTrace) => const SizedBox(),
                           fit: BoxFit.cover)),
                 ),
-                Positioned(
-                    bottom: 7,
-                    right: 7,
+                Container(
+                    margin: const EdgeInsets.only(right: 7, bottom: 7),
                     child: Avatar(
                       type: 'group',
                       path: accountLink,

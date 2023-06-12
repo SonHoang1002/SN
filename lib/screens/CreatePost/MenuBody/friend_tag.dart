@@ -124,9 +124,9 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                                             ['preview_url']
                                         : linkAvatarDefault,
                                   ),
-                                  Positioned(
-                                      right: 2,
-                                      top: 2,
+                                  Container(
+                                      margin: const EdgeInsets.only(
+                                          right: 2, top: 2),
                                       child: InkWell(
                                         onTap: () {
                                           handleSelected(friendSelected[index]);
