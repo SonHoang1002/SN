@@ -75,16 +75,9 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
         }
       });
 
-      // ignore: prefer_typing_uninitialized_variables
-      var response;
-      if (widget.type == 'page') {
-        response = await page.PageApi()
-            .pagePostMedia(formData, widget.entityObj['id']);
-      } else {
-        response = null;
-      }
-
-      // await page.PageApi().pagePostMedia(formData, widget.entityObj['id']);
+      var response = widget.type == 'page'
+          ? await page.PageApi().pagePostMedia(formData, widget.entityObj['id'])
+          : null;
       if (response != null) {
         setState(() {
           isClick = false;
@@ -454,13 +447,19 @@ class _AvatarWigetState extends State<AvatarWiget> {
                             Theme.of(context).scaffoldBackgroundColor,
                         barrierColor: Colors.transparent,
                         context: context,
-                        builder: (context) =>
-                            PagePickFrames(handleAction: (type, frame) {
-                              setState(() {
-                                frameSelected = frame;
-                              });
-                              widget.handleUpdateData('frame_id', frame['id']);
-                            }));
+                        builder: (context) => SingleChildScrollView(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child:
+                                  PagePickFrames(handleAction: (type, frame) {
+                                setState(() {
+                                  frameSelected = frame;
+                                });
+                                widget.handleUpdateData(
+                                    'frame_id', frame['id']);
+                              }),
+                            ));
                   },
                 ),
               ],

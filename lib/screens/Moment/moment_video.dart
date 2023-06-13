@@ -61,6 +61,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
           });
         }
         if (widget.isPlayBack == true) {
+          videoPlayerController.setVolume(0.0);
           _setTimer();
         }
       });

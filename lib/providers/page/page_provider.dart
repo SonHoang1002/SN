@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 
+import '../../apis/group_api.dart';
+
 @immutable
 class PageState {
   final bool rolePage;
@@ -294,6 +296,55 @@ class PageController extends StateNotifier<PageState> {
     }
   }
 
+  updateLinkedGroup(dynamic group, id, params) async {
+    await GroupApi().updateLinkedGroup(id, params);
+    if (mounted) {
+      List<dynamic> updatedPageGroup = [group, ...state.pageGroup];
+      state = state.copyWith(
+        rolePage: state.rolePage,
+        pageFeed: state.pageFeed,
+        isMoreFeed: state.isMoreFeed,
+        pageReview: state.pageReview,
+        isMoreReview: state.isMoreReview,
+        pagePined: state.pagePined,
+        pagePhoto: state.pagePhoto,
+        isMorePhoto: state.isMorePhoto,
+        pageAlbum: state.pageAlbum,
+        isMoreAlbum: state.isMoreAlbum,
+        pageVideo: state.pageVideo,
+        isMoreVideo: state.isMoreVideo,
+        pageDetail: state.pageDetail,
+        pageGroup: updatedPageGroup,
+        isMoreGroup: state.isMoreGroup,
+      );
+    }
+  }
+
+  removeLinkedGroup(id, params) async {
+    await GroupApi().removeLinkedGroup(id, params);
+    if (mounted) {
+      state = state.copyWith(
+        rolePage: state.rolePage,
+        pageFeed: state.pageFeed,
+        isMoreFeed: state.isMoreFeed,
+        pageReview: state.pageReview,
+        isMoreReview: state.isMoreReview,
+        pagePined: state.pagePined,
+        pagePhoto: state.pagePhoto,
+        isMorePhoto: state.isMorePhoto,
+        pageAlbum: state.pageAlbum,
+        isMoreAlbum: state.isMoreAlbum,
+        pageVideo: state.pageVideo,
+        isMoreVideo: state.isMoreVideo,
+        pageDetail: state.pageDetail,
+        pageGroup: state.pageGroup
+            .where((group) => group['id'] != params['group_id'])
+            .toList(),
+        isMoreGroup: state.isMoreGroup,
+      );
+    }
+  }
+
   getListPageFeed(params, id) async {
     var response = await PageApi().getListPostPageApi(params, id);
     if (response != null) {
@@ -315,6 +366,113 @@ class PageController extends StateNotifier<PageState> {
             pageGroup: state.pageGroup,
             isMoreGroup: state.isMoreGroup);
       }
+    }
+  }
+
+  //
+  createPostFeedPage(newPost) {
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: [newPost] + state.pageFeed,
+          isMoreFeed: true,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          pageDetail: state.pageDetail,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
+    }
+  }
+
+  changeProcessingPost(dynamic newData) {
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: [
+            ...state.pageFeed.sublist(0, 0),
+            newData,
+            ...state.pageFeed.sublist(1)
+          ],
+          isMoreFeed: true,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          pageDetail: state.pageDetail,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
+    }
+  }
+
+  actionHiddenDeletePost(type, data) {
+    int index = -1;
+    index = state.pageFeed.indexWhere((element) => element['id'] == data['id']); 
+    if (index < 0) return;
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: [
+            ...state.pageFeed.sublist(0, index),
+            ...state.pageFeed.sublist(index + 1)
+          ],
+          isMoreFeed: true,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          pageDetail: state.pageDetail,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
+    }
+  }
+
+  actionUpdateDetailInPost(
+    dynamic type,
+    dynamic newData,
+  ) async {
+    int index = -1;
+    index = state.pageFeed
+        .indexWhere((element) => element['id'] == newData['id']);
+    if (index < 0) return;
+
+    if (mounted) {
+      state = state.copyWith(
+          rolePage: state.rolePage,
+          pageFeed: [
+            ...state.pageFeed.sublist(0, index),
+            newData,
+            ...state.pageFeed.sublist(index + 1)
+          ],
+          isMoreFeed: true,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          pageDetail: state.pageDetail,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup);
     }
   }
 

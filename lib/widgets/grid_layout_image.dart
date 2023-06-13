@@ -70,10 +70,12 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                               ? Image.memory(
                                   medias[0]['newUint8ListFile'],
                                   fit: BoxFit.fitWidth,
+                                  width: size.width,
                                 )
                               : Image.file(
                                   medias[0]['file'],
                                   fit: BoxFit.cover,
+                                  width: size.width,
                                 )
                           : Hero(
                               tag: medias[0]['id'],

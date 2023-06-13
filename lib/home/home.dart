@@ -248,7 +248,7 @@ class _HomeState extends ConsumerState<Home>
               )))
     ];
 
-    if (ref.watch(connectivityControllerProvider).connectWifi == false &&
+    if (ref.watch(connectivityControllerProvider).connectInternet == false &&
         !isShowSnackBar) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _buildSnackBar("Không có kết nối mạng");
@@ -256,7 +256,8 @@ class _HomeState extends ConsumerState<Home>
           isShowSnackBar = true;
         });
       });
-    } else if (ref.watch(connectivityControllerProvider).connectWifi == true &&
+    } else if (ref.watch(connectivityControllerProvider).connectInternet ==
+            true &&
         isShowSnackBar) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _buildSnackBar("Đã khôi phục kết nối mạng");

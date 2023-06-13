@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/page_invite_waiting.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
@@ -97,7 +99,13 @@ class _RenderInvitePageState extends ConsumerState<RenderInvitePage> {
             ),
             if (widget.listInvites.isNotEmpty)
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => PageInviteWaiting(
+                              listInvites: widget.listInvites)));
+                },
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(

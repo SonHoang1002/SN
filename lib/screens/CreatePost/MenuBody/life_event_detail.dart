@@ -69,8 +69,8 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
                           ),
                         ),
                 ),
-                Positioned(
-                  bottom: 5,
+                Container(
+                  margin: const EdgeInsets.only(bottom: 5),
                   child: SizedBox(
                     width: size.width,
                     child: Row(
