@@ -129,7 +129,12 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             showHeaderTabFixed = true;
           });
         }
-      } else if (scrollController.offset < headerTabToTop &&
+      } else if (scrollController.offset <
+              headerTabToTop +
+                  (pageData?['page_relationship']?['role'] == 'admin' &&
+                          rolePage
+                      ? 247
+                      : 0) &&
           showHeaderTabFixed == true) {
         if (mounted) {
           setState(() {
