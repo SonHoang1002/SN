@@ -57,14 +57,12 @@ class _VideoPlayerHasControllerState
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
       )..initialize().then((value) => setState(() {
             chewieController = ChewieController(
-                looping: true,
-                autoInitialize: true,
                 placeholder: Container(
                     decoration: BoxDecoration(
                   color: Color(int.parse(
                       '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
                 )),
-                showControlsOnInitialize: true,
+                showControlsOnInitialize: false,
                 videoPlayerController: videoPlayerController!,
                 aspectRatio: videoPlayerController!.value.aspectRatio,
                 progressIndicatorDelay: const Duration(seconds: 10));
@@ -80,6 +78,25 @@ class _VideoPlayerHasControllerState
       chewieController?.dispose();
     }
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.isHiddenControl != null && !widget.isHiddenControl!) {
+      setState(() {
+        chewieController = ChewieController(
+            placeholder: Container(
+                decoration: BoxDecoration(
+              color: Color(int.parse(
+                  '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
+            )),
+            showControlsOnInitialize: true,
+            videoPlayerController: videoPlayerController!,
+            aspectRatio: videoPlayerController!.value.aspectRatio,
+            progressIndicatorDelay: const Duration(seconds: 10));
+      });
+    }
   }
 
   @override

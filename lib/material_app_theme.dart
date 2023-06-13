@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
@@ -293,7 +294,7 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
           if (selectedVideo != null)
             Positioned(
               bottom: 100,
-              left: 10,
+              right: 10,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Card(
@@ -326,7 +327,7 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
                                 selectedVideo['content'].isNotEmpty
                                     ? SizedBox(
                                         height: 20,
-                                        width: 100,
+                                        width: 150,
                                         child: Marquee(
                                           text: selectedVideo['content'],
                                           velocity: 30,
@@ -352,14 +353,19 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
                                 FontAwesomeIcons.upRightAndDownLeftFromCenter,
                                 size: 15),
                             onPressed: () {
-                              Navigator.push(
-                                  context,
+                              SchedulerBinding.instance
+                                  .addPostFrameCallback((_) {
+                                if (GlobalVariable.navState.currentContext !=
+                                    null) {
                                   MaterialPageRoute(
                                       builder: (context) => WatchDetail(
                                             post: selectedVideo,
                                             media: selectedVideo[
                                                 'media_attachments'][0],
-                                          )));
+                                          ));
+                                }
+                              });
+
                               ref
                                   .read(selectedVideoProvider.notifier)
                                   .update((state) => null);
@@ -389,4 +395,8 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void navigateToSecondPageByNameWithoutContext(routeName) {
   navigatorKey.currentState!.pushReplacementNamed(routeName);
+}
+
+class GlobalVariable {
+  static final GlobalKey<NavigatorState> navState = GlobalKey<NavigatorState>();
 }
