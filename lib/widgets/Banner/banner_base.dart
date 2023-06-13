@@ -74,36 +74,41 @@ class _BannerBaseState extends State<BannerBase> {
                             path: pathAvatar,
                             object: widget.object,
                           ),
-                          Positioned(
-                              right: 6,
-                              bottom: 6,
-                              child: GestureDetector(
-                                onTap: () {
-                                  showModal(context, 'avatar');
-                                },
-                                child: widget.object?['page_relationship']
-                                                ?['role'] !=
-                                            '' &&
-                                        widget.role != null &&
-                                        widget.role!
-                                    ? const CameraIcon()
-                                    : const SizedBox(),
-                              ))
+                          widget.object != null
+                              ? Positioned(
+                                  right: 6,
+                                  bottom: 6,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showModal(context, 'avatar');
+                                    },
+                                    child: widget.object?['page_relationship']
+                                                    ?['role'] !=
+                                                '' &&
+                                            widget.role != null &&
+                                            widget.role!
+                                        ? const CameraIcon()
+                                        : const SizedBox(),
+                                  ),
+                                )
+                              : const SizedBox()
                         ],
                       ))),
-              Positioned(
-                  right: 6,
-                  top: 159,
-                  child: GestureDetector(
-                      onTap: () {
-                        showModal(context, 'banner');
-                      },
-                      child:
-                          widget.object?['page_relationship']?['role'] != '' &&
+              widget.object != null
+                  ? Positioned(
+                      right: 6,
+                      top: 159,
+                      child: GestureDetector(
+                          onTap: () {
+                            showModal(context, 'banner');
+                          },
+                          child: widget.object?['page_relationship']?['role'] !=
+                                      '' &&
                                   widget.role != null &&
                                   widget.role!
                               ? const CameraIcon()
-                              : const SizedBox())),
+                              : const SizedBox()))
+                  : const SizedBox(),
             ],
           ),
         ),
