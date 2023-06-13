@@ -1,16 +1,24 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
 import 'package:social_network_app_mobile/screens/Post/post_suggest.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/Posts/processing_indicator_widget.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
@@ -42,6 +50,7 @@ class _PostState extends ConsumerState<Post> {
   dynamic currentPost;
   // tranh truong hop tao bai viet moi nhung khong co hieu ung cho va co the reaction o cac loai post khac o cac phan he khac
   bool isNeedInitPost = true;
+  String warning = "Không có kết nối";
 
   _changeShowCommentBox() {
     setState(() {
@@ -68,6 +77,16 @@ class _PostState extends ConsumerState<Post> {
   Widget build(BuildContext context) {
     final meData = ref.watch(meControllerProvider)[0];
     isNeedInitPost ? currentPost = widget.post : null;
+    if (ref.read(connectivityControllerProvider).connectInternet == false &&
+        currentPost['processing'] == "isProcessing") {
+      if (warning != "Sẽ thử lại bài viết của bạn") {
+        Timer(const Duration(seconds: 5), () {
+          setState(() {
+            warning = "Sẽ thử lại bài viết của bạn";
+          });
+        });
+      }
+    }
     return currentPost != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +104,11 @@ class _PostState extends ConsumerState<Post> {
                       updateDataFunction: updateNewPost,
                     )
                   : const SizedBox(),
+              ref.watch(connectivityControllerProvider).connectInternet ==
+                          false &&
+                      currentPost['processing'] == "isProcessing"
+                  ? _buildInternetWarningCreatePost()
+                  : const SizedBox(),
               currentPost['processing'] == "isProcessing"
                   ? const CustomLinearProgressIndicator()
                   : const SizedBox(),
@@ -92,15 +116,20 @@ class _PostState extends ConsumerState<Post> {
                 children: [
                   Column(
                     children: [
-                      PostHeader(
-                          post: currentPost,
-                          type: widget.type,
-                          // isHaveAction:
-                          //     widget.type != postPageUser ? !isHaveSuggest : true,
-                          reloadFunction: () {
-                            setState(() {});
-                          },
-                          updateDataFunction: updateNewPost),
+                      Container(
+                        padding: currentPost['processing'] == "isProcessing"
+                            ? const EdgeInsets.only(top: 7)
+                            : null,
+                        child: PostHeader(
+                            post: currentPost,
+                            type: widget.type,
+                            // isHaveAction:
+                            //     widget.type != postPageUser ? !isHaveSuggest : true,
+                            reloadFunction: () {
+                              setState(() {});
+                            },
+                            updateDataFunction: updateNewPost),
+                      ),
                       PostCenter(
                           post: currentPost,
                           type: widget.type,
@@ -155,5 +184,98 @@ class _PostState extends ConsumerState<Post> {
             ],
           )
         : const SizedBox();
+  }
+
+  Widget _buildInternetWarningCreatePost() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/icons/retry_create_post.png",
+                    height: 20,
+                    color: secondaryColor,
+                  ),
+                  buildSpacer(width: 5),
+                  buildTextContent(warning, false,
+                      colorWord: secondaryColor, fontSize: 13)
+                ],
+              ),
+              InkWell(
+                onTap: () {
+                  showDeletePostPopup();
+                },
+                child: Image.asset(
+                  "assets/icons/remove_create_post.png",
+                  height: 20,
+                  color: secondaryColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+        buildSpacer(height: 10),
+        buildDivider(color: greyColor)
+      ],
+    );
+  }
+
+  showDeletePostPopup() {
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: buildTextContent("Bỏ bài viết", false,
+                fontSize: 18, isCenterLeft: false),
+            content: buildTextContent(
+                "Khi nào kết nối internet mạnh hơn, chúng tôi sẽ tự động đăng nội dung này cho bạn",
+                false,
+                fontSize: 14,
+                isCenterLeft: false),
+            actions: [
+              Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: Flex(direction: Axis.horizontal, children: [
+                  Flexible(
+                    child: CupertinoButton(
+                        child: buildTextContent("Hủy", false,
+                            fontSize: 13, isCenterLeft: false),
+                        onPressed: () {
+                          popToPreviousScreen(context);
+                        }),
+                  ),
+                  Container(
+                    color: greyColor,
+                    width: 0.5,
+                    height: 50,
+                  ),
+                  Flexible(
+                    child: CupertinoButton(
+                        child: buildTextContent("Bỏ", false,
+                            fontSize: 13, colorWord: red, isCenterLeft: false),
+                        onPressed: () {
+                          popToPreviousScreen(context);
+                          ref
+                              .read(postControllerProvider.notifier)
+                              .removeProgessingPost();
+                          widget.reloadFunction != null
+                              ? widget.reloadFunction!()
+                              : null;
+                        }),
+                  ),
+                  buildDivider(color: greyColor),
+                ]),
+              )
+            ],
+          );
+        });
   }
 }

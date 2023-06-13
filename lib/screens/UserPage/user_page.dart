@@ -5,16 +5,23 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
+import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_friend_block.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_infomation_block.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_pin_post.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_photo_video.dart';
+import 'package:social_network_app_mobile/screens/Watch/watch.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/banner_base.dart';
+import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
@@ -52,6 +59,7 @@ class _UserPageState extends ConsumerState<UserPage> {
   List friend = [];
   List pinPost = [];
   List lifeEvent = [];
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -116,7 +124,11 @@ class _UserPageState extends ConsumerState<UserPage> {
     });
   }
 
-  _reloadFunction(dynamic newData) {
+  _reloadFunction(dynamic type, dynamic newData) {
+    if (type == null && newData == null) {
+      setState(() {});
+      return;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
       setState(() {});
@@ -126,6 +138,20 @@ class _UserPageState extends ConsumerState<UserPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _onItemTapped(int index) {
+    // if (index == 2) {
+    //   pushCustomCupertinoPageRoute(
+    //       context,
+    //       Home(
+    //         selectedIndex: _selectedIndex,
+    //       ));
+    // } else {
+    //   setState(() {
+    //     _selectedIndex = index;
+    //   });
+    // }
   }
 
   PreferredSizeWidget buildAppBar(BuildContext context) {
@@ -239,9 +265,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           ),
           CreatePostButton(
             preType: postPageUser,
-            reloadFunction: (dynamic newData) {
-              _reloadFunction(newData);
-            },
+            reloadFunction: _reloadFunction,
           ),
           const CrossBar(),
           InkWell(
@@ -300,6 +324,10 @@ class _UserPageState extends ConsumerState<UserPage> {
           });
         },
         child: buildUserPageBody(context),
+      ),
+      bottomNavigationBar: BottomNavigatorBarEmso(
+        onTap: _onItemTapped,
+        selectedIndex: _selectedIndex,
       ),
     );
   }
