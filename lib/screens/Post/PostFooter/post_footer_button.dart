@@ -486,6 +486,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                   child: CommentTextfield(
                       handleComment: handleComment,
                       commentNode: commentNode,
+                      autoFocus: false,
                       isOnBoxComment: true)),
             ],
           ),

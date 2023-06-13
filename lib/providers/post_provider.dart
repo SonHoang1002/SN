@@ -143,6 +143,22 @@ class PostController extends StateNotifier<PostState> {
           isMoreUserPage: state.isMoreUserPage); 
     }
   }
+  removeProgessingPost(){
+    if (mounted) {
+      state = state.copyWith(
+          postsPin: state.postsPin,
+          posts: [
+            ...state.posts.sublist(0, 0), 
+            ...state.posts.sublist(1)
+          ],
+          isMore: state.isMore,
+          postUserPage: [
+            ...state.posts.sublist(0, 0), 
+            ...state.posts.sublist(1)
+          ],
+          isMoreUserPage: state.isMoreUserPage); 
+    }
+  }
 
   actionPinPost(type, post) async {
     if (mounted) {

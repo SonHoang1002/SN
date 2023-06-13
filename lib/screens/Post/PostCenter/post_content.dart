@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/expandable_text.dart';
 
@@ -32,7 +33,8 @@ class _PostContentState extends State<PostContent> {
           constraints: const BoxConstraints(minHeight: 320),
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(backgroundObject['url']),
+                image:
+                    NetworkImage(backgroundObject?['url'] ?? linkBannerDefault),
                 onError: (exception, stackTrace) => const SizedBox(),
                 fit: BoxFit.cover),
           ),
@@ -43,12 +45,15 @@ class _PostContentState extends State<PostContent> {
                 widget.post['content'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: double.parse(backgroundObject['style']['fontSize']
-                            .substring(0, 2)) -
-                        10,
-                    color: Color(int.parse(backgroundObject['style']
-                            ['fontColor']
-                        .replaceAll('#', '0xff'))),
+                    fontSize: backgroundObject?['style'] != null
+                        ? (double.parse(backgroundObject?['style']['fontSize']
+                                .substring(0, 2)) -
+                            10)
+                        : 18,
+                    color: backgroundObject?['style'] != null
+                        ? Color(int.parse(backgroundObject['style']['fontColor']
+                            .replaceAll('#', '0xff')))
+                        : Theme.of(context).textTheme.bodyLarge!.color,
                     fontWeight: FontWeight.w700),
               ),
             ),
