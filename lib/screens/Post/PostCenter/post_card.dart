@@ -52,6 +52,8 @@ class PostCard extends StatelessWidget {
                               return MyWebView(
                                 title: "abc",
                                 selectedUrl: card['link'] ?? card['url'],
+                                post: post,
+                                type: type,
                               );
                             });
                           });

@@ -115,6 +115,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool isMenuMinExtent = true;
 
   GlobalKey _heightKey = GlobalKey();
+  bool _isClickForCreatePost = false;
 
   @override
   void initState() {
@@ -480,104 +481,115 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   handleCreatePost() async {
-    double processingPostHeight = _heightKey.currentContext!.size!.height;
-    ref
-        .read(processingPostController.notifier)
-        .setPostionPost(processingPostHeight);
-    String? type = widget.type ?? feedPost;
-    if (type == postPage) {
+    if (!_isClickForCreatePost) {
+      setState(() {
+        _isClickForCreatePost = true;
+      });
+      double processingPostHeight = _heightKey.currentContext!.size!.height;
       ref
-          .read(pageControllerProvider.notifier)
-          .createPostFeedPage(_createFakeData());
-      widget.reloadFunction != null ? widget.reloadFunction!(null, null) : null;
-    } else if (type == postLearnSpace) {
-      ref
-          .read(learnSpaceStateControllerProvider.notifier)
-          .createPostLearnSpace(type, _createFakeData());
-      widget.reloadFunction != null ? widget.reloadFunction!(null, null) : null;
-    } else {
-      ref
-          .read(postControllerProvider.notifier)
-          .createUpdatePost(type, _createFakeData());
-      widget.reloadFunction != null ? widget.reloadFunction!(null, null) : null;
-    }
-
-    Navigator.pop(context);
-    // prepare data for api
-    var data = {"status": content, "visibility": visibility['key']};
-    if (backgroundSelected != null) {
-      data = {...data, 'status_background_id': backgroundSelected['id']};
-    }
-    if (gifLink.isNotEmpty) {
-      data = {
-        ...data,
-        "extra_body": {"description": "", "link": gifLink, "title": ""}
-      };
-    }
-    if (statusActivity != null) {
-      data = {...data, 'status_activity_id': statusActivity['id']};
-    }
-    if (friendSelected.isNotEmpty) {
-      data = {
-        ...data,
-        'mention_ids': friendSelected.map((e) => e['id']).toList()
-      };
-    }
-    if (poll != null) {
-      data = {...data, 'poll': poll};
-    }
-    if (statusQuestion != null) {
-      data = {
-        ...data,
-        "post_type": statusQuestion['postType'],
-        statusQuestion['postType'] == 'target'
-            ? 'status_target'
-            : 'status_question': {
-          "color": statusQuestion['color'],
-          "content": statusQuestion['content'],
-        }
-      };
-    }
-    if (checkin != null) {
-      data = {...data, 'place_id': checkin['id']};
-    }
-    if (files.isNotEmpty) {
-      List<Future> listUpload = [];
-      for (var i = 0; i < files.length; i++) {
-        listUpload.add(handleUploadMedia(i, files[i]));
-      }
-      var results = await Future.wait(listUpload);
-      List mediasId = [];
-      if (results.isNotEmpty) {
-        mediasId = results.map((e) => e['id']).toList();
-      }
-      data = {...data, "media_ids": mediasId};
-    }
-    if (lifeEvent != null) {
-      data = {...data, "life_event": lifeEvent};
-    }
-    if (postDiscussion != null) {
-      data['course_id'] = widget.postDiscussion['course_id'];
-    }
-    if (widget.pageData != null) {
-      data['page_id'] = widget.pageData['id'];
-      data['page_owner_id'] = widget.pageData['id'];
-    }
-    var response = await PostApi().createStatus(data);
-    if (response != null) {
-      if (isUploadVideo) {
-        setState(() {
-          isUploadVideo = false;
-        });
-      } else {
-        // chưa check xem link gửi có xấu độc hay không nên lấy luôn link để hiển thị
-        // đợi ghép socket thông báo post xấu độc hay không
-        if (previewUrlData != null && response['card'] == null) {
-          response['card'] = previewUrlData;
-        }
+          .read(processingPostController.notifier)
+          .setPostionPost(processingPostHeight);
+      String? type = widget.type ?? feedPost;
+      if (type == postPage) {
+        ref
+            .read(pageControllerProvider.notifier)
+            .createPostFeedPage(_createFakeData());
         widget.reloadFunction != null
-            ? widget.reloadFunction!(type, response)
+            ? widget.reloadFunction!(null, null)
             : null;
+      } else if (type == postLearnSpace) {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .createPostLearnSpace(type, _createFakeData());
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(null, null)
+            : null;
+      } else {
+        ref
+            .read(postControllerProvider.notifier)
+            .createUpdatePost(type, _createFakeData());
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(null, null)
+            : null;
+      }
+
+      Navigator.pop(context);
+      // prepare data for api
+      var data = {"status": content, "visibility": visibility['key']};
+      if (backgroundSelected != null) {
+        data = {...data, 'status_background_id': backgroundSelected['id']};
+      }
+      if (gifLink.isNotEmpty) {
+        data = {
+          ...data,
+          "extra_body": {"description": "", "link": gifLink, "title": ""}
+        };
+      }
+      if (statusActivity != null) {
+        data = {...data, 'status_activity_id': statusActivity['id']};
+      }
+      if (friendSelected.isNotEmpty) {
+        data = {
+          ...data,
+          'mention_ids': friendSelected.map((e) => e['id']).toList()
+        };
+      }
+      if (poll != null) {
+        data = {...data, 'poll': poll};
+      }
+      if (statusQuestion != null) {
+        data = {
+          ...data,
+          "post_type": statusQuestion['postType'],
+          statusQuestion['postType'] == 'target'
+              ? 'status_target'
+              : 'status_question': {
+            "color": statusQuestion['color'],
+            "content": statusQuestion['content'],
+          }
+        };
+      }
+      if (checkin != null) {
+        data = {...data, 'place_id': checkin['id']};
+      }
+      if (files.isNotEmpty) {
+        List<Future> listUpload = [];
+        for (var i = 0; i < files.length; i++) {
+          listUpload.add(handleUploadMedia(i, files[i]));
+        }
+        var results = await Future.wait(listUpload);
+        List mediasId = [];
+        if (results.isNotEmpty) {
+          mediasId = results.map((e) => e['id']).toList();
+        }
+        data = {...data, "media_ids": mediasId};
+      }
+      if (lifeEvent != null) {
+        data = {...data, "life_event": lifeEvent};
+      }
+      if (postDiscussion != null) {
+        data['course_id'] = widget.postDiscussion['course_id'];
+      }
+      if (widget.pageData != null) {
+        data['page_id'] = widget.pageData['id'];
+        data['page_owner_id'] = widget.pageData['id'];
+      } 
+      var response = await PostApi().createStatus(data);
+      if (response != null) {
+        if (isUploadVideo) {
+          setState(() {
+            isUploadVideo = false;
+          });
+        } else {
+          // chưa check xem link gửi có xấu độc hay không nên lấy luôn link để hiển thị
+          // đợi ghép socket thông báo post xấu độc hay không
+          if (previewUrlData != null && response['card'] == null) {
+            response['card'] = previewUrlData;
+          }
+          widget.reloadFunction != null
+              ? widget.reloadFunction!(type, response)
+              : null;
+        }
       }
     }
   }
@@ -626,23 +638,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
     if (widget.post['visibility'] != visibility['key']) {
       newData['visibility'] = visibility['key'];
-    }
-    // if (backgroundSelected != null &&
-    //     widget.post['status_background']?['id'] != backgroundSelected['id']) {
-    //   if (files.isNotEmpty ||
-    //       checkin == null ||
-    //       poll == null ||
-    //       lifeEvent == null ||
-    //       widget.post['shared_event'] == null ||
-    //       widget.post['shared_recruit'] == null ||
-    //       widget.post['shared_project'] == null ||
-    //       widget.post['shared_course'] == null ||
-    //       widget.post['shared_product'] == null ||
-    //       widget.post['shared_page'] == null ||
-    //       widget.post['shared_group'] == null) {
-    //     newData['status_background_id'] = backgroundSelected['id'];
-    //   }
-    // } else {}
+    } 
     newData['status_background_id'] =
         backgroundSelected != null ? backgroundSelected['id'] : null;
 

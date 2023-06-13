@@ -47,14 +47,11 @@ class _CustomLinearProgressIndicatorState
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 5),
-          child: LinearProgressIndicator(
-            value: _animationController.value,
-            minHeight: 5,
-            backgroundColor: Colors.grey,
-            valueColor: _colorAnimation,
-          ),
+        return LinearProgressIndicator(
+          value: _animationController.value,
+          minHeight: 5,
+          backgroundColor: Colors.grey,
+          valueColor: _colorAnimation,
         );
       },
     );

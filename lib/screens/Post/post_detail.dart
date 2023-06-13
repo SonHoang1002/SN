@@ -14,6 +14,7 @@ import 'package:social_network_app_mobile/helper/split_link.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
@@ -22,6 +23,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/information_comp
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/comment_textfield.dart';
 
@@ -52,6 +54,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   dynamic commentChild;
   dynamic postData;
   dynamic preUpdateData;
+  int _selectedIndex = 0;
   List<dynamic> filterCommentList = [
     {
       'key': "fit",
@@ -469,7 +472,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                             child: Row(
                               children: [
                                 buildSpacer(width: 10),
-                                buildTextContent(_filterSelection['title'], false,
+                                buildTextContent(
+                                    _filterSelection['title'], false,
                                     colorWord: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
@@ -551,13 +555,30 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                         commentSelected: commentSelected,
                         getCommentSelected: getCommentSelected,
                         commentNode: commentNode,
+                        autoFocus: false,
                         handleComment: handleComment),
                   )
                 ]),
           ),
         ),
+        bottomNavigationBar: BottomNavigatorBarEmso(
+          onTap: _onItemTapped,
+          selectedIndex: _selectedIndex,
+        ),
       ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (index == 2) {
+      showBarModalBottomSheet(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          context: context,
+          builder: (context) => const CreatePost());
+    }
   }
 
   _callApiFilterComment(dynamic key) {}
