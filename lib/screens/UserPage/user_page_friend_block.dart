@@ -104,7 +104,9 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                               mainAxisSpacing: 7,
                               crossAxisCount: 3,
                               childAspectRatio: 0.75),
-                      itemCount: widget.friends.sublist(0, 6).length,
+                      itemCount: widget.friends.length > 6
+                          ? widget.friends.sublist(0, 6).length
+                          : widget.friends.length,
                       itemBuilder: (context, index) => InkWell(
                         onTap: () {
                           Navigator.push(
