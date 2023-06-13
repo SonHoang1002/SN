@@ -425,7 +425,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             tabCurrent: menuSelected));
   }
 
-  void showModalSwitchRole(context, listSwitch, rolePage) {
+  void showModalSwitchRole(context, listSwitch, rolePage, size) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -488,13 +488,18 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                       const SizedBox(
                                         width: 7,
                                       ),
-                                      Text(
-                                        listSwitch[index]?['display_name'] ??
-                                            listSwitch[index]?['title'] ??
-                                            "",
-                                        style: const TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500),
+                                      SizedBox(
+                                        width: size.width * 0.6,
+                                        child: Text(
+                                          listSwitch[index]?['display_name'] ??
+                                              listSwitch[index]?['title'] ??
+                                              "",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                       )
                                     ],
                                   ),
@@ -533,7 +538,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     if (!isModalOpen && pageData?['page_relationship']?['role'] == 'admin') {
       isModalOpen = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showModalSwitchRole(context, listSwitch, rolePage);
+        showModalSwitchRole(context, listSwitch, rolePage, size);
       });
     }
 
@@ -559,7 +564,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         title: InkWell(
           onTap: () {
             if (pageData?['page_relationship']?['role'] != '' && rolePage) {
-              showModalSwitchRole(context, listSwitch, rolePage);
+              showModalSwitchRole(context, listSwitch, rolePage, size);
             }
           },
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
