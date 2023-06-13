@@ -295,10 +295,5 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
     return VideoPlayer(
       videoPlayerController,
     );
-    // : ImageCacheRender(
-    //     width: size.width,
-    //     height: size.height,
-    //     path: widget.moment['media_attachments'][0]['preview_url'],
-    //   );
   }
 }

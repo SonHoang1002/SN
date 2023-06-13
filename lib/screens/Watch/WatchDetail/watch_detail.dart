@@ -131,53 +131,56 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                                           child: VideoPlayerHasController(
                                             type: widget.type,
                                             media: widget.media,
+                                            isHiddenControl: false,
                                           ),
                                         )
                                       : VideoPlayerHasController(
                                           type: widget.type,
                                           media: widget.media,
+                                          isHiddenControl: false,
                                         )),
                             ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15, right: 15),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                if (!isHiddenAction)
-                                  Container(
-                                    constraints: BoxConstraints(
-                                        maxHeight: size.height / 3),
-                                    child: TabBarView(
-                                        controller: _tabController,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              PostHeader(
-                                                  post: widget.post,
-                                                  textColor: white,
-                                                  type: postDetail),
-                                              Container(
-                                                padding: const EdgeInsets.only(
-                                                    top: 12),
-                                                child: PostContent(
-                                                  post: widget.post,
-                                                  textColor: white,
-                                                ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (!isHiddenAction)
+                                Container(
+                                  constraints: BoxConstraints(
+                                      maxHeight: size.height / 3),
+                                  child: TabBarView(
+                                      controller: _tabController,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            PostHeader(
+                                                post: widget.post,
+                                                textColor: white,
+                                                type: postDetail),
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 12),
+                                              child: PostContent(
+                                                post: widget.post,
+                                                textColor: white,
                                               ),
-                                            ],
-                                          ),
-                                          ListComment(
-                                              postComment: postComment,
-                                              commentChild: commentChild,
-                                              commentNode: commentNode,
-                                              commentSelected: commentSelected)
-                                        ]),
-                                  ),
-                                Row(
+                                            ),
+                                          ],
+                                        ),
+                                        ListComment(
+                                            postComment: postComment,
+                                            commentChild: commentChild,
+                                            commentNode: commentNode,
+                                            commentSelected: commentSelected)
+                                      ]),
+                                ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     RotateIcon(
@@ -204,11 +207,15 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                                           ]),
                                   ],
                                 ),
-                                BottomAction(
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: BottomAction(
                                     widget: widget,
-                                    isHiddenAction: isHiddenAction)
-                              ],
-                            ),
+                                    isHiddenAction: isHiddenAction),
+                              )
+                            ],
                           ),
                         ],
                       ),

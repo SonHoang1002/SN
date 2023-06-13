@@ -18,10 +18,11 @@ class ImageCacheRender extends StatefulWidget {
 
 class _ImageCacheRenderState extends State<ImageCacheRender> {
   final cacheManager = DefaultCacheManager();
+
   @override
   void dispose() {
-    super.dispose();
     cacheManager.emptyCache();
+    super.dispose();
   }
 
   @override
