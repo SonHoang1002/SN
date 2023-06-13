@@ -31,7 +31,7 @@ class WebSocketService {
 
   Future<WebSocketChannel> connectToWebSocket() async {
     var res = await fetchToken();
-    if (res['data']['token'] != null) {
+    if (res != null && res['data']['token'] != null) {
       webSocketChannel = WebSocketChannel.connect(
         Uri.parse(
           '$socketNovuUrl/?token=${res['data']['token']}&EIO=3&transport=websocket',

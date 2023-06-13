@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -293,25 +294,22 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
             Positioned(
               bottom: 100,
               left: 10,
-              child: Card(
-                elevation: 10,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: FittedBox(
-                            fit: BoxFit.cover,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Card(
+                  elevation: 10,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 80,
+                            height: 80,
+                            color: Color(int.parse(
+                                '0xFF${selectedVideo['media_attachments'][0]['meta']['small']['average_color'].substring(1)}')),
+                            child: Center(
                               child: VideoPlayerNoneController(
+                                isShowVolumn: false,
                                 media: selectedVideo['media_attachments'][0],
                                 type: 'miniPlayer',
                                 path: selectedVideo['media_attachments'][0]
@@ -319,50 +317,66 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                height: 20,
-                                width: 100,
-                                child: Marquee(
-                                  text: selectedVideo['content'] ?? '',
-                                  velocity: 30,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w500),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                selectedVideo['content'].isNotEmpty
+                                    ? SizedBox(
+                                        height: 20,
+                                        width: 100,
+                                        child: Marquee(
+                                          text: selectedVideo['content'],
+                                          velocity: 30,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                                Flexible(
+                                  child: Text(
+                                    selectedVideo['account']['display_name'] ??
+                                        selectedVideo['page']['title'] ??
+                                        '',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 ),
-                              ),
-                              Flexible(
-                                child: Text(
-                                  selectedVideo['account']['display_name'] ??
-                                      selectedVideo['page']['title'] ??
-                                      '',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.play_arrow),
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            ref
-                                .read(selectedVideoProvider.notifier)
-                                .update((state) => null);
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                          IconButton(
+                            icon: const Icon(
+                                FontAwesomeIcons.upRightAndDownLeftFromCenter,
+                                size: 15),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WatchDetail(
+                                            post: selectedVideo,
+                                            media: selectedVideo[
+                                                'media_attachments'][0],
+                                          )));
+                              ref
+                                  .read(selectedVideoProvider.notifier)
+                                  .update((state) => null);
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              ref
+                                  .read(selectedVideoProvider.notifier)
+                                  .update((state) => null);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
