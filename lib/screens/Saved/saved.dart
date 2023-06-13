@@ -1,10 +1,9 @@
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 
 class Saved extends StatefulWidget {
@@ -78,74 +77,70 @@ class SavedState extends State<Saved> {
     double height,
     ThemeManager theme,
   ) {
-    return Container(
-      child: GridView.builder(
-        clipBehavior: Clip.hardEdge,
-        shrinkWrap: true,
-        itemCount: collections.length >= 4 ? 4 : collections.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    return GridView.builder(
+      clipBehavior: Clip.hardEdge,
+      shrinkWrap: true,
+      itemCount: collections.length >= 4 ? 4 : collections.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisSpacing: 5.0,
           mainAxisSpacing: 5.0,
           crossAxisCount: 2,
-        ),
-        itemBuilder: (context, index) {
-          var item = collections[index];
-          return Container(
-            child: CardComponents(
-              imageCard: SizedBox(
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                  child: Image.network(
-                    item['imageUrl'],
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: height / 8,
-                  ),
-                ),
+          childAspectRatio: 1.12),
+      itemBuilder: (context, index) {
+        var item = collections[index];
+        return CardComponents(
+          imageCard: SizedBox(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
               ),
-              onTap: () {},
-              textCard: Container(
-                // color: Colors.red,
-                padding: const EdgeInsets.only(
-                  right: 12.5,
-                  left: 12.5,
-                  top: 8,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Text(
-                        item['name'],
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w800,
-                          color: theme.isDarkMode ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Text(
-                        'Chỉ mình tôi',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          color: greyColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              child: Image.network(
+                item['imageUrl'],
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: height / 8,
               ),
             ),
-          );
-        },
-      ),
+          ),
+          onTap: () {},
+          textCard: Container(
+            // color: Colors.red,
+            padding: const EdgeInsets.only(
+              right: 12.5,
+              left: 12.5,
+              top: 8,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    item['name'],
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w800,
+                      color: theme.isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(2.0),
+                  child: Text(
+                    'Chỉ mình tôi',
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      color: greyColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
