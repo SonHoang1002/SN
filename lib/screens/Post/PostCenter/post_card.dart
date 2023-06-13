@@ -44,19 +44,27 @@ class PostCard extends StatelessWidget {
                       // } else {
                       //   return;
                       // }
-                      showBarModalBottomSheet(
-                          context: context,
-                          builder: (ctx) {
-                            return StatefulBuilder(
-                                builder: (ctx, setStatefull) {
-                              return MyWebView(
-                                title: "abc",
-                                selectedUrl: card['link'] ?? card['url'],
-                                post: post,
-                                type: type,
-                              );
-                            });
-                          });
+                      pushCustomCupertinoPageRoute(
+                          context,
+                          MyWebView(
+                            title: "abc",
+                            selectedUrl: card['link'] ?? card['url'],
+                            post: post,
+                            type: type,
+                          ));
+                      // showBarModalBottomSheet(
+                      //     context: context,
+                      //     builder: (ctx) {
+                      //       return StatefulBuilder(
+                      //           builder: (ctx, setStatefull) {
+                      //         return MyWebView(
+                      //           title: "abc",
+                      //           selectedUrl: card['link'] ?? card['url'],
+                      //           post: post,
+                      //           type: type,
+                      //         );
+                      //       });
+                      //     });
                     }
                   },
                   child: isVertical
