@@ -37,7 +37,7 @@ class _AboutPageState extends State<AboutPage> {
             'key': 'like',
             'title': 'Lượt thích',
             'subtitle': widget.aboutPage['like_count'].toString(),
-            'icon': FontAwesomeIcons.thumbsUp
+            'icon': FontAwesomeIcons.solidThumbsUp
           },
           {
             'key': 'follow',
@@ -60,7 +60,7 @@ class _AboutPageState extends State<AboutPage> {
           {
             'key': 'phone',
             'title': 'Số điện thoại',
-            'subtitle': '09234090423',
+            'subtitle': widget.aboutPage['phone_number'],
             'icon': Icons.phone
           },
         ];

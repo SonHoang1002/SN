@@ -551,18 +551,33 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             color: Theme.of(context).textTheme.titleLarge?.color,
           ),
         ),
-        title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text(
-              rolePage
-                  ? (pageData?['title'] != null &&
-                          pageData?['title'].length >= 32
-                      ? '${pageData?['title'].substring(0, 32)}...'
-                      : pageData?['title'] ?? "")
-                  : meData[0]['display_name'],
-              style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                  fontSize: 15)),
-        ]),
+        title: InkWell(
+          onTap: () {
+            if (pageData?['page_relationship']?['role'] != '' && rolePage) {
+              showModalSwitchRole(context, listSwitch, rolePage);
+            }
+          },
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(
+                rolePage
+                    ? (pageData?['title'] != null &&
+                            pageData?['title'].length >= 32
+                        ? '${pageData?['title'].substring(0, 32)}...'
+                        : pageData?['title'] ?? "")
+                    : meData[0]['display_name'],
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                    fontSize: 15)),
+            if (pageData?['page_relationship']?['role'] != '' && rolePage)
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Icon(
+                  FontAwesomeIcons.angleDown,
+                  size: 18,
+                ),
+              )
+          ]),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(11.0),

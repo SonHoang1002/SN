@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 
+import '../../apis/group_api.dart';
+
 @immutable
 class PageState {
   final bool rolePage;
@@ -291,6 +293,55 @@ class PageController extends StateNotifier<PageState> {
                 checkObjectUniqueInList(state.pageGroup + response, 'id'),
             isMoreGroup: response.length < params['limit'] ? false : true);
       }
+    }
+  }
+
+  updateLinkedGroup(dynamic group, id, params) async {
+    await GroupApi().updateLinkedGroup(id, params);
+    if (mounted) {
+      List<dynamic> updatedPageGroup = [group, ...state.pageGroup];
+      state = state.copyWith(
+        rolePage: state.rolePage,
+        pageFeed: state.pageFeed,
+        isMoreFeed: state.isMoreFeed,
+        pageReview: state.pageReview,
+        isMoreReview: state.isMoreReview,
+        pagePined: state.pagePined,
+        pagePhoto: state.pagePhoto,
+        isMorePhoto: state.isMorePhoto,
+        pageAlbum: state.pageAlbum,
+        isMoreAlbum: state.isMoreAlbum,
+        pageVideo: state.pageVideo,
+        isMoreVideo: state.isMoreVideo,
+        pageDetail: state.pageDetail,
+        pageGroup: updatedPageGroup,
+        isMoreGroup: state.isMoreGroup,
+      );
+    }
+  }
+
+  removeLinkedGroup(id, params) async {
+    await GroupApi().removeLinkedGroup(id, params);
+    if (mounted) {
+      state = state.copyWith(
+        rolePage: state.rolePage,
+        pageFeed: state.pageFeed,
+        isMoreFeed: state.isMoreFeed,
+        pageReview: state.pageReview,
+        isMoreReview: state.isMoreReview,
+        pagePined: state.pagePined,
+        pagePhoto: state.pagePhoto,
+        isMorePhoto: state.isMorePhoto,
+        pageAlbum: state.pageAlbum,
+        isMoreAlbum: state.isMoreAlbum,
+        pageVideo: state.pageVideo,
+        isMoreVideo: state.isMoreVideo,
+        pageDetail: state.pageDetail,
+        pageGroup: state.pageGroup
+            .where((group) => group['id'] != params['group_id'])
+            .toList(),
+        isMoreGroup: state.isMoreGroup,
+      );
     }
   }
 
