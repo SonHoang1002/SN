@@ -301,7 +301,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 154.5,
+                      width: size.width * 0.38,
                       height: 35,
                       child: ButtonPrimary(
                         label: "Nhắn tin",
@@ -309,9 +309,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                         handlePress: () {},
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 8),
                     SizedBox(
-                      width: 154.5,
+                      width: size.width * 0.38,
                       height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'
@@ -336,9 +336,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 8),
                     SizedBox(
-                      width: 50,
+                      width: size.width * 0.12,
                       height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'

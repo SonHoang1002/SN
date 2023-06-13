@@ -81,7 +81,11 @@ class _BannerBaseState extends State<BannerBase> {
                                 onTap: () {
                                   showModal(context, 'avatar');
                                 },
-                                child: widget.role != null && widget.role!
+                                child: widget.object?['page_relationship']
+                                                ?['role'] !=
+                                            '' &&
+                                        widget.role != null &&
+                                        widget.role!
                                     ? const CameraIcon()
                                     : const SizedBox(),
                               ))
@@ -94,17 +98,43 @@ class _BannerBaseState extends State<BannerBase> {
                       onTap: () {
                         showModal(context, 'banner');
                       },
-                      child: widget.role != null && widget.role!
-                          ? const CameraIcon()
-                          : const SizedBox())),
+                      child:
+                          widget.object?['page_relationship']?['role'] != '' &&
+                                  widget.role != null &&
+                                  widget.role!
+                              ? const CameraIcon()
+                              : const SizedBox())),
             ],
           ),
         ),
         SizedBox(
           width: size.width - 30,
-          child: Text(
-            '$title ${subTitle != '' ? '($subTitle)' : ''}',
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+          child: RichText(
+            text: TextSpan(
+              text: title,
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: colorWord(context)),
+              children: [
+                // WidgetSpan(
+                //   child: Padding(
+                //     padding: const EdgeInsets.only(left: 8.0, bottom: 3.0),
+                //     child: Image.asset(
+                //       'assets/pages/blueTick.png',
+                //       width: 20,
+                //       height: 20,
+                //     ),
+                //   ),
+                // ),
+                TextSpan(
+                    text: ' ${subTitle != '' ? '($subTitle)' : ''}',
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: colorWord(context))),
+              ],
+            ),
           ),
         ),
       ],

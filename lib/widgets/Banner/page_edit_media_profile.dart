@@ -75,8 +75,9 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
         }
       });
 
-      var response =
-          await page.PageApi().pagePostMedia(formData, widget.entityObj['id']);
+      var response = widget.type == 'page'
+          ? await page.PageApi().pagePostMedia(formData, widget.entityObj['id'])
+          : null;
       if (response != null) {
         setState(() {
           isClick = false;
