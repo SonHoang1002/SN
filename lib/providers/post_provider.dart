@@ -140,23 +140,21 @@ class PostController extends StateNotifier<PostState> {
             newData,
             ...state.posts.sublist(1)
           ],
-          isMoreUserPage: state.isMoreUserPage); 
+          isMoreUserPage: state.isMoreUserPage);
     }
   }
-  removeProgessingPost(){
+
+  removeProgessingPost() {
     if (mounted) {
       state = state.copyWith(
           postsPin: state.postsPin,
-          posts: [
-            ...state.posts.sublist(0, 0), 
-            ...state.posts.sublist(1)
-          ],
+          posts: [...state.posts.sublist(0, 0), ...state.posts.sublist(1)],
           isMore: state.isMore,
           postUserPage: [
-            ...state.posts.sublist(0, 0), 
+            ...state.posts.sublist(0, 0),
             ...state.posts.sublist(1)
           ],
-          isMoreUserPage: state.isMoreUserPage); 
+          isMoreUserPage: state.isMoreUserPage);
     }
   }
 
@@ -216,8 +214,6 @@ class PostController extends StateNotifier<PostState> {
               : state.postUserPage,
           isMoreUserPage: state.isMoreUserPage);
     }
-    if (preType == feedPost) {
-    } else if (preType == postPageUser) {}
   }
 
   actionUpdateDetailInPost(dynamic type, dynamic data,

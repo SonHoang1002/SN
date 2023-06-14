@@ -298,7 +298,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const UserPage(),
+                                              const UserPageHome(),
                                           settings: RouteSettings(
                                             arguments: {
                                               'id': hosts[index]['account']
@@ -378,7 +378,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const UserPage(),
+                                                    const UserPageHome(),
                                                 settings: RouteSettings(
                                                   arguments: {
                                                     'id': hosts[index]

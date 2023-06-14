@@ -137,7 +137,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const UserPage(),
+                              builder: (context) => const UserPageHome(),
                               settings: RouteSettings(
                                 arguments: {'id': searchResults[index]['id']},
                               ),

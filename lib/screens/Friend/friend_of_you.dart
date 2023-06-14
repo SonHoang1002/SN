@@ -217,7 +217,7 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const UserPage(),
+                                builder: (context) => const UserPageHome(),
                                 settings: RouteSettings(
                                   arguments: {'id': friends[index]['id']},
                                 ),

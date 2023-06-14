@@ -64,7 +64,7 @@ class SearchHistory extends ConsumerWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const UserPage(),
+                                                const UserPageHome(),
                                             settings: RouteSettings(
                                               arguments: {
                                                 'id': searchHistory[index]

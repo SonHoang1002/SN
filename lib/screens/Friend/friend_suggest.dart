@@ -89,7 +89,7 @@ class _FriendSuggestState extends ConsumerState<FriendSuggest> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const UserPage(),
+                                  builder: (context) => const UserPageHome(),
                                   settings: RouteSettings(
                                     arguments: {
                                       'id': friendSuggestions[index]['id']

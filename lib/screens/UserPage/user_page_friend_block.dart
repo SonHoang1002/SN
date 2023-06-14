@@ -112,7 +112,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const UserPage(),
+                              builder: (context) => const UserPageHome(),
                               settings: RouteSettings(
                                 arguments: {
                                   'id': widget.friends[index]['id'],

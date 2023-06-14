@@ -24,7 +24,7 @@ class MenuUser extends ConsumerWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UserPage(),
+            builder: (context) => UserPageHome(),
             settings: RouteSettings(
               arguments: {'id': meData['id']},
             ),

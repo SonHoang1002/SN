@@ -210,7 +210,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                               : Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const UserPage(),
+                                    builder: (context) => const UserPageHome(),
                                     settings: RouteSettings(
                                       arguments: {
                                         'id': recruitDetail['account']['id']
@@ -263,7 +263,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const UserPage(),
+                                              const UserPageHome(),
                                           settings: RouteSettings(
                                             arguments: {
                                               'id': recruitDetail['account']

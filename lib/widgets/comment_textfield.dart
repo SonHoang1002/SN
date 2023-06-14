@@ -273,7 +273,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
             ? '[${widget.commentSelected['account']['id']}] $content'
             : content,
         // "contentWithId": contentWithId,
-        "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : null,
+        "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : [],
         "extra_body": linkEmojiSticky.isEmpty
             ? null
             : {

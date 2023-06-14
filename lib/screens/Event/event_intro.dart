@@ -183,7 +183,8 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 : Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const UserPage(),
+                                      builder: (context) =>
+                                          const UserPageHome(),
                                       settings: RouteSettings(
                                         arguments: {
                                           'id': hosts[index]['account']['id']
@@ -306,7 +307,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const UserPage(),
+                                                    const UserPageHome(),
                                                 settings: RouteSettings(
                                                   arguments: {
                                                     'id': hosts[index]
