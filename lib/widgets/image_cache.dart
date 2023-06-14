@@ -29,32 +29,30 @@ class _ImageCacheRenderState extends State<ImageCacheRender> {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: CachedNetworkImage(
-        key: UniqueKey(),
-        cacheManager: cacheManager,
-        cacheKey: widget.path,
-        placeholder: (context, url) => Image.asset(
-          'assets/grey.png',
-          fit: BoxFit.cover,
-        ),
-        imageUrl: widget.path,
-        imageBuilder: (context, imageProvider) {
-          return Image(
-            image: CachedNetworkImageProvider(
-              widget.path,
-            ),
-            fit: BoxFit.cover,
-          );
-        },
-        fadeInDuration: Duration.zero,
-        width: widget.width,
-        height: widget.height,
+    return CachedNetworkImage(
+      key: UniqueKey(),
+      cacheManager: cacheManager,
+      cacheKey: widget.path,
+      placeholder: (context, url) => Image.asset(
+        'assets/grey.png',
         fit: BoxFit.cover,
-        errorWidget: (context, url, error) => Image.asset(
-          'assets/grey.png',
+      ),
+      imageUrl: widget.path,
+      imageBuilder: (context, imageProvider) {
+        return Image(
+          image: CachedNetworkImageProvider(
+            widget.path,
+          ),
           fit: BoxFit.cover,
-        ),
+        );
+      },
+      fadeInDuration: Duration.zero,
+      width: widget.width,
+      height: widget.height,
+      fit: BoxFit.cover,
+      errorWidget: (context, url, error) => Image.asset(
+        'assets/grey.png',
+        fit: BoxFit.cover,
       ),
     );
   }

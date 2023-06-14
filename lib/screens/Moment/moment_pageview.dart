@@ -149,7 +149,7 @@ class RenderPageView extends StatelessWidget {
       controller: _pageController,
       itemCount: widget.momentRender.length,
       scrollDirection: Axis.vertical,
-      preloadPagesCount: 5,
+      preloadPagesCount: 3,
       onPageChanged: (value) {
         widget.handlePageChange(value);
       },

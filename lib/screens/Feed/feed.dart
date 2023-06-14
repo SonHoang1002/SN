@@ -69,8 +69,9 @@ class _FeedState extends ConsumerState<Feed> {
             0) {
           EasyDebounce.debounce(
               'my-debouncer', const Duration(milliseconds: 800), () {
-            String maxId =
-                ref.watch(postControllerProvider).posts.last['score'];
+            String maxId = ref.watch(postControllerProvider).posts.isNotEmpty
+                ? ref.watch(postControllerProvider).posts.last['score']
+                : '';
             ref.read(postControllerProvider.notifier).getListPost({
               "max_id": maxId,
               "multi": 2,

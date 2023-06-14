@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 Function(int num) shortenLargeNumber = (int num) {
@@ -212,7 +213,12 @@ String readTimestamp(int timestamp, String firstText) {
 
   return time;
 }
+
 String formatCurrency(dynamic number) {
   final formatter = NumberFormat('#,##0', 'vi_VN');
   return formatter.format(int.parse(number.toStringAsFixed(0)));
+}
+
+TextStyle customIbmPlexSans(TextStyle textStyle) {
+  return GoogleFonts.ibmPlexSans(textStyle: textStyle);
 }

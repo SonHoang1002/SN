@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -87,7 +88,14 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
               const BackIconAppbar(),
               AppBarTitle(
                   title: widget.object[
-                      widget.objectType == 'page' ? 'title' : 'display_name']),
+                      widget.objectType == 'page' ? 'title' : 'display_name'],
+                  textStyle: customIbmPlexSans(
+                    TextStyle(
+                        fontSize: 18,
+                        overflow: TextOverflow.ellipsis,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).textTheme.displayLarge!.color),
+                  )),
               const SizedBox()
             ],
           )),
@@ -108,7 +116,8 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
             Text(
               widget.object[
                   widget.objectType == 'page' ? 'title' : 'display_name'],
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              style: customIbmPlexSans(
+                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
             ),
             const SizedBox(
               height: 12.0,
@@ -124,18 +133,18 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
                           children: [
                             Text(
                               dataInfo[index]['count'],
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
+                              style: customIbmPlexSans(const TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w500)),
                             ),
                             const SizedBox(
                               height: 8.0,
                             ),
                             Text(
                               dataInfo[index]['description'],
-                              style: const TextStyle(
+                              style: customIbmPlexSans(const TextStyle(
                                   color: greyColor,
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500)),
                             ),
                           ],
                         ),
@@ -190,21 +199,21 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
                             bottom: 5,
                             left: 5,
                             child: Row(
-                              children: const [
-                                Icon(
+                              children: [
+                                const Icon(
                                   CupertinoIcons.play_arrow,
                                   color: white,
                                   size: 16,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 3.0,
                                 ),
                                 Text(
                                   '123,5k',
-                                  style: TextStyle(
+                                  style: customIbmPlexSans(const TextStyle(
                                       color: white,
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w500),
+                                      fontWeight: FontWeight.w500)),
                                 )
                               ],
                             ))

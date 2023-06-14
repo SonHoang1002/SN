@@ -157,7 +157,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                       color: Colors.black,
                     ),
                     child: Center(
-                      child: videoPlayerController.value.aspectRatio >= 0.6
+                      child: videoPlayerController.value.aspectRatio >= 0.7
                           ? AspectRatio(
                               aspectRatio:
                                   videoPlayerController.value.aspectRatio,
