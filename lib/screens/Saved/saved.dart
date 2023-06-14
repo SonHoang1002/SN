@@ -1,68 +1,52 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
+import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
 import 'package:social_network_app_mobile/screens/Saved/func.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 
-class Saved extends StatefulWidget {
+class Saved extends ConsumerStatefulWidget {
   const Saved({super.key});
 
   @override
   SavedState createState() => SavedState();
 }
 
-class SavedState extends State<Saved> {
-  List collections = [];
-  List bookmarks = [];
-
-  void initBookmark() async {
-    // get all bookmark of users
-    var bmResult = await BookmarkApi().fetchAllBookmark();
-
-    // get all collection of users
-    var cltResult = await BookmarkApi().fetchBookmarkCollection();
-
-    var renderCollections = [];
-    for (var i = 0; i < cltResult.length; i++) {
-      var collection = cltResult[i];
-      var bookmarks = bmResult
-          .where((e) =>
-              e['bookmark_collection'] != null &&
-              e['bookmark_collection']['id'] == collection['id'])
-          .toList();
-
-      if (bookmarks.isNotEmpty) {
-        var earliest =
-            DateTime.parse(bookmarks[0]['created_at']).millisecondsSinceEpoch;
-        var index = 0;
-        for (var j = 0; j < bookmarks.length; j++) {
-          int createAt =
-              DateTime.parse(bookmarks[j]['created_at']).millisecondsSinceEpoch;
-          if (createAt <= earliest) {
-            earliest = createAt;
-            index = j;
-          }
-        }
-        collection['imageUrl'] = getBookmarkImageUrl(bmResult[index]);
-      }
-      renderCollections.add(collection);
-    }
-
-    setState(() {
-      collections = renderCollections;
-      bookmarks = bmResult;
-    });
-  }
-
+class SavedState extends ConsumerState<Saved> {
   @override
   void initState() {
-    initBookmark();
+    // initBookmark();
     super.initState();
+    if (mounted) {
+      Future.delayed(
+        Duration.zero,
+        () => ref.read(savedControllerProvider.notifier).initBookmark(),
+      );
+    }
+  }
+
+  handleUnBookmark(bookmark, BuildContext context) async {
+    var response = await BookmarkApi()
+        .unBookmarkApi({"bookmark_id": bookmark['bookmark_id']});
+    if (response != null && mounted) {
+      ref
+          .read(savedControllerProvider.notifier)
+          .updateAfterUnBookmard(bookmark['id']);
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Bỏ lưu thành công"),
+        ),
+      );
+    }
   }
 
   Widget _buildCollections(
@@ -171,12 +155,13 @@ class SavedState extends State<Saved> {
     );
   }
 
-  Widget _buildBookmarks(bookmarks, double height, ThemeManager theme) {
+  Widget _buildBookmarks(
+      bookmarks, double height, ThemeManager theme, BuildContext context) {
     return Container(
       height: height * 0.4,
       child: ListView.builder(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: bookmarks.length >= 3 ? 3 : bookmarks.length,
         itemBuilder: (context, index) {
           var item = convertItem(bookmarks[index]);
@@ -247,7 +232,78 @@ class SavedState extends State<Saved> {
                 Expanded(
                   flex: 1,
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              height: 100.0,
+                              padding: const EdgeInsets.only(left: 10.0),
+                              width: double.infinity,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  Navigator.pop(context);
+                                  showCupertinoDialog(
+                                      context: context,
+                                      builder: ((context) {
+                                        return CupertinoAlertDialog(
+                                          content: Container(
+                                            margin: EdgeInsets.only(top: 8.0),
+                                            child: const Text(
+                                              "Bạn có chắc chắn muốn bỏ lưu mục đã chọn không?",
+                                              style: TextStyle(fontSize: 14.0),
+                                            ),
+                                          ),
+                                          actions: [
+                                            CupertinoDialogAction(
+                                              isDefaultAction: true,
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Hủy'),
+                                            ),
+                                            CupertinoDialogAction(
+                                              isDestructiveAction: true,
+                                              onPressed: () {
+                                                handleUnBookmark(item, context);
+                                              },
+                                              child: const Text('Gỡ, xóa'),
+                                            ),
+                                          ],
+                                        );
+                                      }));
+                                },
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 18.0,
+                                      backgroundColor: greyColor[350],
+                                      child: const Icon(
+                                        FontAwesomeIcons.circleXmark,
+                                        size: 18.0,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        "Bỏ lưu",
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
                     child: Icon(
                       Icons.more_horiz_rounded,
                       size: 25.0,
@@ -283,6 +339,8 @@ class SavedState extends State<Saved> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final theme = pv.Provider.of<ThemeManager>(context);
+    var bookmarks = ref.watch(savedControllerProvider).bookmarks;
+    var collections = ref.watch(savedControllerProvider).bmCollections;
 
     return Container(
       width: width,
@@ -310,7 +368,7 @@ class SavedState extends State<Saved> {
                           ),
                         ],
                       )),
-                  _buildBookmarks(bookmarks, height, theme),
+                  _buildBookmarks(bookmarks, height, theme, context),
                   _buildSeeAllButton(() {}, theme),
                   Container(
                     margin: const EdgeInsets.only(top: 10.0),
