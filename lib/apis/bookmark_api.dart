@@ -5,6 +5,10 @@ class BookmarkApi {
     return await Api().getRequestBase('/api/v1/bookmark_collections', null);
   }
 
+  Future<List> fetchAllBookmark() async {
+    return await Api().getRequestBase('/api/v1/bookmarks', null);
+  }
+
   Future<dynamic> bookmarkApi(data) async {
     return await Api().postRequestBase('/api/v1/bookmarks', data);
   }

@@ -528,15 +528,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                               Navigator.pop(
                                                                   context);
                                                               if (iconActionEllipsis[
-                                                                              index]
-                                                                          [
-                                                                          'key'] !=
-                                                                      'save' &&
-                                                                  iconActionEllipsis[
-                                                                              index]
-                                                                          [
-                                                                          'key'] !=
-                                                                      'copy') {
+                                                                          index]
+                                                                      ['key'] !=
+                                                                  'copy') {
                                                                 showBarModalBottomSheet(
                                                                     backgroundColor:
                                                                         Theme.of(context)
@@ -547,7 +541,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                         (context) =>
                                                                             SizedBox(
                                                                               width: width,
-                                                                              child: ActionEllipsis(menuSelected: iconActionEllipsis[index], type: 'event', data: eventDetail),
+                                                                              child: ActionEllipsis(
+                                                                                menuSelected: iconActionEllipsis[index],
+                                                                                type: 'event',
+                                                                                data: eventDetail,
+                                                                              ),
                                                                             ));
                                                               } else if (iconActionEllipsis[
                                                                           index]
