@@ -202,7 +202,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                         fontWeight: FontWeight.w600,
                                       ))
                                   : const SizedBox(),
-                                  buildSpacer(height: 3),
+                              buildSpacer(height: 3),
                               Row(
                                 children: [
                                   widget.post['page_owner'] != null &&
@@ -389,7 +389,7 @@ class BlockNamePost extends StatelessWidget {
         if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
           Navigator.pushNamed(context, '/page', arguments: page);
         } else {
-          pushCustomCupertinoPageRoute(context, const UserPage(),
+          pushCustomCupertinoPageRoute(context, const UserPageHome(),
               settings: RouteSettings(
                 arguments: {'id': account['id']},
               ));

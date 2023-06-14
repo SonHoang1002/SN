@@ -162,7 +162,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const UserPage(),
+                                                    const UserPageHome(),
                                                 settings: RouteSettings(
                                                   arguments: {
                                                     'id': friendsAll[index]

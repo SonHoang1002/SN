@@ -29,7 +29,7 @@ class SearchItem extends StatelessWidget {
             ? Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const UserPage(),
+                  builder: (context) => const UserPageHome(),
                   settings: RouteSettings(
                     arguments: {'id': item['id'].toString()},
                   ),

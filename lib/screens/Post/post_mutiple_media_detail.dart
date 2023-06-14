@@ -448,14 +448,15 @@ class _PostMutipleMediaDetail1State
                                                     children: [
                                                       !isDragOutside
                                                           ? Hero(
-                                                              tag: 
-                                                              // medias[index]
-                                                              //         ['id'] ??
+                                                              tag:
+                                                                  // medias[index]
+                                                                  //         ['id'] ??
                                                                   index,
                                                               child: ExtendedImage.network(
                                                                   medias[index]
                                                                       ['url'],
-                                                                  key: Key(medias[index]
+                                                                  key: Key(medias[
+                                                                          index]
                                                                       ['id']),
                                                                   fit: BoxFit
                                                                       .fitWidth,
@@ -494,8 +495,6 @@ class _PostMutipleMediaDetail1State
                                                   )),
                                               PostFooter(
                                                   post: postData,
-                                                  // mediaData ??
-                                                  //     medias[index],
                                                   type: postMultipleMedia,
                                                   preType: widget.preType,
                                                   indexOfImage: index,

@@ -39,7 +39,7 @@ class _HomeState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   bool isShowSnackBar = false;
-  bool showBottomNavigator = true;
+  ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(false);
   bool? _fromPostDetail;
 
   double valueFromPercentageInRange(
@@ -136,9 +136,9 @@ class _HomeState extends ConsumerState<Home>
   }
 
   _showBottomNavigator(bool value) {
-    if (showBottomNavigator != value) {
+    if (showBottomNavigatorNotifier.value != value) {
       setState(() {
-        showBottomNavigator = value;
+        showBottomNavigatorNotifier.value = value;
       });
     }
   }
@@ -148,7 +148,9 @@ class _HomeState extends ConsumerState<Home>
     final size = MediaQuery.of(context).size;
     final theme = pv.Provider.of<ThemeManager>(context);
     if (widget.selectedIndex != null) {
-      _selectedIndex = widget.selectedIndex!;
+      setState(() {
+        _selectedIndex = widget.selectedIndex!;
+      });
     }
     String modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
@@ -185,11 +187,9 @@ class _HomeState extends ConsumerState<Home>
     ];
 
     List<Widget> pages = [
-      _fromPostDetail == true
-          ? const UserPage()
-          : Feed(
-              callbackFunction: _showBottomNavigator,
-            ),
+      Feed(
+        callbackFunction: _showBottomNavigator,
+      ),
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
@@ -307,7 +307,7 @@ class _HomeState extends ConsumerState<Home>
           index: _selectedIndex,
           children: pages,
         ),
-        bottomNavigationBar: showBottomNavigator
+        bottomNavigationBar: showBottomNavigatorNotifier.value
             ? BottomNavigatorBarEmso(
                 selectedIndex: _selectedIndex,
                 onTap: _onItemTapped,

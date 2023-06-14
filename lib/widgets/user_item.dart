@@ -17,7 +17,7 @@ class UserItem extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const UserPage(),
+              builder: (context) => const UserPageHome(),
               settings: RouteSettings(
                 arguments: {'id': user['id'].toString()},
               ),

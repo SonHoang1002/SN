@@ -83,11 +83,10 @@ class PostShareEvent extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          getRefractorTime(event['start_time']),
-                          // DateFormat.yMd()
-                          //     .add_jm()
-                          //     .format(DateTime.parse(event['start_time'])),
+                        Text( 
+                          DateFormat.yMd()
+                              .add_jm()
+                              .format(DateTime.parse(event['start_time'])),
                           style: const TextStyle(
                               color: Colors.red,
                               fontWeight: FontWeight.w600,

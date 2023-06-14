@@ -115,7 +115,7 @@ class _ReefState extends ConsumerState<Reef> {
               _startVideoEditorDefault();
             },
             secondFunction: () {
-              pushCustomCupertinoPageRoute(context, const UserPage());
+              pushCustomCupertinoPageRoute(context, const UserPageHome());
             },
           )
         ],

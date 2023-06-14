@@ -26,13 +26,15 @@ class CommentPostModal extends ConsumerStatefulWidget {
   final dynamic preType;
   final int? indexImagePost;
   final Function? reloadFunction;
+  final Function? updateDataPhotoPage;
   const CommentPostModal(
       {Key? key,
       this.post,
       this.type,
       this.preType,
       this.indexImagePost,
-      this.reloadFunction})
+      this.reloadFunction,
+      this.updateDataPhotoPage})
       : super(key: key);
 
   @override
@@ -73,8 +75,14 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       setState(() {
         postDetail = response;
       });
-
-      getListCommentPost(response['id'], {"sort_by": "newest"});
+      if (widget.indexImagePost != null) {
+        getListCommentPost(
+            response['media_attachments'][widget.indexImagePost]['status_media']
+                ['id'],
+            {"sort_by": "newest"});
+      } else {
+        getListCommentPost(response['id'], {"sort_by": "newest"});
+      }
     }
   }
 
@@ -88,6 +96,20 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
         isLoadComment = false;
         postComment = postComment + newList;
       });
+      // change count to
+      final currentPost = ref.watch(currentPostControllerProvider).currentPost;
+      if (currentPost['media_attachments'].isNotEmpty &&
+          widget.indexImagePost != null) {
+        currentPost['media_attachments'][widget.indexImagePost]['status_media']
+            ['replies_total'] = postComment.length;
+        ref
+            .read(currentPostControllerProvider.notifier)
+            .saveCurrentPost(currentPost);
+        ref.read(postControllerProvider.notifier).actionUpdatePostCount(
+              widget.preType,
+              currentPost,
+            );
+      }
     }
   }
 
@@ -233,9 +255,11 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
         newComment = await PostApi().createStatus({
               ...data,
               "visibility": "public",
-              "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
+              "in_reply_to_id": widget.post['media_attachments']
+                  [widget.indexImagePost]['status_media']['id']
             }) ??
             newCommentPreview;
+
         if (newComment['card'] == null && preCardData != null) {
           newComment["card"] = newCommentPreview["card"];
         }
@@ -288,8 +312,6 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
               addtionalIfChild: (data['type'] == 'child' &&
                       data['typeStatus'] != 'editChild' &&
                       data['typeStatus'] != "editComment")
-                  //     ||
-                  // widget.indexImagePost != null
                   ? 1
                   : 0);
         }
@@ -503,7 +525,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
     });
   }
 
-  handleDeleteComment(post) { 
+  handleDeleteComment(post) {
     if (post != null) {
       if (widget.indexImagePost != null) {
         if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
@@ -552,7 +574,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
   }
 
   _updatePostCount({int addtionalIfChild = 0, int subIfChild = 0}) async {
-    if (widget.indexImagePost != null) { 
+    if (widget.indexImagePost != null) {
       dynamic updateCountPostData = widget.post;
       if (updateCountPostData['media_attachments'][widget.indexImagePost]
                   ['status_media']['replies_total'] ==
@@ -572,7 +594,12 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       ref
           .read(currentPostControllerProvider.notifier)
           .saveCurrentPost(updateCountPostData);
-    } else { 
+      if (widget.type == imagePhotoPage || widget.preType == imagePhotoPage) {
+        widget.updateDataPhotoPage != null
+            ? widget.updateDataPhotoPage!(updateCountPostData)
+            : null;
+      }
+    } else {
       dynamic updateCountPostData = widget.post;
       dynamic count = postComment.length;
       postComment.forEach((element) {
@@ -745,6 +772,9 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
                     getCommentSelected: getCommentSelected,
                     commentNode: commentNode,
                     handleComment: handleComment),
+              ),
+              Container(
+                height: 40,
               )
             ],
           ),

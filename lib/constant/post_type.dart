@@ -12,6 +12,8 @@ String postStatusActivity = 'activity';
 
 String postMultipleMedia = 'post_multiple_media';
 
+String imagePhotoPage = 'photo_page_image';
+
 String postShareEvent = 'event_shared';
 
 String postMoment = 'moment';

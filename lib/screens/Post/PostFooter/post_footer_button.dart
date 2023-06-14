@@ -32,24 +32,30 @@ class PostFooterButton extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
   final String? preType;
-  final Function? backFunction;
+
+  /// reload post one media screen when user see iamge in photo page on page screen
+  final Function? updateDataPhotoPage;
   final Function? reloadFunction;
   final int? indexImage;
+
+  /// reload post detail screen
   final Function? reloadDetailFunction;
   final bool? isShowCommentBox;
+
+  /// update data from post and post detail screen
   final Function? updateDataFunction;
-  const PostFooterButton(
-      {Key? key,
-      this.post,
-      this.type,
-      this.backFunction,
-      this.reloadFunction,
-      this.preType,
-      this.indexImage,
-      this.reloadDetailFunction,
-      this.isShowCommentBox,
-      this.updateDataFunction})
-      : super(key: key);
+  const PostFooterButton({
+    Key? key,
+    this.post,
+    this.type,
+    this.updateDataPhotoPage,
+    this.reloadFunction,
+    this.preType,
+    this.indexImage,
+    this.reloadDetailFunction,
+    this.isShowCommentBox,
+    this.updateDataFunction,
+  }) : super(key: key);
 
   @override
   ConsumerState<PostFooterButton> createState() => _PostFooterButtonState();
@@ -87,28 +93,35 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             widget.post['media_attachments'].isNotEmpty
         ? (widget.post['media_attachments'][widget.indexImage]?['status_media']
                 ?['viewer_reaction'] ??
+            widget.post['viewer_reaction'] ??
             '')
         : (widget.post['viewer_reaction'] ?? ""));
     postData = widget.post;
+
     handlePress(key) {
       if (key == 'comment') {
-        if (![postDetail, postMultipleMedia, postWatch].contains(widget.type)) {
+        if (![postDetail, postMultipleMedia, postWatch, imagePhotoPage]
+                .contains(widget.type) ||
+            ([feedPost, postPageUser].contains(widget.type) &&
+                widget.post['media_attachments'].length > 1)) {
           pushCustomCupertinoPageRoute(
               context,
               PostDetail(
                   post: widget.post,
                   preType: widget.type,
                   updateDataFunction: widget.updateDataFunction));
-        } else if (widget.type == postMultipleMedia) {
+        } else if (([postMultipleMedia, imagePhotoPage].contains(widget.type) ||
+            ([feedPost, postPageUser].contains(widget.type) &&
+                widget.post['media_attachments'].length == 1))) {
           showBarModalBottomSheet(
               context: context,
               backgroundColor: Colors.transparent,
               builder: (context) => CommentPostModal(
-                    post: widget.post,
-                    preType: widget.preType,
-                    indexImagePost: widget.indexImage,
-                    reloadFunction: widget.reloadDetailFunction,
-                  ));
+                  post: widget.post,
+                  preType: widget.preType,
+                  indexImagePost: widget.indexImage,
+                  reloadFunction: widget.reloadDetailFunction,
+                  updateDataPhotoPage: widget.updateDataPhotoPage));
         } else if (widget.type == postWatch) {
           Navigator.push(
               context,
@@ -127,7 +140,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     }
 
     handleReaction(react) async {
-      if (widget.type == postMultipleMedia &&
+      // only update reaction in image in media_attachments
+      if (([postMultipleMedia, imagePhotoPage].contains(widget.type)) &&
           widget.post['media_attachments'].isNotEmpty &&
           widget.indexImage != null) {
         var newPost = widget.post;
@@ -170,6 +184,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                   1;
           newPost['media_attachments'][widget.indexImage]['status_media']
               ?['viewer_reaction'] = react;
+          if (newPost['media_attachments'].length == 1) {
+            newPost['viewer_reaction'] = react;
+          }
           newPost['media_attachments'][widget.indexImage]['status_media']
               ?['reactions'] = newFavourites;
           ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
@@ -181,7 +198,15 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
           widget.updateDataFunction != null
               ? widget.updateDataFunction!()
               : null;
-          // await PostApi().reactionPostApi(widget.post['id'], data);
+          if (widget.type == imagePhotoPage) {
+            widget.updateDataPhotoPage != null
+                ? widget.updateDataPhotoPage!(newPost)
+                : null;
+          }
+          await PostApi().reactionPostApi(
+              widget.post['media_attachments'][widget.indexImage]
+                  ['status_media']['id'],
+              data);
         } else {
           newPost['media_attachments'][widget.indexImage]['status_media']
               ['favourites_count'] = newPost['media_attachments']
@@ -194,6 +219,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                   ['favourites_count'];
           newPost['media_attachments'][widget.indexImage]['status_media']
               ?['viewer_reaction'] = null;
+          if (newPost['media_attachments'].length == 1) {
+            newPost['viewer_reaction'] = null;
+          }
           newPost['media_attachments'][widget.indexImage]['status_media']
               ?['reactions'] = newFavourites;
           ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
@@ -202,7 +230,13 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
           ref
               .read(currentPostControllerProvider.notifier)
               .saveCurrentPost(newPost);
-          // await PostApi().unReactionPostApi(widget.post['id']);
+          if (widget.type == imagePhotoPage) {
+            widget.updateDataPhotoPage != null
+                ? widget.updateDataPhotoPage!(newPost)
+                : null;
+          }
+          await PostApi().unReactionPostApi(widget.post['media_attachments']
+              [widget.indexImage]['status_media']['id']);
           widget.updateDataFunction != null
               ? widget.updateDataFunction!()
               : null;
@@ -211,9 +245,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             ? widget.reloadDetailFunction!()
             : null;
       } else {
+        // only update reaction in post
         var newPost = widget.post;
         List newFavourites = newPost['reactions'];
-
         int index = newPost['reactions']
             .indexWhere((element) => element['type'] == react);
         int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
@@ -275,8 +309,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
               : null;
           await PostApi().unReactionPostApi(widget.post['id']);
         }
+        widget.reloadFunction != null ? widget.reloadFunction!(newPost) : null;
       }
-      widget.reloadFunction != null ? widget.reloadFunction!() : null;
     }
 
     handlePressButton() {

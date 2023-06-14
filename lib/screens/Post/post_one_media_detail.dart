@@ -13,6 +13,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
@@ -53,24 +54,33 @@ List typeVisibility = [
 ];
 
 class PostOneMediaDetail extends ConsumerStatefulWidget {
-  ///  currently selected image in post
+  ///  Currently selected image in post
   final dynamic postMedia;
 
-  /// image list
+  /// Image list
   final List? medias;
 
-  /// index of
+  /// Index of image in medias
   final int? currentIndex;
-  final Function? backFunction;
-  final Function? reloadFunction;
 
-  /// current post to serve for reaction, comment, share post
+  /// This current post to serve for reaction, comment, share post
   final dynamic post;
 
-  /// type of current post
+  /// This type of current post
   final dynamic type;
+
+  /// This preType property are used to check post type ( feedPost, postUserPage,...) when type have been postMultiMedia
   final dynamic preType;
+
+  /// This function is called when we want update data post component
   final Function? updateDataFunction;
+
+  /// This function is called when we want back to previous screen
+  final Function? backFunction;
+
+  /// This function is called when we want reload post component ( reload reaction, comment count, share count in post)
+  final Function? reloadFunction;
+
   const PostOneMediaDetail(
       {Key? key,
       this.postMedia,
@@ -106,6 +116,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
 
   double progress = 0;
   dynamic tag;
+
   @override
   void initState() {
     super.initState();
@@ -119,8 +130,8 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
 
     if (mounted && widget.postMedia != null) {
       setState(() {
-        postRender = widget.postMedia;
-        userData = widget.postMedia;
+        postRender = widget.postMedia ?? widget.post;
+        userData = widget.postMedia ?? widget.post;
       });
     }
     if (widget.post != null) {
@@ -136,7 +147,10 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
     _initialPosition = 0;
     _currentPosition = _initialPosition;
 
-    tag = postRender['media_attachments']?[0]?['id'] ?? postRender['id'];
+    tag = postRender?['media_attachments']?[widget.currentIndex ?? 0]?['id'] ??
+        postRender['id'];
+
+    Future.wait([getDataOfImagePhotoPage()]);
   }
 
   @override
@@ -216,11 +230,32 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
     }
   }
 
+  Future<void> getDataOfImagePhotoPage() async {
+    if (widget.type == imagePhotoPage) {
+      var response =
+          await PostApi().getPostDetailMedia(widget.medias![indexRender]['id']);
+      if (response != null) {
+        setState(() {
+          userData = response;
+        });
+      }
+    }
+  }
+
+  _reloadDataPostOneMediaDetail(dynamic newData) {
+    setState(() {
+      userData = newData;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    userData = ref.watch(currentPostControllerProvider).currentPost.isNotEmpty
-        ? ref.watch(currentPostControllerProvider).currentPost
-        : userData;
+    widget.type != imagePhotoPage
+        ? (userData =
+            ref.watch(currentPostControllerProvider).currentPost.isNotEmpty
+                ? ref.watch(currentPostControllerProvider).currentPost
+                : userData)
+        : null;
     String path =
         postRender['media_attachments']?[0]?['url'] ?? postRender['url'];
     final size = MediaQuery.of(context).size;
@@ -349,11 +384,13 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                     );
                     return image;
                   },
-                  onPageChanged: (int value) {
+                  onPageChanged: (int value) async {
                     setState(() {
                       postRender = widget.medias![value];
                       indexRender = value;
+                      userData = null;
                     });
+                    await getDataOfImagePhotoPage();
                   },
                   controller: ExtendedPageController(
                     initialPage: indexRender,
@@ -361,7 +398,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                   scrollDirection: Axis.horizontal,
                 ),
               ),
-              buildContent(size)
+              userData != null ? buildContent(size) : const SizedBox()
             ],
           ),
         ),
@@ -380,7 +417,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const UserPage(),
+            builder: (context) => const UserPageHome(),
             settings: RouteSettings(
               arguments: {'id': account['id']},
             ),
@@ -415,24 +452,47 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
     return _isDragging
         ? const SizedBox()
         : isShowDetail && opacityValue != 0
-            ? SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 40),
-                      child: Container(
-                        width: size.width - 40,
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 40),
+                    child: Container(
+                      width: size.width - 40,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // widget.backFunction != null
+                              //     ? widget.backFunction!()
+                              //     : null;
+                              popToPreviousScreen(context);
+                            },
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey.withOpacity(0.5)),
+                              child: const Icon(
+                                FontAwesomeIcons.xmark,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          widget.medias != null && widget.medias!.length > 1
+                              ? Text(
+                                  "${indexRender + 1}/${widget.medias!.length}",
+                                  style: const TextStyle(
+                                      fontSize: 15, color: Colors.white),
+                                )
+                              : const SizedBox(),
+                          GestureDetector(
                               onTap: () {
-                                // widget.backFunction != null
-                                //     ? widget.backFunction!()
-                                //     : null;
-                                popToPreviousScreen(context);
+                                showActionSheet(context,
+                                    objectItem: postRender);
                               },
                               child: Container(
                                 width: 30,
@@ -441,145 +501,124 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                     shape: BoxShape.circle,
                                     color: Colors.grey.withOpacity(0.5)),
                                 child: const Icon(
-                                  FontAwesomeIcons.xmark,
+                                  FontAwesomeIcons.ellipsis,
                                   color: Colors.white,
                                 ),
-                              ),
-                            ),
-                            widget.medias != null && widget.medias!.length > 1
-                                ? Text(
-                                    "${indexRender + 1}/${widget.medias!.length}",
-                                    style: const TextStyle(
-                                        fontSize: 15, color: Colors.white),
-                                  )
-                                : const SizedBox(),
-                            GestureDetector(
-                                onTap: () {
-                                  showActionSheet(context,
-                                      objectItem: postRender);
-                                },
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey.withOpacity(0.5)),
-                                  child: const Icon(
-                                    FontAwesomeIcons.ellipsis,
-                                    color: Colors.white,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 15),
-                      color: blackColor.withOpacity(0.4),
-                      width: size.width,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            constraints: BoxConstraints(
-                                maxHeight: size.height * 0.6, minHeight: 10),
-                            child: SingleChildScrollView(
-                              physics: const BouncingScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 15),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        //down
-                                        buildTextContentButton(
-                                            userData["group"] != null
-                                                ? userData["group"]['title'] ??
-                                                    ""
-                                                : userData["page"] != null
-                                                    ? userData["page"]
-                                                            ['title'] ??
-                                                        ""
-                                                    : userData["account"]
-                                                            ['display_name'] ??
-                                                        "",
-                                            true,
-                                            colorWord: white,
-                                            fontSize: 14, function: () {
-                                          pushToScreen();
-                                        }),
-                                        buildSpacer(height: 7),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              GetTimeAgo.parse(DateTime.parse(
-                                                  userData['created_at'])),
-                                              style: const TextStyle(
-                                                  color: greyColor,
-                                                  fontSize: 12),
-                                            ),
-                                            const Text(" · ",
-                                                style: TextStyle(
-                                                    color: greyColor)),
-                                            Icon(
-                                                typeVisibility.firstWhere(
-                                                    (element) =>
-                                                        element['key'] ==
-                                                        userData['visibility'],
-                                                    orElse: () => {})['icon'],
-                                                size: 13,
-                                                color: greyColor)
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  buildSpacer(height: 7),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: PostContent(
-                                      key: _contentKey,
-                                      post: userData,
-                                      textColor: white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          PostFooterInformation(
-                              post: userData,
-                              preType: checkPreType(),
-                              indexImagePost: widget.currentIndex,
-                              updateDataFunction: widget.updateDataFunction),
-                          buildDivider(),
-                          SizedBox(
-                            height: 40,
-                            child: PostFooterButton(
-                              post: userData,
-                              type: postMultipleMedia,
-                              preType: checkPreType(),
-                              reloadFunction: () {
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  widget.reloadFunction != null
-                                      ? widget.reloadFunction!()
-                                      : null;
-                                });
-                              },
-                              updateDataFunction: widget.updateDataFunction,
-                              indexImage: widget.currentIndex,
-                            ),
-                          )
+                              ))
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 15),
+                    color: blackColor.withOpacity(0.4),
+                    width: size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(
+                              maxHeight: size.height * 0.6, minHeight: 10),
+                          child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      //down
+                                      buildTextContentButton(
+                                          userData["group"] != null
+                                              ? userData["group"]['title'] ?? ""
+                                              : userData["page"] != null
+                                                  ? userData["page"]['title'] ??
+                                                      ""
+                                                  : userData["account"]
+                                                          ['display_name'] ??
+                                                      "",
+                                          true,
+                                          colorWord: white,
+                                          fontSize: 14, function: () {
+                                        pushToScreen();
+                                      }),
+                                      buildSpacer(height: 7),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            GetTimeAgo.parse(DateTime.parse(
+                                                userData['created_at'])),
+                                            style: const TextStyle(
+                                                color: greyColor, fontSize: 12),
+                                          ),
+                                          const Text(" · ",
+                                              style:
+                                                  TextStyle(color: greyColor)),
+                                          Icon(
+                                              typeVisibility.firstWhere(
+                                                  (element) =>
+                                                      element['key'] ==
+                                                      userData['visibility'],
+                                                  orElse: () => {})['icon'],
+                                              size: 13,
+                                              color: greyColor)
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                buildSpacer(height: 7),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: PostContent(
+                                    key: _contentKey,
+                                    post: userData,
+                                    textColor: white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        PostFooterInformation(
+                            post: userData,
+                            preType: checkPreType(),
+                            indexImagePost: widget.type == imagePhotoPage
+                                ? 0
+                                : widget.currentIndex,
+                            updateDataFunction: widget.updateDataFunction),
+                        buildDivider(),
+                        SizedBox(
+                          height: 40,
+                          child: PostFooterButton(
+                            post: userData,
+                            type: widget.type ?? postMultipleMedia,
+                            preType: checkPreType(),
+                            reloadFunction: (dynamic newData) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                widget.reloadFunction != null
+                                    ? widget.reloadFunction!()
+                                    : null;
+                              });
+                            },
+                            updateDataPhotoPage: _reloadDataPostOneMediaDetail,
+                            updateDataFunction: widget.updateDataFunction,
+                            indexImage: widget.type == imagePhotoPage
+                                ? 0
+                                : widget.currentIndex,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               )
             : const SizedBox();
   }

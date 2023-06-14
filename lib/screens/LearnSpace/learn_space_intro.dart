@@ -183,7 +183,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                               : Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const UserPage(),
+                                    builder: (context) => const UserPageHome(),
                                     settings: RouteSettings(
                                       arguments: {
                                         'id': courseDetail['account']['id']
@@ -235,7 +235,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const UserPage(),
+                                              const UserPageHome(),
                                           settings: RouteSettings(
                                             arguments: {
                                               'id': courseDetail['account']

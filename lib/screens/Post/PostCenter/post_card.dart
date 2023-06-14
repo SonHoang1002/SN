@@ -38,13 +38,6 @@ class PostCard extends StatelessWidget {
                 child: InkWell(
                   onTap: () async {
                     if (type != "edit_post") {
-                      // if (await canLaunchUrl(
-                      //     Uri.parse(card['link'] ?? card['url']))) {
-                      //   await launchUrl(Uri.parse(card['link'] ?? card['url']));
-                      // } else {
-                      //   return;
-                      // }
-                      
                       pushCustomCupertinoPageRoute(
                           context,
                           MyWebView(
@@ -53,19 +46,6 @@ class PostCard extends StatelessWidget {
                             post: post,
                             type: type,
                           ));
-                      // showBarModalBottomSheet(
-                      //     context: context,
-                      //     builder: (ctx) {
-                      //       return StatefulBuilder(
-                      //           builder: (ctx, setStatefull) {
-                      //         return MyWebView(
-                      //           title: "abc",
-                      //           selectedUrl: card['link'] ?? card['url'],
-                      //           post: post,
-                      //           type: type,
-                      //         );
-                      //       });
-                      //     });
                     }
                   },
                   child: isVertical

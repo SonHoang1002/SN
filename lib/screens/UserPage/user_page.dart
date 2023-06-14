@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
+import 'package:social_network_app_mobile/screens/Feed/feed.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
@@ -36,6 +39,64 @@ import '../../widgets/cross_bar.dart';
 import '../../widgets/skeleton.dart';
 import '../Feed/create_post_button.dart';
 
+class UserPageHome extends StatefulWidget {
+  final dynamic id;
+  const UserPageHome({super.key, this.id});
+
+  @override
+  State<UserPageHome> createState() => _UserPageHomeState();
+}
+
+class _UserPageHomeState extends State<UserPageHome> {
+  int _selectedIndex = 0;
+  ValueNotifier<bool> isClickedHome = ValueNotifier(false);
+  List<Widget> pageUserRoutes = [
+    const UserPage(),
+    const Moment(typePage: 'home'),
+    const SizedBox(),
+    const Watch(),
+    const MainMarketPage(false)
+  ];
+  List<Widget> pageHomeRoutes = [
+    const Home(),
+    const Moment(typePage: 'home'),
+    const SizedBox(),
+    const Watch(),
+    const MainMarketPage(false)
+  ];
+  void _onItemTapped(int index) {
+    if (index == 2) {
+      showBarModalBottomSheet(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          context: context,
+          builder: (context) => const CreatePost());
+    } else if (index == 0 && isClickedHome.value) {
+      Navigator.pushReplacement(
+          context, CupertinoPageRoute(builder: (ctx) => const Home()));
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+    if (index == 0 && isClickedHome.value == false) {
+      isClickedHome.value = true;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: pageUserRoutes,
+        ),
+        bottomNavigationBar: BottomNavigatorBarEmso(
+          selectedIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ));
+  }
+}
+
 class UserPage extends ConsumerStatefulWidget {
   final dynamic user;
 
@@ -59,7 +120,6 @@ class _UserPageState extends ConsumerState<UserPage> {
   List friend = [];
   List pinPost = [];
   List lifeEvent = [];
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -138,20 +198,6 @@ class _UserPageState extends ConsumerState<UserPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _onItemTapped(int index) {
-    // if (index == 2) {
-    //   pushCustomCupertinoPageRoute(
-    //       context,
-    //       Home(
-    //         selectedIndex: _selectedIndex,
-    //       ));
-    // } else {
-    //   setState(() {
-    //     _selectedIndex = index;
-    //   });
-    // }
   }
 
   PreferredSizeWidget buildAppBar(BuildContext context) {
@@ -324,10 +370,6 @@ class _UserPageState extends ConsumerState<UserPage> {
           });
         },
         child: buildUserPageBody(context),
-      ),
-      bottomNavigationBar: BottomNavigatorBarEmso(
-        onTap: _onItemTapped,
-        selectedIndex: _selectedIndex,
       ),
     );
   }

@@ -154,7 +154,7 @@ class _RenderPhotoState extends State<RenderPhoto> {
               medias: widget.photoData,
               post: response,
               postMedia: widget.photoData[index],
-              type: postMultipleMedia,
+              type: imagePhotoPage,
               backFunction: () {
                 popToPreviousScreen(context);
               }),
