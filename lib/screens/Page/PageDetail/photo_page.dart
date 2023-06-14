@@ -3,12 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/page_api.dart';
-import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/header_tabs.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
+
+import '../../../apis/post_api.dart';
+import '../../../constant/post_type.dart';
+import '../../../helper/push_to_new_screen.dart';
 
 class PhotoPage extends ConsumerStatefulWidget {
   final dynamic pageData;
@@ -140,17 +143,22 @@ class RenderPhoto extends StatefulWidget {
 }
 
 class _RenderPhotoState extends State<RenderPhoto> {
-  fetchApiPostMedia(id) async {
+  fetchApiPostMedia(id, index) async {
     var response = await PostApi().getPostDetailMedia(id);
     if (response != null) {
       // ignore: use_build_context_synchronously
-      Navigator.push(
+      pushCustomVerticalPageRoute(
           context,
-          MaterialPageRoute(
-              builder: (context) => PostOneMediaDetail(
-                    postMedia: response,
-                    medias: widget.photoData,
-                  )));
+          PostOneMediaDetail(
+              currentIndex: index,
+              medias: widget.photoData,
+              post: response,
+              postMedia: widget.photoData[index],
+              type: postMultipleMedia,
+              backFunction: () {
+                popToPreviousScreen(context);
+              }),
+          opaque: false);
     }
   }
 
@@ -200,7 +208,7 @@ class _RenderPhotoState extends State<RenderPhoto> {
                     if (widget.action != null) {
                       widget.action!(widget.photoData[index]);
                     } else {
-                      fetchApiPostMedia(widget.photoData[index]['id']);
+                      fetchApiPostMedia(widget.photoData[index]['id'], index);
                     }
                   },
                   child: !widget.hasTitle

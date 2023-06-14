@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:miniplayer/miniplayer.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -16,20 +15,20 @@ import 'package:social_network_app_mobile/screens/Menu/menu.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screens/Search/search.dart';
-import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
+import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import 'package:social_network_app_mobile/screens/Feed/feed.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
+import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:provider/provider.dart' as pv;
-import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
 class Home extends ConsumerStatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final int? selectedIndex;
+  const Home({Key? key, this.selectedIndex}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -40,6 +39,17 @@ class _HomeState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   bool isShowSnackBar = false;
+  bool showBottomNavigator = true;
+  bool? _fromPostDetail;
+
+  double valueFromPercentageInRange(
+      {required final double min, max, percentage}) {
+    return percentage * (max - min) + min;
+  }
+
+  double percentageFromValueInRange({required final double min, max, value}) {
+    return (value - min) / (max - min);
+  }
 
   void _onItemTapped(int index) {
     if (index == 2) {
@@ -125,11 +135,21 @@ class _HomeState extends ConsumerState<Home>
     );
   }
 
+  _showBottomNavigator(bool value) {
+    if (showBottomNavigator != value) {
+      setState(() {
+        showBottomNavigator = value;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final theme = pv.Provider.of<ThemeManager>(context);
-
+    if (widget.selectedIndex != null) {
+      _selectedIndex = widget.selectedIndex!;
+    }
     String modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
         : theme.themeMode == ThemeMode.light
@@ -165,7 +185,11 @@ class _HomeState extends ConsumerState<Home>
     ];
 
     List<Widget> pages = [
-      const Feed(),
+      _fromPostDetail == true
+          ? const UserPage()
+          : Feed(
+              callbackFunction: _showBottomNavigator,
+            ),
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
@@ -243,15 +267,16 @@ class _HomeState extends ConsumerState<Home>
               )))
     ];
 
-    if (ref.watch(connectivityControllerProvider).connectWifi == false &&
+    if (ref.watch(connectivityControllerProvider).connectInternet == false &&
         !isShowSnackBar) {
-      WidgetsBinding.instance.addPostFrameCallback((_) { 
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _buildSnackBar("Không có kết nối mạng");
         setState(() {
           isShowSnackBar = true;
         });
       });
-    } else if (ref.watch(connectivityControllerProvider).connectWifi == true &&
+    } else if (ref.watch(connectivityControllerProvider).connectInternet ==
+            true &&
         isShowSnackBar) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _buildSnackBar("Đã khôi phục kết nối mạng");
@@ -261,164 +286,32 @@ class _HomeState extends ConsumerState<Home>
       });
     }
     return Scaffold(
-      drawer: _selectedIndex == 1 || _selectedIndex == 4
-          ? null
-          : Drawer(
-              width: size.width - 20,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              child: const Menu(),
-            ),
-      appBar: _selectedIndex == 1 || _selectedIndex == 4
-          ? null
-          : AppBar(
-              elevation: 0,
-              centerTitle: false,
-              iconTheme: const IconThemeData(color: primaryColor),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              actions: actions.elementAt(_selectedIndex),
-              title: titles.elementAt(_selectedIndex),
-            ),
-      body: Consumer(builder: (context, ref, _) {
-        final selectedVideo = ref.watch(selectedVideoProvider);
-        final miniPlayerController = ref.watch(miniPlayerControllerProvider);
-
-        return Stack(
-          children: [
-            IndexedStack(index: _selectedIndex, children: pages),
-            if (selectedVideo != null)
-              Miniplayer(
-                controller: miniPlayerController,
-                minHeight: 80,
-                maxHeight: size.height,
-                builder: (height, percentage) {
-                  return Container(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: VideoPlayerHasController(
-                                type: 'miniPlayer',
-                                media: selectedVideo['media_attachments'][0],
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        selectedVideo['content'],
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        selectedVideo['account']
-                                                ['displayName'] ??
-                                            selectedVideo['page']['title'] ??
-                                            '',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.play_arrow),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => WatchDetail(
-                                              post: selectedVideo,
-                                              media: selectedVideo[
-                                                  'media_attachments'][0],
-                                            )));
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () {
-                                ref
-                                    .read(selectedVideoProvider.notifier)
-                                    .update((state) => null);
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
+        drawer: _selectedIndex == 1 || _selectedIndex == 4
+            ? null
+            : Drawer(
+                width: size.width - 20,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                child: const Menu(),
               ),
-          ],
-        );
-      }),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: primaryColor,
-        unselectedItemColor: greyColor,
-        showSelectedLabels: false,
-        selectedLabelStyle: const TextStyle(fontSize: 0),
-        unselectedLabelStyle: const TextStyle(fontSize: 0),
-        elevation: 0,
-        backgroundColor: _selectedIndex == 1
-            ? Colors.black
-            : Theme.of(context).scaffoldBackgroundColor,
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              _selectedIndex == 0 ? "assets/HomeFC.svg" : "assets/home.svg",
-              width: 20,
-              height: 20,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                _selectedIndex == 1
-                    ? 'assets/MomentFC.png'
-                    : 'assets/MomentLM.png',
-                width: 22,
-                height: 22,
+        appBar: _selectedIndex == 1 || _selectedIndex == 4
+            ? null
+            : AppBar(
+                elevation: 0,
+                centerTitle: false,
+                iconTheme: const IconThemeData(color: primaryColor),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                actions: actions.elementAt(_selectedIndex),
+                title: titles.elementAt(_selectedIndex),
               ),
-              label: ''),
-          BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                "assets/Plus.svg",
-                width: 20,
-                height: 20,
-                color: _selectedIndex == 2 ? primaryColor : greyColor,
-              ),
-              label: ''),
-          BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                _selectedIndex == 3 ? "assets/WatchFC.svg" : "assets/Watch.svg",
-                width: 20,
-                height: 20,
-              ),
-              label: ''),
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                _selectedIndex == 4
-                    ? 'assets/MarketFC.png'
-                    : 'assets/MarketLM.png',
-                width: 22,
-                height: 22,
-              ),
-              label: '')
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-    );
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: pages,
+        ),
+        bottomNavigationBar: showBottomNavigator
+            ? BottomNavigatorBarEmso(
+                selectedIndex: _selectedIndex,
+                onTap: _onItemTapped,
+              )
+            : null);
   }
 }

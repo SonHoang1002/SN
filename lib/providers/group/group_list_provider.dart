@@ -73,6 +73,20 @@ class GroupListController extends StateNotifier<GroupListState> {
     }
   }
 
+  removeGroupAdmin(dynamic group) async {
+    if (mounted) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin
+            .where((admin) => admin['id'] != group['id'])
+            .toList(),
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+      );
+    }
+  }
+
   removeGroupMember(dynamic groupMemberId) async {
     state = state.copyWith(
         groupAdmin: state.groupAdmin,

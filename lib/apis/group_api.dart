@@ -5,6 +5,15 @@ class GroupApi {
     return await Api().getRequestBase('/api/v1/groups', params);
   }
 
+  updateLinkedGroup(id, params) async {
+    return await Api().postRequestBase('/api/v1/pages/$id/link_group', params);
+  }
+
+  removeLinkedGroup(id, params) async {
+    return await Api()
+        .postRequestBase('/api/v1/pages/$id/remove_linked_group', params);
+  }
+
   getMemberQuestion(dynamic id) async {
     return Api().getRequestBase("/api/v1/groups/$id/member_questions", null);
   }

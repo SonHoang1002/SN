@@ -115,7 +115,6 @@ class PostController extends StateNotifier<PostState> {
           posts: [feedPost, postPageUser].contains(type)
               ? [newPost] + state.posts
               : state.posts,
-          // posts: type == feedPost ? [newPost] + state.posts : state.posts,
           isMore: state.isMore,
           postUserPage: [feedPost, postPageUser].contains(type)
               ? [newPost] + state.postUserPage
@@ -141,7 +140,23 @@ class PostController extends StateNotifier<PostState> {
             newData,
             ...state.posts.sublist(1)
           ],
-          isMoreUserPage: state.isMoreUserPage);
+          isMoreUserPage: state.isMoreUserPage); 
+    }
+  }
+  removeProgessingPost(){
+    if (mounted) {
+      state = state.copyWith(
+          postsPin: state.postsPin,
+          posts: [
+            ...state.posts.sublist(0, 0), 
+            ...state.posts.sublist(1)
+          ],
+          isMore: state.isMore,
+          postUserPage: [
+            ...state.posts.sublist(0, 0), 
+            ...state.posts.sublist(1)
+          ],
+          isMoreUserPage: state.isMoreUserPage); 
     }
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create_moment.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -71,8 +71,6 @@ class _CreatePostState extends State<CreatePost> {
       //   platform.invokeMethod(
       //       methodDemoPlayExportedVideo, exportedVideoFilePath);
       // });
-      print('response, $exportedVideoCoverPreviewPath');
-      print('response, $exportedVideoFilePath');
       if (exportedVideoCoverPreviewPath != null &&
           exportedVideoFilePath != null) {
         Navigator.push(
@@ -120,12 +118,12 @@ class _CreatePostState extends State<CreatePost> {
                               if (key == 'moment') {
                                 _startVideoEditorDefault();
                               } else {
-                                Navigator.push(context,
-                                    CupertinoPageRoute(builder: ((context) {
-                                  return key == 'post'
-                                      ? const CreateNewFeed()
-                                      : const SizedBox();
-                                })));
+                                popToPreviousScreen(context);
+                                pushCustomCupertinoPageRoute(
+                                    context,
+                                    key == 'post'
+                                        ? const CreateNewFeed()
+                                        : const SizedBox());
                               }
                             },
                             child: Container(

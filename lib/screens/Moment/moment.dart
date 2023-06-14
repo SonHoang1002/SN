@@ -82,6 +82,7 @@ class _MomentState extends ConsumerState<Moment>
     );
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.black,
         body: Stack(children: <Widget>[
           TabBarView(controller: _tabController, children: [

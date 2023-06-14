@@ -27,7 +27,9 @@ final miniPlayerControllerProvider =
 class WatchDetail extends ConsumerStatefulWidget {
   final dynamic media;
   final dynamic post;
-  const WatchDetail({Key? key, this.media, this.post}) : super(key: key);
+  final String? type;
+  const WatchDetail({Key? key, this.media, this.post, this.type})
+      : super(key: key);
 
   @override
   ConsumerState<WatchDetail> createState() => _WatchDetailState();
@@ -44,7 +46,9 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   dynamic commentSelected;
   dynamic commentChild;
   List postComment = [];
-  bool isHiddenAction = false;
+  bool isHiddenAction = true;
+  bool isDragVideo = false;
+  bool isDismissed = false;
 
   @override
   void initState() {
@@ -83,139 +87,141 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
     super.build(context);
     final size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () {
-        hiddenKeyboard(context);
-      },
-      child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          body: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(widget.media['preview_remote_url'] ??
-                      widget.media['preview_url']),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                child: Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: SafeArea(
-                    child: Dismissible(
-                        direction: DismissDirection.vertical,
-                        key: Key(widget.media['id'].toString()),
-                        resizeDuration: const Duration(milliseconds: 1),
-                        onDismissed: (direction) {
-                          ref
-                              .read(selectedVideoProvider.notifier)
-                              .update((state) => widget.post);
-                          ref
-                              .read(miniPlayerControllerProvider)
-                              .animateToHeight(state: PanelState.MIN);
-                          Navigator.pop(context);
-                        },
-                        child: Stack(
-                          children: [
-                            Hero(
-                              tag: widget.media['remote_url'] ??
-                                  widget.media['url'],
-                              child: isHiddenAction
-                                  ? Center(
-                                      child: VideoPlayerHasController(
-                                        media: widget.media,
-                                      ),
-                                    )
-                                  : VideoPlayerHasController(
-                                      media: widget.media,
-                                    ),
-                            ),
-                            if (!isHiddenAction)
-                              Container(
-                                margin: const EdgeInsets.only(top: 20),
-                                child: PostHeader(
-                                    post: widget.post,
-                                    textColor: white,
-                                    type: postDetail),
-                              ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 15, right: 15),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  if (!isHiddenAction)
-                                    Container(
-                                      constraints: BoxConstraints(
-                                          maxHeight: 1 * size.height / 3),
-                                      child: TabBarView(
-                                          controller: _tabController,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 20),
-                                                  child: PostContent(
-                                                    post: widget.post,
-                                                    textColor: white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            ListComment(
-                                                postComment: postComment,
-                                                commentChild: commentChild,
-                                                commentNode: commentNode,
-                                                commentSelected:
-                                                    commentSelected)
-                                          ]),
-                                    ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      RotateIcon(
-                                          updateHiddenAction:
-                                              updateHiddenAction),
-                                      if (!isHiddenAction)
-                                        TabBar(
-                                            isScrollable: true,
-                                            controller: _tabController,
-                                            onTap: (index) {},
-                                            indicator: const BoxDecoration(),
-                                            indicatorWeight: 0,
-                                            labelColor: Colors.white,
-                                            unselectedLabelColor:
-                                                Colors.white.withOpacity(0.5),
-                                            indicatorSize:
-                                                TabBarIndicatorSize.label,
-                                            tabs: const [
-                                              Tab(
-                                                text: "Tổng quan",
-                                              ),
-                                              Tab(
-                                                text: "Bình luận",
-                                              )
-                                            ]),
-                                    ],
-                                  ),
-                                  BottomAction(
-                                      widget: widget,
-                                      isHiddenAction: isHiddenAction)
-                                ],
-                              ),
-                            ),
-                          ],
-                        )),
+        onTap: () {
+          hiddenKeyboard(context);
+        },
+        child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            body: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(widget.media['preview_remote_url'] ??
+                        widget.media['preview_url']),
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ))),
-    );
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: SafeArea(
+                      child: Stack(
+                        children: [
+                          if (!isDismissed)
+                            Dismissible(
+                              direction: DismissDirection.vertical,
+                              key: Key(widget.media['id'].toString()),
+                              resizeDuration: const Duration(milliseconds: 1),
+                              onDismissed: (direction) {
+                                ref
+                                    .read(selectedVideoProvider.notifier)
+                                    .update((state) => widget.post);
+                                setState(() {
+                                  isDismissed = true;
+                                });
+                                Future.delayed(Duration.zero, () {
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: Hero(
+                                  tag: widget.media['remote_url'] ??
+                                      widget.media['url'],
+                                  child: isHiddenAction
+                                      ? Center(
+                                          child: VideoPlayerHasController(
+                                            type: widget.type,
+                                            media: widget.media,
+                                            isHiddenControl: false,
+                                          ),
+                                        )
+                                      : VideoPlayerHasController(
+                                          type: widget.type,
+                                          media: widget.media,
+                                          isHiddenControl: false,
+                                        )),
+                            ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (!isHiddenAction)
+                                Container(
+                                  constraints: BoxConstraints(
+                                      maxHeight: size.height / 3),
+                                  child: TabBarView(
+                                      controller: _tabController,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            PostHeader(
+                                                post: widget.post,
+                                                textColor: white,
+                                                type: postDetail),
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 12),
+                                              child: PostContent(
+                                                post: widget.post,
+                                                textColor: white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        ListComment(
+                                            postComment: postComment,
+                                            commentChild: commentChild,
+                                            commentNode: commentNode,
+                                            commentSelected: commentSelected)
+                                      ]),
+                                ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    RotateIcon(
+                                        updateHiddenAction: updateHiddenAction),
+                                    if (!isHiddenAction)
+                                      TabBar(
+                                          isScrollable: true,
+                                          controller: _tabController,
+                                          onTap: (index) {},
+                                          indicator: const BoxDecoration(),
+                                          indicatorWeight: 0,
+                                          labelColor: Colors.white,
+                                          unselectedLabelColor:
+                                              Colors.white.withOpacity(0.5),
+                                          indicatorSize:
+                                              TabBarIndicatorSize.label,
+                                          tabs: const [
+                                            Tab(
+                                              text: "Tổng quan",
+                                            ),
+                                            Tab(
+                                              text: "Bình luận",
+                                            )
+                                          ]),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: BottomAction(
+                                    widget: widget,
+                                    isHiddenAction: isHiddenAction),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ))));
   }
 
   @override

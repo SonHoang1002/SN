@@ -19,7 +19,9 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_feed_status.dart';
@@ -68,13 +70,15 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
   final dynamic postDiscussion;
+  final dynamic pageData;
   final Function? reloadFunction;
   const CreateNewFeed(
       {Key? key,
       this.post,
       this.type,
       this.postDiscussion,
-      this.reloadFunction})
+      this.reloadFunction,
+      this.pageData})
       : super(key: key);
 
   @override
@@ -111,6 +115,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool isMenuMinExtent = true;
 
   GlobalKey _heightKey = GlobalKey();
+  bool _isClickForCreatePost = false;
 
   @override
   void initState() {
@@ -414,6 +419,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       "created_at": "${DateTime.now()}+07:00",
       "backdated_time": "${DateTime.now()}+07:00",
       "processing": "isProcessing",
+      "media_attachments": [],
       "account": {
         "id": meData['id'],
         "username": meData['username'],
@@ -426,7 +432,24 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         "banner": meData['banner'],
       },
     };
-
+    if (widget.pageData != null) {
+      _fakeData['page'] = {
+        "id": widget.pageData['id'],
+        'title': widget.pageData['title'],
+        'username': widget.pageData['username'],
+        'avatar_media': widget.pageData['avatar_media'],
+        'location': widget.pageData['location'],
+        'follow_count': widget.pageData['follow_count'],
+        'rating_product_count': widget.pageData['rating_product_count'] ?? 0,
+        'page_relationship': widget.pageData['page_relationship'],
+        'page_categories': widget.pageData['page_categories'],
+        'banner': widget.pageData['banner'],
+      };
+      _fakeData['page_owner'] = _fakeData['page'];
+    }
+    if (previewUrlData != null) {
+      _fakeData['card'] = previewUrlData;
+    }
     if (files.isNotEmpty) {
       _fakeData['media_attachments'] = files;
     }
@@ -458,79 +481,115 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   handleCreatePost() async {
-    double processingPostHeight = _heightKey.currentContext!.size!.height;
-    ref
-        .read(processingPostController.notifier)
-        .setPostionPost(processingPostHeight);
-    Navigator.pop(context);
-    String? type = widget.type ?? feedPost;
-    ref
-        .read(postControllerProvider.notifier)
-        .createUpdatePost(type, _createFakeData());
-    // prepare data for api
-    var data = {"status": content, "visibility": visibility['key']};
-    if (backgroundSelected != null) {
-      data = {...data, 'status_background_id': backgroundSelected['id']};
-    }
-    if (gifLink.isNotEmpty) {
-      data = {
-        ...data,
-        "extra_body": {"description": "", "link": gifLink, "title": ""}
-      };
-    }
-    if (statusActivity != null) {
-      data = {...data, 'status_activity_id': statusActivity['id']};
-    }
-    if (friendSelected.isNotEmpty) {
-      data = {
-        ...data,
-        'mention_ids': friendSelected.map((e) => e['id']).toList()
-      };
-    }
-    if (poll != null) {
-      data = {...data, 'poll': poll};
-    }
-    if (statusQuestion != null) {
-      data = {
-        ...data,
-        "post_type": statusQuestion['postType'],
-        statusQuestion['postType'] == 'target'
-            ? 'status_target'
-            : 'status_question': {
-          "color": statusQuestion['color'],
-          "content": statusQuestion['content'],
-        }
-      };
-    }
-    if (checkin != null) {
-      data = {...data, 'place_id': checkin['id']};
-    }
-    if (files.isNotEmpty) {
-      List<Future> listUpload = [];
-      for (var i = 0; i < files.length; i++) {
-        listUpload.add(handleUploadMedia(i, files[i]));
-      }
-      var results = await Future.wait(listUpload);
-      List mediasId = [];
-      if (results.isNotEmpty) {
-        mediasId = results.map((e) => e['id']).toList();
-      }
-      data = {...data, "media_ids": mediasId};
-    }
-    if (lifeEvent != null) {
-      data = {...data, "life_event": lifeEvent};
-    }
-    if (postDiscussion != null) {
-      data = {...data, ...postDiscussion};
-    }
-    var response = await PostApi().createStatus(data);
-    if (response != null) {
-      if (isUploadVideo) {
-        setState(() {
-          isUploadVideo = false;
-        });
+    if (!_isClickForCreatePost) {
+      setState(() {
+        _isClickForCreatePost = true;
+      });
+      double processingPostHeight = _heightKey.currentContext!.size!.height;
+      ref
+          .read(processingPostController.notifier)
+          .setPostionPost(processingPostHeight);
+      String? type = widget.type ?? feedPost;
+      if (type == postPage) {
+        ref
+            .read(pageControllerProvider.notifier)
+            .createPostFeedPage(_createFakeData());
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(null, null)
+            : null;
+      } else if (type == postLearnSpace) {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .createPostLearnSpace(type, _createFakeData());
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(null, null)
+            : null;
       } else {
-        widget.reloadFunction != null ? widget.reloadFunction!(response) : null;
+        ref
+            .read(postControllerProvider.notifier)
+            .createUpdatePost(type, _createFakeData());
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(null, null)
+            : null;
+      }
+
+      Navigator.pop(context);
+      // prepare data for api
+      var data = {"status": content, "visibility": visibility['key']};
+      if (backgroundSelected != null) {
+        data = {...data, 'status_background_id': backgroundSelected['id']};
+      }
+      if (gifLink.isNotEmpty) {
+        data = {
+          ...data,
+          "extra_body": {"description": "", "link": gifLink, "title": ""}
+        };
+      }
+      if (statusActivity != null) {
+        data = {...data, 'status_activity_id': statusActivity['id']};
+      }
+      if (friendSelected.isNotEmpty) {
+        data = {
+          ...data,
+          'mention_ids': friendSelected.map((e) => e['id']).toList()
+        };
+      }
+      if (poll != null) {
+        data = {...data, 'poll': poll};
+      }
+      if (statusQuestion != null) {
+        data = {
+          ...data,
+          "post_type": statusQuestion['postType'],
+          statusQuestion['postType'] == 'target'
+              ? 'status_target'
+              : 'status_question': {
+            "color": statusQuestion['color'],
+            "content": statusQuestion['content'],
+          }
+        };
+      }
+      if (checkin != null) {
+        data = {...data, 'place_id': checkin['id']};
+      }
+      if (files.isNotEmpty) {
+        List<Future> listUpload = [];
+        for (var i = 0; i < files.length; i++) {
+          listUpload.add(handleUploadMedia(i, files[i]));
+        }
+        var results = await Future.wait(listUpload);
+        List mediasId = [];
+        if (results.isNotEmpty) {
+          mediasId = results.map((e) => e['id']).toList();
+        }
+        data = {...data, "media_ids": mediasId};
+      }
+      if (lifeEvent != null) {
+        data = {...data, "life_event": lifeEvent};
+      }
+      if (postDiscussion != null) {
+        data['course_id'] = widget.postDiscussion['course_id'];
+      }
+      if (widget.pageData != null) {
+        data['page_id'] = widget.pageData['id'];
+        data['page_owner_id'] = widget.pageData['id'];
+      } 
+      var response = await PostApi().createStatus(data);
+      if (response != null) {
+        if (isUploadVideo) {
+          setState(() {
+            isUploadVideo = false;
+          });
+        } else {
+          // chưa check xem link gửi có xấu độc hay không nên lấy luôn link để hiển thị
+          // đợi ghép socket thông báo post xấu độc hay không
+          if (previewUrlData != null && response['card'] == null) {
+            response['card'] = previewUrlData;
+          }
+          widget.reloadFunction != null
+              ? widget.reloadFunction!(type, response)
+              : null;
+        }
       }
     }
   }
@@ -579,23 +638,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
     if (widget.post['visibility'] != visibility['key']) {
       newData['visibility'] = visibility['key'];
-    }
-    // if (backgroundSelected != null &&
-    //     widget.post['status_background']?['id'] != backgroundSelected['id']) {
-    //   if (files.isNotEmpty ||
-    //       checkin == null ||
-    //       poll == null ||
-    //       lifeEvent == null ||
-    //       widget.post['shared_event'] == null ||
-    //       widget.post['shared_recruit'] == null ||
-    //       widget.post['shared_project'] == null ||
-    //       widget.post['shared_course'] == null ||
-    //       widget.post['shared_product'] == null ||
-    //       widget.post['shared_page'] == null ||
-    //       widget.post['shared_group'] == null) {
-    //     newData['status_background_id'] = backgroundSelected['id'];
-    //   }
-    // } else {}
+    } 
     newData['status_background_id'] =
         backgroundSelected != null ? backgroundSelected['id'] : null;
 
@@ -607,10 +650,28 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         widget.post['status_activity']?['id'] != statusActivity['id']) {
       newData = {...newData, 'status_activity_id': statusActivity['id']};
     }
+    if (widget.pageData != null) {
+      newData['page_owner'] = widget.pageData['page_owner'];
+      newData['page'] = widget.pageData['page'];
+    }
+
+    if (widget.postDiscussion != null) {
+      newData['course_id'] = widget.postDiscussion['course_id'];
+    }
     dynamic response = await PostApi().updatePost(widget.post['id'], newData);
-    ref
-        .read(postControllerProvider.notifier)
-        .actionUpdateDetailInPost(widget.type, response);
+    if (widget.type == postPage) {
+      ref
+          .read(pageControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, response);
+    } else if (widget.type == postLearnSpace) {
+      ref
+          .read(learnSpaceStateControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, response);
+    } else {
+      ref
+          .read(postControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, response);
+    }
 
     if (response != null && mounted) {
       context.loaderOverlay.hide();
@@ -965,7 +1026,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     ? null
                     : backgroundSelected,
                 handleUpdateData: handleUpdateData,
-                handleGetPreviewUrl: handleGetPreviewUrl),
+                handleGetPreviewUrl: handleGetPreviewUrl,
+                pageData: widget.pageData),
             previewUrlData != null
                 ? PreviewUrlPost(
                     detailData: previewUrlData,

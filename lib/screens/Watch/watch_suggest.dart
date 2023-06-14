@@ -71,9 +71,9 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => WatchDetail(
-                                      post: widget.post,
-                                      media: widget.media,
-                                    )));
+                                    post: widget.post,
+                                    media: widget.media,
+                                    type: postWatchDetail)));
                       },
                     ))
                   ],

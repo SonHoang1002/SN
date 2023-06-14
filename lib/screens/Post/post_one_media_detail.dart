@@ -53,12 +53,21 @@ List typeVisibility = [
 ];
 
 class PostOneMediaDetail extends ConsumerStatefulWidget {
+  ///  currently selected image in post
   final dynamic postMedia;
+
+  /// image list
   final List? medias;
+
+  /// index of
   final int? currentIndex;
   final Function? backFunction;
   final Function? reloadFunction;
+
+  /// current post to serve for reaction, comment, share post
   final dynamic post;
+
+  /// type of current post
   final dynamic type;
   final dynamic preType;
   final Function? updateDataFunction;
@@ -221,6 +230,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
         return true;
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: blackColor.withOpacity(opacityValue! > 1.0
             ? 1.0
             : opacityValue! < 0.0
@@ -542,11 +552,10 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                             ),
                           ),
                           PostFooterInformation(
-                            post: userData,
-                            preType: checkPreType(),
-                            indexImagePost: widget.currentIndex,
-                            updateDataFunction:widget.updateDataFunction
-                          ),
+                              post: userData,
+                              preType: checkPreType(),
+                              indexImagePost: widget.currentIndex,
+                              updateDataFunction: widget.updateDataFunction),
                           buildDivider(),
                           SizedBox(
                             height: 40,
@@ -561,7 +570,8 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                       ? widget.reloadFunction!()
                                       : null;
                                 });
-                              },updateDataFunction:widget.updateDataFunction,
+                              },
+                              updateDataFunction: widget.updateDataFunction,
                               indexImage: widget.currentIndex,
                             ),
                           )
