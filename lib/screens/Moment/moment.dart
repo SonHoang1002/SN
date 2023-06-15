@@ -154,11 +154,12 @@ class _MomentState extends ConsumerState<Moment>
                         isScrollable: true,
                         controller: _tabController,
                         onTap: (index) {},
+                        indicator: const BoxDecoration(),
                         indicatorColor: Colors.white,
                         labelColor: Colors.white,
-                        unselectedLabelColor: Colors.white,
+                        unselectedLabelColor: Colors.white.withOpacity(0.5),
                         indicatorSize: TabBarIndicatorSize.label,
-                        indicatorWeight: 1,
+                        indicatorWeight: 0,
                         labelStyle: GoogleFonts.ibmPlexSans(),
                         tabs: const [
                           Tab(
