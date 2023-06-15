@@ -19,18 +19,19 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
   final bool? isHiddenControl;
   final double? timeStart;
   final Function? handleAction;
-  const VideoPlayerHasController(
-      {Key? key,
-      this.media,
-      this.type,
-      this.handleAction,
-      this.overlayWidget,
-      this.aspectRatio,
-      this.hasDispose,
-      this.isHiddenControl,
-      this.timeStart,
-      this.videoPositionNotifier})
-      : super(key: key);
+
+  const VideoPlayerHasController({
+    Key? key,
+    this.media,
+    this.type,
+    this.handleAction,
+    this.overlayWidget,
+    this.aspectRatio,
+    this.hasDispose,
+    this.isHiddenControl,
+    this.timeStart,
+    this.videoPositionNotifier,
+  }) : super(key: key);
 
   @override
   ConsumerState<VideoPlayerHasController> createState() =>

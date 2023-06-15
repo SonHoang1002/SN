@@ -82,10 +82,112 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
     });
   }
 
+  Widget renderVideo() {
+    return !isDismissed
+        ? Dismissible(
+            direction: DismissDirection.vertical,
+            key: Key(widget.media['id'].toString()),
+            resizeDuration: const Duration(milliseconds: 1),
+            onDismissed: (direction) {
+              ref
+                  .read(selectedVideoProvider.notifier)
+                  .update((state) => widget.post);
+              setState(() {
+                isDismissed = true;
+              });
+              Future.delayed(Duration.zero, () {
+                Navigator.pop(context);
+              });
+            },
+            child: Hero(
+                tag: widget.media['remote_url'] ?? widget.media['url'],
+                child: isHiddenAction
+                    ? Center(
+                        child: VideoPlayerHasController(
+                          type: widget.type,
+                          media: widget.media,
+                          isHiddenControl: false,
+                        ),
+                      )
+                    : VideoPlayerHasController(
+                        type: widget.type,
+                        media: widget.media,
+                        isHiddenControl: false,
+                      )),
+          )
+        : const SizedBox();
+  }
+
+  Widget renderPostInformation(size) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        if (!isHiddenAction)
+          Container(
+            constraints: BoxConstraints(maxHeight: size.height / 3),
+            child: TabBarView(controller: _tabController, children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  PostHeader(
+                      post: widget.post, textColor: white, type: postDetail),
+                  Container(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: PostContent(
+                      post: widget.post,
+                      textColor: white,
+                    ),
+                  ),
+                ],
+              ),
+              ListComment(
+                  postComment: postComment,
+                  commentChild: commentChild,
+                  commentNode: commentNode,
+                  commentSelected: commentSelected)
+            ]),
+          ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              RotateIcon(updateHiddenAction: updateHiddenAction),
+              if (!isHiddenAction)
+                TabBar(
+                    isScrollable: true,
+                    controller: _tabController,
+                    onTap: (index) {},
+                    indicator: const BoxDecoration(),
+                    indicatorWeight: 0,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.white.withOpacity(0.5),
+                    indicatorSize: TabBarIndicatorSize.label,
+                    tabs: const [
+                      Tab(
+                        text: "Tổng quan",
+                      ),
+                      Tab(
+                        text: "Bình luận",
+                      )
+                    ]),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: BottomAction(widget: widget, isHiddenAction: isHiddenAction),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final size = MediaQuery.of(context).size;
+
     return GestureDetector(
         onTap: () {
           hiddenKeyboard(context);
@@ -106,118 +208,7 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                     color: Colors.black.withOpacity(0.5),
                     child: SafeArea(
                       child: Stack(
-                        children: [
-                          if (!isDismissed)
-                            Dismissible(
-                              direction: DismissDirection.vertical,
-                              key: Key(widget.media['id'].toString()),
-                              resizeDuration: const Duration(milliseconds: 1),
-                              onDismissed: (direction) {
-                                ref
-                                    .read(selectedVideoProvider.notifier)
-                                    .update((state) => widget.post);
-                                setState(() {
-                                  isDismissed = true;
-                                });
-                                Future.delayed(Duration.zero, () {
-                                  Navigator.pop(context);
-                                });
-                              },
-                              child: Hero(
-                                  tag: widget.media['remote_url'] ??
-                                      widget.media['url'],
-                                  child: isHiddenAction
-                                      ? Center(
-                                          child: VideoPlayerHasController(
-                                            type: widget.type,
-                                            media: widget.media,
-                                            isHiddenControl: false,
-                                          ),
-                                        )
-                                      : VideoPlayerHasController(
-                                          type: widget.type,
-                                          media: widget.media,
-                                          isHiddenControl: false,
-                                        )),
-                            ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              if (!isHiddenAction)
-                                Container(
-                                  constraints: BoxConstraints(
-                                      maxHeight: size.height / 3),
-                                  child: TabBarView(
-                                      controller: _tabController,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            PostHeader(
-                                                post: widget.post,
-                                                textColor: white,
-                                                type: postDetail),
-                                            Container(
-                                              padding: const EdgeInsets.only(
-                                                  top: 12),
-                                              child: PostContent(
-                                                post: widget.post,
-                                                textColor: white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        ListComment(
-                                            postComment: postComment,
-                                            commentChild: commentChild,
-                                            commentNode: commentNode,
-                                            commentSelected: commentSelected)
-                                      ]),
-                                ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    RotateIcon(
-                                        updateHiddenAction: updateHiddenAction),
-                                    if (!isHiddenAction)
-                                      TabBar(
-                                          isScrollable: true,
-                                          controller: _tabController,
-                                          onTap: (index) {},
-                                          indicator: const BoxDecoration(),
-                                          indicatorWeight: 0,
-                                          labelColor: Colors.white,
-                                          unselectedLabelColor:
-                                              Colors.white.withOpacity(0.5),
-                                          indicatorSize:
-                                              TabBarIndicatorSize.label,
-                                          tabs: const [
-                                            Tab(
-                                              text: "Tổng quan",
-                                            ),
-                                            Tab(
-                                              text: "Bình luận",
-                                            )
-                                          ]),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: BottomAction(
-                                    widget: widget,
-                                    isHiddenAction: isHiddenAction),
-                              )
-                            ],
-                          ),
-                        ],
+                        children: [renderVideo(), renderPostInformation(size)],
                       ),
                     ),
                   ),
