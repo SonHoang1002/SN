@@ -27,6 +27,9 @@ final savedControllerProvider =
   (ref) => SavedController(),
 );
 
+const String defaultCollectionImage =
+    "https://snapi.emso.asia/system/media_attachments/files/108/927/296/811/310/650/small/6d639898340c58e6.jpg";
+
 class SavedController extends StateNotifier<SavedMenuItemState> {
   SavedController() : super(const SavedMenuItemState());
 
@@ -60,7 +63,11 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
           }
         }
         collection['imageUrl'] = getBookmarkImageUrl(bmResult[index]);
+      } else {
+        // collections has no bookmark -> default Image;
+        collection['imageUrl'] = defaultCollectionImage;
       }
+
       renderCollections.add(collection);
     }
     if (mounted) {
@@ -77,6 +84,20 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
       bookmarks: state.bookmarks
           .where((element) => element['id'] != bookmarkId)
           .toList(),
+    );
+  }
+
+  updateAfterAddingNewCollection(String collectionName, id) async {
+    state = state.copyWith(
+      bookmarks: state.bookmarks,
+      bmCollections: [
+        {
+          "imageUrl": defaultCollectionImage,
+          "name": collectionName,
+          "id": id,
+        },
+        ...state.bmCollections
+      ],
     );
   }
 }

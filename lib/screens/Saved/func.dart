@@ -41,3 +41,13 @@ dynamic convertItem(bookmark) {
     };
   }
 }
+
+double getRateListView(int length) {
+  if (length == 1) {
+    return 0.3;
+  } else if (length == 2) {
+    return 0.6;
+  } else {
+    return 1;
+  }
+}
