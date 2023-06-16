@@ -61,6 +61,11 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
   @override
   void dispose() {
     super.dispose();
+    postDetail = null;
+    postComment = [];
+    commentNode.dispose();
+    commentSelected = null;
+    commentChild = null;
   }
 
   fetchDataPostDetail() async {
@@ -90,7 +95,8 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
     setState(() {
       isLoadComment = true;
     });
-    List newList = await PostApi().getListCommentPost(postId, params) ?? [];
+    List newList =
+        await PostApi().getListCommentPost(postId.toString(), params) ?? [];
     if (mounted) {
       setState(() {
         isLoadComment = false;
@@ -99,9 +105,16 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       // change count to
       final currentPost = ref.watch(currentPostControllerProvider).currentPost;
       if (currentPost['media_attachments'].isNotEmpty &&
-          widget.indexImagePost != null) {
+          widget.indexImagePost != null &&
+          newList.isNotEmpty) {
+        int sumComment = postComment.length;
+        newList.forEach((element) {
+          sumComment += int.parse(
+              (element['replies_count'] ?? element['replies_total'])
+                  .toString());
+        });
         currentPost['media_attachments'][widget.indexImagePost]['status_media']
-            ['replies_total'] = postComment.length;
+            ['replies_total'] = sumComment;
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(currentPost);
@@ -251,14 +264,15 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
 
       dynamic newComment;
       // cal api
+      final params = {
+        ...data,
+        "visibility": "public",
+        "in_reply_to_id": data['in_reply_to_id'] ??
+            widget.post['media_attachments'][widget.indexImagePost]
+                ['status_media']['id']
+      };
       if (!['editComment', 'editChild'].contains(data['typeStatus'])) {
-        newComment = await PostApi().createStatus({
-              ...data,
-              "visibility": "public",
-              "in_reply_to_id": widget.post['media_attachments']
-                  [widget.indexImagePost]['status_media']['id']
-            }) ??
-            newCommentPreview;
+        newComment = await PostApi().createStatus(params) ?? newCommentPreview;
 
         if (newComment['card'] == null && preCardData != null) {
           newComment["card"] = newCommentPreview["card"];

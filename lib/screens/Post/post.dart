@@ -51,6 +51,7 @@ class _PostState extends ConsumerState<Post> {
   // tranh truong hop tao bai viet moi nhung khong co hieu ung cho va co the reaction o cac loai post khac o cac phan he khac
   bool isNeedInitPost = true;
   String warning = "Không có kết nối";
+  dynamic meData;
 
   _changeShowCommentBox() {
     setState(() {
@@ -74,9 +75,19 @@ class _PostState extends ConsumerState<Post> {
   }
 
   @override
+  void dispose() {
+    currentPost = null;
+    meData = null;
+    _isShowCommentBox.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final meData = ref.watch(meControllerProvider)[0];
-    isNeedInitPost ? currentPost = widget.post : null;
+    meData ??= ref.watch(meControllerProvider)[0];
+    if (isNeedInitPost) {
+      currentPost = widget.post;
+    }
     if (ref.read(connectivityControllerProvider).connectInternet == false &&
         currentPost['processing'] == "isProcessing") {
       if (warning != "Sẽ thử lại bài viết của bạn") {

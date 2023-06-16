@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/apis/moment_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/data/moment.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
@@ -39,11 +41,15 @@ class MomentController extends StateNotifier<MomentState> {
 
   getListMomentFollow(params) async {
     List response = await MomentApi().getListMomentFollow(params) ?? [];
-    if (mounted) {
-      state = state.copyWith(
-          momentFollow: state.momentFollow + response,
-          momentSuggest: state.momentSuggest);
+    List fakeMomentData = moments.sublist(1, 7);
+
+    if (response.isEmpty) {
+      response.addAll(checkObjectUniqueInList(response + fakeMomentData, 'id'));
     }
+
+    state = state.copyWith(
+        momentFollow: state.momentFollow + response,
+        momentSuggest: state.momentSuggest);
   }
 
   updateReaction(reaction, id) async {
@@ -143,6 +149,5 @@ class MomentController extends StateNotifier<MomentState> {
       response =
           await Api().postRequestBase("/api/v1/groups/$id/accounts", null);
     }
-    
   }
 }

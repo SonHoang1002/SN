@@ -605,6 +605,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                     : null;
                               });
                             },
+                            fromOneMediaPost: true,
                             updateDataPhotoPage: _reloadDataPostOneMediaDetail,
                             updateDataFunction: widget.updateDataFunction,
                             indexImage: widget.type == imagePhotoPage

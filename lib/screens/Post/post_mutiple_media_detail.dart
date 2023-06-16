@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +15,11 @@ import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.d
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
+import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
+import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -255,19 +260,6 @@ class _PostMutipleMediaDetail1State
           },
           child: Stack(
             children: [
-              // ValueListenableBuilder<bool>(
-              //     valueListenable: showBgContainer,
-              //     builder: (ctx, state, child) {
-              //       if (state) {
-              //         return Container(
-              //           height: height,
-              //           width: width,
-              //           color: Theme.of(context).scaffoldBackgroundColor,
-              //         );
-              //       } else {
-              //         return const SizedBox();
-              //       }
-              //     }),
               Container(
                 margin: EdgeInsets.only(
                   top: (beginDirection == ScrollDirection.forward &&
@@ -424,73 +416,71 @@ class _PostMutipleMediaDetail1State
                                                 CrossAxisAlignment.start,
                                             children: [
                                               GestureDetector(
-                                                  onTap: () {
-                                                    pushCustomVerticalPageRoute(
-                                                        context,
-                                                        PostOneMediaDetail(
-                                                            currentIndex: index,
-                                                            medias:
-                                                                medias, //list anh
-                                                            post: postData,
-                                                            postMedia: medias[
-                                                                index], // anh hien tai dang duoc chon
-                                                            type:
-                                                                postMultipleMedia,
-                                                            preType:
-                                                                widget.preType,
-                                                            backFunction: () {
-                                                              popToPreviousScreen(
-                                                                  context);
-                                                            }),
-                                                        opaque: false);
+                                                  onTap: () { 
+                                                    if (medias[index]['type'] ==
+                                                        "image") {
+                                                      pushCustomVerticalPageRoute(
+                                                          context,
+                                                          PostOneMediaDetail(
+                                                              currentIndex:
+                                                                  index,
+                                                              medias:
+                                                                  medias, //list anh
+                                                              post: postData,
+                                                              postMedia: medias[
+                                                                  index], // anh hien tai dang duoc chon
+                                                              type:
+                                                                  postMultipleMedia,
+                                                              preType: widget
+                                                                  .preType,
+                                                              backFunction: () {
+                                                                popToPreviousScreen(
+                                                                    context);
+                                                              }),
+                                                          opaque: false);
+                                                    }
+                                                    // else if (medias[index]
+                                                    //         ['type'] ==
+                                                    //     "video") {
+                                                    //   pushCustomVerticalPageRoute(
+                                                    //       context,
+                                                    //       WatchDetail(
+                                                    //         post: widget.post,
+                                                    //         media:
+                                                    //             medias[index],
+                                                    //       ),
+                                                    //       opaque: false);
+                                                    // } else { 
+                                                    // }
                                                   },
                                                   child: Stack(
                                                     children: [
-                                                      !isDragOutside
-                                                          ? Hero(
-                                                              tag:
-                                                                  // medias[index]
-                                                                  //         ['id'] ??
-                                                                  index,
-                                                              child: ExtendedImage.network(
-                                                                  medias[index]
-                                                                      ['url'],
-                                                                  key: Key(medias[
-                                                                          index]
-                                                                      ['id']),
-                                                                  fit: BoxFit
-                                                                      .fitWidth,
-                                                                  width:
-                                                                      MediaQuery.of(context)
-                                                                          .size
-                                                                          .width,
-                                                                  loadStateChanged:
-                                                                      (ExtendedImageState
-                                                                          state) {
-                                                                _buildLoadingExtendexImage(
-                                                                    state,
-                                                                    index);
-                                                              }))
-                                                          : ExtendedImage.network(
-                                                              medias[index]
-                                                                  ['url'],
-                                                              key: Key(
-                                                                  medias[index]
-                                                                      ['id']),
-                                                              fit: BoxFit
-                                                                  .fitWidth,
-                                                              width:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                              loadStateChanged:
-                                                                  (state) {
-                                                                _buildLoadingExtendexImage(
-                                                                    state,
-                                                                    index);
-                                                              },
-                                                            ),
+                                                      medias[index][
+                                                                  'type'] ==
+                                                              'image'
+                                                          ? (!isDragOutside
+                                                              ? Hero(
+                                                                  tag: medias[
+                                                                              index]
+                                                                          [
+                                                                          'id'] ??
+                                                                      index,
+                                                                  child:
+                                                                      _buildImageMediaNetwork(
+                                                                          index))
+                                                              : _buildImageMediaNetwork(
+                                                                  index))
+                                                          : (!isDragOutside
+                                                              ? Hero(
+                                                                  tag: medias[index]
+                                                                          [
+                                                                          'id'] ??
+                                                                      index,
+                                                                  child:
+                                                                      _buildVideoMedia(
+                                                                          index))
+                                                              : _buildVideoMedia(
+                                                                  index))
                                                     ],
                                                   )),
                                               PostFooter(
@@ -524,6 +514,46 @@ class _PostMutipleMediaDetail1State
             ],
           ),
         ));
+  }
+
+  Widget _buildVideoMedia(int index) {
+    return SizedBox(
+        height: (medias[index]['aspect'] ??
+                    medias[index]['meta']['original']['aspect'] ??
+                    1) <
+                1
+            ? MediaQuery.of(context).size.width
+            : null,
+        width: MediaQuery.of(context).size.width,
+        child: medias[index]['file'] != null
+            ? VideoPlayerNoneController(
+                path: medias[index]['file'].path,
+                type: "local",
+              )
+            : VideoPlayerHasController(
+                media: medias[index],
+                handleAction: () {
+                  pushCustomVerticalPageRoute(
+                      context,
+                      WatchDetail(
+                        post: widget.post,
+                        media: medias[index],
+                      ),
+                      opaque: false);
+                },
+              ));
+  }
+
+  Widget _buildImageMediaNetwork(int index) {
+    return ExtendedImage.network(
+      medias[index]['url'],
+      key: Key(medias[index]['id']),
+      fit: BoxFit.fitWidth,
+      width: MediaQuery.of(context).size.width,
+      loadStateChanged: (state) {
+        _buildLoadingExtendexImage(state, index);
+      },
+    );
   }
 
   Widget? _buildLoadingExtendexImage(state, index) {

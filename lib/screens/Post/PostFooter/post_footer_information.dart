@@ -36,6 +36,16 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
   late List reactions;
 
   @override
+  void dispose() {
+    super.dispose();
+    favourites = null;
+    viewerReaction = '';
+    textRender = '';
+    reactionsCount = null;
+    reactions = [];
+  }
+
+  @override
   Widget build(BuildContext context) {
     dynamic meData = ref.read(meControllerProvider)[0];
     const style = TextStyle(color: greyColor, fontSize: 15);
@@ -45,7 +55,7 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
           ? (widget.post['media_attachments'][widget.indexImagePost]
                   ?['status_media']?['viewer_reaction'] ??
               '')
-          : (widget.post['viewer_reaction'] ?? ""));
+          : (widget.post?['viewer_reaction'] ?? ""));
       favourites = widget.post['media_attachments'][widget.indexImagePost]
           ?['status_media']?['favourites'];
       textRender =
@@ -57,7 +67,7 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
               ?['status_media']['reactions'] ??
           [];
     } else {
-      favourites = widget.post['favourites'];
+      favourites = widget.post?['favourites'];
       viewerReaction = widget.post['viewer_reaction'] ?? '';
       textRender =
           '${shortenLargeNumber(widget.post?['favourites_count'] ?? 0)}';

@@ -60,6 +60,7 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
+import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
 import '../../../providers/create_feed/feed_draft_provider.dart';
 import 'package:dio/src/multipart_file.dart';
@@ -512,7 +513,16 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             ? widget.reloadFunction!(null, null)
             : null;
       }
-
+      bool isHaveVideo = false;
+      files.forEach((element) {
+        if (element['type'] != 'image') {
+          isHaveVideo = true;
+        }
+      });
+      if (isHaveVideo) {
+        _buildSnackBar(
+            "Video của bạn đang trong quá trình xử lý, chúng tôi sẽ thông báo cho bạn khi video đã sẵn sàng.");
+      }
       Navigator.pop(context);
       // prepare data for api
       var data = {"status": content, "visibility": visibility['key']};
@@ -559,7 +569,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         }
         var results = await Future.wait(listUpload);
         List mediasId = [];
-        if (results.isNotEmpty) {
+        if (results != null && results.isNotEmpty) {
           mediasId = results.map((e) => e['id']).toList();
         }
         data = {...data, "media_ids": mediasId};
@@ -573,23 +583,23 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       if (widget.pageData != null) {
         data['page_id'] = widget.pageData['id'];
         data['page_owner_id'] = widget.pageData['id'];
-      } 
+      }
       var response = await PostApi().createStatus(data);
       if (response != null) {
-        if (isUploadVideo) {
-          setState(() {
-            isUploadVideo = false;
-          });
-        } else {
-          // chưa check xem link gửi có xấu độc hay không nên lấy luôn link để hiển thị
-          // đợi ghép socket thông báo post xấu độc hay không
-          if (previewUrlData != null && response['card'] == null) {
-            response['card'] = previewUrlData;
-          }
-          widget.reloadFunction != null
-              ? widget.reloadFunction!(type, response)
-              : null;
+        // if (isUploadVideo) {
+        //   setState(() {
+        //     isUploadVideo = false;
+        //   });
+        // } else {
+        // chưa check xem link gửi có xấu độc hay không nên lấy luôn link để hiển thị
+        // đợi ghép socket thông báo post xấu độc hay không
+        if (previewUrlData != null && response['card'] == null) {
+          response['card'] = previewUrlData;
         }
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(type, response)
+            : null;
+        // }
       }
     }
   }
@@ -638,7 +648,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
     if (widget.post['visibility'] != visibility['key']) {
       newData['visibility'] = visibility['key'];
-    } 
+    }
     newData['status_background_id'] =
         backgroundSelected != null ? backgroundSelected['id'] : null;
 
@@ -922,6 +932,18 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     } else {
       popToPreviousScreen(context);
     }
+  }
+
+  _buildSnackBar(String title) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(title),
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(9)))),
+    );
   }
 
   @override

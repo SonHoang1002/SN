@@ -37,7 +37,7 @@ hiddenKeyboard(context) {
   }
 }
 
-checkObjectUniqueInList(list, keyCheck) {
+List checkObjectUniqueInList(list, keyCheck) {
   List newList = [];
 
   for (var i = 0; i < list.length; i++) {
