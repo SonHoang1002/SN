@@ -39,7 +39,8 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
 }
 
 class _VideoPlayerHasControllerState
-    extends ConsumerState<VideoPlayerHasController> {
+    extends ConsumerState<VideoPlayerHasController>
+    with WidgetsBindingObserver {
   bool isVisible = false;
   BetterState? betterPlayer;
   VideoPlayerController? videoPlayerController;
@@ -48,6 +49,7 @@ class _VideoPlayerHasControllerState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     betterPlayer = ref.read(betterPlayerControllerProvider);
     if (betterPlayer!.videoId == widget.media['id']) {
       videoPlayerController = betterPlayer!.videoPlayerController;
@@ -73,6 +75,7 @@ class _VideoPlayerHasControllerState
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     if (betterPlayer!.videoPlayerController != null &&
         betterPlayer!.videoId != widget.media['id']) {
       videoPlayerController?.dispose();
@@ -97,6 +100,17 @@ class _VideoPlayerHasControllerState
             aspectRatio: videoPlayerController!.value.aspectRatio,
             progressIndicatorDelay: const Duration(seconds: 10));
       });
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      if (chewieController != null && chewieController!.isPlaying) {
+        chewieController!.pause();
+      }
     }
   }
 

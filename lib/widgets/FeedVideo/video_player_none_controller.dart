@@ -35,7 +35,8 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
 }
 
 class _VideoPlayerNoneControllerState
-    extends ConsumerState<VideoPlayerNoneController> {
+    extends ConsumerState<VideoPlayerNoneController>
+    with WidgetsBindingObserver {
   late VideoPlayerController videoPlayerController;
   bool isVisible = false;
   bool _isMuted = false;
@@ -43,7 +44,7 @@ class _VideoPlayerNoneControllerState
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addObserver(this);
     videoPlayerController = (widget.path.startsWith('http')
         ? VideoPlayerController.network(widget.path)
         : VideoPlayerController.file(File(widget.path)))
@@ -66,6 +67,17 @@ class _VideoPlayerNoneControllerState
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      if (videoPlayerController.value.isPlaying) {
+        videoPlayerController.pause();
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
         onVisibilityChanged: (visibilityInfo) {
@@ -76,7 +88,7 @@ class _VideoPlayerNoneControllerState
               if (isVisible) {
                 videoPlayerController.play();
                 if (ref.read(watchControllerProvider).mediaSelected?['id'] ==
-                    (widget.media?['id']?? 0 )) {
+                    (widget.media?['id'] ?? 0)) {
                   videoPlayerController.seekTo(Duration(
                       seconds: ref.read(watchControllerProvider).position));
                 } else {
@@ -90,7 +102,7 @@ class _VideoPlayerNoneControllerState
             });
           }
         },
-        key: Key(widget.media?['id'] ?? widget.path ??'111'),
+        key: Key(widget.media?['id'] ?? widget.path ?? '111'),
         child: Stack(
           children: [
             GestureDetector(
@@ -153,7 +165,8 @@ class _VideoPlayerNoneControllerState
 
   @override
   void dispose() {
-    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     videoPlayerController.dispose();
+    super.dispose();
   }
 }

@@ -20,7 +20,7 @@ class MomentVideo extends ConsumerStatefulWidget {
 }
 
 class _MomentVideoState extends ConsumerState<MomentVideo>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late VideoPlayerController videoPlayerController;
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -39,6 +39,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     _animation =
@@ -81,6 +82,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _animationController.dispose();
     videoPlayerController.dispose();
     timer?.cancel();
@@ -118,6 +120,17 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
     setState(() {
       isDragSlider = data;
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      if (videoPlayerController.value.isPlaying) {
+        videoPlayerController.pause();
+      }
+    }
   }
 
   @override
