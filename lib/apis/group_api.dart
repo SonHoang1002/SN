@@ -11,7 +11,7 @@ class GroupApi {
 
   removeLinkedGroup(id, params) async {
     return await Api()
-        .postRequestBase('/api/v1/pages/$id/remove_linked_group', params);
+        .deleteRequestBase('/api/v1/pages/$id/remove_linked_group', params);
   }
 
   getMemberQuestion(dynamic id) async {

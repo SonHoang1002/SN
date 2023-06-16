@@ -81,6 +81,7 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
       if (response != null) {
         setState(() {
           isClick = false;
+
           widget.handleChangeDependencies!(response);
 
           ref.read(pageControllerProvider.notifier).updateMedata(response);

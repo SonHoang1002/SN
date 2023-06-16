@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/screens/Page/PageEdit/page_edit.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/page_search.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -207,6 +208,10 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
           };
         });
         updatePageEllipsis();
+        break;
+      case 'edit':
+        Navigator.push(context,
+            CupertinoPageRoute(builder: (context) =>  PageEdit(data: widget.data)));
         break;
       default:
     }
