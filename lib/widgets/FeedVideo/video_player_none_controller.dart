@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
+import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -45,25 +47,35 @@ class _VideoPlayerNoneControllerState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    final selectedVideo = ref.read(selectedVideoProvider);
+    BetterState betterStatePlayer = ref.read(betterPlayerControllerProvider);
+
     videoPlayerController = (widget.path.startsWith('http')
         ? VideoPlayerController.network(widget.path)
         : VideoPlayerController.file(File(widget.path)))
       ..initialize().then((value) {
-        if (widget.isShowVolumn != null && widget.isShowVolumn == false) {
-          videoPlayerController.seekTo(
-              Duration(seconds: ref.read(watchControllerProvider).position));
-        }
         videoPlayerController.setLooping(true);
         if (widget.timeStart != null) {
           videoPlayerController.seekTo(widget.timeStart!);
         }
-      })
-      ..addListener(() {
-        if (mounted) {
-          ref.read(watchControllerProvider.notifier).updatePositionPlaying(
-              videoPlayerController.value.position.inSeconds);
+
+        if (selectedVideo != null && widget.type == 'miniPlayer') {
+          videoPlayerController.seekTo(Duration(
+              seconds: betterStatePlayer
+                      .videoPlayerController?.value.position.inSeconds ??
+                  0));
         }
-      });
+      })
+      ..addListener(() {});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.type == 'miniPlayer' && mounted) {
+      ref.read(watchControllerProvider.notifier).updatePositionPlaying(
+          videoPlayerController.value.position.inSeconds);
+    }
   }
 
   @override

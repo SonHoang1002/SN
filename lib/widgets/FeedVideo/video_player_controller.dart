@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
@@ -88,19 +89,25 @@ class _VideoPlayerHasControllerState
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (widget.isHiddenControl != null && !widget.isHiddenControl!) {
-      setState(() {
-        chewieController = ChewieController(
-            placeholder: Container(
-                decoration: BoxDecoration(
-              color: Color(int.parse(
-                  '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
-            )),
-            showControlsOnInitialize: true,
-            videoPlayerController: videoPlayerController!,
-            aspectRatio: videoPlayerController!.value.aspectRatio,
-            progressIndicatorDelay: const Duration(seconds: 10));
-      });
+    // if (widget.isHiddenControl != null && !widget.isHiddenControl!) {
+    //   setState(() {
+    //     chewieController = ChewieController(
+    //         placeholder: Container(
+    //             decoration: BoxDecoration(
+    //           color: Color(int.parse(
+    //               '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
+    //         )),
+    //         showControlsOnInitialize: true,
+    //         videoPlayerController: videoPlayerController!,
+    //         aspectRatio: videoPlayerController!.value.aspectRatio,
+    //         progressIndicatorDelay: const Duration(seconds: 10));
+    //   });
+    // }
+
+    if (ref.watch(selectedVideoProvider) != null &&
+        ref.read(watchControllerProvider).position != 0) {
+      chewieController!.seekTo(
+          Duration(seconds: ref.read(watchControllerProvider).position));
     }
   }
 
@@ -127,11 +134,7 @@ class _VideoPlayerHasControllerState
               if (chewieController == null) return;
               if (isVisible) {
                 if (selectedVideo != null) {
-                  if (widget.type == 'miniPlayer') {
-                    chewieController!.videoPlayerController.play();
-                  } else {
-                    chewieController!.videoPlayerController.pause();
-                  }
+                  chewieController!.videoPlayerController.pause();
                 } else {
                   chewieController!.videoPlayerController.play();
                 }
