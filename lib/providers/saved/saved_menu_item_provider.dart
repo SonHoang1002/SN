@@ -3,21 +3,25 @@ import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/screens/Saved/func.dart';
 
 class SavedMenuItemState {
-  final List bookmarks;
-  final List bmCollections;
+  final List bookmarks; // all bookmark from database
+  final List bmCollections; // all collection
+  final List currentBmBookmarks; // bookmarks of one collection
 
   const SavedMenuItemState({
     this.bookmarks = const [],
     this.bmCollections = const [],
+    this.currentBmBookmarks = const [],
   });
 
   SavedMenuItemState copyWith({
     bookmarks = const [],
     bmCollections = const [],
+    currentBmBookmarks = const [],
   }) {
     return SavedMenuItemState(
       bookmarks: bookmarks,
       bmCollections: bmCollections,
+      currentBmBookmarks: currentBmBookmarks,
     );
   }
 }
@@ -62,10 +66,10 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
             index = j;
           }
         }
-        collection['imageUrl'] = getBookmarkImageUrl(bmResult[index]);
+        collection['imageWidget'] = handleImage(bmResult[index]);
       } else {
         // collections has no bookmark -> default Image;
-        collection['imageUrl'] = defaultCollectionImage;
+        collection['imageWidget'] = defaultCollectionImage;
       }
 
       renderCollections.add(collection);
@@ -98,6 +102,54 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
         },
         ...state.bmCollections
       ],
+    );
+  }
+
+  fetchBookmarkOfOneCollection(dynamic collectionId) async {
+    final bmResponse = await BookmarkApi().getBookmarkOfOneCollection(
+      collectionId,
+      {"limit": 6},
+    );
+    state = state.copyWith(
+      bookmarks: state.bookmarks,
+      bmCollections: state.bmCollections,
+      currentBmBookmarks: bmResponse,
+    );
+  }
+
+  fetchAllCollection() async {
+    // get all bookmark of users
+    var bmResult = await BookmarkApi().fetchAllBookmark();
+    state = state.copyWith(
+      bookmarks: bmResult,
+      bmCollections: state.bmCollections,
+      currentBmBookmarks: state.currentBmBookmarks,
+    );
+  }
+
+  deleteOneCollection(collectionId) async {
+    state = state.copyWith(
+      bookmarks: state.bookmarks,
+      bmCollections: state.bmCollections
+          .where((element) => element['id'] != collectionId)
+          .toList(),
+      currentBmBookmarks: state.currentBmBookmarks,
+    );
+  }
+
+  renameOneCollection(collectionId, String newName) async {
+    var index = state.bmCollections.indexWhere(
+      (element) => element['id'] == collectionId,
+    );
+    print(index);
+    var newArray = state.bmCollections;
+    newArray[index]['name'] = newName;
+    print(newArray);
+
+    state = state.copyWith(
+      bookmarks: state.bookmarks,
+      bmCollections: newArray,
+      currentBmBookmarks: state.currentBmBookmarks,
     );
   }
 }

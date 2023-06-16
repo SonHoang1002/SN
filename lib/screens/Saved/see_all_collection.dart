@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
-import 'package:social_network_app_mobile/widgets/Bookmark/collection_item.dart';
+import 'package:social_network_app_mobile/screens/Saved/item/collection_item.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 
@@ -73,7 +73,12 @@ class SeeAllCollectionState extends ConsumerState<SeeAllCollection> {
                 ),
                 itemBuilder: (context, index) {
                   var item = widget.collections[index];
-                  return CollectionItem(item: item);
+                  return CollectionItem(
+                    item: item,
+                    func: () {
+                      setState(() {});
+                    },
+                  );
                 },
               ),
             ),

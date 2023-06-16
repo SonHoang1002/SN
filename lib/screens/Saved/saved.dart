@@ -6,10 +6,10 @@ import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provid
 import 'package:social_network_app_mobile/screens/Saved/func.dart';
 import 'package:social_network_app_mobile/screens/Saved/see_all_bookmark.dart';
 import 'package:social_network_app_mobile/screens/Saved/see_all_collection.dart';
+import 'package:social_network_app_mobile/screens/Saved/item/bookmark_item.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widgets/Bookmark/bookmark_item.dart';
-import 'package:social_network_app_mobile/widgets/Bookmark/collection_item.dart';
+import 'package:social_network_app_mobile/screens/Saved/item/collection_item.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/Bookmark/bookmark_page.dart';
 
@@ -62,7 +62,11 @@ class SavedState extends ConsumerState<Saved> {
         ),
         itemBuilder: (context, index) {
           var item = collections[index];
-          return CollectionItem(item: item);
+          return CollectionItem(
+              item: item,
+              func: () {
+                setState(() {});
+              });
         },
       ),
     );
@@ -191,7 +195,7 @@ class SavedState extends ConsumerState<Saved> {
                               context,
                               CupertinoPageRoute(
                                 builder: (context) => SeeAllBookmark(
-                                  bookmarks: bookmarks,
+                                  type: 'all',
                                 ),
                               ),
                             );

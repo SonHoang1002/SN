@@ -7,6 +7,7 @@ import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provid
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
 class BookmarkItem extends ConsumerStatefulWidget {
   final dynamic item;
@@ -26,11 +27,7 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
           .read(savedControllerProvider.notifier)
           .updateAfterUnBookmard(bookmark['id']);
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Bỏ lưu thành công"),
-        ),
-      );
+      showSnackbar(context, "Bỏ lưu thành công");
     }
   }
 
@@ -50,12 +47,11 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
         children: [
           Expanded(
             flex: 3,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                widget.item['imageUrl'] ?? defaultCollectionImage,
-                fit: BoxFit.cover,
-                height: height / 10,
+            child: SizedBox(
+              height: height / 10,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: widget.item['imageWidget'],
               ),
             ),
           ),
