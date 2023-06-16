@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
+import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_tree.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
@@ -95,6 +96,10 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
               setState(() {
                 isDismissed = true;
               });
+              ref
+                  .read(betterPlayerControllerProvider)
+                  .chewieController!
+                  .pause();
               Future.delayed(Duration.zero, () {
                 Navigator.pop(context);
               });

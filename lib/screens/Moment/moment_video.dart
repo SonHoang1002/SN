@@ -83,7 +83,6 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    videoPlayerController.pause();
     _animationController.dispose();
     videoPlayerController.dispose();
     timer?.cancel();
@@ -121,17 +120,6 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
     setState(() {
       isDragSlider = data;
     });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.detached) {
-      if (videoPlayerController.value.isPlaying) {
-        videoPlayerController.pause();
-      }
-    }
   }
 
   @override

@@ -125,6 +125,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                           type: 'avatarFriend',
                           imageCard: SizedBox(
                             height: 110.0,
+                            width: double.infinity,
                             child: ClipRRect(
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(8),
