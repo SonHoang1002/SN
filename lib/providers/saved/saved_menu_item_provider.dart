@@ -1,27 +1,31 @@
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/screens/Saved/func.dart';
 
+import '../../constant/common.dart';
+
 class SavedMenuItemState {
   final List bookmarks; // all bookmark from database
   final List bmCollections; // all collection
-  final List currentBmBookmarks; // bookmarks of one collection
+  final List currentCltBookmarks; // bookmarks of one collection
 
   const SavedMenuItemState({
     this.bookmarks = const [],
     this.bmCollections = const [],
-    this.currentBmBookmarks = const [],
+    this.currentCltBookmarks = const [],
   });
 
   SavedMenuItemState copyWith({
     bookmarks = const [],
     bmCollections = const [],
-    currentBmBookmarks = const [],
+    currentCltBookmarks = const [],
   }) {
     return SavedMenuItemState(
       bookmarks: bookmarks,
       bmCollections: bmCollections,
-      currentBmBookmarks: currentBmBookmarks,
+      currentCltBookmarks: currentCltBookmarks,
     );
   }
 }
@@ -30,9 +34,6 @@ final savedControllerProvider =
     StateNotifierProvider<SavedController, SavedMenuItemState>(
   (ref) => SavedController(),
 );
-
-const String defaultCollectionImage =
-    "https://snapi.emso.asia/system/media_attachments/files/108/927/296/811/310/650/small/6d639898340c58e6.jpg";
 
 class SavedController extends StateNotifier<SavedMenuItemState> {
   SavedController() : super(const SavedMenuItemState());
@@ -69,7 +70,7 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
         collection['imageWidget'] = handleImage(bmResult[index]);
       } else {
         // collections has no bookmark -> default Image;
-        collection['imageWidget'] = defaultCollectionImage;
+        collection['imageWidget'] = linkBannerDefault;
       }
 
       renderCollections.add(collection);
@@ -88,7 +89,7 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
       bookmarks: state.bookmarks
           .where((element) => element['id'] != bookmarkId)
           .toList(),
-      currentBmBookmarks: state.currentBmBookmarks
+      currentCltBookmarks: state.currentCltBookmarks
           .where((element) => element['id'] != bookmarkId)
           .toList(),
     );
@@ -99,60 +100,64 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
       bookmarks: state.bookmarks,
       bmCollections: [
         {
-          "imageUrl": defaultCollectionImage,
+          "imageWidget": ExtendedImage.network(
+            linkBannerDefault,
+            fit: BoxFit.cover,
+          ),
           "name": collectionName,
           "id": id,
         },
         ...state.bmCollections
       ],
+      currentCltBookmarks: state.currentCltBookmarks,
     );
   }
 
   fetchBookmarkOfOneCollection(dynamic collectionId) async {
     final bmResponse = await BookmarkApi().getBookmarkOfOneCollection(
       collectionId,
-      {"limit": 6},
+      null,
     );
     state = state.copyWith(
       bookmarks: state.bookmarks,
       bmCollections: state.bmCollections,
-      currentBmBookmarks: bmResponse,
+      currentCltBookmarks: bmResponse,
     );
   }
 
-  fetchAllCollection() async {
+  fetchAllBookmark() async {
     // get all bookmark of users
     var bmResult = await BookmarkApi().fetchAllBookmark();
     state = state.copyWith(
       bookmarks: bmResult,
       bmCollections: state.bmCollections,
-      currentBmBookmarks: state.currentBmBookmarks,
+      currentCltBookmarks: state.currentCltBookmarks,
     );
   }
 
   deleteOneCollection(collectionId) async {
+    var response = await BookmarkApi().deleteBookmarkCollection(collectionId);
     state = state.copyWith(
       bookmarks: state.bookmarks,
       bmCollections: state.bmCollections
           .where((element) => element['id'] != collectionId)
           .toList(),
-      currentBmBookmarks: state.currentBmBookmarks,
+      currentCltBookmarks: state.currentCltBookmarks,
     );
   }
 
   renameOneCollection(collectionId, String newName) async {
+    var response = await BookmarkApi().renameCollection(collectionId, newName);
     var index = state.bmCollections.indexWhere(
       (element) => element['id'] == collectionId,
     );
-    print(index);
     var newArray = state.bmCollections;
     newArray[index]['name'] = newName;
-    print(newArray);
 
     state = state.copyWith(
       bookmarks: state.bookmarks,
       bmCollections: newArray,
-      currentBmBookmarks: state.currentBmBookmarks,
+      currentCltBookmarks: state.currentCltBookmarks,
     );
   }
 }

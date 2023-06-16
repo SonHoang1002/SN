@@ -8,6 +8,8 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:provider/provider.dart' as pv;
 
+import '../see_collection_bookmark.dart';
+
 class CollectionItem extends ConsumerStatefulWidget {
   dynamic item;
   void Function() func;
@@ -39,17 +41,16 @@ class CollectionItemState extends ConsumerState<CollectionItem> {
           child: widget.item['imageWidget'],
         ),
       ),
-      onTap: () {
+      onTap: () async {
         Navigator.push(
           context,
           CupertinoPageRoute(
-            builder: (context) => SeeAllBookmark(
-              type: 'collection_bookmark',
-              collectionId: widget.item['id'],
+            builder: (context) => SeeCollectionBookmark(
+              collectionId: collections[index]['id'],
               collectionName: collections[index]['name'],
             ),
           ),
-        ).then((_) => widget.func());
+        );
       },
       textCard: Container(
         // color: Colors.red,

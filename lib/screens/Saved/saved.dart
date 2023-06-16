@@ -194,9 +194,7 @@ class SavedState extends ConsumerState<Saved> {
                             Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                builder: (context) => SeeAllBookmark(
-                                  type: 'all',
-                                ),
+                                builder: (context) => SeeAllBookmark(),
                               ),
                             );
                           }, theme),

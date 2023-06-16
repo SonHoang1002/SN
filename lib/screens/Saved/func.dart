@@ -1,6 +1,5 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
 
 import '../../constant/common.dart';
 
@@ -12,7 +11,7 @@ Widget handleImage(bookmark) {
     if (media['url'].contains('.mp4') || media['url'].contains('.mov')) {
       // video, current: image mock data
       return ExtendedImage.network(
-        defaultCollectionImage,
+        linkBannerDefault,
         fit: BoxFit.cover,
       );
     } else {

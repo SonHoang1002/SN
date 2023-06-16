@@ -130,11 +130,11 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
                 children: [
                   FolderItem(
                     handleAction: handleAction,
-                    item: const {
-                      "icon": Icon(
+                    item: {
+                      "icon": const Icon(
                         FontAwesomeIcons.plus,
                         size: 20,
-                        color: secondaryColor,
+                        color: Colors.black87,
                       ),
                       "name": "Tạo bộ sưu tập",
                       "type": "create"
@@ -146,7 +146,7 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
                     "icon": Icon(
                       FontAwesomeIcons.solidFolder,
                       size: 20,
-                      color: secondaryColor,
+                      color: Colors.black87,
                     )
                   }),
                   const CrossBar(
@@ -161,7 +161,7 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
                             "icon": const Icon(
                               FontAwesomeIcons.solidFolder,
                               size: 20,
-                              color: secondaryColor,
+                              color: Colors.black87,
                             )
                           }))),
                 ],
@@ -306,7 +306,9 @@ class FolderItem extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                  color: secondaryColorSelected, shape: BoxShape.circle),
+                color: greyColor[350],
+                shape: BoxShape.circle,
+              ),
               child: item['icon'],
             ),
             const SizedBox(
