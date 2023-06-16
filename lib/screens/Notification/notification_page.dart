@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -43,6 +44,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
   Widget build(BuildContext context) {
     List notifications =
         ref.watch(notificationControllerProvider).notifications;
+
     renderName(noti) {
       dynamic status = noti['status'];
       dynamic account = noti['account'];
@@ -145,7 +147,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       } else if (type == 'recruit_apply') {
         return {
           'textNone': ' đã ứng tuyển vào công việc',
-          'textBold': '${status?['recruit']?['title']}'
+          'textBold': ' ${status?['recruit']?['title']}'
         };
       } else if (type == 'recruit_invitation') {
         return {
@@ -217,7 +219,9 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
     renderLinkAvatar(noti) {
       dynamic account = noti['account'];
 
-      return account['avatar_media']['preview_url'];
+      return account['avatar_media'] != null
+          ? account['avatar_media']['preview_url']
+          : linkAvatarDefault;
     }
 
     renderLinkSvg(type, status) {
