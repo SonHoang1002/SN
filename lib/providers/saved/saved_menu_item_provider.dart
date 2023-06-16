@@ -88,6 +88,9 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
       bookmarks: state.bookmarks
           .where((element) => element['id'] != bookmarkId)
           .toList(),
+      currentBmBookmarks: state.currentBmBookmarks
+          .where((element) => element['id'] != bookmarkId)
+          .toList(),
     );
   }
 

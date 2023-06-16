@@ -24,11 +24,16 @@ class CollectionHandleItem extends ConsumerStatefulWidget {
   HandleItem item;
   String collectionId;
   String collectionName;
+  final Function? onRename;
+  final Function? onDelete;
+
   CollectionHandleItem({
     super.key,
     required this.item,
     required this.collectionId,
     required this.collectionName,
+    this.onRename,
+    this.onDelete,
   });
 
   @override
@@ -38,29 +43,19 @@ class CollectionHandleItem extends ConsumerStatefulWidget {
 class CollectionHandleItemState extends ConsumerState<CollectionHandleItem> {
   TextEditingController _controller = TextEditingController();
 
-  void handleDelete(collectionId) async {
-    var response = await BookmarkApi().deleteBookmarkCollection(collectionId);
-    if (response != null && mounted) {
-      ref
-          .read(savedControllerProvider.notifier)
-          .deleteOneCollection(collectionId);
-    }
+  void handleDelete(collectionId, BuildContext context) async {
+    widget.onDelete!(collectionId);
+    Navigator.pop(context);
+    showSnackbar(context, "Xóa bộ sưu tập thành công");
+    await Future.delayed(const Duration(seconds: 0), () {
+      Navigator.pop(context);
+    });
   }
 
   void handleRename(collectionId, String newName, BuildContext context) async {
-    // print("handle: $collectionId");
-    // print("newName: $newName");
-    final res = await BookmarkApi().renameCollection(collectionId, newName);
-    // print("handle: $res");
-    // print("mounted: $mounted");
-    if (res != null && mounted) {
-      // print("run: run");
-      ref
-          .read(savedControllerProvider.notifier)
-          .renameOneCollection(collectionId, newName);
-      Navigator.pop(context);
-      showSnackbar(context, "Đổi tên thành công");
-    }
+    widget.onRename!(newName);
+    Navigator.pop(context);
+    showSnackbar(context, "Đổi tên thành công");
   }
 
   @override
@@ -147,9 +142,7 @@ class CollectionHandleItemState extends ConsumerState<CollectionHandleItem> {
                   CupertinoDialogAction(
                     isDestructiveAction: true,
                     onPressed: () {
-                      handleDelete(widget.collectionId);
-                      Navigator.pop(context);
-                      showSnackbar(context, "Xóa bộ sưu tập thành công");
+                      handleDelete(widget.collectionId, context);
                     },
                     child: const Text('Gỡ, xóa'),
                   ),

@@ -10,6 +10,7 @@ import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 
+import '../../apis/bookmark_api.dart';
 import 'item/collection_handle_item.dart';
 
 class SeeAllBookmark extends ConsumerStatefulWidget {
@@ -29,6 +30,7 @@ class SeeAllBookmark extends ConsumerStatefulWidget {
 
 class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
   bool isLoading = true;
+  String collectionName = '';
   final itemList = [
     HandleItem(
       iconData: FontAwesomeIcons.solidPenToSquare,
@@ -50,6 +52,11 @@ class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
   @override
   void initState() {
     super.initState();
+    if (widget.collectionName != null) {
+      setState(() {
+        collectionName = widget.collectionName!;
+      });
+    }
     if (mounted) {
       if (widget.type == 'collection_bookmark') {
         Future.delayed(Duration.zero, () => fetchCollectionBookmark());
@@ -96,7 +103,7 @@ class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
                     children: [
                       const BackIconAppbar(),
                       const SizedBox(width: 10.0),
-                      AppBarTitle(title: widget.collectionName!),
+                      AppBarTitle(title: collectionName),
                     ],
                   ),
                   GestureDetector(
@@ -117,10 +124,38 @@ class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
                                 children: itemList
                                     .map(
                                       (e) => CollectionHandleItem(
-                                        item: e,
-                                        collectionId: widget.collectionId!,
-                                        collectionName: widget.collectionName!,
-                                      ),
+                                          item: e,
+                                          collectionId: widget.collectionId!,
+                                          collectionName: collectionName,
+                                          onRename: (value) async {
+                                            final res = await BookmarkApi()
+                                                .renameCollection(
+                                                    widget.collectionId, value);
+                                            if (res != null && mounted) {
+                                              ref
+                                                  .read(savedControllerProvider
+                                                      .notifier)
+                                                  .renameOneCollection(
+                                                    widget.collectionId,
+                                                    value,
+                                                  );
+                                            }
+                                            setState(() {
+                                              collectionName = value;
+                                            });
+                                          },
+                                          onDelete: (collectionId) async {
+                                            var resp = await BookmarkApi()
+                                                .deleteBookmarkCollection(
+                                                    collectionId);
+                                            if (resp != null && mounted) {
+                                              ref
+                                                  .read(savedControllerProvider
+                                                      .notifier)
+                                                  .deleteOneCollection(
+                                                      collectionId);
+                                            }
+                                          }),
                                     )
                                     .toList(),
                               ),
