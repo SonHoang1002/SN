@@ -41,21 +41,23 @@ class PostFooterButton extends ConsumerStatefulWidget {
   /// reload post detail screen
   final Function? reloadDetailFunction;
   final bool? isShowCommentBox;
+  final bool? fromOneMediaPost;
 
   /// update data from post and post detail screen
   final Function? updateDataFunction;
-  const PostFooterButton({
-    Key? key,
-    this.post,
-    this.type,
-    this.updateDataPhotoPage,
-    this.reloadFunction,
-    this.preType,
-    this.indexImage,
-    this.reloadDetailFunction,
-    this.isShowCommentBox,
-    this.updateDataFunction,
-  }) : super(key: key);
+  const PostFooterButton(
+      {Key? key,
+      this.post,
+      this.type,
+      this.updateDataPhotoPage,
+      this.reloadFunction,
+      this.preType,
+      this.indexImage,
+      this.reloadDetailFunction,
+      this.isShowCommentBox,
+      this.updateDataFunction,
+      this.fromOneMediaPost = false})
+      : super(key: key);
 
   @override
   ConsumerState<PostFooterButton> createState() => _PostFooterButtonState();
@@ -72,7 +74,16 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
   @override
   void initState() {
     super.initState();
-    // postData = widget.post;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    suggestReactionContent = "";
+    postData = null;
+    postComment = [];
+    commentSelected = null;
+    commentNode.dispose();
   }
 
   @override
@@ -95,24 +106,23 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                 ?['viewer_reaction'] ??
             widget.post['viewer_reaction'] ??
             '')
-        : (widget.post['viewer_reaction'] ?? ""));
+        : (widget.post?['viewer_reaction'] ?? ""));
     postData = widget.post;
 
     handlePress(key) {
       if (key == 'comment') {
         if (![postDetail, postMultipleMedia, postWatch, imagePhotoPage]
-                .contains(widget.type) ||
-            ([feedPost, postPageUser].contains(widget.type) &&
-                widget.post['media_attachments'].length > 1)) {
+                .contains(widget.type) &&
+            widget.fromOneMediaPost == false) {
           pushCustomCupertinoPageRoute(
               context,
               PostDetail(
                   post: widget.post,
                   preType: widget.type,
                   updateDataFunction: widget.updateDataFunction));
-        } else if (([postMultipleMedia, imagePhotoPage].contains(widget.type) ||
-            ([feedPost, postPageUser].contains(widget.type) &&
-                widget.post['media_attachments'].length == 1))) {
+        } else if (([postMultipleMedia, imagePhotoPage]
+                .contains(widget.type)) ||
+            widget.fromOneMediaPost == true) {
           showBarModalBottomSheet(
               context: context,
               backgroundColor: Colors.transparent,

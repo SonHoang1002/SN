@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,7 +48,6 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
 
     renderLayoutMedia(medias) {
       final size = MediaQuery.of(context).size;
-
       switch (medias.length) {
         case 1:
           if (checkIsImage(medias[0])) {
@@ -120,6 +121,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                       MaterialPageRoute(
                                           builder: (context) => Moment(
                                                 dataAdditional: widget.post,
+                                                isBack: true,
                                               )))
                                   : Navigator.push(
                                       context,

@@ -54,6 +54,10 @@ class PostApi {
         .deleteRequestBase("/api/v1/allow_notification_posts/$postId", null);
   }
 
+  Future getPostApi(postId) async {
+    return Api().getRequestBase("/api/v1/statuses/$postId", null);
+  }
+
   Future deletePostApi(postId) async {
     return Api().deleteRequestBase("/api/v1/statuses/$postId", null);
   }

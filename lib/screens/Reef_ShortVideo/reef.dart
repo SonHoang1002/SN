@@ -58,46 +58,6 @@ class _ReefState extends ConsumerState<Reef> {
                 ? moments.sublist(1, 7)
                 : momentSuggests;
     momentSuggests.shuffle();
-    handleSettingHeader() {
-      showCustomBottomSheet(context, 170, "",
-          isHaveHeader: false,
-          bgColor: Theme.of(context).colorScheme.background,
-          widget: Column(
-            children: [
-              GeneralComponent(
-                [
-                  buildTextContent("Ẩn", false, fontSize: 15),
-                  buildSpacer(height: 7),
-                  buildTextContent("Ẩn bớt các bài viết tương tự", false,
-                      fontSize: 12, colorWord: greyColor)
-                ],
-                prefixWidget: const Icon(
-                  FontAwesomeIcons.rectangleXmark,
-                  size: 18,
-                ),
-                changeBackground: greyColor[300],
-              ),
-              buildSpacer(height: 10),
-              GeneralComponent(
-                [
-                  buildTextContent("Quản lý Bảng feed", false, fontSize: 15),
-                ],
-                prefixWidget: const Icon(
-                  FontAwesomeIcons.sliders,
-                  size: 18,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                changeBackground: greyColor[300],
-                function: () {
-                  Navigator.of(context).push(CupertinoPageRoute(
-                      builder: (ctx) => const ReefSettingMain()));
-                },
-              ),
-            ],
-          ));
-    }
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -121,6 +81,45 @@ class _ReefState extends ConsumerState<Reef> {
         ],
       ),
     );
+  }
+
+  handleSettingHeader() {
+    showCustomBottomSheet(context, 170, "",
+        isHaveHeader: false,
+        bgColor: Theme.of(context).colorScheme.background,
+        widget: Column(
+          children: [
+            GeneralComponent(
+              [
+                buildTextContent("Ẩn", false, fontSize: 15),
+                buildSpacer(height: 7),
+                buildTextContent("Ẩn bớt các bài viết tương tự", false,
+                    fontSize: 12, colorWord: greyColor)
+              ],
+              prefixWidget: const Icon(
+                FontAwesomeIcons.rectangleXmark,
+                size: 18,
+              ),
+              changeBackground: Theme.of(context).cardColor,
+            ),
+            buildSpacer(height: 10),
+            GeneralComponent(
+              [
+                buildTextContent("Quản lý Bảng feed", false, fontSize: 15),
+              ],
+              prefixWidget: const Icon(
+                FontAwesomeIcons.sliders,
+                size: 18,
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+              changeBackground: Theme.of(context).cardColor,
+              function: () {
+                Navigator.of(context).push(CupertinoPageRoute(
+                    builder: (ctx) => const ReefSettingMain()));
+              },
+            ),
+          ],
+        ));
   }
 
   Future<void> _initVideoEditor() async {

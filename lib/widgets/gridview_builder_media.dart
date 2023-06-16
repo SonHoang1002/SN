@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
@@ -100,9 +101,10 @@ class GridViewBuilderMedia extends StatelessWidget {
                                   medias[indexBg]['remote_url'] ??
                                   medias[indexBg]['url'],
                               media: medias[indexBg],
+                              isPause: true,
                               type: medias[indexBg]['file']?.path != null
                                   ? 'local'
-                                  : 'network'),
+                                  : 'network')
                         ]));
         });
   }

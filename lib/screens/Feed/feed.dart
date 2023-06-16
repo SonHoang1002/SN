@@ -95,8 +95,28 @@ class _FeedState extends ConsumerState<Feed> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
+      bool isHaveVideo = false;
+      if (newData['media_attachments'].forEach((ele) {
+        if (ele['type'] == "video") {
+          isHaveVideo = true;
+        }
+      })) if (isHaveVideo) {
+        _buildSnackBar("Video của bạn đã sẵn sàng.");
+      }
       setState(() {});
     });
+  }
+
+  _buildSnackBar(String title) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(title),
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(9)))),
+    );
   }
 
   @override

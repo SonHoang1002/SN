@@ -57,9 +57,9 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
   Widget build(BuildContext context) {
     final meData = ref.watch(meControllerProvider)[0];
     var size = MediaQuery.of(context).size;
-    var account = widget.post['account'] ?? {};
-    var group = widget.post['group'];
-    var page = widget.post['page'];
+    var account = widget.post?['account'] ?? {};
+    var group = widget.post?['group'];
+    var page = widget.post?['page'];
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
     String description = '';

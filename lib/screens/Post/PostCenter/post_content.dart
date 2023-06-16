@@ -26,7 +26,7 @@ class _PostContentState extends State<PostContent> {
   Widget build(BuildContext context) {
     renderPostContent() {
       final size = MediaQuery.of(context).size;
-      if (widget.post['status_background'] != null) {
+      if (widget.post?['status_background'] != null) {
         var backgroundObject = widget.post['status_background'];
         return Container(
           width: size.width,
@@ -68,7 +68,7 @@ class _PostContentState extends State<PostContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ExpandableTextContent(
-                  content: widget.post['content'],
+                  content: widget.post?['content'],
                   linkColor: widget.textColor ??
                       Theme.of(context).textTheme.bodyLarge!.color ??
                       white,

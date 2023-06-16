@@ -59,18 +59,22 @@ class _VideoPlayerHasControllerState
       videoPlayerController = VideoPlayerController.network(
         widget.media['remote_url'] ?? widget.media['url'],
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-      )..initialize().then((value) => setState(() {
-            chewieController = ChewieController(
-                placeholder: Container(
-                    decoration: BoxDecoration(
-                  color: Color(int.parse(
-                      '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
-                )),
-                showControlsOnInitialize: false,
-                videoPlayerController: videoPlayerController!,
-                aspectRatio: videoPlayerController!.value.aspectRatio,
-                progressIndicatorDelay: const Duration(seconds: 10));
-          }));
+      )..initialize().then((value) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            setState(() {
+              chewieController = ChewieController(
+                  placeholder: Container(
+                      decoration: BoxDecoration(
+                    color: Color(int.parse(
+                        '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
+                  )),
+                  showControlsOnInitialize: false,
+                  videoPlayerController: videoPlayerController!,
+                  aspectRatio: videoPlayerController!.value.aspectRatio,
+                  progressIndicatorDelay: const Duration(seconds: 10));
+            });
+          });
+        });
     }
   }
 
@@ -183,9 +187,6 @@ class _VideoPlayerHasControllerState
                                   child: Chewie(controller: chewieController!)),
                               Positioned.fill(child: GestureDetector(
                                 onTap: () {
-                                  if (widget.handleAction != null) {
-                                    widget.handleAction!();
-                                  }
                                   if (betterPlayer!.videoId !=
                                       widget.media['id']) {
                                     ref
@@ -195,6 +196,9 @@ class _VideoPlayerHasControllerState
                                             widget.media['id'],
                                             videoPlayerController!,
                                             chewieController!);
+                                  }
+                                  if (widget.handleAction != null) {
+                                    widget.handleAction!();
                                   }
                                 },
                               ))

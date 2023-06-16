@@ -19,6 +19,7 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
   final double? aspectRatio;
   final bool? isShowVolumn;
   final Duration? timeStart;
+  final bool? isPause;
   const VideoPlayerNoneController(
       {Key? key,
       this.timeStart,
@@ -27,7 +28,8 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
       this.media,
       this.aspectRatio,
       this.post,
-      this.isShowVolumn})
+      this.isShowVolumn,
+      this.isPause = false})
       : super(key: key);
 
   @override
@@ -65,6 +67,9 @@ class _VideoPlayerNoneControllerState
                       .videoPlayerController?.value.position.inSeconds ??
                   0));
         }
+      });
+    if (widget.isPause == true) {
+      videoPlayerController.pause()
       })
       ..addListener(() {});
   }
@@ -118,24 +123,24 @@ class _VideoPlayerNoneControllerState
         child: Stack(
           children: [
             GestureDetector(
-                onTap: () {
-                  widget.type == 'local'
-                      ? null
-                      : widget.post != null &&
-                              widget.post["post_type"] != null &&
-                              widget.post["post_type"] == 'moment'
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Moment(
-                                        dataAdditional: widget.post,
-                                      )))
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WatchSuggest(
-                                      post: widget.post, media: widget.media)));
-                },
+                // onTap: () {
+                //   widget.type == 'local'
+                //       ? null
+                //       : widget.post != null &&
+                //               widget.post["post_type"] != null &&
+                //               widget.post["post_type"] == 'moment'
+                //           ? Navigator.push(
+                //               context,
+                //               MaterialPageRoute(
+                //                   builder: (context) => Moment(
+                //                         dataAdditional: widget.post,
+                //                       )))
+                //           : Navigator.push(
+                //               context,
+                //               MaterialPageRoute(
+                //                   builder: (context) => WatchSuggest(
+                //                       post: widget.post, media: widget.media)));
+                // },
                 child: Hero(
                     tag: widget.path,
                     child: AspectRatio(

@@ -31,76 +31,74 @@ class PostMedia extends StatelessWidget {
 
     handlePress(media) {
       if (type != "edit_post") {
-        if (checkIsImage(media)) {
-          if (medias.length == 1) {
-            showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
-            pushCustomVerticalPageRoute(
-                context,
-                PostOneMediaDetail(
-                    postMedia: post,
-                    post: post,
-                    type: type,
-                    preType: preType,
-                    backFunction: () {
-                      backFunction != null ? backFunction!() : null;
-                    },
-                    reloadFunction: () {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        reloadFunction != null ? reloadFunction!() : null;
-                      });
-                    },
-                    updateDataFunction: updateDataFunction),
-                opaque: false);
-          } else if (medias.length > 1) {
-            showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
-            int initialIndex =
-                medias.indexWhere((element) => element['id'] == media['id']);
-            pushCustomCupertinoPageRoute(
-                context,
-                PostMutipleMediaDetail(
+        // if (checkIsImage(media)) {
+        if (medias.length == 1) {
+          showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
+          pushCustomVerticalPageRoute(
+              context,
+              PostOneMediaDetail(
+                  postMedia: post,
+                  post: post,
+                  type: type,
+                  preType: preType,
+                  backFunction: () {
+                    backFunction != null ? backFunction!() : null;
+                  },
+                  reloadFunction: () {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      reloadFunction != null ? reloadFunction!() : null;
+                    });
+                  },
+                  updateDataFunction: updateDataFunction),
+              opaque: false);
+        } else if (medias.length > 1) {
+          showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
+          int initialIndex =
+              medias.indexWhere((element) => element['id'] == media['id']); 
+          pushCustomCupertinoPageRoute(
+              context,
+              PostMutipleMediaDetail(
                   post: post,
                   initialIndex: initialIndex,
                   preType: preType,
-                  updateDataFunction:updateDataFunction
+                  updateDataFunction: updateDataFunction
                   // reloadPostFunction: () {
                   //     WidgetsBinding.instance.addPostFrameCallback((_) {
                   //       reloadFunction != null ? reloadFunction!() : null;
                   //     });
                   //   }
-                ),
-                opaque: false);
-          } else {
-            showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
-            pushCustomCupertinoPageRoute(
-                context,
-                PostDetail(
+                  ),
+              opaque: false);
+        } else {
+          showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
+          pushCustomCupertinoPageRoute(
+              context,
+              PostDetail(
                   post: post,
                   preType: type,
-                  updateDataFunction:updateDataFunction
-                ));
-            // Navigator.push(
-            //     context,
-            //     CupertinoPageRoute(
-            //         builder: (context) => PostDetail(
-            //               post: post,
-            //               preType: type,
-            //             )));
-          }
-        } else {
-          return;
+                  updateDataFunction: updateDataFunction));
+          // Navigator.push(
+          //     context,
+          //     CupertinoPageRoute(
+          //         builder: (context) => PostDetail(
+          //               post: post,
+          //               preType: type,
+          //             )));
         }
+      } else {
+        return;
       }
+      // }
     }
 
     return medias.isNotEmpty
         ? Container(
             margin: const EdgeInsets.only(top: 8.0),
             child: GridLayoutImage(
-              post: post,
-              medias: medias,
-              handlePress: handlePress,
-              updateDataFunction:updateDataFunction
-            ),
+                post: post,
+                medias: medias,
+                handlePress: handlePress,
+                updateDataFunction: updateDataFunction),
           )
         : Container();
   }

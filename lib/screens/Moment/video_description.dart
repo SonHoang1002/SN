@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -16,6 +19,8 @@ import 'package:social_network_app_mobile/widgets/expandable_text.dart';
 import 'package:social_network_app_mobile/widgets/screen_share.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'follow_animation.dart';
+
 class VideoDescription extends ConsumerStatefulWidget {
   final dynamic moment;
   const VideoDescription({super.key, this.moment});
@@ -27,7 +32,7 @@ class VideoDescription extends ConsumerStatefulWidget {
 class _VideoDescriptionState extends ConsumerState<VideoDescription> {
   bool _isFollowing = false;
   bool showTick = false;
-  bool isWidgetExpanded = false;
+  // bool isWidgetExpanded = false;
   bool isEyeVisible = false;
 
   @override
@@ -36,7 +41,11 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
 
     if (widget.moment?['account_relationships']?['following'] == true ||
         widget.moment?["account"]?['relationships']?['following'] == true) {
-      _isFollowing = true;
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {
+          _isFollowing = true;
+        });
+      });
     }
   }
 
@@ -61,10 +70,9 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
     }
     if (response != null && response['id'] == id) {
       setState(() {
-        isWidgetExpanded = !isWidgetExpanded;
-        isEyeVisible = !isWidgetExpanded;
+        isEyeVisible = !isEyeVisible;
       });
-      if (isWidgetExpanded) {
+      if (isEyeVisible) {
         Future.delayed(const Duration(milliseconds: 200), () {
           setState(() {
             isEyeVisible = false;
@@ -342,42 +350,24 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                               object: page ?? account,
                               path: page != null
                                   ? page['avatar_media'] != null
-                                      ? page['avatar_media']['preview_url']
+                                      ? (page['avatar_media']?['preview_url'])
                                       : linkAvatarDefault
-                                  : account['avatar_media']['preview_url']),
+                                  : (account['avatar_media']?['preview_url']) ??
+                                      linkAvatarDefault),
                         ),
                       ),
-                      // AnimatedOpacity(
-                      //   duration: const Duration(milliseconds: 200),
-                      //   opacity: isEyeVisible ? 1.0 : 0.0,
-                      //   child: AnimatedContainer(
-                      //     duration: const Duration(milliseconds: 300),
-                      //     curve: Curves.easeInOut,
-                      //     height: isWidgetExpanded ? 0 : 30,
-                      //     width: isWidgetExpanded ? 0 : 30,
-                      //     child:
-                      Positioned(
-                        bottom: -5,
-                        right: 13,
-                        child: GestureDetector(
-                          onTap: () {
-                            checkMomentFollow();
-                          },
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.remove_red_eye,
-                              size: 20,
-                              color: whiteColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      //   ),
-                      // ),
+                      !_isFollowing
+                          ? Positioned(
+                              bottom: -5,
+                              right: 13,
+                              child: GestureDetector(
+                                onTap: () {
+                                  checkMomentFollow();
+                                },
+                                child: AddToTickAnimation(),
+                              ),
+                            )
+                          : const SizedBox(),
                     ],
                   ),
                   const SizedBox(
@@ -436,9 +426,10 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                             object: page ?? account,
                             path: page != null
                                 ? page['avatar_media'] != null
-                                    ? page['avatar_media']['preview_url']
+                                    ? (page['avatar_media']?['preview_url'])
                                     : linkAvatarDefault
-                                : account['avatar_media']['preview_url']),
+                                : (account['avatar_media']?['preview_url']) ??
+                                    linkAvatarDefault),
                       )
                     ],
                   )
