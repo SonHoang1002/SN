@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
@@ -53,7 +54,8 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
     showCupertinoModalPopup<void>(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
+          return CustomAlertDialog(
+            isSavedMenuItem: false,
             type: widget.type,
             entitySave: widget.entitySave,
             entityType: widget.entityType,
@@ -172,48 +174,62 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
   }
 }
 
-class AlertDialog extends ConsumerStatefulWidget {
+class CustomAlertDialog extends ConsumerStatefulWidget {
+  final bool isSavedMenuItem;
   final String type;
   final dynamic entitySave;
   final String entityType;
-  const AlertDialog({
+  const CustomAlertDialog({
     super.key,
     required this.type,
     required this.entitySave,
     required this.entityType,
+    required this.isSavedMenuItem,
   });
 
   @override
-  ConsumerState<AlertDialog> createState() => _AlertDialogState();
+  ConsumerState<CustomAlertDialog> createState() => _AlertDialogState();
 }
 
-class _AlertDialogState extends ConsumerState<AlertDialog> {
+class _AlertDialogState extends ConsumerState<CustomAlertDialog> {
   String name = '';
 
   handleCreateAndBookmark(name) async {
     var response = await BookmarkApi().createBookmarkAlbum({"name": name});
     if (response != null) {
-      var data = {
-        "bookmark_id": widget.entitySave['id'],
-        "entity_type": widget.entityType,
-        "bookmark_collection_id": response['id']
-      };
-      var res = await BookmarkApi().bookmarkApi(data);
-
-      if (res != null && mounted) {
+      if (widget.isSavedMenuItem == true) {
         ref
-            .read(postControllerProvider.notifier)
-            .actionUpdateDetailInPost(widget.type, res);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Đã lưu vào ${response['name']}")));
-        Navigator.pop(context);
-      } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Lỗi, vui lòng thử lại sau")));
-        Navigator.pop(context);
-      }
+            .read(savedControllerProvider.notifier)
+            .updateAfterAddingNewCollection(name, response['id']);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Tạo mới thành công")),
+          );
+          Navigator.pop(context);
+        }
+      } else {
+        var data = {
+          "bookmark_id": widget.entitySave['id'],
+          "entity_type": widget.entityType,
+          "bookmark_collection_id": response['id']
+        };
+        var res = await BookmarkApi().bookmarkApi(data);
 
-      setState(() {});
+        if (res != null && mounted) {
+          ref
+              .read(postControllerProvider.notifier)
+              .actionUpdateDetailInPost(widget.type, res);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Đã lưu vào ${response['name']}")));
+          Navigator.pop(context);
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Lỗi, vui lòng thử lại sau")));
+          Navigator.pop(context);
+        }
+        setState(() {});
+      }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

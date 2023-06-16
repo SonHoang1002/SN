@@ -369,7 +369,7 @@ class AlertDialogDelete extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     handleDeletePost(key) async {
-      var response = await PostApi().deletePostApi(post!['id']); 
+      var response = await PostApi().deletePostApi(post!['id']);
       if (type == postLearnSpace) {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
