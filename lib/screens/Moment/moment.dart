@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -37,12 +36,12 @@ class _MomentState extends ConsumerState<Moment>
       Future.delayed(Duration.zero, () {
         ref
             .read(momentControllerProvider.notifier)
-            .getListMomentSuggest({"limit": 10});
+            .getListMomentSuggest({"limit": 5});
       });
       Future.delayed(Duration.zero, () {
         ref
             .read(momentControllerProvider.notifier)
-            .getListMomentFollow({"limit": 10});
+            .getListMomentFollow({"limit": 5});
       });
     }
   }
@@ -71,18 +70,17 @@ class _MomentState extends ConsumerState<Moment>
 
     final size = MediaQuery.of(context).size;
 
-    Widget NoData = Container(
+    Widget noData = Container(
       color: Colors.black,
       width: size.width,
       height: size.height,
-      child: const Center(
-        child:
-            Text("Không có dữ liệu hiển thị", style: TextStyle(color: white)),
+      child: Center(
+        child: Text("Không có dữ liệu hiển thị",
+            style: GoogleFonts.ibmPlexSans(textStyle: TextStyle(color: white))),
       ),
     );
 
     return Scaffold(
-        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.black,
         body: Stack(children: <Widget>[
           TabBarView(controller: _tabController, children: [
@@ -92,34 +90,34 @@ class _MomentState extends ConsumerState<Moment>
                     typePage: widget.typePage,
                     momentRender: momentFollow,
                     handlePageChange: (value) {
-                      if (value == momentFollow.length - 5) {
+                      if (value == momentFollow.length - 3) {
                         ref
                             .read(momentControllerProvider.notifier)
                             .getListMomentFollow({
-                          "limit": 10,
+                          "limit": 5,
                           "max_id": momentFollow.last['score']
                         });
                       }
                     },
                   )
-                : NoData,
+                : noData,
             momentSuggests.isNotEmpty
                 ? MomentPageview(
                     type: 'suggest',
                     typePage: widget.typePage,
                     momentRender: momentSuggests,
                     handlePageChange: (value) {
-                      if (value == momentSuggests.length - 5) {
+                      if (value == momentSuggests.length - 3) {
                         ref
                             .read(momentControllerProvider.notifier)
                             .getListMomentSuggest({
-                          "limit": 10,
+                          "limit": 5,
                           "max_id": momentSuggests.last['score']
                         });
                       }
                     },
                   )
-                : NoData
+                : noData
           ]),
           Positioned(
               //Place it at the top, and not use the entire screen
@@ -156,11 +154,13 @@ class _MomentState extends ConsumerState<Moment>
                         isScrollable: true,
                         controller: _tabController,
                         onTap: (index) {},
+                        indicator: const BoxDecoration(),
                         indicatorColor: Colors.white,
                         labelColor: Colors.white,
-                        unselectedLabelColor: Colors.white,
+                        unselectedLabelColor: Colors.white.withOpacity(0.5),
                         indicatorSize: TabBarIndicatorSize.label,
-                        indicatorWeight: 1,
+                        indicatorWeight: 0,
+                        labelStyle: GoogleFonts.ibmPlexSans(),
                         tabs: const [
                           Tab(
                             text: "Đang theo dõi",

@@ -20,7 +20,7 @@ class MomentVideo extends ConsumerStatefulWidget {
 }
 
 class _MomentVideoState extends ConsumerState<MomentVideo>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late VideoPlayerController videoPlayerController;
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -39,6 +39,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     _animation =
@@ -81,10 +82,12 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
 
   @override
   void dispose() {
-    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    videoPlayerController.pause();
     _animationController.dispose();
     videoPlayerController.dispose();
     timer?.cancel();
+    super.dispose();
   }
 
   _handleOnDoubleTap(TapDownDetails tapDetails) {
@@ -118,6 +121,17 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
     setState(() {
       isDragSlider = data;
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      if (videoPlayerController.value.isPlaying) {
+        videoPlayerController.pause();
+      }
+    }
   }
 
   @override
@@ -157,7 +171,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                       color: Colors.black,
                     ),
                     child: Center(
-                      child: videoPlayerController.value.aspectRatio >= 0.6
+                      child: videoPlayerController.value.aspectRatio >= 0.7
                           ? AspectRatio(
                               aspectRatio:
                                   videoPlayerController.value.aspectRatio,

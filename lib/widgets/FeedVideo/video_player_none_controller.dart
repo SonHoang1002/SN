@@ -37,7 +37,8 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
 }
 
 class _VideoPlayerNoneControllerState
-    extends ConsumerState<VideoPlayerNoneController> {
+    extends ConsumerState<VideoPlayerNoneController>
+    with WidgetsBindingObserver {
   late VideoPlayerController videoPlayerController;
   bool isVisible = false;
   bool _isMuted = false;
@@ -45,6 +46,7 @@ class _VideoPlayerNoneControllerState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     videoPlayerController = (widget.path.startsWith('http')
         ? VideoPlayerController.network(widget.path)
         : VideoPlayerController.file(File(widget.path)))
@@ -66,6 +68,17 @@ class _VideoPlayerNoneControllerState
       });
     if (widget.isPause == true) {
       videoPlayerController.pause();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      if (videoPlayerController.value.isPlaying) {
+        videoPlayerController.pause();
+      }
     }
   }
 
@@ -157,7 +170,9 @@ class _VideoPlayerNoneControllerState
 
   @override
   void dispose() {
-    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    videoPlayerController.pause();
     videoPlayerController.dispose();
+    super.dispose();
   }
 }

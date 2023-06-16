@@ -8,12 +8,12 @@ import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_page_hashtag.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_page_profile.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header_action.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/expandable_text.dart';
 import 'package:social_network_app_mobile/widgets/screen_share.dart';
@@ -91,7 +91,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
     int reactionsCount = widget.moment['favourites_count'] ?? 0;
     bool highLightIcon =
         widget.moment['viewer_reaction'] == 'love' ? true : false;
-    Color whiteColor = Colors.white.withOpacity(0.9);
+    Color whiteColor = Colors.white.withOpacity(0.95);
 
     List iconsAction = [
       {
@@ -156,7 +156,6 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
       }
     }
 
-    Color whiteOpacity = Colors.white.withOpacity(0.9);
     Color greyOpacity = const Color.fromRGBO(33, 33, 33, 1).withOpacity(0.9);
 
     return Column(
@@ -179,7 +178,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                 begin: Alignment.bottomCenter,
                                 end: Alignment.topCenter,
                                 colors: <Color>[
-                                  Colors.black.withOpacity(0.7),
+                                  Colors.black.withOpacity(0.8),
                                   Colors.black.withOpacity(0.0),
                                 ],
                               ),
@@ -189,7 +188,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                         Container(
                           width: size.width,
                           margin: const EdgeInsets.only(
-                              bottom: 15, left: 15, right: 75),
+                              bottom: 15, left: 15, right: 75, top: 20),
                           constraints: BoxConstraints(
                             maxHeight: size.height * 0.4,
                           ),
@@ -222,12 +221,14 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                         ),
                                         SizedBox(
                                           child: Text('Xem quần áo ở đây nha',
-                                              style: TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  color: whiteOpacity,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15)),
+                                              style: customIbmPlexSans(
+                                                  TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color: whiteColor,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 15))),
                                         )
                                       ],
                                     ),
@@ -235,27 +236,30 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                 Row(
                                   children: [
                                     GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    MomentPageProfile(
-                                                        object: page ?? account,
-                                                        objectType: page != null
-                                                            ? 'page'
-                                                            : 'account')));
-                                      },
-                                      child: Text(
-                                        page != null
-                                            ? page['title']
-                                            : account['display_name'],
-                                        style: const TextStyle(
-                                            color: white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 17),
-                                      ),
-                                    )
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      MomentPageProfile(
+                                                          object:
+                                                              page ?? account,
+                                                          objectType: page !=
+                                                                  null
+                                                              ? 'page'
+                                                              : 'account')));
+                                        },
+                                        child: Text(
+                                          page != null
+                                              ? page['title']
+                                              : account['display_name'],
+                                          style: customIbmPlexSans(
+                                            TextStyle(
+                                                color: whiteColor,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 17),
+                                          ),
+                                        ))
                                   ],
                                 ),
                                 const SizedBox(
@@ -264,14 +268,14 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                 ExpandableTextContent(
                                   content: widget.moment['content'],
                                   linkColor: whiteColor,
-                                  styleContent: TextStyle(
+                                  styleContent: customIbmPlexSans(TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w400,
                                       color: whiteColor,
-                                      height: 1.5),
-                                  hashtagStyle: TextStyle(
+                                      height: 1.5)),
+                                  hashtagStyle: customIbmPlexSans(TextStyle(
                                       color: whiteColor,
-                                      fontWeight: FontWeight.w500),
+                                      fontWeight: FontWeight.w500)),
                                   handleHashtag: (name) {
                                     Navigator.push(
                                         context,
@@ -286,10 +290,10 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                 ),
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       CupertinoIcons.music_note_2,
                                       size: 15,
-                                      color: Colors.white,
+                                      color: whiteColor,
                                     ),
                                     const SizedBox(
                                       width: 8,
@@ -300,8 +304,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                       child: Marquee(
                                         text: 'Âm thanh   ·   ',
                                         velocity: 30,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14),
+                                        style: customIbmPlexSans(TextStyle(
+                                            color: whiteColor, fontSize: 14)),
                                       ),
                                     )
                                   ],
@@ -385,7 +389,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                     },
                                     child: Icon(
                                       iconsAction[index]['icon'],
-                                      size: 32,
+                                      size: 30,
                                       color: highLightIcon
                                           ? iconsAction[index]['iconHighlight']
                                           : whiteColor,
@@ -395,11 +399,12 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                     height: 5,
                                   ),
                                   Text(
-                                    (iconsAction[index]['count'] ?? '')
-                                        .toString(),
-                                    style: TextStyle(
-                                        color: whiteColor, fontSize: 14),
-                                  )
+                                      (iconsAction[index]['count'] ?? '')
+                                          .toString(),
+                                      style: customIbmPlexSans(
+                                        TextStyle(
+                                            color: whiteColor, fontSize: 14),
+                                      ))
                                 ],
                               ),
                             )),
@@ -446,7 +451,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.search, color: whiteOpacity, size: 23),
+                    Icon(Icons.search, color: whiteColor, size: 23),
                     const SizedBox(
                       width: 5,
                     ),
@@ -458,10 +463,10 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                           maxLines: 1,
                           text: TextSpan(
                               text: 'Tìm kiếm',
-                              style: TextStyle(
-                                  color: whiteOpacity,
+                              style: customIbmPlexSans(TextStyle(
+                                  color: whiteColor,
                                   fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.ellipsis),
+                                  overflow: TextOverflow.ellipsis)),
                               children: const [
                                 TextSpan(text: ' · '),
                                 TextSpan(
@@ -473,8 +478,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                     )
                   ],
                 ),
-                Icon(FontAwesomeIcons.chevronRight,
-                    size: 18, color: whiteOpacity)
+                Icon(FontAwesomeIcons.chevronRight, size: 18, color: whiteColor)
               ],
             ),
           )

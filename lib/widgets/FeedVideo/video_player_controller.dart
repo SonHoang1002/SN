@@ -19,18 +19,19 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
   final bool? isHiddenControl;
   final double? timeStart;
   final Function? handleAction;
-  const VideoPlayerHasController(
-      {Key? key,
-      this.media,
-      this.type,
-      this.handleAction,
-      this.overlayWidget,
-      this.aspectRatio,
-      this.hasDispose,
-      this.isHiddenControl,
-      this.timeStart,
-      this.videoPositionNotifier})
-      : super(key: key);
+
+  const VideoPlayerHasController({
+    Key? key,
+    this.media,
+    this.type,
+    this.handleAction,
+    this.overlayWidget,
+    this.aspectRatio,
+    this.hasDispose,
+    this.isHiddenControl,
+    this.timeStart,
+    this.videoPositionNotifier,
+  }) : super(key: key);
 
   @override
   ConsumerState<VideoPlayerHasController> createState() =>
@@ -38,7 +39,8 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
 }
 
 class _VideoPlayerHasControllerState
-    extends ConsumerState<VideoPlayerHasController> {
+    extends ConsumerState<VideoPlayerHasController>
+    with WidgetsBindingObserver {
   bool isVisible = false;
   BetterState? betterPlayer;
   VideoPlayerController? videoPlayerController;
@@ -47,6 +49,7 @@ class _VideoPlayerHasControllerState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     betterPlayer = ref.read(betterPlayerControllerProvider);
     if (betterPlayer!.videoId == widget.media['id']) {
       videoPlayerController = betterPlayer!.videoPlayerController;
@@ -76,8 +79,10 @@ class _VideoPlayerHasControllerState
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     if (betterPlayer!.videoPlayerController != null &&
         betterPlayer!.videoId != widget.media['id']) {
+      chewieController!.pause();
       videoPlayerController?.dispose();
       chewieController?.dispose();
     }
@@ -100,6 +105,17 @@ class _VideoPlayerHasControllerState
             aspectRatio: videoPlayerController!.value.aspectRatio,
             progressIndicatorDelay: const Duration(seconds: 10));
       });
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      if (chewieController != null && chewieController!.isPlaying) {
+        chewieController!.pause();
+      }
     }
   }
 

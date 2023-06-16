@@ -8,6 +8,8 @@ import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
+import '../../helper/common.dart';
+
 class MomentPageHashtag extends StatefulWidget {
   final String hashtag;
   const MomentPageHashtag({Key? key, required this.hashtag}) : super(key: key);
@@ -81,7 +83,15 @@ class _MomentPageHashtagState extends State<MomentPageHashtag> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const BackIconAppbar(),
-            AppBarTitle(title: "#${widget.hashtag}"),
+            AppBarTitle(
+                title: "#${widget.hashtag}",
+                textStyle: customIbmPlexSans(
+                  TextStyle(
+                      fontSize: 18,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).textTheme.displayLarge!.color),
+                )),
             Container(
               width: 30,
               height: 30,
@@ -106,15 +116,16 @@ class _MomentPageHashtagState extends State<MomentPageHashtag> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "Video",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
+                    style: customIbmPlexSans(const TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 17)),
                   ),
                   momentHashtag != null
                       ? Text(
                           "${momentHashtag['meta']?['total'] ?? 0} video",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 17),
+                          style: customIbmPlexSans(const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 17)),
                         )
                       : const SizedBox()
                 ],
@@ -171,25 +182,27 @@ class _MomentPageHashtagState extends State<MomentPageHashtag> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        children: const [
-                                          Icon(
+                                        children: [
+                                          const Icon(
                                             CupertinoIcons.play_arrow,
                                             color: white,
                                             size: 16,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 3.0,
                                           ),
                                           Text(
                                             '123,5k',
-                                            style: TextStyle(
-                                                color: white,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500),
+                                            style: customIbmPlexSans(
+                                                const TextStyle(
+                                                    color: white,
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
                                           )
                                         ],
                                       ),
-                                      const SizedBox(height: 3.0),
+                                      const SizedBox(height: 4.0),
                                       Row(
                                         children: [
                                           AvatarSocial(
@@ -214,12 +227,14 @@ class _MomentPageHashtagState extends State<MomentPageHashtag> {
                                               object['page']?['title'] ??
                                                   object['account']
                                                       ['display_name'],
-                                              style: const TextStyle(
-                                                  color: white,
-                                                  fontSize: 14,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontWeight: FontWeight.w500),
+                                              style: customIbmPlexSans(
+                                                  const TextStyle(
+                                                      color: white,
+                                                      fontSize: 14,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
                                             ),
                                           )
                                         ],
@@ -233,8 +248,8 @@ class _MomentPageHashtagState extends State<MomentPageHashtag> {
                             child: Text(
                               object['content'],
                               maxLines: 2,
-                              style: const TextStyle(
-                                  overflow: TextOverflow.ellipsis),
+                              style: customIbmPlexSans(const TextStyle(
+                                  overflow: TextOverflow.ellipsis)),
                             ),
                           ),
                         ],
