@@ -67,11 +67,12 @@ class _VideoPlayerNoneControllerState
                       .videoPlayerController?.value.position.inSeconds ??
                   0));
         }
-      });
-    if (widget.isPause == true) {
-      videoPlayerController.pause()
       })
       ..addListener(() {});
+
+    if (widget.isPause == true) {
+      videoPlayerController.pause();
+    }
   }
 
   @override
