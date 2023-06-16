@@ -78,6 +78,7 @@ class _VideoPlayerHasControllerState
     WidgetsBinding.instance.removeObserver(this);
     if (betterPlayer!.videoPlayerController != null &&
         betterPlayer!.videoId != widget.media['id']) {
+      chewieController!.pause();
       videoPlayerController?.dispose();
       chewieController?.dispose();
     }

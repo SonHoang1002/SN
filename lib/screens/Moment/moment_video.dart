@@ -83,6 +83,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    videoPlayerController.pause();
     _animationController.dispose();
     videoPlayerController.dispose();
     timer?.cancel();

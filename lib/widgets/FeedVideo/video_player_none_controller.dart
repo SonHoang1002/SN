@@ -166,6 +166,7 @@ class _VideoPlayerNoneControllerState
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    videoPlayerController.pause();
     videoPlayerController.dispose();
     super.dispose();
   }
