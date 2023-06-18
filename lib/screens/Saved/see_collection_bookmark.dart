@@ -317,7 +317,7 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         margin: const EdgeInsets.symmetric(vertical: 15.0),
-                        height: height,
+                        // height: height,
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

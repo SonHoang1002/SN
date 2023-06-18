@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
+import '../../../constant/post_type.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../Post/post_detail.dart';
 
@@ -45,9 +46,14 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
         pushCustomCupertinoPageRoute(
           context,
           widget.item['type'] == 'status'
-              ? PostDetail()
+              ? PostDetail(
+                  post: widget.item['data'],
+                  preType: postDetail,
+                )
               : widget.item['type'] == 'page'
-                  ? PageDetail()
+                  ? PageDetail(
+                      pageData: widget.item['data'],
+                    )
                   : const SizedBox(),
         );
       },

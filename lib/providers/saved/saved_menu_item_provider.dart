@@ -70,7 +70,10 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
         collection['imageWidget'] = handleImage(bmResult[index]);
       } else {
         // collections has no bookmark -> default Image;
-        collection['imageWidget'] = linkBannerDefault;
+        collection['imageWidget'] = ExtendedImage.network(
+          linkBannerDefault,
+          fit: BoxFit.cover,
+        );
       }
 
       renderCollections.add(collection);

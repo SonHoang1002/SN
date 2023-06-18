@@ -49,29 +49,38 @@ Widget handleImage(bookmark) {
       }),
     );
   } else {
-    if (bookmark['status']['card'] != null) {
-      imageUrl = bookmark['status']['card']['image'] ??
-          bookmark['status']['card']['url'];
-    } else if (bookmark['status']['reblog'] != null &&
-        bookmark['status']['reblog']['card'] != null) {
-      imageUrl = bookmark['status']['reblog']['card']['image'] ??
-          bookmark['status']['reblog']['card']['url'];
-    } else {
-      imageUrl = bookmark['status']['account']['avatar_media']['url'];
+    try {
+      if (bookmark['status'] != null && bookmark['status']['card'] != null) {
+        imageUrl = bookmark['status']['card']['image'] ??
+            bookmark['status']['card']['url'];
+      } else if (bookmark['status']['reblog'] != null &&
+          bookmark['status']['reblog']['card'] != null) {
+        imageUrl = bookmark['status']['reblog']['card']['image'] ??
+            bookmark['status']['reblog']['card']['url'];
+      } else if (bookmark['status']['account']['avatar_media'] != null) {
+        imageUrl = bookmark['status']['account']['avatar_media']['url'];
+      } else {
+        imageUrl = linkBannerDefault;
+      }
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: ((context, error, stackTrace) {
+          imageUrl = bookmark['status']['account']['banner'] != null
+              ? bookmark['status']['account']['banner'].preview_url
+              : linkBannerDefault;
+          return ExtendedImage.network(
+            imageUrl,
+            fit: BoxFit.cover,
+          );
+        }),
+      );
+    } catch (e) {
+      return ExtendedImage.network(
+        linkBannerDefault,
+        fit: BoxFit.cover,
+      );
     }
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.cover,
-      errorBuilder: ((context, error, stackTrace) {
-        imageUrl = bookmark['status']['account']['banner'] != null
-            ? bookmark['status']['account']['banner'].preview_url
-            : linkBannerDefault;
-        return ExtendedImage.network(
-          imageUrl,
-          fit: BoxFit.cover,
-        );
-      }),
-    );
   }
 }
 
@@ -85,6 +94,7 @@ dynamic convertItem(bookmark) {
       "imageWidget": handleImage(bookmark),
       "content": bookmark['status']['content'],
       "author": bookmark['status']['account']['display_name'],
+      "data": bookmark['status'],
     };
   } else {
     return {
@@ -94,7 +104,8 @@ dynamic convertItem(bookmark) {
           bookmark['page'] == null ? 'not_found' : bookmark['page']['id'],
       "imageWidget": handleImage(bookmark),
       "content": bookmark['page']['title'],
-      "author": ""
+      "author": "",
+      "data": bookmark['page'],
     };
   }
 }
