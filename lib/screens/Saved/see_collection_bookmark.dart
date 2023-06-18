@@ -298,7 +298,7 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
                 ],
               ),
             ),
-            isLoading || cltBookmarks.isEmpty
+            isLoading
                 ? const Center(child: CupertinoActivityIndicator())
                 : cltBookmarks.isEmpty
                     ? Column(

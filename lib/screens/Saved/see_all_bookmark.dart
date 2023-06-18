@@ -77,7 +77,7 @@ class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
                 ],
               ),
             ),
-            isLoading || allBookmark.isEmpty
+            isLoading
                 ? const Center(child: CupertinoActivityIndicator())
                 : allBookmark.isEmpty
                     ? Column(

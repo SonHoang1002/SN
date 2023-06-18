@@ -89,23 +89,27 @@ dynamic convertItem(bookmark) {
   if (type == 'status') {
     return {
       "type": 'status',
-      "id": bookmark['id'],
-      "bookmark_id": bookmark['status']['id'],
+      "id": bookmark['id'] ?? "empty",
+      "bookmark_id":
+          bookmark['status'] != null ? bookmark['status']['id'] : "empty",
       "imageWidget": handleImage(bookmark),
-      "content": bookmark['status']['content'],
-      "author": bookmark['status']['account']['display_name'],
-      "data": bookmark['status'],
+      "content":
+          bookmark['status'] != null ? bookmark['status']['content'] : "empty",
+      "author": bookmark['status']['account'] != null
+          ? bookmark['status']['account']['display_name']
+          : "empty",
+      "data": bookmark['status'] ?? "empty",
     };
   } else {
     return {
       "type": 'page',
-      "id": bookmark['id'],
+      "id": bookmark['id'] ?? "empty",
       "bookmark_id":
           bookmark['page'] == null ? 'not_found' : bookmark['page']['id'],
       "imageWidget": handleImage(bookmark),
-      "content": bookmark['page']['title'],
+      "content": bookmark['page'] != null ? bookmark['page']['title'] : "empty",
       "author": "",
-      "data": bookmark['page'],
+      "data": bookmark['page'] ?? "empty",
     };
   }
 }

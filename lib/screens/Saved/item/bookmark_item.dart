@@ -12,6 +12,7 @@ import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
 import '../../../constant/post_type.dart';
 import '../../../helper/push_to_new_screen.dart';
+import '../../../providers/post_current_provider.dart';
 import '../../Post/post_detail.dart';
 
 class BookmarkItem extends ConsumerStatefulWidget {
@@ -43,19 +44,24 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
 
     return GestureDetector(
       onTap: () {
-        pushCustomCupertinoPageRoute(
-          context,
-          widget.item['type'] == 'status'
-              ? PostDetail(
-                  post: widget.item['data'],
-                  preType: postDetail,
-                )
-              : widget.item['type'] == 'page'
-                  ? PageDetail(
-                      pageData: widget.item['data'],
-                    )
-                  : const SizedBox(),
-        );
+        if (widget.item['data'] != "empty") {
+          ref
+              .read(currentPostControllerProvider.notifier)
+              .saveCurrentPost(widget.item['data']);
+          pushCustomCupertinoPageRoute(
+            context,
+            widget.item['type'] == 'status'
+                ? PostDetail(
+                    post: widget.item['data'],
+                    preType: postDetail,
+                  )
+                : widget.item['type'] == 'page'
+                    ? PageDetail(
+                        pageData: widget.item['data'],
+                      )
+                    : const SizedBox(),
+          );
+        }
       },
       child: Container(
         height: height / 8,
