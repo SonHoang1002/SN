@@ -28,10 +28,11 @@ class CollectionItemState extends ConsumerState<CollectionItem> {
     );
 
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     final theme = pv.Provider.of<ThemeManager>(context);
     return CardComponents(
       imageCard: SizedBox(
-        height: height / 8.5,
+        height: height > width ? height / 8.5 : height / 1.6,
         width: double.infinity,
         child: ClipRRect(
           borderRadius: const BorderRadius.only(

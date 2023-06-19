@@ -13,6 +13,7 @@ import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import '../../theme/colors.dart';
 import '../../widgets/show_modal_message.dart';
 import '../../widgets/text_description.dart';
+import 'item/place_holder.dart';
 
 class HandleItem {
   IconData iconData;
@@ -299,7 +300,7 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
               ),
             ),
             isLoading
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: BookmarkListSkeleton())
                 : cltBookmarks.isEmpty
                     ? Column(
                         children: [

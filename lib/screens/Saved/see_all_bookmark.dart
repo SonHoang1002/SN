@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
 import 'package:social_network_app_mobile/screens/Saved/func.dart';
 import 'package:social_network_app_mobile/screens/Saved/item/bookmark_item.dart';
+import 'package:social_network_app_mobile/screens/Saved/item/place_holder.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -78,7 +79,7 @@ class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
               ),
             ),
             isLoading
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: BookmarkListSkeleton())
                 : allBookmark.isEmpty
                     ? Column(
                         children: [

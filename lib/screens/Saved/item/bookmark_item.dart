@@ -40,6 +40,7 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     final theme = pv.Provider.of<ThemeManager>(context);
 
     return GestureDetector(
@@ -64,7 +65,7 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
         }
       },
       child: Container(
-        height: height / 8,
+        height: height > width ? height / 8 : height / 4,
         width: double.infinity,
         padding: const EdgeInsets.all(5.0),
         child: Row(
@@ -72,7 +73,7 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
             Expanded(
               flex: 3,
               child: SizedBox(
-                height: height / 10,
+                height: height > width ? height / 8 : height / 4,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: widget.item['imageWidget'],
