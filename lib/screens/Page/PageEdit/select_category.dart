@@ -53,13 +53,13 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxHeight: 35,
-                        maxWidth: 400,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxHeight: 35,
+                          maxWidth: 400,
+                        ),
                         child: TextFormField(
                           onChanged: (value) {
                             setState(() {
