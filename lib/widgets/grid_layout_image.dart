@@ -42,7 +42,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
       } else {
         return checkIsImage(media)
             ? media['meta']['original']['aspect']
-            : 1 / media['meta']['original']['aspect'];
+            : 1 / (media['meta']['original']?['aspect'] ?? 0.6);
       }
     }
 
@@ -103,6 +103,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                         1
                     ? size.width
                     : null,
+                width: size.width,
                 child: medias[0]['file'] != null
                     ? VideoPlayerNoneController(
                         path: medias[0]['file'].path,

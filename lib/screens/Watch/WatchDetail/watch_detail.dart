@@ -125,65 +125,70 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
 
   Widget renderPostInformation(size) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        if (!isHiddenAction)
-          Container(
-            constraints: BoxConstraints(maxHeight: size.height / 3),
-            child: TabBarView(controller: _tabController, children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  PostHeader(
-                      post: widget.post, textColor: white, type: postDetail),
-                  Container(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: PostContent(
-                      post: widget.post,
-                      textColor: white,
-                    ),
+        PostHeader(post: widget.post, textColor: white, type: postDetail),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (!isHiddenAction)
+              Container(
+                constraints: BoxConstraints(maxHeight: size.height / 3),
+                child: TabBarView(controller: _tabController, children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: PostContent(
+                          post: widget.post,
+                          textColor: white,
+                        ),
+                      ),
+                    ],
                   ),
+                  ListComment(
+                      postComment: postComment,
+                      commentChild: commentChild,
+                      commentNode: commentNode,
+                      commentSelected: commentSelected)
+                ]),
+              ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  RotateIcon(updateHiddenAction: updateHiddenAction),
+                  if (!isHiddenAction)
+                    TabBar(
+                        isScrollable: true,
+                        controller: _tabController,
+                        onTap: (index) {},
+                        indicator: const BoxDecoration(),
+                        indicatorWeight: 0,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.white.withOpacity(0.5),
+                        indicatorSize: TabBarIndicatorSize.label,
+                        tabs: const [
+                          Tab(
+                            text: "Tổng quan",
+                          ),
+                          Tab(
+                            text: "Bình luận",
+                          )
+                        ]),
                 ],
               ),
-              ListComment(
-                  postComment: postComment,
-                  commentChild: commentChild,
-                  commentNode: commentNode,
-                  commentSelected: commentSelected)
-            ]),
-          ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              RotateIcon(updateHiddenAction: updateHiddenAction),
-              if (!isHiddenAction)
-                TabBar(
-                    isScrollable: true,
-                    controller: _tabController,
-                    onTap: (index) {},
-                    indicator: const BoxDecoration(),
-                    indicatorWeight: 0,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.white.withOpacity(0.5),
-                    indicatorSize: TabBarIndicatorSize.label,
-                    tabs: const [
-                      Tab(
-                        text: "Tổng quan",
-                      ),
-                      Tab(
-                        text: "Bình luận",
-                      )
-                    ]),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child:
+                  BottomAction(widget: widget, isHiddenAction: isHiddenAction),
+            )
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: BottomAction(widget: widget, isHiddenAction: isHiddenAction),
-        )
       ],
     );
   }
@@ -213,7 +218,10 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                     color: Colors.black.withOpacity(0.5),
                     child: SafeArea(
                       child: Stack(
-                        children: [renderVideo(), renderPostInformation(size)],
+                        children: [
+                          Center(child: renderVideo()),
+                          renderPostInformation(size)
+                        ],
                       ),
                     ),
                   ),

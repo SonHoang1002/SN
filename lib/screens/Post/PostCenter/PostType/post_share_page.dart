@@ -72,7 +72,7 @@ class PostSharePage extends StatelessWidget {
                               height: 5,
                             ),
                             Text(
-                                "${page['like_count'] ?? 0} lượt thích · ${page['page_categories'][0]['text']}"),
+                                "${page['like_count'] ?? 0} lượt thích ${page['page_categories'].isNotEmpty ? "· ${page['page_categories'][0]['text']}" : ""}"),
                           ],
                         ),
                       )

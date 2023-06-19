@@ -133,189 +133,205 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
           ' ${statusActivity['parent']['name'].toLowerCase()} ${statusActivity['name'].toLowerCase()}';
     }
 
-    return InkWell(
-      hoverColor: transparent,
-      highlightColor: transparent,
-      splashColor: transparent,
-      onTap: () {
-        if (widget.type != postDetail && widget.type != 'edit_post') {
-          pushCustomCupertinoPageRoute(
-              context,
-              PostDetail(
-                  post: widget.post,
-                  preType: widget.type,
-                  updateDataFunction: widget.updateDataFunction));
-          // Navigator.push(
-          //     context,
-          //     CupertinoPageRoute(
-          //         builder: (context) => PostDetail(
-          //               post: widget.post,
-          //               preType: widget.type,
-          //             )));
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(left: 12, right: 12),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AvatarPost(
-                      post: widget.post,
-                      group: group,
-                      page: page,
-                      account: account,
-                      type: widget.type),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: size.width * 0.6,
-                        child: BlockNamePost(
-                          post: widget.post,
-                          account: account,
-                          description: description,
-                          mentions: mentions,
-                          statusActivity: statusActivity,
-                          group: group,
-                          page: page,
-                          textColor: widget.textColor,
-                          type: widget.type,
+    return widget.post != null
+        ? InkWell(
+            hoverColor: transparent,
+            highlightColor: transparent,
+            splashColor: transparent,
+            onTap: () {
+              if (widget.type != postDetail && widget.type != 'edit_post') {
+                pushCustomCupertinoPageRoute(
+                    context,
+                    PostDetail(
+                        post: widget.post,
+                        preType: widget.type,
+                        updateDataFunction: widget.updateDataFunction));
+                // Navigator.push(
+                //     context,
+                //     CupertinoPageRoute(
+                //         builder: (context) => PostDetail(
+                //               post: widget.post,
+                //               preType: widget.type,
+                //             )));
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 12, right: 12),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AvatarPost(
+                            post: widget.post,
+                            group: group,
+                            page: page,
+                            account: account,
+                            type: widget.type),
+                        const SizedBox(
+                          width: 5,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              group != null
-                                  ? Text(account['display_name'],
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ))
-                                  : const SizedBox(),
-                              buildSpacer(height: 3),
-                              Row(
-                                children: [
-                                  widget.post['page_owner'] != null &&
-                                          widget.post['page'] != null &&
-                                          widget.post?['page_owner']
-                                                      ?['page_relationship']
-                                                  ?['role'] ==
-                                              "admin" &&
-                                          widget.type != postDetail
-                                      ? Row(
-                                          children: [
-                                            buildTextContent(
-                                                "Người đăng: ", true,
-                                                fontSize: 14,
-                                                colorWord: blackColor),
-                                            buildTextContent(
-                                                widget.post['account']
-                                                        ['display_name'] +
-                                                    " · ",
-                                                true,
-                                                colorWord: greyColor,
-                                                fontSize: 13)
-                                          ],
-                                        )
-                                      : const SizedBox(),
-                                  Text(
-                                    getRefractorTime(
-                                        widget.post?['created_at']),
-                                    style: const TextStyle(
-                                        color: greyColor, fontSize: 12),
-                                  ),
-                                  const Text(" · ",
-                                      style: TextStyle(color: greyColor)),
-                                  Icon(
-                                      typeVisibility.firstWhere(
-                                          (element) =>
-                                              element['key'] ==
-                                              widget.post['visibility'],
-                                          orElse: () => {})['icon'],
-                                      size: 13,
-                                      color: greyColor)
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
-              // widget.isHaveAction == true
-              widget.post['account']['id'] == meData['id'] ||
-                      (widget.post['page'] != null &&
-                          widget.post['page_owner'] != null &&
-                          widget.post['page_owner']['page_relationship']
-                                  ['role'] ==
-                              "admin")
-                  ? (![postReblog, postMultipleMedia].contains(widget.type))
-                      ? Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            InkWell(
-                              onTap: () {
-                                showBarModalBottomSheet(
-                                    context: context,
-                                    backgroundColor:
-                                        Theme.of(context).canvasColor,
-                                    barrierColor: Colors.transparent,
-                                    builder: (context) => PostHeaderAction(
-                                          post: widget.post,
-                                          type: widget.type,
-                                          reloadFunction: () {
-                                            widget.reloadFunction != null
-                                                ? widget.reloadFunction!()
-                                                : null;
-                                          },
-                                        ));
-                              },
-                              child: const Icon(
-                                FontAwesomeIcons.ellipsis,
-                                size: 20,
-                                color: greyColor,
+                            SizedBox(
+                              width: size.width * 0.6,
+                              child: BlockNamePost(
+                                post: widget.post,
+                                account: account,
+                                description: description,
+                                mentions: mentions,
+                                statusActivity: statusActivity,
+                                group: group,
+                                page: page,
+                                textColor: widget.textColor,
+                                type: widget.type,
                               ),
                             ),
-                            SizedBox(
-                              width: widget.type != postDetail ? 10 : 0,
-                            ),
-                            [postDetail, postPageUser].contains(widget.type) ||
-                                    widget.post['account']['id'] == meData['id']
-                                ? const SizedBox()
-                                : InkWell(
-                                    onTap: () async {
-                                      final data = {"hidden": true};
-                                      await PostApi()
-                                          .updatePost(widget.post['id'], data);
-                                      ref
-                                          .read(postControllerProvider.notifier)
-                                          .actionHiddenDeletePost(
-                                              widget.type, widget.post);
+                            Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    group != null
+                                        ? Text(account['display_name'],
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ))
+                                        : const SizedBox(),
+                                    buildSpacer(height: 3),
+                                    Row(
+                                      children: [
+                                        widget.post['page_owner'] != null &&
+                                                widget.post['page'] != null &&
+                                                widget.post?['page_owner']?[
+                                                            'page_relationship']
+                                                        ?['role'] ==
+                                                    "admin" &&
+                                                widget.type != postDetail
+                                            ? Row(
+                                                children: [
+                                                  buildTextContent(
+                                                      "Người đăng: ", true,
+                                                      fontSize: 14,
+                                                      colorWord: blackColor),
+                                                  buildTextContent(
+                                                      widget.post['account']
+                                                              ['display_name'] +
+                                                          " · ",
+                                                      true,
+                                                      colorWord: greyColor,
+                                                      fontSize: 13)
+                                                ],
+                                              )
+                                            : const SizedBox(),
+                                        widget.post['processing'] !=
+                                                "isProcessing"
+                                            ? Text(
+                                                getRefractorTime(
+                                                    widget.post?['created_at']),
+                                                style: const TextStyle(
+                                                    color: greyColor,
+                                                    fontSize: 12),
+                                              )
+                                            : const SizedBox(),
+                                        Text(
+                                            widget.post['processing'] !=
+                                                    "isProcessing"
+                                                ? " · "
+                                                : "",
+                                            style: const TextStyle(
+                                                color: greyColor)),
+                                        Icon(
+                                            typeVisibility.firstWhere(
+                                                (element) =>
+                                                    element['key'] ==
+                                                    widget.post['visibility'],
+                                                orElse: () => {})['icon'],
+                                            size: 13,
+                                            color: greyColor)
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    // widget.isHaveAction == true
+                    widget.post['account']['id'] == meData['id'] ||
+                            (widget.post['page'] != null &&
+                                widget.post['page_owner'] != null &&
+                                widget.post['page_owner']['page_relationship']
+                                        ['role'] ==
+                                    "admin")
+                        ? (![postReblog, postMultipleMedia]
+                                .contains(widget.type))
+                            ? Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      showBarModalBottomSheet(
+                                          context: context,
+                                          backgroundColor:
+                                              Theme.of(context).canvasColor,
+                                          barrierColor: Colors.transparent,
+                                          builder: (context) =>
+                                              PostHeaderAction(
+                                                post: widget.post,
+                                                type: widget.type,
+                                                reloadFunction: () {
+                                                  widget.reloadFunction != null
+                                                      ? widget.reloadFunction!()
+                                                      : null;
+                                                },
+                                              ));
                                     },
                                     child: const Icon(
-                                      FontAwesomeIcons.xmark,
+                                      FontAwesomeIcons.ellipsis,
                                       size: 20,
                                       color: greyColor,
                                     ),
-                                  )
-                          ],
-                        )
-                      : const SizedBox()
-                  : const SizedBox()
-            ]),
-      ),
-    );
+                                  ),
+                                  SizedBox(
+                                    width: widget.type != postDetail ? 10 : 0,
+                                  ),
+                                  [postDetail, postPageUser]
+                                              .contains(widget.type) ||
+                                          widget.post['account']['id'] ==
+                                              meData['id']
+                                      ? const SizedBox()
+                                      : InkWell(
+                                          onTap: () async {
+                                            final data = {"hidden": true};
+                                            await PostApi().updatePost(
+                                                widget.post['id'], data);
+                                            ref
+                                                .read(postControllerProvider
+                                                    .notifier)
+                                                .actionHiddenDeletePost(
+                                                    widget.type, widget.post);
+                                          },
+                                          child: const Icon(
+                                            FontAwesomeIcons.xmark,
+                                            size: 20,
+                                            color: greyColor,
+                                          ),
+                                        )
+                                ],
+                              )
+                            : const SizedBox()
+                        : const SizedBox()
+                  ]),
+            ),
+          )
+        : const SizedBox();
   }
 
   @override

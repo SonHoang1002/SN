@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
@@ -151,12 +152,15 @@ class _VideoPlayerHasControllerState
         key: Key(widget.media['id']),
         child: chewieController != null
             ? AspectRatio(
-                aspectRatio: (widget.type == postWatchDetail ||
-                        chewieController!
-                                .videoPlayerController.value.aspectRatio >=
-                            3 / 4)
-                    ? chewieController!.videoPlayerController.value.aspectRatio
-                    : 3 / 4,
+                aspectRatio:
+                    chewieController!.videoPlayerController.value.aspectRatio,
+                // (widget.type == postWatchDetail ||
+                //         chewieController!
+                //                 .videoPlayerController.value.aspectRatio >=
+                //             3 / 4)
+                //     ? chewieController!
+                //         .videoPlayerController.value.aspectRatio
+                // : 3 / 4,
                 child: chewieController!
                         .videoPlayerController.value.isInitialized
                     ? selectedVideo != null &&
