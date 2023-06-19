@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/drawer.dart';
+import 'package:social_network_app_mobile/screens/Friend/friend_search.dart';
 import 'package:social_network_app_mobile/screens/Menu/menu_user.dart';
 import 'package:social_network_app_mobile/screens/Setting/setting.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -12,6 +13,7 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
 import '../../helper/push_to_new_screen.dart';
 import '../Login/LoginCreateModules/onboarding_login_page.dart';
+import '../Search/search.dart';
 import '../Setting/darkmode_setting.dart';
 import 'menu_render.dart';
 import 'menu_shortcut.dart';
@@ -53,8 +55,13 @@ class _MenuState extends ConsumerState<Menu> {
         "icon": Icons.search,
         'type': 'icon',
         "action": () {
-          Navigator.push(context,
-              CupertinoPageRoute(builder: (context) => const Setting()));
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              // builder: (context) => const Setting(),
+              builder: (context) => const Search(),
+            ),
+          );
         }
       },
     ];
