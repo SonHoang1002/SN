@@ -44,7 +44,7 @@ class WebSocketService {
   }
 
   void setupPeriodicSending() {
-    timer = Timer.periodic(const Duration(seconds: 25), (_) {
+    timer = Timer.periodic(const Duration(seconds: 21), (_) {
       webSocketChannel?.sink.add('2');
     });
   }

@@ -1,22 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widgets/Formik/lib/lo_form.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/PageEdit/select_category.dart';
+import 'package:social_network_app_mobile/screens/Page/PageEdit/textfield_edit_page.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../theme/colors.dart';
-import 'textfield_edit_page.dart';
 
-class EditDetail extends StatefulWidget {
+class EditDetail extends ConsumerStatefulWidget {
   final dynamic detailPage;
   final dynamic data;
   const EditDetail({super.key, this.detailPage, this.data});
 
   @override
-  State<EditDetail> createState() => _EditDetailState();
+  ConsumerState<EditDetail> createState() => _EditDetailState();
 }
 
-class _EditDetailState extends State<EditDetail> {
+class _EditDetailState extends ConsumerState<EditDetail> {
   dynamic editPage;
   @override
   void initState() {
@@ -30,6 +32,9 @@ class _EditDetailState extends State<EditDetail> {
       "username": widget.data['username'],
       "page_categories": widget.data['page_categories'],
     };
+    Future.delayed(Duration.zero, () {
+      ref.read(pageControllerProvider.notifier).getPageDetailCategory(null);
+    });
   }
 
   @override
@@ -67,10 +72,20 @@ class _EditDetailState extends State<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
+                  trailing: const Icon(Icons.edit),
                   title: Text(editPage?['page_categories'].isNotEmpty
                       ? "Trang \u2022 ${editPage?['page_categories']?[0]?['text']}"
                       : "Trang"),
-                  onTap: () {},
+                  onTap: () async {
+                    final selectedCategory = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SelectCategory()),
+                    );
+                    if (selectedCategory != null) {
+                      print(selectedCategory);
+                    }
+                  },
                 )
               ],
             ),
@@ -145,14 +160,19 @@ class _EditDetailState extends State<EditDetail> {
                               field: 'email',
                               initialValue: editPage?['email'],
                               title: "Chỉnh sửa email",
-                              validators: [
-                                LoRequiredValidator(),
-                                LoFieldValidator.any(
-                                  [
-                                    LoRegExpValidator.email(),
-                                  ],
-                                )
-                              ],
+                              validateInput: (value) {
+                                final regex = RegExp(
+                                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|'
+                                    r'(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.'
+                                    r'[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                                if (value.isEmpty) {
+                                  return false;
+                                }
+                                if (!regex.hasMatch(value)) {
+                                  return true;
+                                }
+                                return false;
+                              },
                               hintText:
                                   "Email này sẽ hiển thị trên Trang của bạn. EMSO sẽ không dùng thông tin này để liên hệ bạn",
                               onChange: (value) {
@@ -178,6 +198,7 @@ class _EditDetailState extends State<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
+                  trailing: const Icon(Icons.edit),
                   title: Text("${editPage?['title'] ?? "Tên trang"}"),
                   onTap: () {
                     Navigator.push(
@@ -199,6 +220,7 @@ class _EditDetailState extends State<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
+                  trailing: const Icon(Icons.edit),
                   title: Text("${editPage?['username'] ?? "Tên người dùng"}"),
                   onTap: () {
                     Navigator.push(
@@ -219,6 +241,7 @@ class _EditDetailState extends State<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
+                  trailing: const Icon(Icons.edit),
                   title: Text("${editPage?['description'] ?? "Mô tả"}"),
                   onTap: () {
                     Navigator.push(
@@ -254,7 +277,9 @@ class _EditDetailState extends State<EditDetail> {
                       child: ButtonPrimary(
                         label: 'Lưu',
                         handlePress: () {
-                          Navigator.pop(context);
+                          Navigator.pop(
+                            context,
+                          );
                         },
                       ),
                     ),

@@ -24,6 +24,10 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/pages/$id", null);
   }
 
+  fetchPageCategories(params) async {
+    return await Api().getRequestBase("/api/v1/page_categories", params);
+  }
+
   fetchSearchPageDetail(id, params) async {
     return await Api()
         .getRequestBase("/api/v1/timelines/page/$id/search", params);

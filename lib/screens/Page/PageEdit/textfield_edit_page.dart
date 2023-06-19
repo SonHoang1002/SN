@@ -1,9 +1,10 @@
 // ignore_for_file: unused_local_variable
 
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widgets/Formik/lib/lo_form.dart';
 
 import '../../../widgets/appbar_title.dart';
+import '../../../widgets/button_primary.dart';
 
 class TextFieldEdit extends StatefulWidget {
   final String field;
@@ -12,7 +13,8 @@ class TextFieldEdit extends StatefulWidget {
   final String? label;
   final String? hintText;
   final String? title;
-  final List<LoFieldBaseValidator<String>>? validators;
+  final Function? validateInput;
+
   final TextInputType? keyboardType;
 
   const TextFieldEdit(
@@ -20,10 +22,10 @@ class TextFieldEdit extends StatefulWidget {
       required this.field,
       required this.onChange,
       this.hintText,
+      this.validateInput,
       this.keyboardType,
       this.initialValue,
       this.title,
-      this.validators,
       required this.label});
   @override
   State<TextFieldEdit> createState() => _TextFieldEditState();
@@ -31,7 +33,8 @@ class TextFieldEdit extends StatefulWidget {
 
 class _TextFieldEditState extends State<TextFieldEdit> {
   final TextEditingController controller = TextEditingController();
-
+  bool errorText = false;
+  String valueText = '';
   @override
   void initState() {
     super.initState();
@@ -41,6 +44,28 @@ class _TextFieldEditState extends State<TextFieldEdit> {
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  void _handleTextChanged(String value) {
+    if (value.isEmpty) {
+      widget.onChange(widget.label);
+      setState(() {
+        errorText = false;
+      });
+    } else {
+      EasyDebounce.debounce(
+        'errorTextDebounce', // A unique identifier for the debounce
+        const Duration(seconds: 1), // Debounce duration
+        () {
+          setState(() {
+            valueText = value;
+            errorText = widget.validateInput != null
+                ? widget.validateInput!(value)
+                : false;
+          });
+        },
+      );
+    }
   }
 
   @override
@@ -53,48 +78,82 @@ class _TextFieldEditState extends State<TextFieldEdit> {
           title: AppBarTitle(title: widget.title ?? ""),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: LoForm<String>(
-            submittableWhen: (status) => status.isValid || status.isSubmitted,
-            validators: [
-              LoFormValidator(
-                (values) {
-                  widget.onChange(values[widget.field]);
-                  return null;
-                },
-              ),
-            ],
-            onSubmit: (values, setErrors) async {
-              return null;
-            },
-            builder: (form) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: LoTextField(
-                      loKey: widget.field,
-                      initialValue: widget.initialValue,
-                      validators: widget.validators,
-                      props: TextFieldProps(
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 5),
-                          border: InputBorder.none,
-                          labelText: widget.label,
-                        ),
-                      ),
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    border:
+                        Border.all(color: errorText ? Colors.red : Colors.grey),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4),
                     ),
                   ),
-                ],
-              );
-            },
-          ),
-        ));
+                  child: TextFormField(
+                    initialValue: widget.initialValue,
+                    onChanged: _handleTextChanged,
+                    keyboardType: widget.keyboardType ?? TextInputType.text,
+                    decoration: InputDecoration(
+                      labelText: widget.label,
+                      border: InputBorder.none,
+                      suffixIcon: Icon(Icons.warning,
+                          color: errorText ? Colors.red : Colors.transparent),
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      focusedErrorBorder: InputBorder.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(widget.hintText ?? ""),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Divider(
+                          height: 20,
+                          thickness: 1,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: ButtonPrimary(
+                                  label: 'Lưu',
+                                  handlePress: () {
+                                    widget.onChange(valueText);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: ButtonPrimary(
+                                  label: 'Xoá, gỡ',
+                                  isGrey: true,
+                                  colorText: Colors.black,
+                                  handlePress: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )));
   }
 }

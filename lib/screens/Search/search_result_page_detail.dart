@@ -1,4 +1,3 @@
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,36 +25,12 @@ class _SearchResultPageDetailState
     extends ConsumerState<SearchResultPageDetail> {
   @override
   Widget build(BuildContext context) {
-    // var searchDetail = {};
-    // var searchStatusDetail = [];
-    // var searchAccountDetail = [];
-    // var searchGroupDetail = [];
-    // var searchPageDetail = [];
-
-    // Future.delayed(const Duration(milliseconds: 100), () {
-    //   searchDetail = ref.watch(searchControllerProvider).searchDetail;
-    //   searchStatusDetail = searchDetail['statuses'];
-    //   searchAccountDetail = searchDetail['accounts'];
-    //   searchGroupDetail = searchDetail['groups'];
-    //   searchPageDetail = searchDetail['pages'];
-    //   setState(() {});
-    // });
-
     var searchDetail = ref.watch(searchControllerProvider).searchDetail;
     var isLoading = ref.watch(searchControllerProvider).isLoading;
     var searchStatusDetail = searchDetail?['statuses'];
     var searchAccountDetail = searchDetail?['accounts'];
     var searchGroupDetail = searchDetail?['groups'];
     var searchPageDetail = searchDetail?['pages'];
-
-    // searchDetail.isEmpty
-    //               ? const Center(child: CupertinoActivityIndicator())
-    //               : searchStatusDetail.isEmpty &&
-    //                       searchAccountDetail.isEmpty &&
-    //                       searchGroupDetail.isEmpty &&
-    //                       searchPageDetail.isEmpty
-    //                   ? const Center(child: Text('Không có dữ liệu'))
-    //                   :
 
     return Scaffold(
       appBar: AppBar(
