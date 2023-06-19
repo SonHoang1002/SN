@@ -50,6 +50,15 @@ class SearchController extends StateNotifier<SearchState> {
     }
   }
 
+  void changeLoadingBackIcon() {
+    state = state.copyWith(
+      searchHistory: state.searchHistory,
+      search: state.search,
+      searchDetail: state.searchDetail,
+      isLoading: true,
+    );
+  }
+
   getSearchDetail(params) async {
     var response = await SearchApi().getListSearchApi(params);
     if (response != null && mounted) {
