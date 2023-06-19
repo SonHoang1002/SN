@@ -42,7 +42,7 @@ class _PostContentState extends State<PostContent> {
             padding: const EdgeInsets.all(15.0),
             child: Center(
               child: Text(
-                widget.post['content'],
+                widget.post['content'] ?? '',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: backgroundObject?['style'] != null
@@ -68,7 +68,7 @@ class _PostContentState extends State<PostContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ExpandableTextContent(
-                  content: widget.post?['content'],
+                  content: widget.post?['content'] ?? '',
                   linkColor: widget.textColor ??
                       Theme.of(context).textTheme.bodyLarge!.color ??
                       white,

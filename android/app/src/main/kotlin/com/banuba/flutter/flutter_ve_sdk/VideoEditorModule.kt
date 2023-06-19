@@ -144,7 +144,8 @@ private class SampleIntegrationVeKoinModule {
         }
 
         single<CoverProvider> {
-            CoverProvider.EXTENDED
+            // CoverProvider.EXTENDED
+            CoverProvider.NONE
         }
 
         factory<DraftConfig> {
@@ -160,7 +161,8 @@ private class SampleIntegrationVeKoinModule {
         single<EditorConfig> {
             EditorConfig(
                 minTotalVideoDurationMs = 1500,
-                stickersApiKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh"
+                stickersApiKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh",
+                supportsTrimRecordedVideo = false
             )
         }
 

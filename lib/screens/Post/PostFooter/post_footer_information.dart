@@ -178,7 +178,7 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
                           ? (widget.post['media_attachments']
                                   [widget.indexImagePost]['status_media']
                               ['favourites_count'])
-                          : (widget.post['favourites_count'])) >
+                          : (widget.post!['favourites_count'] ?? 0)) >
                       0)
                   ? Row(
                       children: [
@@ -220,7 +220,7 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
                                     ? (widget.post['media_attachments']
                                             [widget.indexImagePost]
                                         ['status_media']['replies_total'])
-                                    : widget.post['replies_total']) >
+                                    : widget.post!['replies_total'] ?? 0) >
                                 0
                             ? Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,

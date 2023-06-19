@@ -7,39 +7,39 @@
 // MARK: - Camera Screen
 
 /* Music selection screen title */
-"Music" = "Music";
+"Music" = "Âm nhạc";
 
 /* Audio track delete action */
-"Delete" = "Delete";
+"Delete" = "Xoá";
 
 /* Title on the screen of the voice recorder */
 "Voice" = "Voice";
 
 /* Used when the question is answered yes */
-"Yes" = "Yes";
+"Yes" = "Có";
 
 /* Used when answering a negative question */
-"No" = "No";
+"No" = "Không";
 
 /* Title of the message if an error occurs */
-"Error" = "Error";
+"Error" = "Lỗi";
 
 /* Move to next screen */
-"Next" = "Next";
+"Next" = "Tiếp";
 
 /* Return to the previous screen */
-"Back" = "Back";
+"Back" = "Quay lại";
 
 /* Ability to cancel */
-"Cancel" = "Cancel";
+"Cancel" = "Huỷ";
 
 /* Ability to close */
-"Close" = "Close";
+"Close" = "Đóng";
 
 /* Ability to close */
-"CLOSE" = "CLOSE";
+"CLOSE" = "ĐÓNG";
 
-"alert.reset.all.title" = "Reset all?";
+"alert.reset.all.title" = "Đặt lại tất cả?";
 "alert.reset.all.message" = "";
 
 /* Alert action button title */
@@ -49,21 +49,21 @@
 "BanubaVideoEditor.Settings.Discard" = "Discard";
 
 /* Used in alert with Yes and No options when resetting filters. */
-"alert.stop.capturing.video.title" = "Do you want to stop capturing and editing the video?";
+"alert.stop.capturing.video.title" = "Bạn muốn dừng lại?";
 "alert.stop.capturing.video.message" = "";
 
 /* Used in alert with Yes and No options when resetting filters. */
-"record.screen.reset.all.title" = "Want to reset changes?";
-"editor.screen.reset.all.title" = "Reset all?";
+"record.screen.reset.all.title" = "Bạn muốn huỷ thay đổi?";
+"editor.screen.reset.all.title" = "Huỷ tất cả?";
 "record.screen.reset.all.message" = "";
 "editor.screen.reset.all.message" = "";
 
 /* Used in alert with Yes and No options */
-"alert.delete.last.clip.title" = "Delete the last video?";
+"alert.delete.last.clip.title" = "Xoá video cuối cùng?";
 "alert.delete.last.clip.message" = "";
 
 /* Used for alert message to continure editing video*/
-"alert.camera.continue.editing.video.question.title" = "You have a not finished video. Do you want to continue?";
+"alert.camera.continue.editing.video.question.title" = "Bạn chưa kết thúc video, bạn có muốn tiếp tục không?";
 "alert.camera.continue.editing.video.question.message" = "";
 
 /* Error message that appears when clicking the Next button in the camera when the first part of split mode is not recorded */
@@ -76,23 +76,23 @@
 "Second part is too short" = "Second part is too short";
 
 /* In-camera beautification (facial correction) enabled */
-"Beautifier on" = "Beautification on";
-"Beautifier off" = "Beautification off";
+"Beautifier on" = "Bật làm đẹp";
+"Beautifier off" = "Tắt làm đẹp";
 
 /* The light (flashlight) in the camera is on */
 "Flash" = "Light";
 
 /* An error message that appears in the camera when the length of the recorded video is less than the minimum allowed duration */
-"Too short. Please capture at least %d seconds" = "Too short. Please capture at least %d seconds";
+"Too short. Please capture at least %d seconds" = "Quá ngắn. Đảm bảo đủ ít nhất %d giây";
 
 /* An error message that appears in the trimmer when user tryed to use too long video */
-"com.banuba.TooLongVideoMessageFormat" = "Video duration should be  between %d and %d seconds";
+"com.banuba.TooLongVideoMessageFormat" = "Thời lượng video nên từ %d đến %d giây";
 
 /* An error message that appears in the camera if the recorded video is longer than the maximum allowed length */
-"Maximum %d seconds." = "Maximum %d seconds.";
+"Maximum %d seconds." = "Quá %d giây.";
 
 /* Turning off the camera's auto timer */
-"Timer is off" = "Timer is off";
+"Timer is off" = "Tắt hẹn giờ";
 
 /*'Seconds' for maximum */
 "Max length %d sec" = "Max length %d sec";
@@ -101,70 +101,70 @@
 "%d sec" = "%d sec";
 
 /* Name of the button in multi-select mode, which confirms the selection of user files and continues the process further */
-"Choose" = "Choose";
+"Choose" = "Chọn";
 
 /* Built-in track volume description */
-"Sound" = "Sound";
+"Sound" = "Âm thanh";
 
 /* Add extra audio track action */
-"Add" = "Add";
+"Add" = "Thêm";
 
 /* Enabling the countdown timer to automatically start shooting in the camera */
 "%i seconds timer is on" = "%i seconds timer is on";
 
 /* Step one of two to edit your avatar: take a photo */
-"Make cover photo" = "Make cover photo";
+"Make cover photo" = "Chọn ảnh nền";
     
 /* Step two of two when taking a profile photo using the camera */
-"Step 2 / 2" = "Step 2 / 2";
+"Step 2 / 2" = "Bước 2 / 2";
     
 /* Description of the zone selection screen for the user avatar when taking pictures on the profile screen */
 "Crop your profile photo for feed and comments" = "Crop your profile photo for feed and comments";
     
 /* Hint on how to apply visual filters or time filter to video */
-"Press and hold" = "Press and hold";
+"Press and hold" = "Nhấn và giữ";
  
 /* Screen title with video from phone gallery */
-"Gallery" = "Gallery";
+"Gallery" = "Thư viện";
 
 /* Activity signature */
-"LOADING" = "LOADING";
+"LOADING" = "ĐANG TẢI";
 
 /* Text under the trobber when exporting a video */
-"EXPORTING" = "EXPORTING";
+"EXPORTING" = "ĐANG XUẤT";
 
 /* Message about downloading videos from iCloud in the window for selecting videos saved on the mobile device */
-"Video is uploading from iCloud" = "Video is uploading from iCloud";
+"Video is uploading from iCloud" = "Video đang được upload từ iCloud";
 
 /* Speed screen name */
-"Speed" = "Speed";
+"Speed" = "Tốc độ";
 
 /* Speed screen info */
-"Recording speed %@" = "Recording speed %@";
+"Recording speed %@" = "Tốc độ ghi %@";
 
 /* Network Unavailable info */
-"Network Unavailable" = "Network Unavailable";
+"Network Unavailable" = "Mạng không khả dụng";
 
 /* Screen name which will be visible if enable in configuration */
-"Single Trim Video Screen Name" = "Trim Video";
+"Single Trim Video Screen Name" = "Cắt video";
 
 /* Screen name which will be visible if enable in configuration */
 "Multi Trim Video Screen Name" = "Multitrimmer";
 
 /* Recorder mask effect screen name */
-"Mask Effect Screen Name" = "Mask";
+"Mask Effect Screen Name" = "Mặt nạ";
 
 /* Recorder color effect screen name */
-"Color Effect Screen Name" = "Effect";
+"Color Effect Screen Name" = "Hiệu ứng";
 
 /* Recorder color effect screen name */
-"Color Effect Screen Name" = "Effect";
+"Color Effect Screen Name" = "Hiệu ứng";
 
 /* Screen name which will be visible if enable in configuration */
-"Text editor color" = "Color";
+"Text editor color" = "Màu";
 
 /* Screen name which will be visible if enable in configuration */
-"Choose Cover Screen Name" = "Choose Cover";
+"Choose Cover Screen Name" = "Chọn ảnh bìa";
 
 /* Screen name which will be visible if enable in configuration at color filters screen */
 "Screen colors" = "Screen colors";
@@ -172,82 +172,82 @@
 "Reach maximum video duration" = "Reach maximum video duration";
 
 /* Disable timer option titiel */
-"Off" = "Off";
+"Off" = "Tắt";
 
 // MARK: - Gifphy Screen
 
 /* Hint, which is shown in the GIF objects search input field, if it is empty */
-"com.banuba.searchGif.placeholder" = "Search GIPHY";
+"com.banuba.searchGif.placeholder" = "Tìm GIPHY";
 
 /* Ability to cancel the search for GIF objects */
-"Cancel" = "Cancel";
+"Cancel" = "Huỷ";
 
 /* Pictures not found by custom keyword */
-"No stickers found" = "No stickers found";
+"No stickers found" = "Không tìm thấy hình ảnh nào";
 
 /* Stickers search can not be performed due to missing API key */
 "Giphy API key missing" = "Stickers will appear here when you set up Giphy key";
 
 /* A heading showing that there are problems with the Internet connection */
-"Problems with internet" = "Problems with internet";
+"Problems with internet" = "Có vấn đề về mạng của bạn";
 
 /* Advice to the user on further actions to solve this problem */
-"Check your connection and try again" = "Check your connection and try again";
+"Check your connection and try again" = "Kiểm tra lại kết nối mạng và thử lại";
 
 /* Ability to load GIF objects again */
-"Again" = "Again";
+"Again" = "Load lại";
 
 // MARK: - ERROR MESSAGES
 /* Message when request failed with `statusCode` code */
 "HTTP Error %d" = "HTTP Error %d";
 
 /* Message displayed when there is no internet connection */
-"You don't seem to be connected to the internet. \nPlease try again" = "You don't seem to be connected to the internet. \nPlease try again";
+"You don't seem to be connected to the internet. \nPlease try again" = "Có vẻ như bạn đang bị mất kết nối mạng. \nThử lại sau";
 
 /* Message displayed when media file cannot be downloaded */
-"Cannot download media file from your iCloud" = "Cannot download media file from your iCloud";
+"Cannot download media file from your iCloud" = "Không thể tải hình ảnh từ iCloud của bạn";
 
 /* Error if the format of the response from the server does not match the expected */
-"Unknown data format" = "Unknown data format";
+"Unknown data format" = "Định dạng không được hỗ trợ";
 
 /* Used in alert re-asking permissions to Photos with Cancel and Settings options. */
-"banuba.camera.alert.missed.gallery.persmission.title" = "Please, allow your Photos & Videos in the settings to make a clip.";
+"banuba.camera.alert.missed.gallery.persmission.title" = "Cho phép truy cập vào thư viện hình ảnh và video của thiết bị.";
 "banuba.camera.alert.missed.gallery.persmission.message" = "";
 
 /* Used in alert re-asking Camera & Microphone permissions with Settings option. */
-"Banuba.Camera.MissedCameraAndMicrophonePersmissions" = "Please, allow your Camera and Mic to make a recording.";
+"Banuba.Camera.MissedCameraAndMicrophonePersmissions" = "Cho phép sử dụng camera và mic của bạn.";
 
 /* Used in a message to the user when access to the camera is denied through special options in the phone settings (such as 'Parental Control') */
-"banuba.alert.camera.access.restricted.title" = "Camera permissions are not granted";
+"banuba.alert.camera.access.restricted.title" = "Không có quyền sử dụng camera";
 "banuba.alert.camera.access.restricted.message" = "";
 
 /* Used in alert with options Cancel and In settings */
-"alert.microphone.unavailable.title" = "Microphone unavailable. Please allow access in device settings";
+"alert.microphone.unavailable.title" = "Mic không khả dụng, vui lòng cho phép trong cài đặt thiết bị";
 "alert.microphone.unavailable.message" = "";
 
 // MARK: - Settings
 
 /* The name of the button, by clicking on which you can go to the Settings application. */
-"Settings" = "Settings";
+"Settings" = "Cài đặt";
 
 /* The name of the button, by clicking on which you can refuse missed permission alert message */
-"Settings.Close" = "Close";
+"Settings.Close" = "Đóng";
 
 /* Used in an alert with Yes and No when resetting effects. */
-"alert.reset.effects.title" = "Discard changes?";
+"alert.reset.effects.title" = "Huỷ thay đổi?";
 "alert.reset.effects.message" = "";
 
 /* Undo filters applied to video in the add filters screen */
 "Undo" = "Undo";
 
 /* Finish button title */
-"Done" = "Done";
+"Done" = "Xong";
 
 /* OK button title in alert */
 "OK" = "OK";
 
 /* Show the user when the disk space has run out during video recording and when he clicks the Record video button */
-"Not enough storage" = "Not enough storage";
+"Not enough storage" = "Không đủ dung lượng";
 
 // MARK: - Effects names
 
@@ -425,54 +425,54 @@
 // MARK: - GALLERY SCREEN / SLIDE SHOW
 
 /* No photo in gallery */
-"No matching photos found in gallery" = "No photos found";
+"No matching photos found in gallery" = "Không có hình ảnh nào";
 
 /* No video in gallery */
-"No matching video found in gallery" = "No videos found";
+"No matching video found in gallery" = "Không có video nào";
 
 /* User selected too many files in the gallery */
-"You can select only %d files" = "You can select only %d files";
+"You can select only %d files" = "Bạn chỉ có thể chọn %d files";
 
 /* Failed to export a video */
-"Failed to create video" = "Failed to create video";
+"Failed to create video" = "Tạo video bị lỗi";
 
 // MARK: - Music Editor
 
 /* Delete track button title */
-"MusicEditor.Delete" = "Delete";
+"MusicEditor.Delete" = "Xoá";
 
 /* Voice effect button title */
-"MusicEditor.VoiceEffect" = "Effect";
+"MusicEditor.VoiceEffect" = "Hiệu ứng";
 
 /* Edit track button title */
-"MusicEditor.Edit" = "Edit";
+"MusicEditor.Edit" = "Chỉnh sửa";
 
 /* Add track button title */
-"MusicEditor.Tracks" = "Tracks";
+"MusicEditor.Tracks" = "Âm thanh";
 
 /* Add effects button title */
-"MusicEditor.Effects" = "Effects";
+"MusicEditor.Effects" = "Hiệu ứng";
 
 /* Add voice record button title */
-"MusicEditor.Record" = "Record";
+"MusicEditor.Record" = "Ghi hình";
 
 /* Video volume title */
-"MusicEditor.VideoVolume" = "Volume";
+"MusicEditor.VideoVolume" = "Âm lượng";
 
 /* Audio duration title */
-"MusicEditor.Duration" = "Duration";
+"MusicEditor.Duration" = "Thời gian";
 
 /* Original sound title */
-"MusicEditor.OriginalSound" = "Original sound";
+"MusicEditor.OriginalSound" = "Âm thanh chung";
 /* Added sound title */
-"MusicEditor.AddedSound" = "Added sound";
+"MusicEditor.AddedSound" = "Thêm âm thanh";
 
 /* Confirmation message for discarding changes */
-"com.banuba.musicEditor.mainScreen.resetAll.title" = "Discard changes?";
+"com.banuba.musicEditor.mainScreen.resetAll.title" = "Huỷ thay đổi?";
 "com.banuba.musicEditor.mainScreen.resetAll.message" = "";
 
 /* Error message when a user tries to add tracks with reached limit */
-"MusicEditor.Max available tracks - %i" = "Max available tracks - %i";
+"MusicEditor.Max available tracks - %i" = "Đã đến giới hạn âm thanh - %i";
 
 /* Elf filter title */
 "com.banuba.musicEditor.elf" = "Elf";
@@ -490,13 +490,13 @@
 // MARK: - Overlay Editor
 
 /* Delete overlay item button title */
-"OverlayEditor.Delete" = "Delete";
+"OverlayEditor.Delete" = "Xoá";
 
 /* Edit overlay item button title */
-"OverlayEditor.Edit" = "Edit";
+"OverlayEditor.Edit" = "Chỉnh sửa";
 
 /* Add text button title */
-"OverlayEditor.Text" = "Text";
+"OverlayEditor.Text" = "Chữ";
 
 /* Add sticker button title */
 "OverlayEditor.Sticker" = "Sticker";
@@ -508,52 +508,52 @@
 "OverlayEditor.Circle.Blur" = "Circle";
 
 /* Cancel button title */
-"OverlayEditor.Cancel" = "Cancel";
+"OverlayEditor.Cancel" = "Huỷ";
 
 /* Done button title */
-"OverlayEditor.Done" = "Done";
+"OverlayEditor.Done" = "Xong";
 
 /* Confirmation button title */
-"OverlayEditor.Yes" = "Yes";
+"OverlayEditor.Yes" = "Có";
 
 /* Discarding button title */
-"OverlayEditor.No" = "No";
+"OverlayEditor.No" = "Không";
 
 /* Confirmation message for discarding changes */
-"com.banuba.overlayEditor.mainScreen.resetAll.title" = "Discard changes?";
+"com.banuba.overlayEditor.mainScreen.resetAll.title" = "Huỷ thay đổi?";
 "com.banuba.overlayEditor.mainScreen.resetAll.message" = "";
-"com.banuba.overlayEditor.mainScreen.resetAll.agree" = "Discard";
-"com.banuba.overlayEditor.mainScreen.resetAll.disagree" = "Cancel";
+"com.banuba.overlayEditor.mainScreen.resetAll.agree" = "Huỷ";
+"com.banuba.overlayEditor.mainScreen.resetAll.disagree" = "Huỷ bỏ";
 
 // MARK: - AudioBrowser
 
 /* No internet connection title in alert */
-"AudioBrowser.noInternetConnection" = "No internet connection";
+"AudioBrowser.noInternetConnection" = "Không có kết nối mạng";
 
 /* Message for user if No internet connection */
-"AudioBrowser.checkConnectionMessage" = "Please, check your connection and try again";
+"AudioBrowser.checkConnectionMessage" = "Kiểm tra lại kết nối mạng và thử lại";
 
 /* Retry button title */
-"AudioBrowser.retry" = "Retry";
+"AudioBrowser.retry" = "Thử lại";
 
 /* Allow access message */
-"AudioBrowser.allowAccessMessage" = "To use your own music, allow access to Apple Music library, please.";
+"AudioBrowser.allowAccessMessage" = "Cho phép truy cập vào Apple Music library.";
 
 /* Allow button title */
-"AudioBrowser.allowAccess" = "Allow Access";
+"AudioBrowser.allowAccess" = "Cho phép truy cập";
 
 /* My files button title */
-"AudioBrowser.myFiles" = "My Files";
+"AudioBrowser.myFiles" = "File của bạn";
 
-"audioBrowser.search.by.categories" = "Search by categories";
-"audioBrowser.search.by.groups" = "Search by groups";
-"audioBrowser.search.by.tracks" = "Search by tracks";
-"audioBrowser.use" = "Use";
-"audioBrowser.show.more" = "Show more";
-"audioBrowser.stop.using" = "Stop using";
-"audioBrowser.my.library" = "My library";
-"audioBrowser.no.matches" = "No matches";
-"audioBrowser.no.tracks" = "No tracks";
+"audioBrowser.search.by.categories" = "Tìm theo danh mục";
+"audioBrowser.search.by.groups" = "Tìm theo nhóm";
+"audioBrowser.search.by.tracks" = "Tìm theo âm thanh";
+"audioBrowser.use" = "Sử dụng";
+"audioBrowser.show.more" = "Xem thêm";
+"audioBrowser.stop.using" = "Dừng sử dụng";
+"audioBrowser.my.library" = "Thư viện của bạn";
+"audioBrowser.no.matches" = "Không khớp";
+"audioBrowser.no.tracks" = "Không có âm thanh";
 /* Track format for displaying mubert track title*/
 "audioBrowser.mubertTrackFormat" = "Track %d";
 
@@ -564,78 +564,78 @@
 
 // MARK: - Hands-free
 "hands.free.video.drag.title" = "Kéo để thiết lập thời gian:";
-"hands.free.btn.title" = "Start countdown";
+"hands.free.btn.title" = "Bắt đầu đếm ngược";
 "hands.free.seconds" = "%@ s";
 
 // MARK: - Video Editor
 
 /* Gallery image tab title */
-"BanubaVideoEditor.Gallery.ImageTabTitle" = "Image";
+"BanubaVideoEditor.Gallery.ImageTabTitle" = "Hình ảnh";
 
 /* Gallery video tab title */
 "BanubaVideoEditor.Gallery.VideoTabTitle" = "Video";
 
 /* Gallery custom All Photos title */
-"BanubaVideoEditor.Gallery.AllPhotosTitle" = "All Photos";
+"BanubaVideoEditor.Gallery.AllPhotosTitle" = "Tất cả hình ảnh";
 
 /* Gallery previe select button name*/
-"BanubaVideoEditor.Gallery.SelectItemName" = "Select";
+"BanubaVideoEditor.Gallery.SelectItemName" = "Chọn";
 
 /* Gallery previe deselect button name*/
-"BanubaVideoEditor.Gallery.DeselectItemName" = "Deselect";
+"BanubaVideoEditor.Gallery.DeselectItemName" = "Bỏ chọn";
 
 /* Gallery header info title */
 "BanubaVideoEditor.Gallery.HeaderInfoTitle" = "Update files %@ to choose more photos";
 "BanubaVideoEditor.Gallery.HeaderInfoColoredTitle" = "settings";
 
 /* Gallery Recent Photos title */
-"BanubaVideoEditor.Gallery.RecentPhotosTitle" = "Recent";
+"BanubaVideoEditor.Gallery.RecentPhotosTitle" = "Gần đây";
 
 /* Damaged file from gallery */
 "BanubaVideoEditor.Gallery.DamagedFile" = "Damaged file";
 
 /* Export video from gallery failed */
-"BanubaVideoEditor.Gallery.ExportVideoFailed" = "Content uploading failed";
+"BanubaVideoEditor.Gallery.ExportVideoFailed" = "Tải lên nội dung không thành công";
 
 /* Gallery selection hint */
-"BanubaVideoEditor.Gallery.SelectItems" = "Select items";
+"BanubaVideoEditor.Gallery.SelectItems" = "Chọn các mục";
 
 /* Import single video template */
-"BanubaVideoEditor.Gallery.ImportSingleVideo" = "Import 1 video";
+"BanubaVideoEditor.Gallery.ImportSingleVideo" = "Tải lên 1 video";
 
 /* Import multiple videos template */
-"BanubaVideoEditor.Gallery.ImportMultipleVideos" = "Import %d videos";
+"BanubaVideoEditor.Gallery.ImportMultipleVideos" = "Tải lên %d video";
 
 /* Import multiple videos template */
-"BanubaVideoEditor.Gallery.ImportMultipleVideosAndPhotos" = "Import %d videos and photos";
+"BanubaVideoEditor.Gallery.ImportMultipleVideosAndPhotos" = "Tải lên %d video và hình ảnh";
 
 /* Import single image template */
-"BanubaVideoEditor.Gallery.ImportSingleImage" = "Import 1 image";
+"BanubaVideoEditor.Gallery.ImportSingleImage" = "Tải lên 1 hình ảnh";
 
 /* Import multiple images template */
-"BanubaVideoEditor.Gallery.ImportMultipleImages" = "Import %d images";
+"BanubaVideoEditor.Gallery.ImportMultipleImages" = "Tải lên %d hình ảnh";
 
 /* Gallery empty selection message */
-"BanubaVideoEditor.Gallery.EmptySelectionMessage" = "Select at least 1 file";
+"BanubaVideoEditor.Gallery.EmptySelectionMessage" = "Chọn ít nhất 1 file";
 
 // MARK: - Effect additional media picker text resource
 
 /* No media files found in gallery for adding to the effect */
-"com.banuba.videoEditor.recorder.additionalEffects.NoMediaFound" = "No media found";
+"com.banuba.videoEditor.recorder.additionalEffects.NoMediaFound" = "Không tìm thấy file";
 
 /* No media files found in gallery for adding to the effect */
-"com.banuba.videoEditor.recorder.additionalEffects.AllowAccess" = "Allow Access";
+"com.banuba.videoEditor.recorder.additionalEffects.AllowAccess" = "Cho phép truy cập";
 
 /* Helpers info message for changing video background */
-"com.banuba.videoEditor.recorder.additionalEffects.selectMediaToChangeBackgroundMessage" = "Select media to change the background:";
+"com.banuba.videoEditor.recorder.additionalEffects.selectMediaToChangeBackgroundMessage" = "Chọn file để thay đổi ảnh nền video:";
 
 /* Helpers info message for providing acces to a user gallery */
-"com.banuba.videoEditor.recorder.additionalEffects.allowAccesToChangeBackgroundMessage" = "Allow access to Gallery to change the background";
+"com.banuba.videoEditor.recorder.additionalEffects.allowAccesToChangeBackgroundMessage" = "Cho phép truy cập thư viện của bạn để thay đổi nền";
 
 // MARK: - Cover
-"cover.thumbnail.title" = "Choose a frame from your video or an image from Gallery";
-"cover.gallery.button.title" = "Choose from Gallery";
-"cover.delete.button.title" = "Delete";
+"cover.thumbnail.title" = "Chọn ảnh bìa từ thư viện của bạn";
+"cover.gallery.button.title" = "Chọn từ thư viện";
+"cover.delete.button.title" = "Xoá";
 
 // MARK: - PIP
 
@@ -780,20 +780,20 @@
 /* progress view alert type */
 "com.banuba.alert.progressView.agreeButtonTitle" = "Retry";
 "com.banuba.alert.progressView.disagreeButtonTitle" = "Cancel";
-"com.banuba.alert.progressView.importingMedia" = "Importing media";
-"com.banuba.alert.progressView.exportingVideo" = "Exporting video";
-"com.banuba.alert.progressView.tooltipMessage" = "Please, don't lock your screen or switch to other apps";
-"com.banuba.alert.progressView.exportVideoInterrupted" = "Export interrupted";
+"com.banuba.alert.progressView.importingMedia" = "Đang tải file";
+"com.banuba.alert.progressView.exportingVideo" = "Đang xuất file";
+"com.banuba.alert.progressView.tooltipMessage" = "Không tắt màn hình hoặc chuyển sang app khác";
+"com.banuba.alert.progressView.exportVideoInterrupted" = "Xuất file bị gián đoạn";
 
 /* need to update iOS alert */
-"com.banuba.alert.needToUpdateIos.title" = "Sorry, minimum supported version is iOS 12.";
-"com.banuba.alert.needToUpdateIos.message" = "You must update to ios 12.0 in order to use this application.";
+"com.banuba.alert.needToUpdateIos.title" = "Phiên bản này chỉ hỗ trợ từ ios 12.";
+"com.banuba.alert.needToUpdateIos.message" = "Cập nhật lên ios 12 để thực hiện hành động này.";
 
 /* remove and start over record video */
-"com.banuba.trim.startOverRecordVideoTitle" = "Want to record a new video?";
+"com.banuba.trim.startOverRecordVideoTitle" = "Bạn muốn tạo video mới?";
 "com.banuba.trim.startOverRecordVideoMessage" = "";
 "com.banuba.trim.startOverRecordVideoAgreeButtonTitle" = "Start over";
-"com.banuba.trim.startOverRecordVideoDisagreeButtonTitle" = "Discard";
+"com.banuba.trim.startOverRecordVideoDisagreeButtonTitle" = "Huỷ";
 
 // MARK: - Trim
 /* Edit video rotate button title */

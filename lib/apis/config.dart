@@ -20,7 +20,7 @@
 //===============
 
 const baseRoot = 'https://cmc-sn.emso.vn';
-const baseRootPtube = 'https://pt.emso.vn';
+const baseRootPtube = 'https://pt.emso.vn'; 
 const baseRootNovu = '-LgRoNshFiyj';
 const socketNovuUrl = 'wss://cmc-notification-ws.emso.vn/socket.io';
 const getTokenNovuUrl = 'https://cmc-notification-api.emso.vn';
