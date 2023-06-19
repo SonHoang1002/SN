@@ -68,19 +68,15 @@ class _VideoPlayerNoneControllerState
                   0));
         }
       })
-      ..addListener(() {});
+      ..addListener(() {
+        if (mounted) {
+          ref.read(watchControllerProvider.notifier).updatePositionPlaying(
+              videoPlayerController.value.position.inSeconds);
+        }
+      });
 
     if (widget.isPause == true) {
       videoPlayerController.pause();
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (widget.type == 'miniPlayer' && mounted) {
-      ref.read(watchControllerProvider.notifier).updatePositionPlaying(
-          videoPlayerController.value.position.inSeconds);
     }
   }
 

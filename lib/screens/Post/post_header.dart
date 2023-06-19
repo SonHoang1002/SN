@@ -229,8 +229,10 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                         )
                                       : const SizedBox(),
                                   Text(
-                                    getRefractorTime(
-                                        widget.post?['created_at']),
+                                    widget.post?['created_at'] != null
+                                        ? getRefractorTime(
+                                            widget.post?['created_at'])
+                                        : '',
                                     style: const TextStyle(
                                         color: greyColor, fontSize: 12),
                                   ),
@@ -255,7 +257,8 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                 ],
               ),
               // widget.isHaveAction == true
-              widget.post['account']['id'] == meData['id'] ||
+              widget.post['account'] != null &&
+                          widget.post['account']['id'] == meData['id'] ||
                       (widget.post['page'] != null &&
                           widget.post['page_owner'] != null &&
                           widget.post['page_owner']['page_relationship']

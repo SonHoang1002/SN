@@ -9,6 +9,8 @@ import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
+import 'package:social_network_app_mobile/providers/video_repository.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/services/notification_service.dart';
 import 'package:social_network_app_mobile/services/web_socket_service.dart';
@@ -295,99 +297,127 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
             Positioned(
               bottom: 100,
               right: 10,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Card(
-                  elevation: 10,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 80,
-                            color: Color(int.parse(
-                                '0xFF${selectedVideo['media_attachments'][0]['meta']['small']['average_color'].substring(1)}')),
-                            child: Center(
-                              child: VideoPlayerNoneController(
-                                isShowVolumn: false,
-                                media: selectedVideo['media_attachments'][0],
-                                type: 'miniPlayer',
-                                path: selectedVideo['media_attachments'][0]
-                                    ['remote_url'],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                selectedVideo['content'].isNotEmpty
-                                    ? SizedBox(
-                                        height: 20,
-                                        width: 150,
-                                        child: Marquee(
-                                          text: selectedVideo['content'],
-                                          velocity: 30,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                                Flexible(
-                                  child: Text(
-                                    selectedVideo['account']['display_name'] ??
-                                        selectedVideo['page']['title'] ??
-                                        '',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                                FontAwesomeIcons.upRightAndDownLeftFromCenter,
-                                size: 15),
-                            onPressed: () {
-                              SchedulerBinding.instance
-                                  .addPostFrameCallback((_) {
-                                if (GlobalVariable.navState.currentContext !=
-                                    null) {
-                                  MaterialPageRoute(
-                                      builder: (context) => WatchDetail(
-                                            post: selectedVideo,
-                                            media: selectedVideo[
-                                                'media_attachments'][0],
-                                          ));
-                                }
-                              });
-
-                              ref
-                                  .read(selectedVideoProvider.notifier)
-                                  .update((state) => null);
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              ref
-                                  .read(selectedVideoProvider.notifier)
-                                  .update((state) => null);
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              child: MiniPlayer(selectedVideo: selectedVideo, ref: ref),
             )
         ],
       ),
+    );
+  }
+}
+
+class MiniPlayer extends StatelessWidget {
+  const MiniPlayer({
+    super.key,
+    required this.selectedVideo,
+    required this.ref,
+  });
+
+  final dynamic selectedVideo;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Card(
+            elevation: 10,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
+                      color: Color(int.parse(
+                          '0xFF${selectedVideo['media_attachments'][0]['meta']['small']['average_color'].substring(1)}')),
+                      child: Center(
+                        child: VideoPlayerNoneController(
+                          isShowVolumn: false,
+                          media: selectedVideo['media_attachments'][0],
+                          type: 'miniPlayer',
+                          path: selectedVideo['media_attachments'][0]
+                              ['remote_url'],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          selectedVideo['content'].isNotEmpty
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 150,
+                                  child: Marquee(
+                                    text: selectedVideo['content'],
+                                    velocity: 30,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                )
+                              : const SizedBox(),
+                          Flexible(
+                            child: Text(
+                              selectedVideo['account']['display_name'] ??
+                                  selectedVideo['page']['title'] ??
+                                  '',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                          FontAwesomeIcons.upRightAndDownLeftFromCenter,
+                          size: 15),
+                      onPressed: () {
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          if (GlobalVariable.navState.currentContext != null) {
+                            MaterialPageRoute(
+                                builder: (context) => WatchDetail(
+                                      post: selectedVideo,
+                                      media: selectedVideo['media_attachments']
+                                          [0],
+                                    ));
+                          }
+                        });
+
+                        ref
+                            .read(selectedVideoProvider.notifier)
+                            .update((state) => null);
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        ref
+                            .read(betterPlayerControllerProvider)
+                            .chewieController!
+                            .seekTo(Duration(
+                                seconds: ref
+                                    .read(watchControllerProvider)
+                                    .position));
+
+                        ref
+                            .read(selectedVideoProvider.notifier)
+                            .update((state) => null);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
