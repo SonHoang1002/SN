@@ -20,6 +20,9 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
   final bool? isShowVolumn;
   final Duration? timeStart;
   final bool? isPause;
+  final bool? isLooping;
+  final int? index;
+  final Function? onEnd;
   const VideoPlayerNoneController(
       {Key? key,
       this.timeStart,
@@ -29,7 +32,10 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
       this.aspectRatio,
       this.post,
       this.isShowVolumn,
-      this.isPause = false})
+      this.isPause = false,
+      this.onEnd,
+      this.index,
+      this.isLooping = false})
       : super(key: key);
 
   @override
@@ -56,7 +62,7 @@ class _VideoPlayerNoneControllerState
         ? VideoPlayerController.network(widget.path)
         : VideoPlayerController.file(File(widget.path)))
       ..initialize().then((value) {
-        videoPlayerController.setLooping(true);
+        videoPlayerController.setLooping(widget.isLooping!);
         if (widget.timeStart != null) {
           videoPlayerController.seekTo(widget.timeStart!);
         }
@@ -73,10 +79,21 @@ class _VideoPlayerNoneControllerState
           ref.read(watchControllerProvider.notifier).updatePositionPlaying(
               videoPlayerController.value.position.inSeconds);
         }
-      });
+      })
+      ..addListener(() {
+        if (widget.isPause == true) {
+          videoPlayerController.pause();
+        } else {
+          videoPlayerController.play();
+        }
+      })
+      ..addListener(_onEnd);
+  }
 
-    if (widget.isPause == true) {
-      videoPlayerController.pause();
+  _onEnd() {
+    if ((widget.media['meta']['original']['duration'] - 1) ==
+        videoPlayerController.value.position.inSeconds) {
+      widget.onEnd != null ? widget.onEnd!() : null;
     }
   }
 
@@ -92,7 +109,7 @@ class _VideoPlayerNoneControllerState
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return VisibilityDetector(
         onVisibilityChanged: (visibilityInfo) {
           if (mounted) {
