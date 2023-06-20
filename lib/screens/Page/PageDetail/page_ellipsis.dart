@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
-import 'package:social_network_app_mobile/screens/Page/PageEdit/page_edit.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/page_search.dart';
+import 'package:social_network_app_mobile/screens/Page/PageEdit/page_edit.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/report_category.dart';
@@ -21,7 +21,10 @@ import '../../../widgets/show_modal_message.dart';
 class PageEllipsis extends ConsumerStatefulWidget {
   final dynamic data;
   final bool? rolePage;
-  const PageEllipsis({Key? key, this.data, this.rolePage}) : super(key: key);
+  final Function? handleChangeDependencies;
+  const PageEllipsis(
+      {Key? key, this.data, this.rolePage, this.handleChangeDependencies})
+      : super(key: key);
 
   @override
   ConsumerState<PageEllipsis> createState() => _PageEllipsisState();
@@ -210,8 +213,13 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
         updatePageEllipsis();
         break;
       case 'edit':
-        Navigator.push(context,
-            CupertinoPageRoute(builder: (context) =>  PageEdit(data: widget.data)));
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => PageEdit(
+                    data: widget.data,
+                    handleChangeDependencies:
+                        widget.handleChangeDependencies)));
         break;
       default:
     }

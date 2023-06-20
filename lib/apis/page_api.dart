@@ -5,6 +5,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
+import 'api_with_code.dart';
 import 'config.dart';
 
 class PageApi {
@@ -22,6 +23,15 @@ class PageApi {
 
   fetchPageDetail(id) async {
     return await Api().getRequestBase("/api/v1/pages/$id", null);
+  }
+
+  fetchPageCategories(params) async {
+    return await Api().getRequestBase("/api/v1/page_categories", params);
+  }
+
+  validPageUsername(params) async {
+    return await ApiWithCode()
+        .getRequestBaseWithCode("/api/v1/pages_validate_username", params);
   }
 
   fetchSearchPageDetail(id, params) async {
