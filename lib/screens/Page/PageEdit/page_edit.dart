@@ -17,7 +17,8 @@ import 'edit_detail.dart';
 
 class PageEdit extends StatefulWidget {
   final dynamic data;
-  const PageEdit({super.key, this.data});
+  final Function? handleChangeDependencies;
+  const PageEdit({super.key, this.data, this.handleChangeDependencies});
 
   @override
   State<PageEdit> createState() => _PageEditState();
@@ -31,30 +32,36 @@ class _PageEditState extends State<PageEdit> {
   void initState() {
     super.initState();
     dataPage = widget.data;
-    detailPage = [
-      {
-        "key": "page",
-        "label": dataPage?['page_categories'].isNotEmpty
-            ? "Trang \u2022 ${dataPage?['page_categories']?[0]?['text']}"
-            : "Trang",
-        "icon": 'assets/pages/circleWarning.png',
-      },
-      {
-        "key": "andress",
-        "label": "${dataPage?['address'] ?? "Địa chỉ"}",
-        "icon": 'assets/pages/direction.png',
-      },
-      {
-        "key": "phone",
-        "label": "${dataPage?['phone_number'] ?? "Điện thoại"}",
-        "icon": 'assets/pages/phone.png',
-      },
-      {
-        "key": "email",
-        "label": "${dataPage?['email'] ?? "Email"}",
-        "icon": 'assets/pages/email.png',
-      }
-    ];
+    updateDetailPage();
+  }
+
+  void updateDetailPage() {
+    setState(() {
+      detailPage = [
+        {
+          "key": "page",
+          "label": dataPage?['page_categories'].isNotEmpty
+              ? "Trang \u2022 ${dataPage?['page_categories']?[0]?['text']}"
+              : "Trang",
+          "icon": 'assets/pages/circleWarning.png',
+        },
+        {
+          "key": "andress",
+          "label": "${dataPage?['address'] ?? "Địa chỉ"}",
+          "icon": 'assets/pages/direction.png',
+        },
+        {
+          "key": "phone",
+          "label": "${dataPage?['phone_number'] ?? "Điện thoại"}",
+          "icon": 'assets/pages/phone.png',
+        },
+        {
+          "key": "email",
+          "label": "${dataPage?['email'] ?? "Email"}",
+          "icon": 'assets/pages/email.png',
+        }
+      ];
+    });
   }
 
   Future<dynamic> showModal(BuildContext context, typePage) {
@@ -297,8 +304,14 @@ class _PageEditState extends State<PageEdit> {
                                 context,
                                 CupertinoPageRoute(
                                     builder: (context) => EditDetail(
-                                        detailPage: detailPage,
-                                        data: dataPage)));
+                                          data: dataPage,
+                                          handleChangeDependencies: (value) {
+                                            setState(() {
+                                              dataPage = value;
+                                              updateDetailPage();
+                                            });
+                                          },
+                                        )));
                           },
                           child: const Text('Chỉnh sửa')),
                     ],

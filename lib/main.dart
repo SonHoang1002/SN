@@ -15,7 +15,7 @@ void main() async {
   NotificationService().initNotification();
   HttpOverrides.global = MyHttpOverrides();
 
-debugProfileBuildsEnabled = true;
+  debugProfileBuildsEnabled = true;
   // debugPaintSizeEnabled = true;
   runApp(
     const ProviderScope(

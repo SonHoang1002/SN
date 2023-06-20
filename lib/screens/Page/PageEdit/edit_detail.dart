@@ -1,22 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/widgets/Formik/lib/lo_form.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/PageEdit/select_category.dart';
+import 'package:social_network_app_mobile/screens/Page/PageEdit/textfield_edit_page.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../theme/colors.dart';
-import 'textfield_edit_page.dart';
 
-class EditDetail extends StatefulWidget {
-  final dynamic detailPage;
+class EditDetail extends ConsumerStatefulWidget {
   final dynamic data;
-  const EditDetail({super.key, this.detailPage, this.data});
+  final Function? handleChangeDependencies;
+  const EditDetail({super.key, this.data, this.handleChangeDependencies});
 
   @override
-  State<EditDetail> createState() => _EditDetailState();
+  ConsumerState<EditDetail> createState() => _EditDetailState();
 }
 
-class _EditDetailState extends State<EditDetail> {
+class _EditDetailState extends ConsumerState<EditDetail> {
   dynamic editPage;
   @override
   void initState() {
@@ -28,8 +31,11 @@ class _EditDetailState extends State<EditDetail> {
       "description": widget.data['description'],
       "title": widget.data['title'],
       "username": widget.data['username'],
-      "page_categories": widget.data['page_categories'],
+      "page_category_ids": widget.data['page_categories'],
     };
+    Future.delayed(Duration.zero, () {
+      ref.read(pageControllerProvider.notifier).getPageDetailCategory(null);
+    });
   }
 
   @override
@@ -67,10 +73,22 @@ class _EditDetailState extends State<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
-                  title: Text(editPage?['page_categories'].isNotEmpty
-                      ? "Trang \u2022 ${editPage?['page_categories']?[0]?['text']}"
+                  trailing: const Icon(Icons.edit),
+                  title: Text(editPage?['page_category_ids'].isNotEmpty
+                      ? "Trang \u2022 ${editPage?['page_category_ids']?[0]?['text']}"
                       : "Trang"),
-                  onTap: () {},
+                  onTap: () async {
+                    final selectedCategory = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SelectCategory()),
+                    );
+                    if (selectedCategory != null) {
+                      setState(() {
+                        editPage['page_category_ids'] = [selectedCategory];
+                      });
+                    }
+                  },
                 )
               ],
             ),
@@ -145,14 +163,19 @@ class _EditDetailState extends State<EditDetail> {
                               field: 'email',
                               initialValue: editPage?['email'],
                               title: "Chỉnh sửa email",
-                              validators: [
-                                LoRequiredValidator(),
-                                LoFieldValidator.any(
-                                  [
-                                    LoRegExpValidator.email(),
-                                  ],
-                                )
-                              ],
+                              validateInput: (value) {
+                                final regex = RegExp(
+                                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|'
+                                    r'(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.'
+                                    r'[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                                if (value.isEmpty) {
+                                  return false;
+                                }
+                                if (!regex.hasMatch(value)) {
+                                  return true;
+                                }
+                                return false;
+                              },
                               hintText:
                                   "Email này sẽ hiển thị trên Trang của bạn. EMSO sẽ không dùng thông tin này để liên hệ bạn",
                               onChange: (value) {
@@ -178,6 +201,7 @@ class _EditDetailState extends State<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
+                  trailing: const Icon(Icons.edit),
                   title: Text("${editPage?['title'] ?? "Tên trang"}"),
                   onTap: () {
                     Navigator.push(
@@ -199,6 +223,7 @@ class _EditDetailState extends State<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
+                  trailing: const Icon(Icons.edit),
                   title: Text("${editPage?['username'] ?? "Tên người dùng"}"),
                   onTap: () {
                     Navigator.push(
@@ -206,8 +231,19 @@ class _EditDetailState extends State<EditDetail> {
                       CupertinoPageRoute(
                           builder: (context) => TextFieldEdit(
                               label: "Tên người dùng",
-                              field: editPage?['username'],
+                              field: 'username',
+                              initialValue: editPage?['username'],
                               title: "Chỉnh sửa tên người dùng",
+                              validateInput: (value) async {
+                                var response = await PageApi()
+                                    .validPageUsername({"username": value});
+                                if (response != null &&
+                                    response.statusCode == 200) {
+                                  return false;
+                                } else {
+                                  return true;
+                                }
+                              },
                               onChange: (value) {
                                 setState(() {
                                   editPage['username'] = value;
@@ -219,6 +255,7 @@ class _EditDetailState extends State<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
+                  trailing: const Icon(Icons.edit),
                   title: Text("${editPage?['description'] ?? "Mô tả"}"),
                   onTap: () {
                     Navigator.push(
@@ -253,8 +290,25 @@ class _EditDetailState extends State<EditDetail> {
                       alignment: Alignment.bottomCenter,
                       child: ButtonPrimary(
                         label: 'Lưu',
-                        handlePress: () {
-                          Navigator.pop(context);
+                        handlePress: () async {
+                          var updatedEditPage = {
+                            ...editPage,
+                            'page_category_ids': editPage['page_category_ids']
+                                .map((e) => e['id'])
+                                .toList(),
+                          };
+                          var res = await PageApi().pagePostMedia(
+                              updatedEditPage, widget.data['id']);
+                          if (res != null) {
+                            widget.handleChangeDependencies!(res);
+                            ref
+                                .read(pageControllerProvider.notifier)
+                                .updateMedata(res);
+                          }
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(
+                            context,
+                          );
                         },
                       ),
                     ),
