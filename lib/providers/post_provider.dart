@@ -62,6 +62,18 @@ class PostController extends StateNotifier<PostState> {
     }
   }
 
+  addListPost(List newData) { 
+    if (mounted) {
+      state = state.copyWith(
+          posts: checkObjectUniqueInList(state.posts + newData, 'id'),
+          postsPin: state.postsPin,
+          postUserPage: state.postUserPage,
+          isMore: true,
+          // isMore: true,
+          isMoreUserPage: state.isMoreUserPage);
+    }
+  }
+
   getListPostUserPage(accountId, params) async {
     List response = await UserPageApi().getListPostApi(accountId, params) ?? [];
     List newList = [];
