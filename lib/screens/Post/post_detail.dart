@@ -403,7 +403,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    if (ref.watch(currentPostControllerProvider).currentPost.isNotEmpty) {
+    var currentPost = ref.watch(currentPostControllerProvider).currentPost;
+    if (currentPost != null && currentPost.isNotEmpty) {
       postData = ref.watch(currentPostControllerProvider).currentPost;
     } else {
       if (widget.postId != null) {
@@ -413,7 +414,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       }
     }
 
-    final commentCount = postData['replies_count'] ?? 0;
+    final commentCount = postData?['replies_count'] ?? 0;
     return GestureDetector(
         onTap: () {
           hiddenKeyboard(context);

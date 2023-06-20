@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_time_ago/get_time_ago.dart';
@@ -7,6 +9,21 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
+
+import '../../constant/post_type.dart';
+import '../../data/list_menu.dart';
+import '../../helper/push_to_new_screen.dart';
+import '../../providers/post_current_provider.dart';
+import '../Event/event_detail.dart';
+import '../Friend/friend_request.dart';
+import '../LearnSpace/learn_space.dart';
+import '../LearnSpace/learn_space_detail.dart';
+import '../LearnSpace/learn_space_invitations.dart';
+import '../Menu/menu_selected.dart';
+import '../Page/PageDetail/page_detail.dart';
+import '../Post/post_detail.dart';
+import '../Recruit/recruit_invite.dart';
+import '../Recruit/recuit_detail.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -17,6 +34,8 @@ class NotificationPage extends ConsumerStatefulWidget {
 
 class _NotificationPageState extends ConsumerState<NotificationPage> {
   final scrollController = ScrollController();
+  bool isLoading = true;
+  bool isMore = false;
 
   @override
   void initState() {
@@ -32,18 +51,28 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         });
       }
     });
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void fetchNotifications(params) async {
+    setState(() {
+      isMore = true;
+    });
     await ref
         .read(notificationControllerProvider.notifier)
         .getListNotifications(params);
+    setState(() {
+      isMore = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     List notifications =
         ref.watch(notificationControllerProvider).notifications;
+    // bool isMore = ref.watch(notificationControllerProvider).isMore;
 
     renderName(noti) {
       dynamic status = noti['status'];
@@ -280,100 +309,292 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       }
     }
 
+    void gotoNextScreenFromNoti(item) {
+      // print(item['type']);
+      // Map<String, dynamic> map = item;
+      // print(map.keys);
+      // item = notifications[index]
+      switch (item['type']) {
+        case 'comment':
+        // đã bình luận về một bài viết có thể bạn quan tâm
+        case 'favourite':
+        // đã bày tỏ cảm xúc về
+        case 'created_status':
+        // Video của bạn đã sẵn sàng.Bây giờ bạn có thể mở xemc
+        case 'approved_group_status':
+        // bài viết của bạn tại nhóm/trang đã được phê duyệt',
+        case 'status_tag':
+        case 'mention':
+        // đã nhắc đến bạn trong một bình luận, đã gắn thẻ bạn trong một bài viết
+        case 'reblog':
+        case 'status':
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => PostDetail(
+                postId: item['status']['id'],
+                preType: postDetail,
+              ),
+            ),
+          );
+          return;
+
+        case 'friendship_request':
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => FriendRequest(),
+            ),
+          );
+          return;
+
+        case 'recruit_apply':
+        // đã ứng tuyển vào công việc',
+        case 'recruit_invitation':
+          // đã mời bạn tham gia tuyển dụng',
+          SchedulerBinding.instance!.addPostFrameCallback((_) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecruitDetail(
+                  data: item['recruit'],
+                ),
+              ),
+            );
+          });
+          return;
+        case 'page_invitation_follow':
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => PageDetail(pageData: item['page']),
+            ),
+          );
+          return;
+
+        // ** NOT CHECKED **
+        case 'event_invitation':
+        case 'event_invitation_host':
+          SchedulerBinding.instance!.addPostFrameCallback((_) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EventDetail(
+                  eventDetail: item['event'],
+                ),
+              ),
+            );
+          });
+          // Navigator.push(
+          //   context,
+          //   CupertinoPageRoute(
+          //     builder: (context) => EventDetail(
+          //       eventDetail: item['event'],
+          //     ),
+          //   ),
+          // );
+          return;
+
+        // ** NOT CHECKED **
+
+        case 'course_invitation':
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => EventDetail(
+                eventDetail: item['event'],
+              ),
+            ),
+          );
+          return;
+
+        case 'page_follow':
+        // đã thích
+        case 'page_invitation':
+        // đã mời bạn làm quản trị viên
+        case 'accept_page_invitation':
+        // đã đồng ý làm quản trị viên trang
+        case 'accept_page_invitation_follow':
+        // đã chấp nhận lời mời thích trang
+        case 'admin_page_invitation':
+        // đã mời bạn làm quản trị viên',
+        case 'accept_admin_page_invitation':
+        // đã đồng ý làm quản trị viên trang',
+        // textBold': '${status?['page']?['title']}'
+
+        case 'moderator_page_invitation':
+        // 'textNone': ' đã đồng ý làm kiểm duyệt viên trang',
+        // 'textBold': '${status?['page']?['title']}'
+
+        case 'project_invitation_host':
+
+        case 'folow':
+        // ... followed you.
+        case 'poll':
+        // Thăm dò ý kiến
+
+        case 'group_invitation':
+        // đã mời bạn tham gia nhóm
+        case 'accept_event_invitation':
+        // đã đồng ý tham gia sự kiện
+        case 'accept_event_invitation_host':
+        // đã đồng ý đồng tổ chức sự kiện
+
+        case 'accept_group_invitation':
+        // đã chấp nhận lời mời tham gia nhóm
+        case 'accept_friendship_request':
+        // đã chấp nhận lời mời kết bạn
+        case 'group_join_request':
+        // đã yêu cầu tham gia'
+
+        case 'approved_group_join_request':
+        // Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với'
+        case 'product_invitation':
+        // đã mời bạn quan tâm đến sản phẩm
+        default:
+          return;
+      }
+    }
+
     return Column(
       children: [
-        Expanded(
-            child: ListView.builder(
+        notifications.isNotEmpty
+            ? Expanded(
+                child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: notifications.length,
                 controller: scrollController,
                 itemBuilder: ((context, index) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 8.0),
-                    decoration: BoxDecoration(
+                  var item = notifications[index];
+                  return InkWell(
+                    onTap: () {
+                      gotoNextScreenFromNoti(item);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 8.0,
+                      ),
+                      decoration: BoxDecoration(
                         color: !notifications[index]['read']
                             ? secondaryColorSelected
-                            : null),
-                    child: Row(
-                      children: [
-                        Stack(
-                          children: [
-                            notifications[index]['type'] == 'created_status'
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(30),
-                                    child: SvgPicture.asset(
-                                      'assets/LogoEmso.svg',
+                            : null,
+                      ),
+                      child: Row(
+                        children: [
+                          Stack(
+                            children: [
+                              notifications[index]['type'] == 'created_status'
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: SvgPicture.asset(
+                                        'assets/LogoEmso.svg',
+                                        width: 60,
+                                        height: 60,
+                                      ),
+                                    )
+                                  : AvatarSocial(
                                       width: 60,
                                       height: 60,
-                                    ))
-                                : AvatarSocial(
-                                    width: 60,
-                                    height: 60,
-                                    object: notifications[index]['account'],
-                                    path:
-                                        renderLinkAvatar(notifications[index])),
-                            Positioned(
+                                      object: notifications[index]['account'],
+                                      path: renderLinkAvatar(
+                                          notifications[index]),
+                                    ),
+                              Positioned(
                                 bottom: 0,
                                 right: 0,
                                 child: Image.asset(
-                                  renderLinkSvg(notifications[index]['type'],
-                                      notifications[index]['status']),
+                                  renderLinkSvg(
+                                    notifications[index]['type'],
+                                    notifications[index]['status'],
+                                  ),
                                   width: 24,
                                   height: 24,
-                                ))
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 12.0,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.75,
-                              child: Text.rich(
-                                TextSpan(
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(width: 12.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.75,
+                                child: Text.rich(
+                                  TextSpan(
                                     text: renderName(notifications[index]),
                                     style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                     children: [
                                       TextSpan(
-                                          text: renderContent(
-                                              notifications[index])['textNone'],
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                          )),
+                                        text: renderContent(
+                                            notifications[index])['textNone'],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
                                       TextSpan(
-                                          text: renderContent(
-                                                      notifications[index])[
-                                                  'textBold'] ??
-                                              '',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          )),
+                                        text:
+                                            renderContent(notifications[index])[
+                                                    'textBold'] ??
+                                                '',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       TextSpan(
                                           text:
                                               ' ${notifications[index]['page']?["title"] ?? notifications[index]['group']?["title"] ?? notifications[index]['event']?["title"] ?? ""}')
-                                    ]),
+                                    ],
+                                  ),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 4.0,
-                            ),
-                            Text(
-                                GetTimeAgo.parse(DateTime.parse(
-                                  notifications[index]['created_at'],
-                                )),
+                              const SizedBox(height: 4.0),
+                              Text(
+                                GetTimeAgo.parse(
+                                  DateTime.parse(
+                                    notifications[index]['created_at'],
+                                  ),
+                                ),
                                 style: const TextStyle(
-                                    color: greyColor, fontSize: 12))
-                          ],
-                        )
-                      ],
+                                  color: greyColor,
+                                  fontSize: 12,
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   );
-                }))),
+                }),
+              ))
+            : const SizedBox(),
+        isLoading && notifications.isEmpty || isMore == true
+            ? const Center(
+                child: SizedBox(
+                  height: 50.0,
+                  child: CupertinoActivityIndicator(),
+                ),
+              )
+            : notifications.isEmpty
+                ? Column(
+                    children: [
+                      Center(
+                        child: Image.asset(
+                          "assets/wow-emo-2.gif",
+                          height: 125.0,
+                          width: 125.0,
+                        ),
+                      ),
+                      const Text('Không tìm thấy thông báo nào'),
+                    ],
+                  )
+                : const SizedBox(),
       ],
     );
   }
