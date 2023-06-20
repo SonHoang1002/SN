@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/screens/Page/PageEdit/select_category.dart';
 import 'package:social_network_app_mobile/screens/Page/PageEdit/textfield_edit_page.dart';
@@ -10,9 +11,9 @@ import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import '../../../theme/colors.dart';
 
 class EditDetail extends ConsumerStatefulWidget {
-  final dynamic detailPage;
   final dynamic data;
-  const EditDetail({super.key, this.detailPage, this.data});
+  final Function? handleChangeDependencies;
+  const EditDetail({super.key, this.data, this.handleChangeDependencies});
 
   @override
   ConsumerState<EditDetail> createState() => _EditDetailState();
@@ -30,7 +31,7 @@ class _EditDetailState extends ConsumerState<EditDetail> {
       "description": widget.data['description'],
       "title": widget.data['title'],
       "username": widget.data['username'],
-      "page_categories": widget.data['page_categories'],
+      "page_category_ids": widget.data['page_categories'],
     };
     Future.delayed(Duration.zero, () {
       ref.read(pageControllerProvider.notifier).getPageDetailCategory(null);
@@ -73,8 +74,8 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   trailing: const Icon(Icons.edit),
-                  title: Text(editPage?['page_categories'].isNotEmpty
-                      ? "Trang \u2022 ${editPage?['page_categories']?[0]?['text']}"
+                  title: Text(editPage?['page_category_ids'].isNotEmpty
+                      ? "Trang \u2022 ${editPage?['page_category_ids']?[0]?['text']}"
                       : "Trang"),
                   onTap: () async {
                     final selectedCategory = await Navigator.push(
@@ -82,7 +83,11 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                       MaterialPageRoute(
                           builder: (context) => const SelectCategory()),
                     );
-                    if (selectedCategory != null) {}
+                    if (selectedCategory != null) {
+                      setState(() {
+                        editPage['page_category_ids'] = [selectedCategory];
+                      });
+                    }
                   },
                 )
               ],
@@ -226,8 +231,19 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                       CupertinoPageRoute(
                           builder: (context) => TextFieldEdit(
                               label: "Tên người dùng",
-                              field: editPage?['username'],
+                              field: 'username',
+                              initialValue: editPage?['username'],
                               title: "Chỉnh sửa tên người dùng",
+                              validateInput: (value) async {
+                                var response = await PageApi()
+                                    .validPageUsername({"username": value});
+                                if (response != null &&
+                                    response.statusCode == 200) {
+                                  return false;
+                                } else {
+                                  return true;
+                                }
+                              },
                               onChange: (value) {
                                 setState(() {
                                   editPage['username'] = value;
@@ -274,7 +290,22 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                       alignment: Alignment.bottomCenter,
                       child: ButtonPrimary(
                         label: 'Lưu',
-                        handlePress: () {
+                        handlePress: () async {
+                          var updatedEditPage = {
+                            ...editPage,
+                            'page_category_ids': editPage['page_category_ids']
+                                .map((e) => e['id'])
+                                .toList(),
+                          };
+                          var res = await PageApi().pagePostMedia(
+                              updatedEditPage, widget.data['id']);
+                          if (res != null) {
+                            widget.handleChangeDependencies!(res);
+                            ref
+                                .read(pageControllerProvider.notifier)
+                                .updateMedata(res);
+                          }
+                          // ignore: use_build_context_synchronously
                           Navigator.pop(
                             context,
                           );
