@@ -17,6 +17,7 @@ class SelectCategory extends ConsumerStatefulWidget {
 
 class _SelectCategoryState extends ConsumerState<SelectCategory> {
   dynamic selectedCategory;
+  bool checkSelected = false;
   List categories = [];
   final TextEditingController searchController =
       TextEditingController(text: "");
@@ -177,7 +178,9 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                   children: [
                     ListTile(
                       title: Text(
-                        selectedCategory['text'],
+                        selectedCategory != null
+                            ? selectedCategory['text']
+                            : '',
                         style: const TextStyle(
                           fontSize: 15,
                         ),

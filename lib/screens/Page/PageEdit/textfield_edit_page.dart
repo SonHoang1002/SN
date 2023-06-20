@@ -91,6 +91,7 @@ class _TextFieldEditState extends State<TextFieldEdit> {
                     ),
                   ),
                   child: TextFormField(
+                    maxLines: widget.field == 'description' ? 5 : 1,
                     initialValue: widget.initialValue,
                     onChanged: _handleTextChanged,
                     keyboardType: widget.keyboardType ?? TextInputType.text,

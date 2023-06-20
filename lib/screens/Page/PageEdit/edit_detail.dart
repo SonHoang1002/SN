@@ -82,9 +82,7 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                       MaterialPageRoute(
                           builder: (context) => const SelectCategory()),
                     );
-                    if (selectedCategory != null) {
-                      print(selectedCategory);
-                    }
+                    if (selectedCategory != null) {}
                   },
                 )
               ],
