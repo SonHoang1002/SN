@@ -1170,11 +1170,17 @@
 
     <style name="CustomExtendedCoverDividerStyle" parent="ExtendedCoverDividerStyle" />
 
-    <style name="CustomExtendedCoverNextButtonStyle" parent="ExtendedCoverNextButtonStyle" />
+    <style name="CustomExtendedCoverNextButtonStyle" parent="ExtendedCoverNextButtonStyle">
+        <item name="android:text">Xong</item>
+    </style>
 
-    <style name="CustomExtendedCoverCancelButtonStyle" parent="ExtendedCoverCancelButtonStyle" />
+    <style name="CustomExtendedCoverCancelButtonStyle" parent="ExtendedCoverCancelButtonStyle">
+        <item name="android:text">Huỷ</item>
+    </style>
 
-    <style name="CustomExtendedCoverTitleStyle" parent="ExtendedCoverTitleStyle" />
+    <style name="CustomExtendedCoverTitleStyle" parent="ExtendedCoverTitleStyle">
+        <item name="android:text">Ảnh bìa</item>
+    </style>
 
     <style name="CustomExtendedCoverPreviewParentStyle" parent="ExtendedCoverPreviewParentStyle" />
 
@@ -1187,10 +1193,13 @@
     </style>
 
     <style name="CustomExtendedCoverExternalPhotoChooseStyle" parent="ExtendedCoverExternalPhotoChooseStyle">
+        <item name="android:text">Chọn từ thư viện</item>
         <item name="android:textColor">@color/egg_blue</item>
     </style>
 
-    <style name="CustomExtendedCoverDescriptionStyle" parent="ExtendedCoverDescriptionStyle" />
+    <style name="CustomExtendedCoverDescriptionStyle" parent="ExtendedCoverDescriptionStyle">
+        <item name="android:text">Chọn ảnh từ video hoặc từ thư viện của bạn</item>
+    </style>
 
     <style name="CustomExtendedCoverThumbnailPickerStyle" parent="ExtendedCoverThumbnailPickerStyle">
         <item name="thumbnail_picker_pointer">@drawable/ic_cover_picker</item>

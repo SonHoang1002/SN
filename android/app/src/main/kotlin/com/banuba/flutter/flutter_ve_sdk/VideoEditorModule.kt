@@ -144,8 +144,8 @@ private class SampleIntegrationVeKoinModule {
         }
 
         single<CoverProvider> {
-            // CoverProvider.EXTENDED
-            CoverProvider.NONE
+            CoverProvider.EXTENDED
+            // CoverProvider.NONE
         }
 
         factory<DraftConfig> {

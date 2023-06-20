@@ -37,7 +37,7 @@ class VideoEditorModule: VideoEditor {
 
         config.gifPickerConfiguration.giphyAPIKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh";
         config.featureConfiguration.supportsTrimRecordedVideo = false;
-        config.featureConfiguration.isVideoCoverSelectionEnabled = false;
+        // config.featureConfiguration.isVideoCoverSelectionEnabled = false;
 
         videoEditorSDK = BanubaVideoEditor(
             token: token ?? "",
