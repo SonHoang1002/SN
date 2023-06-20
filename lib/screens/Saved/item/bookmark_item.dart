@@ -4,10 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
+
+import '../../../constant/post_type.dart';
+import '../../../helper/push_to_new_screen.dart';
+import '../../../providers/post_current_provider.dart';
+import '../../Post/post_detail.dart';
 
 class BookmarkItem extends ConsumerStatefulWidget {
   final dynamic item;
@@ -31,18 +37,35 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
     }
   }
 
-  String defaultCollectionImage =
-      "https://snapi.emso.asia/system/media_attachments/files/108/927/296/811/310/650/small/6d639898340c58e6.jpg";
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     final theme = pv.Provider.of<ThemeManager>(context);
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (widget.item['data'] != "empty") {
+          ref
+              .read(currentPostControllerProvider.notifier)
+              .saveCurrentPost(widget.item['data']);
+          pushCustomCupertinoPageRoute(
+            context,
+            widget.item['type'] == 'status'
+                ? PostDetail(
+                    post: widget.item['data'],
+                    preType: postDetail,
+                  )
+                : widget.item['type'] == 'page'
+                    ? PageDetail(
+                        pageData: widget.item['data'],
+                      )
+                    : const SizedBox(),
+          );
+        }
+      },
       child: Container(
-        height: height / 8,
+        height: height > width ? height / 8 : height / 4,
         width: double.infinity,
         padding: const EdgeInsets.all(5.0),
         child: Row(
@@ -50,7 +73,7 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
             Expanded(
               flex: 3,
               child: SizedBox(
-                height: height / 10,
+                height: height > width ? height / 8 : height / 4,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: widget.item['imageWidget'],

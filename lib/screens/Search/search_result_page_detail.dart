@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,8 @@ class _SearchResultPageDetailState
     extends ConsumerState<SearchResultPageDetail> {
   @override
   Widget build(BuildContext context) {
+    // bool isLoading = true;
+
     var searchDetail = ref.watch(searchControllerProvider).searchDetail;
     var isLoading = ref.watch(searchControllerProvider).isLoading;
     var searchStatusDetail = searchDetail?['statuses'];
@@ -37,7 +40,7 @@ class _SearchResultPageDetailState
         automaticallyImplyLeading: false,
         elevation: 0,
         titleSpacing: 0,
-        leading: const BackIconAppbar(),
+        leading: const BackIconAppbar(isSearch: true),
         title: InkWell(
           onTap: () {
             Navigator.push(

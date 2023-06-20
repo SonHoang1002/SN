@@ -4,6 +4,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
@@ -21,6 +22,7 @@ import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class Feed extends ConsumerStatefulWidget {
   final Function? callbackFunction;
@@ -34,6 +36,7 @@ class _FeedState extends ConsumerState<Feed> {
   final scrollController = ScrollController();
   var paramsConfig = {"limit": 3, "exclude_replies": true};
   double heightOfProcessingPost = 0;
+  bool dataHasVideoPending = false;
   @override
   void initState() {
     if (!mounted) return;
@@ -65,10 +68,10 @@ class _FeedState extends ConsumerState<Feed> {
             ? widget.callbackFunction!(false)
             : null;
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                100.0 ==
+                120.0 ==
             0) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 800), () {
+              'my-debouncer', const Duration(milliseconds: 1000), () async {
             String maxId = ref.watch(postControllerProvider).posts.isNotEmpty
                 ? ref.watch(postControllerProvider).posts.last['score']
                 : '';
@@ -88,23 +91,25 @@ class _FeedState extends ConsumerState<Feed> {
   }
 
   // avoid bug look up ...
-  _reloadFeedFunction(dynamic type, dynamic newData) {
+  _reloadFeedFunction(dynamic type, dynamic newData) async {
     if (type == null && newData == null) {
       setState(() {});
       return;
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
-      bool isHaveVideo = false;
-      if (newData['media_attachments'].forEach((ele) {
-        if (ele['type'] == "video") {
-          isHaveVideo = true;
+    if (newData != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
+        bool isHaveVideo = false;
+        newData['media_attachments'].forEach((ele) {
+          if (ele['type'] == "video") {
+            isHaveVideo = true;
+          }
+        });
+        if (isHaveVideo) {
+          _buildSnackBar("Video của bạn đã sẵn sàng.");
         }
-      })) if (isHaveVideo) {
-        _buildSnackBar("Video của bạn đã sẵn sàng.");
-      }
-      setState(() {});
-    });
+      });
+    }
   }
 
   _buildSnackBar(String title) {
@@ -141,16 +146,17 @@ class _FeedState extends ConsumerState<Feed> {
                   const CrossBar(
                     height: 5,
                   ),
-                  posts.length == 5 || isMore == false
-                      ? Column(
-                          children: const [
-                            Reef(),
-                            CrossBar(
-                              height: 5,
-                            ),
-                          ],
-                        )
-                      : const SizedBox(),
+                  // test render onlt post
+                  // posts.length == 5 || isMore == false
+                  //     ? Column(
+                  //         children: const [
+                  //           Reef(),
+                  //           CrossBar(
+                  //             height: 5,
+                  //           ),
+                  //         ],
+                  //       )
+                  //     : const SizedBox(),
                   posts.length == 20 || isMore == false
                       ? Suggest(
                           type: suggestGroups,

@@ -4,6 +4,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -164,10 +165,10 @@ class _UserPageState extends ConsumerState<UserPage> {
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                100.0 ==
+                120.0 ==
             0) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 300), () {
+              'my-debouncer', const Duration(milliseconds: 1000), () async {
             String maxId = "";
             if (ref.read(postControllerProvider).postUserPage.isEmpty) {
               if (postUser.isNotEmpty) {
@@ -179,6 +180,7 @@ class _UserPageState extends ConsumerState<UserPage> {
             ref.read(postControllerProvider.notifier).getListPostUserPage(
                 id, {"max_id": maxId, "exclude_replies": true, "limit": 10});
           });
+          //   DefaultCacheManager().emptyCache();
         }
       }
     });

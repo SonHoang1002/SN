@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class BackIconAppbar extends StatelessWidget {
+import '../providers/search/search_provider.dart';
+
+class BackIconAppbar extends ConsumerWidget {
   final Color? iconColor;
-  const BackIconAppbar({Key? key, this.iconColor}) : super(key: key);
+  final bool? isSearch;
+  const BackIconAppbar({Key? key, this.iconColor, this.isSearch})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
+        if (isSearch != null && isSearch == true) {
+          ref.read(searchControllerProvider.notifier).changeLoadingBackIcon();
+        }
         Navigator.pop(context);
       },
       child: Icon(
