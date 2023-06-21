@@ -29,6 +29,7 @@ class Post extends ConsumerStatefulWidget {
   final bool? isHiddenFooter;
   final dynamic data;
   final Function? reloadFunction;
+  final bool? isFocus;
 
   const Post(
       {Key? key,
@@ -37,7 +38,8 @@ class Post extends ConsumerStatefulWidget {
       this.isHiddenCrossbar,
       this.data,
       this.isHiddenFooter,
-      this.reloadFunction})
+      this.reloadFunction,
+      this.isFocus})
       : super(key: key);
 
   @override
@@ -153,6 +155,7 @@ class _PostState extends ConsumerState<Post> {
                               setState(() {});
                             });
                           },
+                          isFocus:widget.isFocus,
                           updateDataFunction: updateNewPost,
                           showCmtBoxFunction: () {
                             _changeShowCommentBox();

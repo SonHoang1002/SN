@@ -26,20 +26,7 @@ class _SearchResultPageDetailState
     extends ConsumerState<SearchResultPageDetail> {
   @override
   Widget build(BuildContext context) {
-    // var searchDetail = {};
-    // var searchStatusDetail = [];
-    // var searchAccountDetail = [];
-    // var searchGroupDetail = [];
-    // var searchPageDetail = [];
-
-    // Future.delayed(const Duration(milliseconds: 100), () {
-    //   searchDetail = ref.watch(searchControllerProvider).searchDetail;
-    //   searchStatusDetail = searchDetail['statuses'];
-    //   searchAccountDetail = searchDetail['accounts'];
-    //   searchGroupDetail = searchDetail['groups'];
-    //   searchPageDetail = searchDetail['pages'];
-    //   setState(() {});
-    // });
+    // bool isLoading = true;
 
     var searchDetail = ref.watch(searchControllerProvider).searchDetail;
     var isLoading = ref.watch(searchControllerProvider).isLoading;
@@ -48,21 +35,12 @@ class _SearchResultPageDetailState
     var searchGroupDetail = searchDetail?['groups'];
     var searchPageDetail = searchDetail?['pages'];
 
-    // searchDetail.isEmpty
-    //               ? const Center(child: CupertinoActivityIndicator())
-    //               : searchStatusDetail.isEmpty &&
-    //                       searchAccountDetail.isEmpty &&
-    //                       searchGroupDetail.isEmpty &&
-    //                       searchPageDetail.isEmpty
-    //                   ? const Center(child: Text('Không có dữ liệu'))
-    //                   :
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
         titleSpacing: 0,
-        leading: const BackIconAppbar(),
+        leading: const BackIconAppbar(isSearch: true),
         title: InkWell(
           onTap: () {
             Navigator.push(

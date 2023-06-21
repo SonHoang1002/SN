@@ -14,6 +14,7 @@ import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/services/notification_service.dart';
 import 'package:social_network_app_mobile/services/web_socket_service.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -294,10 +295,114 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
             routes: routes,
           ),
           if (selectedVideo != null)
-            Positioned(
-              bottom: 100,
-              right: 10,
-              child: MiniPlayer(selectedVideo: selectedVideo, ref: ref),
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: const EdgeInsets.only(bottom: 100, right: 10, left: 10),
+              child: SizedBox(
+                // width: double.infinity,
+                // height: 80,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Card(
+                    elevation: 10,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          color: Color(int.parse(
+                              '0xFF${selectedVideo['media_attachments'][0]['meta']['small']['average_color'].substring(1)}')),
+                          child: Center(
+                            child: VideoPlayerNoneController(
+                              isShowVolumn: false,
+                              media: selectedVideo['media_attachments'][0],
+                              type: 'miniPlayer',
+                              path: selectedVideo['media_attachments'][0]
+                                  ['remote_url'],
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 18.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    selectedVideo['content'].isNotEmpty
+                                        ? SizedBox(
+                                            height: 20,
+                                            width: 150,
+                                            child: Marquee(
+                                              text: selectedVideo['content'],
+                                              velocity: 30,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                    Flexible(
+                                      child: Text(
+                                        selectedVideo['account']
+                                                ['display_name'] ??
+                                            selectedVideo['page']['title'] ??
+                                            '',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                      FontAwesomeIcons
+                                          .upRightAndDownLeftFromCenter,
+                                      size: 15),
+                                  onPressed: () {
+                                    SchedulerBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      if (GlobalVariable
+                                              .navState.currentContext !=
+                                          null) {
+                                        MaterialPageRoute(
+                                            builder: (context) => WatchDetail(
+                                                  post: selectedVideo,
+                                                  media: selectedVideo[
+                                                      'media_attachments'][0],
+                                                ));
+                                      }
+                                    });
+
+                                    ref
+                                        .read(selectedVideoProvider.notifier)
+                                        .update((state) => null);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    ref
+                                        .read(selectedVideoProvider.notifier)
+                                        .update((state) => null);
+                                  },
+                                )
+                              ],
+                            )
+                          ],
+                        ))
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             )
         ],
       ),

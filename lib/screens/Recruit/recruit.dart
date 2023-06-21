@@ -8,14 +8,16 @@ class Recruit extends StatefulWidget {
   State<Recruit> createState() => _RecruitState();
 }
 
-class _RecruitState extends State<Recruit> with AutomaticKeepAliveClientMixin<Recruit> {
+class _RecruitState extends State<Recruit>
+    with AutomaticKeepAliveClientMixin<Recruit> {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return const NotificationListener<ScrollNotification>(
+    return NotificationListener<ScrollNotification>(
       child: Scaffold(body: RecruitRender()),
     );
   }
+
   @override
   bool get wantKeepAlive => true;
 }

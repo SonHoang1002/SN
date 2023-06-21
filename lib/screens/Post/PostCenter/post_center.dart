@@ -28,6 +28,7 @@ class PostCenter extends StatefulWidget {
   final Function? reloadFunction;
   final Function? showCmtBoxFunction;
   final Function? updateDataFunction;
+  final bool? isFocus;
   const PostCenter(
       {Key? key,
       this.post,
@@ -36,7 +37,9 @@ class PostCenter extends StatefulWidget {
       this.preType,
       this.backFunction,
       this.reloadFunction,
-      this.showCmtBoxFunction,this.updateDataFunction})
+      this.showCmtBoxFunction,
+      this.updateDataFunction,
+      this.isFocus})
       : super(key: key);
 
   @override
@@ -91,7 +94,8 @@ class _PostCenterState extends State<PostCenter> {
                           ? widget.backFunction!()
                           : null;
                     },
-                    updateDataFunction:widget.updateDataFunction,
+                    isFocus: widget.isFocus,
+                    updateDataFunction: widget.updateDataFunction,
                     reloadFunction: () {
                       widget.reloadFunction != null
                           ? widget.reloadFunction!()

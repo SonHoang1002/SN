@@ -25,10 +25,12 @@ import '../LearnSpace/learn_space.dart';
 class MenuSelected extends StatelessWidget {
   final dynamic menuSelected;
   final dynamic data;
-  const MenuSelected({
+  String? notiType;
+  MenuSelected({
     Key? key,
     this.menuSelected,
     this.data,
+    this.notiType,
   }) : super(key: key);
 
   @override
@@ -172,7 +174,7 @@ class MenuSelected extends StatelessWidget {
         );
         break;
       case "job":
-        body = const RecruitRender();
+        body = RecruitRender(notiType: notiType);
         // buttonAppbar = Row(
         //   children: [
         //     InkWell(

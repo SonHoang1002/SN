@@ -35,12 +35,13 @@ class VideoEditorModule: VideoEditor {
         
         // Make customization here
 
-        config.gifPickerConfiguration.giphyAPIKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh"
-        
+        config.gifPickerConfiguration.giphyAPIKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh";
+        config.featureConfiguration.supportsTrimRecordedVideo = false;
+        // config.featureConfiguration.isVideoCoverSelectionEnabled = false;
+
         videoEditorSDK = BanubaVideoEditor(
             token: token ?? "",
             configuration: config,
-            // gifPickerConfiguration: gifPickerConfiguration,
             externalViewControllerFactory: self.getAppDelegate().provideCustomViewFactory()
         )
         

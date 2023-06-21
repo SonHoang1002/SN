@@ -416,7 +416,7 @@ class _PostMutipleMediaDetail1State
                                                 CrossAxisAlignment.start,
                                             children: [
                                               GestureDetector(
-                                                  onTap: () { 
+                                                  onTap: () {
                                                     if (medias[index]['type'] ==
                                                         "image") {
                                                       pushCustomVerticalPageRoute(
@@ -450,7 +450,7 @@ class _PostMutipleMediaDetail1State
                                                     //             medias[index],
                                                     //       ),
                                                     //       opaque: false);
-                                                    // } else { 
+                                                    // } else {
                                                     // }
                                                   },
                                                   child: Stack(
@@ -517,18 +517,20 @@ class _PostMutipleMediaDetail1State
   }
 
   Widget _buildVideoMedia(int index) {
+    final size = MediaQuery.of(context).size;
     return SizedBox(
         height: (medias[index]['aspect'] ??
-                    medias[index]['meta']['original']['aspect'] ??
-                    1) <
+                    medias[index]['meta']['small']['aspect']) <
                 1
-            ? MediaQuery.of(context).size.width
+            ? size.width
             : null,
-        width: MediaQuery.of(context).size.width,
+        // width: MediaQuery.of(context).size.width,
+        // width: double.infinity,
         child: medias[index]['file'] != null
             ? VideoPlayerNoneController(
                 path: medias[index]['file'].path,
                 type: "local",
+                // aspectRatio: size.height / size.width,
               )
             : VideoPlayerHasController(
                 media: medias[index],

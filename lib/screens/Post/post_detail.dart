@@ -354,6 +354,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         final response = await PostApi().getPostApi(widget.postId);
         if (response != null) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            ref
+                .read(postControllerProvider.notifier)
+                .createUpdatePost(feedPost, response);
             setState(() {
               postFromNoti = response;
             });
@@ -364,7 +367,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     Future.delayed(Duration.zero, () {
       ref
           .read(currentPostControllerProvider.notifier)
-          .saveCurrentPost(widget.post);
+          .saveCurrentPost(postFromNoti ?? widget.post);
     });
     getListCommentPost(
         widget.postId ?? widget.post['id'], {"sort_by": "newest"});
@@ -403,8 +406,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    var currentPost = ref.watch(currentPostControllerProvider).currentPost;
-    if (currentPost != null && currentPost.isNotEmpty) {
+    if (ref.watch(currentPostControllerProvider).currentPost != null &&
+        ref.watch(currentPostControllerProvider).currentPost.isNotEmpty) {
       postData = ref.watch(currentPostControllerProvider).currentPost;
     } else {
       if (widget.postId != null) {

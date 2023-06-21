@@ -482,6 +482,16 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   handleCreatePost() async {
+    bool isHaveVideo = false;
+    files.forEach((element) {
+      if (element['type'] != 'image') {
+        isHaveVideo = true;
+      }
+    });
+    if (isHaveVideo) {
+      _buildSnackBar(
+          "Video của bạn đang trong quá trình xử lý, chúng tôi sẽ thông báo cho bạn khi video đã sẵn sàng.");
+    }
     if (!_isClickForCreatePost) {
       setState(() {
         _isClickForCreatePost = true;
@@ -505,6 +515,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         widget.reloadFunction != null
             ? widget.reloadFunction!(null, null)
             : null;
+      } else if (isHaveVideo) {
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(null, null)
+            : null;
       } else {
         ref
             .read(postControllerProvider.notifier)
@@ -512,16 +526,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         widget.reloadFunction != null
             ? widget.reloadFunction!(null, null)
             : null;
-      }
-      bool isHaveVideo = false;
-      files.forEach((element) {
-        if (element['type'] != 'image') {
-          isHaveVideo = true;
-        }
-      });
-      if (isHaveVideo) {
-        _buildSnackBar(
-            "Video của bạn đang trong quá trình xử lý, chúng tôi sẽ thông báo cho bạn khi video đã sẵn sàng.");
       }
       Navigator.pop(context);
       // prepare data for api

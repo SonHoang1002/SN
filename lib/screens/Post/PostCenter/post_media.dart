@@ -5,7 +5,7 @@ import 'package:social_network_app_mobile/screens/Post/post_mutiple_media_detail
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 
-class PostMedia extends StatelessWidget {
+class PostMedia extends StatefulWidget {
   final dynamic post;
   final String? type;
   final dynamic preType;
@@ -13,8 +13,9 @@ class PostMedia extends StatelessWidget {
   final Function? reloadFunction;
   final Function? showCmtBoxFunction;
   final Function? updateDataFunction;
+  final bool? isFocus;
 
-  const PostMedia(
+  PostMedia(
       {Key? key,
       this.post,
       this.type,
@@ -22,46 +23,77 @@ class PostMedia extends StatelessWidget {
       this.backFunction,
       this.reloadFunction,
       this.showCmtBoxFunction,
-      this.updateDataFunction})
+      this.updateDataFunction,
+      this.isFocus})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    List medias = post['media_attachments'] ?? [];
+  State<PostMedia> createState() => _PostMediaState();
+}
 
+class _PostMediaState extends State<PostMedia> {
+  ValueNotifier<dynamic> currentVideoId = ValueNotifier(0);
+
+  @override
+  void initState() {
+    super.initState();
+    final List mediaList = widget.post['media_attachments'] ?? [];
+    if (mediaList.isNotEmpty) {
+      // Map<String, dynamic>? firstVideo = mediaList.firstWhere(
+      //   (element) => element['type'] == 'video',
+      //   orElse: () => null,
+      // );
+      for (int i = 0; i < mediaList.length; i++) {
+        if (mediaList[i]['type'] == 'video') {
+          currentVideoId.value = mediaList[i]['id'];
+          return;
+        }
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) { 
+    List medias = widget.post['media_attachments'] ?? [];
     handlePress(media) {
-      if (type != "edit_post") {
+      if (widget.type != "edit_post") {
         // if (checkIsImage(media)) {
         if (medias.length == 1) {
-          showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
+          widget.showCmtBoxFunction != null
+              ? widget.showCmtBoxFunction!()
+              : null;
           pushCustomVerticalPageRoute(
               context,
               PostOneMediaDetail(
-                  postMedia: post,
-                  post: post,
-                  type: type,
-                  preType: preType,
+                  postMedia: widget.post,
+                  post: widget.post,
+                  type: widget.type,
+                  preType: widget.preType,
                   backFunction: () {
-                    backFunction != null ? backFunction!() : null;
+                    widget.backFunction != null ? widget.backFunction!() : null;
                   },
                   reloadFunction: () {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      reloadFunction != null ? reloadFunction!() : null;
+                      widget.reloadFunction != null
+                          ? widget.reloadFunction!()
+                          : null;
                     });
                   },
-                  updateDataFunction: updateDataFunction),
+                  updateDataFunction: widget.updateDataFunction),
               opaque: false);
         } else if (medias.length > 1) {
-          showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
+          widget.showCmtBoxFunction != null
+              ? widget.showCmtBoxFunction!()
+              : null;
           int initialIndex =
-              medias.indexWhere((element) => element['id'] == media['id']); 
+              medias.indexWhere((element) => element['id'] == media['id']);
           pushCustomCupertinoPageRoute(
               context,
               PostMutipleMediaDetail(
-                  post: post,
+                  post: widget.post,
                   initialIndex: initialIndex,
-                  preType: preType,
-                  updateDataFunction: updateDataFunction
+                  preType: widget.preType,
+                  updateDataFunction: widget.updateDataFunction
                   // reloadPostFunction: () {
                   //     WidgetsBinding.instance.addPostFrameCallback((_) {
                   //       reloadFunction != null ? reloadFunction!() : null;
@@ -70,13 +102,15 @@ class PostMedia extends StatelessWidget {
                   ),
               opaque: false);
         } else {
-          showCmtBoxFunction != null ? showCmtBoxFunction!() : null;
+          widget.showCmtBoxFunction != null
+              ? widget.showCmtBoxFunction!()
+              : null;
           pushCustomCupertinoPageRoute(
               context,
               PostDetail(
-                  post: post,
-                  preType: type,
-                  updateDataFunction: updateDataFunction));
+                  post: widget.post,
+                  preType: widget.type,
+                  updateDataFunction: widget.updateDataFunction));
           // Navigator.push(
           //     context,
           //     CupertinoPageRoute(
@@ -95,10 +129,29 @@ class PostMedia extends StatelessWidget {
         ? Container(
             margin: const EdgeInsets.only(top: 8.0),
             child: GridLayoutImage(
-                post: post,
-                medias: medias,
-                handlePress: handlePress,
-                updateDataFunction: updateDataFunction),
+              post: widget.post,
+              medias: medias,
+              handlePress: handlePress,
+              isFocus: widget.isFocus,
+              currentFocusVideoId: currentVideoId.value,
+              updateDataFunction: widget.updateDataFunction,
+              onEnd: () {
+                List mediaList = widget.post['media_attachments'];
+                dynamic startingValue = currentVideoId.value;
+                int index = mediaList.indexWhere((element) =>
+                    element['id'] == startingValue &&
+                    mediaList.indexOf(element) < mediaList.length - 1 &&
+                    mediaList[mediaList.indexOf(element) + 1]['type'] ==
+                        'video');
+
+                if (index >= 0 && index < mediaList.length - 1) {
+                  dynamic video = mediaList[index + 1];
+                  // setState(() {
+                    currentVideoId.value = video['id'];
+                  // });
+                }
+              },
+            ),
           )
         : Container();
   }

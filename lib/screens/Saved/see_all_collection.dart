@@ -18,6 +18,8 @@ class SeeAllCollection extends ConsumerStatefulWidget {
 }
 
 class SeeAllCollectionState extends ConsumerState<SeeAllCollection> {
+  bool isLoading = true;
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -55,33 +57,43 @@ class SeeAllCollectionState extends ConsumerState<SeeAllCollection> {
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(15.0),
-              width: double.infinity,
-              height: height,
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                clipBehavior: Clip.hardEdge,
-                itemCount: widget.collections.length >= 4
-                    ? 4
-                    : widget.collections.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.12,
-                ),
-                itemBuilder: (context, index) {
-                  var item = widget.collections[index];
-                  return CollectionItem(
-                    item: item,
-                    func: () {
-                      setState(() {});
-                    },
-                  );
-                },
-              ),
-            ),
+            widget.collections.isNotEmpty
+                ? Container(
+                    padding: const EdgeInsets.all(15.0),
+                    width: double.infinity,
+                    // height: height,
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      clipBehavior: Clip.hardEdge,
+                      itemCount: widget.collections.length >= 4
+                          ? 4
+                          : widget.collections.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisSpacing: 5.0,
+                        mainAxisSpacing: 5.0,
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.12,
+                      ),
+                      itemBuilder: (context, index) {
+                        var item = widget.collections[index];
+                        return CollectionItem(item: item);
+                      },
+                    ),
+                  )
+                : Column(
+                    children: [
+                      Center(
+                        child: Image.asset(
+                          "assets/wow-emo-2.gif",
+                          height: 125.0,
+                          width: 125.0,
+                        ),
+                      ),
+                      const Text('Bạn chưa lưu mục nào ở đây'),
+                    ],
+                  ),
           ],
         ),
       ),

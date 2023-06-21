@@ -309,11 +309,10 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       }
     }
 
-    void gotoNextScreenFromNoti(item) {
-      // print(item['type']);
-      // Map<String, dynamic> map = item;
-      // print(map.keys);
-      // item = notifications[index]
+    Widget? nextScreenFromNoti(item) {
+      print(item['type']);
+      Map<String, dynamic> map = item;
+      print(map.keys);
       switch (item['type']) {
         case 'comment':
         // đã bình luận về một bài viết có thể bạn quan tâm
@@ -328,86 +327,44 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         // đã nhắc đến bạn trong một bình luận, đã gắn thẻ bạn trong một bài viết
         case 'reblog':
         case 'status':
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => PostDetail(
-                postId: item['status']['id'],
-                preType: postDetail,
-              ),
-            ),
+          return PostDetail(
+            postId: item['status']['id'],
+            preType: postDetail,
           );
-          return;
 
         case 'friendship_request':
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => FriendRequest(),
-            ),
-          );
-          return;
+          return const FriendRequest();
 
         case 'recruit_apply':
         // đã ứng tuyển vào công việc',
         case 'recruit_invitation':
 
           // đã mời bạn tham gia tuyển dụng',
-          SchedulerBinding.instance!.addPostFrameCallback((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RecruitDetail(
-                  data: item['recruit'],
-                ),
-              ),
-            );
-          });
-          return;
-        case 'page_invitation_follow':
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => PageDetail(pageData: item['page']),
-            ),
+          // SchedulerBinding.instance!.addPostFrameCallback((_) {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => RecruitDetail(
+          //         data: item['recruit'],
+          //       ),
+          //     ),
+          //   );
+          // });
+          return MenuSelected(
+            notiType: 'recruit_invite',
+            menuSelected: listSocial[10],
           );
-          return;
+        case 'page_invitation_follow':
+          return PageDetail(pageData: item['page']);
 
         // ** NOT CHECKED **
         case 'event_invitation':
         case 'event_invitation_host':
-          SchedulerBinding.instance!.addPostFrameCallback((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EventDetail(
-                  eventDetail: item['event'],
-                ),
-              ),
-            );
-          });
-          // Navigator.push(
-          //   context,
-          //   CupertinoPageRoute(
-          //     builder: (context) => EventDetail(
-          //       eventDetail: item['event'],
-          //     ),
-          //   ),
-          // );
-          return;
+          return EventDetail(eventDetail: item['event']);
 
         // ** NOT CHECKED **
 
         case 'course_invitation':
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => EventDetail(
-                eventDetail: item['event'],
-              ),
-            ),
-          );
-          return;
 
         case 'page_follow':
         // đã thích
@@ -453,7 +410,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         case 'product_invitation':
         // đã mời bạn quan tâm đến sản phẩm
         default:
-          return;
+          return null;
       }
     }
 
@@ -469,7 +426,10 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                   var item = notifications[index];
                   return InkWell(
                     onTap: () {
-                      gotoNextScreenFromNoti(item);
+                      var nextScreen = nextScreenFromNoti(item);
+                      if (nextScreen != null) {
+                        pushCustomCupertinoPageRoute(context, nextScreen);
+                      }
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(

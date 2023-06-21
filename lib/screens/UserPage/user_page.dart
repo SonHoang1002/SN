@@ -4,6 +4,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,6 +29,7 @@ import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../apis/user_page_api.dart';
 import '../../constant/post_type.dart';
@@ -120,6 +122,7 @@ class _UserPageState extends ConsumerState<UserPage> {
   List friend = [];
   List pinPost = [];
   List lifeEvent = [];
+  ValueNotifier<int> focusCurrentPostIndex = ValueNotifier(0);
 
   @override
   void initState() {
@@ -164,10 +167,10 @@ class _UserPageState extends ConsumerState<UserPage> {
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                100.0 ==
+                120.0 ==
             0) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 300), () {
+              'my-debouncer', const Duration(milliseconds: 1000), () async {
             String maxId = "";
             if (ref.read(postControllerProvider).postUserPage.isEmpty) {
               if (postUser.isNotEmpty) {
@@ -179,6 +182,7 @@ class _UserPageState extends ConsumerState<UserPage> {
             ref.read(postControllerProvider.notifier).getListPostUserPage(
                 id, {"max_id": maxId, "exclude_replies": true, "limit": 10});
           });
+          //   DefaultCacheManager().emptyCache();
         }
       }
     });
@@ -337,13 +341,27 @@ class _UserPageState extends ConsumerState<UserPage> {
             shrinkWrap: true,
             primary: false,
             itemCount: postUser.length,
-            itemBuilder: (context, index) => Post(
-              type: postPageUser,
-              post: postUser[index],
-              reloadFunction: () {
-                setState(() {});
-              },
-            ),
+            itemBuilder: (context, index) {
+              return VisibilityDetector(
+                key: Key(postUser[index]['id']),
+                onVisibilityChanged: (info) {
+                  double visibleFraction = info.visibleFraction;
+                  if (visibleFraction == 1) {
+                    if (focusCurrentPostIndex.value != index) {
+                      focusCurrentPostIndex.value = index;
+                    }
+                  }
+                },
+                child: Post(
+                  type: postPageUser,
+                  post: postUser[index],
+                  isFocus: focusCurrentPostIndex.value == index,
+                  reloadFunction: () {
+                    setState(() {});
+                  },
+                ),
+              );
+            },
           ),
           isMorePageUser
               ? Center(child: SkeletonCustom().postSkeleton(context))

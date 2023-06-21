@@ -8,10 +8,11 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:provider/provider.dart' as pv;
 
+import '../see_collection_bookmark.dart';
+
 class CollectionItem extends ConsumerStatefulWidget {
   dynamic item;
-  void Function() func;
-  CollectionItem({super.key, this.item, required this.func});
+  CollectionItem({super.key, this.item});
 
   @override
   CollectionItemState createState() => CollectionItemState();
@@ -26,10 +27,11 @@ class CollectionItemState extends ConsumerState<CollectionItem> {
     );
 
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     final theme = pv.Provider.of<ThemeManager>(context);
     return CardComponents(
       imageCard: SizedBox(
-        height: height / 8.5,
+        height: height > width ? height / 8.5 : height / 1.6,
         width: double.infinity,
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
@@ -39,17 +41,16 @@ class CollectionItemState extends ConsumerState<CollectionItem> {
           child: widget.item['imageWidget'],
         ),
       ),
-      onTap: () {
+      onTap: () async {
         Navigator.push(
           context,
           CupertinoPageRoute(
-            builder: (context) => SeeAllBookmark(
-              type: 'collection_bookmark',
-              collectionId: widget.item['id'],
+            builder: (context) => SeeCollectionBookmark(
+              collectionId: collections[index]['id'],
               collectionName: collections[index]['name'],
             ),
           ),
-        ).then((_) => widget.func());
+        );
       },
       textCard: Container(
         // color: Colors.red,

@@ -273,6 +273,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      pageData = ref.read(pageControllerProvider).pageDetail;
+    });
+  }
+
   void handleChangeDependencies(dynamic value) {
     if (value != null) {
       if (mounted) {
@@ -356,7 +364,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                             context,
                             CupertinoPageRoute(
                                 builder: (_) => PageEllipsis(
-                                    data: pageData, rolePage: rolePage)),
+                                      data: pageData,
+                                      rolePage: rolePage,
+                                      handleChangeDependencies:
+                                          handleChangeDependencies,
+                                    )),
                           );
                         },
                       ),

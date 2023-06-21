@@ -12,6 +12,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/screens/Saved/item/collection_item.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/Bookmark/bookmark_page.dart';
+import 'package:social_network_app_mobile/screens/Saved/item/place_holder.dart';
 
 class Saved extends ConsumerStatefulWidget {
   const Saved({super.key});
@@ -46,29 +47,45 @@ class SavedState extends ConsumerState<Saved> {
   Widget _buildCollections(
     dynamic collections,
     double height,
+    double width,
     ThemeManager theme,
   ) {
     return Container(
-      height: collections.length <= 2 ? height * 0.2 : height * 0.4,
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        clipBehavior: Clip.hardEdge,
-        itemCount: collections.length >= 4 ? 4 : collections.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisSpacing: 5.0,
-          mainAxisSpacing: 5.0,
-          crossAxisCount: 2,
-          childAspectRatio: 1.12,
-        ),
-        itemBuilder: (context, index) {
-          var item = collections[index];
-          return CollectionItem(
-              item: item,
-              func: () {
-                setState(() {});
-              });
-        },
-      ),
+      height: height > width
+          ? collections.length <= 2
+              ? height * 0.2
+              : height * 0.4
+          : collections.length <= 2
+              ? height * 0.9
+              : height * 1.75,
+      child: collections.isNotEmpty
+          ? GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              clipBehavior: Clip.hardEdge,
+              itemCount: collections.length >= 4 ? 4 : collections.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+                crossAxisCount: 2,
+                childAspectRatio: 1.12,
+              ),
+              itemBuilder: (context, index) {
+                var item = collections[index];
+                return CollectionItem(item: item);
+              },
+            )
+          : Column(
+              children: [
+                Center(
+                  child: Image.asset(
+                    "assets/wow-emo-2.gif",
+                    height: 125.0,
+                    width: 125.0,
+                  ),
+                ),
+                const Text('Bạn chưa lưu mục nào ở đây'),
+              ],
+            ),
     );
   }
 
@@ -111,18 +128,33 @@ class SavedState extends ConsumerState<Saved> {
     );
   }
 
-  Widget _buildBookmarks(bookmarks, double height) {
+  Widget _buildBookmarks(bookmarks, double height, double width) {
     return Container(
-      height: height * 0.4 * getRateListView(bookmarks.length),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: bookmarks.length >= 3 ? 3 : bookmarks.length,
-        itemBuilder: (context, index) {
-          var item = convertItem(bookmarks[index]);
-          return BookmarkItem(item: item);
-        },
-      ),
+      height: height > width
+          ? height * 0.38 * getRateListView(bookmarks.length)
+          : height * 0.75 * getRateListView(bookmarks.length),
+      child: bookmarks.isNotEmpty
+          ? ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: bookmarks.length >= 3 ? 3 : bookmarks.length,
+              itemBuilder: (context, index) {
+                var item = convertItem(bookmarks[index]);
+                return BookmarkItem(item: item);
+              },
+            )
+          : Column(
+              children: [
+                Center(
+                  child: Image.asset(
+                    "assets/wow-emo-2.gif",
+                    height: 125.0,
+                    width: 125.0,
+                  ),
+                ),
+                const Text('Bạn chưa lưu mục nào ở đây'),
+              ],
+            ),
     );
   }
 
@@ -155,7 +187,8 @@ class SavedState extends ConsumerState<Saved> {
       padding: const EdgeInsets.symmetric(horizontal: 12.5, vertical: 8.0),
       child: SingleChildScrollView(
         child: isLoading || (bookmarks.isEmpty && collections.isEmpty)
-            ? const Center(child: CupertinoActivityIndicator())
+            // ? const Center(child: CupertinoActivityIndicator())
+            ? Center(child: SavedWaitingSkeleton())
             : bookmarks.isEmpty && collections.isEmpty
                 ? Column(
                     children: [
@@ -189,14 +222,12 @@ class SavedState extends ConsumerState<Saved> {
                                   ),
                                 ],
                               )),
-                          _buildBookmarks(bookmarks, height),
+                          _buildBookmarks(bookmarks, height, width),
                           _buildSeeAllButton(() {
                             Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                builder: (context) => SeeAllBookmark(
-                                  type: 'all',
-                                ),
+                                builder: (context) => SeeAllBookmark(),
                               ),
                             );
                           }, theme),
@@ -206,7 +237,7 @@ class SavedState extends ConsumerState<Saved> {
                             child: Divider(height: 1.0, color: Colors.grey),
                           ),
                           _buildRowAction(theme),
-                          _buildCollections(collections, height, theme),
+                          _buildCollections(collections, height, width, theme),
                           _buildSeeAllButton(() {
                             Navigator.push(
                               context,
@@ -236,7 +267,8 @@ class SavedState extends ConsumerState<Saved> {
                               ),
                               const SizedBox(height: 17.5),
                               _buildRowAction(theme),
-                              _buildCollections(collections, height, theme),
+                              _buildCollections(
+                                  collections, height, width, theme),
                               _buildSeeAllButton(() {
                                 Navigator.push(
                                   context,

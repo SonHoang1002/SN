@@ -23,6 +23,7 @@ class PageState {
   final bool isMoreGroup;
   final dynamic pageDetail;
   final List pageSearch;
+  final List pageCategory;
 
   const PageState({
     this.rolePage = true,
@@ -41,6 +42,7 @@ class PageState {
     this.pageDetail = const {},
     this.isMoreGroup = true,
     this.pageSearch = const [],
+    this.pageCategory = const [],
   });
 
   PageState copyWith({
@@ -60,6 +62,7 @@ class PageState {
     dynamic pageDetail = const {},
     bool isMoreGroup = true,
     List pageSearch = const [],
+    List pageCategory = const [],
   }) {
     return PageState(
       rolePage: rolePage,
@@ -77,6 +80,7 @@ class PageState {
       pageGroup: pageGroup,
       pageDetail: pageDetail,
       isMoreGroup: isMoreGroup,
+      pageCategory: pageCategory,
     );
   }
 }
@@ -113,6 +117,7 @@ class PageController extends StateNotifier<PageState> {
           pageGroup: state.pageGroup,
           isMoreGroup: state.isMoreGroup,
           pageDetail: state.pageDetail,
+          pageCategory: state.pageCategory,
         );
       }
     }
@@ -123,21 +128,49 @@ class PageController extends StateNotifier<PageState> {
     if (response != null) {
       if (mounted) {
         state = state.copyWith(
-            pageDetail: response,
-            rolePage: state.rolePage,
-            pageFeed: state.pageFeed,
-            isMoreFeed: state.isMoreFeed,
-            pageReview: state.pageReview,
-            isMoreReview: response.isEmpty ? false : true,
-            pagePined: state.pagePined,
-            pagePhoto: state.pagePhoto,
-            isMorePhoto: state.isMorePhoto,
-            pageAlbum: state.pageAlbum,
-            isMoreAlbum: state.isMoreAlbum,
-            pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo,
-            pageGroup: state.pageGroup,
-            isMoreGroup: state.isMoreGroup);
+          pageDetail: response,
+          rolePage: state.rolePage,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
+          isMoreReview: response.isEmpty ? false : true,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup,
+          pageCategory: state.pageCategory,
+        );
+      }
+    }
+  }
+
+  getPageDetailCategory(params) async {
+    var response = await PageApi().fetchPageCategories(params);
+    if (response != null) {
+      if (mounted) {
+        state = state.copyWith(
+          pageDetail: state.pageDetail,
+          rolePage: state.rolePage,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
+          isMoreReview: response.isEmpty ? false : true,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup,
+          pageCategory: response,
+        );
       }
     }
   }
@@ -146,21 +179,23 @@ class PageController extends StateNotifier<PageState> {
     if (data != null) {
       if (mounted) {
         state = state.copyWith(
-            pageDetail: data,
-            rolePage: state.rolePage,
-            pageFeed: state.pageFeed,
-            isMoreFeed: state.isMoreFeed,
-            pageReview: state.pageReview,
-            isMoreReview: false,
-            pagePined: state.pagePined,
-            pagePhoto: state.pagePhoto,
-            isMorePhoto: state.isMorePhoto,
-            pageAlbum: state.pageAlbum,
-            isMoreAlbum: state.isMoreAlbum,
-            pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo,
-            pageGroup: state.pageGroup,
-            isMoreGroup: state.isMoreGroup);
+          pageDetail: data,
+          rolePage: state.rolePage,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
+          isMoreReview: false,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup,
+          pageCategory: state.pageCategory,
+        );
       }
     }
   }
@@ -169,102 +204,110 @@ class PageController extends StateNotifier<PageState> {
     switch (type) {
       case "like":
         state = state.copyWith(
-            pageDetail: {
-              ...state.pageDetail,
-              'page_relationship': {
-                ...state.pageDetail['page_relationship'],
-                'like': true
-              }
-            },
-            rolePage: state.rolePage,
-            pageFeed: state.pageFeed,
-            isMoreFeed: state.isMoreFeed,
-            pageReview: state.pageReview,
-            isMoreReview: state.isMoreReview,
-            pagePined: state.pagePined,
-            pagePhoto: state.pagePhoto,
-            isMorePhoto: state.isMorePhoto,
-            pageAlbum: state.pageAlbum,
-            isMoreAlbum: state.isMoreAlbum,
-            pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo,
-            pageGroup: state.pageGroup,
-            isMoreGroup: state.isMoreGroup);
+          pageDetail: {
+            ...state.pageDetail,
+            'page_relationship': {
+              ...state.pageDetail['page_relationship'],
+              'like': true
+            }
+          },
+          rolePage: state.rolePage,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup,
+          pageCategory: state.pageCategory,
+        );
         await PageApi().likePageSuggestion(id);
         break;
       case "unlike":
         state = state.copyWith(
-            pageDetail: {
-              ...state.pageDetail,
-              'page_relationship': {
-                ...state.pageDetail['page_relationship'],
-                'like': false
-              }
-            },
-            rolePage: state.rolePage,
-            pageFeed: state.pageFeed,
-            isMoreFeed: state.isMoreFeed,
-            pageReview: state.pageReview,
-            isMoreReview: state.isMoreReview,
-            pagePined: state.pagePined,
-            pagePhoto: state.pagePhoto,
-            isMorePhoto: state.isMorePhoto,
-            pageAlbum: state.pageAlbum,
-            isMoreAlbum: state.isMoreAlbum,
-            pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo,
-            pageGroup: state.pageGroup,
-            isMoreGroup: state.isMoreGroup);
+          pageDetail: {
+            ...state.pageDetail,
+            'page_relationship': {
+              ...state.pageDetail['page_relationship'],
+              'like': false
+            }
+          },
+          rolePage: state.rolePage,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup,
+          pageCategory: state.pageCategory,
+        );
         await PageApi().unLikePageSuggestion(id);
         break;
       case "follow":
         state = state.copyWith(
-            pageDetail: {
-              ...state.pageDetail,
-              'page_relationship': {
-                ...state.pageDetail['page_relationship'],
-                'following': true
-              }
-            },
-            rolePage: state.rolePage,
-            pageFeed: state.pageFeed,
-            isMoreFeed: state.isMoreFeed,
-            pageReview: state.pageReview,
-            isMoreReview: state.isMoreReview,
-            pagePined: state.pagePined,
-            pagePhoto: state.pagePhoto,
-            isMorePhoto: state.isMorePhoto,
-            pageAlbum: state.pageAlbum,
-            isMoreAlbum: state.isMoreAlbum,
-            pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo,
-            pageGroup: state.pageGroup,
-            isMoreGroup: state.isMoreGroup);
+          pageDetail: {
+            ...state.pageDetail,
+            'page_relationship': {
+              ...state.pageDetail['page_relationship'],
+              'following': true
+            }
+          },
+          rolePage: state.rolePage,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup,
+          pageCategory: state.pageCategory,
+        );
         await PageApi().followPage(id);
         break;
       case "unfollow":
         state = state.copyWith(
-            pageDetail: {
-              ...state.pageDetail,
-              'page_relationship': {
-                ...state.pageDetail['page_relationship'],
-                'following': false
-              }
-            },
-            rolePage: state.rolePage,
-            pageFeed: state.pageFeed,
-            isMoreFeed: state.isMoreFeed,
-            pageReview: state.pageReview,
-            isMoreReview: state.isMoreReview,
-            pagePined: state.pagePined,
-            pagePhoto: state.pagePhoto,
-            isMorePhoto: state.isMorePhoto,
-            pageAlbum: state.pageAlbum,
-            isMoreAlbum: state.isMoreAlbum,
-            pageVideo: state.pageVideo,
-            isMoreVideo: state.isMoreVideo,
-            pageGroup: state.pageGroup,
-            isMoreGroup: state.isMoreGroup);
+          pageDetail: {
+            ...state.pageDetail,
+            'page_relationship': {
+              ...state.pageDetail['page_relationship'],
+              'following': false
+            }
+          },
+          rolePage: state.rolePage,
+          pageFeed: state.pageFeed,
+          isMoreFeed: state.isMoreFeed,
+          pageReview: state.pageReview,
+          isMoreReview: state.isMoreReview,
+          pagePined: state.pagePined,
+          pagePhoto: state.pagePhoto,
+          isMorePhoto: state.isMorePhoto,
+          pageAlbum: state.pageAlbum,
+          isMoreAlbum: state.isMoreAlbum,
+          pageVideo: state.pageVideo,
+          isMoreVideo: state.isMoreVideo,
+          pageGroup: state.pageGroup,
+          isMoreGroup: state.isMoreGroup,
+          pageCategory: state.pageCategory,
+        );
         await PageApi().unfollowPage(id);
         break;
       default:
@@ -289,6 +332,7 @@ class PageController extends StateNotifier<PageState> {
             pageVideo: state.pageVideo,
             isMoreVideo: state.isMoreVideo,
             pageDetail: state.pageDetail,
+            pageCategory: state.pageCategory,
             pageGroup:
                 checkObjectUniqueInList(state.pageGroup + response, 'id'),
             isMoreGroup: response.length < params['limit'] ? false : true);
@@ -311,6 +355,7 @@ class PageController extends StateNotifier<PageState> {
         isMorePhoto: state.isMorePhoto,
         pageAlbum: state.pageAlbum,
         isMoreAlbum: state.isMoreAlbum,
+        pageCategory: state.pageCategory,
         pageVideo: state.pageVideo,
         isMoreVideo: state.isMoreVideo,
         pageDetail: state.pageDetail,
@@ -332,6 +377,7 @@ class PageController extends StateNotifier<PageState> {
         pagePined: state.pagePined,
         pagePhoto: state.pagePhoto,
         isMorePhoto: state.isMorePhoto,
+        pageCategory: state.pageCategory,
         pageAlbum: state.pageAlbum,
         isMoreAlbum: state.isMoreAlbum,
         pageVideo: state.pageVideo,
@@ -357,6 +403,7 @@ class PageController extends StateNotifier<PageState> {
             isMoreReview: state.isMoreReview,
             pagePined: state.pagePined,
             pagePhoto: state.pagePhoto,
+            pageCategory: state.pageCategory,
             isMorePhoto: state.isMorePhoto,
             pageAlbum: state.pageAlbum,
             pageDetail: state.pageDetail,
@@ -378,6 +425,7 @@ class PageController extends StateNotifier<PageState> {
           isMoreFeed: true,
           pageReview: state.pageReview,
           isMoreReview: state.isMoreReview,
+          pageCategory: state.pageCategory,
           pagePined: state.pagePined,
           pagePhoto: state.pagePhoto,
           isMorePhoto: state.isMorePhoto,
@@ -408,6 +456,7 @@ class PageController extends StateNotifier<PageState> {
           isMorePhoto: state.isMorePhoto,
           pageAlbum: state.pageAlbum,
           pageDetail: state.pageDetail,
+          pageCategory: state.pageCategory,
           isMoreAlbum: state.isMoreAlbum,
           pageVideo: state.pageVideo,
           isMoreVideo: state.isMoreVideo,
@@ -418,7 +467,7 @@ class PageController extends StateNotifier<PageState> {
 
   actionHiddenDeletePost(type, data) {
     int index = -1;
-    index = state.pageFeed.indexWhere((element) => element['id'] == data['id']); 
+    index = state.pageFeed.indexWhere((element) => element['id'] == data['id']);
     if (index < 0) return;
     if (mounted) {
       state = state.copyWith(
@@ -432,6 +481,7 @@ class PageController extends StateNotifier<PageState> {
           isMoreReview: state.isMoreReview,
           pagePined: state.pagePined,
           pagePhoto: state.pagePhoto,
+          pageCategory: state.pageCategory,
           isMorePhoto: state.isMorePhoto,
           pageAlbum: state.pageAlbum,
           pageDetail: state.pageDetail,
@@ -448,8 +498,8 @@ class PageController extends StateNotifier<PageState> {
     dynamic newData,
   ) async {
     int index = -1;
-    index = state.pageFeed
-        .indexWhere((element) => element['id'] == newData['id']);
+    index =
+        state.pageFeed.indexWhere((element) => element['id'] == newData['id']);
     if (index < 0) return;
 
     if (mounted) {
@@ -468,6 +518,7 @@ class PageController extends StateNotifier<PageState> {
           isMorePhoto: state.isMorePhoto,
           pageAlbum: state.pageAlbum,
           pageDetail: state.pageDetail,
+          pageCategory: state.pageCategory,
           isMoreAlbum: state.isMoreAlbum,
           pageVideo: state.pageVideo,
           isMoreVideo: state.isMoreVideo,
@@ -487,6 +538,7 @@ class PageController extends StateNotifier<PageState> {
             pageReview: state.pageReview,
             pageDetail: state.pageDetail,
             isMoreReview: state.isMoreReview,
+            pageCategory: state.pageCategory,
             pagePined: response,
             pagePhoto: state.pagePhoto,
             isMorePhoto: state.isMorePhoto,
@@ -510,6 +562,7 @@ class PageController extends StateNotifier<PageState> {
             isMoreFeed: state.isMoreFeed,
             pageReview: state.pageReview,
             pageDetail: state.pageDetail,
+            pageCategory: state.pageCategory,
             isMoreReview: state.isMoreReview,
             pagePined: state.pagePined,
             pagePhoto: state.pagePhoto +
@@ -545,6 +598,7 @@ class PageController extends StateNotifier<PageState> {
             pageReview: state.pageReview,
             isMoreReview: state.isMoreReview,
             pagePined: state.pagePined,
+            pageCategory: state.pageCategory,
             pageDetail: state.pageDetail,
             pagePhoto: state.pagePhoto,
             isMorePhoto: state.isMorePhoto,
@@ -593,6 +647,7 @@ class PageController extends StateNotifier<PageState> {
           pagePhoto: state.pagePhoto,
           isMorePhoto: state.isMorePhoto,
           pageAlbum: state.pageAlbum,
+          pageCategory: state.pageCategory,
           isMoreAlbum: state.isMoreAlbum,
           pageVideo: state.pageVideo,
           isMoreVideo: state.isMoreVideo,
