@@ -59,9 +59,10 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
           .then((value) {
         recruitDetail = ref.read(recruitControllerProvider).detailRecruit;
       });
+      print(recruitDetail);
     }
-    isRecruitInterested =
-        widget.data['recruit_relationships']['follow_recruit'];
+    // isRecruitInterested =
+    //     widget.data['recruit_relationships']['follow_recruit'];
     await ref
         .read(recruitControllerProvider.notifier)
         .getListRecruitPropose({'exclude_current_user': true, 'limit': 5});
@@ -72,7 +73,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
       'time': 'upcoming'
     });
 
-    // setState(() {});
+    setState(() {});
   }
 
   /// Re-render when component changed
@@ -84,6 +85,8 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
 
   @override
   Widget build(BuildContext context) {
+    print(recruitDetail);
+    print(recruitDetail.keys);
     final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
       extendBodyBehindAppBar: true,

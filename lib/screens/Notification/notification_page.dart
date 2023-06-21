@@ -351,6 +351,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         case 'recruit_apply':
         // đã ứng tuyển vào công việc',
         case 'recruit_invitation':
+
           // đã mời bạn tham gia tuyển dụng',
           SchedulerBinding.instance!.addPostFrameCallback((_) {
             Navigator.push(
