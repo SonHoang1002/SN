@@ -11,8 +11,7 @@ import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import '../../widgets/cross_bar.dart';
 
 class RecruitRender extends StatefulWidget {
-  String? notiType;
-  RecruitRender({Key? key, this.notiType}) : super(key: key);
+  const RecruitRender({Key? key}) : super(key: key);
 
   @override
   State<RecruitRender> createState() => _RecruitRenderState();
@@ -23,11 +22,6 @@ class _RecruitRenderState extends State<RecruitRender> {
 
   @override
   void initState() {
-    if (widget.notiType != null) {
-      setState(() {
-        menuSelected = widget.notiType!;
-      });
-    }
     super.initState();
   }
 

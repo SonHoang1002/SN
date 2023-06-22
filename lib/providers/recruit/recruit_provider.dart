@@ -381,8 +381,9 @@ class RecruitController extends StateNotifier<RecruitState> {
           recruitsInterest: state.recruitsInterest,
           recruitsNewPast: state.recruitsNewPast,
         );
+      } else {
+        print("Not mounted 2");
       }
-      print("Not mounted 2");
     }
   }
 
@@ -472,8 +473,9 @@ class RecruitController extends StateNotifier<RecruitState> {
           recruitsInterest: state.recruitsInterest,
           recruitsNewPast: state.recruitsNewPast,
         );
+      } else {
+        print("Not mounted getDetailRecruitl");
       }
-      print("Not mounted !!");
     }
   }
 

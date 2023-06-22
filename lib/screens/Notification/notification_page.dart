@@ -4,26 +4,29 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:social_network_app_mobile/apis/events_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
+// handle push to another page when tapping
+import '../../apis/learn_space_api.dart';
+import '../../apis/recruit_api.dart';
 import '../../constant/post_type.dart';
-import '../../data/list_menu.dart';
 import '../../helper/push_to_new_screen.dart';
-import '../../providers/post_current_provider.dart';
+import '../../providers/page/page_list_provider.dart';
+import '../CreatePost/create_modal_base_menu.dart';
 import '../Event/event_detail.dart';
 import '../Friend/friend_request.dart';
-import '../LearnSpace/learn_space.dart';
 import '../LearnSpace/learn_space_detail.dart';
-import '../LearnSpace/learn_space_invitations.dart';
-import '../Menu/menu_selected.dart';
 import '../Page/PageDetail/page_detail.dart';
+import '../Page/page_invite.dart';
 import '../Post/post_detail.dart';
-import '../Recruit/recruit_invite.dart';
 import '../Recruit/recuit_detail.dart';
+import '../UserPage/user_page.dart';
+import 'deleted_status.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -147,7 +150,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       } else if (type == 'comment') {
         return {
           'textNone':
-              ' đã bình luận về một bài viết có thể bạn quan tâm: ${status['content']}'
+              ' đã bình luận về một bài viết có thể bạn quan tâm: ${status['content'] ?? ''}'
         };
       } else if (type == 'approved_group_join_request') {
         return {
@@ -155,13 +158,16 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
               ' Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với'
         };
       } else if (type == 'course_invitation') {
-        return {'textNone': ' đã mời bạn tham gia khóa học'};
+        return {
+          'textNone': ' đã mời bạn tham gia khóa học ',
+          'textBold': '${noti['course']['title']}',
+        };
       } else if (type == 'product_invitation') {
         return {'textNone': ' đã mời bạn quan tâm đến sản phẩm'};
       } else if (type == 'admin_page_invitation') {
         return {
-          'textNone': ' đã mời bạn làm quản trị viên',
-          'textBold': '${status?['page']?['title']}'
+          'textNone': ' đã mời bạn làm quản trị viên trang',
+          'textBold': '',
         };
       } else if (type == 'approved_group_status') {
         return {
@@ -176,17 +182,22 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       } else if (type == 'recruit_apply') {
         return {
           'textNone': ' đã ứng tuyển vào công việc',
-          'textBold': ' ${status?['recruit']?['title']}'
+          'textBold': ' ${noti?['recruit']?['title']}'
         };
       } else if (type == 'recruit_invitation') {
         return {
-          'textNone': ' đã mời bạn tham gia tuyển dụng',
-          'textBold': '${status?['recruit']?['title']}'
+          'textNone': ' đã mời bạn tham gia tuyển dụng ',
+          'textBold': '${noti['recruit']?['title']}'
         };
       } else if (type == 'moderator_page_invitation') {
         return {
+          'textNone': ' đã mời bạn làm kiểm duyệt viên trang',
+          'textBold': ''
+        };
+      } else if (type == 'accept_moderator_page_invitation') {
+        return {
           'textNone': ' đã đồng ý làm kiểm duyệt viên trang',
-          'textBold': '${status?['page']?['title']}'
+          'textBold': ''
         };
       }
       if (type == 'favourite') {
@@ -309,7 +320,38 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       }
     }
 
-    Widget? nextScreenFromNoti(item) {
+    prepareData(item) async {
+      switch (item['type']) {
+        case 'recruit_invitation':
+        case 'recruit_apply':
+          return await RecruitApi().getDetailRecruitApi(item['recruit']['id']);
+        case 'event_invitation':
+        case 'event_invitation_host':
+        case 'accept_event_invitation':
+        case 'accept_event_invitation_host':
+          return await EventApi().getEventDetailApi(item['event']['id']);
+        case 'course_invitation':
+          return await LearnSpaceApi()
+              .getDetailCoursesApi(item['course']['id']);
+        case 'page_invitation':
+        case 'moderator_page_invitation':
+        case 'admin_page_invitation':
+        case 'page_invitation_follow':
+          await ref
+              .read(pageListControllerProvider.notifier)
+              .getListPageInvited('like');
+
+          await ref
+              .read(pageListControllerProvider.notifier)
+              .getListPageInvited('manage');
+
+          return null;
+        default:
+          return null;
+      }
+    }
+
+    Widget? nextScreenFromNoti(item, data) {
       print(item['type']);
       Map<String, dynamic> map = item;
       print(map.keys);
@@ -327,88 +369,85 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         // đã nhắc đến bạn trong một bình luận, đã gắn thẻ bạn trong một bài viết
         case 'reblog':
         case 'status':
-          return PostDetail(
-            postId: item['status']['id'],
-            preType: postDetail,
-          );
+          return item['status'] != null
+              ? PostDetail(
+                  postId: item['status']['id'],
+                  preType: postDetail,
+                )
+              : DeletedStatus(type: "Bài viết");
 
         case 'friendship_request':
           return const FriendRequest();
 
-        case 'recruit_apply':
-        // đã ứng tuyển vào công việc',
         case 'recruit_invitation':
+        // đã mời quan tâm công việc',
+        case 'recruit_apply':
+          // đã ứng tuyển vào công việc',
+          return RecruitDetail(data: data, isUseRecruitData: true);
 
-          // đã mời bạn tham gia tuyển dụng',
-          // SchedulerBinding.instance!.addPostFrameCallback((_) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => RecruitDetail(
-          //         data: item['recruit'],
-          //       ),
-          //     ),
-          //   );
-          // });
-          return MenuSelected(
-            notiType: 'recruit_invite',
-            menuSelected: listSocial[10],
-          );
-        case 'page_invitation_follow':
-          return PageDetail(pageData: item['page']);
-
-        // ** NOT CHECKED **
         case 'event_invitation':
         case 'event_invitation_host':
-          return EventDetail(eventDetail: item['event']);
-
-        // ** NOT CHECKED **
+        case 'accept_event_invitation':
+        // đã đồng ý tham gia sự kiện
+        case 'accept_event_invitation_host':
+          // đã đồng ý đồng tổ chức sự kiện
+          return EventDetail(eventDetail: data, isUseEventData: true);
 
         case 'course_invitation':
+          return LearnSpaceDetail(data: data, isUseLearnData: true);
 
-        case 'page_follow':
-        // đã thích
         case 'page_invitation':
-        // đã mời bạn làm quản trị viên
+        // đã mời bạn like page
+        case 'moderator_page_invitation':
+        // đã invite you làm kiểm duyệt viên trang',
+        case 'admin_page_invitation':
+        // đã mời bạn làm quản trị viên',
+        case 'page_invitation_follow':
+          // đã mời bạn follow page
+          return const CreateModalBaseMenu(
+            title: 'Lời mời',
+            body: PageInvite(),
+            buttonAppbar: SizedBox(),
+          );
+
         case 'accept_page_invitation':
         // đã đồng ý làm quản trị viên trang
         case 'accept_page_invitation_follow':
         // đã chấp nhận lời mời thích trang
-        case 'admin_page_invitation':
-        // đã mời bạn làm quản trị viên',
         case 'accept_admin_page_invitation':
         // đã đồng ý làm quản trị viên trang',
-        // textBold': '${status?['page']?['title']}'
+        case 'page_follow':
+        // đã thích your page (not yet)
+        case 'accept_moderator_page_invitation':
+          return PageDetail(pageData: item['page']);
 
-        case 'moderator_page_invitation':
-        // 'textNone': ' đã đồng ý làm kiểm duyệt viên trang',
-        // 'textBold': '${status?['page']?['title']}'
-
+        case 'product_invitation':
+        // đã mời bạn quan tâm đến sản phẩm
         case 'project_invitation_host':
-
-        case 'folow':
-        // ... followed you.
         case 'poll':
         // Thăm dò ý kiến
 
+        case 'accept_friendship_request':
+        // đã chấp nhận lời mời kết bạn
+        case 'folow':
+        // ... followed you.
+        // return UserPage(user: item['account']);
+
         case 'group_invitation':
         // đã mời bạn tham gia nhóm
-        case 'accept_event_invitation':
-        // đã đồng ý tham gia sự kiện
-        case 'accept_event_invitation_host':
-        // đã đồng ý đồng tổ chức sự kiện
+        case 'group_invitation_host':
+        // return const CreateModalBaseMenu(
+        //   title: 'Lời mời & Yêu cầu',
+        //   body: GroupInvitedRequest(),
+        //   buttonAppbar: SizedBox(),
+        // );
 
         case 'accept_group_invitation':
         // đã chấp nhận lời mời tham gia nhóm
-        case 'accept_friendship_request':
-        // đã chấp nhận lời mời kết bạn
-        case 'group_join_request':
-        // đã yêu cầu tham gia'
-
         case 'approved_group_join_request':
         // Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với'
-        case 'product_invitation':
-        // đã mời bạn quan tâm đến sản phẩm
+        // return GroupDetail()
+
         default:
           return null;
       }
@@ -425,8 +464,9 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                 itemBuilder: ((context, index) {
                   var item = notifications[index];
                   return InkWell(
-                    onTap: () {
-                      var nextScreen = nextScreenFromNoti(item);
+                    onTap: () async {
+                      final data = await prepareData(item);
+                      var nextScreen = nextScreenFromNoti(item, data);
                       if (nextScreen != null) {
                         pushCustomCupertinoPageRoute(context, nextScreen);
                       }

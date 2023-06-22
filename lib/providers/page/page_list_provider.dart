@@ -165,7 +165,9 @@ class PageListController extends StateNotifier<PageListState> {
           pageAdmin: state.pageAdmin,
           isMorePageLiked: state.isMorePageLiked,
           isMorePageAdmin: state.isMorePageAdmin,
-          pageInvitedLike: state.pageInvitedLike + response['data'],
+          pageInvitedLike: state.pageInvitedLike.isEmpty
+              ? state.pageInvitedLike + response['data']
+              : response['data'],
           isMorePageInvitedLike: state.isMorePageInvitedLike,
           pageInvitedManage: state.pageInvitedManage,
           isMorePageInvitedManage: state.isMorePageInvitedManage,
@@ -183,7 +185,9 @@ class PageListController extends StateNotifier<PageListState> {
           isMorePageAdmin: state.isMorePageAdmin,
           pageInvitedLike: state.pageInvitedLike,
           isMorePageInvitedLike: state.isMorePageInvitedLike,
-          pageInvitedManage: state.pageInvitedManage + response['data'],
+          pageInvitedManage: state.pageInvitedManage.isEmpty
+              ? state.pageInvitedManage + response['data']
+              : response['data'],
           isMorePageInvitedManage: state.isMorePageInvitedManage,
           pageSuggestions: state.pageSuggestions,
           isMorePageSuggestions: state.isMorePageSuggestions,
