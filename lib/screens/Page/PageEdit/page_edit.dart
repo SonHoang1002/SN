@@ -86,14 +86,14 @@ class _PageEditState extends State<PageEdit> {
       },
     ];
 
-    handleChooseMedia(type, entity) {
+    handleChooseMedia(entityType, entity) {
       Navigator.push(
           context,
           CupertinoPageRoute(
               builder: (context) => PageEditMediaProfile(
                   typePage: typePage,
                   entityObj: dataPage,
-                  entityType: type,
+                  entityType: entityType,
                   handleChangeDependencies: (value) {
                     setState(() {
                       dataPage = value;
@@ -140,7 +140,9 @@ class _PageEditState extends State<PageEdit> {
             context,
             CupertinoPageRoute(
                 builder: (context) => PagePickMedia(
-                    user: widget.data, handleAction: handleChooseMedia)));
+                    type: 'page',
+                    user: dataPage,
+                    handleAction: handleChooseMedia)));
       } else if (key == 'frames') {
         showBarModalBottomSheet(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,

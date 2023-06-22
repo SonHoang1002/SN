@@ -169,7 +169,7 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
-  File? currentFile;
+  dynamic currentFile;
 
   @override
   void initState() {
@@ -183,8 +183,20 @@ class _BannerWidgetState extends State<BannerWidget> {
     currentFile = widget.widget.file!;
   }
 
+  void disposeCacheFiles() async {
+    Directory cacheDirectory = await getTemporaryDirectory();
+    if (cacheDirectory.existsSync()) {
+      cacheDirectory.listSync(recursive: true).forEach((file) {
+        if (file is File) {
+          file.deleteSync();
+        }
+      });
+    }
+  }
+
   @override
   void dispose() {
+    disposeCacheFiles();
     super.dispose();
   }
 
@@ -324,7 +336,7 @@ class AvatarWiget extends StatefulWidget {
 
 class _AvatarWigetState extends State<AvatarWiget> {
   dynamic frameSelected;
-  File? currentFile;
+  dynamic currentFile;
 
   @override
   void initState() {
