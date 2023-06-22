@@ -8,7 +8,7 @@ import 'package:social_network_app_mobile/screens/MarketPlace/screen/address_mod
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';

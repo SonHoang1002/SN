@@ -46,7 +46,7 @@ class Post extends ConsumerStatefulWidget {
   ConsumerState<Post> createState() => _PostState();
 }
 
-class _PostState extends ConsumerState<Post> {
+class _PostState extends ConsumerState<Post> with TickerProviderStateMixin, WidgetsBindingObserver{
   bool isHaveSuggest = true;
   final ValueNotifier<bool> _isShowCommentBox = ValueNotifier(false);
   dynamic currentPost;
@@ -78,6 +78,7 @@ class _PostState extends ConsumerState<Post> {
 
   @override
   void dispose() {
+     WidgetsBinding.instance.removeObserver(this);
     currentPost = null;
     meData = null;
     _isShowCommentBox.dispose();

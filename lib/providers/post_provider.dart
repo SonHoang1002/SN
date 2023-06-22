@@ -62,14 +62,13 @@ class PostController extends StateNotifier<PostState> {
     }
   }
 
-  addListPost(List newData) { 
+  addListPost(List newData, dynamic params) {
     if (mounted) {
       state = state.copyWith(
           posts: checkObjectUniqueInList(state.posts + newData, 'id'),
           postsPin: state.postsPin,
           postUserPage: state.postUserPage,
-          isMore: true,
-          // isMore: true,
+          isMore: newData.length < params['limit'] ? false : true,
           isMoreUserPage: state.isMoreUserPage);
     }
   }

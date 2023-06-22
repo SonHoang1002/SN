@@ -16,7 +16,6 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   debugProfileBuildsEnabled = true;
-  // debugPaintSizeEnabled = true;
   runApp(
     const ProviderScope(
       child: App(),

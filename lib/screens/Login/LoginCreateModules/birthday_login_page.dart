@@ -6,7 +6,7 @@ import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
-import '../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../widgets/GeneralWidget/general_component.dart';
 import '../../../widgets/GeneralWidget/spacer_widget.dart';
 import '../../../widgets/GeneralWidget/text_content_widget.dart';
 import '../widgets/have_account_widget.dart';

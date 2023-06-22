@@ -284,7 +284,7 @@ class _HomeState extends ConsumerState<Home>
           isShowSnackBar = false;
         });
       });
-    }
+    } 
     return Scaffold(
         drawer: _selectedIndex == 1 || _selectedIndex == 4
             ? null

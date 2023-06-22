@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../constant/group_constants.dart';
 import '../../../../providers/group/hide_group_provider.dart';
 import '../../../../theme/colors.dart';
-import '../../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../../widgets/GeneralWidget/general_component.dart';
 import '../../../../widgets/GeneralWidget/spacer_widget.dart';
 import '../../../../widgets/appbar_title.dart';
 import '../widgets/additional_information_request_friend.dart';
