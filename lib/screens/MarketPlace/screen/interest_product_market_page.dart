@@ -7,7 +7,7 @@ import 'package:social_network_app_mobile/providers/market_place_providers/produ
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/button_for_market_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/share_and_search_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
-import '../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../widgets/GeneralWidget/general_component.dart';
 import '../../../widgets/GeneralWidget/text_content_widget.dart';
 import '../../../widgets/appbar_title.dart';
 import 'main_login_page.dart';

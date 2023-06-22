@@ -9,7 +9,7 @@ import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modu
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/see_your_share_modules/who_see_share_constants.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
-import '../../../../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../../../../widgets/GeneralWidget/general_component.dart';
 import '../../../../../../widgets/GeneralWidget/text_content_widget.dart';
 import 'emso_advertising_options/recommend_advertisement_page.dart';
 import 'how_find_you_modules/add_friend_request_page.dart';

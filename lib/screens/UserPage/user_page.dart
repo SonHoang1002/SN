@@ -19,6 +19,7 @@ import 'package:social_network_app_mobile/screens/UserPage/user_page_infomation_
 import 'package:social_network_app_mobile/screens/UserPage/user_page_pin_post.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_photo_video.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
+import 'package:social_network_app_mobile/services/notification_service.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/banner_base.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
@@ -48,13 +49,7 @@ class UserPageHome extends StatefulWidget {
 class _UserPageHomeState extends State<UserPageHome> {
   int _selectedIndex = 0;
   ValueNotifier<bool> isClickedHome = ValueNotifier(false);
-  List<Widget> pageUserRoutes = [
-    const UserPage(),
-    const Moment(typePage: 'home'),
-    const SizedBox(),
-    const Watch(),
-    const MainMarketPage(false)
-  ];
+
   List<Widget> pageHomeRoutes = [
     const Home(),
     const Moment(typePage: 'home'),
@@ -83,6 +78,13 @@ class _UserPageHomeState extends State<UserPageHome> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> pageUserRoutes = [
+      UserPage(id: widget.id),
+      const Moment(typePage: 'home'),
+      const SizedBox(),
+      const Watch(),
+      const MainMarketPage(false)
+    ];
     return Scaffold(
         body: IndexedStack(
           index: _selectedIndex,
@@ -97,11 +99,9 @@ class _UserPageHomeState extends State<UserPageHome> {
 
 class UserPage extends ConsumerStatefulWidget {
   final dynamic user;
+  final String? id;
 
-  const UserPage({
-    Key? key,
-    this.user,
-  }) : super(key: key);
+  const UserPage({Key? key, this.user, this.id}) : super(key: key);
 
   @override
   ConsumerState<UserPage> createState() => _UserPageState();
@@ -118,7 +118,9 @@ class _UserPageState extends ConsumerState<UserPage> {
   List friend = [];
   List pinPost = [];
   List lifeEvent = [];
-  ValueNotifier<int> focusCurrentPostIndex = ValueNotifier(0);
+
+  // save id of post
+  ValueNotifier<dynamic> focusCurrentPostIndex = ValueNotifier("");
 
   @override
   void initState() {
@@ -128,7 +130,7 @@ class _UserPageState extends ConsumerState<UserPage> {
         final queryParams =
             ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
         setState(() {
-          id = queryParams['id'];
+          id = widget.id ?? queryParams['id'];
         });
       });
 
@@ -197,6 +199,8 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   void dispose() {
+    focusCurrentPostIndex.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -342,16 +346,16 @@ class _UserPageState extends ConsumerState<UserPage> {
                 key: Key(postUser[index]['id']),
                 onVisibilityChanged: (info) {
                   double visibleFraction = info.visibleFraction;
-                  if (visibleFraction == 1) {
-                    if (focusCurrentPostIndex.value != index) {
-                      focusCurrentPostIndex.value = index;
+                  if (visibleFraction > 0.6) {
+                    if (focusCurrentPostIndex.value != postUser[index]['id']) {
+                      focusCurrentPostIndex.value = postUser[index]['id'];
                     }
                   }
                 },
                 child: Post(
                   type: postPageUser,
                   post: postUser[index],
-                  isFocus: focusCurrentPostIndex.value == index,
+                  isFocus: focusCurrentPostIndex.value == postUser[index]['id'],
                   reloadFunction: () {
                     setState(() {});
                   },

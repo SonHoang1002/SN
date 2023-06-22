@@ -26,7 +26,7 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/video_player.dart';
 
 import '../../../../theme/colors.dart';
-import '../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../widgets/GeneralWidget/general_component.dart';
 import '../../../widgets/back_icon_appbar.dart';
 import '../../../widgets/GeneralWidget/circular_progress_indicator.dart';
 import 'cart_market_page.dart';

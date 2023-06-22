@@ -97,7 +97,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/personal_page_page.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';

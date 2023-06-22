@@ -6,7 +6,7 @@ import '../../../../constant/group_constants.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widgets/GeneralWidget/build_stage_navigation_bar.dart';
 import '../../../../widgets/GeneralWidget/divider_widget.dart';
-import '../../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../../widgets/GeneralWidget/general_component.dart';
 import '../../../../widgets/back_icon_appbar.dart';
 
 class CreatePostGroupPage extends StatefulWidget {

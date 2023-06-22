@@ -11,7 +11,7 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';

@@ -16,7 +16,7 @@ class GridViewBuilderMedia extends StatefulWidget {
   final Function? handlePress;
   final bool? isFocus;
   final dynamic currentFocusVideoId;
-  final Function( )? onEnd;
+  final Function()? onEnd;
   final dynamic mediasNoneCheck;
 
   GridViewBuilderMedia(
@@ -38,12 +38,12 @@ class GridViewBuilderMedia extends StatefulWidget {
 
 class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     checkIsImage(media) {
       return media['type'] == 'image' ? true : false;
     }
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size; 
     return GridView.builder(
         shrinkWrap: true,
         primary: false,
@@ -86,10 +86,25 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                             : Hero(
                                 tag: widget.medias[indexBg]['id'] ?? indexBg,
                                 child: ExtendedImage.network(
-                                  widget.medias[indexBg]['url'],
-                                  fit: BoxFit.cover,
-                                  width: size.width,
-                                )),
+                                    widget.medias[indexBg]['url'],
+                                    fit: BoxFit.cover,
+                                    width: size.width, loadStateChanged:
+                                        (ExtendedImageState state) {
+                                  if (state.extendedImageLoadState !=
+                                      LoadState.completed) {
+                                    return Container(
+                                      height: double.parse(
+                                          (widget.medias[indexBg]?['meta']
+                                                      ?['small']?['height'] ??
+                                                  400)
+                                              .toString()),
+                                      width: size.width,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                    );
+                                  }
+                                })),
                         widget.imageRemain != null &&
                                 widget.imageRemain! > 0 &&
                                 indexBg + 1 == widget.medias.length
@@ -118,22 +133,22 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                                   widget.medias[indexBg]['remote_url'] ??
                                   widget.medias[indexBg]['url'],
                               media: widget.medias[indexBg],
-                              isPause:widget.currentFocusVideoId != widget.medias[indexBg]['id'],
-                              //  (checkIsPlayVideo(indexBg)),
+                              isPause: (widget.isFocus != true ||
+                                  widget.currentFocusVideoId !=
+                                      widget.medias[indexBg]['id']),
+                                      // removeObserver:false,
                               type: widget.medias[indexBg]['file']?.path != null
                                   ? 'local'
                                   : 'network',
-                              index: indexBg,
+                              index: indexBg, 
                               onEnd: () {
-                                widget.onEnd != null
-                                    ? widget.onEnd!( )
-                                    : null;
+                                widget.onEnd != null ? widget.onEnd!() : null;
                               })
                         ]));
         });
   }
 
-  checkIsPlayVideo(int index) { 
+  checkIsPlayVideo(int index) {
     return widget.currentFocusVideoId != widget.medias[index]['id'];
   }
 }

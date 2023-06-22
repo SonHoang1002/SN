@@ -22,7 +22,7 @@ import 'package:social_network_app_mobile/apis/market_place_apis/page_list_api.d
 import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
