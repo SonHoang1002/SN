@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -168,6 +169,8 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
+  File? currentFile;
+
   @override
   void initState() {
     super.initState();
@@ -177,6 +180,7 @@ class _BannerWidgetState extends State<BannerWidget> {
         widget.widget.file != null) {
       widget.handleUpdateData('file', widget.widget.file);
     }
+    currentFile = widget.widget.file!;
   }
 
   @override
@@ -184,10 +188,18 @@ class _BannerWidgetState extends State<BannerWidget> {
     super.dispose();
   }
 
+  Future<String> generateNewFilePath(String fileName) async {
+    String cacheDirectory = '';
+    Directory? tempDir = await getTemporaryDirectory();
+    cacheDirectory = tempDir.path;
+    String uniqueFileName = UniqueKey().toString();
+    String extension = fileName.split('.').last;
+    return '$cacheDirectory/$uniqueFileName.$extension';
+  }
+
   File uint8ListToFile(Uint8List data, String fileName) {
     File file = File(fileName);
     file.writeAsBytesSync(data, mode: FileMode.write);
-
     return file;
   }
 
@@ -197,7 +209,7 @@ class _BannerWidgetState extends State<BannerWidget> {
       String path = '';
       if (widget.widget.entityType == 'file') {
         return Image.file(
-          widget.widget.file!,
+          currentFile!,
           width: widget.size.width,
           height: 240,
           fit: BoxFit.cover,
@@ -223,7 +235,7 @@ class _BannerWidgetState extends State<BannerWidget> {
             children: [
               renderBanner(),
               Positioned(
-                  top: 120,
+                  top: 115,
                   left: 15,
                   child: Container(
                       width: 172.0,
@@ -270,11 +282,17 @@ class _BannerWidgetState extends State<BannerWidget> {
               Navigator.push(context, CupertinoPageRoute(builder: (context) {
                 return EditImageMain(
                   imageData: {
-                    'file': widget.widget.file!,
+                    'file': currentFile!,
                     'type': 'local',
                   },
-                  updateData: (_, value) {
-                    print(value);
+                  updateData: (_, value) async {
+                    String newFilePath =
+                        await generateNewFilePath(value['file'].path);
+                    setState(() {
+                      currentFile = uint8ListToFile(
+                          value['newUint8ListFile'], newFilePath);
+                      widget.handleUpdateData('file', currentFile);
+                    });
                   },
                 );
               }));
@@ -306,6 +324,7 @@ class AvatarWiget extends StatefulWidget {
 
 class _AvatarWigetState extends State<AvatarWiget> {
   dynamic frameSelected;
+  File? currentFile;
 
   @override
   void initState() {
@@ -326,6 +345,22 @@ class _AvatarWigetState extends State<AvatarWiget> {
         widget.widget.file != null) {
       widget.handleUpdateData('file', widget.widget.file);
     }
+    currentFile = widget.widget.file!;
+  }
+
+  Future<String> generateNewFilePath(String fileName) async {
+    String cacheDirectory = '';
+    Directory? tempDir = await getTemporaryDirectory();
+    cacheDirectory = tempDir.path;
+    String uniqueFileName = UniqueKey().toString();
+    String extension = fileName.split('.').last;
+    return '$cacheDirectory/$uniqueFileName.$extension';
+  }
+
+  File uint8ListToFile(Uint8List data, String fileName) {
+    File file = File(fileName);
+    file.writeAsBytesSync(data, mode: FileMode.write);
+    return file;
   }
 
   @override
@@ -343,7 +378,7 @@ class _AvatarWigetState extends State<AvatarWiget> {
           return ClipRRect(
             borderRadius: BorderRadius.circular((widget.size.width - 100) / 2),
             child: Image.file(
-              widget.widget.file!,
+              currentFile!,
               width: widget.size.width - 100,
               height: widget.size.width - 100,
               fit: BoxFit.cover,
@@ -452,7 +487,27 @@ class _AvatarWigetState extends State<AvatarWiget> {
                   ),
                   label: "Chỉnh sửa",
                   isPrimary: true,
-                  handlePress: () {},
+                  handlePress: () {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) {
+                      return EditImageMain(
+                        imageData: {
+                          'file': currentFile!,
+                          'type': 'local',
+                        },
+                        screenshot: false,
+                        updateData: (_, value) async {
+                          String newFilePath =
+                              await generateNewFilePath(value['file'].path);
+                          setState(() {
+                            currentFile = uint8ListToFile(
+                                value['newUint8ListFile'], newFilePath);
+                            widget.handleUpdateData('file', currentFile);
+                          });
+                        },
+                      );
+                    }));
+                  },
                 ),
                 const SizedBox(
                   width: 12.0,

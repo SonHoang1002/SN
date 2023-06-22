@@ -30,8 +30,14 @@ import 'draw_image/stroke_options.dart';
 class EditImageMain extends StatefulWidget {
   final dynamic imageData;
   final int? index;
+  final bool screenshot;
   final Function? updateData;
-  const EditImageMain({this.imageData, this.index, this.updateData, super.key});
+  const EditImageMain(
+      {this.imageData,
+      this.index,
+      this.updateData,
+      this.screenshot = true,
+      super.key});
 
   @override
   State<EditImageMain> createState() => _EditImageMainState();
@@ -354,7 +360,8 @@ class _EditImageMainState extends State<EditImageMain> {
           width: screenWidth.toInt(),
           height: imageHeight.toInt());
       // encode to Uint8List
-      Uint8List pngBytes = img.encodePng(croppedImage);
+      Uint8List pngBytes =
+          img.encodePng(widget.screenshot ? croppedImage : originalImage);
       return pngBytes;
     } catch (e) {
       rethrow;

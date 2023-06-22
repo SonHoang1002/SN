@@ -92,7 +92,7 @@ class _PageEditState extends State<PageEdit> {
           CupertinoPageRoute(
               builder: (context) => PageEditMediaProfile(
                   typePage: typePage,
-                  entityObj: widget.data,
+                  entityObj: dataPage,
                   entityType: type,
                   handleChangeDependencies: (value) {
                     setState(() {
@@ -118,7 +118,7 @@ class _PageEditState extends State<PageEdit> {
             CupertinoPageRoute(
                 builder: (context) => PageEditMediaProfile(
                     typePage: typePage,
-                    entityObj: widget.data,
+                    entityObj: dataPage,
                     entityType: 'file',
                     handleChangeDependencies: (value) {
                       setState(() {
