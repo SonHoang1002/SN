@@ -11,6 +11,7 @@ import com.banuba.sdk.arcloud.di.ArCloudKoinModule
 import com.banuba.sdk.audiobrowser.di.AudioBrowserKoinModule
 import com.banuba.sdk.audiobrowser.domain.AudioBrowserMusicProvider
 import com.banuba.sdk.cameraui.data.CameraTimerActionProvider
+import com.banuba.sdk.cameraui.data.CameraConfig
 import com.banuba.sdk.cameraui.data.CameraTimerStateProvider
 import com.banuba.sdk.cameraui.data.TimerEntry
 import com.banuba.sdk.cameraui.domain.HandsFreeTimerActionProvider
@@ -149,7 +150,7 @@ private class SampleIntegrationVeKoinModule {
         }
 
         factory<DraftConfig> {
-            DraftConfig.ENABLED_ASK_TO_SAVE
+            DraftConfig.DISABLED
         }
 
         single<AspectRatioProvider> {
@@ -170,6 +171,10 @@ private class SampleIntegrationVeKoinModule {
             ObjectEditorConfig(
                 objectEffectDefaultDuration = 2000
             )
+        }
+
+        single<CameraConfig> {
+            CameraConfig(maxRecordedTotalVideoDurationMs = 240_000)
         }
     }
 }
