@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_frames.dart';
@@ -17,6 +21,7 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../apis/page_api.dart' as page;
 import '../../providers/page/page_provider.dart';
+import '../EditImage/edit_img_main.dart';
 
 class PageEditMediaProfile extends ConsumerStatefulWidget {
   final String typePage;
@@ -163,8 +168,6 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
-  final GlobalKey _widgetKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
@@ -181,11 +184,17 @@ class _BannerWidgetState extends State<BannerWidget> {
     super.dispose();
   }
 
+  File uint8ListToFile(Uint8List data, String fileName) {
+    File file = File(fileName);
+    file.writeAsBytesSync(data, mode: FileMode.write);
+
+    return file;
+  }
+
   @override
   Widget build(BuildContext context) {
     renderBanner() {
       String path = '';
-
       if (widget.widget.entityType == 'file') {
         return Image.file(
           widget.widget.file!,
@@ -207,7 +216,6 @@ class _BannerWidgetState extends State<BannerWidget> {
     }
 
     return Column(
-      key: _widgetKey,
       children: [
         Container(
           constraints: const BoxConstraints(minHeight: 290),
@@ -229,8 +237,11 @@ class _BannerWidgetState extends State<BannerWidget> {
                               width: 170.0,
                               height: 170.0,
                               object: widget.widget.entityObj,
-                              path: widget.widget.entityObj['avatar_media']
-                                  ['url']),
+                              path: widget.widget.entityObj['avatar_media'] !=
+                                      null
+                                  ? widget.widget.entityObj['avatar_media']
+                                      ['url']
+                                  : linkAvatarDefault),
                         ],
                       ))),
             ],
@@ -255,7 +266,19 @@ class _BannerWidgetState extends State<BannerWidget> {
             ),
             label: "Chỉnh sửa hình ảnh",
             isPrimary: true,
-            handlePress: () {},
+            handlePress: () {
+              Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                return EditImageMain(
+                  imageData: {
+                    'file': widget.widget.file!,
+                    'type': 'local',
+                  },
+                  updateData: (_, value) {
+                    print(value);
+                  },
+                );
+              }));
+            },
           ),
         ),
       ],

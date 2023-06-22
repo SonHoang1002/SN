@@ -1,10 +1,15 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
+import 'dart:ui' as ui;
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image/image.dart' as img;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:perfect_freehand/perfect_freehand.dart';
 import 'package:social_network_app_mobile/data/emoji_activity.dart';
@@ -17,21 +22,16 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.da
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
-import 'dart:async';
-import 'dart:ui' as ui;
-import 'package:image/image.dart' as img;
 
 import 'draw_image/sketcher.dart';
 import 'draw_image/stroke.dart';
 import 'draw_image/stroke_options.dart';
 
-import 'dart:math' as math;
-
 class EditImageMain extends StatefulWidget {
-  dynamic imageData;
+  final dynamic imageData;
   final int? index;
   final Function? updateData;
-  EditImageMain({this.imageData, this.index, this.updateData, super.key});
+  const EditImageMain({this.imageData, this.index, this.updateData, super.key});
 
   @override
   State<EditImageMain> createState() => _EditImageMainState();
@@ -168,8 +168,8 @@ class _EditImageMainState extends State<EditImageMain> {
   dynamic _imageData;
 
   List<dynamic> _overlayWidget = [];
-  GlobalKey _imageKey = GlobalKey();
-  GlobalKey _globalKey = GlobalKey();
+  final GlobalKey _imageKey = GlobalKey();
+  final GlobalKey _globalKey = GlobalKey();
 
   List<ValueNotifier<Matrix4>> notifiers = [];
 
@@ -382,9 +382,9 @@ class _EditImageMainState extends State<EditImageMain> {
   }
 
   resetColorIconMenu() {
-    iconList.forEach((element) {
+    for (var element in iconList) {
       element['color'] = white;
-    });
+    }
   }
 
   Future<Uint8List> fileToUint8List(File file) async {
@@ -747,10 +747,8 @@ class _EditImageMainState extends State<EditImageMain> {
                                 }
                               },
                               child: MatrixGestureDetector(
-                                onMatrixUpdate: (matrix,
-                                    translationDeltaMatrix,
-                                    scaleDeltaMatrix,
-                                    rotationDeltaMatrix) {
+                                onMatrixUpdate: (matrix, translationDeltaMatrix,
+                                    scaleDeltaMatrix, rotationDeltaMatrix) {
                                   setState(() {
                                     notifiers[index].value = matrix;
                                   });
@@ -777,8 +775,8 @@ class _EditImageMainState extends State<EditImageMain> {
                                         child: FittedBox(
                                           fit: BoxFit.contain,
                                           child: RotatedBox(
-                                            quarterTurns: rotationAngle ~/
-                                                (math.pi / 2),
+                                            quarterTurns:
+                                                rotationAngle ~/ (math.pi / 2),
                                             // quarterTurns: 3,
                                             child: e['widget'],
                                           ),

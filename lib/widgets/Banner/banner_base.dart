@@ -122,16 +122,6 @@ class _BannerBaseState extends State<BannerBase> {
                   fontWeight: FontWeight.w600,
                   color: colorWord(context)),
               children: [
-                // WidgetSpan(
-                //   child: Padding(
-                //     padding: const EdgeInsets.only(left: 8.0, bottom: 3.0),
-                //     child: Image.asset(
-                //       'assets/pages/blueTick.png',
-                //       width: 20,
-                //       height: 20,
-                //     ),
-                //   ),
-                // ),
                 TextSpan(
                     text: ' ${subTitle != '' ? '($subTitle)' : ''}',
                     style: TextStyle(

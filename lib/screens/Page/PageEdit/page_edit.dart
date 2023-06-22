@@ -97,6 +97,7 @@ class _PageEditState extends State<PageEdit> {
                   handleChangeDependencies: (value) {
                     setState(() {
                       dataPage = value;
+                      widget.handleChangeDependencies!(value);
                     });
                   },
                   type: 'page',
@@ -122,6 +123,7 @@ class _PageEditState extends State<PageEdit> {
                     handleChangeDependencies: (value) {
                       setState(() {
                         dataPage = value;
+                        widget.handleChangeDependencies!(value);
                       });
                     },
                     type: 'page',
