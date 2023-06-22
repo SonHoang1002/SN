@@ -29,6 +29,7 @@ import 'draw_image/stroke_options.dart';
 
 class EditImageMain extends StatefulWidget {
   final dynamic imageData;
+  
   final int? index;
   final bool screenshot;
   final Function? updateData;

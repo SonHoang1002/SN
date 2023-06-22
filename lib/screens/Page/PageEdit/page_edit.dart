@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 import '../../../constant/common.dart';
 import '../../../widgets/Banner/page_edit_media_profile.dart';
@@ -212,6 +214,8 @@ class _PageEditState extends State<PageEdit> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = pv.Provider.of<ThemeManager>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -332,11 +336,12 @@ class _PageEditState extends State<PageEdit> {
                               horizontal: 0, vertical: 0.0),
                           visualDensity:
                               const VisualDensity(horizontal: -4, vertical: -1),
-                          leading: Image.asset(
-                            detailPage[index]['icon'],
-                            width: 20,
-                            height: 20,
-                          ),
+                          leading: Image.asset(detailPage[index]['icon'],
+                              width: 20,
+                              height: 20,
+                              color: theme.isDarkMode
+                                  ? Colors.white
+                                  : Colors.black),
                           title: Text(detailPage[index]['label']),
                         );
                       }),
