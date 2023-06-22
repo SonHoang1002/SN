@@ -12,8 +12,7 @@ import '../see_collection_bookmark.dart';
 
 class CollectionItem extends ConsumerStatefulWidget {
   dynamic item;
-  void Function() func;
-  CollectionItem({super.key, this.item, required this.func});
+  CollectionItem({super.key, this.item});
 
   @override
   CollectionItemState createState() => CollectionItemState();

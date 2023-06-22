@@ -71,11 +71,7 @@ class SavedState extends ConsumerState<Saved> {
               ),
               itemBuilder: (context, index) {
                 var item = collections[index];
-                return CollectionItem(
-                    item: item,
-                    func: () {
-                      setState(() {});
-                    });
+                return CollectionItem(item: item);
               },
             )
           : Column(

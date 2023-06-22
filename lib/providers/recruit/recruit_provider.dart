@@ -363,23 +363,27 @@ class RecruitController extends StateNotifier<RecruitState> {
   getListRecruitPropose(params) async {
     List response = await RecruitApi().getListRecruitApi(params);
     if (response.isNotEmpty) {
-      state = state.copyWith(
-        recruitsPropose: response,
-        recruitsSimilar: state.recruitsSimilar,
-        recruits: state.recruits,
-        recruitsChipMenu: state.recruitsChipMenu,
-        isMore: params['limit'] != null
-            ? response.length < params['limit']
-                ? false
-                : true
-            : false,
-        detailRecruit: state.detailRecruit,
-        recruitsCV: state.recruitsCV,
-        recruitsNew: state.recruitsNew,
-        recruitsPast: state.recruitsPast,
-        recruitsInterest: state.recruitsInterest,
-        recruitsNewPast: state.recruitsNewPast,
-      );
+      if (mounted) {
+        state = state.copyWith(
+          recruitsPropose: response,
+          recruitsSimilar: state.recruitsSimilar,
+          recruits: state.recruits,
+          recruitsChipMenu: state.recruitsChipMenu,
+          isMore: params['limit'] != null
+              ? response.length < params['limit']
+                  ? false
+                  : true
+              : false,
+          detailRecruit: state.detailRecruit,
+          recruitsCV: state.recruitsCV,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+        );
+      } else {
+        print("Not mounted 2");
+      }
     }
   }
 
@@ -454,20 +458,24 @@ class RecruitController extends StateNotifier<RecruitState> {
   getDetailRecruit(id) async {
     var response = await RecruitApi().getDetailRecruitApi(id);
     if (response != null && response.isNotEmpty) {
-      state = state.copyWith(
-        detailRecruit: response,
-        recruits: state.recruits,
-        recruitsChipMenu: state.recruitsChipMenu,
-        recruitsCV: state.recruitsCV,
-        isMore: state.isMore,
-        recruitsSimilar: state.recruitsSimilar,
-        recruitsPropose: state.recruitsPropose,
-        recruitsInvite: state.recruitsInvite,
-        recruitsNew: state.recruitsNew,
-        recruitsPast: state.recruitsPast,
-        recruitsInterest: state.recruitsInterest,
-        recruitsNewPast: state.recruitsNewPast,
-      );
+      if (mounted) {
+        state = state.copyWith(
+          detailRecruit: response,
+          recruits: state.recruits,
+          recruitsChipMenu: state.recruitsChipMenu,
+          recruitsCV: state.recruitsCV,
+          isMore: state.isMore,
+          recruitsSimilar: state.recruitsSimilar,
+          recruitsPropose: state.recruitsPropose,
+          recruitsInvite: state.recruitsInvite,
+          recruitsNew: state.recruitsNew,
+          recruitsPast: state.recruitsPast,
+          recruitsInterest: state.recruitsInterest,
+          recruitsNewPast: state.recruitsNewPast,
+        );
+      } else {
+        print("Not mounted getDetailRecruitl");
+      }
     }
   }
 

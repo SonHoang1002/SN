@@ -406,11 +406,12 @@ class _PostDetailState extends ConsumerState<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    if (ref.watch(currentPostControllerProvider).currentPost !=null && ref.watch(currentPostControllerProvider).currentPost.isNotEmpty) {
+    if (ref.watch(currentPostControllerProvider).currentPost != null &&
+        ref.watch(currentPostControllerProvider).currentPost.isNotEmpty) {
       postData = ref.watch(currentPostControllerProvider).currentPost;
     } else {
       if (widget.postId != null) {
-        postData = postFromNoti ;
+        postData = postFromNoti;
       } else {
         postData = widget.post;
       }

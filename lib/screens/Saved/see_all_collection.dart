@@ -78,12 +78,7 @@ class SeeAllCollectionState extends ConsumerState<SeeAllCollection> {
                       ),
                       itemBuilder: (context, index) {
                         var item = widget.collections[index];
-                        return CollectionItem(
-                          item: item,
-                          func: () {
-                            setState(() {});
-                          },
-                        );
+                        return CollectionItem(item: item);
                       },
                     ),
                   )
