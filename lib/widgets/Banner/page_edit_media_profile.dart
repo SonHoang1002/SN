@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -180,7 +181,7 @@ class _BannerWidgetState extends State<BannerWidget> {
         widget.widget.file != null) {
       widget.handleUpdateData('file', widget.widget.file);
     }
-    currentFile = widget.widget.file!;
+    findCurrentFile();
   }
 
   void disposeCacheFiles() async {
@@ -213,6 +214,31 @@ class _BannerWidgetState extends State<BannerWidget> {
     File file = File(fileName);
     file.writeAsBytesSync(data, mode: FileMode.write);
     return file;
+  }
+
+  Future<File> urlToFile(String imageUrl) async {
+    var response = await http.get(Uri.parse(imageUrl));
+    var bytes = response.bodyBytes;
+
+    var fileName = imageUrl.split('/').last; // Extracting the filename
+
+    var dir = await Directory.systemTemp.createTemp();
+    File file = File('${dir.path}/$fileName');
+    await file.writeAsBytes(bytes);
+
+    return file;
+  }
+
+  void findCurrentFile() async {
+    if (widget.widget.file != null) {
+      if (widget.widget.entityType == 'file') {
+        currentFile = widget.widget.file;
+      } else if (widget.widget.entityType == 'image') {
+        currentFile = await urlToFile(widget.widget.file['url'] ?? '');
+      } else {
+        currentFile = await urlToFile(widget.widget.entityObj['banner']['url']);
+      }
+    }
   }
 
   @override
@@ -357,7 +383,33 @@ class _AvatarWigetState extends State<AvatarWiget> {
         widget.widget.file != null) {
       widget.handleUpdateData('file', widget.widget.file);
     }
-    currentFile = widget.widget.file!;
+    findCurrentFile();
+  }
+
+  Future<File> urlToFile(String imageUrl) async {
+    var response = await http.get(Uri.parse(imageUrl));
+    var bytes = response.bodyBytes;
+
+    var fileName = imageUrl.split('/').last; // Extracting the filename
+
+    var dir = await Directory.systemTemp.createTemp();
+    File file = File('${dir.path}/$fileName');
+    await file.writeAsBytes(bytes);
+
+    return file;
+  }
+
+  void findCurrentFile() async {
+    if (widget.widget.file != null) {
+      if (widget.widget.entityType == 'file') {
+        currentFile = widget.widget.file;
+      } else if (widget.widget.entityType == 'image') {
+        currentFile = await urlToFile(widget.widget.file['url'] ?? '');
+      } else {
+        currentFile = await urlToFile(
+            widget.widget.entityObj['avatar_media']['preview_url']);
+      }
+    }
   }
 
   Future<String> generateNewFilePath(String fileName) async {
