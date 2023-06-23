@@ -46,7 +46,8 @@ class _FeedState extends ConsumerState<Feed> {
   double heightOfProcessingPost = 0;
   bool dataHasVideoPending = false;
   ValueNotifier<dynamic> focusCurrentPostIndex = ValueNotifier("");
-  // ValueNotifier<List>
+  List posts = [];
+  ThemeManager? theme;
   @override
   void initState() {
     if (!mounted) return;
@@ -150,9 +151,9 @@ class _FeedState extends ConsumerState<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    List posts = ref.read(postControllerProvider).posts;
+    posts = ref.read(postControllerProvider).posts;
     bool isMore = ref.watch(postControllerProvider).isMore;
-    final theme = pv.Provider.of<ThemeManager>(context);
+    theme = pv.Provider.of<ThemeManager>(context);
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);
@@ -285,7 +286,7 @@ class _FeedState extends ConsumerState<Feed> {
               alignment: Alignment.center,
               margin: const EdgeInsets.only(top: 10),
               child: CupertinoActivityIndicator(
-                  color: theme.isDarkMode ? Colors.white : Colors.black)),
+                  color: theme!.isDarkMode ? Colors.white : Colors.black)),
     );
   }
 

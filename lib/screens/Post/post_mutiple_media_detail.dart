@@ -7,6 +7,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -529,9 +530,10 @@ class _PostMutipleMediaDetail1State
         child: medias[index]['file'] != null
             ? VideoPlayerNoneController(
                 path: medias[index]['file'].path,
-                type: "local",removeObserver:false
+                type: "local",
+                removeObserver: false
                 // aspectRatio: size.height / size.width,
-              )
+                )
             : VideoPlayerHasController(
                 media: medias[index],
                 handleAction: () {
@@ -541,7 +543,7 @@ class _PostMutipleMediaDetail1State
                         post: widget.post,
                         media: medias[index],
                         type: widget.preType,
-                        updateDataFunction: () { 
+                        updateDataFunction: () {
                           // updateNewPost() {
                           // setState(() {
                           //   postData = ref.watch(currentPostControllerProvider).currentPost;
@@ -586,7 +588,18 @@ class _PostMutipleMediaDetail1State
       elevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       automaticallyImplyLeading: false,
-      leading: const BackIconAppbar(),
+      leading: InkWell(
+        onTap: () {
+          setState(() {
+            isDragOutside = true;
+          });
+          Navigator.pop(context);
+        },
+        child: Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: Theme.of(context).textTheme.displayLarge!.color,
+        ),
+      ),
       title: Container(
         padding: const EdgeInsets.only(right: 30),
         width: size.width - 70,

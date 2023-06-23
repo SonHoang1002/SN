@@ -285,7 +285,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                                   child: Transform.scale(
                                     scale: zoomIconWhenRelease.value,
                                     child: Image.asset(
-                                      'assets/reaction/tym.gif',
+                                      'assets/reaction/love.gif',
                                       width: 40.0,
                                       height: 40.0,
                                     ),
@@ -303,7 +303,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                                   child: Transform.scale(
                                     scale: zoomIconWhenRelease.value,
                                     child: Image.asset(
-                                      'assets/reaction/hug.gif',
+                                      'assets/reaction/yay.gif',
                                       width: 40.0,
                                       height: 40.0,
                                     ),
@@ -357,7 +357,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                                   child: Transform.scale(
                                     scale: zoomIconWhenRelease.value,
                                     child: Image.asset(
-                                      'assets/reaction/cry.gif',
+                                      'assets/reaction/sad.gif',
                                       width: 40.0,
                                       height: 40.0,
                                     ),
@@ -375,7 +375,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                                   child: Transform.scale(
                                     scale: zoomIconWhenRelease.value,
                                     child: Image.asset(
-                                      'assets/reaction/mad.gif',
+                                      'assets/reaction/angry.gif',
                                       width: 40.0,
                                       height: 40.0,
                                     ),
@@ -672,7 +672,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                         )
                       : Container(),
                   Image.asset(
-                    'assets/reaction/tym.gif',
+                    'assets/reaction/love.gif',
                     width: isSizeBig ? 75.0 : 58.0,
                     height: isSizeBig ? 75.0 : 58.0,
                     fit: BoxFit.contain,
@@ -737,7 +737,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                         )
                       : Container(),
                   Image.asset(
-                    'assets/reaction/hug.gif',
+                    'assets/reaction/yay.gif',
                     width: isSizeBig ? 65.0 : 55.0,
                     height: isSizeBig ? 65.0 : 55.0,
                     fit: BoxFit.contain,
@@ -947,7 +947,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                         )
                       : Container(),
                   Image.asset(
-                    'assets/reaction/cry.gif',
+                    'assets/reaction/sad.gif',
                     width: isSizeBig ? 45.0 : 37.0,
                     height: isSizeBig ? 45.0 : 37.0,
                     fit: BoxFit.contain,
@@ -1015,7 +1015,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
                         )
                       : Container(),
                   Image.asset(
-                    'assets/reaction/mad.gif',
+                    'assets/reaction/angry.gif',
                     width: isSizeBig ? 40.0 : 33.0,
                     height: isSizeBig ? 40.0 : 33.0,
                     fit: BoxFit.contain,
