@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +25,7 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
   final bool? isLooping;
   final int? index;
   final Function? onEnd;
+  final bool removeObserver;
   const VideoPlayerNoneController(
       {Key? key,
       this.timeStart,
@@ -35,7 +38,8 @@ class VideoPlayerNoneController extends ConsumerStatefulWidget {
       this.isPause = false,
       this.onEnd,
       this.index,
-      this.isLooping = false})
+      this.isLooping = false,
+      this.removeObserver = true})
       : super(key: key);
 
   @override
@@ -50,6 +54,7 @@ class _VideoPlayerNoneControllerState
   late VideoPlayerController videoPlayerController;
   bool isVisible = false;
   bool _isMuted = false;
+  bool isPlaying = true;
 
   @override
   void initState() {
@@ -80,13 +85,6 @@ class _VideoPlayerNoneControllerState
               videoPlayerController.value.position.inSeconds);
         }
       })
-      ..addListener(() {
-        if (widget.isPause == true) {
-          videoPlayerController.pause();
-        } else {
-          videoPlayerController.play();
-        }
-      })
       ..addListener(_onEnd);
   }
 
@@ -109,13 +107,21 @@ class _VideoPlayerNoneControllerState
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
+    if (widget.isPause == true) {
+      videoPlayerController.pause();
+    } else {
+      if (isPlaying) {
+        videoPlayerController.play();
+      } else {
+        videoPlayerController.pause();
+      }
+    }
     return VisibilityDetector(
         onVisibilityChanged: (visibilityInfo) {
           if (mounted) {
             setState(() {
               isVisible = visibilityInfo.visibleFraction == 1;
-
               if (isVisible) {
                 videoPlayerController.play();
                 if (ref.read(watchControllerProvider).mediaSelected?['id'] ==
@@ -170,7 +176,11 @@ class _VideoPlayerNoneControllerState
                       onTap: () {
                         setState(() {
                           _isMuted = !_isMuted;
-                          videoPlayerController.setVolume(_isMuted ? 0 : 1);
+                          if (widget.isPause == true) {
+                            videoPlayerController.setVolume(0);
+                          } else {
+                            videoPlayerController.setVolume(_isMuted ? 0 : 1);
+                          }
                         });
                       },
                       child: Container(
@@ -189,14 +199,38 @@ class _VideoPlayerNoneControllerState
                           ),
                         ),
                       ),
-                    ))
+                    )),
+            // Positioned.fill(
+            //   child: Align(
+            //     alignment: Alignment.center,
+            //     child: isPlaying
+            //         ? const SizedBox(height: 40, width: 40)
+            //         : IconButton(
+            //             icon: const Icon(
+            //               FontAwesomeIcons.play,
+            //               color: Colors.red,
+            //               size: 40,
+            //             ),
+            //             onPressed: () {
+            //               if (widget.isPause != true) {
+            //                 setState(() {
+            //                   isPlaying = !isPlaying;
+            //                 });
+            //               }
+            //               print("isPlaying ${isPlaying}");
+            //             },
+            //           ),
+            //   ),
+            // ),
           ],
         ));
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    widget.removeObserver == true
+        ? WidgetsBinding.instance.removeObserver(this)
+        : null;
     videoPlayerController.pause();
     videoPlayerController.dispose();
     super.dispose();

@@ -74,9 +74,11 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   trailing: const Icon(Icons.edit),
-                  title: Text(editPage?['page_category_ids'].isNotEmpty
-                      ? "Trang \u2022 ${editPage?['page_category_ids']?[0]?['text']}"
-                      : "Trang"),
+                  title: Text(
+                      editPage?['page_category_ids'].isNotEmpty
+                          ? "Trang \u2022 ${editPage?['page_category_ids']?[0]?['text']}"
+                          : "Trang",
+                      maxLines: 2),
                   onTap: () async {
                     final selectedCategory = await Navigator.push(
                       context,
@@ -105,7 +107,8 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
-                  title: Text("${editPage?['address'] ?? "Địa chỉ"}"),
+                  title:
+                      Text("${editPage?['address'] ?? "Địa chỉ"}", maxLines: 2),
                   trailing: const Icon(Icons.edit),
                   onTap: () {
                     Navigator.push(
@@ -127,7 +130,10 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
-                  title: Text("${editPage?['phone_number'] ?? "Điện thoại"}"),
+                  title: Text(
+                    "${editPage?['phone_number'] ?? "Điện thoại"}",
+                    maxLines: 2,
+                  ),
                   trailing: const Icon(Icons.edit),
                   onTap: () {
                     Navigator.push(
@@ -152,7 +158,7 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                 ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
-                  title: Text("${editPage?['email'] ?? "Email"}"),
+                  title: Text("${editPage?['email'] ?? "Email"}", maxLines: 2),
                   trailing: const Icon(Icons.edit),
                   onTap: () {
                     Navigator.push(
@@ -202,7 +208,10 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   trailing: const Icon(Icons.edit),
-                  title: Text("${editPage?['title'] ?? "Tên trang"}"),
+                  title: Text(
+                    "${editPage?['title'] ?? "Tên trang"}",
+                    maxLines: 2,
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -224,7 +233,8 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   trailing: const Icon(Icons.edit),
-                  title: Text("${editPage?['username'] ?? "Tên người dùng"}"),
+                  title: Text("${editPage?['username'] ?? "Tên người dùng"}",
+                      maxLines: 2),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -256,7 +266,9 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   trailing: const Icon(Icons.edit),
-                  title: Text("${editPage?['description'] ?? "Mô tả"}"),
+                  title: Text("${editPage?['description'] ?? "Mô tả"}",
+                      maxLines: 6,
+                      style: const TextStyle(overflow: TextOverflow.ellipsis)),
                   onTap: () {
                     Navigator.push(
                       context,

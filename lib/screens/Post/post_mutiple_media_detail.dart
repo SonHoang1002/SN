@@ -529,7 +529,7 @@ class _PostMutipleMediaDetail1State
         child: medias[index]['file'] != null
             ? VideoPlayerNoneController(
                 path: medias[index]['file'].path,
-                type: "local",
+                type: "local",removeObserver:false
                 // aspectRatio: size.height / size.width,
               )
             : VideoPlayerHasController(
@@ -540,6 +540,14 @@ class _PostMutipleMediaDetail1State
                       WatchDetail(
                         post: widget.post,
                         media: medias[index],
+                        type: widget.preType,
+                        updateDataFunction: () { 
+                          // updateNewPost() {
+                          // setState(() {
+                          //   postData = ref.watch(currentPostControllerProvider).currentPost;
+                          // });
+                          // }
+                        },
                       ),
                       opaque: false);
                 },

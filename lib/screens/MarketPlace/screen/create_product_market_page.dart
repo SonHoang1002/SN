@@ -26,7 +26,7 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/video_player.dart';
 
 import '../../../../theme/colors.dart';
-import '../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../widgets/GeneralWidget/general_component.dart';
 
 import 'manage_product_market_page.dart';
 

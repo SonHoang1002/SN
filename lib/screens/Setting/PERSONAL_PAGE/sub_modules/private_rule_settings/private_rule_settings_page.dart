@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../helper/push_to_new_screen.dart';
 import '../../../../../theme/colors.dart';
 import '../../../../../widgets/GeneralWidget/bottom_navigator_bar_widget.dart';
-import '../../../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../../../widgets/GeneralWidget/general_component.dart';
 import '../../../../../widgets/GeneralWidget/text_content_widget.dart';
 import '../../../../../widgets/appbar_title.dart';
 import '../../../../../widgets/back_icon_appbar.dart';

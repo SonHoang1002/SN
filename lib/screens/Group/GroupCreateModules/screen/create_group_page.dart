@@ -8,7 +8,7 @@ import '../../../../helper/push_to_new_screen.dart';
 import '../../../../providers/group/hide_group_provider.dart';
 import '../../../../theme/colors.dart';
 import '../../../../widgets/GeneralWidget/build_stage_navigation_bar.dart';
-import '../../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../../widgets/GeneralWidget/general_component.dart';
 import '../../../../widgets/GeneralWidget/spacer_widget.dart';
 import '../../../../widgets/GeneralWidget/text_content_widget.dart';
 import '../../../../widgets/appbar_title.dart';

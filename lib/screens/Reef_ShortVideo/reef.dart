@@ -19,7 +19,7 @@ import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_header.da
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_settings/reef_setting_main.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -100,7 +100,7 @@ class _ReefState extends ConsumerState<Reef> {
                 FontAwesomeIcons.rectangleXmark,
                 size: 18,
               ),
-              changeBackground: Theme.of(context).cardColor,
+              changeBackground: Theme.of(context).colorScheme.background,
             ),
             buildSpacer(height: 10),
             GeneralComponent(
@@ -112,7 +112,7 @@ class _ReefState extends ConsumerState<Reef> {
                 size: 18,
               ),
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              changeBackground: Theme.of(context).cardColor,
+              changeBackground: Theme.of(context).colorScheme.background,
               function: () {
                 Navigator.of(context).push(CupertinoPageRoute(
                     builder: (ctx) => const ReefSettingMain()));

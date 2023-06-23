@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../theme/colors.dart';
 import '../../../widgets/GeneralWidget/bottom_navigator_bar_widget.dart';
-import '../../../widgets/GeneralWidget/information_component_widget.dart';
+import '../../../widgets/GeneralWidget/general_component.dart';
 import '../../../widgets/GeneralWidget/title_description_content_list.dart';
 import '../../../widgets/back_icon_appbar.dart';
 import '../../../widgets/search_input.dart';

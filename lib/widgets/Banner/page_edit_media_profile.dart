@@ -1,10 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_frames.dart';
@@ -17,6 +23,7 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../apis/page_api.dart' as page;
 import '../../providers/page/page_provider.dart';
+import '../EditImage/edit_img_main.dart';
 
 class PageEditMediaProfile extends ConsumerStatefulWidget {
   final String typePage;
@@ -163,7 +170,7 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
-  final GlobalKey _widgetKey = GlobalKey();
+  dynamic currentFile;
 
   @override
   void initState() {
@@ -174,21 +181,73 @@ class _BannerWidgetState extends State<BannerWidget> {
         widget.widget.file != null) {
       widget.handleUpdateData('file', widget.widget.file);
     }
+    findCurrentFile();
+  }
+
+  void disposeCacheFiles() async {
+    Directory cacheDirectory = await getTemporaryDirectory();
+    if (cacheDirectory.existsSync()) {
+      cacheDirectory.listSync(recursive: true).forEach((file) {
+        if (file is File) {
+          file.deleteSync();
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
+    disposeCacheFiles();
     super.dispose();
+  }
+
+  Future<String> generateNewFilePath(String fileName) async {
+    String cacheDirectory = '';
+    Directory? tempDir = await getTemporaryDirectory();
+    cacheDirectory = tempDir.path;
+    String uniqueFileName = UniqueKey().toString();
+    String extension = fileName.split('.').last;
+    return '$cacheDirectory/$uniqueFileName.$extension';
+  }
+
+  File uint8ListToFile(Uint8List data, String fileName) {
+    File file = File(fileName);
+    file.writeAsBytesSync(data, mode: FileMode.write);
+    return file;
+  }
+
+  Future<File> urlToFile(String imageUrl) async {
+    var response = await http.get(Uri.parse(imageUrl));
+    var bytes = response.bodyBytes;
+
+    var fileName = imageUrl.split('/').last; // Extracting the filename
+
+    var dir = await Directory.systemTemp.createTemp();
+    File file = File('${dir.path}/$fileName');
+    await file.writeAsBytes(bytes);
+
+    return file;
+  }
+
+  void findCurrentFile() async {
+    if (widget.widget.file != null) {
+      if (widget.widget.entityType == 'file') {
+        currentFile = widget.widget.file;
+      } else if (widget.widget.entityType == 'image') {
+        currentFile = await urlToFile(widget.widget.file['url'] ?? '');
+      } else {
+        currentFile = await urlToFile(widget.widget.entityObj['banner']['url']);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     renderBanner() {
       String path = '';
-
       if (widget.widget.entityType == 'file') {
         return Image.file(
-          widget.widget.file!,
+          currentFile!,
           width: widget.size.width,
           height: 240,
           fit: BoxFit.cover,
@@ -207,7 +266,6 @@ class _BannerWidgetState extends State<BannerWidget> {
     }
 
     return Column(
-      key: _widgetKey,
       children: [
         Container(
           constraints: const BoxConstraints(minHeight: 290),
@@ -215,7 +273,7 @@ class _BannerWidgetState extends State<BannerWidget> {
             children: [
               renderBanner(),
               Positioned(
-                  top: 120,
+                  top: 115,
                   left: 15,
                   child: Container(
                       width: 172.0,
@@ -229,8 +287,11 @@ class _BannerWidgetState extends State<BannerWidget> {
                               width: 170.0,
                               height: 170.0,
                               object: widget.widget.entityObj,
-                              path: widget.widget.entityObj['avatar_media']
-                                  ['url']),
+                              path: widget.widget.entityObj['avatar_media'] !=
+                                      null
+                                  ? widget.widget.entityObj['avatar_media']
+                                      ['url']
+                                  : linkAvatarDefault),
                         ],
                       ))),
             ],
@@ -255,7 +316,25 @@ class _BannerWidgetState extends State<BannerWidget> {
             ),
             label: "Chỉnh sửa hình ảnh",
             isPrimary: true,
-            handlePress: () {},
+            handlePress: () {
+              Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                return EditImageMain(
+                  imageData: {
+                    'file': currentFile!,
+                    'type': 'local',
+                  },
+                  updateData: (_, value) async {
+                    String newFilePath =
+                        await generateNewFilePath(value['file'].path);
+                    setState(() {
+                      currentFile = uint8ListToFile(
+                          value['newUint8ListFile'], newFilePath);
+                      widget.handleUpdateData('file', currentFile);
+                    });
+                  },
+                );
+              }));
+            },
           ),
         ),
       ],
@@ -283,6 +362,7 @@ class AvatarWiget extends StatefulWidget {
 
 class _AvatarWigetState extends State<AvatarWiget> {
   dynamic frameSelected;
+  dynamic currentFile;
 
   @override
   void initState() {
@@ -303,6 +383,48 @@ class _AvatarWigetState extends State<AvatarWiget> {
         widget.widget.file != null) {
       widget.handleUpdateData('file', widget.widget.file);
     }
+    findCurrentFile();
+  }
+
+  Future<File> urlToFile(String imageUrl) async {
+    var response = await http.get(Uri.parse(imageUrl));
+    var bytes = response.bodyBytes;
+
+    var fileName = imageUrl.split('/').last; // Extracting the filename
+
+    var dir = await Directory.systemTemp.createTemp();
+    File file = File('${dir.path}/$fileName');
+    await file.writeAsBytes(bytes);
+
+    return file;
+  }
+
+  void findCurrentFile() async {
+    if (widget.widget.file != null) {
+      if (widget.widget.entityType == 'file') {
+        currentFile = widget.widget.file;
+      } else if (widget.widget.entityType == 'image') {
+        currentFile = await urlToFile(widget.widget.file['url'] ?? '');
+      } else {
+        currentFile = await urlToFile(
+            widget.widget.entityObj['avatar_media']['preview_url']);
+      }
+    }
+  }
+
+  Future<String> generateNewFilePath(String fileName) async {
+    String cacheDirectory = '';
+    Directory? tempDir = await getTemporaryDirectory();
+    cacheDirectory = tempDir.path;
+    String uniqueFileName = UniqueKey().toString();
+    String extension = fileName.split('.').last;
+    return '$cacheDirectory/$uniqueFileName.$extension';
+  }
+
+  File uint8ListToFile(Uint8List data, String fileName) {
+    File file = File(fileName);
+    file.writeAsBytesSync(data, mode: FileMode.write);
+    return file;
   }
 
   @override
@@ -320,7 +442,7 @@ class _AvatarWigetState extends State<AvatarWiget> {
           return ClipRRect(
             borderRadius: BorderRadius.circular((widget.size.width - 100) / 2),
             child: Image.file(
-              widget.widget.file!,
+              currentFile!,
               width: widget.size.width - 100,
               height: widget.size.width - 100,
               fit: BoxFit.cover,
@@ -429,7 +551,27 @@ class _AvatarWigetState extends State<AvatarWiget> {
                   ),
                   label: "Chỉnh sửa",
                   isPrimary: true,
-                  handlePress: () {},
+                  handlePress: () {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) {
+                      return EditImageMain(
+                        imageData: {
+                          'file': currentFile!,
+                          'type': 'local',
+                        },
+                        screenshot: false,
+                        updateData: (_, value) async {
+                          String newFilePath =
+                              await generateNewFilePath(value['file'].path);
+                          setState(() {
+                            currentFile = uint8ListToFile(
+                                value['newUint8ListFile'], newFilePath);
+                            widget.handleUpdateData('file', currentFile);
+                          });
+                        },
+                      );
+                    }));
+                  },
                 ),
                 const SizedBox(
                   width: 12.0,

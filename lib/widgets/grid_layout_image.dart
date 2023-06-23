@@ -18,9 +18,10 @@ class GridLayoutImage extends ConsumerStatefulWidget {
   final dynamic post;
   final Function? updateDataFunction;
   final bool? isFocus;
+
   /// id of video
   final dynamic currentFocusVideoId;
-  final Function( )? onEnd;
+  final Function()? onEnd;
   const GridLayoutImage(
       {Key? key,
       required this.medias,
@@ -88,10 +89,24 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                           : Hero(
                               tag: medias[0]['id'],
                               child: ExtendedImage.network(
-                                medias[0]['url'] ?? medias[0]['preview_url'],
-                                fit: BoxFit.fitWidth,
-                                width: size.width,
-                              ),
+                                  medias[0]['url'] ?? medias[0]['preview_url'],
+                                  fit: BoxFit.fitWidth,
+                                  width: size.width,
+                                  loadStateChanged: (ExtendedImageState state) {
+                                if (state.extendedImageLoadState !=
+                                    LoadState.completed) {
+                                  return Container(
+                                    height: double.parse((medias[0]?['meta']
+                                                ?['small']?['height'] ??
+                                            400)
+                                        .toString()),
+                                    width: size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                  );
+                                }
+                              }),
                             ),
                       buildDivider(color: greyColor),
                     ],
@@ -103,7 +118,11 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
             String path = medias[0]['file']?.path ??
                 medias[0]['remote_url'] ??
                 medias[0]['url'];
-            return SizedBox(
+            return Container(
+                constraints: BoxConstraints(
+                  maxHeight: size.height * 0.75,
+                  minHeight: 500,
+                ),
                 height: (medias[0]['aspect'] ??
                             medias[0]['meta']['original']['aspect'] ??
                             1) <
@@ -115,10 +134,11 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                     ? VideoPlayerNoneController(
                         path: medias[0]['file'].path,
                         type: "local",
-                        isPause: (widget.isFocus != true &&
-                            widget.currentFocusVideoId !=medias[0]['id'] ),
-                        onEnd: widget.onEnd != null ? widget.onEnd!( ) : null,
-                      )
+                        isPause: (widget.isFocus != true ||
+                            widget.currentFocusVideoId != medias[0]['id']),
+                        onEnd: widget.onEnd != null ? widget.onEnd!() : null,
+                        // removeObserver: false
+                        )
                     : VideoPlayerHasController(
                         media: medias[0],
                         handleAction: () {
@@ -151,7 +171,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
             aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
             medias: medias,
             onEnd: widget.onEnd,
-            isFocus: widget.isFocus, 
+            isFocus: widget.isFocus,
             currentFocusVideoId: widget.currentFocusVideoId,
           );
         case 3:
@@ -319,8 +339,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                 onEnd: widget.onEnd,
                                 mediasNoneCheck: medias,
                                 isFocus: widget.isFocus,
-                                currentFocusVideoId:
-                                    widget.currentFocusVideoId,
+                                currentFocusVideoId: widget.currentFocusVideoId,
                               ),
                             ),
                           ],

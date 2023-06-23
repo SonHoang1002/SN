@@ -15,7 +15,7 @@ import 'package:social_network_app_mobile/apis/market_place_apis/detail_product_
 import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/review_product_apis.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';

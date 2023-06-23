@@ -8,7 +8,8 @@ import 'package:social_network_app_mobile/providers/friend/friend_provider.dart'
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_settings/reef_setting_main.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/information_component_widget.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -94,7 +95,9 @@ class _SuggestState extends ConsumerState<Suggest> {
                 FontAwesomeIcons.rectangleXmark,
                 size: 18,
               ),
-              changeBackground: greyColor[300],
+              changeBackground: Theme.of(context).colorScheme.background,
+
+              // greyColor[300],
             ),
             buildSpacer(height: 10),
             GeneralComponent(
@@ -106,7 +109,7 @@ class _SuggestState extends ConsumerState<Suggest> {
                 size: 18,
               ),
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              changeBackground: greyColor[300],
+              changeBackground: Theme.of(context).colorScheme.background,
               function: () {
                 Navigator.of(context).push(CupertinoPageRoute(
                     builder: (ctx) => const ReefSettingMain()));

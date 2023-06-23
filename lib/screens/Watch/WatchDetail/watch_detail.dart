@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,10 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
+import 'package:social_network_app_mobile/helper/split_link.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/post_current_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_tree.dart';
@@ -29,7 +34,9 @@ class WatchDetail extends ConsumerStatefulWidget {
   final dynamic media;
   final dynamic post;
   final String? type;
-  const WatchDetail({Key? key, this.media, this.post, this.type})
+  final Function? updateDataFunction;
+  const WatchDetail(
+      {Key? key, this.media, this.post, this.type, this.updateDataFunction})
       : super(key: key);
 
   @override
@@ -54,8 +61,14 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   @override
   void initState() {
     super.initState();
-    getListCommentPost(widget.post['id'], {"sort_by": "newest"});
+    getListCommentPost(widget.media['status_media']['id'] ?? widget.post['id'],
+        {"sort_by": "newest"});
     _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    Future.delayed(Duration.zero, () {
+      ref
+          .read(currentPostControllerProvider.notifier)
+          .saveCurrentPost(widget.post);
+    });
   }
 
   @override
@@ -114,13 +127,238 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                           isHiddenControl: false,
                         ),
                       )
-                    : VideoPlayerHasController(
-                        type: widget.type,
-                        media: widget.media,
-                        isHiddenControl: false,
+                    : Container(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: VideoPlayerHasController(
+                          type: widget.type,
+                          media: widget.media,
+                          isHiddenControl: false,
+                        ),
                       )),
           )
         : const SizedBox();
+  }
+
+  getCommentSelected(comment) {
+    setState(() {
+      commentSelected = comment;
+    });
+  }
+
+  handleDeleteComment(post) {
+    if (post != null) {
+      if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
+        List newPostComment = postComment
+            .where((element) => element['id'] != post['id'])
+            .toList();
+        setState(() {
+          postComment = newPostComment;
+        });
+        _updatePostCount(subIfChild: 1);
+        return;
+      } else if (post['in_reply_to_id'] != null) {
+        // cap nhat so luong khi xoa cmt con
+        postComment.forEach((element) {
+          if (element['id'] == post['in_reply_to_id']) {
+            setState(() {
+              postComment = postComment;
+            });
+            _updatePostCount(subIfChild: 1);
+          }
+        });
+      }
+    }
+  }
+
+  Future handleComment(data, previewLinkText) async {
+    if (!mounted) return;
+    final preCardData = await getPreviewUrl(previewLinkText);
+    final cardData = preCardData != null
+        ? {
+            "url": preCardData[0]['link'],
+            "title": preCardData[0]['title'],
+            "description": preCardData[0]['description'],
+            "type": "link",
+            "author_name": "",
+            "author_url": "",
+            "provider_name": "",
+            "provider_url": "",
+            "html": "",
+            "width": 400,
+            "height": 240,
+            "image": preCardData[0]['url'],
+            "embed_url": "",
+            "blurhash": "UNKKi:%L~A9Fvesm%MX9pdR+RPV@wajZjtt6"
+          }
+        : null;
+    var newCommentPreview = {
+      "id": data['id'],
+      "in_reply_to_id": widget.media['status_media']['id'] ?? widget.post['id'],
+      "account": ref.watch(meControllerProvider)[0],
+      "content": data['status'],
+      "typeStatus": data['typeStatus'] ?? "previewComment",
+      "created_at":
+          '${DateTime.now().toIso8601String().substring(0, 23)}+07:00',
+      "backdated_time": "2023-02-01T23:04:48.047+07:00",
+      "sensitive": false,
+      "spoiler_text": "",
+      "visibility": "public",
+      "language": "vi",
+      "post_type": null,
+      "replies_count": 0,
+      "off_comment": false,
+      "reblogs_count": 0,
+      "favourites_count": 0,
+      "reactions": [
+        {"type": "like", "likes_count": 0},
+        {"type": "haha", "hahas_count": 0},
+        {"type": "angry", "angrys_count": 0},
+        {"type": "love", "loves_count": 0},
+        {"type": "sad", "sads_count": 0},
+        {"type": "wow", "wows_count": 0},
+        {"type": "yay", "yays_count": 0}
+      ],
+      "replies_total": 0,
+      "score": "109790330095515423",
+      "hidden": false,
+      "notify": false,
+      "processing": "done",
+      "comment_moderation": "public",
+      "viewer_reaction": null,
+      "reblogged": false,
+      "muted": false,
+      "bookmarked": false,
+      "pinned": null,
+      "card": preCardData != null ? cardData : preCardData,
+      "in_reply_to_parent_id": null,
+      "reblog": null,
+      "application": {"name": "Web", "website": null},
+      "status_background": null,
+      "status_activity": null,
+      "tagable_page": null,
+      "place": null,
+      "page_owner": null,
+      "album": null,
+      "event": null,
+      "project": null,
+      "course": null,
+      "series": null,
+      "shared_event": null,
+      "shared_project": null,
+      "shared_recruit": null,
+      "shared_course": null,
+      "shared_page": null,
+      "shared_group": null,
+      "target_account": null,
+      "media_attachments": [],
+      "mentions": [],
+      "tags": data['tags'],
+      "replies": [],
+      "favourites": [],
+      "emojis": [],
+      "status_tags": [],
+      "poll": null,
+      "life_event": null,
+      "status_question": null,
+      "status_target": null
+    };
+
+    List dataPreComment = [];
+
+    if (data['type'] == 'parent' && data['typeStatus'] == null) {
+      //Comment parent
+      dataPreComment = [newCommentPreview, ...postComment];
+    }
+    setState(() {
+      postComment = dataPreComment;
+    });
+    _updatePostCount(addtionalIfChild: 1);
+
+    dynamic newComment;
+    // cal api
+    if (!['editComment', 'editChild'].contains(data['typeStatus'])) {
+      newComment = await PostApi().createStatus({
+            ...data,
+            "visibility": "public",
+            "in_reply_to_id": data['in_reply_to_id'] ??
+                widget.media['status_media']['id'] ??
+                widget.post['id']
+          }) ??
+          newCommentPreview;
+      if (newComment['card'] == null && preCardData != null) {
+        newComment["card"] = newCommentPreview["card"];
+      }
+    } else {
+      newComment = await PostApi().updatePost(data['id'], {
+        "extra_body": data['extra_body'],
+        "status": data['status'],
+        "tags": data['tags']
+      });
+      if (newComment['card'] == null ||
+          (newComment["card"] != newCommentPreview["card"])) {
+        newComment["card"] = newCommentPreview["card"];
+      }
+    }
+
+    if (mounted && newComment != null) {
+      int indexComment = postComment
+          .indexWhere((element) => element['id'] == newComment['id']);
+      List newListUpdate = [];
+
+      if (indexComment > -1) {
+        newListUpdate = postComment.sublist(0, indexComment) +
+            [newComment] +
+            postComment.sublist(indexComment + 1);
+      }
+
+      List dataCommentUpdate = postComment;
+
+      if (data['type'] == 'parent' && data['typeStatus'] == null) {
+        //Comment parent
+        dataCommentUpdate = [newComment, ...postComment.sublist(1)];
+      }
+      setState(() {
+        postComment = dataCommentUpdate;
+      });
+    }
+  }
+
+  _updatePostCount({int? addtionalIfChild, int? subIfChild}) {
+    if (widget.media != null) {
+      dynamic updateCountPostData = widget.post;
+      dynamic count = widget.media['status_media']['replies_total'];
+      final listIdMedia =
+          widget.post['media_attachments'].map((e) => e['id']).toList();
+      final indexOfMedia = listIdMedia.indexOf(widget.media['id']);
+      updateCountPostData['media_attachments'][indexOfMedia]['status_media']
+              ['replies_total'] =
+          count + (addtionalIfChild ?? 0) - (subIfChild ?? 0);
+      ref
+          .read(postControllerProvider.notifier)
+          .actionUpdatePostCount(widget.type, updateCountPostData);
+      ref
+          .read(currentPostControllerProvider.notifier)
+          .saveCurrentPost(updateCountPostData);
+      widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+      return;
+    } else {
+      int countAdditionalIfChild = addtionalIfChild ?? 0;
+      int countSubIfChild = subIfChild ?? 0;
+      dynamic updateCountPostData = widget.post;
+      dynamic count = updateCountPostData['replies_total'];
+      postComment.forEach((element) {
+        count += element["replies_total"];
+      });
+      updateCountPostData['replies_total'] =
+          count + countAdditionalIfChild - countSubIfChild;
+      ref
+          .read(postControllerProvider.notifier)
+          .actionUpdatePostCount(widget.type, updateCountPostData);
+      ref
+          .read(currentPostControllerProvider.notifier)
+          .saveCurrentPost(updateCountPostData);
+      widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+    }
   }
 
   Widget renderPostInformation(size) {
@@ -128,66 +366,78 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         PostHeader(post: widget.post, textColor: white, type: postDetail),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            if (!isHiddenAction)
-              Container(
-                constraints: BoxConstraints(maxHeight: size.height / 3),
-                child: TabBarView(controller: _tabController, children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: PostContent(
-                          post: widget.post,
-                          textColor: white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  ListComment(
-                      postComment: postComment,
-                      commentChild: commentChild,
-                      commentNode: commentNode,
-                      commentSelected: commentSelected)
-                ]),
-              ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  RotateIcon(updateHiddenAction: updateHiddenAction),
-                  if (!isHiddenAction)
-                    TabBar(
-                        isScrollable: true,
-                        controller: _tabController,
-                        onTap: (index) {},
-                        indicator: const BoxDecoration(),
-                        indicatorWeight: 0,
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.white.withOpacity(0.5),
-                        indicatorSize: TabBarIndicatorSize.label,
-                        tabs: const [
-                          Tab(
-                            text: "Tổng quan",
+        Container(
+          color: !isHiddenAction ? blackColor.withOpacity(0.2) : null,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (!isHiddenAction)
+                Container(
+                  constraints: BoxConstraints(maxHeight: size.height / 5.2),
+                  child: TabBarView(controller: _tabController, children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: PostContent(
+                            post: widget.post,
+                            textColor: white,
                           ),
-                          Tab(
-                            text: "Bình luận",
-                          )
-                        ]),
-                ],
+                        ),
+                      ],
+                    ),
+                    ListComment(
+                        postComment: postComment,
+                        commentChild: commentChild,
+                        commentNode: commentNode,
+                        commentSelected: commentSelected,
+                        getCommentSelected: getCommentSelected,
+                        handleDeleteComment: handleDeleteComment,
+                        type: widget.type)
+                  ]),
+                ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RotateIcon(updateHiddenAction: updateHiddenAction),
+                    if (!isHiddenAction)
+                      TabBar(
+                          isScrollable: true,
+                          controller: _tabController,
+                          onTap: (index) {},
+                          indicator: const BoxDecoration(),
+                          indicatorWeight: 0,
+                          labelColor: Colors.white,
+                          unselectedLabelColor: Colors.white.withOpacity(0.5),
+                          indicatorSize: TabBarIndicatorSize.label,
+                          tabs: const [
+                            Tab(
+                              text: "Tổng quan",
+                            ),
+                            Tab(
+                              text: "Bình luận",
+                            )
+                          ]),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child:
-                  BottomAction(widget: widget, isHiddenAction: isHiddenAction),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: BottomAction(
+                  widget: widget,
+                  isHiddenAction: isHiddenAction,
+                  handleComment: handleComment,
+                  commentNode: commentNode,
+                  getCommentSelected: getCommentSelected,
+                  commentSelected: commentSelected,
+                ),
+              )
+            ],
+          ),
         ),
       ],
     );
@@ -305,27 +555,34 @@ class _RotateIconState extends State<RotateIcon>
 }
 
 class ListComment extends StatelessWidget {
-  const ListComment({
-    super.key,
-    required this.postComment,
-    required this.commentChild,
-    required this.commentNode,
-    required this.commentSelected,
-  });
+  const ListComment(
+      {super.key,
+      required this.postComment,
+      required this.commentChild,
+      required this.commentNode,
+      required this.commentSelected,
+      this.getCommentSelected,
+      this.handleDeleteComment,
+      this.type});
 
   final List postComment;
   final dynamic commentChild;
   final FocusNode commentNode;
   final dynamic commentSelected;
+  final Function? getCommentSelected;
+  final Function? handleDeleteComment;
+  final String? type;
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        reverse: true,
-        itemCount: postComment.length,
-        itemBuilder: ((context, index) {
-          return CommentTree(
+  Widget build(BuildContext context) { 
+    return SizedBox(
+      // height: MediaQuery.of(context).size.height * 0.3,
+      child: ListView.builder(
+          // shrinkWrap: true,
+          reverse: true,
+          itemCount: postComment.length,
+          itemBuilder: ((context, index) {
+            return CommentTree(
               key: Key(postComment[index]['id']),
               type: postWatchDetail,
               commentChildCreate:
@@ -335,19 +592,29 @@ class ListComment extends StatelessWidget {
               commentNode: commentNode,
               commentSelected: commentSelected,
               commentParent: postComment[index],
-              getCommentSelected: () {},
-              handleDeleteComment: () {});
-        }));
+              getCommentSelected: getCommentSelected,
+              handleDeleteComment: handleDeleteComment,
+              preType: type,
+            );
+          })),
+    );
   }
 }
 
 class BottomAction extends StatelessWidget {
   final bool isHiddenAction;
-  const BottomAction({
-    super.key,
-    required this.widget,
-    required this.isHiddenAction,
-  });
+  final Function handleComment;
+  final dynamic commentNode;
+  final dynamic commentSelected;
+  final Function? getCommentSelected;
+  const BottomAction(
+      {super.key,
+      required this.widget,
+      required this.isHiddenAction,
+      required this.handleComment,
+      required this.commentNode,
+      required this.commentSelected,
+      required this.getCommentSelected});
 
   final WatchDetail widget;
 
@@ -388,15 +655,14 @@ class BottomAction extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width - 70,
-                  child: CommentTextfield(
-                      autoFocus: false,
-                      type: postWatchDetail,
-                      commentSelected: null,
-                      getCommentSelected: () {},
-                      commentNode: null,
-                      handleComment: () {}),
-                ),
+                    width: MediaQuery.of(context).size.width - 70,
+                    child: CommentTextfield(
+                        commentSelected: commentSelected,
+                        getCommentSelected: getCommentSelected,
+                        commentNode: commentNode,
+                        autoFocus: false,
+                        type: postWatchDetail,
+                        handleComment: handleComment)),
                 ...listReaction.map((String el) => Container(
                     margin: EdgeInsets.only(
                         left: 2, right: 2, bottom: el == 'hug' ? 10 : 0),

@@ -41,9 +41,9 @@ class GeneralComponent extends StatelessWidget {
                   // height: 77,
                   // color: Colors.red,
                   // margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  padding: padding ?? EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  padding: padding ?? const EdgeInsets.fromLTRB(10, 10, 10, 10),
                   decoration: BoxDecoration(
-                      color: changeBackground ?? Colors.grey[900],
+                      color: changeBackground ?? Theme.of(context).cardColor,
                       border: isHaveBorder == true
                           ? Border.all(
                               color: borderColor ?? greyColor, width: 0.6)
