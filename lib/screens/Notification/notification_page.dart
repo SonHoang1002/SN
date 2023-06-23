@@ -1,12 +1,32 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:social_network_app_mobile/apis/events_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
+
+// handle push to another page when tapping
+import '../../apis/learn_space_api.dart';
+import '../../apis/recruit_api.dart';
+import '../../constant/post_type.dart';
+import '../../helper/push_to_new_screen.dart';
+import '../../providers/page/page_list_provider.dart';
+import '../CreatePost/create_modal_base_menu.dart';
+import '../Event/event_detail.dart';
+import '../Friend/friend_request.dart';
+import '../LearnSpace/learn_space_detail.dart';
+import '../Page/PageDetail/page_detail.dart';
+import '../Page/page_invite.dart';
+import '../Post/post_detail.dart';
+import '../Recruit/recuit_detail.dart';
+import '../UserPage/user_page.dart';
+import 'deleted_status.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -17,6 +37,8 @@ class NotificationPage extends ConsumerStatefulWidget {
 
 class _NotificationPageState extends ConsumerState<NotificationPage> {
   final scrollController = ScrollController();
+  bool isLoading = true;
+  bool isMore = false;
 
   @override
   void initState() {
@@ -32,18 +54,28 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         });
       }
     });
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void fetchNotifications(params) async {
+    setState(() {
+      isMore = true;
+    });
     await ref
         .read(notificationControllerProvider.notifier)
         .getListNotifications(params);
+    setState(() {
+      isMore = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     List notifications =
         ref.watch(notificationControllerProvider).notifications;
+    // bool isMore = ref.watch(notificationControllerProvider).isMore;
 
     renderName(noti) {
       dynamic status = noti['status'];
@@ -118,7 +150,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       } else if (type == 'comment') {
         return {
           'textNone':
-              ' đã bình luận về một bài viết có thể bạn quan tâm: ${status['content']}'
+              ' đã bình luận về một bài viết có thể bạn quan tâm: ${status['content'] ?? ''}'
         };
       } else if (type == 'approved_group_join_request') {
         return {
@@ -126,13 +158,16 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
               ' Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với'
         };
       } else if (type == 'course_invitation') {
-        return {'textNone': ' đã mời bạn tham gia khóa học'};
+        return {
+          'textNone': ' đã mời bạn tham gia khóa học ',
+          'textBold': '${noti['course']['title']}',
+        };
       } else if (type == 'product_invitation') {
         return {'textNone': ' đã mời bạn quan tâm đến sản phẩm'};
       } else if (type == 'admin_page_invitation') {
         return {
-          'textNone': ' đã mời bạn làm quản trị viên',
-          'textBold': '${status?['page']?['title']}'
+          'textNone': ' đã mời bạn làm quản trị viên trang',
+          'textBold': '',
         };
       } else if (type == 'approved_group_status') {
         return {
@@ -147,17 +182,22 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       } else if (type == 'recruit_apply') {
         return {
           'textNone': ' đã ứng tuyển vào công việc',
-          'textBold': ' ${status?['recruit']?['title']}'
+          'textBold': ' ${noti?['recruit']?['title']}'
         };
       } else if (type == 'recruit_invitation') {
         return {
-          'textNone': ' đã mời bạn tham gia tuyển dụng',
-          'textBold': '${status?['recruit']?['title']}'
+          'textNone': ' đã mời bạn tham gia tuyển dụng ',
+          'textBold': '${noti['recruit']?['title']}'
         };
       } else if (type == 'moderator_page_invitation') {
         return {
+          'textNone': ' đã mời bạn làm kiểm duyệt viên trang',
+          'textBold': ''
+        };
+      } else if (type == 'accept_moderator_page_invitation') {
+        return {
           'textNone': ' đã đồng ý làm kiểm duyệt viên trang',
-          'textBold': '${status?['page']?['title']}'
+          'textBold': ''
         };
       }
       if (type == 'favourite') {
@@ -280,100 +320,282 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       }
     }
 
+    prepareData(item) async {
+      switch (item['type']) {
+        case 'recruit_invitation':
+        case 'recruit_apply':
+          return await RecruitApi().getDetailRecruitApi(item['recruit']['id']);
+        case 'event_invitation':
+        case 'event_invitation_host':
+        case 'accept_event_invitation':
+        case 'accept_event_invitation_host':
+          return await EventApi().getEventDetailApi(item['event']['id']);
+        case 'course_invitation':
+          return await LearnSpaceApi()
+              .getDetailCoursesApi(item['course']['id']);
+        case 'page_invitation':
+        case 'moderator_page_invitation':
+        case 'admin_page_invitation':
+        case 'page_invitation_follow':
+          await ref
+              .read(pageListControllerProvider.notifier)
+              .getListPageInvited('like');
+
+          await ref
+              .read(pageListControllerProvider.notifier)
+              .getListPageInvited('manage');
+
+          return null;
+        default:
+          return null;
+      }
+    }
+
+    Widget? nextScreenFromNoti(item, data) {
+      print(item['type']);
+      Map<String, dynamic> map = item;
+      print(map.keys);
+      switch (item['type']) {
+        case 'comment':
+        // đã bình luận về một bài viết có thể bạn quan tâm
+        case 'favourite':
+        // đã bày tỏ cảm xúc về
+        case 'created_status':
+        // Video của bạn đã sẵn sàng.Bây giờ bạn có thể mở xemc
+        case 'approved_group_status':
+        // bài viết của bạn tại nhóm/trang đã được phê duyệt',
+        case 'status_tag':
+        case 'mention':
+        // đã nhắc đến bạn trong một bình luận, đã gắn thẻ bạn trong một bài viết
+        case 'reblog':
+        case 'status':
+          return item['status'] != null
+              ? PostDetail(
+                  postId: item['status']['id'],
+                  preType: postDetail,
+                )
+              : DeletedStatus(type: "Bài viết");
+
+        case 'friendship_request':
+          return const FriendRequest();
+
+        case 'recruit_invitation':
+        // đã mời quan tâm công việc',
+        case 'recruit_apply':
+          // đã ứng tuyển vào công việc',
+          return RecruitDetail(data: data, isUseRecruitData: true);
+
+        case 'event_invitation':
+        case 'event_invitation_host':
+        case 'accept_event_invitation':
+        // đã đồng ý tham gia sự kiện
+        case 'accept_event_invitation_host':
+          // đã đồng ý đồng tổ chức sự kiện
+          return EventDetail(eventDetail: data, isUseEventData: true);
+
+        case 'course_invitation':
+          return LearnSpaceDetail(data: data, isUseLearnData: true);
+
+        case 'page_invitation':
+        // đã mời bạn like page
+        case 'moderator_page_invitation':
+        // đã invite you làm kiểm duyệt viên trang',
+        case 'admin_page_invitation':
+        // đã mời bạn làm quản trị viên',
+        case 'page_invitation_follow':
+          // đã mời bạn follow page
+          return const CreateModalBaseMenu(
+            title: 'Lời mời',
+            body: PageInvite(),
+            buttonAppbar: SizedBox(),
+          );
+
+        case 'accept_page_invitation':
+        // đã đồng ý làm quản trị viên trang
+        case 'accept_page_invitation_follow':
+        // đã chấp nhận lời mời thích trang
+        case 'accept_admin_page_invitation':
+        // đã đồng ý làm quản trị viên trang',
+        case 'page_follow':
+        // đã thích your page (not yet)
+        case 'accept_moderator_page_invitation':
+          return PageDetail(pageData: item['page']);
+
+        case 'product_invitation':
+        // đã mời bạn quan tâm đến sản phẩm
+        case 'project_invitation_host':
+        case 'poll':
+        // Thăm dò ý kiến
+
+        case 'accept_friendship_request':
+        // đã chấp nhận lời mời kết bạn
+        case 'folow':
+        // ... followed you.
+        // return UserPage(user: item['account']);
+
+        case 'group_invitation':
+        // đã mời bạn tham gia nhóm
+        case 'group_invitation_host':
+        // return const CreateModalBaseMenu(
+        //   title: 'Lời mời & Yêu cầu',
+        //   body: GroupInvitedRequest(),
+        //   buttonAppbar: SizedBox(),
+        // );
+
+        case 'accept_group_invitation':
+        // đã chấp nhận lời mời tham gia nhóm
+        case 'approved_group_join_request':
+        // Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với'
+        // return GroupDetail()
+
+        default:
+          return null;
+      }
+    }
+
     return Column(
       children: [
-        Expanded(
-            child: ListView.builder(
+        notifications.isNotEmpty
+            ? Expanded(
+                child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: notifications.length,
                 controller: scrollController,
                 itemBuilder: ((context, index) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 8.0),
-                    decoration: BoxDecoration(
+                  var item = notifications[index];
+                  return InkWell(
+                    onTap: () async {
+                      final data = await prepareData(item);
+                      var nextScreen = nextScreenFromNoti(item, data);
+                      if (nextScreen != null) {
+                        pushCustomCupertinoPageRoute(context, nextScreen);
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 8.0,
+                      ),
+                      decoration: BoxDecoration(
                         color: !notifications[index]['read']
                             ? secondaryColorSelected
-                            : null),
-                    child: Row(
-                      children: [
-                        Stack(
-                          children: [
-                            notifications[index]['type'] == 'created_status'
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(30),
-                                    child: SvgPicture.asset(
-                                      'assets/LogoEmso.svg',
+                            : null,
+                      ),
+                      child: Row(
+                        children: [
+                          Stack(
+                            children: [
+                              notifications[index]['type'] == 'created_status'
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: SvgPicture.asset(
+                                        'assets/LogoEmso.svg',
+                                        width: 60,
+                                        height: 60,
+                                      ),
+                                    )
+                                  : AvatarSocial(
                                       width: 60,
                                       height: 60,
-                                    ))
-                                : AvatarSocial(
-                                    width: 60,
-                                    height: 60,
-                                    object: notifications[index]['account'],
-                                    path:
-                                        renderLinkAvatar(notifications[index])),
-                            Positioned(
+                                      object: notifications[index]['account'],
+                                      path: renderLinkAvatar(
+                                          notifications[index]),
+                                    ),
+                              Positioned(
                                 bottom: 0,
                                 right: 0,
                                 child: Image.asset(
-                                  renderLinkSvg(notifications[index]['type'],
-                                      notifications[index]['status']),
+                                  renderLinkSvg(
+                                    notifications[index]['type'],
+                                    notifications[index]['status'],
+                                  ),
                                   width: 24,
                                   height: 24,
-                                ))
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 12.0,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.75,
-                              child: Text.rich(
-                                TextSpan(
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(width: 12.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.75,
+                                child: Text.rich(
+                                  TextSpan(
                                     text: renderName(notifications[index]),
                                     style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                     children: [
                                       TextSpan(
-                                          text: renderContent(
-                                              notifications[index])['textNone'],
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                          )),
+                                        text: renderContent(
+                                            notifications[index])['textNone'],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
                                       TextSpan(
-                                          text: renderContent(
-                                                      notifications[index])[
-                                                  'textBold'] ??
-                                              '',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          )),
+                                        text:
+                                            renderContent(notifications[index])[
+                                                    'textBold'] ??
+                                                '',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       TextSpan(
                                           text:
                                               ' ${notifications[index]['page']?["title"] ?? notifications[index]['group']?["title"] ?? notifications[index]['event']?["title"] ?? ""}')
-                                    ]),
+                                    ],
+                                  ),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 4.0,
-                            ),
-                            Text(
-                                GetTimeAgo.parse(DateTime.parse(
-                                  notifications[index]['created_at'],
-                                )),
+                              const SizedBox(height: 4.0),
+                              Text(
+                                GetTimeAgo.parse(
+                                  DateTime.parse(
+                                    notifications[index]['created_at'],
+                                  ),
+                                ),
                                 style: const TextStyle(
-                                    color: greyColor, fontSize: 12))
-                          ],
-                        )
-                      ],
+                                  color: greyColor,
+                                  fontSize: 12,
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   );
-                }))),
+                }),
+              ))
+            : const SizedBox(),
+        isLoading && notifications.isEmpty || isMore == true
+            ? const Center(
+                child: SizedBox(
+                  height: 50.0,
+                  child: CupertinoActivityIndicator(),
+                ),
+              )
+            : notifications.isEmpty
+                ? Column(
+                    children: [
+                      Center(
+                        child: Image.asset(
+                          "assets/wow-emo-2.gif",
+                          height: 125.0,
+                          width: 125.0,
+                        ),
+                      ),
+                      const Text('Không tìm thấy thông báo nào'),
+                    ],
+                  )
+                : const SizedBox(),
       ],
     );
   }

@@ -101,6 +101,11 @@ class PageApi {
         .getRequestBase('/api/v1/pages/$id/media_attachments', params);
   }
 
+  Future getManagementHistory(params, id) async {
+    return await Api()
+        .getRequestBase('/api/v1/pages/$id/management_histories', params);
+  }
+
   Future getListAlbumPageApi(params, id) async {
     return await Api().getRequestBase('/api/v1/pages/$id/albums', params);
   }

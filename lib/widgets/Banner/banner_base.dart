@@ -122,16 +122,6 @@ class _BannerBaseState extends State<BannerBase> {
                   fontWeight: FontWeight.w600,
                   color: colorWord(context)),
               children: [
-                // WidgetSpan(
-                //   child: Padding(
-                //     padding: const EdgeInsets.only(left: 8.0, bottom: 3.0),
-                //     child: Image.asset(
-                //       'assets/pages/blueTick.png',
-                //       width: 20,
-                //       height: 20,
-                //     ),
-                //   ),
-                // ),
                 TextSpan(
                     text: ' ${subTitle != '' ? '($subTitle)' : ''}',
                     style: TextStyle(
@@ -168,14 +158,14 @@ class _BannerBaseState extends State<BannerBase> {
       },
     ];
 
-    handleChooseMedia(type, entity) {
+    handleChooseMedia(entityType, entity) {
       Navigator.push(
           context,
           CupertinoPageRoute(
               builder: (context) => PageEditMediaProfile(
                   typePage: typePage,
                   entityObj: widget.object,
-                  entityType: type,
+                  entityType: entityType,
                   handleChangeDependencies: widget.handleChangeDependencies,
                   type: widget.type,
                   file: entity)));
@@ -212,7 +202,9 @@ class _BannerBaseState extends State<BannerBase> {
             context,
             CupertinoPageRoute(
                 builder: (context) => PagePickMedia(
-                    user: widget.object, handleAction: handleChooseMedia)));
+                    type: widget.type,
+                    user: widget.object,
+                    handleAction: handleChooseMedia)));
       } else if (key == 'frames') {
         showBarModalBottomSheet(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,

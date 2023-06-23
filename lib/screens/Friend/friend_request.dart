@@ -398,7 +398,18 @@ class _FriendRequestState extends ConsumerState<FriendRequest> {
                     ),
                   ],
                 )
-              : const SizedBox(),
+              : Column(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        "assets/wow-emo-2.gif",
+                        height: 125.0,
+                        width: 125.0,
+                      ),
+                    ),
+                    const Text('Bạn hiện không có lời mời kết bạn nào mới'),
+                  ],
+                ),
         ),
       ),
     );

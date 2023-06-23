@@ -19,6 +19,12 @@ class RecruitRender extends StatefulWidget {
 
 class _RecruitRenderState extends State<RecruitRender> {
   String menuSelected = 'recruit_interesting';
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

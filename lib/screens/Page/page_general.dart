@@ -86,12 +86,15 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
       }
 
       Navigator.push(
-          context,
-          CupertinoPageRoute(
-              builder: ((context) => CreateModalBaseMenu(
-                  title: menu['name'],
-                  body: body,
-                  buttonAppbar: const SizedBox()))));
+        context,
+        CupertinoPageRoute(
+          builder: (context) => CreateModalBaseMenu(
+            title: menu['name'],
+            body: body,
+            buttonAppbar: const SizedBox(),
+          ),
+        ),
+      );
     }
 
     List menuButton = [
@@ -129,25 +132,25 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(
-                      menuButton.length,
-                      (index) => GestureDetector(
-                            onTap: () {
-                              handlePressMenu(menuButton[index]);
-                            },
-                            child: ChipMenu(
-                                icon: Icon(
-                                  menuButton[index]['icon'],
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge!
-                                      .color,
-                                  size: 14,
-                                ),
-                                isSelected: false,
-                                label: menuButton[index]['name']),
-                          ))),
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(
+                  menuButton.length,
+                  (index) => GestureDetector(
+                    onTap: () {
+                      handlePressMenu(menuButton[index]);
+                    },
+                    child: ChipMenu(
+                      icon: Icon(
+                        menuButton[index]['icon'],
+                        color: Theme.of(context).textTheme.displayLarge!.color,
+                        size: 14,
+                      ),
+                      isSelected: false,
+                      label: menuButton[index]['name'],
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           const Padding(

@@ -37,7 +37,9 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   void initState() {
     super.initState();
     if (mounted) {
-      loadData();
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        loadData();
+      });
     }
   }
 
@@ -47,6 +49,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   }
 
   void loadData() async {
+    if (!mounted) return;
     if ((recruitDetail.isEmpty) && (widget.isUseRecruitData == true)) {
       recruitDetail = widget.data;
     } else {
