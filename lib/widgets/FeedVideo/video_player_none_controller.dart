@@ -71,7 +71,6 @@ class _VideoPlayerNoneControllerState
         if (widget.timeStart != null) {
           videoPlayerController.seekTo(widget.timeStart!);
         }
-
         if (selectedVideo != null && widget.type == 'miniPlayer') {
           videoPlayerController.seekTo(Duration(
               seconds: betterStatePlayer
@@ -216,8 +215,7 @@ class _VideoPlayerNoneControllerState
             //                 setState(() {
             //                   isPlaying = !isPlaying;
             //                 });
-            //               }
-            //               print("isPlaying ${isPlaying}");
+            //               } 
             //             },
             //           ),
             //   ),

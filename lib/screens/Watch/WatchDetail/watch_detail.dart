@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +20,9 @@ import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.d
 import 'package:social_network_app_mobile/screens/Post/comment_tree.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/AnimatedWidgets/animated_fly_icon.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/comment_textfield.dart';
 import 'package:social_network_app_mobile/widgets/screen_share.dart';
 
@@ -29,6 +32,13 @@ final miniPlayerControllerProvider =
     StateProvider.autoDispose<MiniplayerController>(
   (ref) => MiniplayerController(),
 );
+
+double getSizeGif(type) {
+  if (type == 'love') return 60;
+  if (type == 'yay') return 55;
+  if (type == 'haha') return 50;
+  return 40;
+}
 
 class WatchDetail extends ConsumerStatefulWidget {
   final dynamic media;
@@ -57,6 +67,15 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   bool isHiddenAction = true;
   bool isDragVideo = false;
   bool isDismissed = false;
+
+  final GlobalKey _animationKey = GlobalKey();
+  bool iconFlying = false;
+  Offset? offset;
+  bool isShowAnimatedReactionIcon = false;
+  String? _reactName;
+  Size? size;
+
+  ValueNotifier<List> listAnimtedFlyIcon = ValueNotifier([]);
 
   @override
   void initState() {
@@ -170,6 +189,25 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
     }
   }
 
+  handleReaction(dynamic react) async {
+    // use status_media_id to react
+    // check to see if the user reacted the same way he reacted before
+    // var newPost = widget.post;
+    // final indexOfMediaInPost = newPost['media_attachments']
+    //     .map((ele) => ele['id'])
+    //     .toList()
+    //     .indexOf(widget.media['id']);
+    // List viewerReaction = newPost['media_attachments'][indexOfMediaInPost]
+    //     ['status_media']?['viewer_reaction'];
+    // if (viewerReaction != react) {
+    //   dynamic data = {"custom_vote_type": react};
+    //   await PostApi().reactionPostApi(
+    //       widget.post['media_attachments'][indexOfMediaInPost]['status_media']
+    //           ['id'],
+    //       data);
+    // }
+  }
+
   Future handleComment(data, previewLinkText) async {
     if (!mounted) return;
     final preCardData = await getPreviewUrl(previewLinkText);
@@ -264,15 +302,40 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
     };
 
     List dataPreComment = [];
-
     if (data['type'] == 'parent' && data['typeStatus'] == null) {
       //Comment parent
       dataPreComment = [newCommentPreview, ...postComment];
+    } else if (data['type'] == 'child' && data['typeStatus'] == 'editChild') {
+      //Edit comment child
+      dataPreComment = postComment;
+    } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+      //Comment child
+      dataPreComment = postComment;
+    } else if (data['type'] == 'parent' &&
+        data['typeStatus'] == 'editComment') {
+      //Edit comment parent
+      int indexComment = postComment
+          .indexWhere((element) => element['id'] == newCommentPreview['id']);
+      List newListUpdate = [];
+      if (indexComment > -1) {
+        newListUpdate = [
+          ...postComment.sublist(0, indexComment),
+          newCommentPreview,
+          ...postComment.sublist(indexComment + 1)
+        ];
+      }
+      dataPreComment = newListUpdate;
     }
     setState(() {
       postComment = dataPreComment;
+      commentChild = data['type'] == 'child' ? newCommentPreview : null;
     });
-    _updatePostCount(addtionalIfChild: 1);
+    _updatePostCount(
+        addtionalIfChild: data['type'] == 'child' &&
+                data['typeStatus'] != 'editChild' &&
+                data['typeStatus'] != "editComment"
+            ? 1
+            : 0);
 
     dynamic newComment;
     // cal api
@@ -316,9 +379,20 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
       if (data['type'] == 'parent' && data['typeStatus'] == null) {
         //Comment parent
         dataCommentUpdate = [newComment, ...postComment.sublist(1)];
+      } else if (data['type'] == 'child' && data['typeStatus'] == 'editChild') {
+        //Edit comment child
+        dataCommentUpdate = postComment;
+      } else if (data['type'] == 'child' && data['typeStatus'] == null) {
+        //Comment child
+        dataCommentUpdate = postComment;
+      } else if (data['type'] == 'parent' &&
+          data['typeStatus'] == 'editComment') {
+        //Edit comment parent
+        dataCommentUpdate = newListUpdate;
       }
       setState(() {
         postComment = dataCommentUpdate;
+        commentChild = newComment;
       });
     }
   }
@@ -362,92 +436,127 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   }
 
   Widget renderPostInformation(size) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
       children: [
-        PostHeader(post: widget.post, textColor: white, type: postDetail),
-        Container(
-          color: !isHiddenAction ? blackColor.withOpacity(0.2) : null,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (!isHiddenAction)
-                Container(
-                  constraints: BoxConstraints(maxHeight: size.height / 5.2),
-                  child: TabBarView(controller: _tabController, children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            PostHeader(post: widget.post, textColor: white, type: postDetail),
+            Container(
+              color: !isHiddenAction ? blackColor.withOpacity(0.5) : null,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (!isHiddenAction)
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Container(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: PostContent(
-                            post: widget.post,
-                            textColor: white,
-                          ),
+                          constraints:
+                              BoxConstraints(maxHeight: size.height / 5.2),
+                          child:
+                              TabBarView(controller: _tabController, children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.only(top: 12),
+                                  child: PostContent(
+                                    post: widget.post,
+                                    textColor: white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            ListComment(
+                                postComment: postComment,
+                                commentChild: commentChild,
+                                commentNode: commentNode,
+                                commentSelected: commentSelected,
+                                getCommentSelected: getCommentSelected,
+                                handleDeleteComment: handleDeleteComment,
+                                type: widget.type)
+                          ]),
                         ),
                       ],
                     ),
-                    ListComment(
-                        postComment: postComment,
-                        commentChild: commentChild,
-                        commentNode: commentNode,
-                        commentSelected: commentSelected,
-                        getCommentSelected: getCommentSelected,
-                        handleDeleteComment: handleDeleteComment,
-                        type: widget.type)
-                  ]),
-                ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    RotateIcon(updateHiddenAction: updateHiddenAction),
-                    if (!isHiddenAction)
-                      TabBar(
-                          isScrollable: true,
-                          controller: _tabController,
-                          onTap: (index) {},
-                          indicator: const BoxDecoration(),
-                          indicatorWeight: 0,
-                          labelColor: Colors.white,
-                          unselectedLabelColor: Colors.white.withOpacity(0.5),
-                          indicatorSize: TabBarIndicatorSize.label,
-                          tabs: const [
-                            Tab(
-                              text: "Tổng quan",
-                            ),
-                            Tab(
-                              text: "Bình luận",
-                            )
-                          ]),
-                  ],
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        RotateIcon(updateHiddenAction: updateHiddenAction),
+                        if (!isHiddenAction)
+                          TabBar(
+                              isScrollable: true,
+                              controller: _tabController,
+                              onTap: (index) {},
+                              indicator: const BoxDecoration(),
+                              indicatorWeight: 0,
+                              labelColor: Colors.white,
+                              unselectedLabelColor:
+                                  Colors.white.withOpacity(0.5),
+                              indicatorSize: TabBarIndicatorSize.label,
+                              tabs: const [
+                                Tab(
+                                  text: "Tổng quan",
+                                ),
+                                Tab(
+                                  text: "Bình luận",
+                                )
+                              ]),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: BottomAction(
+                      widget: widget,
+                      isHiddenAction: isHiddenAction,
+                      handleComment: handleComment,
+                      commentNode: commentNode,
+                      getCommentSelected: getCommentSelected,
+                      commentSelected: commentSelected,
+                      handleReaction: handleReaction,
+                      handleAdditionalAction: (String reactitonName) {
+                        setState(() {
+                          listAnimtedFlyIcon.value.add(reactitonName);
+                        });
+                      },
+                    ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: BottomAction(
-                  widget: widget,
-                  isHiddenAction: isHiddenAction,
-                  handleComment: handleComment,
-                  commentNode: commentNode,
-                  getCommentSelected: getCommentSelected,
-                  commentSelected: commentSelected,
-                ),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
+        ...buildAnimtedFlyIconWidget()
       ],
     );
+  }
+
+  List<Widget> buildAnimtedFlyIconWidget() {
+    List<Widget> listWidget = [];
+    for (int i = 0; i < listAnimtedFlyIcon.value.length; i++) {
+      listWidget.add(AnimatedFlyIconWidget(
+          key: GlobalKey(
+              debugLabel:
+                  "${listAnimtedFlyIcon.value[i]}${Random().nextDouble()}"),
+          reactName: listAnimtedFlyIcon.value[i],
+          onEnd: () {
+            setState(() {
+              listAnimtedFlyIcon.value = [];
+              listAnimtedFlyIcon.value.remove(i);
+            });
+          }));
+    }
+    return listWidget;
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final size = MediaQuery.of(context).size;
-
+    size = MediaQuery.of(context).size;
     return GestureDetector(
         onTap: () {
           hiddenKeyboard(context);
@@ -574,112 +683,164 @@ class ListComment extends StatelessWidget {
   final String? type;
 
   @override
-  Widget build(BuildContext context) { 
-    return SizedBox(
-      // height: MediaQuery.of(context).size.height * 0.3,
-      child: ListView.builder(
-          // shrinkWrap: true,
-          reverse: true,
-          itemCount: postComment.length,
-          itemBuilder: ((context, index) {
-            return CommentTree(
-              key: Key(postComment[index]['id']),
-              type: postWatchDetail,
-              commentChildCreate:
-                  postComment[index]['id'] == commentChild?['in_reply_to_id']
-                      ? commentChild
-                      : null,
-              commentNode: commentNode,
-              commentSelected: commentSelected,
-              commentParent: postComment[index],
-              getCommentSelected: getCommentSelected,
-              handleDeleteComment: handleDeleteComment,
-              preType: type,
-            );
-          })),
-    );
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        // shrinkWrap: true,
+        reverse: true,
+        itemCount: postComment.length,
+        itemBuilder: ((context, index) {
+          return CommentTree(
+            key: Key(postComment[index]['id']),
+            type: postWatchDetail,
+            commentChildCreate:
+                postComment[index]['id'] == commentChild?['in_reply_to_id']
+                    ? commentChild
+                    : null,
+            commentNode: commentNode,
+            commentSelected: commentSelected,
+            commentParent: postComment[index],
+            getCommentSelected: getCommentSelected,
+            handleDeleteComment: handleDeleteComment,
+            preType: type,
+          );
+        }));
   }
 }
 
-class BottomAction extends StatelessWidget {
+class BottomAction extends StatefulWidget {
   final bool isHiddenAction;
   final Function handleComment;
   final dynamic commentNode;
   final dynamic commentSelected;
   final Function? getCommentSelected;
-  const BottomAction(
+  final Function(dynamic data)? handleReaction;
+  final Function? handleAdditionalAction;
+  BottomAction(
       {super.key,
       required this.widget,
       required this.isHiddenAction,
       required this.handleComment,
       required this.commentNode,
       required this.commentSelected,
-      required this.getCommentSelected});
+      required this.getCommentSelected,
+      required this.handleReaction,
+      this.handleAdditionalAction});
 
   final WatchDetail widget;
 
   @override
+  State<BottomAction> createState() => _BottomActionState();
+}
+
+class _BottomActionState extends State<BottomAction> {
+  @override
   Widget build(BuildContext context) {
-    double getSizeGif(type) {
-      if (type == 'tym') return 60;
-      if (type == 'hug') return 55;
-      if (type == 'haha') return 50;
-      return 40;
-    }
+    const listReaction = ['like', 'love', 'yay', 'haha', 'wow', 'sad', 'angry'];
 
-    const listReaction = ['like', 'tym', 'hug', 'haha', 'wow', 'cry', 'mad'];
-
-    return !isHiddenAction
-        ? SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    showBarModalBottomSheet(
-                        context: context,
-                        barrierColor: Colors.transparent,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.7,
-                            child: ScreenShare(
-                                entityShare: widget.post,
-                                type: 'post',
-                                entityType: 'post')));
-                  },
-                  child: Icon(
-                    FontAwesomeIcons.share,
-                    color: Colors.white.withOpacity(0.8),
-                    size: 24,
-                  ),
-                ),
-                SizedBox(
-                    width: MediaQuery.of(context).size.width - 70,
-                    child: CommentTextfield(
-                        commentSelected: commentSelected,
-                        getCommentSelected: getCommentSelected,
-                        commentNode: commentNode,
-                        autoFocus: false,
-                        type: postWatchDetail,
-                        handleComment: handleComment)),
-                ...listReaction.map((String el) => Container(
-                    margin: EdgeInsets.only(
-                        left: 2, right: 2, bottom: el == 'hug' ? 10 : 0),
-                    child: LikeButton(
-                      size: getSizeGif(el),
-                      circleColor: const CircleColor(
-                          start: primaryColor, end: secondaryColor),
-                      bubblesColor: const BubblesColor(
-                        dotPrimaryColor: primaryColor,
-                        dotSecondaryColor: secondaryColor,
+    return !widget.isHiddenAction
+        ? Column(
+            children: [
+              buildDivider(),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: widget.commentSelected != null ? 20 : 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          showBarModalBottomSheet(
+                              context: context,
+                              barrierColor: Colors.transparent,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.7,
+                                  child: ScreenShare(
+                                      entityShare: widget.widget.post,
+                                      type: 'post',
+                                      entityType: 'post')));
+                        },
+                        child: Icon(
+                          FontAwesomeIcons.share,
+                          color: Colors.white.withOpacity(0.8),
+                          size: 20,
+                        ),
                       ),
-                      likeBuilder: (bool isLiked) {
-                        return renderGif('gif', el, size: getSizeGif(el));
-                      },
-                    )))
-              ],
-            ),
+                    ),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width - 70,
+                        child: CommentTextfield(
+                            commentSelected: widget.commentSelected,
+                            getCommentSelected: widget.getCommentSelected,
+                            commentNode: widget.commentNode,
+                            autoFocus: false,
+                            type: postWatchDetail,
+                            handleComment: widget.handleComment)),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: widget.commentSelected != null ? 20 : 0),
+                      child: Row(
+                          children: listReaction
+                              .map((String el) => Stack(
+                                    children: [
+                                      Container(
+                                          alignment: Alignment.bottomCenter,
+                                          padding: EdgeInsets.only(
+                                              left: 2,
+                                              right: 2,
+                                              bottom: el == 'yay' ? 10 : 0),
+                                          height: 70,
+                                          child: LikeButton(
+                                            size: getSizeGif(el),
+                                            circleColor: const CircleColor(
+                                                start: primaryColor,
+                                                end: secondaryColor),
+                                            bubblesColor: const BubblesColor(
+                                              dotPrimaryColor: primaryColor,
+                                              dotSecondaryColor: secondaryColor,
+                                            ),
+                                            likeBuilder: (bool isLiked) {
+                                              return renderGif('gif', el,
+                                                  size: getSizeGif(el));
+                                            },
+                                            onTap: (value) async {
+                                              widget.handleReaction!(el);
+                                              widget.handleAdditionalAction !=
+                                                      null
+                                                  ? widget
+                                                      .handleAdditionalAction!(el)
+                                                  : null;
+                                            },
+                                          )),
+                                      // widget.media['status_media']['viewer_reaction'] == el
+                                      //     ?
+                                      // Positioned(
+                                      //   bottom: 0,
+                                      //   left: 0,
+                                      //   right: 0,
+                                      //   child: Center(
+                                      //     child: Container(
+                                      //       decoration: BoxDecoration(
+                                      //           color: secondaryColor,
+                                      //           borderRadius:
+                                      //               BorderRadius.circular(5)),
+                                      //       height: 10,
+                                      //       width: 10,
+                                      //     ),
+                                      //   ),
+                                      // )
+                                      // : const SizedBox()
+                                    ],
+                                  ))
+                              .toList()),
+                    )
+                  ],
+                ),
+              ),
+            ],
           )
         : const SizedBox(
             height: 71,

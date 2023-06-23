@@ -53,8 +53,9 @@ class _PostMediaState extends State<PostMedia> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     List medias = widget.post['media_attachments'] ?? [];
+
     handlePress(media) {
       if (widget.type != "edit_post") {
         // if (checkIsImage(media)) {
@@ -147,7 +148,7 @@ class _PostMediaState extends State<PostMedia> {
                 if (index >= 0 && index < mediaList.length - 1) {
                   dynamic video = mediaList[index + 1];
                   // setState(() {
-                    currentVideoId.value = video['id'];
+                  currentVideoId.value = video['id'];
                   // });
                 }
               },
