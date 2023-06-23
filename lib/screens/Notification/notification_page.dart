@@ -12,7 +12,9 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
 // handle push to another page when tapping
+import '../../apis/grow_api.dart';
 import '../../apis/learn_space_api.dart';
+import '../../apis/page_api.dart';
 import '../../apis/recruit_api.dart';
 import '../../constant/post_type.dart';
 import '../../helper/push_to_new_screen.dart';
@@ -20,6 +22,9 @@ import '../../providers/page/page_list_provider.dart';
 import '../CreatePost/create_modal_base_menu.dart';
 import '../Event/event_detail.dart';
 import '../Friend/friend_request.dart';
+import '../Group/group.dart';
+import '../Group/group_invited_request.dart';
+import '../Grows/grow_detail.dart';
 import '../LearnSpace/learn_space_detail.dart';
 import '../Page/PageDetail/page_detail.dart';
 import '../Page/page_invite.dart';
@@ -203,7 +208,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       if (type == 'favourite') {
         return {
           'textNone':
-              ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận:' : 'bài viết:'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content']}'
+              ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận:' : 'bài viết:'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content'] ?? ''}'
         };
       } else if (type == 'status') {
         if (status != null) {
@@ -324,15 +329,20 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       switch (item['type']) {
         case 'recruit_invitation':
         case 'recruit_apply':
-          return await RecruitApi().getDetailRecruitApi(item['recruit']['id']);
+          return item['recruit'] != null
+              ? await RecruitApi().getDetailRecruitApi(item['recruit']['id'])
+              : null;
         case 'event_invitation':
         case 'event_invitation_host':
         case 'accept_event_invitation':
         case 'accept_event_invitation_host':
-          return await EventApi().getEventDetailApi(item['event']['id']);
+          return item['event'] != null
+              ? await EventApi().getEventDetailApi(item['event']['id'])
+              : null;
         case 'course_invitation':
-          return await LearnSpaceApi()
-              .getDetailCoursesApi(item['course']['id']);
+          return item['course'] != null
+              ? await LearnSpaceApi().getDetailCoursesApi(item['course']['id'])
+              : null;
         case 'page_invitation':
         case 'moderator_page_invitation':
         case 'admin_page_invitation':
@@ -346,6 +356,11 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
               .getListPageInvited('manage');
 
           return null;
+        case 'project_invitation':
+        case 'project_invitation_host':
+          return item['project'] != null
+              ? await GrowApi().getDetailGrowApi(item['project']['id'])
+              : null;
         default:
           return null;
       }
@@ -375,6 +390,14 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                   preType: postDetail,
                 )
               : DeletedStatus(type: "Bài viết");
+        case 'poll':
+          // Thăm dò ý kiến
+          return item['status'] != null
+              ? PostDetail(
+                  postId: item['status']['id'],
+                  preType: postDetail,
+                )
+              : DeletedStatus(type: "Cuộc thăm dò ý kiến");
 
         case 'friendship_request':
           return const FriendRequest();
@@ -383,7 +406,9 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         // đã mời quan tâm công việc',
         case 'recruit_apply':
           // đã ứng tuyển vào công việc',
-          return RecruitDetail(data: data, isUseRecruitData: true);
+          return data != null
+              ? RecruitDetail(data: data, isUseRecruitData: true)
+              : DeletedStatus(type: "Công việc");
 
         case 'event_invitation':
         case 'event_invitation_host':
@@ -391,10 +416,14 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         // đã đồng ý tham gia sự kiện
         case 'accept_event_invitation_host':
           // đã đồng ý đồng tổ chức sự kiện
-          return EventDetail(eventDetail: data, isUseEventData: true);
+          return data != null
+              ? EventDetail(eventDetail: data, isUseEventData: true)
+              : DeletedStatus(type: "Sự kiện");
 
         case 'course_invitation':
-          return LearnSpaceDetail(data: data, isUseLearnData: true);
+          return data != null
+              ? LearnSpaceDetail(data: data, isUseLearnData: true)
+              : DeletedStatus(type: "Khóa học");
 
         case 'page_invitation':
         // đã mời bạn like page
@@ -419,13 +448,23 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         case 'page_follow':
         // đã thích your page (not yet)
         case 'accept_moderator_page_invitation':
-          return PageDetail(pageData: item['page']);
+          return item['page'] != null
+              ? PageDetail(pageData: item['page'])
+              : null;
 
-        case 'product_invitation':
-        // đã mời bạn quan tâm đến sản phẩm
+        case 'group_invitation':
+        // đã mời bạn tham gia nhóm
+        case 'group_invitation_host':
+          return const CreateModalBaseMenu(
+            title: 'Lời mời & Yêu cầu',
+            body: Group(), // true: GroupInviteRequest()
+            buttonAppbar: SizedBox(),
+          );
+
         case 'project_invitation_host':
-        case 'poll':
-        // Thăm dò ý kiến
+          return data != null
+              ? GrowDetail(data: data, isUseGrowData: true)
+              : DeletedStatus(type: "Dự án");
 
         case 'accept_friendship_request':
         // đã chấp nhận lời mời kết bạn
@@ -433,14 +472,8 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         // ... followed you.
         // return UserPage(user: item['account']);
 
-        case 'group_invitation':
-        // đã mời bạn tham gia nhóm
-        case 'group_invitation_host':
-        // return const CreateModalBaseMenu(
-        //   title: 'Lời mời & Yêu cầu',
-        //   body: GroupInvitedRequest(),
-        //   buttonAppbar: SizedBox(),
-        // );
+        case 'product_invitation':
+        // đã mời bạn quan tâm đến sản phẩm
 
         case 'accept_group_invitation':
         // đã chấp nhận lời mời tham gia nhóm
@@ -459,129 +492,140 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
             ? Expanded(
                 child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: notifications.length,
+                itemCount: notifications.length + 1,
                 controller: scrollController,
                 itemBuilder: ((context, index) {
-                  var item = notifications[index];
-                  return InkWell(
-                    onTap: () async {
-                      final data = await prepareData(item);
-                      var nextScreen = nextScreenFromNoti(item, data);
-                      if (nextScreen != null) {
-                        pushCustomCupertinoPageRoute(context, nextScreen);
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 8.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: !notifications[index]['read']
-                            ? secondaryColorSelected
-                            : null,
-                      ),
-                      child: Row(
-                        children: [
-                          Stack(
-                            children: [
-                              notifications[index]['type'] == 'created_status'
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(30),
-                                      child: SvgPicture.asset(
-                                        'assets/LogoEmso.svg',
-                                        width: 60,
-                                        height: 60,
+                  var item = index < notifications.length
+                      ? notifications[index]
+                      : null;
+                  return index != notifications.length
+                      ? InkWell(
+                          onTap: () async {
+                            final data = await prepareData(item);
+                            var nextScreen = nextScreenFromNoti(item, data);
+                            if (nextScreen != null) {
+                              pushCustomCupertinoPageRoute(context, nextScreen);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10.0,
+                              horizontal: 8.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: !notifications[index]['read']
+                                  ? secondaryColorSelected
+                                  : null,
+                            ),
+                            child: Row(
+                              children: [
+                                Stack(
+                                  children: [
+                                    notifications[index]['type'] ==
+                                            'created_status'
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            child: SvgPicture.asset(
+                                              'assets/LogoEmso.svg',
+                                              width: 60,
+                                              height: 60,
+                                            ),
+                                          )
+                                        : AvatarSocial(
+                                            width: 60,
+                                            height: 60,
+                                            object: notifications[index]
+                                                ['account'],
+                                            path: renderLinkAvatar(
+                                                notifications[index]),
+                                          ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: Image.asset(
+                                        renderLinkSvg(
+                                          notifications[index]['type'],
+                                          notifications[index]['status'],
+                                        ),
+                                        width: 24,
+                                        height: 24,
                                       ),
                                     )
-                                  : AvatarSocial(
-                                      width: 60,
-                                      height: 60,
-                                      object: notifications[index]['account'],
-                                      path: renderLinkAvatar(
-                                          notifications[index]),
-                                    ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Image.asset(
-                                  renderLinkSvg(
-                                    notifications[index]['type'],
-                                    notifications[index]['status'],
-                                  ),
-                                  width: 24,
-                                  height: 24,
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(width: 12.0),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.75,
-                                child: Text.rich(
-                                  TextSpan(
-                                    text: renderName(notifications[index]),
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    children: [
-                                      TextSpan(
-                                        text: renderContent(
-                                            notifications[index])['textNone'],
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            renderContent(notifications[index])[
-                                                    'textBold'] ??
-                                                '',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      TextSpan(
+                                const SizedBox(width: 12.0),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.75,
+                                      child: Text.rich(
+                                        TextSpan(
                                           text:
-                                              ' ${notifications[index]['page']?["title"] ?? notifications[index]['group']?["title"] ?? notifications[index]['event']?["title"] ?? ""}')
-                                    ],
-                                  ),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                              renderName(notifications[index]),
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                              text: renderContent(
+                                                      notifications[index])[
+                                                  'textNone'],
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: renderContent(
+                                                          notifications[index])[
+                                                      'textBold'] ??
+                                                  '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                                text:
+                                                    ' ${notifications[index]['page']?["title"] ?? notifications[index]['group']?["title"] ?? notifications[index]['event']?["title"] ?? ""}')
+                                          ],
+                                        ),
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4.0),
+                                    Text(
+                                      GetTimeAgo.parse(
+                                        DateTime.parse(
+                                          notifications[index]['created_at'],
+                                        ),
+                                      ),
+                                      style: const TextStyle(
+                                        color: greyColor,
+                                        fontSize: 12,
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      : isLoading && notifications.isEmpty || isMore == true
+                          ? Container(
+                              padding: const EdgeInsets.only(bottom: 15.0),
+                              height: 50.0,
+                              color: secondaryColorSelected,
+                              child: const Center(
+                                child: CupertinoActivityIndicator(),
                               ),
-                              const SizedBox(height: 4.0),
-                              Text(
-                                GetTimeAgo.parse(
-                                  DateTime.parse(
-                                    notifications[index]['created_at'],
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  color: greyColor,
-                                  fontSize: 12,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  );
+                            )
+                          : const SizedBox();
                 }),
               ))
-            : const SizedBox(),
-        isLoading && notifications.isEmpty || isMore == true
-            ? const Center(
-                child: SizedBox(
-                  height: 50.0,
-                  child: CupertinoActivityIndicator(),
-                ),
-              )
             : notifications.isEmpty
                 ? Column(
                     children: [
