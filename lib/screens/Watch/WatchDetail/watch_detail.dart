@@ -715,7 +715,7 @@ class BottomAction extends StatefulWidget {
   final Function? getCommentSelected;
   final Function(dynamic data)? handleReaction;
   final Function? handleAdditionalAction;
-  BottomAction(
+  const BottomAction(
       {super.key,
       required this.widget,
       required this.isHiddenAction,
@@ -736,7 +736,6 @@ class _BottomActionState extends State<BottomAction> {
   @override
   Widget build(BuildContext context) {
     const listReaction = ['like', 'love', 'yay', 'haha', 'wow', 'sad', 'angry'];
-
     return !widget.isHiddenAction
         ? Column(
             children: [

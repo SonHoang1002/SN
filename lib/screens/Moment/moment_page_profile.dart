@@ -28,6 +28,11 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
   bool isMore = true;
   late ScrollController scrollController;
 
+  List dataInfo = [
+    {"count": "8", "description": "Đang theo dõi"},
+    {"count": "118.7k", "description": "Người theo dõi"},
+  ];
+
   @override
   initState() {
     super.initState();
@@ -73,11 +78,6 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
 
   @override
   Widget build(BuildContext context) {
-    List dataInfo = [
-      {"count": "8", "description": "Đang theo dõi"},
-      {"count": "118.7k", "description": "Người theo dõi"},
-    ];
-
     return Scaffold(
       appBar: AppBar(
           elevation: 0,

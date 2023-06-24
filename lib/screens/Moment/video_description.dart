@@ -82,16 +82,56 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
     }
   }
 
+  handlePressMenu(key, highLightIcon, size) {
+    if (key == 'reaction') {
+      Future.delayed(Duration.zero, () {
+        ref.read(momentControllerProvider.notifier).updateReaction(
+              highLightIcon ? null : 'love',
+              widget.moment['id'],
+            );
+      });
+    } else if (key == 'menu') {
+      showBarModalBottomSheet(
+          context: context,
+          backgroundColor: Theme.of(context).canvasColor,
+          barrierColor: Colors.transparent,
+          builder: (context) =>
+              PostHeaderAction(post: widget.moment, type: 'moment'));
+    } else if (key == 'share') {
+      showBarModalBottomSheet(
+          context: context,
+          barrierColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          builder: (context) => SizedBox(
+              height: size.height * 0.7,
+              child: ScreenShare(
+                  entityShare: widget.moment,
+                  type: 'moment',
+                  entityType: 'post')));
+    } else if (key == 'comment') {
+      showBarModalBottomSheet(
+          context: context,
+          barrierColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          builder: (context) => SizedBox(
+              height: size.height * 0.7,
+              child: CommentPostModal(post: widget.moment)));
+    }
+  }
+
+  Color greyOpacity = const Color.fromRGBO(33, 33, 33, 1).withOpacity(0.9);
+  Color whiteColor = Colors.white.withOpacity(0.95);
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     var account = widget.moment['account'];
     var page = widget.moment['page'];
 
-    final size = MediaQuery.of(context).size;
     int reactionsCount = widget.moment['favourites_count'] ?? 0;
     bool highLightIcon =
         widget.moment['viewer_reaction'] == 'love' ? true : false;
-    Color whiteColor = Colors.white.withOpacity(0.95);
 
     List iconsAction = [
       {
@@ -118,45 +158,6 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
         "iconHighlight": whiteColor
       },
     ];
-
-    handlePressMenu(key) {
-      if (key == 'reaction') {
-        Future.delayed(Duration.zero, () {
-          ref.read(momentControllerProvider.notifier).updateReaction(
-                highLightIcon ? null : 'love',
-                widget.moment['id'],
-              );
-        });
-      } else if (key == 'menu') {
-        showBarModalBottomSheet(
-            context: context,
-            backgroundColor: Theme.of(context).canvasColor,
-            barrierColor: Colors.transparent,
-            builder: (context) =>
-                PostHeaderAction(post: widget.moment, type: 'moment'));
-      } else if (key == 'share') {
-        showBarModalBottomSheet(
-            context: context,
-            barrierColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-            builder: (context) => SizedBox(
-                height: size.height * 0.7,
-                child: ScreenShare(
-                    entityShare: widget.moment,
-                    type: 'moment',
-                    entityType: 'post')));
-      } else if (key == 'comment') {
-        showBarModalBottomSheet(
-            context: context,
-            barrierColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-            builder: (context) => SizedBox(
-                height: size.height * 0.7,
-                child: CommentPostModal(post: widget.moment)));
-      }
-    }
-
-    Color greyOpacity = const Color.fromRGBO(33, 33, 33, 1).withOpacity(0.9);
 
     return Column(
       children: [
@@ -384,8 +385,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      handlePressMenu(
-                                          iconsAction[index]['key']);
+                                      handlePressMenu(iconsAction[index]['key'],
+                                          highLightIcon, size);
                                     },
                                     child: Icon(
                                       iconsAction[index]['icon'],
