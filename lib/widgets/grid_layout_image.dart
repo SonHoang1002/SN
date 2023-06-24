@@ -119,9 +119,10 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                 medias[0]['remote_url'] ??
                 medias[0]['url'];
             return Container(
+                alignment: Alignment.center,
                 constraints: BoxConstraints(
                   maxHeight: size.height * 0.75,
-                  minHeight: 500,
+                  minHeight: size.width,
                 ),
                 height: (medias[0]['aspect'] ??
                             medias[0]['meta']['original']['aspect'] ??
@@ -138,7 +139,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                             widget.currentFocusVideoId != medias[0]['id']),
                         onEnd: widget.onEnd != null ? widget.onEnd!() : null,
                         // removeObserver: false
-                        )
+                      )
                     : VideoPlayerHasController(
                         media: medias[0],
                         handleAction: () {

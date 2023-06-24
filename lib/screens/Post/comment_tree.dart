@@ -680,13 +680,13 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                                           value: 'like',
                                         ),
                                         Reaction(
-                                          previewIcon: renderGif('gif', 'tym'),
+                                          previewIcon: renderGif('gif', 'love'),
                                           icon: renderGif('png', 'love',
                                               size: 20),
                                           value: 'love',
                                         ),
                                         Reaction(
-                                          previewIcon: renderGif('gif', 'hug'),
+                                          previewIcon: renderGif('gif', 'yay'),
                                           icon:
                                               renderGif('png', 'yay', size: 20),
                                           value: 'yay',
@@ -704,13 +704,13 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                                           value: 'haha',
                                         ),
                                         Reaction(
-                                          previewIcon: renderGif('gif', 'cry'),
+                                          previewIcon: renderGif('gif', 'sad'),
                                           icon:
                                               renderGif('png', 'sad', size: 20),
                                           value: 'sad',
                                         ),
                                         Reaction(
-                                          previewIcon: renderGif('gif', 'mad'),
+                                          previewIcon: renderGif('gif', 'angry'),
                                           icon: renderGif('png', 'angry',
                                               size: 20),
                                           value: 'angry',

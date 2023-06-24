@@ -343,13 +343,15 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 //         color: widget.type == postWatchDetail
                 //             ? Colors.transparent
                 //             : greyColor)
-                            // )
-                            )
-            : null, 
+                // )
+              )
+            : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            !widget.isOnBoxComment! ? buildDivider(color: greyColor,bottom: 10):const SizedBox(), 
+            !widget.isOnBoxComment! && widget.type != postWatchDetail
+                ? buildDivider(color: greyColor, bottom: 10)
+                : const SizedBox(),
             listMentions.isNotEmpty && content.isNotEmpty
                 ? BoxMention(
                     listData: listMentions,
@@ -366,17 +368,24 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                         text: TextSpan(
                             text: 'Đang trả lời ',
                             style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .color,
-                                fontSize: 13),
+                              color: widget.type == postWatchDetail
+                                  ? white
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
+                              fontSize: 13,
+                            ),
                             children: [
                           TextSpan(
                               text:
                                   '${widget.commentSelected['account']['display_name']}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 13)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                  color: widget.type == postWatchDetail
+                                      ? secondaryColor
+                                      : null)),
                           TextSpan(
                               text: '  Hủy',
                               recognizer: TapGestureRecognizer()
@@ -452,8 +461,11 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   )
                 : const SizedBox(),
             Container(
-              margin:!widget.isOnBoxComment!? const EdgeInsets.symmetric(horizontal: 10):null,
-              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              margin: !widget.isOnBoxComment!
+                  ? const EdgeInsets.symmetric(horizontal: 10)
+                  : null,
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 if (widget.type != postWatchDetail && !widget.isOnBoxComment!)
                   GestureDetector(
                     onTap: () {
