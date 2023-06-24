@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,7 +35,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   void initState() {
     super.initState();
     if (mounted) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         loadData();
       });
     }
@@ -57,11 +55,14 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
           .read(recruitControllerProvider.notifier)
           .getDetailRecruit(widget.data['id'])
           .then((value) {
-        recruitDetail = ref.read(recruitControllerProvider).detailRecruit;
+        setState(() {
+          recruitDetail = ref.watch(recruitControllerProvider).detailRecruit;
+          isRecruitInterested =
+              recruitDetail['recruit_relationships']['follow_recruit'];
+        });
       });
     }
-    isRecruitInterested =
-        widget.data['recruit_relationships']['follow_recruit'];
+
     await ref
         .read(recruitControllerProvider.notifier)
         .getListRecruitPropose({'exclude_current_user': true, 'limit': 5});
@@ -71,8 +72,6 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
       'limit': 5,
       'time': 'upcoming'
     });
-
-    setState(() {});
   }
 
   /// Re-render when component changed

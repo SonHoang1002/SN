@@ -42,7 +42,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
   void initState() {
     if (!mounted) return;
     super.initState();
-    loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadData();
+    });
     _scrollController.addListener(() {
       if (_scrollController.offset > 200) {
         setState(() {

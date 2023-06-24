@@ -64,17 +64,18 @@ class NotificationController extends StateNotifier<NotificationState> {
     }
   }
 
-  markNotificationIdAsRead(notiId) async {
+  markNotificationIdAsRead(notiId) {
     int index = state.notifications.indexWhere((e) => e['id'] == notiId);
     if (state.notifications[index]['read'] == false) {
+      final newNotifications = state.notifications.map((ele) {
+        if (ele['id'] == notiId) {
+          ele['read'] = true;
+        }
+      }).toList();
       NotificationsApi().markNotiAsRead(notiId);
       state = state.copyWith(
         isMore: state.isMore,
-        notifications: state.notifications.map((ele) {
-          if (ele['id'] == notiId) {
-            ele['read'] = true;
-          }
-        }).toList(),
+        notifications: newNotifications,
       );
     }
   }

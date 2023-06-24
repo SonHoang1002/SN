@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_time_ago/get_time_ago.dart';
@@ -30,7 +29,6 @@ import '../Page/PageDetail/page_detail.dart';
 import '../Page/page_invite.dart';
 import '../Post/post_detail.dart';
 import '../Recruit/recuit_detail.dart';
-import '../UserPage/user_page.dart';
 import 'deleted_status.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
@@ -319,52 +317,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
     }
   }
 
-  prepareData(item) async {
-    await markNotiAsRead(item['id']);
-    switch (item['type']) {
-      case 'recruit_invitation':
-      case 'recruit_apply':
-        return item['recruit'] != null
-            ? await RecruitApi().getDetailRecruitApi(item['recruit']['id'])
-            : null;
-      case 'event_invitation':
-      case 'event_invitation_host':
-      case 'accept_event_invitation':
-      case 'accept_event_invitation_host':
-        return item['event'] != null
-            ? await EventApi().getEventDetailApi(item['event']['id'])
-            : null;
-      case 'course_invitation':
-        return item['course'] != null
-            ? await LearnSpaceApi().getDetailCoursesApi(item['course']['id'])
-            : null;
-      case 'page_invitation':
-      case 'moderator_page_invitation':
-      case 'admin_page_invitation':
-      case 'page_invitation_follow':
-        await ref
-            .read(pageListControllerProvider.notifier)
-            .getListPageInvited('like');
-
-        await ref
-            .read(pageListControllerProvider.notifier)
-            .getListPageInvited('manage');
-
-        return null;
-      case 'project_invitation':
-      case 'project_invitation_host':
-        return item['project'] != null
-            ? await GrowApi().getDetailGrowApi(item['project']['id'])
-            : null;
-      default:
-        return null;
-    }
-  }
-
-  Widget? nextScreenFromNoti(item, data) {
-    // print(item['type']);
-    // Map<String, dynamic> map = item;
-    // print(map.keys);
+  Widget? nextScreenFromNoti(item) {
     switch (item['type']) {
       case 'comment':
       // đã bình luận về một bài viết có thể bạn quan tâm
@@ -385,14 +338,6 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                 preType: postDetail,
               )
             : DeletedStatus(type: "Bài viết");
-      case 'poll':
-        // Thăm dò ý kiến
-        return item['status'] != null
-            ? PostDetail(
-                postId: item['status']['id'],
-                preType: postDetail,
-              )
-            : DeletedStatus(type: "Cuộc thăm dò ý kiến");
 
       case 'friendship_request':
         return const FriendRequest();
@@ -401,8 +346,8 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       // đã mời quan tâm công việc',
       case 'recruit_apply':
         // đã ứng tuyển vào công việc',
-        return data != null
-            ? RecruitDetail(data: data, isUseRecruitData: true)
+        return item['recruit'] != null
+            ? RecruitDetail(data: item['recruit'])
             : DeletedStatus(type: "Công việc");
 
       case 'event_invitation':
@@ -411,13 +356,19 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       // đã đồng ý tham gia sự kiện
       case 'accept_event_invitation_host':
         // đã đồng ý đồng tổ chức sự kiện
-        return data != null
-            ? EventDetail(eventDetail: data, isUseEventData: true)
+        return item['event'] != null
+            ? EventDetail(eventDetail: item['event'])
             : DeletedStatus(type: "Sự kiện");
 
       case 'course_invitation':
-        return data != null
-            ? LearnSpaceDetail(data: data, isUseLearnData: true)
+        return item['course'] != null
+            ? LearnSpaceDetail(data: item['course'])
+            : DeletedStatus(type: "Khóa học");
+
+      case 'project_invitation':
+      case 'project_invitation_host':
+        return item['project'] != null
+            ? GrowDetail(data: item['project'])
             : DeletedStatus(type: "Khóa học");
 
       case 'page_invitation':
@@ -443,7 +394,18 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
       case 'page_follow':
       // đã thích your page (not yet)
       case 'accept_moderator_page_invitation':
-        return item['page'] != null ? PageDetail(pageData: item['page']) : null;
+        return item['page'] != null
+            ? PageDetail(pageData: item['page'])
+            : DeletedStatus(type: "Trang");
+
+      case 'poll':
+        // Thăm dò ý kiến
+        return item['status'] != null
+            ? PostDetail(
+                postId: item['status']['id'],
+                preType: postDetail,
+              )
+            : DeletedStatus(type: "Cuộc thăm dò ý kiến");
 
       case 'group_invitation':
       // đã mời bạn tham gia nhóm
@@ -454,19 +416,11 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
           buttonAppbar: SizedBox(),
         );
 
-      case 'project_invitation_host':
-        return data != null
-            ? GrowDetail(data: data, isUseGrowData: true)
-            : DeletedStatus(type: "Dự án");
-
       case 'accept_friendship_request':
       // đã chấp nhận lời mời kết bạn
       case 'folow':
       // ... followed you.
       // return UserPage(user: item['account']);
-
-      case 'product_invitation':
-      // đã mời bạn quan tâm đến sản phẩm
 
       case 'accept_group_invitation':
       // đã chấp nhận lời mời tham gia nhóm
@@ -479,17 +433,10 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
     }
   }
 
-  markNotiAsRead(notificationId) async {
-    return await ref
-        .read(notificationControllerProvider.notifier)
-        .markNotificationIdAsRead(notificationId);
-  }
-
   @override
   Widget build(BuildContext context) {
     List notifications =
         ref.watch(notificationControllerProvider).notifications;
-    // bool isMore = ref.watch(notificationControllerProvider).isMore;
 
     return Column(
       children: [
@@ -506,11 +453,18 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                   return index < notifications.length ||
                           index != notifications.length
                       ? InkWell(
-                          onTap: () async {
-                            final data = await prepareData(item);
-                            var nextScreen = nextScreenFromNoti(item, data);
+                          onTap: () {
+                            // ref
+                            //     .read(notificationControllerProvider.notifier)
+                            //     .markNotificationIdAsRead(item['id']);
+                            var nextScreen = nextScreenFromNoti(item);
                             if (nextScreen != null) {
-                              pushCustomCupertinoPageRoute(context, nextScreen);
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => nextScreen,
+                                ),
+                              );
                             }
                           },
                           child: Container(
@@ -519,7 +473,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                               horizontal: 8.0,
                             ),
                             decoration: BoxDecoration(
-                              color: !notifications[index]['read']
+                              color: item['read'] == false
                                   ? secondaryColorSelected
                                   : null,
                             ),
@@ -629,7 +583,6 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                             child: CupertinoActivityIndicator(),
                           ),
                         );
-                  // : const SizedBox();
                 }),
               ))
             : notifications.isEmpty

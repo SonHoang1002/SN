@@ -65,7 +65,7 @@ class RecruitState {
 }
 
 final recruitControllerProvider =
-    StateNotifierProvider.autoDispose<RecruitController, RecruitState>((ref) {
+    StateNotifierProvider<RecruitController, RecruitState>((ref) {
   ref.read(meControllerProvider);
   return RecruitController(ref.watch(meControllerProvider));
 });
