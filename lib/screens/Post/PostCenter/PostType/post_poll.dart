@@ -14,8 +14,6 @@ class PostPoll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Stack(children: [
@@ -57,17 +55,17 @@ class PostPoll extends StatelessWidget {
                   ),
                   // pollData['id'] == null
                   //     ?
-                       Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              border: Border.all(width: 0.4, color: greyColor)),
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.fromLTRB(8, 5, 8, 3),
-                          child: buildTextContent(
-                              "+ Thêm lựa chọn thăm dò ý kiến...", false,
-                              fontSize: 17),
-                        )
-                      // : const SizedBox(),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        border: Border.all(width: 0.4, color: greyColor)),
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.fromLTRB(8, 5, 8, 3),
+                    child: buildTextContent(
+                        "+ Thêm lựa chọn thăm dò ý kiến...", false,
+                        fontSize: 17),
+                  )
+                  // : const SizedBox(),
                 ],
               )),
         ),

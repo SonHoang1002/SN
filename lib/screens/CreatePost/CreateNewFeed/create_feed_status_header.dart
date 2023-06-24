@@ -37,20 +37,20 @@ class CreateFeedStatusHeader extends ConsumerStatefulWidget {
 
 class _CreateFeedStatusHeaderState
     extends ConsumerState<CreateFeedStatusHeader> {
+  renderLinkAvatar(meData) {
+    if (widget.entity != null && widget.entity['entityType'] == 'page') {
+      return widget.entity['avatar_media'] != null
+          ? widget.entity['avatar_media']['preview_url']
+          : linkAvatarDefault;
+    } else {
+      return meData?['avatar_media']?['preview_url'] ?? linkAvatarDefault;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     var meData = ref.watch(meControllerProvider)[0];
-
-    renderLinkAvatar() {
-      if (widget.entity != null && widget.entity['entityType'] == 'page') {
-        return widget.entity['avatar_media'] != null
-            ? widget.entity['avatar_media']['preview_url']
-            : linkAvatarDefault;
-      } else {
-        return meData?['avatar_media']?['preview_url'] ?? linkAvatarDefault;
-      }
-    }
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +58,7 @@ class _CreateFeedStatusHeaderState
         AvatarSocial(
           width: 38,
           height: 38,
-          path: renderLinkAvatar(),
+          path: renderLinkAvatar(meData),
           object: widget.entity,
         ),
         const SizedBox(

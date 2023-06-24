@@ -16,6 +16,12 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
+  List postTypeCreate = [
+    {"key": "post", "icon": "assets/story.svg", "title": "Post"},
+    {"key": "moment", "image": "assets/MomentMenu.png", "title": "Khoảnh khắc"},
+    {"key": "live", "icon": "assets/Live.svg", "title": "Phát trực tiếp"}
+  ];
+
   static const String LICENSE_TOKEN = tokenBanuba;
 
   static const channelName = 'startActivity/VideoEditorChannel';
@@ -85,16 +91,6 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
-    List postTypeCreate = [
-      {"key": "post", "icon": "assets/story.svg", "title": "Post"},
-      {
-        "key": "moment",
-        "image": "assets/MomentMenu.png",
-        "title": "Khoảnh khắc"
-      },
-      {"key": "live", "icon": "assets/Live.svg", "title": "Phát trực tiếp"}
-    ];
-
     return Container(
         margin: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_feed_status_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import "package:collection/collection.dart";
-import 'package:social_network_app_mobile/widgets/text_description.dart';
 
 class CreateFeedStatus extends StatefulWidget {
   final String? content;

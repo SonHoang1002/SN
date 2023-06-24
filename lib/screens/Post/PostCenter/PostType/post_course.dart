@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -7,8 +5,6 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/LearnSpace/learn_space_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/avatar_social.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 class PostCourse extends StatelessWidget {
   final dynamic post;

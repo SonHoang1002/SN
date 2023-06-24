@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/screens/Event/event_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -83,7 +82,7 @@ class PostShareEvent extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text( 
+                        Text(
                           DateFormat.yMd()
                               .add_jm()
                               .format(DateTime.parse(event['start_time'])),

@@ -35,59 +35,59 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
     // "start_date": ""
   };
 
+  handlePress(event) {
+    if (event['children'] != null && event['children'].isNotEmpty) {
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => CreateModalBaseMenu(
+                  title: event['name'],
+                  body: LifeEventCategories(
+                    type: 'children',
+                    eventSelected: event,
+                    listLifeEvent: event['children'],
+                    handleUpdateData: widget.handleUpdateData,
+                  ),
+                  buttonAppbar: const SizedBox())));
+    } else {
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => CreateModalBaseMenu(
+                  title: event['name'] ?? '',
+                  body: LifeEventDetail(
+                      event: event,
+                      updateLifeEvent: (type, value) {
+                        if (mounted) {
+                          setState(() {
+                            lifeEvent = {...lifeEvent, type: value};
+                          });
+                        }
+                      }),
+                  buttonAppbar: ButtonPrimary(
+                    label: "Xong",
+                    handlePress: () {
+                      widget.handleUpdateData('updateLifeEvent', lifeEvent);
+                      if (widget.type != null && widget.type == 'children') {
+                        Navigator.of(context)
+                          ..pop()
+                          ..pop()
+                          ..pop();
+                      } else {
+                        Navigator.of(context)
+                          ..pop()
+                          ..pop();
+                      }
+                    },
+                  ))));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     List listData = widget.listLifeEvent ?? lifeEventCategories;
-
-    handlePress(event) {
-      if (event['children'] != null && event['children'].isNotEmpty) {
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => CreateModalBaseMenu(
-                    title: event['name'],
-                    body: LifeEventCategories(
-                      type: 'children',
-                      eventSelected: event,
-                      listLifeEvent: event['children'],
-                      handleUpdateData: widget.handleUpdateData,
-                    ),
-                    buttonAppbar: const SizedBox())));
-      } else {
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => CreateModalBaseMenu(
-                    title: event['name'] ?? '',
-                    body: LifeEventDetail(
-                        event: event,
-                        updateLifeEvent: (type, value) {
-                          if (mounted) {
-                            setState(() {
-                              lifeEvent = {...lifeEvent, type: value};
-                            });
-                          }
-                        }),
-                    buttonAppbar: ButtonPrimary(
-                      label: "Xong",
-                      handlePress: () {
-                        widget.handleUpdateData('updateLifeEvent', lifeEvent);
-                        if (widget.type != null && widget.type == 'children') {
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop()
-                            ..pop();
-                        } else {
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop();
-                        }
-                      },
-                    ))));
-      }
-    }
 
     return SingleChildScrollView(
       child: Column(

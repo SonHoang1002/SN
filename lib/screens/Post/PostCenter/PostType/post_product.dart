@@ -7,7 +7,6 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/rating_sta
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
 class PostProduct extends StatefulWidget {
   final dynamic post;

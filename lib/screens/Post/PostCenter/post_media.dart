@@ -15,7 +15,7 @@ class PostMedia extends StatefulWidget {
   final Function? updateDataFunction;
   final bool? isFocus;
 
-  PostMedia(
+  const PostMedia(
       {Key? key,
       this.post,
       this.type,
@@ -52,79 +52,80 @@ class _PostMediaState extends State<PostMedia> {
     }
   }
 
+  handlePress(media) {
+    dynamic medias = widget.post['media_attachments'] ?? [];
+    if (widget.type != "edit_post") {
+      // if (checkIsImage(media)) {
+      if (medias.length == 1) {
+        widget.showCmtBoxFunction != null ? widget.showCmtBoxFunction!() : null;
+        pushCustomVerticalPageRoute(
+            context,
+            PostOneMediaDetail(
+                postMedia: widget.post,
+                post: widget.post,
+                type: widget.type,
+                preType: widget.preType,
+                backFunction: () {
+                  widget.backFunction != null ? widget.backFunction!() : null;
+                },
+                reloadFunction: () {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    widget.reloadFunction != null
+                        ? widget.reloadFunction!()
+                        : null;
+                  });
+                },
+                updateDataFunction: widget.updateDataFunction),
+            opaque: false);
+      } else if (medias.length > 1) {
+        widget.showCmtBoxFunction != null ? widget.showCmtBoxFunction!() : null;
+        int initialIndex =
+            medias.indexWhere((element) => element['id'] == media['id']);
+        pushCustomCupertinoPageRoute(
+            context,
+            PostMutipleMediaDetail(
+                post: widget.post,
+                initialIndex: initialIndex,
+                preType: widget.preType,
+                updateDataFunction: widget.updateDataFunction
+                // reloadPostFunction: () {
+                //     WidgetsBinding.instance.addPostFrameCallback((_) {
+                //       reloadFunction != null ? reloadFunction!() : null;
+                //     });
+                //   }
+                ),
+            opaque: false);
+      } else {
+        widget.showCmtBoxFunction != null ? widget.showCmtBoxFunction!() : null;
+        pushCustomCupertinoPageRoute(
+            context,
+            PostDetail(
+                post: widget.post,
+                preType: widget.type,
+                updateDataFunction: widget.updateDataFunction));
+        // Navigator.push(
+        //     context,
+        //     CupertinoPageRoute(
+        //         builder: (context) => PostDetail(
+        //               post: post,
+        //               preType: type,
+        //             )));
+      }
+    } else {
+      return;
+    }
+    // }
+  }
+
+  @override
+  void dispose() {
+    currentVideoId.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     List medias = widget.post['media_attachments'] ?? [];
-
-    handlePress(media) {
-      if (widget.type != "edit_post") {
-        // if (checkIsImage(media)) {
-        if (medias.length == 1) {
-          widget.showCmtBoxFunction != null
-              ? widget.showCmtBoxFunction!()
-              : null;
-          pushCustomVerticalPageRoute(
-              context,
-              PostOneMediaDetail(
-                  postMedia: widget.post,
-                  post: widget.post,
-                  type: widget.type,
-                  preType: widget.preType,
-                  backFunction: () {
-                    widget.backFunction != null ? widget.backFunction!() : null;
-                  },
-                  reloadFunction: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      widget.reloadFunction != null
-                          ? widget.reloadFunction!()
-                          : null;
-                    });
-                  },
-                  updateDataFunction: widget.updateDataFunction),
-              opaque: false);
-        } else if (medias.length > 1) {
-          widget.showCmtBoxFunction != null
-              ? widget.showCmtBoxFunction!()
-              : null;
-          int initialIndex =
-              medias.indexWhere((element) => element['id'] == media['id']);
-          pushCustomCupertinoPageRoute(
-              context,
-              PostMutipleMediaDetail(
-                  post: widget.post,
-                  initialIndex: initialIndex,
-                  preType: widget.preType,
-                  updateDataFunction: widget.updateDataFunction
-                  // reloadPostFunction: () {
-                  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-                  //       reloadFunction != null ? reloadFunction!() : null;
-                  //     });
-                  //   }
-                  ),
-              opaque: false);
-        } else {
-          widget.showCmtBoxFunction != null
-              ? widget.showCmtBoxFunction!()
-              : null;
-          pushCustomCupertinoPageRoute(
-              context,
-              PostDetail(
-                  post: widget.post,
-                  preType: widget.type,
-                  updateDataFunction: widget.updateDataFunction));
-          // Navigator.push(
-          //     context,
-          //     CupertinoPageRoute(
-          //         builder: (context) => PostDetail(
-          //               post: post,
-          //               preType: type,
-          //             )));
-        }
-      } else {
-        return;
-      }
-      // }
-    }
 
     return medias.isNotEmpty
         ? Container(

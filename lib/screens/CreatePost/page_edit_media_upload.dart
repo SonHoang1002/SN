@@ -19,7 +19,6 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/text_form_field_custom.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class PageEditMediaUpload extends StatefulWidget {
   final List files;
@@ -98,107 +97,105 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
         : null;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    checkIsImage(media) {
-      return media['type'] == 'image' ? true : false;
-    }
+  checkIsImage(media) {
+    return media['type'] == 'image' ? true : false;
+  }
 
-    Widget renderMedia(index) {
-      final file = filesRender[index];
-      return Column(
-        children: [
-          if (checkIsImage(file))
-            GestureDetector(
-              onTap: () {
-                navigatorFunction(index);
-              },
-              child: Stack(
-                children: [
-                  ClipRect(
-                      child: Align(
-                    alignment: Alignment.topCenter,
-                    heightFactor:
-                        (file['aspect'] ?? file['meta']['original']['aspect']) <
-                                0.4
-                            ? 0.6
-                            : 1,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: file['subType'] == 'local'
-                          ? file['newUint8ListFile'] != null
-                              ? Hero(
-                                  tag: index,
-                                  child: Image.memory(
-                                    file['newUint8ListFile'],
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Hero(
-                                  tag: index,
-                                  child: Image.file(
-                                    File(file['file'].path),
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                          : Hero(
-                              tag: file['id'] ?? index,
-                              child: ExtendedImage.network(
-                                file['url'],
-                              ),
+  Widget renderMedia(index) {
+    final size = MediaQuery.of(context).size;
+
+    final file = filesRender[index];
+    return Column(
+      children: [
+        if (checkIsImage(file))
+          GestureDetector(
+            onTap: () {
+              navigatorFunction(index);
+            },
+            child: Stack(
+              children: [
+                ClipRect(
+                    child: Align(
+                  alignment: Alignment.topCenter,
+                  heightFactor:
+                      (file['aspect'] ?? file['meta']['original']['aspect']) <
+                              0.4
+                          ? 0.6
+                          : 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: file['subType'] == 'local'
+                        ? file['newUint8ListFile'] != null
+                            ? Hero(
+                                tag: index,
+                                child: Image.memory(
+                                  file['newUint8ListFile'],
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Hero(
+                                tag: index,
+                                child: Image.file(
+                                  File(file['file'].path),
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                        : Hero(
+                            tag: file['id'] ?? index,
+                            child: ExtendedImage.network(
+                              file['url'],
                             ),
-                      // FadeInImage.memoryNetwork(
-                      //     placeholder: kTransparentImage,
-                      //     image: file['url'],
-                      //     imageErrorBuilder: (context, error, stackTrace) =>
-                      //         const SizedBox(),
-                      //   ),
-                    ),
-                  )),
-                ],
-              ),
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: SizedBox(
-                height:
-                    (file['aspect'] ?? file['meta']['original']['aspect']) < 1
-                        ? size.width
-                        : null,
-                child: FeedVideo(
-                    path:
-                        file['file']?.path ?? file['remote_url'] ?? file['url'],
-                    flickMultiManager: flickMultiManager,
-                    image: file['preview_remote_url'] ??
-                        file['preview_url'] ??
-                        ''),
-              ),
+                          ),
+                    // FadeInImage.memoryNetwork(
+                    //     placeholder: kTransparentImage,
+                    //     image: file['url'],
+                    //     imageErrorBuilder: (context, error, stackTrace) =>
+                    //         const SizedBox(),
+                    //   ),
+                  ),
+                )),
+              ],
             ),
-          Container(
-            margin: const EdgeInsets.all(8.0),
-            child: TextFormFieldCustom(
-              autofocus: false,
-              hintText: "Mô tả",
-              handleGetValue: (value) {
-                EasyDebounce.debounce(
-                    'my-debouncer', const Duration(milliseconds: 500), () {
-                  setState(() {
-                    filesRender = [
-                      ...filesRender.sublist(0, index),
-                      {...file, "description": value},
-                      ...filesRender.sublist(index + 1)
-                    ];
-                  });
-                });
-              },
+          )
+        else
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: SizedBox(
+              height: (file['aspect'] ?? file['meta']['original']['aspect']) < 1
+                  ? size.width
+                  : null,
+              child: FeedVideo(
+                  path: file['file']?.path ?? file['remote_url'] ?? file['url'],
+                  flickMultiManager: flickMultiManager,
+                  image:
+                      file['preview_remote_url'] ?? file['preview_url'] ?? ''),
             ),
           ),
-        ],
-      );
-    }
+        Container(
+          margin: const EdgeInsets.all(8.0),
+          child: TextFormFieldCustom(
+            autofocus: false,
+            hintText: "Mô tả",
+            handleGetValue: (value) {
+              EasyDebounce.debounce(
+                  'my-debouncer', const Duration(milliseconds: 500), () {
+                setState(() {
+                  filesRender = [
+                    ...filesRender.sublist(0, index),
+                    {...file, "description": value},
+                    ...filesRender.sublist(index + 1)
+                  ];
+                });
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);

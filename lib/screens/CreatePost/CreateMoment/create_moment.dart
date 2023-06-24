@@ -43,6 +43,110 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
   };
   List friendsPrePage = [];
 
+  void handleClickAction(key) {
+    Widget pageNext = FriendTag(
+        handleUpdateData: (key, dataTag) {
+          setState(() {
+            friendsPrePage = dataTag;
+            data = {
+              ...data,
+              "mention_ids": dataTag?.map((element) => element['id']).toList()
+            };
+          });
+        },
+        friendsPrePage: friendsPrePage);
+    Widget buttonAppBar = SizedBox(
+      height: 40,
+      child: ButtonPrimary(
+        label: "Xong",
+        handlePress: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
+    if (key == 'visibility') {
+      buttonAppBar = const SizedBox();
+      pageNext = PageVisibility(
+          visibility: typeVisibility
+              .firstWhere((element) => element['key'] == data['visibility']),
+          handleUpdate: (visibilitySelected) {
+            setState(() {
+              data = {...data, 'visibility': visibilitySelected['key']};
+            });
+          });
+    }
+
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+            builder: (context) => CreateModalBaseMenu(
+                title:
+                    key == 'friend_tag' ? 'Gắn thẻ bạn bè' : 'Quyền riêng tư',
+                body: pageNext,
+                buttonAppbar: buttonAppBar)));
+  }
+
+  Future<String> imageToBase64(String imagePath) async {
+    final bytes = await File(imagePath).readAsBytes();
+    final base64Str = base64Encode(bytes);
+    return 'data:image/jpeg;base64,$base64Str';
+  }
+
+  handleUploadMedia(fileData, imageCover) async {
+    fileData = fileData.replaceAll('file://', '');
+    FormData formData;
+
+    formData = FormData.fromMap({
+      "description": '',
+      "position": 1,
+      "file": await MultipartFile.fromFile(fileData,
+          filename: fileData.split('/').last),
+      "show_url": await imageToBase64(imageCover),
+    });
+    var response = await MediaApi().uploadMediaEmso(formData);
+
+    return response;
+  }
+
+  handleSubmit() async {
+    context.loaderOverlay.show();
+    var snackbar = ScaffoldMessenger.of(context);
+    var mediaUploadResult =
+        await handleUploadMedia(widget.videoPath, widget.imageCover);
+    if (mediaUploadResult == null) {
+      // ignore: use_build_context_synchronously
+      context.loaderOverlay.hide();
+
+      snackbar.showSnackBar(const SnackBar(
+          content: Text(
+              'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
+    }
+    var response = await PostApi().createStatus({
+      ...data,
+      "media_ids": [mediaUploadResult['id']],
+    });
+
+    if (response != null) {
+      // ignore: use_build_context_synchronously
+      context.loaderOverlay.hide();
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Moment(
+                    dataAdditional: response,
+                  )));
+      snackbar.showSnackBar(
+          const SnackBar(content: Text('Đăng bài viết thành công')));
+    } else {
+      // ignore: use_build_context_synchronously
+      context.loaderOverlay.hide();
+      snackbar.showSnackBar(const SnackBar(
+          content: Text(
+              'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -64,110 +168,6 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
         color: Theme.of(context).textTheme.bodyLarge!.color,
         fontWeight: FontWeight.w600,
         fontSize: 15);
-
-    void handleClickAction(key) {
-      Widget pageNext = FriendTag(
-          handleUpdateData: (key, dataTag) {
-            setState(() {
-              friendsPrePage = dataTag;
-              data = {
-                ...data,
-                "mention_ids": dataTag?.map((element) => element['id']).toList()
-              };
-            });
-          },
-          friendsPrePage: friendsPrePage);
-      Widget buttonAppBar = SizedBox(
-        height: 40,
-        child: ButtonPrimary(
-          label: "Xong",
-          handlePress: () {
-            Navigator.pop(context);
-          },
-        ),
-      );
-      if (key == 'visibility') {
-        buttonAppBar = const SizedBox();
-        pageNext = PageVisibility(
-            visibility: typeVisibility
-                .firstWhere((element) => element['key'] == data['visibility']),
-            handleUpdate: (visibilitySelected) {
-              setState(() {
-                data = {...data, 'visibility': visibilitySelected['key']};
-              });
-            });
-      }
-
-      Navigator.push(
-          context,
-          CupertinoPageRoute(
-              builder: (context) => CreateModalBaseMenu(
-                  title:
-                      key == 'friend_tag' ? 'Gắn thẻ bạn bè' : 'Quyền riêng tư',
-                  body: pageNext,
-                  buttonAppbar: buttonAppBar)));
-    }
-
-    Future<String> imageToBase64(String imagePath) async {
-      final bytes = await File(imagePath).readAsBytes();
-      final base64Str = base64Encode(bytes);
-      return 'data:image/jpeg;base64,$base64Str';
-    }
-
-    handleUploadMedia(fileData, imageCover) async {
-      fileData = fileData.replaceAll('file://', '');
-      FormData formData;
-
-      formData = FormData.fromMap({
-        "description": '',
-        "position": 1,
-        "file": await MultipartFile.fromFile(fileData,
-            filename: fileData.split('/').last),
-        "show_url": await imageToBase64(imageCover),
-      });
-      var response = await MediaApi().uploadMediaEmso(formData);
-
-      return response;
-    }
-
-    handleSubmit() async {
-      context.loaderOverlay.show();
-      var snackbar = ScaffoldMessenger.of(context);
-      var mediaUploadResult =
-          await handleUploadMedia(widget.videoPath, widget.imageCover);
-      if (mediaUploadResult == null) {
-        // ignore: use_build_context_synchronously
-        context.loaderOverlay.hide();
-
-        snackbar.showSnackBar(const SnackBar(
-            content: Text(
-                'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
-      }
-      var response = await PostApi().createStatus({
-        ...data,
-        "media_ids": [mediaUploadResult['id']],
-      });
-
-      if (response != null) {
-        // ignore: use_build_context_synchronously
-        context.loaderOverlay.hide();
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Moment(
-                      dataAdditional: response,
-                    )));
-        snackbar.showSnackBar(
-            const SnackBar(content: Text('Đăng bài viết thành công')));
-      } else {
-        // ignore: use_build_context_synchronously
-        context.loaderOverlay.hide();
-        snackbar.showSnackBar(const SnackBar(
-            content: Text(
-                'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
-      }
-    }
 
     return LoaderOverlay(
       useDefaultLoading: false,

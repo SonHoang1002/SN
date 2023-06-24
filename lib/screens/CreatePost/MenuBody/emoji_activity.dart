@@ -6,7 +6,6 @@ import 'package:social_network_app_mobile/apis/common.api.dart';
 import 'package:social_network_app_mobile/data/emoji_activity.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
 
 class EmojiActivity extends StatefulWidget {

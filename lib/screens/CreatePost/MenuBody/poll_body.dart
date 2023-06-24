@@ -1,12 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
@@ -28,7 +23,7 @@ class PollBody extends StatefulWidget {
 }
 
 class _PollBodyState extends State<PollBody> {
-  List<bool> _settingStatusList = [true, true];
+  final List<bool> _settingStatusList = [true, true];
 
   final _timeMenuList = [
     {"key": "5_minutes", 'time': "5 phút", "value": 5 * 60},
@@ -144,7 +139,6 @@ class _PollBodyState extends State<PollBody> {
     const marginHorizontal = EdgeInsets.symmetric(
       horizontal: 8.0,
     );
-    final size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(

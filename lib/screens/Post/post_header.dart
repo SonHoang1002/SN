@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:get_time_ago/get_time_ago.dart';
@@ -13,7 +12,6 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
-import 'package:social_network_app_mobile/screens/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';

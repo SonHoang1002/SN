@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -17,9 +16,7 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
-import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.dart';
-import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer_button.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer_information.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
@@ -27,10 +24,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:social_network_app_mobile/widgets/video_player.dart';
 
 List typeVisibility = [
   {

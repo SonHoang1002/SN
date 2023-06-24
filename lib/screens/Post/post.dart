@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -46,7 +44,8 @@ class Post extends ConsumerStatefulWidget {
   ConsumerState<Post> createState() => _PostState();
 }
 
-class _PostState extends ConsumerState<Post> with TickerProviderStateMixin, WidgetsBindingObserver{
+class _PostState extends ConsumerState<Post>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   bool isHaveSuggest = true;
   final ValueNotifier<bool> _isShowCommentBox = ValueNotifier(false);
   dynamic currentPost;
@@ -78,7 +77,7 @@ class _PostState extends ConsumerState<Post> with TickerProviderStateMixin, Widg
 
   @override
   void dispose() {
-     WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     currentPost = null;
     meData = null;
     _isShowCommentBox.dispose();
@@ -101,6 +100,7 @@ class _PostState extends ConsumerState<Post> with TickerProviderStateMixin, Widg
         });
       }
     }
+
     return currentPost != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +156,7 @@ class _PostState extends ConsumerState<Post> with TickerProviderStateMixin, Widg
                               setState(() {});
                             });
                           },
-                          isFocus:widget.isFocus,
+                          isFocus: widget.isFocus,
                           updateDataFunction: updateNewPost,
                           showCmtBoxFunction: () {
                             _changeShowCommentBox();

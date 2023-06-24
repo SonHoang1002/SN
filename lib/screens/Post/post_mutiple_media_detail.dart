@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math' as math;
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
@@ -17,12 +14,10 @@ import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.da
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
-import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
 const String closeTopToBottom = "topToBottom";
