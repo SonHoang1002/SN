@@ -58,11 +58,6 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
                     "label": "Thêm nút hành động",
                     "icon": "assets/pages/addAction.png",
                   },
-                  // {
-                  //   "key": "archives",
-                  //   "label": "Kho lưu trữ",
-                  //   "icon": "assets/pages/boxArchives.png",
-                  // },
                   {
                     "key": "activity",
                     "label": "Nhật ký hoạt động",
@@ -72,11 +67,6 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
                     "key": "setting",
                     "label": "Cài đặt Trang và gắn thẻ",
                     "icon": "assets/pages/settingPage.png",
-                  },
-                  {
-                    "key": "review",
-                    "label": "Xem lại bài viết và thẻ",
-                    "icon": "assets/pages/reviewPost.png",
                   },
                   {
                     "key": "private",
@@ -187,6 +177,7 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
               CupertinoDialogAction(
                 onPressed: () async {
                   await PageApi().blockPage({'page_id': widget.data['id']});
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 },
                 child: const Text('Chặn'),
@@ -228,12 +219,17 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
             context,
             CupertinoPageRoute(
                 builder: (context) => PageAction(
-                      data: widget.data,
-                    )));
+                    data: widget.data,
+                    handleChangeDependencies:
+                        widget.handleChangeDependencies)));
         break;
       case 'activity':
-        Navigator.push(context,
-            CupertinoPageRoute(builder: (context) => const PageActivity()));
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => PageActivity(
+                      data: widget.data,
+                    )));
         break;
       default:
     }
