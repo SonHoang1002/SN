@@ -67,16 +67,20 @@ class NotificationController extends StateNotifier<NotificationState> {
   markNotificationIdAsRead(notiId) {
     int index = state.notifications.indexWhere((e) => e['id'] == notiId);
     if (state.notifications[index]['read'] == false) {
-      final newNotifications = state.notifications.map((ele) {
-        if (ele['id'] == notiId) {
-          ele['read'] = true;
-        }
-      }).toList();
-      NotificationsApi().markNotiAsRead(notiId);
       state = state.copyWith(
         isMore: state.isMore,
-        notifications: newNotifications,
+        notifications: state.notifications
+            .map(
+              (ele) => {
+                ...ele,
+                "read": ele['id'] == notiId && ele['read'] == false
+                    ? true
+                    : ele['read'],
+              },
+            )
+            .toList(),
       );
+      NotificationsApi().markNotiAsRead(notiId);
     }
   }
 }
