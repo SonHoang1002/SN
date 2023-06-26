@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,7 +5,6 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 
 class PostFooterInformation extends ConsumerStatefulWidget {
   final dynamic post;
@@ -15,7 +12,7 @@ class PostFooterInformation extends ConsumerStatefulWidget {
   final dynamic preType;
   final int? indexImagePost;
   final Function? updateDataFunction;
-  PostFooterInformation(
+  const PostFooterInformation(
       {Key? key,
       this.post,
       this.type,
@@ -34,6 +31,69 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
   late String textRender;
   late int? reactionsCount;
   late List reactions;
+
+  renderImage(link, key) {
+    double size = (key == 'love')
+        ? 24
+        : ['angry', 'sad', 'like'].contains(key)
+            ? key == 'yay'
+                ? 28
+                : 16
+            : 18;
+    return Image.asset(
+      link,
+      height: size,
+      width: size,
+      errorBuilder: (context, error, stackTrace) =>
+          const Icon(FontAwesomeIcons.faceAngry),
+    );
+  }
+
+  renderReaction(key) {
+    if (key != null) {
+      return renderImage('assets/reaction/$key.png', key);
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  double setHeight() {
+    double height = 5;
+    if ((widget.indexImagePost != null)) {
+      if (((widget.post['media_attachments']?[widget.indexImagePost]
+                  ['status_media']['favourites_count'] >
+              0) ||
+          (widget.post['media_attachments']?[widget.indexImagePost]
+                  ['status_media']['replies_total'] >
+              0))) {
+        height = 40;
+      }
+    } else if (((widget.post['favourites_count'] ?? 0) > 0 ||
+        (widget.post['replies_total'] ?? 0) > 0)) {
+      height = 40;
+    }
+    return height;
+  }
+
+  EdgeInsets setPadding() {
+    EdgeInsets padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
+    // if ((post['favourites_count'] ?? 0) > 0 ||
+    //     (post['replies_total'] ?? 0) > 0) {
+    //   if (favourites != null && favourites.length == 2) {
+    //     padding = const EdgeInsets.fromLTRB(8, 3, 8, 6);
+    //   } else {
+    //     if (reactionsCount > 1) {
+    //       //bajn va nguoi khac
+    //       padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
+    //     } else {
+    //       //ban
+    //       padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
+    //     }
+    //   }
+    // }
+
+    return padding;
+  }
 
   @override
   void dispose() {
@@ -96,69 +156,6 @@ class _PostFooterInformationState extends ConsumerState<PostFooterInformation> {
         textRender =
             'Bạn ${reactionsCount! > 1 ? 'và ${shortenLargeNumber(reactionsCount! - 1)} người khác' : ''}';
       }
-    }
-
-    renderImage(link, key) {
-      double size = (key == 'love')
-          ? 24
-          : ['angry', 'sad', 'like'].contains(key)
-              ? key == 'yay'
-                  ? 28
-                  : 16
-              : 18;
-      return Image.asset(
-        link,
-        height: size,
-        width: size,
-        errorBuilder: (context, error, stackTrace) =>
-            const Icon(FontAwesomeIcons.faceAngry),
-      );
-    }
-
-    renderReaction(key) {
-      if (key != null) {
-        return renderImage('assets/reaction/$key.png', key);
-      } else {
-        return const SizedBox();
-      }
-    }
-
-    double setHeight() {
-      double height = 5;
-      if ((widget.indexImagePost != null)) {
-        if (((widget.post['media_attachments']?[widget.indexImagePost]
-                    ['status_media']['favourites_count'] >
-                0) ||
-            (widget.post['media_attachments']?[widget.indexImagePost]
-                    ['status_media']['replies_total'] >
-                0))) {
-          height = 40;
-        }
-      } else if (((widget.post['favourites_count'] ?? 0) > 0 ||
-          (widget.post['replies_total'] ?? 0) > 0)) {
-        height = 40;
-      }
-      return height;
-    }
-
-    EdgeInsets setPadding() {
-      EdgeInsets padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
-      // if ((post['favourites_count'] ?? 0) > 0 ||
-      //     (post['replies_total'] ?? 0) > 0) {
-      //   if (favourites != null && favourites.length == 2) {
-      //     padding = const EdgeInsets.fromLTRB(8, 3, 8, 6);
-      //   } else {
-      //     if (reactionsCount > 1) {
-      //       //bajn va nguoi khac
-      //       padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
-      //     } else {
-      //       //ban
-      //       padding = const EdgeInsets.fromLTRB(8, 6, 8, 9);
-      //     }
-      //   }
-      // }
-
-      return padding;
     }
 
     return Container(

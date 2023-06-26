@@ -15,9 +15,9 @@ class PageMention extends StatelessWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
-        title: Row(
+        title:   Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: const[
             BackIcon(),
             AppBarTitle(
               title: "Được gắn thẻ",

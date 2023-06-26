@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:comment_tree/comment_tree.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +9,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:path/path.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -19,7 +16,6 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/helper/split_any.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
-import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_card.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -27,8 +23,6 @@ import 'package:social_network_app_mobile/widgets/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/flick_multiple_manager.dart';
 import 'package:social_network_app_mobile/widgets/Reaction/flutter_reaction_button.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
-import 'package:social_network_app_mobile/widgets/preview_link.dart';
 import 'package:social_network_app_mobile/widgets/reaction_list.dart';
 import 'package:social_network_app_mobile/widgets/report_category.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -109,17 +103,40 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
     super.initState();
   }
 
+  checkElement() {
+    int indexCommentChild = postChildComment.indexWhere(
+        (element) => element['id'] == widget.commentChildCreate['id']);
+
+    if (indexCommentChild < 0) return false;
+
+    return true;
+  }
+
+  handleUpdatePost(post) {
+    if (post != null && post['in_reply_to_parent_id'] != null) {
+      int index =
+          postChildComment.indexWhere((element) => element['id'] == post['id']);
+
+      if (index < 0) return;
+      widget.handleDeleteComment!(post);
+      setState(() {
+        postChildComment = [
+          ...postChildComment.sublist(0, index),
+          ...postChildComment.sublist((index + 1))
+        ];
+        commentChild = [
+          ...commentChild.sublist(0, index),
+          ...commentChild.sublist((index + 1))
+        ];
+      });
+    } else {
+      widget.handleDeleteComment!(post);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     dynamic avatarMedia = widget.commentParent?['account']?['avatar_media'];
-    checkElement() {
-      int indexCommentChild = postChildComment.indexWhere(
-          (element) => element['id'] == widget.commentChildCreate['id']);
-
-      if (indexCommentChild < 0) return false;
-
-      return true;
-    }
 
     if (widget.commentChildCreate != null) {
       Comment commentCreate = Comment(
@@ -155,28 +172,6 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
             ];
           });
         }
-      }
-    }
-
-    handleUpdatePost(post) {
-      if (post != null && post['in_reply_to_parent_id'] != null) {
-        int index = postChildComment
-            .indexWhere((element) => element['id'] == post['id']);
-
-        if (index < 0) return;
-        widget.handleDeleteComment!(post);
-        setState(() {
-          postChildComment = [
-            ...postChildComment.sublist(0, index),
-            ...postChildComment.sublist((index + 1))
-          ];
-          commentChild = [
-            ...commentChild.sublist(0, index),
-            ...commentChild.sublist((index + 1))
-          ];
-        });
-      } else {
-        widget.handleDeleteComment!(post);
       }
     }
 
@@ -680,13 +675,13 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                                           value: 'like',
                                         ),
                                         Reaction(
-                                          previewIcon: renderGif('gif', 'tym'),
+                                          previewIcon: renderGif('gif', 'love'),
                                           icon: renderGif('png', 'love',
                                               size: 20),
                                           value: 'love',
                                         ),
                                         Reaction(
-                                          previewIcon: renderGif('gif', 'hug'),
+                                          previewIcon: renderGif('gif', 'yay'),
                                           icon:
                                               renderGif('png', 'yay', size: 20),
                                           value: 'yay',
@@ -704,13 +699,14 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                                           value: 'haha',
                                         ),
                                         Reaction(
-                                          previewIcon: renderGif('gif', 'cry'),
+                                          previewIcon: renderGif('gif', 'sad'),
                                           icon:
                                               renderGif('png', 'sad', size: 20),
                                           value: 'sad',
                                         ),
                                         Reaction(
-                                          previewIcon: renderGif('gif', 'mad'),
+                                          previewIcon:
+                                              renderGif('gif', 'angry'),
                                           icon: renderGif('png', 'angry',
                                               size: 20),
                                           value: 'angry',

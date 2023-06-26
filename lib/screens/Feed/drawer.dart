@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/drawer.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/group_item.dart';
-import 'package:social_network_app_mobile/widgets/text_action.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
 
@@ -12,7 +9,6 @@ class DrawerFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

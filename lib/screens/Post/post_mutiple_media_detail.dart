@@ -1,13 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math' as math;
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
@@ -16,12 +12,10 @@ import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.da
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
-import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
 const String closeTopToBottom = "topToBottom";
@@ -48,6 +42,8 @@ class PostMutipleMediaDetail extends ConsumerStatefulWidget {
 class _PostMutipleMediaDetail1State
     extends ConsumerState<PostMutipleMediaDetail> {
   late ScrollController _scrollParentController;
+  ValueNotifier<bool> showBgContainer = ValueNotifier(true);
+
   bool isDragOutside = false;
   bool canDragOutside = false;
   bool isHaveAppbar = true;
@@ -215,14 +211,14 @@ class _PostMutipleMediaDetail1State
 
   @override
   void dispose() {
+    showBgContainer.dispose();
+    _scrollParentController.dispose();
     super.dispose();
   }
 
   checkIsImage(media) {
     return media['type'] == 'image' ? true : false;
   }
-
-  ValueNotifier<bool> showBgContainer = ValueNotifier(true);
 
   reloadDetailFunction() {
     setState(() {});
@@ -529,9 +525,10 @@ class _PostMutipleMediaDetail1State
         child: medias[index]['file'] != null
             ? VideoPlayerNoneController(
                 path: medias[index]['file'].path,
-                type: "local",removeObserver:false
+                type: "local",
+                removeObserver: false
                 // aspectRatio: size.height / size.width,
-              )
+                )
             : VideoPlayerHasController(
                 media: medias[index],
                 handleAction: () {
@@ -541,7 +538,7 @@ class _PostMutipleMediaDetail1State
                         post: widget.post,
                         media: medias[index],
                         type: widget.preType,
-                        updateDataFunction: () { 
+                        updateDataFunction: () {
                           // updateNewPost() {
                           // setState(() {
                           //   postData = ref.watch(currentPostControllerProvider).currentPost;
@@ -562,6 +559,7 @@ class _PostMutipleMediaDetail1State
       width: MediaQuery.of(context).size.width,
       loadStateChanged: (state) {
         _buildLoadingExtendexImage(state, index);
+        return null;
       },
     );
   }
@@ -586,7 +584,18 @@ class _PostMutipleMediaDetail1State
       elevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       automaticallyImplyLeading: false,
-      leading: const BackIconAppbar(),
+      leading: InkWell(
+        onTap: () {
+          setState(() {
+            isDragOutside = true;
+          });
+          Navigator.pop(context);
+        },
+        child: Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: Theme.of(context).textTheme.displayLarge!.color,
+        ),
+      ),
       title: Container(
         padding: const EdgeInsets.only(right: 30),
         width: size.width - 70,
@@ -625,13 +634,10 @@ class CustomBouncingScrollPhysics extends BouncingScrollPhysics {
       ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
-      double constantDeceleration;
       switch (decelerationRate) {
         case ScrollDecelerationRate.fast:
-          constantDeceleration = 1400;
           break;
         case ScrollDecelerationRate.normal:
-          constantDeceleration = 0;
           break;
       }
       return null;

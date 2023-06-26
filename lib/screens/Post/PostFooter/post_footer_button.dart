@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -71,9 +69,234 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
   List postComment = [];
   dynamic commentSelected;
   FocusNode commentNode = FocusNode();
+  String? viewerReaction;
   @override
   void initState() {
     super.initState();
+  }
+
+  List buttonAction = [
+    {
+      "key": "comment",
+      "icon": "assets/reaction/comment_light.png",
+      "label": "Bình luận",
+    },
+    {
+      "key": "share",
+      "icon": "assets/reaction/share_light.png",
+      "label": "Chia sẻ",
+    }
+  ];
+
+  handlePress(key) {
+    if (key == 'comment') {
+      if (![postDetail, postMultipleMedia, postWatch, imagePhotoPage]
+              .contains(widget.type) &&
+          widget.fromOneMediaPost == false) {
+        pushCustomCupertinoPageRoute(
+            context,
+            PostDetail(
+                post: widget.post,
+                preType: widget.type,
+                updateDataFunction: widget.updateDataFunction));
+      } else if (([postMultipleMedia, imagePhotoPage].contains(widget.type)) ||
+          widget.fromOneMediaPost == true) {
+        showBarModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            builder: (context) => CommentPostModal(
+                post: widget.post,
+                preType: widget.preType,
+                indexImagePost: widget.indexImage,
+                reloadFunction: widget.reloadDetailFunction,
+                updateDataPhotoPage: widget.updateDataPhotoPage));
+      } else if (widget.type == postWatch) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WatchComment(post: widget.post)));
+      }
+    } else if (key == 'share') {
+      showBarModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          builder: (context) => ScreenShare(
+              entityShare: widget.post, type: widget.type, entityType: 'post'));
+    }
+  }
+
+  handleReaction(react, viewerReaction) async {
+    // only update reaction in image in media_attachments
+    if (([postMultipleMedia, imagePhotoPage].contains(widget.type)) &&
+        widget.post['media_attachments'].isNotEmpty &&
+        widget.indexImage != null) {
+      var newPost = widget.post;
+      List newFavourites = newPost['media_attachments'][widget.indexImage]
+          ['status_media']?['reactions'];
+      int index = newPost['media_attachments'][widget.indexImage]
+              ['status_media']?['reactions']
+          .indexWhere((element) => element['type'] == react);
+      int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
+          ? (newPost['media_attachments'][widget.indexImage]['status_media']
+                  ?['reactions'])
+              .indexWhere((element) => element['type'] == viewerReaction)
+          : -1;
+      if (index >= 0) {
+        newPost['media_attachments'][widget.indexImage]['status_media']
+            ?['reactions'][index] = {
+          "type": react,
+          "${react}s_count": newFavourites[index]['${react}s_count'] + 1
+        };
+      }
+      if (indexCurrent >= 0) {
+        newPost['media_attachments'][widget.indexImage]['status_media']
+            ?['reactions'][indexCurrent] = {
+          "type": viewerReaction,
+          "${viewerReaction}s_count":
+              newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
+        };
+      }
+
+      if (react != null) {
+        dynamic data = {"custom_vote_type": react};
+        newPost['media_attachments'][widget.indexImage]['status_media']
+            ['favourites_count'] = newPost['media_attachments']
+                    [widget.indexImage]['status_media']?['viewer_reaction'] !=
+                null
+            ? (newPost['media_attachments'][widget.indexImage]?['status_media']
+                ['favourites_count'])
+            : (newPost['media_attachments'][widget.indexImage]['status_media']
+                    ?['favourites_count']) +
+                1;
+        newPost['media_attachments'][widget.indexImage]['status_media']
+            ?['viewer_reaction'] = react;
+        if (newPost['media_attachments'].length == 1) {
+          newPost['viewer_reaction'] = react;
+        }
+        newPost['media_attachments'][widget.indexImage]['status_media']
+            ?['reactions'] = newFavourites;
+        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+            widget.type, newPost,
+            preType: widget.preType);
+        ref
+            .read(currentPostControllerProvider.notifier)
+            .saveCurrentPost(newPost);
+        widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+        if (widget.type == imagePhotoPage) {
+          widget.updateDataPhotoPage != null
+              ? widget.updateDataPhotoPage!(newPost)
+              : null;
+        }
+        await PostApi().reactionPostApi(
+            widget.post['media_attachments'][widget.indexImage]['status_media']
+                ['id'],
+            data);
+      } else {
+        newPost['media_attachments'][widget.indexImage]['status_media']
+            ['favourites_count'] = newPost['media_attachments']
+                    [widget.indexImage]['status_media']['viewer_reaction'] !=
+                null
+            ? newPost['media_attachments'][widget.indexImage]['status_media']
+                    ['favourites_count'] -
+                1
+            : newPost['media_attachments'][widget.indexImage]['status_media']
+                ['favourites_count'];
+        newPost['media_attachments'][widget.indexImage]['status_media']
+            ?['viewer_reaction'] = null;
+        if (newPost['media_attachments'].length == 1) {
+          newPost['viewer_reaction'] = null;
+        }
+        newPost['media_attachments'][widget.indexImage]['status_media']
+            ?['reactions'] = newFavourites;
+        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+            widget.type, newPost,
+            preType: widget.preType);
+        ref
+            .read(currentPostControllerProvider.notifier)
+            .saveCurrentPost(newPost);
+        if (widget.type == imagePhotoPage) {
+          widget.updateDataPhotoPage != null
+              ? widget.updateDataPhotoPage!(newPost)
+              : null;
+        }
+        await PostApi().unReactionPostApi(widget.post['media_attachments']
+            [widget.indexImage]['status_media']['id']);
+        widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+      }
+      widget.reloadDetailFunction != null
+          ? widget.reloadDetailFunction!()
+          : null;
+    } else {
+      // only update reaction in post
+      var newPost = widget.post;
+      List newFavourites = newPost['reactions'];
+      int index = newPost['reactions']
+          .indexWhere((element) => element['type'] == react);
+      int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
+          ? newPost['reactions']
+              .indexWhere((element) => element['type'] == viewerReaction)
+          : -1;
+      if (index >= 0) {
+        newFavourites[index] = {
+          "type": react,
+          "${react}s_count": newFavourites[index]['${react}s_count'] + 1
+        };
+      }
+
+      if (indexCurrent >= 0) {
+        newFavourites[indexCurrent] = {
+          "type": viewerReaction,
+          "${viewerReaction}s_count":
+              newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
+        };
+      }
+
+      if (react != null) {
+        dynamic data = {"custom_vote_type": react};
+        newPost = {
+          ...newPost,
+          "favourites_count": newPost['viewer_reaction'] != null
+              ? newPost['favourites_count']
+              : newPost['favourites_count'] + 1,
+          "viewer_reaction": react,
+          "reactions": newFavourites
+        };
+        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+            widget.type, newPost,
+            preType: widget.preType);
+        ref
+            .read(currentPostControllerProvider.notifier)
+            .saveCurrentPost(newPost);
+        widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+        await PostApi().reactionPostApi(widget.post['id'], data);
+      } else {
+        newPost = {
+          ...newPost,
+          "favourites_count": newPost['favourites_count'] != null
+              ? newPost['favourites_count'] - 1
+              : newPost['favourites_count'],
+          "viewer_reaction": null,
+          "reactions": newFavourites
+        };
+        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+            widget.type, newPost,
+            preType: widget.preType);
+        ref
+            .read(currentPostControllerProvider.notifier)
+            .saveCurrentPost(newPost);
+        widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+        await PostApi().unReactionPostApi(widget.post['id']);
+      }
+      widget.reloadFunction != null ? widget.reloadFunction!(newPost) : null;
+    }
+  }
+
+  handlePressButton() {
+    if (viewerReaction!.isNotEmpty) {
+      handleReaction(null, viewerReaction);
+    } else {
+      handleReaction('like', viewerReaction);
+    }
   }
 
   @override
@@ -88,19 +311,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
 
   @override
   Widget build(BuildContext context) {
-    List buttonAction = [
-      {
-        "key": "comment",
-        "icon": "assets/reaction/comment_light.png",
-        "label": "Bình luận",
-      },
-      {
-        "key": "share",
-        "icon": "assets/reaction/share_light.png",
-        "label": "Chia sẻ",
-      }
-    ];
-    String viewerReaction = (widget.indexImage != null &&
+    viewerReaction = (widget.indexImage != null &&
             widget.post['media_attachments'].isNotEmpty
         ? (widget.post['media_attachments'][widget.indexImage]?['status_media']
                 ?['viewer_reaction'] ??
@@ -108,228 +319,6 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             '')
         : (widget.post?['viewer_reaction'] ?? ""));
     postData = widget.post;
-
-    handlePress(key) {
-      if (key == 'comment') {
-        if (![postDetail, postMultipleMedia, postWatch, imagePhotoPage]
-                .contains(widget.type) &&
-            widget.fromOneMediaPost == false) {
-          pushCustomCupertinoPageRoute(
-              context,
-              PostDetail(
-                  post: widget.post,
-                  preType: widget.type,
-                  updateDataFunction: widget.updateDataFunction));
-        } else if (([postMultipleMedia, imagePhotoPage]
-                .contains(widget.type)) ||
-            widget.fromOneMediaPost == true) {
-          showBarModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              builder: (context) => CommentPostModal(
-                  post: widget.post,
-                  preType: widget.preType,
-                  indexImagePost: widget.indexImage,
-                  reloadFunction: widget.reloadDetailFunction,
-                  updateDataPhotoPage: widget.updateDataPhotoPage));
-        } else if (widget.type == postWatch) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => WatchComment(post: widget.post)));
-        }
-      } else if (key == 'share') {
-        showBarModalBottomSheet(
-            context: context,
-            backgroundColor: Colors.transparent,
-            builder: (context) => ScreenShare(
-                entityShare: widget.post,
-                type: widget.type,
-                entityType: 'post'));
-      }
-    }
-
-    handleReaction(react) async {
-      // only update reaction in image in media_attachments
-      if (([postMultipleMedia, imagePhotoPage].contains(widget.type)) &&
-          widget.post['media_attachments'].isNotEmpty &&
-          widget.indexImage != null) {
-        var newPost = widget.post;
-        List newFavourites = newPost['media_attachments'][widget.indexImage]
-            ['status_media']?['reactions'];
-        int index = newPost['media_attachments'][widget.indexImage]
-                ['status_media']?['reactions']
-            .indexWhere((element) => element['type'] == react);
-        int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
-            ? (newPost['media_attachments'][widget.indexImage]['status_media']
-                    ?['reactions'])
-                .indexWhere((element) => element['type'] == viewerReaction)
-            : -1;
-        if (index >= 0) {
-          newPost['media_attachments'][widget.indexImage]['status_media']
-              ?['reactions'][index] = {
-            "type": react,
-            "${react}s_count": newFavourites[index]['${react}s_count'] + 1
-          };
-        }
-        if (indexCurrent >= 0) {
-          newPost['media_attachments'][widget.indexImage]['status_media']
-              ?['reactions'][indexCurrent] = {
-            "type": viewerReaction,
-            "${viewerReaction}s_count":
-                newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
-          };
-        }
-
-        if (react != null) {
-          dynamic data = {"custom_vote_type": react};
-          newPost['media_attachments'][widget.indexImage]['status_media']
-              ['favourites_count'] = newPost['media_attachments']
-                      [widget.indexImage]['status_media']?['viewer_reaction'] !=
-                  null
-              ? (newPost['media_attachments'][widget.indexImage]
-                  ?['status_media']['favourites_count'])
-              : (newPost['media_attachments'][widget.indexImage]['status_media']
-                      ?['favourites_count']) +
-                  1;
-          newPost['media_attachments'][widget.indexImage]['status_media']
-              ?['viewer_reaction'] = react;
-          if (newPost['media_attachments'].length == 1) {
-            newPost['viewer_reaction'] = react;
-          }
-          newPost['media_attachments'][widget.indexImage]['status_media']
-              ?['reactions'] = newFavourites;
-          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
-              widget.type, newPost,
-              preType: widget.preType);
-          ref
-              .read(currentPostControllerProvider.notifier)
-              .saveCurrentPost(newPost);
-          widget.updateDataFunction != null
-              ? widget.updateDataFunction!()
-              : null;
-          if (widget.type == imagePhotoPage) {
-            widget.updateDataPhotoPage != null
-                ? widget.updateDataPhotoPage!(newPost)
-                : null;
-          }
-          await PostApi().reactionPostApi(
-              widget.post['media_attachments'][widget.indexImage]
-                  ['status_media']['id'],
-              data);
-        } else {
-          newPost['media_attachments'][widget.indexImage]['status_media']
-              ['favourites_count'] = newPost['media_attachments']
-                      [widget.indexImage]['status_media']['viewer_reaction'] !=
-                  null
-              ? newPost['media_attachments'][widget.indexImage]['status_media']
-                      ['favourites_count'] -
-                  1
-              : newPost['media_attachments'][widget.indexImage]['status_media']
-                  ['favourites_count'];
-          newPost['media_attachments'][widget.indexImage]['status_media']
-              ?['viewer_reaction'] = null;
-          if (newPost['media_attachments'].length == 1) {
-            newPost['viewer_reaction'] = null;
-          }
-          newPost['media_attachments'][widget.indexImage]['status_media']
-              ?['reactions'] = newFavourites;
-          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
-              widget.type, newPost,
-              preType: widget.preType);
-          ref
-              .read(currentPostControllerProvider.notifier)
-              .saveCurrentPost(newPost);
-          if (widget.type == imagePhotoPage) {
-            widget.updateDataPhotoPage != null
-                ? widget.updateDataPhotoPage!(newPost)
-                : null;
-          }
-          await PostApi().unReactionPostApi(widget.post['media_attachments']
-              [widget.indexImage]['status_media']['id']);
-          widget.updateDataFunction != null
-              ? widget.updateDataFunction!()
-              : null;
-        }
-        widget.reloadDetailFunction != null
-            ? widget.reloadDetailFunction!()
-            : null;
-      } else {
-        // only update reaction in post
-        var newPost = widget.post;
-        List newFavourites = newPost['reactions'];
-        int index = newPost['reactions']
-            .indexWhere((element) => element['type'] == react);
-        int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
-            ? newPost['reactions']
-                .indexWhere((element) => element['type'] == viewerReaction)
-            : -1;
-        if (index >= 0) {
-          newFavourites[index] = {
-            "type": react,
-            "${react}s_count": newFavourites[index]['${react}s_count'] + 1
-          };
-        }
-
-        if (indexCurrent >= 0) {
-          newFavourites[indexCurrent] = {
-            "type": viewerReaction,
-            "${viewerReaction}s_count":
-                newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
-          };
-        }
-
-        if (react != null) {
-          dynamic data = {"custom_vote_type": react};
-          newPost = {
-            ...newPost,
-            "favourites_count": newPost['viewer_reaction'] != null
-                ? newPost['favourites_count']
-                : newPost['favourites_count'] + 1,
-            "viewer_reaction": react,
-            "reactions": newFavourites
-          };
-          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
-              widget.type, newPost,
-              preType: widget.preType);
-          ref
-              .read(currentPostControllerProvider.notifier)
-              .saveCurrentPost(newPost);
-          widget.updateDataFunction != null
-              ? widget.updateDataFunction!()
-              : null;
-          await PostApi().reactionPostApi(widget.post['id'], data);
-        } else {
-          newPost = {
-            ...newPost,
-            "favourites_count": newPost['favourites_count'] != null
-                ? newPost['favourites_count'] - 1
-                : newPost['favourites_count'],
-            "viewer_reaction": null,
-            "reactions": newFavourites
-          };
-          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
-              widget.type, newPost,
-              preType: widget.preType);
-          ref
-              .read(currentPostControllerProvider.notifier)
-              .saveCurrentPost(newPost);
-          widget.updateDataFunction != null
-              ? widget.updateDataFunction!()
-              : null;
-          await PostApi().unReactionPostApi(widget.post['id']);
-        }
-        widget.reloadFunction != null ? widget.reloadFunction!(newPost) : null;
-      }
-    }
-
-    handlePressButton() {
-      if (viewerReaction.isNotEmpty) {
-        handleReaction(null);
-      } else {
-        handleReaction('like');
-      }
-    }
 
     return Column(
       children: [
@@ -352,7 +341,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                           flex: 1,
                           child: ReactionButton(
                             onReactionChanged: (value) {
-                              handleReaction(value);
+                              handleReaction(value, viewerReaction);
                             },
                             handlePressButton: handlePressButton,
                             onWaitingReaction: () {
@@ -380,7 +369,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                               ),
                             ],
                             initialReaction: Reaction(
-                                icon: viewerReaction.isNotEmpty
+                                icon: viewerReaction!.isNotEmpty
                                     ? viewerReaction != "like"
                                         ? renderGif(
                                             'png',

@@ -46,17 +46,18 @@ class _MomentState extends ConsumerState<Moment>
     }
   }
 
+  final GlobalKey<ScaffoldState> key = GlobalKey();
+
+  List iconAction = [
+    {"icon": Icons.search, 'type': 'icon'},
+  ];
+
   @override
   bool get wantKeepAlive => false;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final GlobalKey<ScaffoldState> key = GlobalKey();
-
-    List iconAction = [
-      {"icon": Icons.search, 'type': 'icon'},
-    ];
 
     List momentFollow = ref.watch(momentControllerProvider).momentFollow;
     List momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
@@ -76,7 +77,7 @@ class _MomentState extends ConsumerState<Moment>
       height: size.height,
       child: Center(
         child: Text("Không có dữ liệu hiển thị",
-            style: GoogleFonts.ibmPlexSans(textStyle: TextStyle(color: white))),
+            style: GoogleFonts.ibmPlexSans(textStyle: const TextStyle(color: white))),
       ),
     );
 

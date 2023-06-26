@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -34,6 +36,7 @@ class _AddToTickAnimationState extends State<AddToTickAnimation>
   }
 
   void _toggleIcon() {
+    widget.additionalFunction != null ? widget.additionalFunction!() : null;
     setState(() {
       if (_isTicked) {
         _currentIcon = FontAwesomeIcons.add;

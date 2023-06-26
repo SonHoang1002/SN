@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/PageEdit/textfield_edit_page.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
-class PageAction extends StatefulWidget {
+class PageAction extends ConsumerStatefulWidget {
   final dynamic data;
-  const PageAction({super.key, this.data});
+  final Function? handleChangeDependencies;
+  const PageAction({super.key, this.data, this.handleChangeDependencies});
 
   @override
-  State<PageAction> createState() => _PageActionState();
+  ConsumerState<PageAction> createState() => _PageActionState();
 }
 
 List actions = [
@@ -19,7 +25,7 @@ List actions = [
     "icon": "assets/pages/inviteFriend.png"
   },
   {
-    "key": "message",
+    "key": "messenger",
     "title": "Gửi tin nhắn",
     "subTitle": "Nhận tin nhắn trong hộp thư trong trang",
     "icon": "assets/pages/chat.png"
@@ -46,15 +52,111 @@ List actions = [
   },
 ];
 
-class _PageActionState extends State<PageAction> {
+class _PageActionState extends ConsumerState<PageAction> {
+  String isActiveAction = '';
+  String buttonValue = '';
+
   @override
   void initState() {
+    if (widget.data['button_key'] != null) {
+      isActiveAction = widget.data['button_key'];
+    }
     super.initState();
   }
 
   @override
   dispose() {
     super.dispose();
+  }
+
+  handlePress(data, context) async {
+    var buttonValue = widget.data['button_value'];
+
+    switch (data) {
+      case 'register':
+        showBarModalBottomSheet(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          context: context,
+          builder: (context) => TextFieldEdit(
+            label: "Đăng ký",
+            field: 'register',
+            initialValue: buttonValue ?? "",
+            onChange: (value) => handleCallApi(value, data),
+          ),
+        );
+        break;
+      case 'email':
+        showBarModalBottomSheet(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          context: context,
+          builder: (context) => TextFieldEdit(
+            label: "Email",
+            validateInput: (value) {
+              final regex = RegExp(
+                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|'
+                  r'(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.'
+                  r'[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+              if (value.isEmpty) {
+                return false;
+              }
+              if (!regex.hasMatch(value)) {
+                return true;
+              }
+              return false;
+            },
+            field: 'email',
+            initialValue: buttonValue ?? "",
+            onChange: (value) => handleCallApi(value, data),
+          ),
+        );
+        break;
+      case 'about':
+        showBarModalBottomSheet(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          context: context,
+          builder: (context) => TextFieldEdit(
+            label: "Tìm hiểu thêm",
+            field: 'about',
+            initialValue: buttonValue ?? "",
+            onChange: (value) => handleCallApi(value, data),
+          ),
+        );
+        break;
+      default:
+        setState(() {
+          isActiveAction = data;
+        });
+        var res = await PageApi().pagePostMedia(
+          {
+            "button_key": data,
+          },
+          widget.data['id'],
+        );
+        if (res != null) {
+          widget.handleChangeDependencies!(res);
+          ref.read(pageControllerProvider.notifier).updateMedata(res);
+        }
+    }
+  }
+
+  void handleCallApi(value, data) async {
+    if (value != null) {
+      setState(() {
+        buttonValue = value;
+        isActiveAction = data;
+      });
+      var res = await PageApi().pagePostMedia(
+        {
+          "button_key": data,
+          "button_value": value,
+        },
+        widget.data['id'],
+      );
+      if (res != null) {
+        widget.handleChangeDependencies!(res);
+        ref.read(pageControllerProvider.notifier).updateMedata(res);
+      }
+    }
   }
 
   @override
@@ -80,7 +182,7 @@ class _PageActionState extends State<PageAction> {
                   horizontalTitleGap: 0,
                   dense: true,
                   contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 0.0),
+                      horizontal: 12.0, vertical: 0.0),
                   visualDensity:
                       const VisualDensity(horizontal: -4, vertical: 0),
                   leading: Padding(
@@ -90,12 +192,19 @@ class _PageActionState extends State<PageAction> {
                         height: 20,
                         color: theme.isDarkMode ? Colors.white : Colors.black),
                   ),
-                  title: Text(actions[index]['title']),
-                  subtitle: Text(actions[index]['subTitle']),
-                  trailing: widget.data['button_key'] == actions[index]['key']
-                      ? const Icon(Icons.check, color: Colors.blue)
-                      : null,
-                  onTap: () {},
+                  title: Text(
+                    actions[index]['title'],
+                    maxLines: 2,
+                  ),
+                  subtitle: Text(
+                    actions[index]['subTitle'],
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: isActiveAction == actions[index]['key']
+                      ? const Icon(Icons.check, color: Colors.blue, size: 15)
+                      : const SizedBox(width: 5),
+                  onTap: () => handlePress(actions[index]['key'], context),
                 );
               },
             )

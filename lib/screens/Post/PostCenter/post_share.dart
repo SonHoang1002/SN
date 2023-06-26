@@ -22,7 +22,10 @@ class PostShare extends StatelessWidget {
       child: Column(
         children: [
           PostHeader(post: postReblogRender, type: type ?? postReblog),
-          PostCenter(post: postReblogRender,type: type,),
+          PostCenter(
+            post: postReblogRender,
+            type: type,
+          ),
         ],
       ),
     );

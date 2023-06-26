@@ -1,15 +1,12 @@
-import 'dart:convert';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 class PostShareGroup extends StatelessWidget {
   final dynamic post;
   final dynamic type;
-  const PostShareGroup({Key? key, this.post,this.type}) : super(key: key);
+  const PostShareGroup({Key? key, this.post, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +16,7 @@ class PostShareGroup extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigator.pushNamed(context, '/group', arguments: group);
-            type != "edit_post"
-            ? null
-            : null;
+        type != "edit_post" ? null : null;
       },
       child: Column(
         children: [

@@ -8,12 +8,14 @@ import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_page_hashtag.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_page_profile.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header_action.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/expandable_text.dart';
 import 'package:social_network_app_mobile/widgets/screen_share.dart';
@@ -49,49 +51,75 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
     }
   }
 
-  checkMomentFollow() async {
-    var response;
+  checkMomentFollow() async { 
+    var type;
     var id;
     if (widget.moment['page'] != null &&
         widget.moment['page_owner']['id'] != widget.moment['page']['id']) {
       // id là pageId
       id = widget.moment['page']['id'];
-      response = await Api().postRequestBase("/api/v1/pages/$id/likes", null);
+      type = momentPage;
     } else if (widget.moment['group'] != null &&
         widget.moment['group_owner']['id'] != widget.moment['group']['id']) {
       id = widget.moment['group']['id'];
-      response =
-          await Api().postRequestBase("/api/v1/groups/$id/accounts", null);
+      type = momentGroup;
     } else {
-      // id là userId
       id = widget.moment['account']['id'];
-      response =
-          await Api().postRequestBase("/api/v1/accounts/$id/follow", null);
+      type = momentUser;
     }
-    if (response != null && response['id'] == id) {
-      setState(() {
-        isEyeVisible = !isEyeVisible;
+    ref.read(momentControllerProvider.notifier).followMoment(type, id);
+  }
+
+  handlePressMenu(key, highLightIcon, size) {
+    if (key == 'reaction') {
+      Future.delayed(Duration.zero, () {
+        ref.read(momentControllerProvider.notifier).updateReaction(
+              highLightIcon ? null : 'love',
+              widget.moment['id'],
+            );
       });
-      if (isEyeVisible) {
-        Future.delayed(const Duration(milliseconds: 200), () {
-          setState(() {
-            isEyeVisible = false;
-          });
-        });
-      }
+    } else if (key == 'menu') {
+      showBarModalBottomSheet(
+          context: context,
+          backgroundColor: Theme.of(context).canvasColor,
+          barrierColor: Colors.transparent,
+          builder: (context) =>
+              PostHeaderAction(post: widget.moment, type: 'moment'));
+    } else if (key == 'share') {
+      showBarModalBottomSheet(
+          context: context,
+          barrierColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          builder: (context) => SizedBox(
+              height: size.height * 0.7,
+              child: ScreenShare(
+                  entityShare: widget.moment,
+                  type: 'moment',
+                  entityType: 'post')));
+    } else if (key == 'comment') {
+      showBarModalBottomSheet(
+          context: context,
+          barrierColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          builder: (context) => SizedBox(
+              height: size.height * 0.7,
+              child: CommentPostModal(post: widget.moment)));
     }
   }
 
+  Color greyOpacity = const Color.fromRGBO(33, 33, 33, 1).withOpacity(0.9);
+  Color whiteColor = Colors.white.withOpacity(0.95);
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     var account = widget.moment['account'];
     var page = widget.moment['page'];
 
-    final size = MediaQuery.of(context).size;
     int reactionsCount = widget.moment['favourites_count'] ?? 0;
     bool highLightIcon =
         widget.moment['viewer_reaction'] == 'love' ? true : false;
-    Color whiteColor = Colors.white.withOpacity(0.95);
 
     List iconsAction = [
       {
@@ -118,45 +146,6 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
         "iconHighlight": whiteColor
       },
     ];
-
-    handlePressMenu(key) {
-      if (key == 'reaction') {
-        Future.delayed(Duration.zero, () {
-          ref.read(momentControllerProvider.notifier).updateReaction(
-                highLightIcon ? null : 'love',
-                widget.moment['id'],
-              );
-        });
-      } else if (key == 'menu') {
-        showBarModalBottomSheet(
-            context: context,
-            backgroundColor: Theme.of(context).canvasColor,
-            barrierColor: Colors.transparent,
-            builder: (context) =>
-                PostHeaderAction(post: widget.moment, type: 'moment'));
-      } else if (key == 'share') {
-        showBarModalBottomSheet(
-            context: context,
-            barrierColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-            builder: (context) => SizedBox(
-                height: size.height * 0.7,
-                child: ScreenShare(
-                    entityShare: widget.moment,
-                    type: 'moment',
-                    entityType: 'post')));
-      } else if (key == 'comment') {
-        showBarModalBottomSheet(
-            context: context,
-            barrierColor: Colors.transparent,
-            backgroundColor: Colors.transparent,
-            builder: (context) => SizedBox(
-                height: size.height * 0.7,
-                child: CommentPostModal(post: widget.moment)));
-      }
-    }
-
-    Color greyOpacity = const Color.fromRGBO(33, 33, 33, 1).withOpacity(0.9);
 
     return Column(
       children: [
@@ -360,11 +349,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                           ? Positioned(
                               bottom: -5,
                               right: 13,
-                              child: GestureDetector(
-                                onTap: () {
-                                  checkMomentFollow();
-                                },
-                                child: AddToTickAnimation(),
+                              child: AddToTickAnimation(
+                                additionalFunction: checkMomentFollow,
                               ),
                             )
                           : const SizedBox(),
@@ -384,8 +370,8 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      handlePressMenu(
-                                          iconsAction[index]['key']);
+                                      handlePressMenu(iconsAction[index]['key'],
+                                          highLightIcon, size);
                                     },
                                     child: Icon(
                                       iconsAction[index]['icon'],

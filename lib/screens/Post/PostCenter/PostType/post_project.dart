@@ -6,7 +6,6 @@ import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/screens/Grows/grow_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
 class PostProject extends StatelessWidget {
   final dynamic post;

@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 // ignore: must_be_immutable
 class GridViewBuilderMedia extends StatefulWidget {
@@ -19,7 +15,7 @@ class GridViewBuilderMedia extends StatefulWidget {
   final Function()? onEnd;
   final dynamic mediasNoneCheck;
 
-  GridViewBuilderMedia(
+  const GridViewBuilderMedia(
       {Key? key,
       required this.aspectRatio,
       required this.medias,
@@ -37,13 +33,17 @@ class GridViewBuilderMedia extends StatefulWidget {
 }
 
 class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
+  checkIsImage(media) {
+    return media['type'] == 'image' ? true : false;
+  }
+
   @override
   Widget build(BuildContext context) {
     checkIsImage(media) {
       return media['type'] == 'image' ? true : false;
     }
 
-    final size = MediaQuery.of(context).size; 
+    final size = MediaQuery.of(context).size;
     return GridView.builder(
         shrinkWrap: true,
         primary: false,
@@ -136,11 +136,11 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                               isPause: (widget.isFocus != true ||
                                   widget.currentFocusVideoId !=
                                       widget.medias[indexBg]['id']),
-                                      // removeObserver:false,
+                              // removeObserver:false,
                               type: widget.medias[indexBg]['file']?.path != null
                                   ? 'local'
                                   : 'network',
-                              index: indexBg, 
+                              index: indexBg,
                               onEnd: () {
                                 widget.onEnd != null ? widget.onEnd!() : null;
                               })

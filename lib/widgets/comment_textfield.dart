@@ -20,8 +20,7 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart'; 
 import 'package:social_network_app_mobile/widgets/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widgets/box_mention.dart';
 import 'package:social_network_app_mobile/widgets/emoji_modal_bottom.dart';
@@ -121,6 +120,158 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
     }
   }
 
+  handleClickIcon() {
+    setState(() {
+      isShowEmoji = !isShowEmoji;
+    });
+  }
+
+  functionGetEmoji(link) {
+    setState(() {
+      isShowEmoji = false;
+      files = [];
+      linkEmojiSticky = link;
+    });
+    widget.commentNode!.requestFocus();
+    widget.isOnBoxComment == true ? popToPreviousScreen(context) : null;
+  }
+
+  handleGetComment(value) async {
+    setState(() {
+      content = value;
+      contentWithId = value;
+    });
+
+    for (var mention in listMentionsSelected) {
+      preMessage = textController.text.replaceAll(
+          mention['display_name'] ?? mention['title'], '[${mention['id']}]');
+    }
+
+    setState(() {
+      flagContent = preMessage;
+    });
+  }
+
+  handleClickMention(data) {
+    //Should show notification
+    if (listMentionsSelected.length > 30) return;
+    String message =
+        '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
+    textController.text = message;
+    String messageWithId =
+        '${textController.text.substring(0, query.range.start)}${data['id']}${textController.text.substring(query.range.end)}';
+
+    if (textController.text.isNotEmpty) {
+      final selection = TextSelection.fromPosition(
+          TextPosition(offset: textController.text.length));
+      textController.selection = selection;
+    }
+    setState(() {
+      listMentions = [];
+      content = message;
+      contentWithId = messageWithId;
+    });
+    setState(() {
+      listMentionsSelected = [...listMentionsSelected, data];
+    });
+  }
+
+  handleGetFiles(file) async {
+    if (file.isEmpty) return;
+
+    if (file[0].pickedThumbData == null) {
+      Uint8List bytes = await file[0].thumbnailData;
+      file[0] = file[0].copyWith(pickedThumbData: bytes);
+    }
+    setState(() {
+      files = file;
+      isShowEmoji = false;
+      linkEmojiSticky = '';
+    });
+  }
+
+  checkHasMention(data) {
+    if (data == null) return false;
+    if (data['typeStatus'] == 'editComment') return false;
+
+    return true;
+  }
+
+  handleActionComment() async {
+    dynamic dataUploadFile;
+    if (files.isNotEmpty && files[0]['id'] == null) {
+      File? fileData = await files[0].file;
+      String fileName = fileData!.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        "file": await MultipartFile.fromFile(fileData.path, filename: fileName),
+      });
+
+      dataUploadFile = await MediaApi().uploadMediaEmso(formData);
+    }
+    widget.handleComment!({
+      "id": widget.commentSelected != null &&
+              ['editComment', 'editChild']
+                  .contains(widget.commentSelected['typeStatus'])
+          ? widget.commentSelected['id']
+          : '111111111111',
+      "status": checkHasMention(widget.commentSelected)
+          ? '[${widget.commentSelected['account']['id']}] $content'
+          : content,
+      // "contentWithId": contentWithId,
+      "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : [],
+      "extra_body": linkEmojiSticky.isEmpty
+          ? null
+          : {
+              "description":
+                  linkEmojiSticky.contains('giphy') ? 'gif' : "sticky",
+              "link": linkEmojiSticky,
+              "title": ""
+            },
+      "tags": (checkHasMention(widget.commentSelected)
+              ? [...listMentionsSelected, widget.commentSelected['account']]
+              : listMentionsSelected)
+          // .where((element) => flagContent.contains(element['id']))
+          .map((e) => {
+                "entity_id": e['id'],
+                "entity_type": e['username'] != null
+                    ? 'Account'
+                    : e['page_relationship'] != null
+                        ? 'Page'
+                        : 'Group',
+                "name": e['display_name'] ?? e['title']
+              })
+          .toList(),
+      "in_reply_to_id": widget.commentSelected != null
+          ? widget.commentSelected['in_reply_to_parent_id'] != null
+              ? widget.commentSelected['in_reply_to_id']
+              : widget.commentSelected['id']
+          : null,
+      "type": widget.commentSelected != null &&
+              widget.commentSelected['typeStatus'] != 'editComment'
+          ? "child"
+          : 'parent',
+      "typeStatus": widget.commentSelected?['typeStatus'],
+    }, textController.text.trim());
+    textController.clear();
+    setState(() {
+      files = [];
+      content = '';
+      isComment = false;
+      linkEmojiSticky = '';
+      listMentionsSelected = [];
+    });
+    widget.getCommentSelected != null ? widget.getCommentSelected!(null) : null;
+    // ignore: use_build_context_synchronously
+    hiddenKeyboard(context);
+  }
+
+  checkVisibleSubmit() {
+    if (textController.text.trim().isNotEmpty) return true;
+    if (linkEmojiSticky.isNotEmpty) return true;
+    if (files.isNotEmpty) return true;
+    return false;
+  }
+
   @override
   void dispose() {
     _streamSubscription.cancel();
@@ -174,160 +325,6 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
       },
       [widget.commentSelected?['id']],
     );
-    handleClickIcon() {
-      setState(() {
-        isShowEmoji = !isShowEmoji;
-      });
-    }
-
-    functionGetEmoji(link) {
-      setState(() {
-        isShowEmoji = false;
-        files = [];
-        linkEmojiSticky = link;
-      });
-      widget.commentNode!.requestFocus();
-      widget.isOnBoxComment == true ? popToPreviousScreen(context) : null;
-    }
-
-    handleGetComment(value) async {
-      setState(() {
-        content = value;
-        contentWithId = value;
-      });
-
-      for (var mention in listMentionsSelected) {
-        preMessage = textController.text.replaceAll(
-            mention['display_name'] ?? mention['title'], '[${mention['id']}]');
-      }
-
-      setState(() {
-        flagContent = preMessage;
-      });
-    }
-
-    handleClickMention(data) {
-      //Should show notification
-      if (listMentionsSelected.length > 30) return;
-      String message =
-          '${textController.text.substring(0, query.range.start)}${(data['display_name'] ?? data['title'])}${textController.text.substring(query.range.end)}';
-      textController.text = message;
-      String messageWithId =
-          '${textController.text.substring(0, query.range.start)}${data['id']}${textController.text.substring(query.range.end)}';
-
-      if (textController.text.isNotEmpty) {
-        final selection = TextSelection.fromPosition(
-            TextPosition(offset: textController.text.length));
-        textController.selection = selection;
-      }
-      setState(() {
-        listMentions = [];
-        content = message;
-        contentWithId = messageWithId;
-      });
-      setState(() {
-        listMentionsSelected = [...listMentionsSelected, data];
-      });
-    }
-
-    handleGetFiles(file) async {
-      if (file.isEmpty) return;
-
-      if (file[0].pickedThumbData == null) {
-        Uint8List bytes = await file[0].thumbnailData;
-        file[0] = file[0].copyWith(pickedThumbData: bytes);
-      }
-      setState(() {
-        files = file;
-        isShowEmoji = false;
-        linkEmojiSticky = '';
-      });
-    }
-
-    checkHasMention(data) {
-      if (data == null) return false;
-      if (data['typeStatus'] == 'editComment') return false;
-
-      return true;
-    }
-
-    handleActionComment() async {
-      dynamic dataUploadFile;
-      if (files.isNotEmpty && files[0]['id'] == null) {
-        File? fileData = await files[0].file;
-        String fileName = fileData!.path.split('/').last;
-        FormData formData = FormData.fromMap({
-          "file":
-              await MultipartFile.fromFile(fileData.path, filename: fileName),
-        });
-
-        dataUploadFile = await MediaApi().uploadMediaEmso(formData);
-      }
-      widget.handleComment!({
-        "id": widget.commentSelected != null &&
-                ['editComment', 'editChild']
-                    .contains(widget.commentSelected['typeStatus'])
-            ? widget.commentSelected['id']
-            : '111111111111',
-        "status": checkHasMention(widget.commentSelected)
-            ? '[${widget.commentSelected['account']['id']}] $content'
-            : content,
-        // "contentWithId": contentWithId,
-        "media_ids": dataUploadFile != null ? [dataUploadFile['id']] : [],
-        "extra_body": linkEmojiSticky.isEmpty
-            ? null
-            : {
-                "description":
-                    linkEmojiSticky.contains('giphy') ? 'gif' : "sticky",
-                "link": linkEmojiSticky,
-                "title": ""
-              },
-        "tags": (checkHasMention(widget.commentSelected)
-                ? [...listMentionsSelected, widget.commentSelected['account']]
-                : listMentionsSelected)
-            // .where((element) => flagContent.contains(element['id']))
-            .map((e) => {
-                  "entity_id": e['id'],
-                  "entity_type": e['username'] != null
-                      ? 'Account'
-                      : e['page_relationship'] != null
-                          ? 'Page'
-                          : 'Group',
-                  "name": e['display_name'] ?? e['title']
-                })
-            .toList(),
-        "in_reply_to_id": widget.commentSelected != null
-            ? widget.commentSelected['in_reply_to_parent_id'] != null
-                ? widget.commentSelected['in_reply_to_id']
-                : widget.commentSelected['id']
-            : null,
-        "type": widget.commentSelected != null &&
-                widget.commentSelected['typeStatus'] != 'editComment'
-            ? "child"
-            : 'parent',
-        "typeStatus": widget.commentSelected?['typeStatus'],
-      }, textController.text.trim());
-      textController.clear();
-      setState(() {
-        files = [];
-        content = '';
-        isComment = false;
-        linkEmojiSticky = '';
-        listMentionsSelected = [];
-      });
-      widget.getCommentSelected != null
-          ? widget.getCommentSelected!(null)
-          : null;
-      // ignore: use_build_context_synchronously
-      hiddenKeyboard(context);
-    }
-
-    checkVisibleSubmit() {
-      if (textController.text.trim().isNotEmpty) return true;
-      if (linkEmojiSticky.isNotEmpty) return true;
-      if (files.isNotEmpty) return true;
-      return false;
-    }
 
     return Container(
         decoration: !widget.isOnBoxComment!
@@ -343,13 +340,15 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                 //         color: widget.type == postWatchDetail
                 //             ? Colors.transparent
                 //             : greyColor)
-                            // )
-                            )
-            : null, 
+                // )
+              )
+            : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            !widget.isOnBoxComment! ? buildDivider(color: greyColor,bottom: 10):const SizedBox(), 
+            !widget.isOnBoxComment! && widget.type != postWatchDetail
+                ? buildDivider(color: greyColor, bottom: 10)
+                : const SizedBox(),
             listMentions.isNotEmpty && content.isNotEmpty
                 ? BoxMention(
                     listData: listMentions,
@@ -366,17 +365,24 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                         text: TextSpan(
                             text: 'Đang trả lời ',
                             style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .color,
-                                fontSize: 13),
+                              color: widget.type == postWatchDetail
+                                  ? white
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
+                              fontSize: 13,
+                            ),
                             children: [
                           TextSpan(
                               text:
                                   '${widget.commentSelected['account']['display_name']}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 13)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                  color: widget.type == postWatchDetail
+                                      ? secondaryColor
+                                      : null)),
                           TextSpan(
                               text: '  Hủy',
                               recognizer: TapGestureRecognizer()
@@ -452,8 +458,11 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   )
                 : const SizedBox(),
             Container(
-              margin:!widget.isOnBoxComment!? const EdgeInsets.symmetric(horizontal: 10):null,
-              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              margin: !widget.isOnBoxComment!
+                  ? const EdgeInsets.symmetric(horizontal: 10)
+                  : null,
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 if (widget.type != postWatchDetail && !widget.isOnBoxComment!)
                   GestureDetector(
                     onTap: () {
@@ -486,6 +495,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                   handleGetValue: (value) => handleGetComment(value),
                   suffixIcon: InkWell(
                       onTap: () {
+                        hiddenKeyboard(context);
                         handleClickIcon();
                         widget.isOnBoxComment == true
                             ? handleShowEmojiBottomSheet(functionGetEmoji)

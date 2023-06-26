@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -43,24 +40,25 @@ class _PostPollCenterState extends ConsumerState<PostPollCenter> {
         .updatePollPost(poll['id'], params, widget.type);
   }
 
+  renderTimeExpires(time, timeStamps) {
+    if ((timeStamps / (24 * 3600 * 1000)).round() > 0) {
+      return '${(timeStamps / (24 * 3600 * 1000)).round()} ngày';
+    } else if ((timeStamps / (60 * 60 * 1000)).round() > 0) {
+      return '${(timeStamps / (60 * 60 * 1000)).round()} giờ`';
+    } else {
+      return '${DateFormat.jm().format(DateTime.parse(poll['expires_at']))} phút';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (ref.watch(meControllerProvider)[0]['id'] ==
         widget.post?["account"]?["id"]) {
       role = roleAdmin;
     }
+
     var timeStamps = DateTime.parse(poll['expires_at']).millisecondsSinceEpoch -
         DateTime.now().millisecondsSinceEpoch;
-
-    renderTimeExpires(time) {
-      if ((timeStamps / (24 * 3600 * 1000)).round() > 0) {
-        return '${(timeStamps / (24 * 3600 * 1000)).round()} ngày';
-      } else if ((timeStamps / (60 * 60 * 1000)).round() > 0) {
-        return '${(timeStamps / (60 * 60 * 1000)).round()} giờ`';
-      } else {
-        return '${DateFormat.jm().format(DateTime.parse(poll['expires_at']))} phút';
-      }
-    }
 
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15, top: 8, bottom: 8),
@@ -131,7 +129,7 @@ class _PostPollCenterState extends ConsumerState<PostPollCenter> {
             ),
             Text(
               timeStamps > 0
-                  ? 'Còn ${renderTimeExpires(poll['expires_at'])}'
+                  ? 'Còn ${renderTimeExpires(poll['expires_at'], timeStamps)}'
                   : "Đã kết thúc",
             ),
           ],

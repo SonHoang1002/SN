@@ -63,24 +63,24 @@ class _FriendTagState extends ConsumerState<FriendTag> {
     });
   }
 
+  handleSelected(friend, friendSelectedId) {
+    List newList = [...friendSelected];
+    if (friendSelectedId.contains(friend['id'])) {
+      newList =
+          newList.where((element) => element['id'] != friend['id']).toList();
+    } else {
+      newList = [...newList, friend];
+    }
+
+    setState(() {
+      friendSelected = newList;
+    });
+    widget.handleUpdateData('update_friend', newList);
+  }
+
   @override
   Widget build(BuildContext context) {
     List friendSelectedId = friendSelected.map((e) => e['id']).toList();
-
-    handleSelected(friend) {
-      List newList = [...friendSelected];
-      if (friendSelectedId.contains(friend['id'])) {
-        newList =
-            newList.where((element) => element['id'] != friend['id']).toList();
-      } else {
-        newList = [...newList, friend];
-      }
-
-      setState(() {
-        friendSelected = newList;
-      });
-      widget.handleUpdateData('update_friend', newList);
-    }
 
     return Container(
       margin: const EdgeInsets.all(8.0),
@@ -129,7 +129,8 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                                           right: 2, top: 2),
                                       child: InkWell(
                                         onTap: () {
-                                          handleSelected(friendSelected[index]);
+                                          handleSelected(friendSelected[index],
+                                              friendSelectedId);
                                         },
                                         child: Container(
                                           width: 18,
@@ -163,7 +164,7 @@ class _FriendTagState extends ConsumerState<FriendTag> {
                 itemCount: friends.length,
                 itemBuilder: (context, index) => InkWell(
                       onTap: () {
-                        handleSelected(friends[index]);
+                        handleSelected(friends[index], friendSelectedId);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8.0),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create_moment.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
@@ -15,8 +16,13 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
-  static const String LICENSE_TOKEN =
-      "X4rJTe9UUMvVmF6pYs0grzRKfEC8pkAjGbiOTzWJ/265iR2Bt0IyMX7GHayeHqInma8/JFrzNLUKAnW0QijPG41nwZrcb+OpF9spaODem3MF1qo8R32yiiPuhhzYhrPmQgbuKZButI8U3lCOAjcNQEi7wj9HTvhTjYmrmoHC6hd2a1AlWny4ZU2XfheTVL4sB4ppda8s5dPAaY+4nRWGO1Noc0/7Xab4Bw/Wizvd9F34DPh1mJvoMsNetpoPs3PtgCwgq+lgh72fhfoxt4mq/rl22BtLjVRFzOrsrYAZ0xkGYGzmp+4karFGvT+71KgoExaSTLH77nwRiarZNTDIdr1ZmIDAxUZDOCUAinLnjSs4PgwX1TH72QhIiPxrAkZzWZhF+APv2jml+o7PdkFZZ7Ar9LS8H/OjCgFttKFUdo9gtWoOhwKW3aXEbUxzUYewMCyN7LNIBtH2MpMFhVN2iJn2lGtXpoDg42QFcrZ+rQz7oG1hRGL5U2l6yp1f5gpDBzVeG5FKyHr/TPzu0zqbR/vPfR5mWw0Kc9JRHHn7SXHMNoiL9C7Umwv132bH32tlOJRKj0GitEeVXubQEgp48Fl1AupLQ/+fR2MFHI0jmrDxBVRnk8Q1DMxH6iyOLVoKIw/R97IYS3zEzb4swmAu85WQhJJq1lpXcaUSj/JO5oUMN0oieFonfxZIeWfPOm/RVOLbWOTy0/tIB44IPON7MqtkK6+6EPIutR17a/hXBn57v5nNWdjRWjhLhVd0x1V+V55qa5oO6Q6TZmfOncqlZjchmtZS8HTBqrOgELsaw61H1ZjL02ebvd2UJCSYicMRNcShDc0JEqecOyqBed14qA2G/x9Q8REmFXp2Fp1dk3h6fE1FJYZlnhO8yssuszM0B1HnCANKr+1WAaHKmC9XCQYv1L9Fokj6CAbaEhpa2QdLccgBFKNbJgVH5KD3dlO0qFhIpMya9K80itytoldrVSMS/HFFSdzC5+eK4EkdscxRwfKGlvdSVGDCldiL1748fiUwIh6mLjo6finHLr43HfEvx/Qq19F7+R0N6sY0vdo8wq+OnB84TcMYPwwvSaKkPu8GivrwqFyjg8qdZnxNYMx3pXBfhmvBhilAYl53zqxYcmHxsWUkhzge6yhjcVXTFup/cCQZEryB58uRiF28ZhgOTZmpghpBvkjkhPo2ywJCpFNRzXECs/aerTgSfN2eqYuKc6YMy3Nn2ImxudPmo9ZeXsKG7Qzdkce1Q6d9/balASFONxFiSkpJU++7pTkXGqtpq69ogYYoRqcgXVaaSeMTxa3vP6bPDUNQMtrGWAgE8qkgEKz3+g3yRSjSgz7ViiD3IciTlqyEa71ogSi4UvBOKONDE/ela6zeBtjDPnKugjmCS/CZM/KcO9im8dF516Fg3zRVndqg7T+/m517KJ5wU/HQO75pJRF5YnSXA8/5z3iIzMjTAP0nFtKDxEVzbtYYb5urbey6Ay+q7eCjRfOVKUzkugv897gTDW0BxbiEGA4jkmaQWxSjp985zSUvV63rOsjgpuC7LIdGy5jkoVQAkMyerPIdqw==";
+  List postTypeCreate = [
+    {"key": "post", "icon": "assets/story.svg", "title": "Post"},
+    {"key": "moment", "image": "assets/MomentMenu.png", "title": "Khoảnh khắc"},
+    {"key": "live", "icon": "assets/Live.svg", "title": "Phát trực tiếp"}
+  ];
+
+  static const String LICENSE_TOKEN = tokenBanuba;
 
   static const channelName = 'startActivity/VideoEditorChannel';
 
@@ -85,16 +91,6 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
-    List postTypeCreate = [
-      {"key": "post", "icon": "assets/story.svg", "title": "Post"},
-      {
-        "key": "moment",
-        "image": "assets/MomentMenu.png",
-        "title": "Khoảnh khắc"
-      },
-      {"key": "live", "icon": "assets/Live.svg", "title": "Phát trực tiếp"}
-    ];
-
     return Container(
         margin: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(

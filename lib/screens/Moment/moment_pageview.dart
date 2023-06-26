@@ -48,38 +48,39 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
     });
   }
 
+  handleAction(type, data) async {
+    dynamic response;
+    if (type == 'reaction') {
+      if (data['viewer_reaction'] != null) {
+        response = await PostApi()
+            .reactionPostApi(data['id'], {"custom_vote_type": 'love'});
+
+        {
+          response = {
+            ...response,
+            "viewer_reaction": 'love',
+            "favourites_count": response['favourites_count'] + 1
+          };
+        }
+      } else {
+        response = await PostApi().unReactionPostApi(data['id']);
+
+        response = {
+          ...response,
+          "viewer_reaction": null,
+          "favourites_count": response['favourites_count'] - 1
+        };
+      }
+    }
+
+    ref
+        .read(momentControllerProvider.notifier)
+        .updateMomentDetail(data['typeAction'], response);
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    handleAction(type, data) async {
-      dynamic response;
-      if (type == 'reaction') {
-        if (data['viewer_reaction'] != null) {
-          response = await PostApi()
-              .reactionPostApi(data['id'], {"custom_vote_type": 'love'});
-
-          {
-            response = {
-              ...response,
-              "viewer_reaction": 'love',
-              "favourites_count": response['favourites_count'] + 1
-            };
-          }
-        } else {
-          response = await PostApi().unReactionPostApi(data['id']);
-
-          response = {
-            ...response,
-            "viewer_reaction": null,
-            "favourites_count": response['favourites_count'] - 1
-          };
-        }
-      }
-
-      ref
-          .read(momentControllerProvider.notifier)
-          .updateMomentDetail(data['typeAction'], response);
-    }
 
     return widget.typePage != null && widget.typePage == 'home'
         ? RenderPageView(

@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:get_time_ago/get_time_ago.dart';
@@ -13,7 +12,6 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
-import 'package:social_network_app_mobile/screens/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
@@ -47,24 +45,23 @@ class PostHeader extends ConsumerStatefulWidget {
 }
 
 class _PostHeaderState extends ConsumerState<PostHeader> {
+  String description = '';
   @override
   void initState() {
-    GetTimeAgo.setDefaultLocale('vi');
     super.initState();
+    GetTimeAgo.setDefaultLocale('vi');
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        description = handleDescription();
+      });
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final meData = ref.watch(meControllerProvider)[0];
-    var size = MediaQuery.of(context).size;
-    var account = widget.post?['account'] ?? {};
-    var group = widget.post?['group'];
-    var page = widget.post?['page'];
+  String handleDescription() {
+    String description = '';
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
-    String description = '';
     var place = widget.post['place'];
-
     var postType = widget.post['post_type'];
 
     if (postType == postAvatarAccount) {
@@ -133,6 +130,19 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
           ' ${statusActivity['parent']['name'].toLowerCase()} ${statusActivity['name'].toLowerCase()}';
     }
 
+    return description;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final meData = ref.watch(meControllerProvider)[0];
+    var size = MediaQuery.of(context).size;
+    var account = widget.post?['account'] ?? {};
+    var group = widget.post?['group'];
+    var page = widget.post?['page'];
+    var mentions = widget.post['mentions'] ?? [];
+    var statusActivity = widget.post['status_activity'] ?? {};
+
     return widget.post != null
         ? InkWell(
             hoverColor: transparent,
@@ -146,13 +156,6 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                         post: widget.post,
                         preType: widget.type,
                         updateDataFunction: widget.updateDataFunction));
-                // Navigator.push(
-                //     context,
-                //     CupertinoPageRoute(
-                //         builder: (context) => PostDetail(
-                //               post: widget.post,
-                //               preType: widget.type,
-                //             )));
               }
             },
             child: Padding(
@@ -362,63 +365,62 @@ class BlockNamePost extends StatelessWidget {
   final Color? textColor;
   final dynamic type;
 
-  @override
-  Widget build(BuildContext context) {
+  renderDisplayName() {
+    if (group != null) {
+      return group['title'];
+    } else if (page != null) {
+      return post['place']?['id'] != page['id']
+          ? page['title']
+          : account['display_name'];
+    } else {
+      return account['display_name'];
+    }
+  }
+
+  TextSpan renderLikeTextSpan() {
+    if (group != null) {
+      return (group["group_relationship"] != null &&
+              group["group_relationship"]?["like"] == true)
+          ? const TextSpan(
+              text: " Đã thích", style: TextStyle(color: secondaryColor))
+          : const TextSpan(
+              text: " Thích", style: TextStyle(color: secondaryColor));
+    } else if (page != null) {
+      return post['place']?['id'] != page['id']
+          ? (page["page_relationship"] != null &&
+                  page["page_relationship"]?["like"] == true)
+              ? const TextSpan(
+                  text: " Đã thích", style: TextStyle(color: secondaryColor))
+              : const TextSpan(
+                  text: " Thích", style: TextStyle(color: secondaryColor))
+          : TextSpan(text: account['display_name']);
+    } else {
+      return const TextSpan(text: '');
+    }
+  }
+
+  void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
 
-    renderDisplayName() {
-      if (group != null) {
-        return group['title'];
-      } else if (page != null) {
-        return post['place']?['id'] != page['id']
-            ? page['title']
-            : account['display_name'];
+    if (type != "edit_post") {
+      if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
+        Navigator.pushNamed(context, '/page', arguments: page);
       } else {
-        return account['display_name'];
+        pushCustomCupertinoPageRoute(context, const UserPageHome(),
+            settings: RouteSettings(
+              arguments: {'id': account['id']},
+            ));
       }
     }
+  }
 
-    TextSpan renderLikeTextSpan() {
-      if (group != null) {
-        return (group["group_relationship"] != null &&
-                group["group_relationship"]?["like"] == true)
-            ? const TextSpan(
-                text: " Đã thích", style: TextStyle(color: secondaryColor))
-            : const TextSpan(
-                text: " Thích", style: TextStyle(color: secondaryColor));
-      } else if (page != null) {
-        return post['place']?['id'] != page['id']
-            ? (page["page_relationship"] != null &&
-                    page["page_relationship"]?["like"] == true)
-                ? const TextSpan(
-                    text: " Đã thích", style: TextStyle(color: secondaryColor))
-                : const TextSpan(
-                    text: " Thích", style: TextStyle(color: secondaryColor))
-            : TextSpan(text: account['display_name']);
-      } else {
-        return const TextSpan(text: '');
-      }
-    }
-
-    void pushToScreen() {
-      if (type != "edit_post") {
-        if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
-          Navigator.pushNamed(context, '/page', arguments: page);
-        } else {
-          pushCustomCupertinoPageRoute(context, const UserPageHome(),
-              settings: RouteSettings(
-                arguments: {'id': account['id']},
-              ));
-        }
-      }
-    }
-
-    final size = MediaQuery.of(context).size;
+  @override
+  Widget build(BuildContext context) {
     return Wrap(
       children: [
         InkWell(
           onTap: () {
-            pushToScreen();
+            pushToScreen(context);
           },
           child: RichText(
             text: TextSpan(
@@ -463,11 +465,6 @@ class BlockNamePost extends StatelessWidget {
                           ..onTap = () {
                             pushCustomCupertinoPageRoute(
                                 context, PageMention(mentions: mentions));
-                            // Navigator.push(
-                            //     context,
-                            //     CupertinoPageRoute(
-                            //         builder: (context) =>
-                            //             PageMention(mentions: mentions)));
                           })
                     : const TextSpan(),
               ],
@@ -509,20 +506,19 @@ class AvatarPost extends StatelessWidget {
   final dynamic account;
   final dynamic type;
 
-  @override
-  Widget build(BuildContext context) {
+  void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
-
-    void pushToScreen() {
-      if (type != "edit_post") {
-        if (page != null &&
-            post['place']?['id'] != page['id'] &&
-            currentRouter != '/page') {
-          Navigator.pushNamed(context, '/page', arguments: page);
-        }
+    if (type != "edit_post") {
+      if (page != null &&
+          post['place']?['id'] != page['id'] &&
+          currentRouter != '/page') {
+        Navigator.pushNamed(context, '/page', arguments: page);
       }
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     String accountLink = account['avatar_media'] != null
         ? account['avatar_media']['preview_url']
         : linkAvatarDefault;
@@ -558,7 +554,7 @@ class AvatarPost extends StatelessWidget {
           )
         : InkWell(
             onTap: () {
-              pushToScreen();
+              pushToScreen(context);
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 1),

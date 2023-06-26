@@ -3,6 +3,7 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/post_mutiple_media_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 
 class PostMedia extends StatefulWidget {
@@ -15,7 +16,7 @@ class PostMedia extends StatefulWidget {
   final Function? updateDataFunction;
   final bool? isFocus;
 
-  PostMedia(
+  const PostMedia(
       {Key? key,
       this.post,
       this.type,
@@ -39,10 +40,6 @@ class _PostMediaState extends State<PostMedia> {
     super.initState();
     final List mediaList = widget.post['media_attachments'] ?? [];
     if (mediaList.isNotEmpty) {
-      // Map<String, dynamic>? firstVideo = mediaList.firstWhere(
-      //   (element) => element['type'] == 'video',
-      //   orElse: () => null,
-      // );
       for (int i = 0; i < mediaList.length; i++) {
         if (mediaList[i]['type'] == 'video') {
           currentVideoId.value = mediaList[i]['id'];
@@ -52,82 +49,78 @@ class _PostMediaState extends State<PostMedia> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) { 
-    List medias = widget.post['media_attachments'] ?? [];
-    handlePress(media) {
-      if (widget.type != "edit_post") {
-        // if (checkIsImage(media)) {
-        if (medias.length == 1) {
-          widget.showCmtBoxFunction != null
-              ? widget.showCmtBoxFunction!()
-              : null;
-          pushCustomVerticalPageRoute(
-              context,
-              PostOneMediaDetail(
-                  postMedia: widget.post,
-                  post: widget.post,
-                  type: widget.type,
-                  preType: widget.preType,
-                  backFunction: () {
-                    widget.backFunction != null ? widget.backFunction!() : null;
-                  },
-                  reloadFunction: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      widget.reloadFunction != null
-                          ? widget.reloadFunction!()
-                          : null;
-                    });
-                  },
-                  updateDataFunction: widget.updateDataFunction),
-              opaque: false);
-        } else if (medias.length > 1) {
-          widget.showCmtBoxFunction != null
-              ? widget.showCmtBoxFunction!()
-              : null;
-          int initialIndex =
-              medias.indexWhere((element) => element['id'] == media['id']);
-          pushCustomCupertinoPageRoute(
-              context,
-              PostMutipleMediaDetail(
-                  post: widget.post,
-                  initialIndex: initialIndex,
-                  preType: widget.preType,
-                  updateDataFunction: widget.updateDataFunction
-                  // reloadPostFunction: () {
-                  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-                  //       reloadFunction != null ? reloadFunction!() : null;
-                  //     });
-                  //   }
-                  ),
-              opaque: false);
-        } else {
-          widget.showCmtBoxFunction != null
-              ? widget.showCmtBoxFunction!()
-              : null;
-          pushCustomCupertinoPageRoute(
-              context,
-              PostDetail(
-                  post: widget.post,
-                  preType: widget.type,
-                  updateDataFunction: widget.updateDataFunction));
-          // Navigator.push(
-          //     context,
-          //     CupertinoPageRoute(
-          //         builder: (context) => PostDetail(
-          //               post: post,
-          //               preType: type,
-          //             )));
-        }
+  handlePress(media) {
+    dynamic medias = widget.post['media_attachments'] ?? [];
+    if (widget.type != "edit_post") {
+      // if (checkIsImage(media)) {
+      if (medias.length == 1) {
+        widget.showCmtBoxFunction != null ? widget.showCmtBoxFunction!() : null;
+        pushCustomVerticalPageRoute(
+            context,
+            PostOneMediaDetail(
+                postMedia: widget.post,
+                post: widget.post,
+                type: widget.type,
+                preType: widget.preType,
+                backFunction: () {
+                  widget.backFunction != null ? widget.backFunction!() : null;
+                },
+                reloadFunction: () {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    widget.reloadFunction != null
+                        ? widget.reloadFunction!()
+                        : null;
+                  });
+                },
+                updateDataFunction: widget.updateDataFunction),
+            opaque: false);
+      } else if (medias.length > 1) {
+        widget.showCmtBoxFunction != null ? widget.showCmtBoxFunction!() : null;
+        int initialIndex =
+            medias.indexWhere((element) => element['id'] == media['id']);
+        pushCustomCupertinoPageRoute(
+            context,
+            PostMutipleMediaDetail(
+                post: widget.post,
+                initialIndex: initialIndex,
+                preType: widget.preType,
+                updateDataFunction: widget.updateDataFunction
+                // reloadPostFunction: () {
+                //     WidgetsBinding.instance.addPostFrameCallback((_) {
+                //       reloadFunction != null ? reloadFunction!() : null;
+                //     });
+                //   }
+                ),
+            opaque: false);
       } else {
-        return;
+        widget.showCmtBoxFunction != null ? widget.showCmtBoxFunction!() : null;
+        pushCustomCupertinoPageRoute(
+            context,
+            PostDetail(
+                post: widget.post,
+                preType: widget.type,
+                updateDataFunction: widget.updateDataFunction)); 
       }
-      // }
+    } else {
+      return;
     }
+    // }
+  }
+
+  @override
+  void dispose() {
+    currentVideoId.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List medias = widget.post['media_attachments'] ?? [];
 
     return medias.isNotEmpty
         ? Container(
             margin: const EdgeInsets.only(top: 8.0),
+            color: widget.post['media_attachments'].length == 1 ? red : null,
             child: GridLayoutImage(
               post: widget.post,
               medias: medias,
@@ -146,9 +139,7 @@ class _PostMediaState extends State<PostMedia> {
 
                 if (index >= 0 && index < mediaList.length - 1) {
                   dynamic video = mediaList[index + 1];
-                  // setState(() {
-                    currentVideoId.value = video['id'];
-                  // });
+                  currentVideoId.value = video['id'];
                 }
               },
             ),
