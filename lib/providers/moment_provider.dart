@@ -41,11 +41,6 @@ class MomentController extends StateNotifier<MomentState> {
 
   getListMomentFollow(params) async {
     List response = await MomentApi().getListMomentFollow(params) ?? [];
-    List fakeMomentData = moments.sublist(1, 7);
-
-    if (response.isEmpty) {
-      response.addAll(checkObjectUniqueInList(response + fakeMomentData, 'id'));
-    }
 
     state = state.copyWith(
         momentFollow: state.momentFollow + response,

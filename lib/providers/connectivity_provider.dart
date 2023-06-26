@@ -1,7 +1,7 @@
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class ConnectivityState {
@@ -15,9 +15,8 @@ class ConnectivityState {
 }
 
 final connectivityControllerProvider =
-    StateNotifierProvider.autoDispose<ConnectivityProvider, ConnectivityState>(
-        (ref) {
-  ref.read(meControllerProvider);
+    StateNotifierProvider<ConnectivityProvider, ConnectivityState>(
+        (ref) { 
   return ConnectivityProvider();
 });
 

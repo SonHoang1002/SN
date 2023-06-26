@@ -69,6 +69,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
   List postComment = [];
   dynamic commentSelected;
   FocusNode commentNode = FocusNode();
+  String? viewerReaction;
   @override
   void initState() {
     super.initState();
@@ -290,8 +291,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     }
   }
 
-  handlePressButton(viewerReaction) {
-    if (viewerReaction.isNotEmpty) {
+  handlePressButton() {
+    if (viewerReaction!.isNotEmpty) {
       handleReaction(null, viewerReaction);
     } else {
       handleReaction('like', viewerReaction);
@@ -310,7 +311,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
 
   @override
   Widget build(BuildContext context) {
-    String viewerReaction = (widget.indexImage != null &&
+    viewerReaction = (widget.indexImage != null &&
             widget.post['media_attachments'].isNotEmpty
         ? (widget.post['media_attachments'][widget.indexImage]?['status_media']
                 ?['viewer_reaction'] ??
@@ -368,7 +369,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                               ),
                             ],
                             initialReaction: Reaction(
-                                icon: viewerReaction.isNotEmpty
+                                icon: viewerReaction!.isNotEmpty
                                     ? viewerReaction != "like"
                                         ? renderGif(
                                             'png',

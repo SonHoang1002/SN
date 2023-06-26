@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:easy_debounce/easy_debounce.dart';
@@ -7,23 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
+import 'package:logger/logger.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/model/post_model.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
-import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/services/isar_post_service.dart';
+import 'package:social_network_app_mobile/services/isar_service.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/Suggestions/suggest.dart';
-import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
-import 'package:social_network_app_mobile/widgets/text_description.dart';
 import 'package:provider/provider.dart' as pv;
-import 'package:visibility_detector/visibility_detector.dart';
 
 class Feed extends ConsumerStatefulWidget {
   final Function? callbackFunction;
@@ -39,46 +36,54 @@ class _FeedState extends ConsumerState<Feed> {
   double heightOfProcessingPost = 0;
   bool dataHasVideoPending = false;
   ValueNotifier<dynamic> focusCurrentPostIndex = ValueNotifier("");
-  List posts = [];
+  // ValueNotifier<List> posts = ValueNotifier([]);
+  ValueNotifier<bool> loadingTo40 = ValueNotifier(false);
   ThemeManager? theme;
   @override
   void initState() {
     super.initState();
     if (!mounted) return;
     Future.delayed(Duration.zero, () async {
-      ref.read(postControllerProvider.notifier).getListPost(paramsConfig);
+      await ref.read(postControllerProvider.notifier).getListPost(paramsConfig);
+      await IsarPostService()
+          .addPostIsar(ref.read(postControllerProvider).posts);
+    });
+    Future.delayed(Duration.zero, () async {
+      while ((await IsarPostService().getPostIsar()) < 100) {
+        await useIsolate(paramsConfig);
+      }
     });
 
-    scrollController.addListener(() {
+    scrollController.addListener(() async {
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         widget.callbackFunction != null
             ? widget.callbackFunction!(false)
             : null;
+
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
                 120.0 ==
             0) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 800), () async {
+              'my-debouncer', const Duration(milliseconds: 300), () async {
             String maxId = ref.watch(postControllerProvider).posts.isNotEmpty
                 ? ref.watch(postControllerProvider).posts.last['score']
                 : '';
-            // ref.read(postControllerProvider.notifier).getListPost({
-            //   "max_id": maxId,
-            //   "multi": 2,
-            //   ...paramsConfig,
-            // });
+
             dynamic params = {
               "max_id": maxId,
               "multi": 2,
               ...paramsConfig,
             };
-            await useIsolate(params);
           });
+          getDataFromIsar();
         }
       } else if (scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
         widget.callbackFunction != null ? widget.callbackFunction!(true) : null;
+        if (double.parse((scrollController.offset).toStringAsFixed(0)) %
+                120.0 ==
+            0) {}
       }
       hiddenKeyboard(context);
     });
@@ -90,15 +95,35 @@ class _FeedState extends ConsumerState<Feed> {
     try {
       await Isolate.spawn(callGetListPostIsolate, [
         receivePort.sendPort,
-        [rootIsolateToken, params]
+        [rootIsolateToken, params ?? paramsConfig]
       ]);
     } on Object {
       debugPrint('Isolate Failed');
       receivePort.close();
     }
     final response = await receivePort.first;
-    ref.read(postControllerProvider.notifier).addListPost(response, params);
+    await IsarPostService().addPostIsar(response);
     return response;
+  }
+
+  getDataFromIsar() async {
+    final _instance = await IsarService.instance;
+    final allPostInIsar = await _instance.postModels.where().findAll();
+    final postIdList = allPostInIsar.map((e) => e.postId).toList();
+    final index =
+        postIdList.indexOf(ref.watch(postControllerProvider).posts.last['id']);
+
+    if (allPostInIsar.length > index + 10) {
+      List newDataList = allPostInIsar
+          .map((e) => jsonDecode(e.objectPost!))
+          .toList()
+          .sublist(index + 1, index + 10);
+      ref.read(postControllerProvider.notifier).addListPost(
+            newDataList, paramsConfig,
+            // removeHeaderPostList:
+            //     (ref.read(postControllerProvider).posts.length > 40)
+          );
+    }
   }
 
   static Future<void> callGetListPostIsolate(List<dynamic> args) async {
@@ -108,7 +133,28 @@ class _FeedState extends ConsumerState<Feed> {
     Isolate.exit(resultPort, response);
   }
 
-  // avoid bug look up ...
+  updateDataInRiverpod(String scrollDirection) async {
+    final _instance = await IsarService.instance;
+    final allPostInIsar = await _instance.postModels.where().findAll();
+    final postIdList = allPostInIsar.map((e) => e.postId).toList();
+    dynamic resultData;
+    if (scrollDirection == "fromBottomToTop") {
+    } else if (scrollDirection == "fromTopToBottom") {
+      final index =
+          postIdList.indexOf(ref.watch(postControllerProvider).posts[0]['id']);
+      if (index > 0) {
+        resultData = allPostInIsar[index - 1];
+      }
+    }
+
+    if (resultData != null) {
+      ref
+          .read(postControllerProvider.notifier)
+          .updatePostWhenScroll(scrollDirection, resultData);
+    }
+  }
+
+  // // avoid bug look up ...
   _reloadFeedFunction(dynamic type, dynamic newData) async {
     if (type == null && newData == null) {
       setState(() {});
@@ -144,132 +190,94 @@ class _FeedState extends ConsumerState<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    posts = ref.read(postControllerProvider).posts;
+    Logger logger = Logger();
+    Future.delayed(Duration.zero, () async {
+      logger.d("getPostIsar ${await IsarPostService().getPostIsar()}");
+    });
+
+    if (loadingTo40.value == false &&
+        ref.read(postControllerProvider).posts.length >= 40) {
+      loadingTo40.value = true;
+    }
     bool isMore = ref.watch(postControllerProvider).isMore;
-    theme = pv.Provider.of<ThemeManager>(context);
+    theme ??= pv.Provider.of<ThemeManager>(context);
     return RefreshIndicator(
-      onRefresh: () async {
-        ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);
-      },
-      child: (ref.watch(meControllerProvider).isNotEmpty &&
-              ref.watch(meControllerProvider)[0] != null)
-          ? Stack(
-              children: [
-                SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 40,
-                      ),
-                      CreatePostButton(
-                        preType: feedPost,
-                        reloadFunction: _reloadFeedFunction,
-                      ),
-                      const CrossBar(
-                        height: 5,
-                      ),
-                      posts.length == 20 || isMore == false
-                          ? Suggest(
-                              type: suggestGroups,
-                              headerWidget: Image.asset(
-                                'assets/icon/logo_app.png',
-                                height: 20,
-                              ),
-                              subHeaderWidget: Column(children: [
-                                buildSpacer(height: 5),
-                                buildTextContent(
-                                    ref.watch(meControllerProvider)[0]
-                                            ['display_name'] +
-                                        " ơi, bạn có thể sẽ thích các nhóm sau ",
-                                    true,
-                                    fontSize: 17),
-                                buildSpacer(height: 5),
-                                buildTextContent(
-                                    "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
-                                    false,
-                                    fontSize: 16),
-                              ]),
-                              reloadFunction: () {
-                                setState(() {});
-                              },
-                              footerTitle: "Khám phá thêm nhóm")
-                          : const SizedBox(),
-                      posts.length == 40 || isMore == false
-                          ? Suggest(
-                              type: suggestFriends,
-                              headerWidget: buildTextContent(
-                                  "Những người bạn có thể biết", true,
-                                  fontSize: 17),
-                              reloadFunction: () {
-                                setState(() {});
-                              },
-                              footerTitle: "Xem thêm")
-                          : const SizedBox(),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          primary: false,
-                          itemCount: posts.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index < posts.length) {
-                              return VisibilityDetector(
-                                key: Key(posts[index]['id']),
-                                onVisibilityChanged: (info) {
-                                  double visibleFraction = info.visibleFraction;
-                                  if (visibleFraction > 0.6) {
-                                    if (focusCurrentPostIndex.value !=
-                                        posts[index]['id']) {
-                                      focusCurrentPostIndex.value =
-                                          posts[index]['id'];
-                                    }
-                                  }
-                                },
-                                child: Post(
-                                    type: feedPost,
-                                    post: posts[index],
-                                    reloadFunction: () {
-                                      setState(() {});
-                                    },
-                                    isFocus: focusCurrentPostIndex.value ==
-                                        posts[index]['id']),
-                              );
-                            } else {
-                              return isMore == true
-                                  ? Center(
-                                      child: SkeletonCustom()
-                                          .postSkeleton(context),
-                                    )
-                                  : const SizedBox();
-                            }
-                          }),
-                      isMore
-                          ? Center(
-                              child: SkeletonCustom().postSkeleton(context),
-                            )
-                          : const Center(
-                              child: TextDescription(
-                                  description:
-                                      "Bạn đã xem hết các bài viết mới rồi"),
-                            )
-                    ],
+        onRefresh: () async {
+          ref
+              .read(postControllerProvider.notifier)
+              .refreshListPost(paramsConfig);
+        },
+        child:
+            // (ref.watch(meControllerProvider).isNotEmpty &&
+            //         ref.watch(meControllerProvider)[0] != null)
+            //     ?
+            Stack(
+          children: [
+            SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                children: [
+                  Container(
+                    height: 40,
                   ),
-                ),
-                Container(
-                  color: greyColor,
-                  height: 40,
-                  width: double.infinity,
-                  child: Center(
-                      child: buildTextContent("${posts.length} posts", true,
-                          fontSize: 20, isCenterLeft: false)),
-                ),
-              ],
-            )
-          : Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(top: 10),
-              child: CupertinoActivityIndicator(
-                  color: theme!.isDarkMode ? Colors.white : Colors.black)),
-    );
+                  ListView.builder(
+                      shrinkWrap: true,
+                      primary: false,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount:
+                          ref.read(postControllerProvider).posts.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index <
+                            ref.read(postControllerProvider).posts.length) {
+                          return Post(
+                              type: feedPost,
+                              post:
+                                  ref.read(postControllerProvider).posts[index],
+                              reloadFunction: () {
+                                setState(() {});
+                              },
+                              isFocus: focusCurrentPostIndex.value ==
+                                  ref.read(postControllerProvider).posts[index]
+                                      ['id']
+                              // )
+                              );
+                        } else {
+                          return isMore == true
+                              ? Center(
+                                  child: SkeletonCustom().postSkeleton(context),
+                                )
+                              : const SizedBox();
+                        }
+                      }),
+                  // isMore
+                  //     ? Center(
+                  //         child: SkeletonCustom().postSkeleton(context),
+                  //       )
+                  //     : const Center(
+                  //         child: TextDescription(
+                  //             description:
+                  //                 "Bạn đã xem hết các bài viết mới rồi"),
+                  //       )
+                ],
+              ),
+            ),
+            // Container(
+            //   color: greyColor,
+            //   height: 40,
+            //   width: double.infinity,
+            //   child: Center(
+            //       child: buildTextContent(
+            //           "${posts.value.length} posts", true,
+            //           fontSize: 20, isCenterLeft: false)),
+            // ),
+          ],
+        )
+        // : Container(
+        //     alignment: Alignment.center,
+        //     margin: const EdgeInsets.only(top: 10),
+        //     child: CupertinoActivityIndicator(
+        //         color: theme!.isDarkMode ? Colors.white : Colors.black)),
+        );
   }
 
   @override

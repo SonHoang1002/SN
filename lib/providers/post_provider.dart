@@ -61,6 +61,30 @@ class PostController extends StateNotifier<PostState> {
           isMoreUserPage: state.isMoreUserPage);
     }
   }
+    updatePostWhenScroll(String scrollDirection, dynamic newData) async {
+    List result = state.posts;
+    switch (scrollDirection) {
+      // xóa 1 ở đầu và thêm 1 ở đuôi
+      case "fromBottomToTop":
+        result.removeLast();
+        result.insert(0, newData);
+        break;
+
+      case "fromTopToBottom":
+        result.removeAt(0);
+        result.add(newData);
+        break;
+    }
+    if (mounted) {
+      state = state.copyWith(
+          posts: result,
+          postsPin: state.postsPin,
+          postUserPage: state.postUserPage,
+          isMore: true,
+          isMoreUserPage: state.isMoreUserPage);
+    }
+  }
+
 
   addListPost(List newData, dynamic params) {
     if (mounted) {
