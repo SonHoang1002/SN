@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
 class PageActivity extends StatefulWidget {
@@ -96,6 +97,21 @@ class _PageActivityState extends State<PageActivity> {
     return description;
   }
 
+  String id(dynamic object) {
+    String description = object["description"].toString();
+    if (object["includes"] != null && object["includes"].isNotEmpty) {
+      for (var include in object["includes"]) {
+        if (include["id"] != null && include["title"] != null) {
+          final id = include["id"].toString();
+          if (description.contains('[$id]')) {
+            return description = id;
+          }
+        }
+      }
+    }
+    return description;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +136,16 @@ class _PageActivityState extends State<PageActivity> {
                 title: extractDescription(data[index]),
                 subtitle: Text(GetTimeAgo.parse(
                     DateTime.parse(data[index]['created_at']))),
-                onTap: () {});
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UserPageHome(),
+                        settings: RouteSettings(
+                          arguments: {'id': id(data[index])},
+                        ),
+                      ));
+                });
           }),
     );
   }
