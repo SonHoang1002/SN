@@ -77,7 +77,7 @@ class _MomentState extends ConsumerState<Moment>
       height: size.height,
       child: Center(
         child: Text("Không có dữ liệu hiển thị",
-            style: GoogleFonts.ibmPlexSans(textStyle: TextStyle(color: white))),
+            style: GoogleFonts.ibmPlexSans(textStyle: const TextStyle(color: white))),
       ),
     );
 

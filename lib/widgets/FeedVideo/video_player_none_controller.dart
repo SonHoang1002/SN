@@ -161,7 +161,7 @@ class _VideoPlayerNoneControllerState
                     child: AspectRatio(
                         aspectRatio: widget.aspectRatio ??
                             videoPlayerController.value.aspectRatio,
-                        child: VideoPlayer(videoPlayerController)))),
+                        child: VideoPlayer(videoPlayerController))) ),
             widget.isShowVolumn != null && widget.isShowVolumn == false
                 ? const SizedBox()
                 : Positioned(

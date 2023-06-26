@@ -39,6 +39,10 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
 
   @override
   Widget build(BuildContext context) {
+    checkIsImage(media) {
+      return media['type'] == 'image' ? true : false;
+    }
+
     final size = MediaQuery.of(context).size;
     return GridView.builder(
         shrinkWrap: true,

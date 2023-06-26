@@ -355,15 +355,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
       // Ghi dữ liệu từ Uint8List vào file ảnh tạm
       final tempFile = File(tempImagePath);
-      await tempFile.writeAsBytes(data);
-      // Đọc ảnh gốc từ đường dẫn imagePath
-      // final originalImageFile = File(imagePath);
-
-      // Kiểm tra nếu ảnh gốc tồn tại
-      // if (await originalImageFile.exists()) {
-      //   // Ghi đè ảnh gốc bằng ảnh từ Uint8List
-      //   await originalImageFile.writeAsBytes(await tempFile.readAsBytes());
-      //   await tempFile.delete();
+      await tempFile.writeAsBytes(data); 
       return tempFile;
     } catch (e) {
       throw e.toString();
@@ -636,7 +628,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       "status": content,
       "scheduled_at": null,
       'hidden': null,
-      'status_background_id': widget.post['status_background']?['id'] ?? null
+      'status_background_id': widget.post?['status_background']?['id']
     };
     if (files.isNotEmpty) {
       List<Future> listUpload = [];

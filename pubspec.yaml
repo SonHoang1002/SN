@@ -110,7 +110,7 @@ dependencies:
     git:
       url: https://github.com/crazecoder/open_file
   shared_preferences: ^2.1.0
-  extended_image: ^8.0.2
+  extended_image: ^8.0.0
   webview_flutter: ^3.0.4
   # flutter_image_compress: ^2.0.2
   web_socket_channel: ^2.4.0
@@ -133,11 +133,15 @@ dependencies:
   like_button: ^2.0.5
   miniplayer: ^1.0.1
   perfect_freehand: ^1.0.4
-  emso_icons:
-    git:
-      url: https://github.com/EMSO-group/flutter_emso_icons
+  # emso_icons:
+  #   git:
+  #     url: https://github.com/EMSO-group/flutter_emso_icons\
+  # connectivity_plus: ^4.0.1
   connectivity: ^3.0.6
   flutter_isolate: ^2.0.4
+  isar_flutter_libs: ^3.1.0+1
+  isar: ^3.1.0+1
+  logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -153,6 +157,7 @@ dev_dependencies:
   very_good_analysis: ^3.0.1
   build_runner: ^2.3.3
   freezed: ^2.3.2
+  isar_generator: ^3.1.0+1
 flutter_icons:
   android: "launcher_icon"
   ios: true

@@ -98,8 +98,8 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                       .toString()),
                                   width: size.width,
                                   decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: greyColor),
                                 );
                               }
                             }),
@@ -112,18 +112,16 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
           );
         } else {
           return Container(
-              alignment: Alignment.center,
               constraints: BoxConstraints(
-                maxHeight: size.height * 0.75,
-                minHeight: size.width,
-              ),
+                  // maxHeight: size.height * 0.75,
+                  ),
               height: (medias[0]['aspect'] ??
                           medias[0]['meta']['original']['aspect'] ??
                           1) <
                       1
                   ? size.width
                   : null,
-              width: size.width,
+              // width: size.width,
               child: medias[0]['file'] != null
                   ? VideoPlayerNoneController(
                       path: medias[0]['file'].path,
