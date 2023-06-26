@@ -22,7 +22,7 @@ class PostContent extends StatefulWidget {
 class _PostContentState extends State<PostContent> {
   bool isMore = false;
 
-  renderPostContent() {
+  Widget renderPostContent() {
     final size = MediaQuery.of(context).size;
     if (widget.post?['status_background'] != null) {
       var backgroundObject = widget.post['status_background'];

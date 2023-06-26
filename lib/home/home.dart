@@ -15,7 +15,6 @@ import 'package:social_network_app_mobile/screens/Menu/menu.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screens/Search/search.dart';
-import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -40,7 +39,6 @@ class _HomeState extends ConsumerState<Home>
   int _selectedIndex = 0;
   bool isShowSnackBar = false;
   ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(false);
-  bool? _fromPostDetail;
 
   double valueFromPercentageInRange(
       {required final double min, max, percentage}) {
@@ -143,16 +141,77 @@ class _HomeState extends ConsumerState<Home>
     }
   }
 
+  List titles = [
+    const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "Emso",
+            style: TextStyle(color: primaryColor, fontWeight: FontWeight.w700),
+          ),
+          Text(
+            "Social",
+            style:
+                TextStyle(color: secondaryColor, fontWeight: FontWeight.w700),
+          )
+        ]),
+    const SizedBox(),
+    const SizedBox(),
+    const AppBarTitle(title: 'Watch')
+  ];
+
+  List iconActionWatch = [
+    {"icon": Icons.search, 'type': 'icon'},
+  ];
+
+  AppBar _buildAppBar(
+      int index, List titles, List actions, ThemeManager theme) {
+    return AppBar(
+      elevation: 0,
+      centerTitle: false,
+      iconTheme: const IconThemeData(color: primaryColor),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      actions: actions.elementAt(index),
+      title: titles.elementAt(index),
+    );
+  }
+
+  Widget _buildBottomNavigator() {
+    return BottomNavigatorBarEmso(
+      selectedIndex: _selectedIndex,
+      onTap: _onItemTapped,
+    );
+  }
+
+  Widget _buildDrawer(Size size) {
+    return Drawer(
+      width: size.width - 20,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      child: const Menu(),
+    );
+  }
+
+  Widget _buildIndexedStack(List<Widget> pages) {
+    return IndexedStack(
+      index: _selectedIndex,
+      children: pages,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final theme = pv.Provider.of<ThemeManager>(context);
-    if (widget.selectedIndex != null) {
+
+    if (widget.selectedIndex != null &&
+        _selectedIndex != widget.selectedIndex!) {
       setState(() {
         _selectedIndex = widget.selectedIndex!;
       });
     }
-    String modeTheme = theme.themeMode == ThemeMode.dark
+
+    final modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
         : theme.themeMode == ThemeMode.light
             ? 'light'
@@ -182,10 +241,6 @@ class _HomeState extends ConsumerState<Home>
       }
     ];
 
-    List iconActionWatch = [
-      {"icon": Icons.search, 'type': 'icon'},
-    ];
-
     List<Widget> pages = [
       Feed(
         callbackFunction: _showBottomNavigator,
@@ -194,27 +249,6 @@ class _HomeState extends ConsumerState<Home>
       const SizedBox(),
       const Watch(),
       const MainMarketPage(false)
-    ];
-
-    List titles = [
-      Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            Text(
-              "Emso",
-              style:
-                  TextStyle(color: primaryColor, fontWeight: FontWeight.w700),
-            ),
-            Text(
-              "Social",
-              style:
-                  TextStyle(color: secondaryColor, fontWeight: FontWeight.w700),
-            )
-          ]),
-      const SizedBox(),
-      const SizedBox(),
-      const AppBarTitle(title: 'Watch')
     ];
 
     List actions = [
@@ -284,34 +318,23 @@ class _HomeState extends ConsumerState<Home>
           isShowSnackBar = false;
         });
       });
-    } 
+    }
+
     return Scaffold(
         drawer: _selectedIndex == 1 || _selectedIndex == 4
             ? null
-            : Drawer(
-                width: size.width - 20,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                child: const Menu(),
-              ),
+            : _buildDrawer(size),
         appBar: _selectedIndex == 1 || _selectedIndex == 4
             ? null
-            : AppBar(
-                elevation: 0,
-                centerTitle: false,
-                iconTheme: const IconThemeData(color: primaryColor),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                actions: actions.elementAt(_selectedIndex),
-                title: titles.elementAt(_selectedIndex),
-              ),
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: pages,
-        ),
-        bottomNavigationBar: showBottomNavigatorNotifier.value
-            ? BottomNavigatorBarEmso(
-                selectedIndex: _selectedIndex,
-                onTap: _onItemTapped,
-              )
-            : null);
+            : _buildAppBar(_selectedIndex, titles, actions, theme),
+        body: _buildIndexedStack(pages),
+        bottomNavigationBar:
+            showBottomNavigatorNotifier.value ? _buildBottomNavigator() : null);
+  }
+
+  @override
+  void dispose() {
+    showBottomNavigatorNotifier.dispose();
+    super.dispose();
   }
 }

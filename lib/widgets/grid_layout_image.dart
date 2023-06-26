@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,7 +50,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
     }
   }
 
-  renderLayoutMedia(medias) {
+  Widget renderLayoutMedia(medias) {
     final size = MediaQuery.of(context).size;
     switch (medias.length) {
       case 1:
@@ -113,9 +111,6 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
             ),
           );
         } else {
-          String path = medias[0]['file']?.path ??
-              medias[0]['remote_url'] ??
-              medias[0]['url'];
           return Container(
               alignment: Alignment.center,
               constraints: BoxConstraints(

@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,6 +42,8 @@ class PostMutipleMediaDetail extends ConsumerStatefulWidget {
 class _PostMutipleMediaDetail1State
     extends ConsumerState<PostMutipleMediaDetail> {
   late ScrollController _scrollParentController;
+  ValueNotifier<bool> showBgContainer = ValueNotifier(true);
+
   bool isDragOutside = false;
   bool canDragOutside = false;
   bool isHaveAppbar = true;
@@ -211,14 +211,14 @@ class _PostMutipleMediaDetail1State
 
   @override
   void dispose() {
+    showBgContainer.dispose();
+    _scrollParentController.dispose();
     super.dispose();
   }
 
   checkIsImage(media) {
     return media['type'] == 'image' ? true : false;
   }
-
-  ValueNotifier<bool> showBgContainer = ValueNotifier(true);
 
   reloadDetailFunction() {
     setState(() {});
@@ -559,6 +559,7 @@ class _PostMutipleMediaDetail1State
       width: MediaQuery.of(context).size.width,
       loadStateChanged: (state) {
         _buildLoadingExtendexImage(state, index);
+        return null;
       },
     );
   }
@@ -633,13 +634,10 @@ class CustomBouncingScrollPhysics extends BouncingScrollPhysics {
       ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
-      double constantDeceleration;
       switch (decelerationRate) {
         case ScrollDecelerationRate.fast:
-          constantDeceleration = 1400;
           break;
         case ScrollDecelerationRate.normal:
-          constantDeceleration = 0;
           break;
       }
       return null;

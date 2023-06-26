@@ -43,8 +43,8 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     Widget suggestContent = _buildSuggestContent();
+
     return isShow && widget.post['account']['id'] != meData['id']
         ? Column(
             children: [
@@ -76,7 +76,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
   }
 
   Widget _buildSuggestContent() {
-    dynamic content = '';
+    String content = '';
     const bold = TextStyle(fontWeight: FontWeight.bold);
     List<TextSpan> listContent = [];
     if ((((widget.post?['page'] == null && widget.post?['group'] == null) ||
@@ -319,7 +319,6 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
 
   dynamic checkVideoImage(List<dynamic> data) {
     int imageLength = data.map((e) => e["type"] == "image").toList().length;
-    int videoLength = data.map((e) => e["type"] == "video").toList().length;
     return {
       "image": imageLength,
       // "video": data.map((e) => e["type"] == "video").toList().length,

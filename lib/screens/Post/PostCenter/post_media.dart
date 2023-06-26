@@ -39,10 +39,6 @@ class _PostMediaState extends State<PostMedia> {
     super.initState();
     final List mediaList = widget.post['media_attachments'] ?? [];
     if (mediaList.isNotEmpty) {
-      // Map<String, dynamic>? firstVideo = mediaList.firstWhere(
-      //   (element) => element['type'] == 'video',
-      //   orElse: () => null,
-      // );
       for (int i = 0; i < mediaList.length; i++) {
         if (mediaList[i]['type'] == 'video') {
           currentVideoId.value = mediaList[i]['id'];
