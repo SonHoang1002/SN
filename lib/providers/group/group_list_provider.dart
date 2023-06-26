@@ -10,14 +10,21 @@ class GroupListState {
   final bool isMoreGroupMember;
   final List memberQuestionList;
   final List groupFeed;
+  final List yourGroup;
+  final List groupDiscover;
+  final List groupInvitedRequest;
 
-  const GroupListState(
-      {this.groupAdmin = const [],
-      this.groupMember = const [],
-      this.isMoreGroupAdmin = true,
-      this.isMoreGroupMember = true,
-      this.memberQuestionList = const [],
-      this.groupFeed = const []});
+  const GroupListState({
+    this.groupAdmin = const [],
+    this.groupMember = const [],
+    this.isMoreGroupAdmin = true,
+    this.isMoreGroupMember = true,
+    this.memberQuestionList = const [],
+    this.groupFeed = const [],
+    this.yourGroup = const [],
+    this.groupDiscover = const [],
+    this.groupInvitedRequest = const [],
+  });
 
   GroupListState copyWith({
     List groupAdmin = const [],
@@ -26,15 +33,20 @@ class GroupListState {
     bool isMoreGroupMember = true,
     List memberQuestionList = const [],
     List groupFeed = const [],
+    List yourGroup = const [],
+    List groupDiscover = const [],
+    List groupInvitedRequest = const [],
   }) {
     return GroupListState(
-      groupAdmin: groupAdmin,
-      groupMember: groupMember,
-      isMoreGroupAdmin: isMoreGroupAdmin,
-      isMoreGroupMember: isMoreGroupMember,
-      memberQuestionList: memberQuestionList,
-      groupFeed: groupFeed,
-    );
+        groupAdmin: groupAdmin,
+        groupMember: groupMember,
+        isMoreGroupAdmin: isMoreGroupAdmin,
+        isMoreGroupMember: isMoreGroupMember,
+        memberQuestionList: memberQuestionList,
+        groupFeed: groupFeed,
+        yourGroup: yourGroup,
+        groupDiscover: groupDiscover,
+        groupInvitedRequest: groupInvitedRequest);
   }
 }
 
@@ -50,7 +62,6 @@ class GroupListController extends StateNotifier<GroupListState> {
         .where((item) =>
             !state.groupFeed.map((el) => el['id']).contains(item['id']))
         .toList();
-    print([...state.groupFeed, ...newGroup].map((el) => el['id']));
     state = state.copyWith(
       groupAdmin: state.groupAdmin,
       groupMember: state.groupMember,
@@ -60,6 +71,9 @@ class GroupListController extends StateNotifier<GroupListState> {
       groupFeed: params.containsKey('max_id')
           ? [...state.groupFeed, ...newGroup]
           : newGroup,
+      yourGroup: state.yourGroup,
+      groupDiscover: state.groupDiscover,
+      groupInvitedRequest: state.groupInvitedRequest,
     );
   }
 
@@ -82,6 +96,9 @@ class GroupListController extends StateNotifier<GroupListState> {
             : state.isMoreGroupMember,
         memberQuestionList: state.memberQuestionList,
         groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
       );
     }
   }
@@ -96,6 +113,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         isMoreGroupMember: state.isMoreGroupMember,
         memberQuestionList: response,
         groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
       );
     }
   }
@@ -103,14 +123,18 @@ class GroupListController extends StateNotifier<GroupListState> {
   removeGroupAdmin(dynamic group) async {
     if (mounted) {
       state = state.copyWith(
-          groupAdmin: state.groupAdmin
-              .where((admin) => admin['id'] != group['id'])
-              .toList(),
-          groupMember: state.groupMember,
-          isMoreGroupAdmin: state.isMoreGroupAdmin,
-          isMoreGroupMember: state.isMoreGroupMember,
-          memberQuestionList: state.memberQuestionList,
-          groupFeed: state.groupFeed);
+        groupAdmin: state.groupAdmin
+            .where((admin) => admin['id'] != group['id'])
+            .toList(),
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+      );
     }
   }
 
@@ -124,6 +148,9 @@ class GroupListController extends StateNotifier<GroupListState> {
       isMoreGroupMember: state.isMoreGroupMember,
       memberQuestionList: state.memberQuestionList,
       groupFeed: state.groupFeed,
+      yourGroup: state.yourGroup,
+      groupDiscover: state.groupDiscover,
+      groupInvitedRequest: state.groupInvitedRequest,
     );
   }
 }
