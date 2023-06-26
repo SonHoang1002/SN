@@ -1,15 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/data/groups.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
-class GroupFeedAll extends StatelessWidget {
-  const GroupFeedAll({Key? key}) : super(key: key);
+import '../../widgets/Market/image_cache.dart';
+
+class GroupFeedAll extends ConsumerStatefulWidget {
+  const GroupFeedAll({super.key});
+
+  @override
+  ConsumerState<GroupFeedAll> createState() => _GroupFeedAllState();
+}
+
+class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
+  var paramsGroupFeed = {
+    "exclude_replies": true,
+    "limit": 3,
+  };
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref
+          .read(groupListControllerProvider.notifier)
+          .getListGroupFeed(paramsGroupFeed);
+    });
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        String maxId =
+            ref.read(groupListControllerProvider).groupFeed.last['id'];
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getListGroupFeed({"max_id": maxId, ...paramsGroupFeed});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final groupFeed = ref.watch(groupListControllerProvider).groupFeed;
     return Expanded(
         child: SingleChildScrollView(
       child: Column(
@@ -64,13 +99,17 @@ class GroupFeedAll extends StatelessWidget {
                         ),
                       ))),
           const CrossBar(),
-          ListView.builder(
-              shrinkWrap: true,
-              primary: true,
-              itemCount: postDiscoverGroup.length,
-              itemBuilder: ((context, index) => Post(
-                    post: postDiscoverGroup[index],
-                  )))
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 230,
+            child: ListView.builder(
+                shrinkWrap: true,
+                controller: scrollController,
+                scrollDirection: Axis.vertical,
+                itemCount: groupFeed.length,
+                itemBuilder: ((context, index) => Post(
+                      post: groupFeed[index],
+                    ))),
+          )
         ],
       ),
     ));
