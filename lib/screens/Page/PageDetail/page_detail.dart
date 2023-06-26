@@ -62,7 +62,6 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ModalRoute.of(context)?.settings.arguments != null) {
         arguments = ModalRoute.of(context)?.settings.arguments;
-
         if (arguments is String) {
           ref
               .read(pageControllerProvider.notifier)
@@ -75,12 +74,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             }
           });
         } else {
-          setState(() {
-            pageData = arguments;
-            ref
-                .read(pageControllerProvider.notifier)
-                .getPageDetail(pageData['id']);
-          });
+          if (mounted) {
+            setState(() {
+              pageData = arguments;
+              ref
+                  .read(pageControllerProvider.notifier)
+                  .getPageDetail(pageData['id']);
+            });
+          }
         }
       }
       final RenderBox renderBox =
@@ -291,6 +292,48 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     }
   }
 
+  String renderButtonName(data) {
+    switch (data['button_key']) {
+      case 'follow':
+        if (data['page_relationship']['following'] == true) {
+          return 'Đang theo dõi';
+        } else {
+          return 'Theo dõi';
+        }
+      case 'register':
+        return 'Đăng ký';
+      case 'email':
+        return 'Gửi email';
+      case 'about':
+        return 'Tìm hiểu thêm';
+      default:
+        return 'Nhắn tin';
+    }
+  }
+
+  handlePress(data) {
+    switch (data['button_key']) {
+      case 'follow':
+        ref.read(pageControllerProvider.notifier).updateLikeFollowPageDetail(
+            pageData['id'],
+            pageData['page_relationship']['following'] == true
+                ? 'unfollow'
+                : 'follow');
+        setState(() {
+          pageData = ref.read(pageControllerProvider).pageDetail;
+        });
+        break;
+      case 'register':
+        break;
+      case 'email':
+        break;
+      case 'about':
+        break;
+      default:
+        break;
+    }
+  }
+
   Widget getBody(size, modeTheme, data, rolePage) {
     return SingleChildScrollView(
         controller: scrollController,
@@ -317,9 +360,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                       width: size.width * 0.38,
                       height: 35,
                       child: ButtonPrimary(
-                        label: "Nhắn tin",
+                        label: renderButtonName(data),
                         fontSize: 14,
-                        handlePress: () {},
+                        handlePress: () => handlePress(data),
                       ),
                     ),
                     const SizedBox(width: 8),

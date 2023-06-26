@@ -6,6 +6,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/screens/Page/PageDetail/page_search.dart';
 import 'package:social_network_app_mobile/screens/Page/PageEdit/page_action.dart';
+import 'package:social_network_app_mobile/screens/Page/PageEdit/page_activity.dart';
 import 'package:social_network_app_mobile/screens/Page/PageEdit/page_edit.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -57,11 +58,6 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
                     "label": "Thêm nút hành động",
                     "icon": "assets/pages/addAction.png",
                   },
-                  // {
-                  //   "key": "archives",
-                  //   "label": "Kho lưu trữ",
-                  //   "icon": "assets/pages/boxArchives.png",
-                  // },
                   {
                     "key": "activity",
                     "label": "Nhật ký hoạt động",
@@ -71,11 +67,6 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
                     "key": "setting",
                     "label": "Cài đặt Trang và gắn thẻ",
                     "icon": "assets/pages/settingPage.png",
-                  },
-                  {
-                    "key": "review",
-                    "label": "Xem lại bài viết và thẻ",
-                    "icon": "assets/pages/reviewPost.png",
                   },
                   {
                     "key": "private",
@@ -186,6 +177,7 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
               CupertinoDialogAction(
                 onPressed: () async {
                   await PageApi().blockPage({'page_id': widget.data['id']});
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 },
                 child: const Text('Chặn'),
@@ -227,6 +219,15 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
             context,
             CupertinoPageRoute(
                 builder: (context) => PageAction(
+                    data: widget.data,
+                    handleChangeDependencies:
+                        widget.handleChangeDependencies)));
+        break;
+      case 'activity':
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => PageActivity(
                       data: widget.data,
                     )));
         break;

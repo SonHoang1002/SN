@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
-import '../../../providers/page/page_provider.dart';
 import '../../../theme/colors.dart';
 import '../../../theme/theme_manager.dart';
 import '../../../widgets/button_primary.dart';
@@ -19,6 +19,7 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
   dynamic selectedCategory;
   bool checkSelected = false;
   List categories = [];
+
   final TextEditingController searchController =
       TextEditingController(text: "");
 
@@ -133,44 +134,48 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                     const SizedBox(
                       height: 10,
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      itemCount: categories.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 0.0,
-                              ),
-                              visualDensity: const VisualDensity(
-                                horizontal: -4,
-                                vertical: -3,
-                              ),
-                              dense: true,
-                              title: Text(
-                                categories[index]['text'],
-                                style: const TextStyle(
-                                  fontSize: 15,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.78,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        scrollDirection: Axis.vertical,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 0.0,
                                 ),
+                                visualDensity: const VisualDensity(
+                                  horizontal: -4,
+                                  vertical: -3,
+                                ),
+                                dense: true,
+                                title: Text(
+                                  categories[index]['text'],
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory = categories[index];
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  selectedCategory = categories[index];
-                                });
-                              },
-                            ),
-                            const Divider(
-                              height: 1,
-                              thickness: 1,
-                              indent: 16,
-                              endIndent: 16,
-                            ),
-                          ],
-                        );
-                      },
+                              const Divider(
+                                height: 1,
+                                thickness: 1,
+                                indent: 16,
+                                endIndent: 16,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ],
                 )
