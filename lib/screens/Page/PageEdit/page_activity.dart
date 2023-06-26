@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -30,18 +31,29 @@ class _PageActivityState extends State<PageActivity> {
 
   String extractDescription(dynamic object) {
     String description = object["description"].toString();
-
-    // Kiểm tra và xoá dấu cách liên tiếp
     description = description.replaceAll(RegExp(r'\s{2,}'), ' ');
-
     if (object["includes"] != null && object["includes"].isNotEmpty) {
       for (var include in object["includes"]) {
         if (include["id"] != null && include["title"] != null) {
           final id = include["id"].toString();
           final title = include["title"].toString();
-
           if (description.contains('[$id]')) {
             description = description.replaceAll('[$id]', title);
+          }
+        }
+      }
+    }
+    return description;
+  }
+
+  String extractImage(dynamic object) {
+    String description = object["description"].toString();
+    if (object["includes"] != null && object["includes"].isNotEmpty) {
+      for (var include in object["includes"]) {
+        if (include["id"] != null && include["title"] != null) {
+          final id = include["id"].toString();
+          if (description.contains('[$id]')) {
+            return description = include["avatar"].toString();
           }
         }
       }
@@ -61,7 +73,17 @@ class _PageActivityState extends State<PageActivity> {
       body: ListView.builder(
           itemCount: data.length,
           itemBuilder: (context, index) {
-            return Text(extractDescription(data[index]));
+            return ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+              visualDensity: const VisualDensity(horizontal: -4, vertical: 0),
+              leading: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipOval(
+                    child: ExtendedImage.network(extractImage(data[index]))),
+              ),
+              title: Text(extractDescription(data[index])),
+            );
           }),
     );
   }
