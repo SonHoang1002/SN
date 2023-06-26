@@ -7,7 +7,7 @@ class SuggestCenter extends StatefulWidget {
   final dynamic type;
   final double? viewportFraction;
   final Function? loadMoreFunction;
-   final Function? reloadFunction;
+  final Function? reloadFunction;
   const SuggestCenter(
       {required this.suggestList,
       this.type,
@@ -31,17 +31,17 @@ class _SuggestCenterState extends State<SuggestCenter> {
 
   @override
   Widget build(BuildContext context) {
-    List _suggestList = widget.suggestList;
+    List suggestList = widget.suggestList;
     final size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
       height: size.height * 0.52,
       padding: EdgeInsets.zero,
-      child: buildPageView(_suggestList, widget.type, size),
+      child: buildPageView(suggestList, widget.type, size),
     );
   }
 
-  Widget buildPageView(List _suggestList, dynamic type, Size size,
+  Widget buildPageView(List suggestList, dynamic type, Size size,
       {double? viewportFraction}) {
     return SizedBox(
       height: size.height * 0.52,
@@ -52,7 +52,7 @@ class _SuggestCenterState extends State<SuggestCenter> {
         ),
         clipBehavior: Clip.none,
         scrollDirection: Axis.horizontal,
-        itemCount: _suggestList.length,
+        itemCount: suggestList.length,
         padEnds: isScrollToLimit ? false : true,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (ctx, index) {
@@ -67,9 +67,9 @@ class _SuggestCenterState extends State<SuggestCenter> {
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: SuggestItem(
-                  suggestData: _suggestList[index],
+                  suggestData: suggestList[index],
                   type: type,
-                  reloadFunction:widget.reloadFunction,
+                  reloadFunction: widget.reloadFunction,
                 )),
           );
         },
@@ -85,7 +85,7 @@ class _SuggestCenterState extends State<SuggestCenter> {
                 isScrollToLimit = false;
               });
             }
-          } 
+          }
           setState(() {
             currentIndex = value;
           });

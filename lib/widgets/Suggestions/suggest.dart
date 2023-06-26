@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -8,7 +7,6 @@ import 'package:social_network_app_mobile/providers/friend/friend_provider.dart'
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_settings/reef_setting_main.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
@@ -122,17 +120,16 @@ class _SuggestState extends ConsumerState<Suggest> {
   @override
   Widget build(BuildContext context) {
     if (widget.type == suggestFriends) {
-      if (ref.read(friendControllerProvider).friendSuggestions != null &&
-          ref.read(friendControllerProvider).friendSuggestions.isNotEmpty) {
+      if (ref.read(friendControllerProvider).friendSuggestions.isNotEmpty) {
         listData = ref.read(friendControllerProvider).friendSuggestions;
       }
     }
     if (widget.type == suggestGroups) {
-      if (ref.read(groupListControllerProvider).groupMember != null &&
-          ref.read(groupListControllerProvider).groupMember.isNotEmpty) {
+      if (ref.read(groupListControllerProvider).groupMember.isNotEmpty) {
         listData = ref.read(groupListControllerProvider).groupMember;
       }
     }
+
     return _isShowSuggest
         ? listData.isNotEmpty
             ? Column(

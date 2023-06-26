@@ -3,7 +3,6 @@ import 'dart:isolate';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -44,8 +43,8 @@ class _FeedState extends ConsumerState<Feed> {
   ThemeManager? theme;
   @override
   void initState() {
-    if (!mounted) return;
     super.initState();
+    if (!mounted) return;
     Future.delayed(Duration.zero, () async {
       ref.read(postControllerProvider.notifier).getListPost(paramsConfig);
     });
@@ -170,17 +169,6 @@ class _FeedState extends ConsumerState<Feed> {
                       const CrossBar(
                         height: 5,
                       ),
-                      // test render only post
-                      // posts.length == 5 || isMore == false
-                      //     ? Column(
-                      //         children: const [
-                      //           Reef(),
-                      //           CrossBar(
-                      //             height: 5,
-                      //           ),
-                      //         ],
-                      //       )
-                      // : const SizedBox(),
                       posts.length == 20 || isMore == false
                           ? Suggest(
                               type: suggestGroups,
@@ -286,9 +274,9 @@ class _FeedState extends ConsumerState<Feed> {
 
   @override
   void dispose() {
-    super.dispose();
     scrollController.removeListener(() {});
     scrollController.dispose();
     focusCurrentPostIndex.dispose();
+    super.dispose();
   }
 }
