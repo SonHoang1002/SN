@@ -8,6 +8,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
 // handle push to another page when tapping
+import '../../apis/notification_api.dart';
 import '../../helper/push_to_new_screen.dart';
 import 'noti_func.dart';
 
@@ -59,6 +60,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
     print("Page re-render");
     List notifications =
         ref.watch(notificationControllerProvider).notifications;
+    print("page's length: ${notifications.length}");
 
     return Column(
       children: [
@@ -102,21 +104,48 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
   }
 }
 
-class NotiItem extends ConsumerWidget {
+class NotiItem extends ConsumerStatefulWidget {
   final int index;
   const NotiItem({super.key, required this.index});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    print("${index}th noti item re-render");
+  NotiItemState createState() => NotiItemState();
+}
+
+class NotiItemState extends ConsumerState<NotiItem> {
+  bool read = false;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      read = ref
+          .read(notificationControllerProvider)
+          .notifications[widget.index]['read'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("${widget.index}th noti item re-render");
     final item = ref.watch(
-      notificationControllerProvider.select((e) => e.notifications[index]),
+      notificationControllerProvider.select(
+        (e) => e.notifications[widget.index],
+      ),
     );
     return InkWell(
-      onTap: () {
-        ref
-            .read(notificationControllerProvider.notifier)
-            .markNotificationIdAsRead(item['id']);
+      onTap: () async {
+        if (read == false) {
+          // ref
+          //     .read(notificationControllerProvider.notifier)
+          //     .markNotificationIdAsRead(item['id']);
+
+          setState(() {
+            read = true;
+          });
+          // await NotificationsApi().markNotiAsRead(item['id']);
+        }
+
         var nextScreen = nextScreenFromNoti(item);
         if (nextScreen != null) {
           pushCustomCupertinoPageRoute(context, nextScreen);
@@ -128,7 +157,7 @@ class NotiItem extends ConsumerWidget {
           horizontal: 8.0,
         ),
         decoration: BoxDecoration(
-          color: item['read'] == false ? secondaryColorSelected : null,
+          color: read == false ? secondaryColorSelected : null,
         ),
         child: Row(
           children: [
