@@ -79,6 +79,12 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
   }
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
 
