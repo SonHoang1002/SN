@@ -13,6 +13,7 @@ class GroupListState {
   final List yourGroup;
   final List groupDiscover;
   final List groupInvitedRequest;
+  final dynamic groupDetail;
 
   const GroupListState({
     this.groupAdmin = const [],
@@ -24,6 +25,7 @@ class GroupListState {
     this.yourGroup = const [],
     this.groupDiscover = const [],
     this.groupInvitedRequest = const [],
+    this.groupDetail = const {},
   });
 
   GroupListState copyWith({
@@ -36,17 +38,20 @@ class GroupListState {
     List yourGroup = const [],
     List groupDiscover = const [],
     List groupInvitedRequest = const [],
+    dynamic groupDetail = const {},
   }) {
     return GroupListState(
-        groupAdmin: groupAdmin,
-        groupMember: groupMember,
-        isMoreGroupAdmin: isMoreGroupAdmin,
-        isMoreGroupMember: isMoreGroupMember,
-        memberQuestionList: memberQuestionList,
-        groupFeed: groupFeed,
-        yourGroup: yourGroup,
-        groupDiscover: groupDiscover,
-        groupInvitedRequest: groupInvitedRequest);
+      groupAdmin: groupAdmin,
+      groupMember: groupMember,
+      isMoreGroupAdmin: isMoreGroupAdmin,
+      isMoreGroupMember: isMoreGroupMember,
+      memberQuestionList: memberQuestionList,
+      groupFeed: groupFeed,
+      yourGroup: yourGroup,
+      groupDiscover: groupDiscover,
+      groupInvitedRequest: groupInvitedRequest,
+      groupDetail: groupDetail,
+    );
   }
 }
 
@@ -74,6 +79,7 @@ class GroupListController extends StateNotifier<GroupListState> {
       yourGroup: state.yourGroup,
       groupDiscover: state.groupDiscover,
       groupInvitedRequest: state.groupInvitedRequest,
+      groupDetail: state.groupDetail,
     );
   }
 
@@ -99,6 +105,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         yourGroup: state.yourGroup,
         groupDiscover: state.groupDiscover,
         groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
       );
     }
   }
@@ -116,6 +123,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         yourGroup: state.yourGroup,
         groupDiscover: state.groupDiscover,
         groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
       );
     }
   }
@@ -134,6 +142,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         yourGroup: state.yourGroup,
         groupDiscover: state.groupDiscover,
         groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
       );
     }
   }
@@ -151,6 +160,43 @@ class GroupListController extends StateNotifier<GroupListState> {
       yourGroup: state.yourGroup,
       groupDiscover: state.groupDiscover,
       groupInvitedRequest: state.groupInvitedRequest,
+      groupDetail: state.groupDetail,
     );
+  }
+
+  groupDiscover(params) async {
+    List response = await GroupApi().fetchListGroupAdminMember(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: response,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+      );
+    }
+  }
+
+  getGroupDetail(id) async {
+    var response = await GroupApi().fetchGroupDetail(id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: response,
+      );
+    }
   }
 }

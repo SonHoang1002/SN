@@ -5,6 +5,10 @@ class GroupApi {
     return await Api().getRequestBase('/api/v1/groups', params);
   }
 
+  Future fetchGroupDetail(id) async {
+    return await Api().getRequestBase('/api/v1/groups/$id', null);
+  }
+
   fetchListGroupFeed(params) async {
     return await Api()
         .getRequestBase('/api/v1/timelines/group_collection', params);

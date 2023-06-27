@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screens/Group/group_invited_request.dart';
 import 'package:social_network_app_mobile/screens/Group/group_list_all.dart';
@@ -7,17 +8,32 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
+import '../../providers/group/group_list_provider.dart';
 import 'group_feed_all.dart';
 
-class Group extends StatefulWidget {
+class Group extends ConsumerStatefulWidget {
   const Group({Key? key}) : super(key: key);
 
   @override
-  State<Group> createState() => _GroupState();
+  ConsumerState<Group> createState() => _GroupState();
 }
 
-class _GroupState extends State<Group> {
+class _GroupState extends ConsumerState<Group> {
   String menuSelected = "group-feed";
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      ref.read(groupListControllerProvider.notifier).getListGroupFeed({
+        "exclude_replies": true,
+        "limit": 3,
+      });
+      ref
+          .read(groupListControllerProvider.notifier)
+          .getListGroupAdminMember({'tab': 'member', 'limit': 10});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
