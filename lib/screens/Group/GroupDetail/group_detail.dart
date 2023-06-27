@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/providers/group/group_list_provider.da
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/AvatarStack/src/avatar_stack.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../widgets/AvatarStack/positions.dart';
 
@@ -64,7 +65,7 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
                 children: [
                   SizedBox(
                     width: size.width,
-                    height: size.height * 0.3,
+                    height: size.height * 0.25,
                     child: ExtendedImage.network(
                       groupDetail['banner'] != null
                           ? groupDetail['banner']['preview_url']
@@ -160,6 +161,33 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
                           ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: size.width * 0.44,
+                          child: ButtonPrimary(
+                            label: 'Quản lý',
+                            icon: const Icon(Icons.settings, size: 18),
+                            handlePress: () {},
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        SizedBox(
+                          width: size.width * 0.44,
+                          child: ButtonPrimary(
+                            label: 'Mời',
+                            isGrey: true,
+                            colorText: Colors.black,
+                            handlePress: () {},
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               )

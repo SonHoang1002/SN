@@ -96,14 +96,23 @@ class AvatarStack extends StatelessWidget {
                   return Stack(
                     alignment: Alignment.center,
                     children: [
+                      BorderedCircleAvatar(
+                        border: border,
+                        backgroundImage: avatar,
+                      ),
                       Opacity(
-                        opacity: 0.1,
-                        child: BorderedCircleAvatar(
-                          border: border,
-                          backgroundImage: avatar,
+                        opacity: 1,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
-                      const Icon(Icons.more_horiz, color: Colors.white),
+                      const Icon(
+                        Icons.more_horiz,
+                        color: Colors.white,
+                      ),
                     ],
                   );
                 }
