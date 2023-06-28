@@ -30,6 +30,8 @@ class RecruitDetail extends ConsumerStatefulWidget {
 class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   bool isRecruitInterested = false;
   dynamic recruitDetail = {};
+  final _scrollController = ScrollController();
+  bool _isVisible = false;
 
   @override
   void initState() {
@@ -38,12 +40,24 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         loadData();
       });
+      _scrollController.addListener(() {
+        if (_scrollController.offset > 200) {
+          setState(() {
+            _isVisible = true;
+          });
+        } else {
+          setState(() {
+            _isVisible = false;
+          });
+        }
+      });
     }
   }
 
   @override
   void dispose() {
     super.dispose();
+    _scrollController.dispose();
   }
 
   void loadData() async {
@@ -84,6 +98,10 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
+    final size = MediaQuery.of(context).size;
+    double width = size.width;
+    double height = size.height;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
@@ -116,11 +134,12 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
         children: [
           RefreshIndicator(
             onRefresh: () async {
-              ref
+              await ref
                   .read(recruitControllerProvider.notifier)
                   .getDetailRecruit(widget.data['id']);
             },
             child: SingleChildScrollView(
+              controller: _scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -449,6 +468,240 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
               ),
             ),
           ),
+          recruitDetail.isNotEmpty &&
+                  !recruitDetail['recruit_relationships']['host_recruit']
+              // are not host recruit
+              ? Visibility(
+                  visible: _isVisible,
+                  child: Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 60,
+                      color: theme.isDarkMode ? Colors.black : Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isRecruitInterested = !isRecruitInterested;
+                                  ref
+                                      .read(recruitControllerProvider.notifier)
+                                      .updateStatusRecruit(
+                                        isRecruitInterested,
+                                        widget.data['id'],
+                                        name: 'detailRecruit',
+                                      );
+                                });
+                              },
+                              child: Container(
+                                height: 32,
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                decoration: BoxDecoration(
+                                  color: !isRecruitInterested
+                                      ? const Color.fromARGB(189, 202, 202, 202)
+                                      : secondaryColor,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    width: 0.2,
+                                    color: greyColor,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.solidStar,
+                                      size: 14,
+                                      color: !isRecruitInterested
+                                          ? Colors.black
+                                          : Colors.white,
+                                    ),
+                                    const SizedBox(width: 5.0),
+                                    Text(
+                                      'Quan tâm',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        color: !isRecruitInterested
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                              onTap: () {},
+                              child: Container(
+                                height: 32,
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(189, 202, 202, 202),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border:
+                                      Border.all(width: 0.2, color: greyColor),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      recruitDetail['recruit_relationships']
+                                                  ['apply_recruit'] ==
+                                              ''
+                                          ? FontAwesomeIcons.clipboardQuestion
+                                          : FontAwesomeIcons.circleCheck,
+                                      size: 14,
+                                      color:
+                                          recruitDetail['recruit_relationships']
+                                                      ['apply_recruit'] !=
+                                                  ''
+                                              ? Colors.white
+                                              : Colors.black,
+                                    ),
+                                    const SizedBox(width: 3.0),
+                                    Text(
+                                      recruitDetail['recruit_relationships']
+                                                  ['apply_recruit'] ==
+                                              ''
+                                          ? 'Nộp CV'
+                                          : 'Đã nộp CV',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        color: recruitDetail[
+                                                        'recruit_relationships']
+                                                    ['apply_recruit'] !=
+                                                ''
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 8.0, top: 15.0),
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height *
+                                            0.3 +
+                                        30,
+                                    child: Column(
+                                      children: [
+                                        ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: iconActionEllipsis.length,
+                                          itemBuilder: ((context, index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 10.0),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  showModalBottomSheet(
+                                                      context: context,
+                                                      isScrollControlled: true,
+                                                      barrierColor:
+                                                          Colors.transparent,
+                                                      clipBehavior: Clip
+                                                          .antiAliasWithSaveLayer,
+                                                      shape: const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.vertical(
+                                                                  top: Radius
+                                                                      .circular(
+                                                                          10))),
+                                                      builder: (context) =>
+                                                          SizedBox(
+                                                            height:
+                                                                height * 0.9,
+                                                            width: width,
+                                                            child: ActionEllipsis(
+                                                                menuSelected:
+                                                                    iconActionEllipsis[
+                                                                        index]),
+                                                          ));
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      radius: 18.0,
+                                                      backgroundColor:
+                                                          greyColor[350],
+                                                      child: Icon(
+                                                        iconActionEllipsis[
+                                                            index]["icon"],
+                                                        size: 18.0,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 10.0),
+                                                      child: Text(
+                                                          iconActionEllipsis[
+                                                              index]["label"],
+                                                          style: const TextStyle(
+                                                              fontSize: 14.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500)),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: 32,
+                                width: MediaQuery.of(context).size.width * 0.1,
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(189, 202, 202, 202),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border:
+                                      Border.all(width: 0.2, color: greyColor),
+                                ),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(FontAwesomeIcons.ellipsis, size: 14),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
           recruitDetail['title'] == null
               ? Center(
                   child: Container(

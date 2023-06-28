@@ -136,14 +136,10 @@ class NotiItemState extends ConsumerState<NotiItem> {
     return InkWell(
       onTap: () async {
         if (read == false) {
-          // ref
-          //     .read(notificationControllerProvider.notifier)
-          //     .markNotificationIdAsRead(item['id']);
-
           setState(() {
             read = true;
           });
-          // await NotificationsApi().markNotiAsRead(item['id']);
+          await NotificationsApi().markNotiAsRead(item['id']);
         }
 
         var nextScreen = nextScreenFromNoti(item);

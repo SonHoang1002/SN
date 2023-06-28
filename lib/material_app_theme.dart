@@ -67,23 +67,26 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
           String jsonString = data.substring(startIndex, endIndex);
           List<dynamic> dataList = jsonDecode("[$jsonString]");
           Map<String, dynamic> object = dataList[1];
-          fetchNotifications(null).then((value) async {
-            dynamic dataFilter = ref
-                .read(notificationControllerProvider)
-                .notifications
-                .where((element) => element['id'] == object['id'])
-                .toList();
-            if (dataFilter != null && dataFilter.isNotEmpty) {
-              await NotificationService().showNotification(
-                  title: 'EMSO',
-                  payLoad: jsonEncode(dataFilter),
-                  largeIcon: dataFilter[0]['account']['avatar_media'] != null
-                      ? dataFilter[0]['account']['avatar_media']['preview_url']
-                      : dataFilter[0]['account']['avatar_static'],
-                  body:
-                      '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
-            }
-          });
+          if (!data.contains('unseen_count_changed')) {
+            fetchNotifications(null).then((value) async {
+              dynamic dataFilter = ref
+                  .read(notificationControllerProvider)
+                  .notifications
+                  .where((element) => element['id'] == object['id'])
+                  .toList();
+              if (dataFilter != null && dataFilter.isNotEmpty) {
+                await NotificationService().showNotification(
+                    title: 'EMSO',
+                    payLoad: jsonEncode(dataFilter),
+                    largeIcon: dataFilter[0]['account']['avatar_media'] != null
+                        ? dataFilter[0]['account']['avatar_media']
+                            ['preview_url']
+                        : dataFilter[0]['account']['avatar_static'],
+                    body:
+                        '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
+              }
+            });
+          }
         }
       },
       onDone: () {

@@ -726,4 +726,28 @@ class RecruitController extends StateNotifier<RecruitState> {
         break;
     }
   }
+
+  updateFollowRecruit(newBooleanVal, id) async {
+    await RecruitApi().recruitUpdateStatusApi(id);
+    state = state.copyWith(
+      recruits: state.recruits,
+      detailRecruit: {
+        ...state.detailRecruit,
+        "recruit_relationships": {
+          ...state.detailRecruit["recruit_relationships"],
+          "follow_recruit": newBooleanVal
+        }
+      },
+      recruitsCV: state.recruitsCV,
+      recruitsSimilar: state.recruitsSimilar,
+      recruitsPropose: state.recruitsPropose,
+      recruitsInvite: state.recruitsInvite,
+      isMore: state.isMore,
+      recruitsNew: state.recruitsNew,
+      recruitsPast: state.recruitsPast,
+      recruitsInterest: state.recruitsInterest,
+      recruitsNewPast: state.recruitsNewPast,
+      recruitsChipMenu: state.recruitsChipMenu,
+    );
+  }
 }
