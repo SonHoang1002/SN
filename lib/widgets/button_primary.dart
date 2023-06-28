@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 class ButtonPrimary extends StatelessWidget {
   final String? label;
@@ -34,6 +36,8 @@ class ButtonPrimary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = pv.Provider.of<ThemeManager>(context);
+
     return ElevatedButton(
       onPressed: handlePress != null
           ? () {
@@ -55,7 +59,9 @@ class ButtonPrimary extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all(
           colorButton ??
               (isGrey == true
-                  ? greyColorOutlined
+                  ? theme.isDarkMode
+                      ? const Color(0xFF525252)
+                      : greyColorOutlined
                   : ![null, false].contains(isPrimary)
                       ? primaryColor
                       : secondaryColor),

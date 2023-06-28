@@ -17,6 +17,7 @@ class ThemeManager with ChangeNotifier {
 
   bool get isDarkMode {
     if (themeMode == ThemeMode.system) {
+      // ignore: deprecated_member_use
       final brightness = SchedulerBinding.instance.window.platformBrightness;
       return brightness == Brightness.dark;
     } else {
@@ -51,6 +52,7 @@ class MyThemes {
       splashColor: Colors.transparent,
       hoverColor: Colors.transparent,
       focusColor: Colors.transparent,
+      // ignore: deprecated_member_use
       backgroundColor: Colors.white.withOpacity(0.1));
 
   static final lightTheme = ThemeData(
@@ -68,5 +70,6 @@ class MyThemes {
       splashColor: Colors.transparent,
       hoverColor: Colors.transparent,
       focusColor: Colors.transparent,
+      // ignore: deprecated_member_use
       backgroundColor: Colors.black.withOpacity(0.1));
 }

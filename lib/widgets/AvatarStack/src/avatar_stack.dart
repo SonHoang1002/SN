@@ -101,10 +101,11 @@ class AvatarStack extends StatelessWidget {
                         backgroundImage: avatar,
                       ),
                       Opacity(
-                        opacity: 1,
+                        opacity: 0.95,
                         child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.black,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade900,
                             shape: BoxShape.circle,
                           ),
                         ),

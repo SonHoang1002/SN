@@ -1,30 +1,29 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
+import 'package:social_network_app_mobile/screens/Feed/feed.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/Menu/menu.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screens/Search/search.dart';
-import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-
-import 'package:social_network_app_mobile/screens/Feed/feed.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-import 'package:provider/provider.dart' as pv;
 
 class Home extends ConsumerStatefulWidget {
   final int? selectedIndex;
@@ -197,10 +196,10 @@ class _HomeState extends ConsumerState<Home>
     ];
 
     List titles = [
-      Row(
+      const Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
+          children: [
             Text(
               "Emso",
               style:
@@ -284,7 +283,7 @@ class _HomeState extends ConsumerState<Home>
           isShowSnackBar = false;
         });
       });
-    } 
+    }
     return Scaffold(
         drawer: _selectedIndex == 1 || _selectedIndex == 4
             ? null
