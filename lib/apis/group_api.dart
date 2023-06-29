@@ -26,4 +26,28 @@ class GroupApi {
   getMemberQuestion(dynamic id) async {
     return Api().getRequestBase("/api/v1/groups/$id/member_questions", null);
   }
+
+  fetchJoinRequest(dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/join_requests", null);
+  }
+
+  fetchPendingStatus(dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/pending_statuses", null);
+  }
+
+  fetchReportedStatus(dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/reported_statuses", null);
+  }
+
+  fetchStatusAlert(dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/status_alerts", null);
+  }
+
+  fetchScheduledStatus(dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/scheduled_statuses", null);
+  }
+
+  fetchRules(dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/rules", null);
+  }
 }

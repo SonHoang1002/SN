@@ -18,16 +18,34 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      ref
-          .read(groupListControllerProvider.notifier)
-          .getGroupDetail(widget.id)
-          .then((value) {
-        setState(() {
-          groupDetail = ref.read(groupListControllerProvider).groupDetail;
-        });
-      });
-    });
+    Future.microtask(
+      () async {
+        await ref
+            .read(groupListControllerProvider.notifier)
+            .getGroupDetail(widget.id)
+            .then(
+          (value) {
+            setState(
+              () {
+                groupDetail = ref.read(groupListControllerProvider).groupDetail;
+              },
+            );
+          },
+        );
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getJoinRequest(widget.id);
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getPendingStatus(widget.id);
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getReportedStatus(widget.id);
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getStatusAlert(widget.id);
+      },
+    );
   }
 
   @override

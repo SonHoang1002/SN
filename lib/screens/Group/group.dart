@@ -32,6 +32,9 @@ class _GroupState extends ConsumerState<Group> {
       ref
           .read(groupListControllerProvider.notifier)
           .getListGroupAdminMember({'tab': 'member', 'limit': 10});
+      ref
+          .read(groupListControllerProvider.notifier)
+          .getListGroupAdminMember({'tab': 'admin', 'limit': 10});
     });
   }
 

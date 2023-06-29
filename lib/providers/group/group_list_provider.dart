@@ -14,6 +14,10 @@ class GroupListState {
   final List groupDiscover;
   final List groupInvitedRequest;
   final dynamic groupDetail;
+  final List contentReported;
+  final List waitingApproval;
+  final List requestMember;
+  final List notiApproval;
 
   const GroupListState({
     this.groupAdmin = const [],
@@ -26,6 +30,10 @@ class GroupListState {
     this.groupDiscover = const [],
     this.groupInvitedRequest = const [],
     this.groupDetail = const {},
+    this.contentReported = const [],
+    this.waitingApproval = const [],
+    this.requestMember = const [],
+    this.notiApproval = const [],
   });
 
   GroupListState copyWith({
@@ -39,6 +47,10 @@ class GroupListState {
     List groupDiscover = const [],
     List groupInvitedRequest = const [],
     dynamic groupDetail = const {},
+    List contentReported = const [],
+    List waitingApproval = const [],
+    List requestMember = const [],
+    List notiApproval = const [],
   }) {
     return GroupListState(
       groupAdmin: groupAdmin,
@@ -51,6 +63,10 @@ class GroupListState {
       groupDiscover: groupDiscover,
       groupInvitedRequest: groupInvitedRequest,
       groupDetail: groupDetail,
+      contentReported: contentReported,
+      waitingApproval: waitingApproval,
+      requestMember: requestMember,
+      notiApproval: notiApproval,
     );
   }
 }
@@ -80,6 +96,10 @@ class GroupListController extends StateNotifier<GroupListState> {
       groupDiscover: state.groupDiscover,
       groupInvitedRequest: state.groupInvitedRequest,
       groupDetail: state.groupDetail,
+      contentReported: state.contentReported,
+      waitingApproval: state.waitingApproval,
+      requestMember: state.requestMember,
+      notiApproval: state.notiApproval,
     );
   }
 
@@ -106,6 +126,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupDiscover: state.groupDiscover,
         groupInvitedRequest: state.groupInvitedRequest,
         groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
       );
     }
   }
@@ -124,6 +148,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupDiscover: state.groupDiscover,
         groupInvitedRequest: state.groupInvitedRequest,
         groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
       );
     }
   }
@@ -143,6 +171,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupDiscover: state.groupDiscover,
         groupInvitedRequest: state.groupInvitedRequest,
         groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
       );
     }
   }
@@ -161,6 +193,10 @@ class GroupListController extends StateNotifier<GroupListState> {
       groupDiscover: state.groupDiscover,
       groupInvitedRequest: state.groupInvitedRequest,
       groupDetail: state.groupDetail,
+      contentReported: state.contentReported,
+      waitingApproval: state.waitingApproval,
+      requestMember: state.requestMember,
+      notiApproval: state.notiApproval,
     );
   }
 
@@ -178,6 +214,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupDiscover: response,
         groupInvitedRequest: state.groupInvitedRequest,
         groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
       );
     }
   }
@@ -196,6 +236,166 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupDiscover: state.groupDiscover,
         groupInvitedRequest: state.groupInvitedRequest,
         groupDetail: response,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+      );
+    }
+  }
+
+  getJoinRequest(id) async {
+    List response = await GroupApi().fetchJoinRequest(id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: response,
+        notiApproval: state.notiApproval,
+      );
+    } else {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: [],
+        notiApproval: state.notiApproval,
+      );
+    }
+  }
+
+  getPendingStatus(id) async {
+    var response = await GroupApi().fetchPendingStatus(id);
+    if (response['data'] != null) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: response['data'],
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+      );
+    } else {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: [],
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+      );
+    }
+  }
+
+  getReportedStatus(id) async {
+    List response = await GroupApi().fetchReportedStatus(id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: response,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+      );
+    } else {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: [],
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+      );
+    }
+  }
+
+  getStatusAlert(id) async {
+    List response = await GroupApi().fetchStatusAlert(id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: response,
+      );
+    } else {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: [],
       );
     }
   }
