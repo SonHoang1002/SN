@@ -165,6 +165,7 @@ class RenderPageView extends StatelessWidget {
         return Opacity(
             opacity: opacity,
             child: MomentVideo(
+              key: Key(widget.momentRender[index]['id']),
               moment: widget.momentRender[index],
             ));
       },

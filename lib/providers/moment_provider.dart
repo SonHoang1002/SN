@@ -1,32 +1,35 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
+import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/moment_api.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/data/moment.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class MomentState {
   final List momentSuggest;
   final List momentFollow;
+  final dynamic momentUpload;
 
-  const MomentState({
-    this.momentSuggest = const [],
-    this.momentFollow = const [],
-  });
+  const MomentState(
+      {this.momentSuggest = const [],
+      this.momentFollow = const [],
+      this.momentUpload = const {}});
 
-  MomentState copyWith({
-    List momentSuggest = const [],
-    List momentFollow = const [],
-  }) {
+  MomentState copyWith(
+      {List momentSuggest = const [],
+      List momentFollow = const [],
+      dynamic momentUpload = const {}}) {
     return MomentState(
-      momentSuggest: momentSuggest,
-      momentFollow: momentFollow,
-    );
+        momentSuggest: momentSuggest,
+        momentFollow: momentFollow,
+        momentUpload: momentUpload);
   }
 }
 
@@ -144,5 +147,55 @@ class MomentController extends StateNotifier<MomentState> {
       response =
           await Api().postRequestBase("/api/v1/groups/$id/accounts", null);
     }
+  }
+
+  updateMomentUpload(
+      String videoPath, String imageCover, dynamic data, snackbar) async {
+    Future<String> imageToBase64(String imagePath) async {
+      final bytes = await File(imagePath).readAsBytes();
+      final base64Str = base64Encode(bytes);
+      return 'data:image/jpeg;base64,$base64Str';
+    }
+
+    handleUploadMedia(fileData, imageCover) async {
+      fileData = fileData.replaceAll('file://', '');
+      FormData formData;
+
+      formData = FormData.fromMap({
+        "description": '',
+        "position": 1,
+        "file": await MultipartFile.fromFile(fileData,
+            filename: fileData.split('/').last),
+        "show_url": await imageToBase64(imageCover),
+      });
+      var response = await MediaApi().uploadMediaEmso(formData);
+
+      return response;
+    }
+
+    var mediaUploadResult = await handleUploadMedia(videoPath, imageCover);
+    if (mediaUploadResult == null) {
+      snackbar.showSnackBar(const SnackBar(
+          content: Text(
+              'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
+    }
+
+    dynamic response = await PostApi().createStatus({
+      ...data,
+      "media_ids": [mediaUploadResult['id']],
+    });
+    if (response != null) {
+      state = state.copyWith(
+          momentFollow: state.momentFollow,
+          momentSuggest: [response] + state.momentSuggest,
+          momentUpload: response);
+    }
+  }
+
+  clearMomentUpload() {
+    state = state.copyWith(
+        momentFollow: state.momentFollow,
+        momentSuggest: state.momentSuggest,
+        momentUpload: {});
   }
 }

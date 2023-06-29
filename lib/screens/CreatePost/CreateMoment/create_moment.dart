@@ -1,14 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:social_network_app_mobile/apis/media_api.dart';
-import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/MenuBody/friend_tag.dart';
@@ -86,65 +80,19 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
                 buttonAppbar: buttonAppBar)));
   }
 
-  Future<String> imageToBase64(String imagePath) async {
-    final bytes = await File(imagePath).readAsBytes();
-    final base64Str = base64Encode(bytes);
-    return 'data:image/jpeg;base64,$base64Str';
-  }
-
-  handleUploadMedia(fileData, imageCover) async {
-    fileData = fileData.replaceAll('file://', '');
-    FormData formData;
-
-    formData = FormData.fromMap({
-      "description": '',
-      "position": 1,
-      "file": await MultipartFile.fromFile(fileData,
-          filename: fileData.split('/').last),
-      "show_url": await imageToBase64(imageCover),
-    });
-    var response = await MediaApi().uploadMediaEmso(formData);
-
-    return response;
-  }
-
-  handleSubmit() async {
-    context.loaderOverlay.show();
-    var snackbar = ScaffoldMessenger.of(context);
-    var mediaUploadResult =
-        await handleUploadMedia(widget.videoPath, widget.imageCover);
-    if (mediaUploadResult == null) {
-      // ignore: use_build_context_synchronously
-      context.loaderOverlay.hide();
-
-      snackbar.showSnackBar(const SnackBar(
-          content: Text(
-              'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
-    }
-    var response = await PostApi().createStatus({
-      ...data,
-      "media_ids": [mediaUploadResult['id']],
-    });
-
-    if (response != null) {
-      // ignore: use_build_context_synchronously
-      context.loaderOverlay.hide();
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Moment(
-                    dataAdditional: response,
-                  )));
-      snackbar.showSnackBar(
-          const SnackBar(content: Text('Đăng bài viết thành công')));
-    } else {
-      // ignore: use_build_context_synchronously
-      context.loaderOverlay.hide();
-      snackbar.showSnackBar(const SnackBar(
-          content: Text(
-              'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
-    }
+  handleSubmit() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Moment(
+                    imageUpload: widget.imageCover,
+                    dataUploadMoment: {
+                      ...data,
+                      "videoPath": widget.videoPath,
+                      "imageCover": widget.imageCover
+                    }
+                    // dataAdditional: response,
+                    )));
   }
 
   @override
@@ -232,11 +180,14 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
                     ),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
-                      child: Image.asset(
-                        widget.imageCover,
-                        height: 150,
-                        width: 100,
-                        fit: BoxFit.cover,
+                      child: Hero(
+                        tag: widget.imageCover,
+                        child: Image.asset(
+                          widget.imageCover,
+                          height: 150,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     )
                   ],
