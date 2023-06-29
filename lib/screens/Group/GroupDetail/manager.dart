@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
 class ManagerDetail extends ConsumerStatefulWidget {
   final dynamic groupDetail;
@@ -63,205 +62,195 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: AppBarTitle(
-          title: widget.groupDetail['title'] ?? '',
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          color: theme.isDarkMode ? Colors.grey[800] : Colors.grey[200],
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Cần xét duyệt',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return SingleChildScrollView(
+      child: Container(
+        width: double.infinity,
+        color: theme.isDarkMode ? Colors.grey[800] : Colors.grey[200],
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Cần xét duyệt',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(
-                  height: 10,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: theme.isDarkMode ? Colors.black : Colors.white,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: theme.isDarkMode ? Colors.black : Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: requestManager.length,
+                  separatorBuilder: (context, index) => const Divider(
+                    height: 1,
+                    color: Colors.grey,
+                    thickness: 1,
+                    indent: 56,
+                    endIndent: 10,
                   ),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: requestManager.length,
-                    separatorBuilder: (context, index) => const Divider(
-                      height: 1,
-                      color: Colors.grey,
-                      thickness: 1,
-                      indent: 56,
-                      endIndent: 10,
-                    ),
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        dense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 0.0,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      dense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                        vertical: 0.0,
+                      ),
+                      visualDensity: const VisualDensity(
+                        horizontal: -4,
+                        vertical: -1,
+                      ),
+                      leading: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Image.asset(
+                          requestManager[index]['icon'],
+                          width: 18,
+                          height: 18,
+                          color: theme.isDarkMode ? Colors.white : Colors.black,
                         ),
-                        visualDensity: const VisualDensity(
-                          horizontal: -4,
-                          vertical: -1,
-                        ),
-                        leading: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Image.asset(
-                            requestManager[index]['icon'],
-                            width: 18,
-                            height: 18,
-                            color:
-                                theme.isDarkMode ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        title: Text(requestManager[index]['label']),
-                        subtitle: RichText(
-                          text: TextSpan(
-                            children: [
-                              if (int.parse(requestManager[index]['noti']) > 0)
-                                const WidgetSpan(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: 4.0, right: 3.0),
-                                    child: Icon(
-                                      Icons.circle,
-                                      size: 8,
-                                      color: Colors.blue,
-                                    ),
+                      ),
+                      title: Text(requestManager[index]['label']),
+                      subtitle: RichText(
+                        text: TextSpan(
+                          children: [
+                            if (int.parse(requestManager[index]['noti']) > 0)
+                              const WidgetSpan(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(bottom: 4.0, right: 3.0),
+                                  child: Icon(
+                                    Icons.circle,
+                                    size: 8,
+                                    color: Colors.blue,
                                   ),
                                 ),
-                              TextSpan(
-                                  text:
-                                      '${requestManager[index]['noti']} mục mới hôm nay',
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                  )),
-                            ],
-                          ),
+                              ),
+                            TextSpan(
+                                text:
+                                    '${requestManager[index]['noti']} mục mới hôm nay',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                )),
+                          ],
                         ),
-                        trailing: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(requestManager[index]['noti']),
-                        ),
-                      );
-                    },
-                  ),
+                      ),
+                      trailing: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(requestManager[index]['noti']),
+                      ),
+                    );
+                  },
                 ),
-                const SizedBox(
-                  height: 10,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'Lối tắt đến công cụ',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                const Text(
-                  'Lối tắt đến công cụ',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/settingGroup.png',
+                title: 'Chat cộng đồng',
+                subtitle: '4 gợi ý chat dành cho nhóm của bạn',
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/activityLog.png',
+                title: 'Nhật ký hoạt động',
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/scheduledStatus.png',
+                title: 'Bài viết đã lên lịch',
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/rulesGroup.png',
+                title: 'Quy tắc nhóm',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'Cài đặt',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(
-                  height: 10,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/settingGroup.png',
+                title: 'Cài đặt nhóm',
+                subtitle: 'Quản lý cuộc thảo luận, quyền và vai trò',
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/addFeature.png',
+                title: 'Thêm tính năng',
+                subtitle:
+                    'Chọn định dạng bài viết, huy hiệu và các tính năng khác',
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/settingProfile.png',
+                title: 'Cài đặt cá nhân',
+                subtitle: 'Thay đổi thông báo và xem nội dung cá nhân',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'Hỗ trợ',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/settingGroup.png',
-                  title: 'Chat cộng đồng',
-                  subtitle: '4 gợi ý chat dành cho nhóm của bạn',
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/activityLog.png',
-                  title: 'Nhật ký hoạt động',
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/scheduledStatus.png',
-                  title: 'Bài viết đã lên lịch',
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/rulesGroup.png',
-                  title: 'Quy tắc nhóm',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  'Cài đặt',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/settingGroup.png',
-                  title: 'Cài đặt nhóm',
-                  subtitle: 'Quản lý cuộc thảo luận, quyền và vai trò',
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/addFeature.png',
-                  title: 'Thêm tính năng',
-                  subtitle:
-                      'Chọn định dạng bài viết, huy hiệu và các tính năng khác',
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/settingProfile.png',
-                  title: 'Cài đặt cá nhân',
-                  subtitle: 'Thay đổi thông báo và xem nội dung cá nhân',
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  'Hỗ trợ',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/centerHelper.png',
-                  title: 'Trung tâm hỗ trợ',
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/centerCommunity.png',
-                  title: 'Trung tâm cộng đồng',
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/centerHelper.png',
+                title: 'Trung tâm hỗ trợ',
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/centerCommunity.png',
+                title: 'Trung tâm cộng đồng',
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
           ),
         ),
       ),

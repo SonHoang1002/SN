@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/home_group.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
 class GroupDetail extends ConsumerStatefulWidget {
@@ -14,7 +15,8 @@ class GroupDetail extends ConsumerStatefulWidget {
 
 class _GroupDetailState extends ConsumerState<GroupDetail> {
   var groupDetail = {};
-
+  final GlobalKey<ScaffoldState> _drawerscaffoldkey =
+      GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -51,13 +53,31 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          title: AppBarTitle(
-            title: groupDetail['title'] ?? '',
-          ),
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        title: AppBarTitle(
+          title: groupDetail['title'] ?? '',
         ),
-        body: HomeGroup(groupDetail: groupDetail));
+      ),
+      body: Scaffold(
+        endDrawerEnableOpenDragGesture: false,
+        key: _drawerscaffoldkey,
+        endDrawer: ManagerDetail(
+          groupDetail: groupDetail,
+        ),
+        body: HomeGroup(
+            groupDetail: groupDetail,
+            onTap: () {
+              if (_drawerscaffoldkey.currentState!.isDrawerOpen) {
+                //if drawer is open, then close the drawer
+                Navigator.pop(context);
+              } else {
+                _drawerscaffoldkey.currentState!.openEndDrawer();
+                //if drawer is closed then open the drawer.
+              }
+            }),
+      ),
+    );
   }
 }

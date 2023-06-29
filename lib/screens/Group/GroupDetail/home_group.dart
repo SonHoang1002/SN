@@ -1,8 +1,6 @@
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/screens/Group/GroupDetail/manager.dart';
 import 'package:social_network_app_mobile/widgets/AvatarStack/avatar_stack.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
@@ -11,8 +9,10 @@ import '../../../widgets/AvatarStack/positions.dart';
 
 class HomeGroup extends StatefulWidget {
   final dynamic groupDetail;
+  final Function? onTap;
   const HomeGroup({
     super.key,
+    this.onTap,
     this.groupDetail,
   });
 
@@ -180,11 +180,7 @@ class _HomeGroupState extends State<HomeGroup> {
                         icon: Image.asset('assets/groups/managerGroup.png',
                             width: 16, height: 16),
                         handlePress: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => ManagerDetail(
-                                      groupDetail: widget.groupDetail)));
+                          widget.onTap!();
                         },
                       ),
                     ),
