@@ -506,7 +506,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                height: 320,
+                                                height: eGLRModalBtmHeight,
                                                 child: Column(
                                                   children: [
                                                     ListView.builder(

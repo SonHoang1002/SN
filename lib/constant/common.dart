@@ -224,3 +224,5 @@ List listMenuPost = [
     ]
   }
 ];
+
+double eGLRModalBtmHeight = 250.0; // eGLR = event + grow + learning + recruit

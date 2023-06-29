@@ -382,8 +382,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                           color:
                                                                               colorWord(context))),
                                                                 ])),
-                                                            actions: <
-                                                                CupertinoDialogAction>[
+                                                            actions: <CupertinoDialogAction>[
                                                               CupertinoDialogAction(
                                                                 isDefaultAction:
                                                                     true,
@@ -490,8 +489,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                           color:
                                                                               Colors.black)),
                                                                 ])),
-                                                            actions: <
-                                                                CupertinoDialogAction>[
+                                                            actions: <CupertinoDialogAction>[
                                                               CupertinoDialogAction(
                                                                 isDefaultAction:
                                                                     true,
@@ -681,7 +679,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                               left: 8.0, top: 15.0),
                                           width:
                                               MediaQuery.of(context).size.width,
-                                          height: 320,
+                                          height: eGLRModalBtmHeight,
                                           child: Column(
                                             children: [
                                               ListView.builder(

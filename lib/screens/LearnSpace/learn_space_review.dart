@@ -274,7 +274,9 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                           });
                                         },
                                         child: isLoading
-                                            ? const CupertinoActivityIndicator()
+                                            ? const CupertinoActivityIndicator(
+                                                color: Colors.white,
+                                              )
                                             : const Text('Đánh giá'),
                                       ),
                                     ),
