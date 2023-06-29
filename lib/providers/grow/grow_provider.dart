@@ -81,7 +81,7 @@ class GrowState {
 }
 
 final growControllerProvider =
-    StateNotifierProvider.autoDispose<GrowController, GrowState>((ref) {
+    StateNotifierProvider<GrowController, GrowState>((ref) {
   ref.read(meControllerProvider);
   return GrowController();
 });

@@ -18,6 +18,18 @@ class PageInvite extends ConsumerStatefulWidget {
 }
 
 class _PageInviteState extends ConsumerState<PageInvite> {
+  bool isLoading = true;
+  @override
+  void initState() {
+    if (mounted) {
+      refreshData();
+      setState(() {
+        isLoading = false;
+      });
+    }
+    super.initState();
+  }
+
   Future<void> refreshData() async {
     await ref
         .read(pageListControllerProvider.notifier)
@@ -41,28 +53,33 @@ class _PageInviteState extends ConsumerState<PageInvite> {
           refreshData();
         },
         child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                RenderInvitePage(
-                  title: 'Lời mời quản lý Trang',
-                  listInvites: inviteManagePage,
-                  type: 'manage',
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: isLoading == false
+              ? Column(
+                  children: [
+                    RenderInvitePage(
+                      title: 'Lời mời quản lý Trang',
+                      listInvites: inviteManagePage,
+                      type: 'manage',
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(6.0),
+                      child: Divider(
+                        height: 3,
+                        thickness: 1.1,
+                      ),
+                    ),
+                    RenderInvitePage(
+                      title: 'Lời mời thích Trang',
+                      listInvites: inviteLikePage,
+                      type: 'like',
+                    ),
+                  ],
+                )
+              : const Center(
+                  child: CupertinoActivityIndicator(),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(6.0),
-                  child: Divider(
-                    height: 3,
-                    thickness: 1.1,
-                  ),
-                ),
-                RenderInvitePage(
-                  title: 'Lời mời thích Trang',
-                  listInvites: inviteLikePage,
-                  type: 'like',
-                ),
-              ],
-            )),
+        ),
       ),
     );
   }

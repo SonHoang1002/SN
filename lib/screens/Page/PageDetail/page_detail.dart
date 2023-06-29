@@ -583,6 +583,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
 
   @override
   Widget build(BuildContext context) {
+    if (pageData.isEmpty) {
+      pageData = widget.pageData;
+    }
     final theme = pv.Provider.of<ThemeManager>(context);
     var meData = ref.watch(meControllerProvider);
     var rolePage = ref.watch(pageControllerProvider).rolePage;
