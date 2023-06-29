@@ -19,6 +19,23 @@ class FriendsApi {
         .postRequestBase('/api/v1/accounts/$id/friendship_requests', null);
   }
 
+  Future cancelFriendRequestApi(id) async {
+    return await Api().postRequestBase(
+        '/api/v1/accounts/$id/cancel_friendship_requests', null);
+  }
+
+  Future unfollow(id) async {
+    return await Api().postRequestBase('/api/v1/accounts/$id/unfollow', null);
+  }
+
+  Future follow(id) async {
+    return await Api().postRequestBase('/api/v1/accounts/$id/follow', null);
+  }
+
+  Future unfriend(id) async {
+    return await Api().postRequestBase('/api/v1/accounts/$id/unfriend', null);
+  }
+
   Future rejectFriendRequestApi(id) async {
     return await Api()
         .postRequestBase('/api/v1/accounts/$id/reject_friendship', null);

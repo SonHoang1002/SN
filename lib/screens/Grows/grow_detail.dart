@@ -608,7 +608,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                           MediaQuery.of(context)
                                                               .size
                                                               .width,
-                                                      height: 300,
+                                                      height:
+                                                          eGLRModalBtmHeight,
                                                       child: Column(
                                                         children: [
                                                           ListView.builder(
