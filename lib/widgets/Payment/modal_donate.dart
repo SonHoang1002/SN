@@ -181,9 +181,12 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                           alignment: Alignment.center,
                           child: Text(
                             '${paymentValue[index]['value']}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w700,
+                              color: selectedItemIndex == index
+                                  ? Colors.white
+                                  : Colors.black,
                             ),
                           ),
                         ),
@@ -325,7 +328,8 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                                       "amount": !_isCustomize &&
                                               selectedItemIndex != -1
                                           ? paymentValue[selectedItemIndex]
-                                              ['value']
+                                                  ['value']
+                                              .toString()
                                           : controller.text
                                     });
                                     Navigator.of(context)

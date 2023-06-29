@@ -53,7 +53,7 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
             context,
             widget.item['type'] == 'status'
                 ? PostDetail(
-                    post: widget.item['data'],
+                    postId: widget.item['data']['id'],
                     preType: postDetail,
                   )
                 : widget.item['type'] == 'page'

@@ -4,8 +4,8 @@ import '../../widgets/appbar_title.dart';
 import '../../widgets/back_icon_appbar.dart';
 
 class DeletedStatus extends StatelessWidget {
-  String? type;
-  DeletedStatus({super.key, this.type});
+  final String? type;
+  const DeletedStatus({super.key, this.type});
 
   @override
   Widget build(BuildContext context) {

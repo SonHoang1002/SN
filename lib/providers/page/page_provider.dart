@@ -86,7 +86,7 @@ class PageState {
 }
 
 final pageControllerProvider =
-    StateNotifierProvider.autoDispose<PageController, PageState>((ref) {
+    StateNotifierProvider<PageController, PageState>((ref) {
   return PageController();
 });
 

@@ -76,4 +76,10 @@ class LearnSpaceApi {
       rethrow;
     }
   }
+
+  // viet bai danh gia
+  Future sendRatingPost(courseId, data) async {
+    return await Api()
+        .postRequestBase('/api/v1/courses/$courseId/course_rating', data);
+  }
 }
