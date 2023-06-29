@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
-import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
 class WatchHome extends ConsumerStatefulWidget {
   final String type;
@@ -47,28 +46,15 @@ class _WatchHomeState extends ConsumerState<WatchHome>
         : ref.watch(watchControllerProvider).watchFollow;
 
     return Expanded(
-      child: SingleChildScrollView(
-        controller: scrollController,
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            ListView.builder(
-                shrinkWrap: true,
-                primary: false,
-                itemCount: watchData.length,
-                itemBuilder: (context, index) => Post(
-                      key: Key(watchData[index]['id']),
-                      post: watchData[index],
-                      type: postWatch,
-                    )),
-            watchData.isEmpty
-                ? const Center(
-                    child: Text('Không có dữ liệu hiển thị'),
-                  )
-                : SkeletonCustom().postSkeleton(context)
-          ],
-        ),
-      ),
+      child: ListView.builder(
+          shrinkWrap: true,
+          controller: scrollController,
+          itemCount: watchData.length,
+          itemBuilder: (context, index) => Post(
+                key: Key(watchData[index]['id']),
+                post: watchData[index],
+                type: postWatch,
+              )),
     );
   }
 

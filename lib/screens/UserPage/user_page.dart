@@ -81,6 +81,12 @@ class _UserPageHomeState extends State<UserPageHome> {
   }
 
   @override
+  void dispose() {
+    isClickedHome.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Widget> pageUserRoutes = [
       UserPage(id: widget.id),
@@ -144,7 +150,6 @@ class _UserPageState extends ConsumerState<UserPage> {
           id = widget.id ?? queryParams['id'];
         });
       });
-
       Future.delayed(Duration.zero, () async {
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
         List postUserNew =
@@ -211,6 +216,26 @@ class _UserPageState extends ConsumerState<UserPage> {
           //   DefaultCacheManager().emptyCache();
         }
       }
+    });
+  }
+
+  void fetchData() async {
+    ref.read(postControllerProvider.notifier).getListPostPin(id);
+    ref
+        .read(postControllerProvider.notifier)
+        .getListPostUserPage(id, {"limit": 3, "exclude_replies": true});
+    ref.read(userInformationProvider.notifier).getUserInformation(id);
+    ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+    ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+    ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
+    var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
+    setState(() {
+      userData = ref.watch(userInformationProvider).userInfor;
+      userAbout = ref.watch(userInformationProvider).userMoreInfor;
+      lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+      postUser = ref.watch(postControllerProvider).postUserPage;
+      pinPost = ref.watch(postControllerProvider).postsPin;
+      friend = friendNew;
     });
   }
 
@@ -287,9 +312,9 @@ class _UserPageState extends ConsumerState<UserPage> {
       postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
     }
-    return SingleChildScrollView(
-      controller: scrollController,
-      child: Column(
+    return CustomScrollView(controller: scrollController, slivers: [
+      SliverToBoxAdapter(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BannerBase(
@@ -685,43 +710,43 @@ class _UserPageState extends ConsumerState<UserPage> {
             ),
           ),
           const CrossBar(),
-          UserPagePinPost(user: userData, pinPosts: pinPost),
-          ListView.builder(
-            shrinkWrap: true,
-            primary: false,
-            itemCount: postUser.length,
-            itemBuilder: (context, index) {
-              return VisibilityDetector(
-                key: Key(postUser[index]['id']),
-                onVisibilityChanged: (info) {
-                  double visibleFraction = info.visibleFraction;
-                  if (visibleFraction > 0.6) {
-                    if (focusCurrentPostIndex.value != postUser[index]['id']) {
-                      focusCurrentPostIndex.value = postUser[index]['id'];
-                    }
-                  }
-                },
-                child: Post(
-                  type: postPageUser,
-                  post: postUser[index],
-                  isFocus: focusCurrentPostIndex.value == postUser[index]['id'],
-                  reloadFunction: () {
-                    setState(() {});
-                  },
-                ),
-              );
+          UserPagePinPost(user: userData, pinPosts: pinPost)
+        ],
+      )),
+      SliverList(
+          delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return VisibilityDetector(
+            key: Key(postUser[index]['id']),
+            onVisibilityChanged: (info) {
+              double visibleFraction = info.visibleFraction;
+              if (visibleFraction > 0.6) {
+                if (focusCurrentPostIndex.value != postUser[index]['id']) {
+                  focusCurrentPostIndex.value = postUser[index]['id'];
+                }
+              }
             },
-          ),
-          isMorePageUser
+            child: Post(
+              type: postPageUser,
+              post: postUser[index],
+              isFocus: focusCurrentPostIndex.value == postUser[index]['id'],
+              reloadFunction: () {
+                setState(() {});
+              },
+            ),
+          );
+        },
+        childCount: postUser.length,
+      )),
+      SliverToBoxAdapter(
+          child: isMorePageUser
               ? Center(child: SkeletonCustom().postSkeleton(context))
               : Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 20),
                   child: buildTextContent("Không còn bài viết nào khác", true,
                       fontSize: 20, isCenterLeft: false),
-                )
-        ],
-      ),
-    );
+                ))
+    ]);
   }
 
   @override
