@@ -8,11 +8,11 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/grow/grow_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/flick_multiple_manager.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 import 'package:social_network_app_mobile/widgets/text_readmore.dart';
 
-import '../../widgets/FeedVideo/video_player_none_controller.dart';
 import '../Page/PageDetail/page_detail.dart';
 import '../UserPage/user_page.dart';
 import 'grow_detail.dart';
@@ -197,9 +197,12 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                         isShowVolumn: true,
                         path: growDetail['introduction_video'] != null
                             ? growDetail['introduction_video']['remote_url'] !=
-                                    "pending"
+                                        "pending" &&
+                                    growDetail['introduction_video']
+                                            ['remote_url'] !=
+                                        null
                                 ? growDetail['introduction_video']['remote_url']
-                                : ""
+                                : growDetail['introduction_video']['show_url']
                             : "",
                         type: 'local',
                         media: growDetail['introduction_video'],
@@ -398,10 +401,10 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                               BorderRadius.circular(6),
                                           border: Border.all(
                                               width: 0.2, color: greyColor)),
-                                      child: Row(
+                                      child: const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Icon(FontAwesomeIcons.user,
                                               color: Colors.black, size: 14),
                                           SizedBox(
@@ -666,10 +669,10 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                               border: Border.all(
                                                   width: 0.2,
                                                   color: greyColor)),
-                                          child: Row(
+                                          child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.share,
                                                   color: Colors.black,
                                                   size: 14),

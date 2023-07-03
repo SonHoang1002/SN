@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/data/groups.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/group_item.dart';
 
-class GroupListAll extends StatelessWidget {
+class GroupListAll extends ConsumerWidget {
   const GroupListAll({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     TextStyle style =
         const TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
+    List groupAdmin = ref.watch(groupListControllerProvider).groupAdmin;
+    List groupMember = ref.watch(groupListControllerProvider).groupMember;
 
     return Expanded(
       child: SingleChildScrollView(
@@ -31,7 +35,15 @@ class GroupListAll extends StatelessWidget {
                       primary: false,
                       itemCount: groupAdmin.length,
                       itemBuilder: (context, index) => InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return GroupDetail(
+                                    id: groupAdmin[index]['id'],
+                                  );
+                                },
+                              ));
+                            },
                             borderRadius: BorderRadius.circular(10.0),
                             child: Container(
                               margin: const EdgeInsets.all(6.0),
@@ -72,13 +84,21 @@ class GroupListAll extends StatelessWidget {
                   shrinkWrap: true,
                   primary: false,
                   itemCount: groupMember.length,
-                  itemBuilder: (context, index) => InkWell(
-                        onTap: () {},
+                  itemBuilder: (context, indexMember) => InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return GroupDetail(
+                                id: groupMember[indexMember]['id'],
+                              );
+                            },
+                          ));
+                        },
                         borderRadius: BorderRadius.circular(10.0),
                         child: Container(
                           margin: const EdgeInsets.all(6.0),
                           child: GroupItem(
-                            group: groupMember[index],
+                            group: groupMember[indexMember],
                           ),
                         ),
                       ))

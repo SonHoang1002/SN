@@ -124,9 +124,9 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                   color: Colors.black.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(width: 0.2, color: greyColor)),
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(FontAwesomeIcons.angleLeft,
                       color: Colors.white, size: 16),
                 ],
@@ -331,11 +331,11 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                     width: 0.2,
                                                                     color:
                                                                         greyColor)),
-                                                            child: Row(
+                                                            child: const Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .center,
-                                                              children: const [
+                                                              children: [
                                                                 Icon(
                                                                     FontAwesomeIcons
                                                                         .circleDollarToSlot,
@@ -506,11 +506,11 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                     width: 0.2,
                                                                     color:
                                                                         greyColor)),
-                                                            child: Row(
+                                                            child: const Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .center,
-                                                              children: const [
+                                                              children: [
                                                                 Icon(
                                                                     FontAwesomeIcons
                                                                         .solidEnvelope,
@@ -564,11 +564,11 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                     width: 0.2,
                                                                     color:
                                                                         greyColor)),
-                                                            child: Row(
+                                                            child: const Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .center,
-                                                              children: const [
+                                                              children: [
                                                                 Text(
                                                                   'Dự án',
                                                                   textAlign:
@@ -732,11 +732,11 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                       border: Border.all(
                                                           width: 0.2,
                                                           color: greyColor)),
-                                                  child: Column(
+                                                  child: const Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
-                                                    children: const [
+                                                    children: [
                                                       Icon(
                                                           FontAwesomeIcons
                                                               .ellipsis,
@@ -877,13 +877,13 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                 ],
                                               ),
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 8.0),
+                                            const Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 8.0),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
-                                                children: const [
+                                                children: [
                                                   Icon(
                                                       FontAwesomeIcons
                                                           .earthAmericas,

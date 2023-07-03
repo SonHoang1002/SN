@@ -14,6 +14,8 @@ import '../widgets/addtional_information_group_widget.dart';
 import 'cover_image_group_page.dart';
 
 class RequestFriendsGroupPage extends StatefulWidget {
+  const RequestFriendsGroupPage({super.key});
+
   @override
   State<RequestFriendsGroupPage> createState() =>
       _RequestFriendsGroupPageState();
@@ -38,9 +40,9 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               SizedBox(),
               AppBarTitle(title: RequestFriendsGroupConstants.TITLE_APPBAR),
               SizedBox(),
@@ -69,7 +71,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                               children: [
                                 // build share widget
                                 GeneralComponent(
-                                  [
+                                  const [
                                     Text(
                                       "Chia sẻ",
                                       style: TextStyle(
@@ -87,14 +89,14 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     child: Container(
                                       height: 40,
                                       width: 40,
-                                      margin: EdgeInsets.only(right: 10),
+                                      margin: const EdgeInsets.only(right: 10),
                                       // padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(20),
                                           ),
                                           color: Colors.grey[300]),
-                                      child: Icon(
+                                      child: const Icon(
                                         FontAwesomeIcons.share,
                                         // color:  white,
                                         size: 14,
@@ -109,7 +111,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                 // build email widget
                                 GeneralComponent(
                                   [
-                                    Text(
+                                    const Text(
                                       RequestFriendsGroupConstants
                                           .EMAIL_REQUEST_TITLE,
                                       style: TextStyle(
@@ -118,8 +120,8 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.only(),
-                                      child: Text(
+                                      margin: const EdgeInsets.only(),
+                                      child: const Text(
                                           RequestFriendsGroupConstants
                                               .EMAIL_REQUEST_SUBTITLE,
                                           style: TextStyle(
@@ -136,15 +138,15 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     child: Container(
                                       height: 40,
                                       width: 40,
-                                      margin: EdgeInsets.only(right: 10),
+                                      margin: const EdgeInsets.only(right: 10),
 
                                       // padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(20),
                                           ),
                                           color: Colors.grey[300]),
-                                      child: Icon(
+                                      child: const Icon(
                                         FontAwesomeIcons.envelope,
                                         // color:  white,
                                         size: 14,
@@ -159,7 +161,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
 
                                 //suggest example, include suggest, location, general group
                                 Container(
-                                  margin: EdgeInsets.only(bottom: 10),
+                                  margin: const EdgeInsets.only(bottom: 10),
                                   child: Row(
                                     children: [
                                       GestureDetector(
@@ -202,7 +204,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                   ),
                                 ),
                                 isLocationSelection
-                                    ? AdditionalInformationForSelectionOfRequestFriendWidget(
+                                    ? const AdditionalInformationForSelectionOfRequestFriendWidget(
                                         title: "Hà Nội",
                                         subTile:
                                             "Bạn bè sống cùng tỉnh/ thành phố với bạn")
@@ -210,12 +212,13 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                 isGeneralGroupSelection
                                     ? Column(
                                         children: [
-                                          AdditionalInformationForSelectionOfRequestFriendWidget(
+                                          const AdditionalInformationForSelectionOfRequestFriendWidget(
                                               title: "Nhóm chung",
                                               subTile:
                                                   "Lọc theo bạn bè ở chung nhóm với bạn"),
                                           Container(
-                                            margin: EdgeInsets.only(bottom: 10),
+                                            margin: const EdgeInsets.only(
+                                                bottom: 10),
                                             child: ElevatedButton(
                                                 onPressed: (() {
                                                   _showBottomSheetSelectionGroupForRequestFriend(
@@ -225,11 +228,12 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    Text("Đã chọn 0 nhóm"),
+                                                    const Text(
+                                                        "Đã chọn 0 nhóm"),
                                                     Container(
-                                                        margin: EdgeInsets.only(
-                                                            left: 5),
-                                                        child: Icon(
+                                                        margin: const EdgeInsets
+                                                            .only(left: 5),
+                                                        child: const Icon(
                                                             FontAwesomeIcons
                                                                 .caretDown,
                                                             size: 14,
@@ -249,7 +253,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                 // build email widget
                                 GeneralComponent(
                                   [
-                                    Text(
+                                    const Text(
                                       RequestFriendsGroupConstants
                                           .EMAIL_REQUEST_TITLE,
                                       style: TextStyle(
@@ -258,8 +262,8 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.only(),
-                                      child: Text(
+                                      margin: const EdgeInsets.only(),
+                                      child: const Text(
                                           RequestFriendsGroupConstants
                                               .EMAIL_REQUEST_SUBTITLE,
                                           style: TextStyle(
@@ -270,13 +274,13 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                   prefixWidget: Container(
                                     height: 40,
                                     width: 40,
-                                    margin: EdgeInsets.only(right: 10),
+                                    margin: const EdgeInsets.only(right: 10),
                                     decoration: BoxDecoration(
                                       color: Colors.grey[400],
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     // padding: const EdgeInsets.all(10),
-                                    child: Icon(
+                                    child: const Icon(
                                       FontAwesomeIcons.envelope,
                                       color: white,
                                       // size: 17,
@@ -343,7 +347,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                 AddtionalInformationGroupWidget(
                                   contentWidget: [
                                     RichText(
-                                        text: TextSpan(children: [
+                                        text: const TextSpan(children: [
                                       TextSpan(
                                           text: RequestFriendsGroupConstants
                                               .PRIVATE_LINK_EXAMPLE,
@@ -356,7 +360,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                       height: 10,
                                     ),
                                     RichText(
-                                        text: TextSpan(children: [
+                                        text: const TextSpan(children: [
                                       TextSpan(
                                           text: RequestFriendsGroupConstants
                                               .PRIVATE_DESCRIPTION_FOR_LINK_EXAMPLE,
@@ -368,16 +372,16 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                   ],
                                   prefixWidget: GestureDetector(
                                     onTap: () {
-                                      Clipboard.setData(ClipboardData(
+                                      Clipboard.setData(const ClipboardData(
                                           text: RequestFriendsGroupConstants
                                               .PRIVATE_LINK_EXAMPLE));
                                     },
                                     child: Container(
                                       height: 75,
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                         right: 10,
                                       ),
-                                      child: Column(
+                                      child: const Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
@@ -390,7 +394,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                               ],
@@ -398,7 +402,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
 
 /////////////////////////////////////////////////////  GENERAL ///////////////////////////////////////////////////
                       // search
-                      Container(
+                      SizedBox(
                         height: 35,
                         child: TextFormField(
                           onChanged: ((value) {}),
@@ -407,19 +411,20 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                               // color:  white
                               ),
                           decoration: InputDecoration(
-                              prefixIcon: Icon(
+                              prefixIcon: const Icon(
                                 FontAwesomeIcons.search,
                                 color: Colors.grey,
                                 size: 13,
                               ),
                               // fillColor: Colors.grey[800],
                               // filled: true,
-                              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(0, 5, 0, 0),
                               hintText: RequestFriendsGroupConstants
                                   .PLACEHOLDER_LIST[0],
-                              hintStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 14),
-                              border: OutlineInputBorder(
+                              hintStyle: const TextStyle(
+                                  color: Colors.grey, fontSize: 14),
+                              border: const OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(17)))),
                         ),
@@ -445,19 +450,19 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                       // friend listView
                       Container(
                         child: isGeneralGroupSelection
-                            ? Container(
+                            ? SizedBox(
                                 height: 300,
                                 child: Column(children: [
                                   Container(
                                     height: 100,
-                                    margin: EdgeInsets.only(bottom: 10),
+                                    margin: const EdgeInsets.only(bottom: 10),
                                     child: Image.asset(
-                                        GroupConstants.PATH_IMG + "cat_1.png",
+                                        "${GroupConstants.PATH_IMG}cat_1.png",
                                         fit: BoxFit.fitWidth),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(bottom: 10),
-                                    child: Text(
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    child: const Text(
                                       "Không tìm thấy kết quả nào",
                                       style: TextStyle(
                                           // color:  white,
@@ -466,7 +471,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                     ),
                                   ),
                                   Container(
-                                    child: Text(
+                                    child: const Text(
                                       "Thử tìm tên khác",
                                       style: TextStyle(
                                         // color: Colors.grey,
@@ -476,7 +481,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                   ),
                                 ]),
                               )
-                            : Container(
+                            : SizedBox(
                                 height: 400,
                                 child: ListView.builder(
                                     padding: EdgeInsets.zero,
@@ -495,12 +500,12 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Container(
+                                                SizedBox(
                                                   // color: Colors.red,
                                                   width: 200,
                                                   child: Text(
-                                                    "People ${index}",
-                                                    style: TextStyle(
+                                                    "People $index",
+                                                    style: const TextStyle(
                                                         // color:  white,
                                                         fontSize: 15,
                                                         fontWeight:
@@ -517,9 +522,9 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                                                       .circular(
                                                                           5),
                                                               side:
-                                                                  BorderSide())),
+                                                                  const BorderSide())),
                                                   onPressed: () {},
-                                                  child: Center(
+                                                  child: const Center(
                                                     child: Text(
                                                       "Mời",
                                                       style: TextStyle(
@@ -534,13 +539,13 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                                           prefixWidget: Container(
                                               height: 40,
                                               width: 40,
-                                              margin:
-                                                  EdgeInsets.only(right: 10),
+                                              margin: const EdgeInsets.only(
+                                                  right: 10),
 
                                               // padding: EdgeInsets.all(10),
                                               decoration: BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.all(
+                                                      const BorderRadius.all(
                                                     Radius.circular(20),
                                                   ),
                                                   color: Colors.grey[800]),
@@ -561,7 +566,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
             ),
 
             /// bottom
-            Container(
+            SizedBox(
               height: 70,
               // color: Colors.black87,
               child: Center(
@@ -573,7 +578,7 @@ class _RequestFriendsGroupPageState extends State<RequestFriendsGroupPage> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => CoverImageGroupPage()));
                     },
-                    child: Text(GroupConstants.NEXT)),
+                    child: const Text(GroupConstants.NEXT)),
               ),
             )
           ]),
@@ -587,20 +592,20 @@ _showBottomSheetForShareComponent(BuildContext context) {
       context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           height: 230,
           decoration: BoxDecoration(
               color: Colors.grey[900],
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(15), topLeft: Radius.circular(15))),
           child: Column(children: [
             // drag and drop navbar
             Container(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: Container(
                 height: 4,
                 width: 40,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(15),
@@ -609,10 +614,11 @@ _showBottomSheetForShareComponent(BuildContext context) {
             ),
             // title
             Container(
-              margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+              margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
               child: Row(
                 children: [
                   Flexible(
+                    flex: 2,
                     child: GestureDetector(
                       onTap: (() {
                         Navigator.of(context).pop();
@@ -623,12 +629,11 @@ _showBottomSheetForShareComponent(BuildContext context) {
                         color: white,
                       ),
                     ),
-                    flex: 2,
                   ),
                   Flexible(
                     flex: 10,
                     child: Container(
-                        child: Center(
+                        child: const Center(
                       child: Text(
                         "Chia sẻ",
                         style: TextStyle(color: white, fontSize: 18),
@@ -639,11 +644,11 @@ _showBottomSheetForShareComponent(BuildContext context) {
               ),
             ),
             // divider
-            Divider(
+            const Divider(
               height: 4,
               color: white,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Expanded(
@@ -658,7 +663,7 @@ _showBottomSheetForShareComponent(BuildContext context) {
                         Text(
                           RequestFriendsGroupConstants
                               .SHARE_BOTTOM_SHEET_CONTENT_LIST[index][1],
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: white,
                               fontSize: 15,
                               fontWeight: FontWeight.bold),
@@ -667,11 +672,11 @@ _showBottomSheetForShareComponent(BuildContext context) {
                       prefixWidget: Container(
                         height: 40,
                         width: 40,
-                        margin: EdgeInsets.only(right: 10),
+                        margin: const EdgeInsets.only(right: 10),
 
                         // padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(20),
                             ),
                             color: Colors.grey[800]),
@@ -682,7 +687,7 @@ _showBottomSheetForShareComponent(BuildContext context) {
                           size: 14,
                         ),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 5),
                       // changeBackground: transparent,
                     );
                   })),
@@ -698,11 +703,11 @@ Widget _buildExampleComponent(String title, bool isSelected, {IconData? icon}) {
     direction: Axis.horizontal,
     children: [
       Container(
-        margin: EdgeInsets.fromLTRB(0, 5, 10, 5),
+        margin: const EdgeInsets.fromLTRB(0, 5, 10, 5),
         height: 35,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(25)),
+            borderRadius: const BorderRadius.all(Radius.circular(25)),
             color: isSelected ? Colors.blue : Colors.grey[800]),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -710,7 +715,7 @@ Widget _buildExampleComponent(String title, bool isSelected, {IconData? icon}) {
             icon != null
                 ? Row(
                     children: [
-                      Container(
+                      SizedBox(
                         height: 18,
                         width: 18,
                         child: Center(
@@ -720,7 +725,7 @@ Widget _buildExampleComponent(String title, bool isSelected, {IconData? icon}) {
                           color: white,
                         )),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                     ],
@@ -728,7 +733,7 @@ Widget _buildExampleComponent(String title, bool isSelected, {IconData? icon}) {
                 : Container(),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 color: white,
                 fontSize: 13,
               ),
@@ -747,19 +752,19 @@ _showBottomSheetSelectionGroupForRequestFriend(
       context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           height: 460,
           decoration: BoxDecoration(
               color: Colors.grey[900],
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(15), topLeft: Radius.circular(15))),
           child: Column(children: [
             Container(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: Container(
                 height: 4,
                 width: 40,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(15),
@@ -767,12 +772,12 @@ _showBottomSheetSelectionGroupForRequestFriend(
               ),
             ),
             Container(
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 5),
+              margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                      child: Center(
+                      child: const Center(
                     child: Text(
                       "Nhóm của bạn",
                       style: TextStyle(color: white, fontSize: 18),
@@ -783,8 +788,8 @@ _showBottomSheetSelectionGroupForRequestFriend(
             ),
             //divider
             Container(
-              margin: EdgeInsets.only(top: 5, bottom: 5),
-              child: Divider(
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
+              child: const Divider(
                 height: 2,
                 color: white,
               ),
@@ -801,7 +806,7 @@ _showBottomSheetSelectionGroupForRequestFriend(
                         Text(
                           RequestFriendsGroupConstants
                               .SELECTION_FOR_CHOOSE_GROUP_GROUP[index][1],
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: white,
                               fontSize: 15,
                               fontWeight: FontWeight.bold),
@@ -809,20 +814,20 @@ _showBottomSheetSelectionGroupForRequestFriend(
                         Text(
                           RequestFriendsGroupConstants
                               .SELECTION_FOR_CHOOSE_GROUP_GROUP[index][2],
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 15,
                           ),
                         ),
                       ],
                       prefixWidget: Container(
-                        margin: EdgeInsets.only(right: 10),
+                        margin: const EdgeInsets.only(right: 10),
                         height: 40,
                         width: 40,
                         decoration: BoxDecoration(
                             color: Colors.grey[700],
                             borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
+                                const BorderRadius.all(Radius.circular(10))),
                         child: Image.asset(
                           RequestFriendsGroupConstants
                               .SELECTION_FOR_CHOOSE_GROUP_GROUP[index][0],
@@ -830,19 +835,19 @@ _showBottomSheetSelectionGroupForRequestFriend(
                       ),
                       suffixWidget: Container(
                         // height: 50,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 7),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 7),
+                        decoration: const BoxDecoration(
                             color: Colors.blue,
                             borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             "Thêm",
                             style: TextStyle(color: white, fontSize: 15),
                           ),
                         ),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 5),
                     );
                   })),
             ),
@@ -857,19 +862,19 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
       context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           height: height,
           decoration: BoxDecoration(
               color: Colors.grey[900],
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(15), topLeft: Radius.circular(15))),
           child: Column(children: [
             Container(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: Container(
                 height: 4,
                 width: 40,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(15),
@@ -878,7 +883,7 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
             ),
             // title
             Container(
-              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -887,21 +892,21 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
                       Navigator.of(context).pop();
                       FocusManager.instance.primaryFocus!.unfocus();
                     }),
-                    child: Icon(
+                    child: const Icon(
                       Icons.close,
                       color: white,
                     ),
                   ),
                   Container(
-                      child: Center(
+                      child: const Center(
                     child: Text(
                       "Chia sẻ",
                       style: TextStyle(color: white, fontSize: 18),
                     ),
                   )),
                   Container(
-                      margin: EdgeInsets.only(right: 10),
-                      child: Center(
+                      margin: const EdgeInsets.only(right: 10),
+                      child: const Center(
                         child: Text(
                           "Gửi",
                           style: TextStyle(color: white, fontSize: 18),
@@ -911,20 +916,20 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
               ),
             ),
             // divider
-            Divider(
+            const Divider(
               height: 4,
               color: white,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
               children: [
                 Container(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                       bottom: 5,
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         "Nhập địa chỉ email để mời ai đó",
                         style: TextStyle(color: Colors.grey, fontSize: 17),
@@ -932,12 +937,12 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
                     )),
               ],
             ),
-            Container(
+            SizedBox(
               height: 80,
               child: TextFormField(
                 onChanged: ((value) {}),
                 style: const TextStyle(color: white),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey, width: 2),
                     ),
@@ -948,7 +953,7 @@ _showBottomSheetForRequestFriendByEmail(BuildContext context, double height) {
               ),
             ),
             GeneralComponent(
-              [
+              const [
                 Text(
                   "Tin nhắn mới",
                   style: TextStyle(color: Colors.grey, fontSize: 17),

@@ -70,10 +70,10 @@ class CardComponents extends StatelessWidget {
                                       ),
                                       child: InkWell(
                                         onTap: () {},
-                                        child: Column(
+                                        child: const Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(
                                               FontAwesomeIcons.ellipsis,
                                               color: Colors.white,
@@ -101,10 +101,10 @@ class CardComponents extends StatelessWidget {
                                     ),
                                     child: InkWell(
                                       onTap: () {},
-                                      child: Column(
+                                      child: const Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Icon(
                                             FontAwesomeIcons.xmark,
                                             color: Colors.white,

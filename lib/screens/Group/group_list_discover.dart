@@ -14,7 +14,7 @@ class GroupListDiscover extends StatelessWidget {
       child: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(left: 12.0, right: 12.0),
-          child: Column(
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
