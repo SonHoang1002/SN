@@ -62,12 +62,14 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
     subscription = webSocketChannel.stream.listen(
       (data) {
         if (data.contains('42')) {
+          // 42["unseen_count_changed",{"id":"891993","transactionId":"891993","unseenCount":3817}]
+          // 42["unseen_count_changed",{"id":"891633","unseenCount":3817}]
           int startIndex = data.indexOf('[') + 1;
           int endIndex = data.lastIndexOf(']');
           String jsonString = data.substring(startIndex, endIndex);
           List<dynamic> dataList = jsonDecode("[$jsonString]");
           Map<String, dynamic> object = dataList[1];
-          if (!data.contains('unseen_count_changed')) {
+          if (data.contains('transactionId')) {
             fetchNotifications(null).then((value) async {
               dynamic dataFilter = ref
                   .read(notificationControllerProvider)

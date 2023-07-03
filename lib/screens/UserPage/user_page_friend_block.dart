@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +8,6 @@ import 'package:social_network_app_mobile/screens/UserPage/page_friend_user.dart
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/text_action.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
 
@@ -131,8 +131,8 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                                 topLeft: Radius.circular(8),
                                 topRight: Radius.circular(8),
                               ),
-                              child: ImageCacheRender(
-                                path: widget.friends[index]['avatar_media']
+                              child: ExtendedImage.network(
+                                widget.friends[index]['avatar_media']
                                         ?['preview_url'] ??
                                     linkAvatarDefault,
                               ),

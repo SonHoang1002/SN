@@ -355,7 +355,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
       // Ghi dữ liệu từ Uint8List vào file ảnh tạm
       final tempFile = File(tempImagePath);
-      await tempFile.writeAsBytes(data); 
+      await tempFile.writeAsBytes(data);
       return tempFile;
     } catch (e) {
       throw e.toString();
