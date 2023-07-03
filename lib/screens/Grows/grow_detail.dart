@@ -60,6 +60,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
   var growDetail = {};
   late double width;
   late double height;
+  double realValue = 0;
+  double donateValue = 0;
   @override
   void initState() {
     if (!mounted) return;
@@ -89,6 +91,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
           .then((value) {
         setState(() {
           growDetail = ref.watch(growControllerProvider).detailGrow;
+          realValue = growDetail['real_value'];
+          donateValue = growDetail['donate_value'];
         });
       });
     }
@@ -292,6 +296,9 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                                                                           "amount": params['amount'],
                                                                                                           "detail_type": growPriceTitle[indexTitle]['type'].toString()
                                                                                                         }, growDetail['id']);
+                                                                                                        setState(() {
+                                                                                                          donateValue = donateValue + double.parse(params['amount']);
+                                                                                                        });
                                                                                                       }
                                                                                                     },
                                                                                                   ),
@@ -601,7 +608,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                           MediaQuery.of(context)
                                                               .size
                                                               .width,
-                                                      height: 300,
+                                                      height:
+                                                          eGLRModalBtmHeight,
                                                       child: Column(
                                                         children: [
                                                           ListView.builder(
@@ -979,7 +987,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                           RichText(
                                                             text: TextSpan(
                                                               text:
-                                                                  'Đã ủng hộ được ',
+                                                                  'Đã được đầu tư ',
                                                               style: TextStyle(
                                                                   fontSize: 12,
                                                                   fontWeight:
@@ -990,7 +998,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                               children: <TextSpan>[
                                                                 TextSpan(
                                                                     text:
-                                                                        '${convertNumberToVND(growDetail['real_value'] ~/ 1)} VNĐ',
+                                                                        '${convertNumberToVND(realValue ~/ 1)} VND',
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             12,
@@ -1004,6 +1012,44 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                                           ),
                                                           Text(
                                                               '${valueLinearProgressBar == 0 ? 0 : valueLinearProgressBar.toStringAsFixed(2)}%')
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 8.0),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          RichText(
+                                                            text: TextSpan(
+                                                              text:
+                                                                  'Đã được ủng hộ ',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: colorWord(
+                                                                      context)),
+                                                              children: <TextSpan>[
+                                                                TextSpan(
+                                                                    text:
+                                                                        '${convertNumberToVND(donateValue ~/ 1)} coin',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: colorWord(
+                                                                            context))),
+                                                              ],
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     )

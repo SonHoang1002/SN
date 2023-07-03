@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -9,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/apis/create_post_apis/preview_url_post_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
@@ -60,10 +58,8 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
-import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
 import '../../../providers/create_feed/feed_draft_provider.dart';
-import 'package:dio/src/multipart_file.dart';
 
 const EDIT_POST = "edit_post";
 
@@ -356,14 +352,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       // Ghi dữ liệu từ Uint8List vào file ảnh tạm
       final tempFile = File(tempImagePath);
       await tempFile.writeAsBytes(data);
-      // Đọc ảnh gốc từ đường dẫn imagePath
-      // final originalImageFile = File(imagePath);
-
-      // Kiểm tra nếu ảnh gốc tồn tại
-      // if (await originalImageFile.exists()) {
-      //   // Ghi đè ảnh gốc bằng ảnh từ Uint8List
-      //   await originalImageFile.writeAsBytes(await tempFile.readAsBytes());
-      //   await tempFile.delete();
       return tempFile;
     } catch (e) {
       throw e.toString();
@@ -636,7 +624,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       "status": content,
       "scheduled_at": null,
       'hidden': null,
-      'status_background_id': widget.post['status_background']?['id'] ?? null
+      'status_background_id': widget.post?['status_background']?['id']
     };
     if (files.isNotEmpty) {
       List<Future> listUpload = [];

@@ -122,7 +122,6 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
     if (mounted) {
       Navigator.pop(context);
       showSnackbar(context, "Đổi tên thành công");
-      Navigator.pop(context);
     }
   }
 

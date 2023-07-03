@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -52,7 +53,7 @@ class _PostState extends ConsumerState<Post>
   // tranh truong hop tao bai viet moi nhung khong co hieu ung cho va co the reaction o cac loai post khac o cac phan he khac
   bool isNeedInitPost = true;
   String warning = "Không có kết nối";
-  dynamic meData;
+  Timer? _timer;
 
   _changeShowCommentBox() {
     setState(() {
@@ -69,44 +70,49 @@ class _PostState extends ConsumerState<Post>
 
   @override
   void initState() {
-    setState(() {
-      currentPost = widget.post;
-    });
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _startWarningTimer();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    currentPost = widget.post;
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    currentPost = null;
-    meData = null;
-    _isShowCommentBox.dispose();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  void _startWarningTimer() {
+    if (ref.read(connectivityControllerProvider).connectInternet == false &&
+        currentPost['processing'] == "isProcessing") {
+      if (warning != "Sẽ thử lại bài viết của bạn") {
+        _timer = Timer(const Duration(seconds: 5), () {
+          if (mounted) {
+            setState(() {
+              warning = "Sẽ thử lại bài viết của bạn";
+            });
+          }
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    meData ??= ref.watch(meControllerProvider)[0];
-    if (isNeedInitPost) {
-      currentPost = widget.post;
-    }
-    if (ref.read(connectivityControllerProvider).connectInternet == false &&
-        currentPost['processing'] == "isProcessing") {
-      if (warning != "Sẽ thử lại bài viết của bạn") {
-        Timer(const Duration(seconds: 5), () {
-          setState(() {
-            warning = "Sẽ thử lại bài viết của bạn";
-          });
-        });
-      }
-    }
+    dynamic meData = ref.watch(meControllerProvider)[0];
 
     return currentPost != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // widget.type != postPageUser &&
-              currentPost?['account']?['id'] != meData['id']
+              widget.type != postPageUser &&
+                      currentPost?['account']?['id'] != meData['id']
                   ? PostSuggest(
                       post: currentPost,
                       type: widget.type,

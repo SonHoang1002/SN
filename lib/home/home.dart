@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
+import 'dart:isolate';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:provider/provider.dart' as pv;
-import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
-import 'package:social_network_app_mobile/screens/Feed/feed.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/Menu/menu.dart';
@@ -21,9 +20,12 @@ import 'package:social_network_app_mobile/screens/Search/search.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+
+import 'package:social_network_app_mobile/screens/Feed/feed.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:provider/provider.dart' as pv;
 
 class Home extends ConsumerStatefulWidget {
   final int? selectedIndex;
@@ -37,9 +39,15 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  bool isShowSnackBar = false;
+  ValueNotifier<bool> isShowSnackBar = ValueNotifier(false);
   ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(false);
   bool? _fromPostDetail;
+  bool _connectionStatus = true;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  Size? size;
+  ThemeManager? theme;
+  ValueNotifier<bool?> isDisconnected = ValueNotifier(null);
 
   double valueFromPercentageInRange(
       {required final double min, max, percentage}) {
@@ -83,10 +91,75 @@ class _HomeState extends ConsumerState<Home>
                   builder: ((context) => const OnboardingLoginPage())));
         }
       });
-      Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-        ref.read(connectivityControllerProvider.notifier).checkConnectivity();
+      initConnectivity();
+      _connectivitySubscription =
+          _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    }
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print("Connectivity Error: $e");
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if (result != ConnectivityResult.mobile ||
+        result != ConnectivityResult.wifi) {
+      setState(() {
+        _connectionStatus = false;
+      });
+    } else {
+      setState(() {
+        _connectionStatus = true;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  useIsolate() async {
+    final ReceivePort receivePort = ReceivePort();
+    RootIsolateToken rootIsolateToken = RootIsolateToken.instance!;
+    try {
+      await Isolate.spawn(checkConnectivity, [
+        receivePort.sendPort,
+        [rootIsolateToken]
+      ]);
+    } on Object {
+      debugPrint('Isolate Failed');
+      receivePort.close();
+    }
+    final response = await receivePort.first;
+    return response;
+  }
+
+  static Future<void> checkConnectivity(List<dynamic> args) async {
+    SendPort resultPort = args[0];
+    BackgroundIsolateBinaryMessenger.ensureInitialized(args[1][0]);
+    bool isDisconnected;
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+      isDisconnected = false;
+    } else {
+      isDisconnected = true;
+    }
+    Isolate.exit(resultPort, isDisconnected);
   }
 
   Future setTheme() async {
@@ -142,18 +215,37 @@ class _HomeState extends ConsumerState<Home>
     }
   }
 
+  List iconActionWatch = [
+    {"icon": Icons.search, 'type': 'icon'},
+  ];
+
+  List titles = const [
+    const SizedBox(),
+    const SizedBox(),
+    const SizedBox(),
+    const AppBarTitle(title: 'Watch')
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final theme = pv.Provider.of<ThemeManager>(context);
-    if (widget.selectedIndex != null) {
-      setState(() {
-        _selectedIndex = widget.selectedIndex!;
-      });
-    }
-    String modeTheme = theme.themeMode == ThemeMode.dark
+    //test render
+    // if (_connectionStatus == false && !isShowSnackBar.value) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _buildSnackBar("Không có kết nối mạng");
+
+    //     isShowSnackBar.value = true;
+    //   });
+    // } else if (_connectionStatus == true && isShowSnackBar.value) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _buildSnackBar("Đã khôi phục kết nối mạng");
+    //     isShowSnackBar.value = false;
+    //   });
+    // }
+    size ??= MediaQuery.of(context).size;
+    theme ??= pv.Provider.of<ThemeManager>(context);
+    String modeTheme = theme!.themeMode == ThemeMode.dark
         ? 'dark'
-        : theme.themeMode == ThemeMode.light
+        : theme!.themeMode == ThemeMode.light
             ? 'light'
             : 'system';
 
@@ -180,11 +272,11 @@ class _HomeState extends ConsumerState<Home>
         "bottom": modeTheme == 'dark' ? 5.0 : 0.0,
       }
     ];
-
-    List iconActionWatch = [
-      {"icon": Icons.search, 'type': 'icon'},
-    ];
-
+    if (widget.selectedIndex != null) {
+      setState(() {
+        _selectedIndex = widget.selectedIndex!;
+      });
+    }
     List<Widget> pages = [
       Feed(
         callbackFunction: _showBottomNavigator,
@@ -194,28 +286,6 @@ class _HomeState extends ConsumerState<Home>
       const Watch(),
       const MainMarketPage(false)
     ];
-
-    List titles = [
-      const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Emso",
-              style:
-                  TextStyle(color: primaryColor, fontWeight: FontWeight.w700),
-            ),
-            Text(
-              "Social",
-              style:
-                  TextStyle(color: secondaryColor, fontWeight: FontWeight.w700),
-            )
-          ]),
-      const SizedBox(),
-      const SizedBox(),
-      const AppBarTitle(title: 'Watch')
-    ];
-
     List actions = [
       List.generate(
           iconActionFeed.length,
@@ -265,30 +335,26 @@ class _HomeState extends ConsumerState<Home>
                 color: Theme.of(context).textTheme.displayLarge!.color,
               )))
     ];
+    // test render posts
+    // if (isDisconnected.value == false && !isShowSnackBar.value) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _buildSnackBar("Không có kết nối mạng");
 
-    if (ref.watch(connectivityControllerProvider).connectInternet == false &&
-        !isShowSnackBar) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _buildSnackBar("Không có kết nối mạng");
-        setState(() {
-          isShowSnackBar = true;
-        });
-      });
-    } else if (ref.watch(connectivityControllerProvider).connectInternet ==
-            true &&
-        isShowSnackBar) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _buildSnackBar("Đã khôi phục kết nối mạng");
-        setState(() {
-          isShowSnackBar = false;
-        });
-      });
-    }
+    //     isShowSnackBar.value = true;
+    //   });
+    // } else if (isDisconnected.value == true && isShowSnackBar.value) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _buildSnackBar("Đã khôi phục kết nối mạng");
+    //     setState(() {
+    //       isShowSnackBar.value = false;
+    //     });
+    //   });
+    // }
     return Scaffold(
         drawer: _selectedIndex == 1 || _selectedIndex == 4
             ? null
             : Drawer(
-                width: size.width - 20,
+                width: size!.width - 20,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 child: const Menu(),
               ),

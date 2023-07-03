@@ -4,4 +4,9 @@ class NotificationsApi {
   Future getListNotifications(params) async {
     return await Api().getRequestBase('/api/v1/notifications', params);
   }
+
+  Future markNotiAsRead(notificationId) async {
+    return await Api()
+        .postRequestBase('/api/v1/notifications/$notificationId/read', null);
+  }
 }

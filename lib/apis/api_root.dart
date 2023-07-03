@@ -58,6 +58,9 @@ class Api {
       if (e.response?.statusCode == 401) {
         logOutWhenTokenError();
       }
+      if (e.response?.statusCode == 422) {
+        return e.response?.data;
+      }
       rethrow;
     }
   }

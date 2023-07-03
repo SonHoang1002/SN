@@ -90,7 +90,7 @@ class LearnSpaceState {
 }
 
 final learnSpaceStateControllerProvider =
-    StateNotifierProvider.autoDispose<LearnSpaceController, LearnSpaceState>(
+    StateNotifierProvider<LearnSpaceController, LearnSpaceState>(
         (ref) => LearnSpaceController());
 
 class LearnSpaceController extends StateNotifier<LearnSpaceState> {

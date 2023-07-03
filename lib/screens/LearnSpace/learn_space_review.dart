@@ -1,9 +1,18 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/apis/learn_space_api.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'dart:io';
+import 'dart:convert';
+
+import '../../apis/media_api.dart';
 
 class LearnSpaceReview extends ConsumerStatefulWidget {
   final dynamic courseDetail;
@@ -14,9 +23,36 @@ class LearnSpaceReview extends ConsumerStatefulWidget {
 }
 
 class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
+  File? _pickedCoverImage;
+  XFile? _imageCover;
+  bool isLoading = false;
+  String errorMessage = '';
+
   final TextEditingController reviewController =
       TextEditingController(text: '');
   int point = 5;
+
+  Future<String> imageToBase64(String imagePath) async {
+    final bytes = await File(imagePath).readAsBytes();
+    final base64Str = base64Encode(bytes);
+    return 'data:image/jpeg;base64,$base64Str';
+  }
+
+  handleUploadMedia(fileData) async {
+    fileData = fileData.replaceAll('file://', '');
+    FormData formData;
+
+    formData = FormData.fromMap({
+      "description": '',
+      "position": 1,
+      "file": await MultipartFile.fromFile(fileData,
+          filename: fileData.split('/').last),
+    });
+    var response = await MediaApi().uploadMediaEmso(formData);
+
+    return response;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -29,10 +65,40 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
     }
   }
 
+  handleSubmit(BuildContext context) async {
+    String message = '';
+    // var snackbar = ScaffoldMessenger.of(context);
+    var mediaUploadResult = await handleUploadMedia(_imageCover!.path);
+    if (mediaUploadResult == null) {
+      message =
+          'Có lỗi xảy ra trong quá trình upload ảnh, vui lòng thử lại sau!';
+    } else {
+      var response =
+          await LearnSpaceApi().sendRatingPost(widget.courseDetail['id'], {
+        "status": reviewController.text.trim(),
+        "rating": point.toString(),
+        "media_ids": [mediaUploadResult['id']],
+      });
+
+      if (response == null) {
+        message = 'Có lỗi xảy ra trong quá trình đăng';
+      } else if (response['error'] != null) {
+        message = response['error'];
+      } else {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .getListCourseReview(widget.courseDetail['id']);
+        message = 'Đăng bài đánh giá thành công!';
+      }
+    }
+    return message;
+  }
+
   @override
   Widget build(BuildContext context) {
     final courseReview =
         ref.watch(learnSpaceStateControllerProvider).courseReview;
+    final width = MediaQuery.of(context).size.width;
 
     return InkWell(
       onTap: () {
@@ -62,6 +128,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                         context: context,
                         builder: (context) => StatefulBuilder(builder:
                             (BuildContext context, StateSetter setState) {
+                          var snackbar = ScaffoldMessenger.of(context);
                           return SingleChildScrollView(
                             primary: true,
                             padding: EdgeInsets.only(
@@ -71,7 +138,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: SizedBox(
-                                height: 300,
+                                height: 450,
                                 child: Column(
                                   children: [
                                     Row(
@@ -112,10 +179,11 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                       decoration: const InputDecoration(
                                           enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Colors.grey, width: 1),
+                                                  color: Colors.grey,
+                                                  width: 0.5),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(12))),
-                                          hintText: "Đề xuất của bạn",
+                                          hintText: "Viết đánh giá của bạn",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           labelStyle:
@@ -124,21 +192,94 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(12)))),
                                     ),
+                                    Container(
+                                      height: 175,
+                                      width: width,
+                                      margin: const EdgeInsets.only(top: 15.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 0.5,
+                                        ),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+
+                                          _imageCover = await ImagePicker()
+                                              .pickImage(
+                                                  source: ImageSource.gallery);
+                                          setState(() {
+                                            _pickedCoverImage =
+                                                File(_imageCover!.path);
+                                            isLoading = false;
+                                          });
+                                        },
+                                        child: Container(
+                                          child: _pickedCoverImage != null
+                                              ? Image.file(
+                                                  _pickedCoverImage!,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      isLoading
+                                                          ? const CupertinoActivityIndicator()
+                                                          : const Icon(
+                                                              Icons.camera_alt,
+                                                              size: 25.0,
+                                                            ),
+                                                      const Text(
+                                                          "Chọn ảnh từ thiết bị"),
+                                                    ],
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                    ),
                                     Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 24.0),
-                                        child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              minimumSize: Size(
-                                                  MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  45),
-                                              foregroundColor:
-                                                  Colors.white, // foreground
+                                      padding: const EdgeInsets.only(top: 15.0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize: Size(
+                                              MediaQuery.of(context).size.width,
+                                              45),
+                                          foregroundColor:
+                                              Colors.white, // foreground
+                                        ),
+                                        onPressed: () async {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          String strMessage =
+                                              await handleSubmit(context);
+                                          Navigator.pop(context);
+                                          snackbar.showSnackBar(
+                                            SnackBar(
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              content: Text(strMessage),
                                             ),
-                                            onPressed: () async {},
-                                            child: const Text('Đánh giá'))),
+                                          );
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        },
+                                        child: isLoading
+                                            ? const CupertinoActivityIndicator(
+                                                color: Colors.white,
+                                              )
+                                            : const Text('Đánh giá'),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

@@ -73,7 +73,7 @@ class EventState {
 }
 
 final eventControllerProvider =
-    StateNotifierProvider.autoDispose<EventController, EventState>((ref) {
+    StateNotifierProvider<EventController, EventState>((ref) {
   return EventController();
 });
 
@@ -347,8 +347,7 @@ class EventController extends StateNotifier<EventState> {
 
   getDetailEvent(id) async {
     var response = await EventApi().getEventDetailApi(id);
-    if (response != null && mounted) { 
-
+    if (response != null && mounted) {
       state = state.copyWith(
         eventDetail: response,
         events: state.events,

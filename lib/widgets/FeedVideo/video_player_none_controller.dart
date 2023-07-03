@@ -2,13 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
-import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
-import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -165,7 +161,7 @@ class _VideoPlayerNoneControllerState
                     child: AspectRatio(
                         aspectRatio: widget.aspectRatio ??
                             videoPlayerController.value.aspectRatio,
-                        child: VideoPlayer(videoPlayerController)))),
+                        child: VideoPlayer(videoPlayerController))) ),
             widget.isShowVolumn != null && widget.isShowVolumn == false
                 ? const SizedBox()
                 : Positioned(
@@ -215,7 +211,7 @@ class _VideoPlayerNoneControllerState
             //                 setState(() {
             //                   isPlaying = !isPlaying;
             //                 });
-            //               } 
+            //               }
             //             },
             //           ),
             //   ),

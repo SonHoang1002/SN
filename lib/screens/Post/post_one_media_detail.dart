@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'dart:io';
 import 'dart:math';
 
@@ -98,7 +100,6 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
   int indexRender = 0;
   bool _isDragging = false;
   final PhotoViewController photoViewController = PhotoViewController();
-  final GlobalKey _imageKey = GlobalKey();
   final GlobalKey _imageKeyDrag = GlobalKey();
   double? opacityValue;
   final GlobalKey _contentKey = GlobalKey();
@@ -149,6 +150,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
 
   @override
   void dispose() {
+    photoViewController.dispose();
     super.dispose();
   }
 
@@ -442,7 +444,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
     }
   }
 
-  buildContent(Size size) {
+  Widget buildContent(Size size) {
     return _isDragging
         ? const SizedBox()
         : isShowDetail && opacityValue != 0
