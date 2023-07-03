@@ -1,13 +1,17 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
+import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/widgets/AvatarStack/avatar_stack.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 
 import '../../../widgets/AvatarStack/positions.dart';
 
-class HomeGroup extends StatefulWidget {
+class HomeGroup extends ConsumerStatefulWidget {
   final dynamic groupDetail;
   final Function? onTap;
   const HomeGroup({
@@ -17,10 +21,12 @@ class HomeGroup extends StatefulWidget {
   });
 
   @override
-  State<HomeGroup> createState() => _HomeGroupState();
+  ConsumerState<HomeGroup> createState() => _HomeGroupState();
 }
 
-class _HomeGroupState extends State<HomeGroup> {
+class _HomeGroupState extends ConsumerState<HomeGroup> {
+  final scrollController = ScrollController();
+
   String menuSelected = '';
 
   final settings = RestrictedPositions(
@@ -28,6 +34,32 @@ class _HomeGroupState extends State<HomeGroup> {
     minCoverage: 0.2,
     laying: StackLaying.first,
   );
+  @override
+  void initState() {
+    if (!mounted) return;
+    super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        String maxId =
+            ref.read(groupListControllerProvider).groupPost.last['id'];
+        ref.read(groupListControllerProvider.notifier).getPostGroup({
+          "sort_by": "new_post",
+          "exclude_replies": true,
+          "limit": 3,
+          "max_id": maxId
+        }, widget.groupDetail['id']);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
   String getAvatarUrl(int n) {
     final url = 'https://i.pravatar.cc/150?img=$n';
     return url;
@@ -57,8 +89,10 @@ class _HomeGroupState extends State<HomeGroup> {
   ];
   @override
   Widget build(BuildContext context) {
+    List postGroup = ref.watch(groupListControllerProvider).groupPost;
     final size = MediaQuery.of(context).size;
     return SingleChildScrollView(
+      controller: scrollController,
       scrollDirection: Axis.vertical,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +173,7 @@ class _HomeGroupState extends State<HomeGroup> {
                     TextSpan(
                         text: widget.groupDetail['is_private'] == true
                             ? 'Nhóm Riêng tư'
-                            : '',
+                            : 'Nhóm Công khai',
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.white,
@@ -228,6 +262,36 @@ class _HomeGroupState extends State<HomeGroup> {
                 ),
               ),
             ),
+          ),
+          const Divider(
+            height: 20,
+            thickness: 1,
+          ),
+          const CreatePostButton(),
+          const Divider(
+            height: 20,
+            thickness: 1,
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+            child: Text('Đáng chú ý',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: postGroup.length,
+            itemBuilder: (context, index) {
+              return Post(
+                post: postGroup[index],
+              );
+            },
           ),
         ],
       ),

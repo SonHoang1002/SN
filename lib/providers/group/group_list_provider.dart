@@ -18,6 +18,7 @@ class GroupListState {
   final List waitingApproval;
   final List requestMember;
   final List notiApproval;
+  final List groupPost;
 
   const GroupListState({
     this.groupAdmin = const [],
@@ -34,6 +35,7 @@ class GroupListState {
     this.waitingApproval = const [],
     this.requestMember = const [],
     this.notiApproval = const [],
+    this.groupPost = const [],
   });
 
   GroupListState copyWith({
@@ -51,6 +53,7 @@ class GroupListState {
     List waitingApproval = const [],
     List requestMember = const [],
     List notiApproval = const [],
+    List groupPost = const [],
   }) {
     return GroupListState(
       groupAdmin: groupAdmin,
@@ -67,6 +70,7 @@ class GroupListState {
       waitingApproval: waitingApproval,
       requestMember: requestMember,
       notiApproval: notiApproval,
+      groupPost: groupPost,
     );
   }
 }
@@ -100,6 +104,7 @@ class GroupListController extends StateNotifier<GroupListState> {
       waitingApproval: state.waitingApproval,
       requestMember: state.requestMember,
       notiApproval: state.notiApproval,
+      groupPost: state.groupPost,
     );
   }
 
@@ -130,6 +135,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     }
   }
@@ -152,6 +158,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     }
   }
@@ -175,6 +182,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     }
   }
@@ -197,6 +205,7 @@ class GroupListController extends StateNotifier<GroupListState> {
       waitingApproval: state.waitingApproval,
       requestMember: state.requestMember,
       notiApproval: state.notiApproval,
+      groupPost: state.groupPost,
     );
   }
 
@@ -218,6 +227,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     }
   }
@@ -240,6 +250,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     }
   }
@@ -262,6 +273,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: response,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     } else {
       state = state.copyWith(
@@ -301,6 +313,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: response['data'],
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     } else {
       state = state.copyWith(
@@ -318,6 +331,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: [],
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     }
   }
@@ -340,6 +354,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     } else {
       state = state.copyWith(
@@ -357,6 +372,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
       );
     }
   }
@@ -396,6 +412,32 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: [],
+        groupPost: state.groupPost,
+      );
+    }
+  }
+
+  getPostGroup(params, id) async {
+    List response = await GroupApi().fetchGroupFeed(params, id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: params.containsKey('max_id')
+            ? state.groupPost + response
+            : response,
       );
     }
   }

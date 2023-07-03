@@ -34,6 +34,9 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
             );
           },
         );
+        ref.read(groupListControllerProvider.notifier).getPostGroup(
+            {"sort_by": "new_post", "exclude_replies": true, "limit": 3},
+            widget.id);
         ref
             .read(groupListControllerProvider.notifier)
             .getJoinRequest(widget.id);
