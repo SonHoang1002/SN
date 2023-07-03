@@ -111,7 +111,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   ScrollController menuController = ScrollController();
   bool isMenuMinExtent = true;
 
-  GlobalKey _heightKey = GlobalKey();
+  final GlobalKey _heightKey = GlobalKey();
   bool _isClickForCreatePost = false;
 
   @override

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:isar/isar.dart'; 
+import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/model/post_model.dart';
 
@@ -28,7 +28,7 @@ class IsarService {
     if (_instance != null && _instance!.isOpen) {
       await _instance!.close();
       _instance = null;
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
   }
 }

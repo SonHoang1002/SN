@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
@@ -7,6 +8,8 @@ import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+
+import 'CreateMoment/camera_moment_controller.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -113,7 +116,12 @@ class _CreatePostState extends State<CreatePost> {
                             onTap: () {
                               String key = postTypeCreate[index]['key'];
                               if (key == 'moment') {
-                                _startVideoEditorDefault();
+                                // _startVideoEditorDefault();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CameraMomentController()));
                               } else {
                                 popToPreviousScreen(context);
                                 pushCustomCupertinoPageRoute(
