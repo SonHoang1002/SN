@@ -19,7 +19,6 @@ import 'package:social_network_app_mobile/screens/UserPage/user_page_infomation_
 import 'package:social_network_app_mobile/screens/UserPage/user_page_pin_post.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_photo_video.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
-import 'package:social_network_app_mobile/services/notification_service.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -138,6 +137,13 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   // save id of post
   ValueNotifier<dynamic> focusCurrentPostIndex = ValueNotifier("");
+
+  void onReset() {
+    setState(() {
+      userData = ref.watch(userInformationProvider).userInfor;
+      userAbout = ref.watch(userInformationProvider).userMoreInfor;
+    });
+  }
 
   @override
   void initState() {
@@ -350,11 +356,11 @@ class _UserPageState extends ConsumerState<UserPage> {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) =>
-                                        const CreateModalBaseMenu(
+                                    builder: (context) => CreateModalBaseMenu(
                                       title: "Chỉnh sửa trang cá nhân",
-                                      body: UserPageEditProfile(),
-                                      buttonAppbar: SizedBox(),
+                                      body: UserPageEditProfile(
+                                          onUpdate: onReset),
+                                      buttonAppbar: const SizedBox(),
                                     ),
                                   ),
                                 );
@@ -751,6 +757,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    // print(userAbout['general_information']);
     pinPost = ref.read(postControllerProvider).postsPin;
     return Scaffold(
       appBar: buildAppBar(context),

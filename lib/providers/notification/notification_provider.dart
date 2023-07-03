@@ -63,25 +63,4 @@ class NotificationController extends StateNotifier<NotificationState> {
       );
     }
   }
-
-  markNotificationIdAsRead(notiId) {
-    // int index = state.notifications.indexWhere((e) => e['id'] == notiId);
-    // if (state.notifications[index]['read'] == false) {
-    //   state = state.copyWith(
-    //     isMore: state.isMore,
-    //     notifications: state.notifications
-    //         .map(
-    //           (ele) => {
-    //             ...ele,
-    //             "read": ele['id'] == notiId && ele['read'] == false
-    //                 ? true
-    //                 : ele['read'],
-    //           },
-    //         )
-    //         .toList(),
-    //   );
-    //   NotificationsApi().markNotiAsRead(notiId);
-    // }
-    NotificationsApi().markNotiAsRead(notiId);
-  }
 }

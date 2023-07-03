@@ -30,11 +30,10 @@ class ChipMenu extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           icon ?? const SizedBox(),
-          const SizedBox(
-            width: 6.0,
-          ),
+          const SizedBox(width: 6.0),
           Text(
             label,
             style: TextStyle(
@@ -42,9 +41,7 @@ class ChipMenu extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: isSelected ? white : null),
           ),
-          const SizedBox(
-            width: 6.0,
-          ),
+          const SizedBox(width: 6.0),
           endIcon ?? const SizedBox.shrink()
         ],
       ),

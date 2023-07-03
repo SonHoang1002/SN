@@ -1,12 +1,12 @@
 import 'dart:math';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/StoryView/story_page.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../theme/theme_manager.dart';
 
@@ -141,35 +141,41 @@ class UserPageInfomationBlock extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 8.0,
-                ),
+                const SizedBox(height: 8.0),
                 const Text(
                   'Sở thích',
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
                 ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(
-                        hobbies.length,
-                        (index) => ChipMenu(
-                              isSelected: false,
-                              label: hobbies[index]['text'],
-                              icon: ImageCacheRender(
-                                path: hobbies[index]['icon'],
-                                width: 20.0,
-                                height: 20.0,
+                const SizedBox(height: 8.0),
+                Wrap(
+                  runSpacing: 10.0,
+                  children: List.generate(
+                    hobbies.length,
+                    (index) => ChipMenu(
+                      isSelected: false,
+                      label: hobbies[index]['text'],
+                      icon: hobbies[index]['icon'] != null
+                          ? ExtendedImage.network(
+                              hobbies[index]['icon'],
+                              width: 20.0,
+                              height: 20.0,
+                            )
+                          : Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
-                            )),
+                              child: const Icon(
+                                FontAwesomeIcons.circleUser,
+                                size: 20.0,
+                                color: greyColor,
+                              ),
+                            ),
+                    ),
                   ),
                 ),
-                const SizedBox(
-                  height: 12.0,
-                ),
+                const SizedBox(height: 12.0),
                 if (featureContents.isNotEmpty)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,9 +185,7 @@ class UserPageInfomationBlock extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 17),
                       ),
-                      const SizedBox(
-                        height: 8.0,
-                      ),
+                      const SizedBox(height: 8.0),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -223,12 +227,12 @@ class UserPageInfomationBlock extends StatelessWidget {
                                               ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(12.0),
-                                                child: ImageCacheRender(
-                                                    width: size.width / 3,
-                                                    height: 2 * size.width / 3,
-                                                    path: featureContents[index]
-                                                            ['banner']
-                                                        ['preview_url']),
+                                                child: ExtendedImage.network(
+                                                  featureContents[index]
+                                                      ['banner']['preview_url'],
+                                                  width: size.width / 3,
+                                                  height: 2 * size.width / 3,
+                                                ),
                                               ),
                                               featureContents[index]
                                                           ['media_count'] >
