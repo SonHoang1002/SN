@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/apis/moment_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:video_compress/video_compress.dart';
 
 @immutable
 class MomentState {
@@ -159,18 +160,39 @@ class MomentController extends StateNotifier<MomentState> {
 
     handleUploadMedia(fileData, imageCover) async {
       fileData = fileData.replaceAll('file://', '');
-      FormData formData;
+      MediaInfo? info;
 
-      formData = FormData.fromMap({
-        "description": '',
-        "position": 1,
-        "file": await MultipartFile.fromFile(fileData,
-            filename: fileData.split('/').last),
-        "show_url": await imageToBase64(imageCover),
-      });
-      var response = await MediaApi().uploadMediaEmso(formData);
+      try {
+        info = await VideoCompress.compressVideo(
+          fileData,
+          quality: VideoQuality.DefaultQuality,
+          deleteOrigin: false, // Keeping the original video
+          includeAudio: true, // Including audio
+        );
 
-      return response;
+        if (info != null) {
+          FormData formData = FormData.fromMap({
+            "description": '',
+            "position": 1,
+            "file": await MultipartFile.fromFile(
+              info.path ?? '',
+              filename: info.path!.split('/').last,
+            ),
+            "show_url": await imageToBase64(imageCover),
+          });
+
+          var response = await MediaApi().uploadMediaEmso(formData);
+          // Remember to delete cache
+          VideoCompress.deleteAllCache();
+
+          return response;
+        }
+      } catch (e) {
+        // Remember to cancel compression and delete cache in case of an error
+        VideoCompress.cancelCompression();
+        VideoCompress.deleteAllCache();
+        throw e; // Re-throwing the exception to handle it outside this function
+      }
     }
 
     var mediaUploadResult = await handleUploadMedia(videoPath, imageCover);

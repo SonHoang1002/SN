@@ -68,16 +68,19 @@ class _MomentState extends ConsumerState<Moment>
             .getListMomentFollow({"limit": 5});
       });
 
-      Future.delayed(Duration.zero, () {
-        setState(() {
-          isShowMediaUpload = true;
+      if (widget.dataUploadMoment != null) {
+        Future.delayed(Duration.zero, () {
+          setState(() {
+            isShowMediaUpload = true;
+          });
+
+          ref.read(momentControllerProvider.notifier).updateMomentUpload(
+              widget.dataUploadMoment['videoPath'],
+              widget.dataUploadMoment['imageCover'],
+              widget.dataUploadMoment,
+              ScaffoldMessenger.of(context));
         });
-        ref.read(momentControllerProvider.notifier).updateMomentUpload(
-            widget.dataUploadMoment['videoPath'],
-            widget.dataUploadMoment['imageCover'],
-            widget.dataUploadMoment,
-            ScaffoldMessenger.of(context));
-      });
+      }
     }
   }
 
@@ -123,7 +126,7 @@ class _MomentState extends ConsumerState<Moment>
 
     useEffect(
       () {
-        Future.delayed(Duration.zero, () {
+        Future.delayed(const Duration(seconds: 1), () {
           if (widget.imageUpload != null) {
             listClick(widgetKey);
           }
@@ -135,7 +138,7 @@ class _MomentState extends ConsumerState<Moment>
 
     useEffect(
       () {
-        Future.delayed(const Duration(seconds: 1), () {
+        Future.delayed(const Duration(seconds: 0), () {
           if (momentUpload != null && momentUpload.isNotEmpty) {
             setState(() {
               isShowMediaUpload = false;

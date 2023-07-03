@@ -671,7 +671,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           UserPageInfomationBlock(
             user: userData,
             lifeEvent: lifeEvent,
-            userAbout: userAbout,
+            userAbout: userAbout ?? {},
             featureContents: featureContents,
           ),
           const CrossBar(),

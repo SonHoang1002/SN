@@ -78,7 +78,8 @@ class _CreatePostState extends State<CreatePost> {
       //       methodDemoPlayExportedVideo, exportedVideoFilePath);
       // });
       if (exportedVideoCoverPreviewPath != null &&
-          exportedVideoFilePath != null) {
+          exportedVideoFilePath != null &&
+          mounted) {
         Navigator.push(
             context,
             CupertinoPageRoute(
