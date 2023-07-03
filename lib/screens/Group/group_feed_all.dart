@@ -1,12 +1,12 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/data/groups.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-
-import '../../widgets/Market/image_cache.dart';
 
 class GroupFeedAll extends ConsumerStatefulWidget {
   const GroupFeedAll({super.key});
@@ -25,11 +25,6 @@ class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      ref
-          .read(groupListControllerProvider.notifier)
-          .getListGroupFeed(paramsGroupFeed);
-    });
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -45,6 +40,7 @@ class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
   @override
   Widget build(BuildContext context) {
     final groupFeed = ref.watch(groupListControllerProvider).groupFeed;
+    final groupMember = ref.watch(groupListControllerProvider).groupMember;
     return Expanded(
         child: SingleChildScrollView(
       child: Column(
@@ -54,62 +50,81 @@ class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: groupMember.length,
-                  itemBuilder: (context, index) => Container(
-                        width: 70,
-                        height: 70,
-                        margin: const EdgeInsets.only(left: 8.0, right: 8.0),
-                        child: Column(
-                          children: [
-                            Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: ImageCacheRender(
-                                    path: groupMember[index]['banner']
-                                        ['preview_url'],
-                                    width: 70.0,
-                                    height: 70.0,
-                                  ),
-                                ),
-                                Container(
-                                  width: 70,
-                                  height: 70,
-                                  decoration: BoxDecoration(
+                  itemBuilder: (context, index) => InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return GroupDetail(
+                                id: groupMember[index]['id'],
+                              );
+                            },
+                          ));
+                        },
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  ClipRRect(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.black.withOpacity(0.3),
+                                    child: ExtendedImage.network(
+                                      groupMember[index]['banner'] != null
+                                          ? groupMember[index]['banner']
+                                              ['preview_url']
+                                          : linkBannerDefault,
+                                      width: 70.0,
+                                      height: 70.0,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                Positioned(
-                                    bottom: 2,
-                                    left: 2,
-                                    child: SizedBox(
-                                        width: 64,
-                                        child: Text(
-                                          groupMember[index]['title'],
-                                          maxLines: 2,
-                                          style: const TextStyle(
-                                              color: white,
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w700,
-                                              overflow: TextOverflow.ellipsis),
-                                        )))
-                              ],
-                            ),
-                          ],
+                                  Container(
+                                    width: 70,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.black.withOpacity(0.3),
+                                    ),
+                                  ),
+                                  Positioned(
+                                      bottom: 2,
+                                      left: 2,
+                                      child: SizedBox(
+                                          width: 64,
+                                          child: Text(
+                                            groupMember[index]['title'],
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                                color: white,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w700,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          )))
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ))),
           const CrossBar(),
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 230,
-            child: ListView.builder(
-                shrinkWrap: true,
-                controller: scrollController,
-                scrollDirection: Axis.vertical,
-                itemCount: groupFeed.length,
-                itemBuilder: ((context, index) => Post(
-                      post: groupFeed[index],
-                    ))),
-          )
+          groupFeed.isEmpty
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height - 230,
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      controller: scrollController,
+                      scrollDirection: Axis.vertical,
+                      itemCount: groupFeed.length,
+                      itemBuilder: ((context, index) => Post(
+                            post: groupFeed[index],
+                          ))),
+                )
         ],
       ),
     ));
