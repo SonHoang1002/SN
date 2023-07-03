@@ -63,18 +63,18 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
       body: Scaffold(
         endDrawerEnableOpenDragGesture: false,
         key: _drawerscaffoldkey,
-        endDrawer: ManagerDetail(
-          groupDetail: groupDetail,
+        endDrawer: SafeArea(
+          child: ManagerDetail(
+            groupDetail: groupDetail,
+          ),
         ),
         body: HomeGroup(
             groupDetail: groupDetail,
             onTap: () {
               if (_drawerscaffoldkey.currentState!.isDrawerOpen) {
-                //if drawer is open, then close the drawer
                 Navigator.pop(context);
               } else {
                 _drawerscaffoldkey.currentState!.openEndDrawer();
-                //if drawer is closed then open the drawer.
               }
             }),
       ),

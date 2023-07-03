@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/approval_group.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 class ManagerDetail extends ConsumerStatefulWidget {
@@ -21,45 +22,44 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    setState(() {
-      requestManager = [
-        {
-          'key': 'content',
-          'label': 'Nội dung bị báo cáo',
-          'icon': 'assets/groups/contentReport.png',
-          'noti':
-              '${ref.read(groupListControllerProvider).contentReported.length}',
-        },
-        {
-          'key': 'waiting',
-          'label': 'Đang chờ phê duyệt',
-          'icon': 'assets/groups/waitingRequest.png',
-          'noti':
-              '${ref.read(groupListControllerProvider).waitingApproval.length}',
-        },
-        {
-          'key': 'member',
-          'label': 'Yêu cầu làm thành viên',
-          'icon': 'assets/groups/requestMember.png',
-          'noti':
-              '${ref.read(groupListControllerProvider).requestMember.length}',
-        },
-        {
-          'key': 'noti',
-          'label': 'Thông báo kiểm duyệt',
-          'icon': 'assets/groups/notiRequest.png',
-          'noti':
-              '${ref.read(groupListControllerProvider).notiApproval.length}',
-        },
-      ];
-    });
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
+    requestManager = [
+      {
+        'key': 'content',
+        'label': 'Nội dung bị báo cáo',
+        'icon': 'assets/groups/contentReport.png',
+        'noti':
+            '${ref.watch(groupListControllerProvider).contentReported.length}',
+      },
+      {
+        'key': 'waiting',
+        'label': 'Đang chờ phê duyệt',
+        'icon': 'assets/groups/waitingRequest.png',
+        'noti':
+            '${ref.watch(groupListControllerProvider).waitingApproval.length}',
+      },
+      {
+        'key': 'member',
+        'label': 'Yêu cầu làm thành viên',
+        'icon': 'assets/groups/requestMember.png',
+        'noti':
+            '${ref.watch(groupListControllerProvider).requestMember.length}',
+      },
+      {
+        'key': 'noti',
+        'label': 'Thông báo kiểm duyệt',
+        'icon': 'assets/groups/notiRequest.png',
+        'noti': '${ref.watch(groupListControllerProvider).notiApproval.length}',
+      },
+    ];
     final theme = pv.Provider.of<ThemeManager>(context);
 
     return SingleChildScrollView(
@@ -98,6 +98,15 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
                   ),
                   itemBuilder: (context, index) {
                     return ListTile(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return ApprovalGroup(
+                              menuSelected: requestManager[index]['key'],
+                            );
+                          },
+                        ));
+                      },
                       dense: true,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 8.0,
@@ -249,6 +258,52 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
               ),
               const SizedBox(
                 height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: theme.isDarkMode ? Colors.black : Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Image.asset(
+                          'assets/groups/stopGroup.png',
+                          width: 18,
+                          height: 18,
+                        ),
+                      ),
+                      const Text('Tạm dừng nhóm')
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: theme.isDarkMode ? Colors.black : Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Image.asset(
+                          'assets/groups/leaveGroup.png',
+                          width: 18,
+                          height: 18,
+                        ),
+                      ),
+                      const Text('Rời khỏi nhóm')
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 40,
               ),
             ],
           ),

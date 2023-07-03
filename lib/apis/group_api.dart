@@ -14,6 +14,10 @@ class GroupApi {
         .getRequestBase('/api/v1/timelines/group_collection', params);
   }
 
+  fetchGroupFeed(params, id) async {
+    return await Api().getRequestBase('/api/v1/timelines/group/$id', params);
+  }
+
   updateLinkedGroup(id, params) async {
     return await Api().postRequestBase('/api/v1/pages/$id/link_group', params);
   }
