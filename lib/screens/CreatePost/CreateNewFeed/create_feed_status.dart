@@ -4,10 +4,6 @@ import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/creat
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import "package:collection/collection.dart";
-import 'package:social_network_app_mobile/widgets/text_description.dart';
-import 'package:social_network_app_mobile/widgets/text_form_field_custom.dart';
-
-import '../../../widgets/comment_textfield.dart';
 
 class CreateFeedStatus extends StatefulWidget {
   final String? content;
