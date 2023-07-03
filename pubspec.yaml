@@ -183,6 +183,7 @@ flutter:
     - assets/effect_frame/
     - assets/sounds/
     - assets/images_and_video.png
+    - assets/image_upload.png
     - assets/camera_menu.png
     - assets/target_menu.png
     - assets/target_in_post.png

@@ -84,8 +84,10 @@ class _VideoPlayerNoneControllerState
   }
 
   _onEnd() {
-    if ((widget.media['meta']['original']['duration'] - 1) ==
-        videoPlayerController.value.position.inSeconds) {
+    if (widget.media != null &&
+        widget.media['meta'] != null &&
+        (widget.media['meta']['original']['duration'] - 1 ==
+            videoPlayerController.value.position.inSeconds)) {
       widget.onEnd != null ? widget.onEnd!() : null;
     }
   }
@@ -161,7 +163,7 @@ class _VideoPlayerNoneControllerState
                     child: AspectRatio(
                         aspectRatio: widget.aspectRatio ??
                             videoPlayerController.value.aspectRatio,
-                        child: VideoPlayer(videoPlayerController))) ),
+                        child: VideoPlayer(videoPlayerController)))),
             widget.isShowVolumn != null && widget.isShowVolumn == false
                 ? const SizedBox()
                 : Positioned(

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:extended_image/extended_image.dart';
@@ -62,9 +61,6 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
 
   _updateData(int index, dynamic newData) async {
     if (newData != null) {
-      final newImage = await uint8ListToFile(
-          newData['newUint8ListFile'], newData['file'].path);
-
       setState(() {
         filesRender[index] = newData;
         // newFileRender[index]['file'] = newImage;
