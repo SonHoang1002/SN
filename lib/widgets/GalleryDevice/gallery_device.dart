@@ -235,15 +235,12 @@ class _GalleryDeviceState extends State<GalleryDevice>
                             List<AssetEntity>? assets = snapshot.data;
                             return InkWell(
                               onTap: () {
-                                if (albumSelected!.id == album.id) {
-                                } else {
-                                  setState(() {
-                                    albumSelected = album;
-                                  });
-                                  loadAssets(albumsSelected: album);
-                                  loadAssetsImage(albumsSelected: album);
-                                  loadAssetsVideo(albumsSelected: album);
-                                }
+                                setState(() {
+                                  albumSelected = album;
+                                });
+                                loadAssets(albumsSelected: album);
+                                loadAssetsImage(albumsSelected: album);
+                                loadAssetsVideo(albumsSelected: album);
                                 _toggleRotation();
                                 _drawerScaffoldKey.currentState!
                                     .closeEndDrawer();
