@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/moment_cover.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GalleryDevice/gallery_device.dart';
 
 class CameraMomentController extends StatefulWidget {
   const CameraMomentController({Key? key}) : super(key: key);
@@ -185,36 +186,44 @@ class _BottomActionState extends State<BottomAction>
                     child: Icon(
                       isRecording ? Icons.stop : Icons.fiber_manual_record,
                       color: isRecording ? Colors.white : Colors.red,
-                      size: 60,
+                      size: 50,
                     ),
                   ),
                 );
               },
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                margin: const EdgeInsets.only(top: 5.0),
-                decoration: BoxDecoration(
-                    border: Border.all(color: white, width: 1),
-                    borderRadius: BorderRadius.circular(4),
-                    image: const DecorationImage(
-                        image: AssetImage(
-                          'assets/image_upload.png',
-                        ),
-                        fit: BoxFit.cover)),
-              ),
-              const SizedBox(
-                height: 3.0,
-              ),
-              Text('Tải lên',
-                  style: customIbmPlexSans(const TextStyle(
-                      color: white, fontWeight: FontWeight.w500)))
-            ],
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const GalleryDevice()));
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  margin: const EdgeInsets.only(top: 5.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: white, width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                      image: const DecorationImage(
+                          image: AssetImage(
+                            'assets/image_upload.png',
+                          ),
+                          fit: BoxFit.cover)),
+                ),
+                const SizedBox(
+                  height: 3.0,
+                ),
+                Text('Tải lên',
+                    style: customIbmPlexSans(const TextStyle(
+                        color: white, fontWeight: FontWeight.w500)))
+              ],
+            ),
           ),
         ],
       ),
