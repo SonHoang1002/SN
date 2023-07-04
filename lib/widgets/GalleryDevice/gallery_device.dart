@@ -41,8 +41,8 @@ class _GalleryDeviceState extends State<GalleryDevice>
     );
     _animation =
         Tween<double>(begin: 0, end: 180).animate(_animationController);
-    loadAssets();
     loadAlbums();
+    loadAssets();
     loadAssetsImage();
     loadAssetsVideo();
   }
@@ -68,36 +68,50 @@ class _GalleryDeviceState extends State<GalleryDevice>
     });
   }
 
-  void loadAssetsImage({albumsSelected}) async {
+  void loadAssetsImage({AssetPathEntity? albumParam}) async {
     List<AssetPathEntity> albums =
         await PhotoManager.getAssetPathList(type: RequestType.image);
+    AssetPathEntity? albumFilter;
+    if (albumParam != null) {
+      albumFilter = albums.firstWhere((element) => element.id == albumParam.id);
+    }
     List<AssetEntity> allAssets =
-        await (albumsSelected ?? albums[0]).getAssetListRange(
+        await (albumFilter ?? albums[0]).getAssetListRange(
       start: 0,
       end: 10000,
     );
+
     setState(() {
       assetImages = allAssets;
     });
   }
 
-  void loadAssetsVideo({albumsSelected}) async {
+  void loadAssetsVideo({albumParam}) async {
     List<AssetPathEntity> albums =
         await PhotoManager.getAssetPathList(type: RequestType.video);
+    AssetPathEntity? albumFilter;
+    if (albumParam != null) {
+      albumFilter = albums.firstWhere((element) => element.id == albumParam.id);
+    }
     List<AssetEntity> allAssets =
-        await (albumsSelected ?? albums[0]).getAssetListRange(
+        await (albumFilter ?? albums[0]).getAssetListRange(
       start: 0,
       end: 10000,
     );
+
     setState(() {
       assetVideos = allAssets;
     });
   }
 
-  void loadAssets({albumsSelected}) async {
-    List<AssetPathEntity> albums = await PhotoManager.getAssetPathList();
-    List<AssetEntity> allAssets = await (albumsSelected ?? albums[0])
-        .getAssetListRange(start: 0, end: 10000);
+  void loadAssets({albumParam}) async {
+    List<AssetEntity> allAssets;
+    if (albumParam != null) {
+      allAssets = await albumParam.getAssetListRange(start: 0, end: 10000);
+    } else {
+      List<AssetPathEntity> albums = await PhotoManager.getAssetPathList();
+      allAssets = await albums[0].getAssetListRange(start: 0, end: 10000);
+    }
     setState(() {
       assets = allAssets;
     });
@@ -157,6 +171,14 @@ class _GalleryDeviceState extends State<GalleryDevice>
       );
     } else {
       return Container();
+    }
+  }
+
+  Widget renderTabBarView(size, List<AssetEntity>? listAssets) {
+    if (listAssets == null) {
+      return ShimmerLoader(size: size);
+    } else {
+      return AssetLoader(assets: listAssets, renderWidget: buildAssetWidget);
     }
   }
 
@@ -238,10 +260,10 @@ class _GalleryDeviceState extends State<GalleryDevice>
                                 setState(() {
                                   albumSelected = album;
                                 });
-                                loadAssets(albumsSelected: album);
-                                loadAssetsImage(albumsSelected: album);
-                                loadAssetsVideo(albumsSelected: album);
                                 _toggleRotation();
+                                loadAssets(albumParam: album);
+                                loadAssetsImage(albumParam: album);
+                                loadAssetsVideo(albumParam: album);
                                 _drawerScaffoldKey.currentState!
                                     .closeEndDrawer();
                               },
@@ -295,23 +317,9 @@ class _GalleryDeviceState extends State<GalleryDevice>
                     'Video',
                   ].toList(),
                   childTab: [
-                    if (assets == null)
-                      ShimmerLoader(size: size)
-                    else
-                      AssetLoader(
-                          assets: assets ?? [], renderWidget: buildAssetWidget),
-                    if (assetImages == null)
-                      ShimmerLoader(size: size)
-                    else
-                      AssetLoader(
-                          assets: assetImages ?? [],
-                          renderWidget: buildAssetWidget),
-                    if (assetVideos == null)
-                      ShimmerLoader(size: size)
-                    else
-                      AssetLoader(
-                          assets: assetVideos ?? [],
-                          renderWidget: buildAssetWidget),
+                    renderTabBarView(size, assets),
+                    renderTabBarView(size, assetImages),
+                    renderTabBarView(size, assetVideos),
                   ]),
             )));
   }
@@ -359,18 +367,25 @@ class AssetLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.only(top: 2),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 2,
-      ),
-      itemCount: assets.length,
-      itemBuilder: (BuildContext context, int index) {
-        final asset = assets[index];
-        return renderWidget(asset);
-      },
-    );
+    return assets.isNotEmpty
+        ? GridView.builder(
+            padding: const EdgeInsets.only(top: 2),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 2,
+            ),
+            itemCount: assets.length,
+            itemBuilder: (BuildContext context, int index) {
+              final asset = assets[index];
+              return renderWidget(asset);
+            },
+          )
+        : Center(
+            child: Text('Không có file phương tiện nào',
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.displayLarge!.color,
+                    fontSize: 15)),
+          );
   }
 }
