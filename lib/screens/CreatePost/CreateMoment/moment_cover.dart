@@ -1,13 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create_moment.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:video_compress/video_compress.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MomentCover extends StatefulWidget {
   final String videoPath;
@@ -29,22 +29,36 @@ class _MomentCoverState extends State<MomentCover> {
   }
 
   handleGenerationThumbnail() async {
-    List<File> newList = [];
-    for (int i = -1; i <= 8; i++) {
-      File imageThumbnail = await getVideoThumbnail(i);
-      newList.add(imageThumbnail);
+    MediaInfo mediaInfo = await VideoCompress.getMediaInfo(widget.videoPath);
+    Duration videoDuration =
+        Duration(milliseconds: mediaInfo.duration!.floor());
+
+    Duration interval = videoDuration ~/ 10;
+
+    List<File> thumbnails = [];
+    for (int i = 0; i < 10; i++) {
+      Duration thumbnailTime = interval * i;
+      File thumbnailData = await getVideoThumbnail(i, thumbnailTime);
+      thumbnails.add(thumbnailData);
     }
 
     setState(() {
-      listImages = newList;
+      listImages = thumbnails;
     });
   }
 
-  getVideoThumbnail(position) async {
-    final thumbnailFile = await VideoCompress.getFileThumbnail(widget.videoPath,
-        position: position // default(-1)
-        );
-    return thumbnailFile;
+  getVideoThumbnail(i, position) async {
+    final thumbnailFile = await VideoThumbnail.thumbnailData(
+      video: widget.videoPath,
+      imageFormat: ImageFormat.JPEG,
+      timeMs: position.inMilliseconds,
+    );
+
+    final tempDir = await getTemporaryDirectory();
+    File file = await File('${tempDir.path}/image_$i.png').create();
+    file.writeAsBytesSync(thumbnailFile!);
+
+    return file;
   }
 
   @override
@@ -81,86 +95,103 @@ class _MomentCoverState extends State<MomentCover> {
       ),
       body: Column(
         children: [
-          Center(
-            child: SizedBox(
-              width: size.width * 0.65,
-              height: 500,
-              child: VideoPlayerNoneController(
-                path: widget.videoPath,
-                type: 'local',
-                isShowVolumn: false,
+          const SizedBox(
+            height: 10,
+          ),
+          if (listImages.isNotEmpty)
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: primaryColorSelected)),
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      width: size.width * 0.65,
+                      height: size.width * 0.65 * 16 / 9,
+                      child: Image.file(listImages[imageIndexSelected],
+                          fit: BoxFit.cover),
+                    ),
+                    const Positioned.fill(
+                      child: Center(
+                        child: Icon(
+                          CupertinoIcons.play_circle,
+                          color: white,
+                          size: 60,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
+          const SizedBox(
+            height: 12,
           ),
           SizedBox(
-            width: size.width - 30,
-            height: 5 + 1.5 * (size.width - 30) / 10,
-            child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: listImages.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  File image = listImages[index];
-                  return Listener(
-                      // onPointerDown: (PointerDownEvent event) {
-                      //   int newIndex =
-                      //       (event.localPosition.dx / ((size.width - 33) / 10))
-                      //           .floor();
-                      //   if (newIndex != imageIndexSelected &&
-                      //       newIndex >= 0 &&
-                      //       newIndex < listImages.length) {
-                      //     setState(() {
-                      //       imageIndexSelected = newIndex;
-                      //     });
-                      //   }
-                      // },
-                      // onPointerMove: (PointerMoveEvent event) {
-                      //   int moveAmount =
-                      //       (event.localPosition.dx / ((size.width - 33) / 10))
-                      //           .floor();
-                      //   int newIndex = imageIndexSelected + moveAmount - index;
-                      //   if (newIndex != imageIndexSelected &&
-                      //       newIndex >= 0 &&
-                      //       newIndex < listImages.length) {
-                      //     setState(() {
-                      //       imageIndexSelected = newIndex;
-                      //     });
-                      //   }
-                      // },
-                      child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        imageIndexSelected = index;
-                      });
-                    },
-                    child: Center(
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border: imageIndexSelected == index
-                                    ? Border.all(width: 2, color: Colors.red)
-                                    : Border.all(width: 0, color: transparent)),
-                            child: Image.file(
-                              image,
-                              width: (size.width - 33) / 10,
-                              height: (imageIndexSelected == index ? 5 : 0) +
-                                  1.5 * (size.width - 30) / 10,
-                              fit: BoxFit.cover,
-                            ),
+              width: size.width - 30,
+              height: 5 + 1.5 * (size.width - 30) / 10,
+              child: Listener(
+                onPointerMove: (PointerMoveEvent event) {
+                  int newIndex =
+                      (event.localPosition.dx / ((size.width - 33) / 10))
+                          .floor();
+                  if (newIndex != imageIndexSelected &&
+                      newIndex >= 0 &&
+                      newIndex < listImages.length) {
+                    setState(() {
+                      imageIndexSelected = newIndex;
+                    });
+                  }
+                },
+                child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: listImages.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      File image = listImages[index];
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            imageIndexSelected = index;
+                          });
+                        },
+                        child: Center(
+                          child: Stack(
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeOut,
+                                decoration: BoxDecoration(
+                                    border: imageIndexSelected == index
+                                        ? Border.all(
+                                            width: 2, color: Colors.red)
+                                        : Border.all(
+                                            width: 0, color: transparent)),
+                                child: Image.file(
+                                  image,
+                                  width: (size.width -
+                                          (imageIndexSelected == index
+                                              ? 35
+                                              : 33)) /
+                                      10,
+                                  height:
+                                      (imageIndexSelected == index ? 2 : 0) +
+                                          1.35 * (size.width - 30) / 10,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              imageIndexSelected == index
+                                  ? const SizedBox()
+                                  : Positioned.fill(
+                                      child: Container(
+                                      color: Colors.white.withOpacity(0.5),
+                                    ))
+                            ],
                           ),
-                          imageIndexSelected == index
-                              ? const SizedBox()
-                              : Positioned.fill(
-                                  child: Container(
-                                  color: Colors.white.withOpacity(0.4),
-                                ))
-                        ],
-                      ),
-                    ),
-                  ));
-                }),
-          )
+                        ),
+                      );
+                    }),
+              ))
         ],
       ),
     );
