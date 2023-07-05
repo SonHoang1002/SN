@@ -57,13 +57,10 @@ class _InviteFriendState extends State<InviteFriend>
     });
     searchFriendInvite(null);
       _tabController.addListener(() {
-      print("aaaaa");
-      if (_tabController.index != 0) {
         if(fetchInvitedCheck == false){
           fetchFriendInvited(null);
           fetchInvitedCheck = true;
         }
-      }
     });
   }
 
