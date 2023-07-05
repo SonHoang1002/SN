@@ -63,6 +63,8 @@
 	<string>Replace with your permission description</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Replace with your permission description</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Reason for needing write access to photo library.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

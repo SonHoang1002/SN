@@ -65,7 +65,10 @@ class _TabSocialState extends State<TabSocial> with TickerProviderStateMixin {
               (index) => Tab(
                 icon:
                     widget.tabCustom != null ? widget.tabCustom![index] : null,
-                text: widget.tabHeader != null ? widget.tabHeader![index] : "",
+                child: Text(
+                  widget.tabHeader != null ? widget.tabHeader![index] : "",
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
             ),
           ),

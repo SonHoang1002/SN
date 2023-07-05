@@ -151,21 +151,22 @@ class MomentController extends StateNotifier<MomentState> {
   }
 
   updateMomentUpload(
-      String videoPath, String imageCover, dynamic data, snackbar) async {
+      String videoPath, File imageCover, dynamic data, snackbar) async {
     Future<String> imageToBase64(String imagePath) async {
       final bytes = await File(imagePath).readAsBytes();
       final base64Str = base64Encode(bytes);
       return 'data:image/jpeg;base64,$base64Str';
     }
 
-    handleUploadMedia(fileData, imageCover) async {
+    handleUploadMedia(fileData, File imageCover) async {
+      print('fileData, $fileData');
       fileData = fileData.replaceAll('file://', '');
       MediaInfo? info;
 
       try {
         info = await VideoCompress.compressVideo(
           fileData,
-          quality: VideoQuality.DefaultQuality,
+          quality: VideoQuality.Res1280x720Quality,
           deleteOrigin: false, // Keeping the original video
           includeAudio: true, // Including audio
         );
@@ -178,7 +179,7 @@ class MomentController extends StateNotifier<MomentState> {
               info.path ?? '',
               filename: info.path!.split('/').last,
             ),
-            "show_url": await imageToBase64(imageCover),
+            "show_url": await imageToBase64(imageCover.path),
           });
 
           var response = await MediaApi().uploadMediaEmso(formData);
@@ -191,7 +192,7 @@ class MomentController extends StateNotifier<MomentState> {
         // Remember to cancel compression and delete cache in case of an error
         VideoCompress.cancelCompression();
         VideoCompress.deleteAllCache();
-        throw e; // Re-throwing the exception to handle it outside this function
+        rethrow; // Re-throwing the exception to handle it outside this function
       }
     }
 

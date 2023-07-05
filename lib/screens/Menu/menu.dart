@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
-import 'package:social_network_app_mobile/screens/Feed/drawer.dart';
-import 'package:social_network_app_mobile/screens/Friend/friend_search.dart';
 import 'package:social_network_app_mobile/screens/Menu/menu_user.dart';
 import 'package:social_network_app_mobile/screens/Setting/setting.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -88,10 +86,10 @@ class _MenuState extends ConsumerState<Menu> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
+            const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   SizedBox(
                     width: 6,
                   ),
