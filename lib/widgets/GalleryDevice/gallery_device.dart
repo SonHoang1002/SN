@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:typed_data';
@@ -7,10 +9,12 @@ import 'package:shimmer/shimmer.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
-import 'package:social_network_app_mobile/widgets/tab_social.dart';
+// import 'package:social_network_app_mobile/widgets/tab_social.dart';
 
 class GalleryDevice extends StatefulWidget {
-  const GalleryDevice({super.key});
+  final Function? handleAction;
+  final Function? handleClose;
+  const GalleryDevice({super.key, this.handleAction, this.handleClose});
 
   @override
   State<GalleryDevice> createState() => _GalleryDeviceState();
@@ -20,8 +24,8 @@ class _GalleryDeviceState extends State<GalleryDevice>
     with SingleTickerProviderStateMixin {
   String tabSelected = "Tất cả";
   List<AssetEntity>? assets;
-  List<AssetEntity>? assetImages;
-  List<AssetEntity>? assetVideos;
+  // List<AssetEntity>? assetImages;
+  // List<AssetEntity>? assetVideos;
   List<AssetPathEntity> albums = [];
   AssetPathEntity? albumSelected;
 
@@ -43,8 +47,8 @@ class _GalleryDeviceState extends State<GalleryDevice>
         Tween<double>(begin: 0, end: 180).animate(_animationController);
     loadAlbums();
     loadAssets();
-    loadAssetsImage();
-    loadAssetsVideo();
+    // loadAssetsImage();
+    // loadAssetsVideo();
   }
 
   @override
@@ -68,48 +72,49 @@ class _GalleryDeviceState extends State<GalleryDevice>
     });
   }
 
-  void loadAssetsImage({AssetPathEntity? albumParam}) async {
-    List<AssetPathEntity> albums =
-        await PhotoManager.getAssetPathList(type: RequestType.image);
-    AssetPathEntity? albumFilter;
-    if (albumParam != null) {
-      albumFilter = albums.firstWhere((element) => element.id == albumParam.id);
-    }
-    List<AssetEntity> allAssets =
-        await (albumFilter ?? albums[0]).getAssetListRange(
-      start: 0,
-      end: 10000,
-    );
+  // void loadAssetsImage({AssetPathEntity? albumParam}) async {
+  //   List<AssetPathEntity> albums =
+  //       await PhotoManager.getAssetPathList(type: RequestType.image);
+  //   AssetPathEntity? albumFilter;
+  //   if (albumParam != null) {
+  //     albumFilter = albums.firstWhere((element) => element.id == albumParam.id);
+  //   }
+  //   List<AssetEntity> allAssets =
+  //       await (albumFilter ?? albums[0]).getAssetListRange(
+  //     start: 0,
+  //     end: 10000,
+  //   );
 
-    setState(() {
-      assetImages = allAssets;
-    });
-  }
+  //   setState(() {
+  //     assetImages = allAssets;
+  //   });
+  // }
 
-  void loadAssetsVideo({albumParam}) async {
-    List<AssetPathEntity> albums =
-        await PhotoManager.getAssetPathList(type: RequestType.video);
-    AssetPathEntity? albumFilter;
-    if (albumParam != null) {
-      albumFilter = albums.firstWhere((element) => element.id == albumParam.id);
-    }
-    List<AssetEntity> allAssets =
-        await (albumFilter ?? albums[0]).getAssetListRange(
-      start: 0,
-      end: 10000,
-    );
+  // void loadAssetsVideo({albumParam}) async {
+  //   List<AssetPathEntity> albums =
+  //       await PhotoManager.getAssetPathList(type: RequestType.video);
+  //   AssetPathEntity? albumFilter;
+  //   if (albumParam != null) {
+  //     albumFilter = albums.firstWhere((element) => element.id == albumParam.id);
+  //   }
+  //   List<AssetEntity> allAssets =
+  //       await (albumFilter ?? albums[0]).getAssetListRange(
+  //     start: 0,
+  //     end: 10000,
+  //   );
 
-    setState(() {
-      assetVideos = allAssets;
-    });
-  }
+  //   setState(() {
+  //     assetVideos = allAssets;
+  //   });
+  // }
 
   void loadAssets({albumParam}) async {
     List<AssetEntity> allAssets;
     if (albumParam != null) {
       allAssets = await albumParam.getAssetListRange(start: 0, end: 10000);
     } else {
-      List<AssetPathEntity> albums = await PhotoManager.getAssetPathList();
+      List<AssetPathEntity> albums =
+          await PhotoManager.getAssetPathList(type: RequestType.video);
       allAssets = await albums[0].getAssetListRange(start: 0, end: 10000);
     }
     setState(() {
@@ -119,55 +124,61 @@ class _GalleryDeviceState extends State<GalleryDevice>
 
   Widget buildAssetWidget(AssetEntity asset) {
     if (asset.type == AssetType.image) {
-      return GestureDetector(
-        onTap: () {},
-        child: FutureBuilder<Uint8List?>(
-          future: asset.thumbnailDataWithSize(const ThumbnailSize(400, 400)),
-          builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.data != null) {
-              return Image.memory(
+      return FutureBuilder<Uint8List?>(
+        future: asset.thumbnailDataWithSize(const ThumbnailSize(400, 400)),
+        builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
+            return GestureDetector(
+              onTap: () {
+                print(asset);
+                widget.handleAction!(snapshot.data!);
+              },
+              child: Image.memory(
                 snapshot.data!,
                 fit: BoxFit.cover,
-              );
-            } else {
-              isLoading = false;
-              return Container();
-            }
-          },
-        ),
+              ),
+            );
+          } else {
+            isLoading = false;
+            return Container();
+          }
+        },
       );
     } else if (asset.type == AssetType.video) {
-      return GestureDetector(
-        onTap: () {},
-        child: FutureBuilder<Uint8List?>(
-          future: asset.thumbnailDataWithSize(const ThumbnailSize(400, 400)),
-          builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.data != null) {
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    width: 300,
-                    height: 300,
-                    child: Image.memory(
-                      snapshot.data!,
-                      fit: BoxFit.cover,
+      return FutureBuilder<Uint8List?>(
+        future: asset.thumbnailDataWithSize(const ThumbnailSize(400, 400)),
+        builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
+            return GestureDetector(
+                onTap: () async {
+                  File? fileData = await asset.loadFile();
+
+                  widget.handleAction!(fileData);
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: Image.memory(
+                        snapshot.data!,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  const Icon(
-                    Icons.play_circle,
-                    size: 30,
-                    color: white,
-                  ),
-                ],
-              );
-            } else {
-              return Center(child: Container());
-            }
-          },
-        ),
+                    const Icon(
+                      Icons.play_circle,
+                      size: 45,
+                      color: white,
+                    ),
+                  ],
+                ));
+          } else {
+            return Center(child: Container());
+          }
+        },
       );
     } else {
       return Container();
@@ -255,54 +266,56 @@ class _GalleryDeviceState extends State<GalleryDevice>
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             List<AssetEntity>? assets = snapshot.data;
-                            return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  albumSelected = album;
-                                });
-                                _toggleRotation();
-                                loadAssets(albumParam: album);
-                                loadAssetsImage(albumParam: album);
-                                loadAssetsVideo(albumParam: album);
-                                _drawerScaffoldKey.currentState!
-                                    .closeEndDrawer();
-                              },
-                              child: Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  margin: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      IgnorePointer(
-                                        child: SizedBox(
-                                            width: 60,
-                                            height: 60,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: assets!.isNotEmpty
-                                                  ? buildAssetWidget(assets[0])
-                                                  : Container(
-                                                      width: 60,
-                                                      height: 60,
-                                                      color: Colors.amber,
-                                                    ),
-                                            )),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        album.name,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .displayLarge!
-                                                .color),
-                                      )
-                                    ],
-                                  )),
-                            );
+                            return assets!.isNotEmpty
+                                ? InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        assets = null;
+                                        albumSelected = album;
+                                      });
+                                      loadAssets(albumParam: album);
+                                      // loadAssetsImage(albumParam: album);
+                                      // loadAssetsVideo(albumParam: album);
+
+                                      _toggleRotation();
+                                      _drawerScaffoldKey.currentState!
+                                          .closeEndDrawer();
+                                    },
+                                    child: Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        margin: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            IgnorePointer(
+                                              child: SizedBox(
+                                                width: 60,
+                                                height: 60,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: assets.isNotEmpty
+                                                      ? buildAssetWidget(
+                                                          assets[0])
+                                                      : null,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              album.name,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displayLarge!
+                                                      .color),
+                                            )
+                                          ],
+                                        )),
+                                  )
+                                : const SizedBox();
                           }
                           return const SizedBox();
                         });
@@ -310,17 +323,18 @@ class _GalleryDeviceState extends State<GalleryDevice>
             ),
             body: SizedBox(
               width: size.width,
-              child: TabSocial(
-                  tabHeader: const [
-                    'Tất cả',
-                    'Hình ảnh',
-                    'Video',
-                  ].toList(),
-                  childTab: [
-                    renderTabBarView(size, assets),
-                    renderTabBarView(size, assetImages),
-                    renderTabBarView(size, assetVideos),
-                  ]),
+              child:
+                  // TabSocial(
+                  //     tabHeader: const [
+                  //       'Tất cả',
+                  //       'Hình ảnh',
+                  //       'Video',
+                  //     ].toList(),
+                  //     childTab: [
+                  renderTabBarView(size, assets),
+              //   renderTabBarView(size, assetImages),
+              //   renderTabBarView(size, assetVideos),
+              // ]),
             )));
   }
 }
@@ -371,10 +385,10 @@ class AssetLoader extends StatelessWidget {
         ? GridView.builder(
             padding: const EdgeInsets.only(top: 2),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-            ),
+                crossAxisCount: 3,
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 2,
+                childAspectRatio: 0.73),
             itemCount: assets.length,
             itemBuilder: (BuildContext context, int index) {
               final asset = assets[index];

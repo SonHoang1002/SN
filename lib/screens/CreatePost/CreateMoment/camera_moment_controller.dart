@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/moment_cover.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GalleryDevice/gallery_device.dart';
+// import 'package:video_compress/video_compress.dart';
 
 class CameraMomentController extends StatefulWidget {
   const CameraMomentController({Key? key}) : super(key: key);
@@ -144,6 +147,13 @@ class _BottomActionState extends State<BottomAction>
     super.dispose();
   }
 
+  // Future<File> convertVideo(Uint8List videoData) async {
+  //   final directory = await getTemporaryDirectory();
+  //   final videoFile = File('${directory.path}/video.mp4');
+  //   await videoFile.writeAsBytes(videoData, mode: FileMode.write);
+  //   return videoFile;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -152,7 +162,7 @@ class _BottomActionState extends State<BottomAction>
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(bottom: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           const SizedBox(
             width: 40,
@@ -198,7 +208,15 @@ class _BottomActionState extends State<BottomAction>
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const GalleryDevice()));
+                      builder: (context) => GalleryDevice(
+                          handleAction: (File? asset) async {
+                            final navigate = Navigator.of(context);
+                            // File videoFile = await convertVideo(asset!);
+                            navigate.push(MaterialPageRoute(
+                                builder: (context) =>
+                                    MomentCover(videoPath: asset!.path)));
+                          },
+                          handleClose: () {})));
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

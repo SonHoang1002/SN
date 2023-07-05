@@ -165,7 +165,7 @@ class MomentController extends StateNotifier<MomentState> {
       try {
         info = await VideoCompress.compressVideo(
           fileData,
-          quality: VideoQuality.Res1920x1080Quality,
+          quality: VideoQuality.Res1280x720Quality,
           deleteOrigin: false, // Keeping the original video
           includeAudio: true, // Including audio
         );
