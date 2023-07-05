@@ -79,7 +79,11 @@ class _MomentState extends ConsumerState<Moment>
           ref.read(momentControllerProvider.notifier).updateMomentUpload(
               widget.dataUploadMoment['videoPath'],
               widget.dataUploadMoment['imageCover'],
-              widget.dataUploadMoment,
+              {
+                ...widget.dataUploadMoment,
+                'imageCover': null,
+                'videoPath': null
+              },
               ScaffoldMessenger.of(context));
         });
       }
