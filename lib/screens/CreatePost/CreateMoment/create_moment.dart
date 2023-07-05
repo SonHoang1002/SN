@@ -83,7 +83,7 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
   }
 
   handleSubmit() {
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
             builder: (context) => Moment(
@@ -94,7 +94,8 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
                       "imageCover": widget.imageCover
                     }
                     // dataAdditional: response,
-                    )));
+                    )),
+        ((route) => route.isFirst));
   }
 
   @override

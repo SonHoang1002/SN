@@ -11,7 +11,9 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 class MomentCover extends StatefulWidget {
   final String videoPath;
-  const MomentCover({Key? key, required this.videoPath}) : super(key: key);
+  final String? videoPathUpload;
+  const MomentCover({Key? key, required this.videoPath, this.videoPathUpload})
+      : super(key: key);
 
   @override
   _MomentCoverState createState() => _MomentCoverState();
@@ -77,7 +79,8 @@ class _MomentCoverState extends State<MomentCover> {
                     CupertinoPageRoute(
                         builder: (context) => CreateMoment(
                             imageCover: listImages[imageIndexSelected],
-                            videoPath: widget.videoPath)));
+                            videoPath:
+                                widget.videoPathUpload ?? widget.videoPath)));
               },
               child: Text(
                 "Xong",
