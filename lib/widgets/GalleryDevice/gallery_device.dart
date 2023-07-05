@@ -131,8 +131,7 @@ class _GalleryDeviceState extends State<GalleryDevice>
               snapshot.data != null) {
             return GestureDetector(
               onTap: () {
-                print(asset);
-                widget.handleAction!(snapshot.data!);
+                // widget.handleAction!(snapshot.data!);
               },
               child: Image.memory(
                 snapshot.data!,
@@ -153,9 +152,10 @@ class _GalleryDeviceState extends State<GalleryDevice>
               snapshot.data != null) {
             return GestureDetector(
                 onTap: () async {
-                  File? fileData = await asset.loadFile();
+                  String? filePath = await asset.getMediaUrl();
+                  File? file = await asset.loadFile();
 
-                  widget.handleAction!(fileData);
+                  widget.handleAction!({'file': file, 'filePath': filePath});
                 },
                 child: Stack(
                   alignment: Alignment.center,

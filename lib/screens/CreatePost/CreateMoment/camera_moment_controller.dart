@@ -209,12 +209,13 @@ class _BottomActionState extends State<BottomAction>
                   context,
                   MaterialPageRoute(
                       builder: (context) => GalleryDevice(
-                          handleAction: (File? asset) async {
+                          handleAction: (dynamic asset) async {
                             final navigate = Navigator.of(context);
                             // File videoFile = await convertVideo(asset!);
                             navigate.push(MaterialPageRoute(
-                                builder: (context) =>
-                                    MomentCover(videoPath: asset!.path)));
+                                builder: (context) => MomentCover(
+                                    videoPath: asset!['file'].path,
+                                    videoPathUpload: asset!['filePath'])));
                           },
                           handleClose: () {})));
             },

@@ -64,11 +64,6 @@ class _MomentState extends ConsumerState<Moment>
             .read(momentControllerProvider.notifier)
             .getListMomentSuggest({"limit": 5});
       });
-      Future.delayed(Duration.zero, () {
-        ref
-            .read(momentControllerProvider.notifier)
-            .getListMomentFollow({"limit": 5});
-      });
 
       if (widget.dataUploadMoment != null) {
         Future.delayed(Duration.zero, () {
@@ -88,6 +83,18 @@ class _MomentState extends ConsumerState<Moment>
         });
       }
     }
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging &&
+          _tabController.index == 0 &&
+          ref.read(momentControllerProvider).momentFollow.isNotEmpty) {
+        Future.delayed(Duration.zero, () {
+          ref
+              .read(momentControllerProvider.notifier)
+              .getListMomentFollow({"limit": 5});
+        });
+      }
+    });
   }
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
