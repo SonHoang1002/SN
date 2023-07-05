@@ -19,6 +19,11 @@ class GroupListState {
   final List requestMember;
   final List notiApproval;
   final List groupPost;
+  final List groupPins;
+  final List groupRoleMember;
+  final List groupRoleFriend;
+  final List groupRoleAdmin;
+  final List groupRoleMorderator;
 
   const GroupListState({
     this.groupAdmin = const [],
@@ -36,6 +41,11 @@ class GroupListState {
     this.requestMember = const [],
     this.notiApproval = const [],
     this.groupPost = const [],
+    this.groupPins = const [],
+    this.groupRoleMember = const [],
+    this.groupRoleFriend = const [],
+    this.groupRoleAdmin = const [],
+    this.groupRoleMorderator = const [],
   });
 
   GroupListState copyWith({
@@ -54,6 +64,11 @@ class GroupListState {
     List requestMember = const [],
     List notiApproval = const [],
     List groupPost = const [],
+    List groupPins = const [],
+    List groupRoleMember = const [],
+    List groupRoleFriend = const [],
+    List groupRoleAdmin = const [],
+    List groupRoleMorderator = const [],
   }) {
     return GroupListState(
       groupAdmin: groupAdmin,
@@ -71,6 +86,11 @@ class GroupListState {
       requestMember: requestMember,
       notiApproval: notiApproval,
       groupPost: groupPost,
+      groupPins: groupPins,
+      groupRoleMember: groupRoleMember,
+      groupRoleFriend: groupRoleFriend,
+      groupRoleAdmin: groupRoleAdmin,
+      groupRoleMorderator: groupRoleMorderator,
     );
   }
 }
@@ -105,6 +125,11 @@ class GroupListController extends StateNotifier<GroupListState> {
       requestMember: state.requestMember,
       notiApproval: state.notiApproval,
       groupPost: state.groupPost,
+      groupPins: state.groupPins,
+      groupRoleMember: state.groupRoleMember,
+      groupRoleFriend: state.groupRoleFriend,
+      groupRoleAdmin: state.groupRoleAdmin,
+      groupRoleMorderator: state.groupRoleMorderator,
     );
   }
 
@@ -136,6 +161,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -159,6 +189,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -183,6 +218,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -206,6 +246,11 @@ class GroupListController extends StateNotifier<GroupListState> {
       requestMember: state.requestMember,
       notiApproval: state.notiApproval,
       groupPost: state.groupPost,
+      groupPins: state.groupPins,
+      groupRoleMember: state.groupRoleMember,
+      groupRoleFriend: state.groupRoleFriend,
+      groupRoleAdmin: state.groupRoleAdmin,
+      groupRoleMorderator: state.groupRoleMorderator,
     );
   }
 
@@ -228,6 +273,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -251,6 +301,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -274,6 +329,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: response,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     } else {
       state = state.copyWith(
@@ -291,6 +351,12 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: [],
         notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -314,6 +380,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     } else {
       state = state.copyWith(
@@ -332,6 +403,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -355,6 +431,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     } else {
       state = state.copyWith(
@@ -373,6 +454,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: state.notiApproval,
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -395,6 +481,12 @@ class GroupListController extends StateNotifier<GroupListState> {
         waitingApproval: state.waitingApproval,
         requestMember: state.requestMember,
         notiApproval: response,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     } else {
       state = state.copyWith(
@@ -413,6 +505,11 @@ class GroupListController extends StateNotifier<GroupListState> {
         requestMember: state.requestMember,
         notiApproval: [],
         groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
       );
     }
   }
@@ -438,6 +535,95 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupPost: params.containsKey('max_id')
             ? state.groupPost + response
             : response,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+      );
+    }
+  }
+
+  getGroupPins(id) async {
+    List response = await GroupApi().fetchListGroupPins(id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: response,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+      );
+    } else {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: [],
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+      );
+    }
+  }
+
+  getGroupRole(params, id) async {
+    String role = params['role'];
+
+    List response = await GroupApi().fetchGroupRole(params, id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember:
+            params['exclude_friend'] == true ? response : state.groupRoleMember,
+        groupRoleFriend:
+            params['include_friend'] == true ? response : state.groupRoleFriend,
+        groupRoleAdmin: role == 'admin' ? response : state.groupRoleAdmin,
+        groupRoleMorderator:
+            role == 'moderator' ? response : state.groupRoleMorderator,
       );
     }
   }

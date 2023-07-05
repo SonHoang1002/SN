@@ -9,9 +9,17 @@ class GroupApi {
     return await Api().getRequestBase('/api/v1/groups/$id', null);
   }
 
+  Future fetchGroupRole(params, id) async {
+    return await Api().getRequestBase('/api/v1/groups/$id/accounts', params);
+  }
+
   fetchListGroupFeed(params) async {
     return await Api()
         .getRequestBase('/api/v1/timelines/group_collection', params);
+  }
+
+  fetchListGroupPins(id) async {
+    return await Api().getRequestBase('/api/v1/groups/$id/pins', null);
   }
 
   fetchGroupFeed(params, id) async {
