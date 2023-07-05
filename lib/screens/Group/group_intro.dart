@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/group_role.dart';
 import 'package:social_network_app_mobile/widgets/AvatarStack/src/avatar_stack.dart';
+import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
 import '../../widgets/AvatarStack/src/positions/positions.dart';
 import '../../widgets/AvatarStack/src/positions/restricted_positions.dart';
@@ -87,7 +89,7 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: const Text('Group Intro'),
+        title: AppBarTitle(title: widget.groupDetail['title']),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -138,19 +140,28 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
               thickness: 1,
               height: 20,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Thành viên',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  'Xem tất cả',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.blue,
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const GroupRole();
+                      },
+                    ));
+                  },
+                  child: const Text(
+                    'Xem tất cả',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.blue,
+                    ),
                   ),
                 ),
               ],
@@ -206,14 +217,6 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
                       ? '${groupAdmin[0]['account']['display_name']} và ${groupAdmin[1]['account']['display_name']} là quản trị viên'
                       : '${groupAdmin[0]['account']['display_name']} là quản trị viên',
               style: const TextStyle(color: Colors.grey),
-            ),
-            const Divider(
-              thickness: 1,
-              height: 20,
-            ),
-            const Text(
-              'Hoạt động trong nhóm',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ],
         ),
