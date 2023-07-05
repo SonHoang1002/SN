@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
@@ -28,6 +29,7 @@ class _InviteFriendState extends State<InviteFriend>
   dynamic paramsIncluded;
   List inviteSuccess = [];
   List inviteCheck = [];
+  bool fetchInvitedCheck = false;
 
   @override
   void initState() {
@@ -53,18 +55,28 @@ class _InviteFriendState extends State<InviteFriend>
         default:
       }
     });
-
     searchFriendInvite(null);
-    _tabController.addListener(() {
-      if (_tabController.index == 1) {
-        fetchFriendInvited(null);
+      _tabController.addListener(() {
+      print("aaaaa");
+      if (_tabController.index != 0) {
+        if(fetchInvitedCheck == false){
+          fetchFriendInvited(null);
+          fetchInvitedCheck = true;
+        }
       }
     });
   }
 
   void searchFriendInvite(key) async {
-    fetchFriendUnInvited(key);
-    fetchFriendInvited(key);
+    if(key!= null){
+      EasyDebounce.debounce(
+                  'my-debouncer', const Duration(milliseconds: 800), () {
+        fetchFriendUnInvited(key);
+    });
+    }
+    else{
+      fetchFriendUnInvited(key);
+    }  
   }
 
   void fetchFriendUnInvited(key) async {
@@ -75,6 +87,7 @@ class _InviteFriendState extends State<InviteFriend>
       if (mounted) {
         setState(() {
           friendUnInvited = response['data'];
+          fetchInvitedCheck = false;
         });
       }
     }
@@ -114,6 +127,7 @@ class _InviteFriendState extends State<InviteFriend>
         if (res != null) {
           setState(() {
             inviteSuccess = inviteSuccess + value;
+            fetchInvitedCheck = false;
           });
         }
         break;
@@ -196,14 +210,16 @@ class _InviteFriendState extends State<InviteFriend>
         ),
         body: Column(
           children: [
-            Container(
-                padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-                child: SearchInput(handleSearch: (value) async {
-                  searchFriendInvite(value);
-                })),
             Expanded(
               child: TabBarView(controller: _tabController, children: [
-                ListView.builder(
+                Column(
+                  children: [
+                    Container(
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+                child: SearchInput(handleSearch: (value) async {   
+                  searchFriendInvite(value);
+                })),
+                Expanded(child: ListView.builder(
                     itemCount: friendUnInvited.length,
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
@@ -253,7 +269,11 @@ class _InviteFriendState extends State<InviteFriend>
                                 },
                               ),
                       );
-                    }),
+                    }),)
+                     
+                  ],
+                ),
+               
                 ListView.builder(
                     itemCount: friendInvited.length,
                     scrollDirection: Axis.vertical,

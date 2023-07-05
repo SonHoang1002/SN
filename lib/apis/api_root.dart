@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
@@ -44,8 +45,10 @@ class Api {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         logOutWhenTokenError();
+        return null;
       }
     }
+    return null; // Trả về null nếu không xảy ra lỗi hoặc lỗi không xác định.
   }
 
   Future postRequestBase(String path, data) async {
