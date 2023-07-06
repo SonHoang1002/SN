@@ -14,11 +14,13 @@ class AppBarTitle extends StatelessWidget {
       title,
       style: textStyle ??
           TextStyle(
-              fontSize: 18,
-              overflow: TextOverflow.ellipsis,
-              fontWeight: FontWeight.w600,
-              color:
-                  textColor ?? Theme.of(context).textTheme.displayLarge!.color),
+            fontSize: 18,
+            overflow: TextOverflow.ellipsis,
+            fontWeight: FontWeight.w600,
+            color: textColor ?? Theme.of(context).textTheme.displayLarge!.color,
+          ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

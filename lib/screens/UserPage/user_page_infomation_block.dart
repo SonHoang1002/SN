@@ -38,12 +38,48 @@ class UserPageInfomationBlock extends StatelessWidget {
     }
   }
 
+  ListTile buildListTile(
+    String normalTxt,
+    String boldText,
+    ThemeManager theme,
+    IconData iconData,
+  ) {
+    return ListTile(
+      dense: true,
+      horizontalTitleGap: 0.0,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 0.0,
+        vertical: 0.0,
+      ),
+      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+      leading: Icon(iconData, size: 18),
+      title: RichText(
+        text: TextSpan(
+          text: '$normalTxt ',
+          style: TextStyle(
+            fontSize: 15,
+            color: theme.isDarkMode ? Colors.white : Colors.black,
+          ),
+          children: [
+            TextSpan(
+              text: boldText,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     dynamic generalInformation = userAbout?['general_information'];
     List hobbies = userAbout['hobbies'] ?? [];
+    final relationshipPartner = userAbout['account_relationship'];
     final theme = Provider.of<ThemeManager>(context);
     final size = MediaQuery.of(context).size;
+    final createdDate =
+        user['created_at'] != null ? DateTime.parse(user['created_at']) : null;
     return generalInformation == null
         ? const SizedBox()
         : Container(
@@ -52,12 +88,25 @@ class UserPageInfomationBlock extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
+                  'Giới thiệu',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
+                ),
+                if (generalInformation['description'] != null &&
+                    generalInformation['description'].isNotEmpty)
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: Text(
+                        generalInformation['description'],
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ),
+                const Text(
                   'Chi tiết',
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
                 ),
-                const SizedBox(
-                  height: 8.0,
-                ),
+                const SizedBox(height: 8.0),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Column(
@@ -92,52 +141,63 @@ class UserPageInfomationBlock extends StatelessWidget {
                           },
                         ),
                       ),
-                      if (generalInformation['description'] != null &&
-                          generalInformation['description'].isNotEmpty)
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          child: ItemInformation(
-                            icon: FontAwesomeIcons.solidComment,
-                            text: generalInformation['description'],
-                          ),
-                        ),
                       if (generalInformation['place_live'] != null)
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          child: ItemInformation(
-                            icon: FontAwesomeIcons.house,
-                            text:
-                                'Sống tại ${generalInformation['place_live']['title'] ?? generalInformation['place_live']['name']}',
-                          ),
+                        buildListTile(
+                          'Sống tại',
+                          '${generalInformation['place_live']['title'] ?? generalInformation['place_live']['name']}',
+                          theme,
+                          FontAwesomeIcons.house,
                         ),
                       if (generalInformation['hometown'] != null)
-                        Container(
-                            margin: const EdgeInsets.only(bottom: 16),
-                            child: ItemInformation(
-                              icon: FontAwesomeIcons.locationDot,
-                              text:
-                                  'Đến từ ${generalInformation['hometown']['title'] ?? generalInformation['hometown']['name']}',
-                            )),
+                        buildListTile(
+                          'Đến từ',
+                          '${generalInformation['hometown']['title'] ?? generalInformation['hometown']['name']}',
+                          theme,
+                          FontAwesomeIcons.locationDot,
+                        ),
+                      if (relationshipPartner != null &&
+                          relationshipPartner['relationship_category'] !=
+                              null &&
+                          relationshipPartner['partner'] != null)
+                        buildListTile(
+                          '${relationshipPartner['relationship_category']['name']} cùng với ',
+                          '${relationshipPartner['partner']['display_name']}',
+                          theme,
+                          FontAwesomeIcons.heart,
+                        ),
                       if (generalInformation['phone_number'] != null)
-                        Container(
-                            margin: const EdgeInsets.only(bottom: 16),
-                            child: ItemInformation(
-                              icon: FontAwesomeIcons.phone,
-                              text: generalInformation['phone_number'],
-                            )),
+                        buildListTile(
+                          generalInformation['phone_number'],
+                          '',
+                          theme,
+                          FontAwesomeIcons.phone,
+                        ),
                       if (user['followers_count'] != null)
-                        Container(
-                            margin: const EdgeInsets.only(bottom: 16),
-                            child: ItemInformation(
-                              iconOther: Transform.rotate(
-                                angle: pi / 4,
-                                child: const Icon(
-                                  FontAwesomeIcons.wifi,
-                                  size: 16,
-                                ),
-                              ),
-                              text: '${user['followers_count']} người theo dõi',
-                            )),
+                        ListTile(
+                          dense: true,
+                          horizontalTitleGap: 0.0,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 0.0, vertical: 0.0),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
+                          leading: Transform.rotate(
+                            angle: pi / 4,
+                            child: const Icon(
+                              FontAwesomeIcons.wifi,
+                              size: 16,
+                            ),
+                          ),
+                          title: Text(
+                              '${user['followers_count']} người theo dõi',
+                              style: const TextStyle(fontSize: 15)),
+                        ),
+                      if (createdDate != null)
+                        buildListTile(
+                          'Tham gia vào',
+                          '${createdDate.day} tháng ${createdDate.month} năm ${createdDate.year}',
+                          theme,
+                          FontAwesomeIcons.clock,
+                        ),
                     ],
                   ),
                 ),
@@ -232,6 +292,7 @@ class UserPageInfomationBlock extends StatelessWidget {
                                                       ['banner']['preview_url'],
                                                   width: size.width / 3,
                                                   height: 2 * size.width / 3,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
                                               featureContents[index]

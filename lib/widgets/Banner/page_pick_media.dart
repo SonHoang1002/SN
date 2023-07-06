@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
+
+import '../../theme/theme_manager.dart';
+import 'package:provider/provider.dart' as pv;
 
 class PagePickMedia extends StatefulWidget {
   final dynamic user;
@@ -69,6 +73,7 @@ class _PagePickMediaState extends State<PagePickMedia> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -82,31 +87,37 @@ class _PagePickMediaState extends State<PagePickMedia> {
             ],
           ),
         ),
-        body: medias.isEmpty
-            ? const Center(
-                child: Text("Không có hình ảnh để hiển thị"),
+        body: isLoading
+            ? Center(
+                child: CupertinoActivityIndicator(
+                  color: theme.isDarkMode ? Colors.white : Colors.black,
+                ),
               )
-            : SingleChildScrollView(
-                controller: scrollController,
-                scrollDirection: Axis.vertical,
-                child: GridView.builder(
-                    shrinkWrap: true,
-                    primary: false,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisSpacing: 4,
-                      mainAxisSpacing: 4,
-                      crossAxisCount: 3,
-                    ),
-                    itemCount: medias.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                          widget.handleAction('image', medias[index]);
-                        },
-                        child: ImageCacheRender(path: medias[index]['url']),
-                      );
-                    })));
+            : medias.isEmpty
+                ? const Center(
+                    child: Text("Không có hình ảnh để hiển thị"),
+                  )
+                : SingleChildScrollView(
+                    controller: scrollController,
+                    scrollDirection: Axis.vertical,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        primary: false,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisSpacing: 4,
+                          mainAxisSpacing: 4,
+                          crossAxisCount: 3,
+                        ),
+                        itemCount: medias.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              widget.handleAction('image', medias[index]);
+                            },
+                            child: ImageCacheRender(path: medias[index]['url']),
+                          );
+                        })));
   }
 }

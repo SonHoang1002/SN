@@ -186,8 +186,7 @@ class SavedState extends ConsumerState<Saved> {
       height: height,
       padding: const EdgeInsets.symmetric(horizontal: 12.5, vertical: 8.0),
       child: SingleChildScrollView(
-        child: isLoading || (bookmarks.isEmpty && collections.isEmpty)
-            // ? const Center(child: CupertinoActivityIndicator())
+        child: isLoading
             ? Center(child: SavedWaitingSkeleton())
             : bookmarks.isEmpty && collections.isEmpty
                 ? Column(
@@ -207,7 +206,9 @@ class SavedState extends ConsumerState<Saved> {
                         children: [
                           Container(
                               width: double.infinity,
-                              padding: EdgeInsets.symmetric(horizontal: 5.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 5.0,
+                              ),
                               child: Row(
                                 children: [
                                   Text(
@@ -232,9 +233,14 @@ class SavedState extends ConsumerState<Saved> {
                             );
                           }, theme),
                           Container(
-                            margin: EdgeInsets.only(top: 10.0),
-                            padding: EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Divider(height: 1.0, color: Colors.grey),
+                            margin: const EdgeInsets.only(top: 10.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5.0,
+                            ),
+                            child: const Divider(
+                              height: 1.0,
+                              color: Colors.grey,
+                            ),
                           ),
                           _buildRowAction(theme),
                           _buildCollections(collections, height, width, theme),

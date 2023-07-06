@@ -185,8 +185,8 @@ class BookmarkListSkeleton extends StatelessWidget {
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       enabled: true,
-      child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
+      child: const SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
@@ -237,9 +237,6 @@ class BookmarkListSkeleton extends StatelessWidget {
 class SavedWaitingSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
@@ -250,19 +247,19 @@ class SavedWaitingSkeleton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(height: 25.0),
-            ContentPlaceholder(
+            const SizedBox(height: 25.0),
+            const ContentPlaceholder(
               lineType: ContentLineType.threeLines,
             ),
-            SizedBox(height: 25.0),
-            ContentPlaceholder(
+            const SizedBox(height: 25.0),
+            const ContentPlaceholder(
               lineType: ContentLineType.threeLines,
             ),
-            SizedBox(height: 25.0),
-            ContentPlaceholder(
+            const SizedBox(height: 25.0),
+            const ContentPlaceholder(
               lineType: ContentLineType.threeLines,
             ),
-            SizedBox(height: 40.0),
+            const SizedBox(height: 40.0),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16.0),
               width: double.infinity,
@@ -272,13 +269,13 @@ class SavedWaitingSkeleton extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 14.0),
               width: double.infinity,
               child: CollectionRowSkeleton(),
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 14.0),
               width: double.infinity,

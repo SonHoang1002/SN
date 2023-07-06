@@ -192,57 +192,62 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(12)))),
                                     ),
-                                    Container(
-                                      height: 175,
-                                      width: width,
-                                      margin: const EdgeInsets.only(top: 15.0),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                          width: 0.5,
-                                        ),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(10)),
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          setState(() {
-                                            isLoading = true;
-                                          });
+                                    GestureDetector(
+                                      onTap: () async {
+                                        setState(() {
+                                          isLoading = true;
+                                        });
 
-                                          _imageCover = await ImagePicker()
-                                              .pickImage(
-                                                  source: ImageSource.gallery);
-                                          setState(() {
-                                            _pickedCoverImage =
-                                                File(_imageCover!.path);
-                                            isLoading = false;
-                                          });
-                                        },
-                                        child: Container(
-                                          child: _pickedCoverImage != null
-                                              ? Image.file(
+                                        _imageCover = await ImagePicker()
+                                            .pickImage(
+                                                source: ImageSource.gallery);
+                                        setState(() {
+                                          _pickedCoverImage =
+                                              File(_imageCover!.path);
+                                          isLoading = false;
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 175,
+                                        width: width,
+                                        margin:
+                                            const EdgeInsets.only(top: 15.0),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey,
+                                            width: 0.5,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10)),
+                                        ),
+                                        child: _pickedCoverImage != null
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(10)),
+                                                child: Image.file(
                                                   _pickedCoverImage!,
                                                   fit: BoxFit.cover,
-                                                )
-                                              : Center(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      isLoading
-                                                          ? const CupertinoActivityIndicator()
-                                                          : const Icon(
-                                                              Icons.camera_alt,
-                                                              size: 25.0,
-                                                            ),
-                                                      const Text(
-                                                          "Chọn ảnh từ thiết bị"),
-                                                    ],
-                                                  ),
+                                                  height: 175,
+                                                  width: width,
                                                 ),
-                                        ),
+                                              )
+                                            : Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    isLoading
+                                                        ? const CupertinoActivityIndicator()
+                                                        : const Icon(
+                                                            Icons.camera_alt,
+                                                            size: 25.0,
+                                                          ),
+                                                    const Text(
+                                                        "Chọn ảnh từ thiết bị"),
+                                                  ],
+                                                ),
+                                              ),
                                       ),
                                     ),
                                     Padding(
@@ -270,7 +275,9 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                             ),
                                           );
                                           setState(() {
+                                            reviewController.text = '';
                                             isLoading = false;
+                                            _pickedCoverImage = null;
                                           });
                                         },
                                         child: isLoading
