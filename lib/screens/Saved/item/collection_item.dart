@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
-import 'package:social_network_app_mobile/screens/Saved/see_all_bookmark.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
@@ -11,8 +10,8 @@ import 'package:provider/provider.dart' as pv;
 import '../see_collection_bookmark.dart';
 
 class CollectionItem extends ConsumerStatefulWidget {
-  dynamic item;
-  CollectionItem({super.key, this.item});
+  final dynamic item;
+  const CollectionItem({super.key, this.item});
 
   @override
   CollectionItemState createState() => CollectionItemState();
@@ -38,7 +37,7 @@ class CollectionItemState extends ConsumerState<CollectionItem> {
             topLeft: Radius.circular(15),
             topRight: Radius.circular(15),
           ),
-          child: widget.item['imageWidget'],
+          child: widget.item['mediaWidget'],
         ),
       ),
       onTap: () async {
@@ -72,6 +71,8 @@ class CollectionItemState extends ConsumerState<CollectionItem> {
                   fontWeight: FontWeight.w800,
                   color: theme.isDarkMode ? Colors.white : Colors.black,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const Padding(

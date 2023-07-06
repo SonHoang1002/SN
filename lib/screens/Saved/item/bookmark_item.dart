@@ -74,10 +74,26 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
               flex: 3,
               child: SizedBox(
                 height: height > width ? height / 8 : height / 4,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: widget.item['imageWidget'],
-                ),
+                child: widget.item['mediaType'] == 'video'
+                    ? Stack(
+                        fit: StackFit.expand,
+                        alignment: Alignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: widget.item['mediaWidget'],
+                          ),
+                          const Icon(
+                            FontAwesomeIcons.circlePlay,
+                            color: Colors.white70,
+                            size: 22.5,
+                          )
+                        ],
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: widget.item['mediaWidget'],
+                      ),
               ),
             ),
             Expanded(

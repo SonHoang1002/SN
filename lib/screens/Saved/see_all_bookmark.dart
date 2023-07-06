@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
@@ -41,7 +40,6 @@ class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     final theme = pv.Provider.of<ThemeManager>(context);
     final allBookmark = ref.watch(savedControllerProvider).bookmarks;
 
@@ -51,8 +49,8 @@ class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Row(
-          children: const [
+        title: const Row(
+          children: [
             BackIconAppbar(),
             SizedBox(width: 10.0),
             AppBarTitle(title: "Đã lưu"),

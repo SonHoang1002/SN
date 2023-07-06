@@ -3,16 +3,26 @@ import 'package:flutter/material.dart';
 
 import '../../constant/common.dart';
 
-Widget handleImage(bookmark) {
+String mediaType = 'image';
+
+Widget handleMedia(bookmark) {
+  mediaType = 'image';
   String imageUrl = '';
   if (bookmark['status'] != null &&
       bookmark['status']['media_attachments'].isNotEmpty) {
     var media = bookmark['status']['media_attachments'][0];
     if (media['url'].contains('.mp4') || media['url'].contains('.mov')) {
-      // video, current: image mock data
-      return ExtendedImage.network(
-        linkBannerDefault,
+      mediaType = 'video';
+      return Image.network(
+        media['preview_remote_url'] ?? media['preview_url'] ?? media['url'],
         fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          mediaType = 'image';
+          return ExtendedImage.network(
+            linkAvatarDefault,
+            fit: BoxFit.cover,
+          );
+        },
       );
     } else {
       imageUrl =
@@ -92,7 +102,8 @@ dynamic convertItem(bookmark) {
       "id": bookmark['id'] ?? "empty",
       "bookmark_id":
           bookmark['status'] != null ? bookmark['status']['id'] : "empty",
-      "imageWidget": handleImage(bookmark),
+      "mediaWidget": handleMedia(bookmark),
+      "mediaType": mediaType,
       "content":
           bookmark['status'] != null ? bookmark['status']['content'] : "empty",
       "author": bookmark['status']['account'] != null
@@ -106,10 +117,11 @@ dynamic convertItem(bookmark) {
       "id": bookmark['id'] ?? "empty",
       "bookmark_id":
           bookmark['page'] == null ? 'not_found' : bookmark['page']['id'],
-      "imageWidget": handleImage(bookmark),
+      "mediaWidget": handleMedia(bookmark),
       "content": bookmark['page'] != null ? bookmark['page']['title'] : "empty",
       "author": "",
       "data": bookmark['page'] ?? "empty",
+      "mediaType": mediaType,
     };
   }
 }

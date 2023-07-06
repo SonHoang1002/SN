@@ -85,7 +85,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
         } else {
           var response = await UserPageApi()
               .getUserFriend(widget.user['id'], {'keyword': text});
-          setState(() => {friendsAll = response});
+          setState(() => friendsAll = response);
         }
         setState(() {
           isSearch = false;
@@ -129,15 +129,11 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                             label: listMenu[index]['label']),
                       )),
             ),
-            const SizedBox(
-              height: 8.0,
-            ),
+            const SizedBox(height: 8.0),
             SearchInput(handleSearch: (value) {
               handleSearch(value);
             }),
-            const SizedBox(
-              height: 8.0,
-            ),
+            const SizedBox(height: 8.0),
             isSearch
                 ? const Center(
                     child: CupertinoActivityIndicator(),
