@@ -283,6 +283,7 @@ class GroupListController extends StateNotifier<GroupListState> {
   }
 
   getGroupDetail(id) async {
+    resetGroupDetail();
     var response = await GroupApi().fetchGroupDetail(id);
     if (response.isNotEmpty) {
       state = state.copyWith(
@@ -624,6 +625,33 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleAdmin: role == 'admin' ? response : state.groupRoleAdmin,
         groupRoleMorderator:
             role == 'moderator' ? response : state.groupRoleMorderator,
+      );
+    }
+  }
+
+  resetGroupDetail() {
+    if (mounted) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupAdmin,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: [],
+        contentReported: [],
+        waitingApproval: [],
+        requestMember: [],
+        notiApproval: [],
+        groupPost: [],
+        groupPins: [],
+        groupRoleMember: [],
+        groupRoleFriend: [],
+        groupRoleAdmin: [],
+        groupRoleMorderator: [],
       );
     }
   }

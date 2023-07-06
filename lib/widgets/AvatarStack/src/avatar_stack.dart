@@ -90,7 +90,7 @@ class AvatarStack extends StatelessWidget {
       child: WidgetStack(
         positions: _settings,
         buildInfoWidget: _infoWidgetBuilder,
-        stackedWidgets: iconEllipse == true
+        stackedWidgets: iconEllipse == true && avatars.length >= 2
             ? avatars.map((avatar) {
                 if (avatar == avatars.last) {
                   return Stack(

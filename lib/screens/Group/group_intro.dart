@@ -69,22 +69,32 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
         mergedList.add(item2);
       }
     }
-
     return mergedList;
   }
 
   @override
   Widget build(BuildContext context) {
     List groupMember =
-        ref.watch(groupListControllerProvider).groupRoleMember ?? [];
+        ref.watch(groupListControllerProvider).groupRoleMember.isNotEmpty
+            ? ref.watch(groupListControllerProvider).groupRoleMember
+            : [];
     List groupFriend =
-        ref.watch(groupListControllerProvider).groupRoleFriend ?? [];
+        ref.watch(groupListControllerProvider).groupRoleFriend.isNotEmpty
+            ? ref.watch(groupListControllerProvider).groupRoleFriend
+            : [];
     List groupMorderator =
-        ref.watch(groupListControllerProvider).groupRoleMorderator ?? [];
+        ref.watch(groupListControllerProvider).groupRoleMorderator.isNotEmpty
+            ? ref.watch(groupListControllerProvider).groupRoleMorderator
+            : [];
     List groupAdmin =
-        ref.watch(groupListControllerProvider).groupRoleAdmin ?? [];
+        ref.watch(groupListControllerProvider).groupRoleAdmin.isNotEmpty
+            ? ref.watch(groupListControllerProvider).groupRoleAdmin
+            : [];
     List avatarMember = mergeAndFilter(
         [...groupMorderator, ...groupAdmin], [...groupMember, ...groupFriend]);
+    List avatarAdmin = [...groupMorderator, ...groupAdmin];
+    List avatarFriend = [...[], ...groupFriend];
+    List avatarNoFriend = [...groupMember, ...[]];
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -151,7 +161,11 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) {
-                        return const GroupRole();
+                        return GroupRole(
+                          groupMember: avatarNoFriend,
+                          groupFriend: avatarFriend,
+                          groupAdmin: avatarAdmin,
+                        );
                       },
                     ));
                   },
@@ -169,41 +183,51 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
             const SizedBox(
               height: 10,
             ),
-            AvatarStack(
-              height: 40,
-              borderColor: Theme.of(context).scaffoldBackgroundColor,
-              settings: settings,
-              avatars: [
-                for (var n = 0; n < avatarMember.length; n++)
-                  NetworkImage(
-                    avatarMember[n]['account']['avatar_media']['preview_url'] ??
-                        linkAvatarDefault,
-                  ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Text(
-              avatarMember.length >= 3
-                  ? '${avatarMember[0]['account']['display_name']}, ${avatarMember[1]['account']['display_name']} và ${avatarMember.length - 2} người bạn khác đã tham gia'
-                  : avatarMember.length == 2
-                      ? '${avatarMember[0]['account']['display_name']} và ${avatarMember[1]['account']['display_name']} đã tham gia'
-                      : '${avatarMember[0]['account']['display_name']} đã tham gia',
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+            avatarMember.isNotEmpty
+                ? Column(
+                    children: [
+                      AvatarStack(
+                        height: 40,
+                        borderColor: Theme.of(context).scaffoldBackgroundColor,
+                        settings: settings,
+                        avatars: [
+                          for (var n = 0; n < avatarMember.length; n++)
+                            NetworkImage(
+                              avatarMember[n]['account']['avatar_media'] != null
+                                  ? avatarMember[n]['account']['avatar_media']
+                                      ['preview_url']
+                                  : linkAvatarDefault,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        avatarMember.length >= 3
+                            ? '${avatarMember[0]['account']['display_name']}, ${avatarMember[1]['account']['display_name']} và ${avatarMember.length - 2} người bạn khác đã tham gia'
+                            : avatarMember.length == 2
+                                ? '${avatarMember[0]['account']['display_name']} và ${avatarMember[1]['account']['display_name']} đã tham gia'
+                                : '${avatarMember[0]['account']['display_name']} đã tham gia',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
             AvatarStack(
               height: 40,
               borderColor: Theme.of(context).scaffoldBackgroundColor,
               settings: setting,
               avatars: [
-                for (var m = 0; m < groupAdmin.length; m++)
+                for (var m = 0; m < avatarAdmin.length; m++)
                   NetworkImage(
-                    groupAdmin[m]['account']['avatar_media']['preview_url'] ??
-                        linkAvatarDefault,
+                    avatarAdmin[m]['account']['avatar_media'] != null
+                        ? avatarAdmin[m]['account']['avatar_media']
+                            ['preview_url']
+                        : linkAvatarDefault,
                   ),
               ],
             ),
@@ -211,11 +235,11 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
               height: 5,
             ),
             Text(
-              groupAdmin.length > 3
-                  ? '${groupAdmin[0]['account']['display_name']}, ${groupAdmin[1]['account']['display_name']} và ${groupAdmin.length - 2} người khác là quản trị viên'
-                  : groupAdmin.length == 2
-                      ? '${groupAdmin[0]['account']['display_name']} và ${groupAdmin[1]['account']['display_name']} là quản trị viên'
-                      : '${groupAdmin[0]['account']['display_name']} là quản trị viên',
+              avatarAdmin.length > 3
+                  ? '${avatarAdmin[0]['account']['display_name']}, ${avatarAdmin[1]['account']['display_name']} và ${avatarAdmin.length - 2} người khác là quản trị viên'
+                  : avatarAdmin.length == 2
+                      ? '${avatarAdmin[0]['account']['display_name']} và ${avatarAdmin[1]['account']['display_name']} là quản trị viên'
+                      : '${avatarAdmin[0]['account']['display_name']} là quản trị viên',
               style: const TextStyle(color: Colors.grey),
             ),
           ],

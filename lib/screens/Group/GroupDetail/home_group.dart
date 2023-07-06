@@ -237,9 +237,10 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     avatars: [
                       for (var n = 0; n < avatarGroup.length; n++)
                         NetworkImage(
-                          avatarGroup[n]['account']['avatar_media']
-                                  ['preview_url'] ??
-                              linkAvatarDefault,
+                          avatarGroup[n]['account']['avatar_media'] != null
+                              ? avatarGroup[n]['account']['avatar_media']
+                                  ['preview_url']
+                              : linkAvatarDefault,
                         ),
                     ],
                   ),
