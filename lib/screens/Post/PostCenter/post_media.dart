@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/post_mutiple_media_detail.dart';
@@ -99,7 +100,7 @@ class _PostMediaState extends State<PostMedia> {
             PostDetail(
                 post: widget.post,
                 preType: widget.type,
-                updateDataFunction: widget.updateDataFunction)); 
+                updateDataFunction: widget.updateDataFunction));
       }
     } else {
       return;
@@ -120,7 +121,12 @@ class _PostMediaState extends State<PostMedia> {
     return medias.isNotEmpty
         ? Container(
             margin: const EdgeInsets.only(top: 8.0),
-            color: widget.post['media_attachments'].length == 1 ? red : null,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: widget.post['media_attachments'].length == 1
+                        ? Colors.grey.withOpacity(0.2)
+                        : transparent,
+                    width: 0.2)),
             child: GridLayoutImage(
               post: widget.post,
               medias: medias,

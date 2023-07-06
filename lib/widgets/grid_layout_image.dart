@@ -102,6 +102,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                       color: greyColor),
                                 );
                               }
+                              return null;
                             }),
                           ),
                     buildDivider(color: greyColor),
@@ -112,7 +113,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
           );
         } else {
           return Container(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                   // maxHeight: size.height * 0.75,
                   ),
               height: (medias[0]['aspect'] ??
