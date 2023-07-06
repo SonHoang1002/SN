@@ -30,12 +30,11 @@ class MeController extends StateNotifier<List> {
                       .firstWhere((e) => e['id'] == response['id'])!['theme'] ??
                   response['theme'])
               : response['theme'];
-
       var newAccount = {
         "id": response['id'],
         "name": response['display_name'],
-        "show_url": response['avatar_media']['show_url'] ??
-            response['avatar_media']['preview_url'],
+        "show_url": response['avatar_media']?['show_url'] ??
+            response['avatar_media']?['preview_url'],
         "token": token,
         "username": response['username'],
         "theme": newTheme

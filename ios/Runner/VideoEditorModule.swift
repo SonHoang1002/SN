@@ -34,13 +34,15 @@ class VideoEditorModule: VideoEditor {
         var config = VideoEditorConfig()
         
         // Make customization here
+        config.videoDurationConfiguration.maximumVideoDuration = 240.0;
+        config.gifPickerConfiguration.giphyAPIKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh";
+        config.featureConfiguration.supportsTrimRecordedVideo = false;
+        config.featureConfiguration.draftsConfig = .disabled;
+        // config.featureConfiguration.isVideoCoverSelectionEnabled = false;
 
-        config.gifPickerConfiguration.giphyAPIKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh"
-        
         videoEditorSDK = BanubaVideoEditor(
             token: token ?? "",
             configuration: config,
-            // gifPickerConfiguration: gifPickerConfiguration,
             externalViewControllerFactory: self.getAppDelegate().provideCustomViewFactory()
         )
         

@@ -22,7 +22,7 @@ class PostCurrentState {
 }
 
 final currentPostControllerProvider =
-    StateNotifierProvider<PostCurrentController, PostCurrentState>((ref) {
+    StateNotifierProvider.autoDispose<PostCurrentController, PostCurrentState>((ref) {
   return PostCurrentController();
 });
 

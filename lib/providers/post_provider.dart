@@ -61,6 +61,41 @@ class PostController extends StateNotifier<PostState> {
           isMoreUserPage: state.isMoreUserPage);
     }
   }
+    updatePostWhenScroll(String scrollDirection, dynamic newData) async {
+    List result = state.posts;
+    switch (scrollDirection) {
+      // xóa 1 ở đầu và thêm 1 ở đuôi
+      case "fromBottomToTop":
+        result.removeLast();
+        result.insert(0, newData);
+        break;
+
+      case "fromTopToBottom":
+        result.removeAt(0);
+        result.add(newData);
+        break;
+    }
+    if (mounted) {
+      state = state.copyWith(
+          posts: result,
+          postsPin: state.postsPin,
+          postUserPage: state.postUserPage,
+          isMore: true,
+          isMoreUserPage: state.isMoreUserPage);
+    }
+  }
+
+
+  addListPost(List newData, dynamic params) {
+    if (mounted) {
+      state = state.copyWith(
+          posts: checkObjectUniqueInList(state.posts + newData, 'id'),
+          postsPin: state.postsPin,
+          postUserPage: state.postUserPage,
+          isMore: newData.length < params['limit'] ? false : true,
+          isMoreUserPage: state.isMoreUserPage);
+    }
+  }
 
   getListPostUserPage(accountId, params) async {
     List response = await UserPageApi().getListPostApi(accountId, params) ?? [];
@@ -115,11 +150,45 @@ class PostController extends StateNotifier<PostState> {
           posts: [feedPost, postPageUser].contains(type)
               ? [newPost] + state.posts
               : state.posts,
-          // posts: type == feedPost ? [newPost] + state.posts : state.posts,
           isMore: state.isMore,
           postUserPage: [feedPost, postPageUser].contains(type)
               ? [newPost] + state.postUserPage
               : state.postUserPage,
+          isMoreUserPage: state.isMoreUserPage);
+    }
+  }
+
+  // only apply for first post of list post from post screen
+  // Recently, create post from feed or userpage also show other page. Therefore, we should update on two page
+  changeProcessingPost(dynamic newData) {
+    if (mounted) {
+      state = state.copyWith(
+          postsPin: state.postsPin,
+          posts: [
+            ...state.posts.sublist(0, 0),
+            newData,
+            ...state.posts.sublist(1)
+          ],
+          isMore: state.isMore,
+          postUserPage: [
+            ...state.posts.sublist(0, 0),
+            newData,
+            ...state.posts.sublist(1)
+          ],
+          isMoreUserPage: state.isMoreUserPage);
+    }
+  }
+
+  removeProgessingPost() {
+    if (mounted) {
+      state = state.copyWith(
+          postsPin: state.postsPin,
+          posts: [...state.posts.sublist(0, 0), ...state.posts.sublist(1)],
+          isMore: state.isMore,
+          postUserPage: [
+            ...state.posts.sublist(0, 0),
+            ...state.posts.sublist(1)
+          ],
           isMoreUserPage: state.isMoreUserPage);
     }
   }
@@ -180,12 +249,10 @@ class PostController extends StateNotifier<PostState> {
               : state.postUserPage,
           isMoreUserPage: state.isMoreUserPage);
     }
-    if (preType == feedPost) {
-    } else if (preType == postPageUser) {}
   }
 
   actionUpdateDetailInPost(dynamic type, dynamic data,
-      {dynamic preType}) async { 
+      {dynamic preType}) async {
     int index = -1;
     if (type == feedPost ||
         (preType == postDetailFromFeed) ||

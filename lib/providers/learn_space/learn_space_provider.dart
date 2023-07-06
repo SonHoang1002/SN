@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/learn_space_api.dart';
-import 'package:social_network_app_mobile/widget/show_modal_message.dart';
+import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 
 @immutable
 class LearnSpaceState {
@@ -90,7 +90,7 @@ class LearnSpaceState {
 }
 
 final learnSpaceStateControllerProvider =
-    StateNotifierProvider.autoDispose<LearnSpaceController, LearnSpaceState>(
+    StateNotifierProvider<LearnSpaceController, LearnSpaceState>(
         (ref) => LearnSpaceController());
 
 class LearnSpaceController extends StateNotifier<LearnSpaceState> {
@@ -508,6 +508,130 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseInvitations: state.courseInvitations,
         courseLessonChapter: state.courseLessonChapter,
         courseChapter: state.courseChapter,
+        courseFAQ: state.courseFAQ,
+        coursePurchased: state.coursePurchased,
+        courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
+        coursesNoFee: state.coursesNoFee,
+        coursesFee: state.coursesFee,
+        coursesHost: state.coursesHost,
+        coursesInterest: state.coursesInterest,
+      );
+    }
+  }
+
+  //
+  createPostLearnSpace(type, newPost) {
+    if (mounted) {
+      state = state.copyWith(
+        course: state.course,
+        isMore: true,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        coursePosts: [newPost] + state.coursePosts,
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+        coursePurchased: state.coursePurchased,
+        courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
+        coursesNoFee: state.coursesNoFee,
+        coursesFee: state.coursesFee,
+        coursesHost: state.coursesHost,
+        coursesInterest: state.coursesInterest,
+      );
+    }
+  }
+
+  changeProcessingPostLearnSpace(dynamic newData) {
+    if (mounted) {
+      state = state.copyWith(
+        course: state.course,
+        isMore: true,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        coursePosts: [
+          ...state.coursePosts.sublist(0, 0),
+          newData,
+          ...state.coursePosts.sublist(1)
+        ],
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+        coursePurchased: state.coursePurchased,
+        courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
+        coursesNoFee: state.coursesNoFee,
+        coursesFee: state.coursesFee,
+        coursesHost: state.coursesHost,
+        coursesInterest: state.coursesInterest,
+      );
+    }
+  }
+
+  actionHiddenDeletePost(type, data) {
+    int index = -1;
+    index =
+        state.coursePosts.indexWhere((element) => element['id'] == data['id']);
+    if (index < 0) return;
+    if (mounted) {
+      state = state.copyWith(
+        course: state.course,
+        isMore: true,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        coursePosts: [
+          ...state.coursePosts.sublist(0, index),
+          ...state.coursePosts.sublist(index + 1)
+        ],
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
+        courseFAQ: state.courseFAQ,
+        coursePurchased: state.coursePurchased,
+        courseReview: state.courseReview,
+        coursesChipMenu: state.coursesChipMenu,
+        coursesNoFee: state.coursesNoFee,
+        coursesFee: state.coursesFee,
+        coursesHost: state.coursesHost,
+        coursesInterest: state.coursesInterest,
+      );
+    }
+  }
+
+  actionUpdateDetailInPost(
+    dynamic type,
+    dynamic newData,
+  ) async {
+    int index = -1;
+    index = state.coursePosts
+        .indexWhere((element) => element['id'] == newData['id']);
+    if (index < 0) return;
+
+    if (mounted) {
+      state = state.copyWith(
+        course: state.course,
+        isMore: true,
+        detailCourse: state.detailCourse,
+        courseLibrary: state.courseLibrary,
+        courseInvitations: state.courseInvitations,
+        courseLessonChapter: state.courseLessonChapter,
+        courseChapter: state.courseChapter,
+        coursePosts: [
+          ...state.coursePosts.sublist(0, index),
+          newData,
+          ...state.coursePosts.sublist(index + 1)
+        ],
+        coursePropose: state.coursePropose,
+        courseSimilar: state.courseSimilar,
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
         courseReview: state.courseReview,

@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class BackIconAppbar extends StatelessWidget {
-  const BackIconAppbar({Key? key}) : super(key: key);
+import '../providers/search/search_provider.dart';
+
+class BackIconAppbar extends ConsumerWidget {
+  final Color? iconColor;
+  final bool? isSearch;
+  const BackIconAppbar({Key? key, this.iconColor, this.isSearch})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
+        if (isSearch != null && isSearch == true) {
+          ref.read(searchControllerProvider.notifier).changeLoadingBackIcon();
+        }
         Navigator.pop(context);
       },
       child: Icon(
         FontAwesomeIcons.chevronLeft,
-        color: Theme.of(context).textTheme.displayLarge!.color,
+        color: iconColor ?? Theme.of(context).textTheme.displayLarge!.color,
+        size: 18,
       ),
     );
   }
 }
 
 class CloseIconAppbar extends StatelessWidget {
-
   const CloseIconAppbar({Key? key}) : super(key: key);
 
   @override
@@ -35,6 +44,7 @@ class CloseIconAppbar extends StatelessWidget {
     );
   }
 }
+
 class MenuIconAppbar extends StatelessWidget {
   const MenuIconAppbar({Key? key}) : super(key: key);
 
@@ -51,4 +61,3 @@ class MenuIconAppbar extends StatelessWidget {
     );
   }
 }
-

@@ -19,6 +19,10 @@ class FlutterCustomViewFactory: ExternalViewControllerFactory {
     var exposureViewFactory: AnimatableViewFactory?
 }
 
+class YourCustomAudioBrowser: UIViewController, TrackSelectionViewController {
+  weak var trackSelectionDelegate: TrackSelectionViewControllerDelegate?
+}
+
 class CustomAudioBrowserViewControllerFactory: MusicEditorExternalViewControllerFactory {
     
     // Audio Browser selection view controller

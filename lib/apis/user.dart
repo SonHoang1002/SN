@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:social_network_app_mobile/constant/config.dart';
 import 'package:http/http.dart' as http; 
-import 'package:social_network_app_mobile/screens/Auth/storage.dart';
+import 'package:social_network_app_mobile/storage/storage.dart'; 
 
 class ApiUser {
   Future<dynamic> getDataUserApi(token) async {

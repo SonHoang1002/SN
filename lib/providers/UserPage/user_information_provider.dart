@@ -167,4 +167,59 @@ class UserInformationController extends StateNotifier<UserInformationState> {
       );
     }
   }
+
+  updateDescription(userId, String newDescription) async {
+    UserPageApi()
+        .updateOtherInformation(userId, {"description": newDescription});
+    if (mounted) {
+      state = state.copyWith(
+        userInfor: state.userInfor,
+        userMoreInfor: {
+          ...state.userMoreInfor,
+          "general_information": {
+            ...state.userMoreInfor['general_information'],
+            "description": newDescription,
+          },
+        },
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: state.userLifeEvent,
+      );
+    }
+  }
+
+  updateHobbies(newHobbies) async {
+    if (mounted) {
+      state = state.copyWith(
+        userInfor: state.userInfor,
+        userMoreInfor: {
+          ...state.userMoreInfor,
+          "hobbies": newHobbies,
+        },
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: state.userLifeEvent,
+      );
+    }
+    List hobbyIds = newHobbies.map((e) => e['id']).toList();
+    UserPageCredentical().updateCredentialUser({"hobby_ids": hobbyIds});
+  }
+
+  saveHobbiesTemporarily(newHobbies) {
+    if (mounted) {
+      state = state.copyWith(
+        userInfor: state.userInfor,
+        userMoreInfor: {
+          ...state.userMoreInfor,
+          "tempHobbies": newHobbies,
+        },
+        friends: state.friends,
+        friendsNear: state.friendsNear,
+        featureContent: state.featureContent,
+        userLifeEvent: state.userLifeEvent,
+      );
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:dio/dio.dart';
 
 import 'api_root.dart';
 
@@ -20,7 +20,11 @@ class PostApi {
   }
 
   Future createStatus(data) async {
-    return await Api().postRequestBase('/api/v1/statuses', data);
+    try {
+      return await Api().postRequestBase('/api/v1/statuses', data);
+    } on DioError {
+      rethrow;
+    }
   }
 
   Future updatePost(postId, data) async {
@@ -48,6 +52,10 @@ class PostApi {
   Future turnOffNotification(postId) async {
     return Api()
         .deleteRequestBase("/api/v1/allow_notification_posts/$postId", null);
+  }
+
+  Future getPostApi(postId) async {
+    return Api().getRequestBase("/api/v1/statuses/$postId", null);
   }
 
   Future deletePostApi(postId) async {

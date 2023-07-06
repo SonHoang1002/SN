@@ -5,6 +5,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
+import 'api_with_code.dart';
 import 'config.dart';
 
 class PageApi {
@@ -12,8 +13,38 @@ class PageApi {
     return await Api().getRequestBase("/api/v1/pages", params);
   }
 
+  fetchListPageSuggest(params) async {
+    return await Api().getRequestBase("/api/v1/suggestions/page", params);
+  }
+
+  blockPage(data) async {
+    return await Api().postRequestBase("/api/v1/block_pages", data);
+  }
+
   fetchPageDetail(id) async {
     return await Api().getRequestBase("/api/v1/pages/$id", null);
+  }
+
+  fetchPageCategories(params) async {
+    return await Api().getRequestBase("/api/v1/page_categories", params);
+  }
+
+  validPageUsername(params) async {
+    return await ApiWithCode()
+        .getRequestBaseWithCode("/api/v1/pages_validate_username", params);
+  }
+
+  fetchSearchPageDetail(id, params) async {
+    return await Api()
+        .getRequestBase("/api/v1/timelines/page/$id/search", params);
+  }
+
+  followPage(id) async {
+    return await Api().getRequestBase("/api/v1/pages/$id/follows", null);
+  }
+
+  unfollowPage(id) async {
+    return await Api().getRequestBase("/api/v1/pages/$id/follows", null);
   }
 
   fetchListPageLiked(params, id) async {
@@ -70,6 +101,11 @@ class PageApi {
         .getRequestBase('/api/v1/pages/$id/media_attachments', params);
   }
 
+  Future getManagementHistory(params, id) async {
+    return await Api()
+        .getRequestBase('/api/v1/pages/$id/management_histories', params);
+  }
+
   Future getListAlbumPageApi(params, id) async {
     return await Api().getRequestBase('/api/v1/pages/$id/albums', params);
   }
@@ -92,6 +128,14 @@ class PageApi {
   Future handleReviewPageApi(idPage, params) async {
     return await Api()
         .postRequestBase('/api/v1/pages/$idPage/feedbacks', params);
+  }
+
+  Future likePageSuggestion(idPage) async {
+    return await Api().postRequestBase('/api/v1/pages/$idPage/likes', null);
+  }
+
+  Future unLikePageSuggestion(idPage) async {
+    return await Api().postRequestBase('/api/v1/pages/$idPage/unlikes', null);
   }
 
   Future handleLikeFollowPage(idPage, action) async {

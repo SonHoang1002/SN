@@ -2,25 +2,30 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
-import 'package:social_network_app_mobile/service/notification_service.dart';
-import 'package:social_network_app_mobile/service/web_socket_service.dart';
+import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
+import 'package:social_network_app_mobile/services/notification_service.dart';
+import 'package:social_network_app_mobile/services/web_socket_service.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'home/PreviewScreen.dart';
 import 'home/home.dart';
-import 'screen/Login/LoginCreateModules/onboarding_login_page.dart';
-import 'screen/Page/PageDetail/page_detail.dart';
-import 'screen/UserPage/user_page.dart';
+import 'screens/Login/LoginCreateModules/onboarding_login_page.dart';
+import 'screens/Page/PageDetail/page_detail.dart';
+import 'screens/UserPage/user_page.dart';
 import 'theme/theme_manager.dart';
 
 var routes = <String, WidgetBuilder>{
   '/home': (BuildContext context) => const Home(),
   '/page': (BuildContext context) => const PageDetail(),
-  '/user': (BuildContext context) => const UserPage(),
+  '/user': (BuildContext context) => const UserPageHome(),
   //  SaleInformationMarketPage
   '/login': (BuildContext context) => const OnboardingLoginPage(),
   '/': (BuildContext context) => const PreviewScreen(),
@@ -39,6 +44,7 @@ class MaterialAppWithTheme extends ConsumerStatefulWidget {
 class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   late WebSocketChannel webSocketChannel;
   StreamSubscription<dynamic>? subscription;
+
   @override
   void initState() {
     if (!mounted) return;
@@ -56,28 +62,33 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
     subscription = webSocketChannel.stream.listen(
       (data) {
         if (data.contains('42')) {
+          // 42["unseen_count_changed",{"id":"891993","transactionId":"891993","unseenCount":3817}]
+          // 42["unseen_count_changed",{"id":"891633","unseenCount":3817}]
           int startIndex = data.indexOf('[') + 1;
           int endIndex = data.lastIndexOf(']');
           String jsonString = data.substring(startIndex, endIndex);
           List<dynamic> dataList = jsonDecode("[$jsonString]");
           Map<String, dynamic> object = dataList[1];
-          fetchNotifications(null).then((value) async {
-            dynamic dataFilter = ref
-                .read(notificationControllerProvider)
-                .notifications
-                .where((element) => element['id'] == object['id'])
-                .toList();
-            if (dataFilter != null && dataFilter.isNotEmpty) {
-              await NotificationService().showNotification(
-                  title: 'EMSO',
-                  payLoad: jsonEncode(dataFilter),
-                  largeIcon: dataFilter[0]['account']['avatar_media'] != null
-                      ? dataFilter[0]['account']['avatar_media']['preview_url']
-                      : dataFilter[0]['account']['avatar_static'],
-                  body:
-                      '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
-            }
-          });
+          if (data.contains('transactionId')) {
+            fetchNotifications(null).then((value) async {
+              dynamic dataFilter = ref
+                  .read(notificationControllerProvider)
+                  .notifications
+                  .where((element) => element['id'] == object['id'])
+                  .toList();
+              if (dataFilter != null && dataFilter.isNotEmpty) {
+                await NotificationService().showNotification(
+                    title: 'EMSO',
+                    payLoad: jsonEncode(dataFilter),
+                    largeIcon: dataFilter[0]['account']['avatar_media'] != null
+                        ? dataFilter[0]['account']['avatar_media']
+                            ['preview_url']
+                        : dataFilter[0]['account']['avatar_static'],
+                    body:
+                        '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
+              }
+            });
+          }
         }
       },
       onDone: () {
@@ -271,15 +282,132 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
+    final selectedVideo = ref.watch(selectedVideoProvider);
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          MaterialApp(
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            themeMode: theme.themeMode,
+            theme: MyThemes.lightTheme,
+            darkTheme: MyThemes.darkTheme,
+            initialRoute: '/',
+            routes: routes,
+          ),
+          if (selectedVideo != null)
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: const EdgeInsets.only(bottom: 100, right: 10, left: 10),
+              child: SizedBox(
+                // width: double.infinity,
+                // height: 80,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Card(
+                    elevation: 10,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          color: Color(int.parse(
+                              '0xFF${selectedVideo['media_attachments'][0]['meta']['small']['average_color'].substring(1)}')),
+                          child: Center(
+                            child: VideoPlayerNoneController(
+                              isShowVolumn: false,
+                              media: selectedVideo['media_attachments'][0],
+                              type: 'miniPlayer',
+                              path: selectedVideo['media_attachments'][0]
+                                  ['remote_url'],
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 18.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    selectedVideo['content'].isNotEmpty
+                                        ? SizedBox(
+                                            height: 20,
+                                            width: 150,
+                                            child: Marquee(
+                                              text: selectedVideo['content'],
+                                              velocity: 30,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                    Flexible(
+                                      child: Text(
+                                        selectedVideo['account']
+                                                ['display_name'] ??
+                                            selectedVideo['page']['title'] ??
+                                            '',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                      FontAwesomeIcons
+                                          .upRightAndDownLeftFromCenter,
+                                      size: 15),
+                                  onPressed: () {
+                                    SchedulerBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      if (GlobalVariable
+                                              .navState.currentContext !=
+                                          null) {
+                                        MaterialPageRoute(
+                                            builder: (context) => WatchDetail(
+                                                  post: selectedVideo,
+                                                  media: selectedVideo[
+                                                      'media_attachments'][0],
+                                                ));
+                                      }
+                                    });
 
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      themeMode: theme.themeMode,
-      theme: MyThemes.lightTheme,
-      darkTheme: MyThemes.darkTheme,
-      initialRoute: '/',
-      routes: routes,
+                                    ref
+                                        .read(selectedVideoProvider.notifier)
+                                        .update((state) => null);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    ref
+                                        .read(selectedVideoProvider.notifier)
+                                        .update((state) => null);
+                                  },
+                                )
+                              ],
+                            )
+                          ],
+                        ))
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+        ],
+      ),
     );
   }
 }
@@ -287,4 +415,8 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void navigateToSecondPageByNameWithoutContext(routeName) {
   navigatorKey.currentState!.pushReplacementNamed(routeName);
+}
+
+class GlobalVariable {
+  static final GlobalKey<NavigatorState> navState = GlobalKey<NavigatorState>();
 }

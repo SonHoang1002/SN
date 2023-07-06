@@ -6,9 +6,9 @@ class FriendsApi {
         .getRequestBase('/api/v1/accounts/$idUser/friendships', params);
   }
 
-  Future getListFriendsApi(params) async {
-    return await Api().getRequestBase('/api/v1/friendships', params);
-  }
+  Future getListFriendsApi(Map<String, dynamic>? params) async {
+  return await Api().getRequestBase('/api/v1/friendships', params);
+}
 
   Future getListFriendRequestApi(params) async {
     return await Api().getRequestBase('/api/v1/friendship_requests', params);
@@ -17,6 +17,23 @@ class FriendsApi {
   Future sendFriendRequestApi(id) async {
     return await Api()
         .postRequestBase('/api/v1/accounts/$id/friendship_requests', null);
+  }
+
+  Future cancelFriendRequestApi(id) async {
+    return await Api().postRequestBase(
+        '/api/v1/accounts/$id/cancel_friendship_requests', null);
+  }
+
+  Future unfollow(id) async {
+    return await Api().postRequestBase('/api/v1/accounts/$id/unfollow', null);
+  }
+
+  Future follow(id) async {
+    return await Api().postRequestBase('/api/v1/accounts/$id/follow', null);
+  }
+
+  Future unfriend(id) async {
+    return await Api().postRequestBase('/api/v1/accounts/$id/unfriend', null);
   }
 
   Future rejectFriendRequestApi(id) async {

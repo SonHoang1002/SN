@@ -58,6 +58,10 @@ class UserPageApi {
         '/api/v1/accounts/$idUser/featured_contents/$idEntity/media_attachments',
         null);
   }
+
+  Future getHobbiesByCategories(String keyword) async {
+    return Api().getRequestBase('/api/v1/categories', {"keyword": keyword});
+  }
 }
 
 class UserPageCredentical {

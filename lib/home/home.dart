@@ -1,32 +1,35 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:isolate';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/screen/CreatePost/create_post.dart';
-import 'package:social_network_app_mobile/screen/Login/LoginCreateModules/onboarding_login_page.dart';
-import 'package:social_network_app_mobile/screen/MarketPlace/screen/main_market_page.dart';
-import 'package:social_network_app_mobile/screen/Menu/menu.dart';
-import 'package:social_network_app_mobile/screen/Moment/moment.dart';
-import 'package:social_network_app_mobile/screen/Notification/notification_page.dart';
-import 'package:social_network_app_mobile/screen/Search/search.dart';
-import 'package:social_network_app_mobile/screen/Watch/watch.dart';
+import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
+import 'package:social_network_app_mobile/screens/Menu/menu.dart';
+import 'package:social_network_app_mobile/screens/Moment/moment.dart';
+import 'package:social_network_app_mobile/screens/Notification/notification_page.dart';
+import 'package:social_network_app_mobile/screens/Search/search.dart';
+import 'package:social_network_app_mobile/screens/Watch/watch.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
-import 'package:social_network_app_mobile/screen/Feed/feed.dart';
+import 'package:social_network_app_mobile/screens/Feed/feed.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widget/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
+import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:provider/provider.dart' as pv;
 
 class Home extends ConsumerStatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final int? selectedIndex;
+  const Home({Key? key, this.selectedIndex}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -36,6 +39,22 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  ValueNotifier<bool> isShowSnackBar = ValueNotifier(false);
+  ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(false);
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  Size? size;
+  ThemeManager? theme;
+  ValueNotifier<bool?> isDisconnected = ValueNotifier(null);
+
+  double valueFromPercentageInRange(
+      {required final double min, max, percentage}) {
+    return percentage * (max - min) + min;
+  }
+
+  double percentageFromValueInRange({required final double min, max, value}) {
+    return (value - min) / (max - min);
+  }
 
   void _onItemTapped(int index) {
     if (index == 2) {
@@ -70,7 +89,74 @@ class _HomeState extends ConsumerState<Home>
                   builder: ((context) => const OnboardingLoginPage())));
         }
       });
+      initConnectivity();
+      _connectivitySubscription =
+          _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     }
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print("Connectivity Error: $e");
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if (result != ConnectivityResult.mobile ||
+        result != ConnectivityResult.wifi) {
+      setState(() {});
+    } else {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    isShowSnackBar.dispose();
+    showBottomNavigatorNotifier.dispose();
+    _connectivitySubscription.cancel();
+    isDisconnected.dispose();
+    super.dispose();
+  }
+
+  useIsolate() async {
+    final ReceivePort receivePort = ReceivePort();
+    RootIsolateToken rootIsolateToken = RootIsolateToken.instance!;
+    try {
+      await Isolate.spawn(checkConnectivity, [
+        receivePort.sendPort,
+        [rootIsolateToken]
+      ]);
+    } on Object {
+      debugPrint('Isolate Failed');
+      receivePort.close();
+    }
+    final response = await receivePort.first;
+    return response;
+  }
+
+  static Future<void> checkConnectivity(List<dynamic> args) async {
+    SendPort resultPort = args[0];
+    BackgroundIsolateBinaryMessenger.ensureInitialized(args[1][0]);
+    bool isDisconnected;
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+      isDisconnected = false;
+    } else {
+      isDisconnected = true;
+    }
+    Isolate.exit(resultPort, isDisconnected);
   }
 
   Future setTheme() async {
@@ -103,17 +189,48 @@ class _HomeState extends ConsumerState<Home>
     } else if (key == 'search') {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Search()));
+    } else if (key == 'chat') {}
+  }
+
+  _showBottomNavigator(bool value) {
+    if (showBottomNavigatorNotifier.value != value) {
+      setState(() {
+        showBottomNavigatorNotifier.value = value;
+      });
     }
   }
 
+  List iconActionWatch = [
+    {"icon": Icons.search, 'type': 'icon'},
+  ];
+
+  List titles = const [
+    SizedBox(),
+    SizedBox(),
+    SizedBox(),
+    AppBarTitle(title: 'Watch')
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final theme = pv.Provider.of<ThemeManager>(context);
+    //test render
+    // if (_connectionStatus == false && !isShowSnackBar.value) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _buildSnackBar("Không có kết nối mạng");
 
-    String modeTheme = theme.themeMode == ThemeMode.dark
+    //     isShowSnackBar.value = true;
+    //   });
+    // } else if (_connectionStatus == true && isShowSnackBar.value) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _buildSnackBar("Đã khôi phục kết nối mạng");
+    //     isShowSnackBar.value = false;
+    //   });
+    // }
+    size ??= MediaQuery.of(context).size;
+    theme ??= pv.Provider.of<ThemeManager>(context);
+    String modeTheme = theme!.themeMode == ThemeMode.dark
         ? 'dark'
-        : theme.themeMode == ThemeMode.light
+        : theme!.themeMode == ThemeMode.light
             ? 'light'
             : 'system';
 
@@ -140,40 +257,20 @@ class _HomeState extends ConsumerState<Home>
         "bottom": modeTheme == 'dark' ? 5.0 : 0.0,
       }
     ];
-
-    List iconActionWatch = [
-      {"icon": Icons.search, 'type': 'icon'},
-    ];
-
+    if (widget.selectedIndex != null) {
+      setState(() {
+        _selectedIndex = widget.selectedIndex!;
+      });
+    }
     List<Widget> pages = [
-      const Feed(),
+      Feed(
+        callbackFunction: _showBottomNavigator,
+      ),
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
       const MainMarketPage(false)
     ];
-
-    List titles = [
-      Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            Text(
-              "Emso",
-              style:
-                  TextStyle(color: primaryColor, fontWeight: FontWeight.w700),
-            ),
-            Text(
-              "Social",
-              style:
-                  TextStyle(color: secondaryColor, fontWeight: FontWeight.w700),
-            )
-          ]),
-      const SizedBox(),
-      const SizedBox(),
-      const AppBarTitle(title: 'Watch')
-    ];
-
     List actions = [
       List.generate(
           iconActionFeed.length,
@@ -223,88 +320,48 @@ class _HomeState extends ConsumerState<Home>
                 color: Theme.of(context).textTheme.displayLarge!.color,
               )))
     ];
+    // test render posts
+    // if (isDisconnected.value == false && !isShowSnackBar.value) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _buildSnackBar("Không có kết nối mạng");
 
-    var meData = ref.watch(meControllerProvider);
-
+    //     isShowSnackBar.value = true;
+    //   });
+    // } else if (isDisconnected.value == true && isShowSnackBar.value) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _buildSnackBar("Đã khôi phục kết nối mạng");
+    //     setState(() {
+    //       isShowSnackBar.value = false;
+    //     });
+    //   });
+    // }
     return Scaffold(
-      drawer: _selectedIndex == 1 || _selectedIndex == 4
-          ? null
-          : Drawer(
-              width: size.width - 20,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              child: const Menu(),
-            ),
-      appBar: _selectedIndex == 1 || _selectedIndex == 4
-          ? null
-          : AppBar(
-              elevation: 0,
-              centerTitle: false,
-              iconTheme: const IconThemeData(color: primaryColor),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              actions: actions.elementAt(_selectedIndex),
-              title: titles.elementAt(_selectedIndex),
-            ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: primaryColor,
-        unselectedItemColor: greyColor,
-        showSelectedLabels: false,
-        selectedLabelStyle: const TextStyle(fontSize: 0),
-        unselectedLabelStyle: const TextStyle(fontSize: 0),
-        elevation: 0,
-        backgroundColor: _selectedIndex == 1
-            ? Colors.black
-            : Theme.of(context).scaffoldBackgroundColor,
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              _selectedIndex == 0 ? "assets/HomeFC.svg" : "assets/home.svg",
-              width: 20,
-              height: 20,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                _selectedIndex == 1
-                    ? 'assets/MomentFC.png'
-                    : 'assets/MomentLM.png',
-                width: 22,
-                height: 22,
+        drawer: _selectedIndex == 1 || _selectedIndex == 4
+            ? null
+            : Drawer(
+                width: size!.width - 20,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                child: const Menu(),
               ),
-              label: ''),
-          BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                "assets/Plus.svg",
-                width: 20,
-                height: 20,
-                color: _selectedIndex == 2 ? primaryColor : greyColor,
+        appBar: _selectedIndex == 1 || _selectedIndex == 4
+            ? null
+            : AppBar(
+                elevation: 0,
+                centerTitle: false,
+                iconTheme: const IconThemeData(color: primaryColor),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                actions: actions.elementAt(_selectedIndex),
+                title: titles.elementAt(_selectedIndex),
               ),
-              label: ''),
-          BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                _selectedIndex == 3 ? "assets/WatchFC.svg" : "assets/Watch.svg",
-                width: 20,
-                height: 20,
-              ),
-              label: ''),
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                _selectedIndex == 4
-                    ? 'assets/MarketFC.png'
-                    : 'assets/MarketLM.png',
-                width: 22,
-                height: 22,
-              ),
-              label: '')
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-    );
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: pages,
+        ),
+        bottomNavigationBar: showBottomNavigatorNotifier.value
+            ? BottomNavigatorBarEmso(
+                selectedIndex: _selectedIndex,
+                onTap: _onItemTapped,
+              )
+            : null);
   }
 }
