@@ -24,7 +24,8 @@ class EntityThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget child = const SizedBox();
 
-    //
+    // Uint8List? data= await entity.thumbnailDataWithQuality(200);
+    // //
     if (entity.type == AssetType.image || entity.type == AssetType.video) {
       if (entity.pickedThumbData != null) {
         child = Image.memory(
@@ -32,12 +33,18 @@ class EntityThumbnail extends StatelessWidget {
           fit: BoxFit.cover,
         );
       } else {
-        child = Image(
-          image: _MediaThumbnailProvider(
-            entity: entity,
-            onBytesLoaded: onBytesGenerated,
-          ),
-          fit: BoxFit.cover,
+        child = FutureBuilder<Uint8List?>(
+          future: entity.thumbnailDataWithSize(const ThumbnailSize(400, 400)),
+          builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.data != null) {
+              return Image.memory(
+                snapshot.data!,
+                fit: BoxFit.cover,
+              );
+            }
+            return const SizedBox();
+          },
         );
       }
     }

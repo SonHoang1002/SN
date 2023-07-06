@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:mime/mime.dart';
-import 'package:social_network_app_mobile/app.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/PickImageVideo/drishya_picker.dart';
 import 'package:social_network_app_mobile/widgets/PickImageVideo/src/animations/animations.dart';
@@ -348,6 +347,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                   onAlbumToggle: _toogleAlbumList,
                 ),
               ),
+
               // Body
               Column(
                 children: [
@@ -375,8 +375,8 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                     },
                   ),
                   // Divider
-                  Divider(
-                    color: Colors.lightBlue.shade300,
+                  const Divider(
+                    color: greyColor,
                     thickness: 0.5,
                     height: 0.5,
                     indent: 0,

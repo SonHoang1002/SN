@@ -786,7 +786,7 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
                     handleComment: handleComment),
               ),
               Container(
-                height: 40,
+                height: 20,
               )
             ],
           ),
