@@ -46,15 +46,17 @@ class _WatchHomeState extends ConsumerState<WatchHome>
         : ref.watch(watchControllerProvider).watchFollow;
 
     return Expanded(
-      child: ListView.builder(
-          shrinkWrap: true,
-          controller: scrollController,
-          itemCount: watchData.length,
-          itemBuilder: (context, index) => Post(
-                key: Key(watchData[index]['id']),
-                post: watchData[index],
-                type: postWatch,
-              )),
+      child: watchData.isNotEmpty
+          ? ListView.builder(
+              shrinkWrap: true,
+              controller: scrollController,
+              itemCount: watchData.length,
+              itemBuilder: (context, index) => Post(
+                    key: Key(watchData[index]['id']),
+                    post: watchData[index],
+                    type: postWatch,
+                  ))
+          : const Center(child: Text('Không còn bài viết nào')),
     );
   }
 

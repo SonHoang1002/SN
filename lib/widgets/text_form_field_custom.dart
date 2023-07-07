@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
@@ -76,7 +75,7 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
           TextFormField(
             focusNode: widget.focusNode,
             controller: widget.textController,
-            textCapitalization: TextCapitalization.words,
+            textCapitalization: TextCapitalization.sentences,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.multiline,
             maxLines: widget.maxLines,
@@ -89,11 +88,6 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
             onChanged: (value) {
               widget.handleGetValue!(value);
             },
-            // inputFormatters: [
-            //   // TextInputFormatter.withFunction()
-            //   // FilteringTextInputFormatter(RegExp("abc"),
-            //   //     allow: true, replacementString: "dfgdfgdf"),
-            // ],
             decoration: InputDecoration(
               labelText: widget.label,
               focusColor: primaryColor,

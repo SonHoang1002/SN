@@ -245,6 +245,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                           bottom: 0,
                           left: 0,
                           child: VideoDescription(
+                            type: widget.type,
                             moment: widget.moment,
                           )),
                   Positioned(

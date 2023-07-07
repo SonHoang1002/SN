@@ -20,7 +20,7 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart'; 
+import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/PickImageVideo/src/gallery/src/gallery_view.dart';
 import 'package:social_network_app_mobile/widgets/box_mention.dart';
 import 'package:social_network_app_mobile/widgets/emoji_modal_bottom.dart';

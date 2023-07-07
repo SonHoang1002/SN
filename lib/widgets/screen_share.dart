@@ -1,23 +1,20 @@
-import 'dart:convert';
-
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:helpers/helpers.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_feed_status_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/group_item.dart';
@@ -190,7 +187,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         data['page_id'] = pageShareSelected['id'];
       }
 
-      if (widget.entityType == 'post') {
+      if (['post', 'moment'].contains(widget.entityType)) {
         data['reblog_of_id'] = widget.entityShare['id'];
         var response = await PostApi().createStatus(data);
 
@@ -202,7 +199,11 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                 const SnackBar(content: Text("Chia sẻ bài viết thành công")));
           }
 
-          if (groupShareSelected == null && pageShareSelected == null) {
+          if (widget.entityType == 'moment') {
+            ref
+                .read(momentControllerProvider.notifier)
+                .updateMomentDetail(widget.entityShare['typePage'], response);
+          } else if (groupShareSelected == null && pageShareSelected == null) {
             ref
                 .read(postControllerProvider.notifier)
                 .createUpdatePost(widget.type, response);

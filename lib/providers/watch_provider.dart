@@ -40,6 +40,10 @@ final watchControllerProvider =
 class WatchController extends StateNotifier<WatchState> {
   WatchController() : super(const WatchState());
 
+  reset() {
+    state = const WatchState();
+  }
+
   getListWatchFollow(params) async {
     List response = await WatchApi().getListWatchFollow(params) ?? [];
     if (mounted) {

@@ -9,6 +9,9 @@ import 'package:social_network_app_mobile/data/tranfer_account.dart';
 import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/moment_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -52,9 +55,22 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
     completeLogin();
   }
 
+  handleTranferAccount(meData, index) {
+    if (meData[0]['username'] != dataLogin[index]['username']) {
+      SecureStorage().deleteKeyStorage('theme');
+
+      ref.read(postControllerProvider.notifier).reset();
+      ref.read(momentControllerProvider.notifier).reset();
+      ref.read(watchControllerProvider.notifier).reset();
+
+      handleLogin(dataLogin[index]['token']);
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     var meData = ref.watch(meControllerProvider);
 
     return SizedBox(
@@ -68,15 +84,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
           body: ListView.builder(
               itemCount: dataLogin.length,
               itemBuilder: (context, index) => InkWell(
-                    onTap: () {
-                      if (meData[0]['username'] !=
-                          dataLogin[index]['username']) {
-                        SecureStorage().deleteKeyStorage('theme');
-                        handleLogin(dataLogin[index]['token']);
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
+                    onTap: () => handleTranferAccount(meData, index),
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border(

@@ -123,6 +123,7 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                       ? TextAlign.center
                       : TextAlign.left,
                   controller: controller,
+                  textCapitalization: TextCapitalization.sentences,
                   style: widget.backgroundSelected != null
                       ? TextStyle(
                           color: Color(int.parse(
