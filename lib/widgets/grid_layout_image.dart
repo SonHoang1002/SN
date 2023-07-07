@@ -97,9 +97,8 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                           400)
                                       .toString()),
                                   width: size.width,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: greyColor),
+                                  decoration:
+                                      const BoxDecoration(color: greyColor),
                                 );
                               }
                               return null;

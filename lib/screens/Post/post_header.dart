@@ -51,9 +51,11 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
     super.initState();
     GetTimeAgo.setDefaultLocale('vi');
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        description = handleDescription();
-      });
+      if (mounted) {
+        setState(() {
+          description = handleDescription();
+        });
+      }
     });
   }
 

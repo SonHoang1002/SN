@@ -213,19 +213,6 @@ class _HomeState extends ConsumerState<Home>
 
   @override
   Widget build(BuildContext context) {
-    //test render
-    // if (_connectionStatus == false && !isShowSnackBar.value) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     _buildSnackBar("Không có kết nối mạng");
-
-    //     isShowSnackBar.value = true;
-    //   });
-    // } else if (_connectionStatus == true && isShowSnackBar.value) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     _buildSnackBar("Đã khôi phục kết nối mạng");
-    //     isShowSnackBar.value = false;
-    //   });
-    // }
     size ??= MediaQuery.of(context).size;
     theme ??= pv.Provider.of<ThemeManager>(context);
     String modeTheme = theme!.themeMode == ThemeMode.dark
@@ -320,21 +307,6 @@ class _HomeState extends ConsumerState<Home>
                 color: Theme.of(context).textTheme.displayLarge!.color,
               )))
     ];
-    // test render posts
-    // if (isDisconnected.value == false && !isShowSnackBar.value) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     _buildSnackBar("Không có kết nối mạng");
-
-    //     isShowSnackBar.value = true;
-    //   });
-    // } else if (isDisconnected.value == true && isShowSnackBar.value) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     _buildSnackBar("Đã khôi phục kết nối mạng");
-    //     setState(() {
-    //       isShowSnackBar.value = false;
-    //     });
-    //   });
-    // }
     return Scaffold(
         drawer: _selectedIndex == 1 || _selectedIndex == 4
             ? null

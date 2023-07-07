@@ -116,6 +116,7 @@ class _FeedState extends ConsumerState<Feed> {
   }
 
   getDataFromIsar() async {
+    if (ref.watch(postControllerProvider).posts.isEmpty) return;
     final instance = await IsarService.instance;
     final allPostInIsar = await instance.postModels.where().findAll();
     final postIdList = allPostInIsar.map((e) => e.postId).toList();
@@ -228,86 +229,85 @@ class _FeedState extends ConsumerState<Feed> {
                 const CrossBar(
                   height: 5,
                 ),
-                posts.length == 5 || isMore == false
-                    ? const Column(
-                        children: [
-                          Reef(),
-                          CrossBar(
-                            height: 5,
-                          ),
-                        ],
-                      )
-                    : const SizedBox(),
-                posts.length == 20 || isMore == false
-                    ? Suggest(
-                        type: suggestGroups,
-                        headerWidget: Image.asset(
-                          'assets/icon/logo_app.png',
-                          height: 20,
-                        ),
-                        subHeaderWidget: Column(children: [
-                          buildSpacer(height: 5),
-                          buildTextContent(
-                              ref.watch(meControllerProvider)[0]
-                                      ['display_name'] +
-                                  " ơi, bạn có thể sẽ thích các nhóm sau ",
-                              true,
-                              fontSize: 17),
-                          buildSpacer(height: 5),
-                          buildTextContent(
-                              "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
-                              false,
-                              fontSize: 16),
-                        ]),
-                        reloadFunction: () {
-                          setState(() {});
-                        },
-                        footerTitle: "Khám phá thêm nhóm")
-                    : const SizedBox(),
-                posts.length == 40 || isMore == false
-                    ? Suggest(
-                        type: suggestFriends,
-                        headerWidget: buildTextContent(
-                            "Những người bạn có thể biết", true,
-                            fontSize: 17),
-                        reloadFunction: () {
-                          setState(() {});
-                        },
-                        footerTitle: "Xem thêm")
-                    : const SizedBox()
               ])),
-              SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  if (index < posts.length) {
-                    return VisibilityDetector(
-                      key: Key(posts[index]['id']),
-                      onVisibilityChanged: (info) {
-                        double visibleFraction = info.visibleFraction;
-                        if (visibleFraction > 0.6) {
-                          if (focusCurrentPostIndex.value !=
-                              posts[index]['id']) {
-                            focusCurrentPostIndex.value = posts[index]['id'];
-                          }
-                        }
-                      },
-                      child: Post(
-                          type: feedPost,
-                          post: posts[index],
-                          reloadFunction: () {
-                            setState(() {});
+              posts.isNotEmpty
+                  ? SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return VisibilityDetector(
+                          key: Key(posts[index]['id']),
+                          onVisibilityChanged: (info) {
+                            double visibleFraction = info.visibleFraction;
+                            if (visibleFraction > 0.6) {
+                              if (focusCurrentPostIndex.value !=
+                                  posts[index]['id']) {
+                                focusCurrentPostIndex.value =
+                                    posts[index]['id'];
+                              }
+                            }
                           },
-                          isFocus: focusCurrentPostIndex.value ==
-                              posts[index]['id']),
-                    );
-                  } else {
-                    return isMore == true
-                        ? Center(
-                            child: SkeletonCustom().postSkeleton(context),
-                          )
-                        : const SizedBox();
-                  }
-                }),
-              ),
+                          child: Column(
+                            children: [
+                              index == 4 || isMore == false
+                                  ? const Column(
+                                      children: [
+                                        Reef(),
+                                        CrossBar(
+                                          height: 5,
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox(),
+                              index == 19 || isMore == false
+                                  ? Suggest(
+                                      type: suggestGroups,
+                                      headerWidget: Image.asset(
+                                        'assets/icon/logo_app.png',
+                                        height: 20,
+                                      ),
+                                      subHeaderWidget: Column(children: [
+                                        buildSpacer(height: 5),
+                                        buildTextContent(
+                                            ref.watch(meControllerProvider)[0]
+                                                    ['display_name'] +
+                                                " ơi, bạn có thể sẽ thích các nhóm sau ",
+                                            true,
+                                            fontSize: 17),
+                                        buildSpacer(height: 5),
+                                        buildTextContent(
+                                            "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
+                                            false,
+                                            fontSize: 16),
+                                      ]),
+                                      reloadFunction: () {
+                                        setState(() {});
+                                      },
+                                      footerTitle: "Khám phá thêm nhóm")
+                                  : const SizedBox(),
+                              index == 39 || isMore == false
+                                  ? Suggest(
+                                      type: suggestFriends,
+                                      headerWidget: buildTextContent(
+                                          "Những người bạn có thể biết", true,
+                                          fontSize: 17),
+                                      reloadFunction: () {
+                                        setState(() {});
+                                      },
+                                      footerTitle: "Xem thêm")
+                                  : const SizedBox(),
+                              Post(
+                                  type: feedPost,
+                                  post: posts[index],
+                                  reloadFunction: () {
+                                    setState(() {});
+                                  },
+                                  isFocus: focusCurrentPostIndex.value ==
+                                      posts[index]['id']),
+                            ],
+                          ),
+                        );
+                      }, childCount: posts.length),
+                    )
+                  : const SliverToBoxAdapter(child: SizedBox()),
               SliverToBoxAdapter(
                   child: Center(child: SkeletonCustom().postSkeleton(context)))
             ])
