@@ -43,6 +43,10 @@ final momentControllerProvider =
 class MomentController extends StateNotifier<MomentState> {
   MomentController() : super(const MomentState());
 
+  reset() {
+    state = const MomentState();
+  }
+
   getListMomentFollow(params) async {
     List response = await MomentApi().getListMomentFollow(params) ?? [];
 
