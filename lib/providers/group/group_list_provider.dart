@@ -27,6 +27,10 @@ class GroupListState {
   final List groupImage;
   final List groupAlbum;
   final List groupDetailAlbum;
+  final List groupOther;
+  final dynamic groupInviteAdmin;
+  final dynamic groupInviteMember;
+  final dynamic groupInviteJoin;
 
   const GroupListState({
     this.groupAdmin = const [],
@@ -52,6 +56,10 @@ class GroupListState {
     this.groupImage = const [],
     this.groupAlbum = const [],
     this.groupDetailAlbum = const [],
+    this.groupOther = const [],
+    this.groupInviteAdmin = const [],
+    this.groupInviteMember = const [],
+    this.groupInviteJoin = const [],
   });
 
   GroupListState copyWith({
@@ -78,6 +86,10 @@ class GroupListState {
     List groupImage = const [],
     List groupAlbum = const [],
     List groupDetailAlbum = const [],
+    List groupOther = const [],
+    dynamic groupInviteAdmin = const [],
+    dynamic groupInviteMember = const [],
+    dynamic groupInviteJoin = const [],
   }) {
     return GroupListState(
       groupAdmin: groupAdmin,
@@ -103,6 +115,10 @@ class GroupListState {
       groupImage: groupImage,
       groupAlbum: groupAlbum,
       groupDetailAlbum: groupDetailAlbum,
+      groupOther: groupOther,
+      groupInviteAdmin: groupInviteAdmin,
+      groupInviteMember: groupInviteMember,
+      groupInviteJoin: groupInviteJoin,
     );
   }
 }
@@ -145,6 +161,10 @@ class GroupListController extends StateNotifier<GroupListState> {
       groupImage: state.groupImage,
       groupAlbum: state.groupAlbum,
       groupDetailAlbum: state.groupDetailAlbum,
+      groupOther: state.groupOther,
+      groupInviteAdmin: state.groupInviteAdmin,
+      groupInviteMember: state.groupInviteMember,
+      groupInviteJoin: state.groupInviteJoin,
     );
   }
 
@@ -184,6 +204,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -215,6 +239,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -247,6 +275,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -278,6 +310,10 @@ class GroupListController extends StateNotifier<GroupListState> {
       groupImage: state.groupImage,
       groupAlbum: state.groupAlbum,
       groupDetailAlbum: state.groupDetailAlbum,
+      groupOther: state.groupOther,
+      groupInviteAdmin: state.groupInviteAdmin,
+      groupInviteMember: state.groupInviteMember,
+      groupInviteJoin: state.groupInviteJoin,
     );
   }
 
@@ -308,6 +344,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -340,6 +380,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -371,6 +415,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     } else {
       state = state.copyWith(
@@ -397,6 +445,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -428,6 +480,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     } else {
       state = state.copyWith(
@@ -454,6 +510,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -485,6 +545,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     } else {
       state = state.copyWith(
@@ -511,6 +575,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -542,6 +610,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     } else {
       state = state.copyWith(
@@ -568,6 +640,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -601,6 +677,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -632,6 +712,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     } else {
       state = state.copyWith(
@@ -658,6 +742,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -694,6 +782,10 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: state.groupImage,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }
@@ -755,6 +847,152 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupImage: response,
         groupAlbum: state.groupAlbum,
         groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
+      );
+    }
+  }
+
+  getAlbum(params, id) async {
+    List response = await GroupApi().fetchAlbum(params, id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: response,
+        groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
+      );
+    }
+  }
+
+  getGroupSuggest(params) async {
+    List response = await GroupApi().fetchListSuggestions(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: response,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
+      );
+    }
+  }
+
+  getGroupInvite(params) async {
+    var role = params['role'];
+    var response = await GroupApi().fetchListInviteGroup(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: role == 'admin' ? response : state.groupInviteAdmin,
+        groupInviteMember:
+            role == 'member' ? response : state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
+      );
+    }
+  }
+
+  getGroupJoinRequest(params) async {
+    var response = await GroupApi().fetchListJoinRequest(params);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: response,
       );
     }
   }

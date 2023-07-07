@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
-class GroupImage extends ConsumerStatefulWidget {
+class GroupAlbum extends ConsumerStatefulWidget {
   final dynamic data;
-  const GroupImage({super.key, this.data});
+  const GroupAlbum({super.key, this.data});
 
   @override
-  ConsumerState<GroupImage> createState() => _GroupImageState();
+  ConsumerState<GroupAlbum> createState() => _GroupAlbumState();
 }
 
-class _GroupImageState extends ConsumerState<GroupImage> {
+class _GroupAlbumState extends ConsumerState<GroupAlbum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
-          title: const AppBarTitle(title: 'Ảnh'),
+          title: const AppBarTitle(title: 'Album'),
         ),
         body: Container(
           child: GridView.builder(
@@ -33,7 +33,8 @@ class _GroupImageState extends ConsumerState<GroupImage> {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(widget.data[index]['preview_url']),
+                      image: NetworkImage(widget.data[index]['media_attachment']
+                          ['preview_url']),
                       fit: BoxFit.cover,
                     ),
                   ),

@@ -5,6 +5,7 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_album.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_image.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_intro.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_noticeable.dart';
@@ -106,12 +107,20 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     data: ref.read(groupListControllerProvider).groupPins)));
         break;
       case 'image':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const GroupImage()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => GroupImage(
+                    data: ref.read(groupListControllerProvider).groupImage)));
         break;
       case 'event':
         break;
       case 'album':
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => GroupAlbum(
+                    data: ref.read(groupListControllerProvider).groupAlbum)));
         break;
     }
   }

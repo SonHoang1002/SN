@@ -18,6 +18,18 @@ class GroupApi {
         .getRequestBase('/api/v1/timelines/group_collection', params);
   }
 
+  fetchListSuggestions(params) async {
+    return await Api().getRequestBase('/api/v1/suggestions/group', params);
+  }
+
+  fetchListInviteGroup(params) async {
+    return await Api().getRequestBase('/api/v1/group_invitations', params);
+  }
+
+  fetchListJoinRequest(params) async {
+    return await Api().getRequestBase('/api/v1/group_join_requests', params);
+  }
+
   fetchListGroupPins(id) async {
     return await Api().getRequestBase('/api/v1/groups/$id/pins', null);
   }

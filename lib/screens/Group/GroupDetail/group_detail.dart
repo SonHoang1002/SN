@@ -44,7 +44,12 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
             {'role': 'member', 'include_friend': true}, widget.id);
         ref.read(groupListControllerProvider.notifier).getGroupRole(
             {'role': 'member', 'exclude_friend': true}, widget.id);
-
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getMediaImage({'media_type': 'image', 'limit': '10'}, widget.id);
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getAlbum({'limit': '10'}, widget.id);
         ref.read(groupListControllerProvider.notifier).getPostGroup(
             {"sort_by": "new_post", "exclude_replies": true, "limit": 3},
             widget.id);
