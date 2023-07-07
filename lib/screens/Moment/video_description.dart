@@ -20,7 +20,8 @@ import 'follow_animation.dart';
 
 class VideoDescription extends ConsumerStatefulWidget {
   final dynamic moment;
-  const VideoDescription({super.key, this.moment});
+  final String? type;
+  const VideoDescription({super.key, this.moment, this.type});
 
   @override
   ConsumerState<VideoDescription> createState() => _VideoDescriptionState();
@@ -85,8 +86,10 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
           context: context,
           barrierColor: Colors.transparent,
           backgroundColor: Colors.transparent,
-          builder: (context) => ScreenShare(
-              entityShare: widget.moment, type: 'moment', entityType: 'post'));
+          builder: (context) => ScreenShare(entityShare: {
+                ...widget.moment,
+                'typePage': widget.type,
+              }, type: 'moment', entityType: 'post'));
     } else if (key == 'comment') {
       showBarModalBottomSheet(
           context: context,

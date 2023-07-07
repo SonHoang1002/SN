@@ -60,9 +60,11 @@ class _MomentState extends ConsumerState<Moment>
 
     if (mounted) {
       Future.delayed(Duration.zero, () {
-        ref
-            .read(momentControllerProvider.notifier)
-            .getListMomentSuggest({"limit": 5});
+        if (ref.read(momentControllerProvider).momentSuggest.isEmpty) {
+          ref
+              .read(momentControllerProvider.notifier)
+              .getListMomentSuggest({"limit": 5});
+        }
       });
 
       if (widget.dataUploadMoment != null) {
