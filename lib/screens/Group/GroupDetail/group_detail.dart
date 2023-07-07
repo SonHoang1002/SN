@@ -34,9 +34,27 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
             );
           },
         );
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getGroupRole({'role': 'admin'}, widget.id);
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getGroupRole({'role': 'moderator'}, widget.id);
+        ref.read(groupListControllerProvider.notifier).getGroupRole(
+            {'role': 'member', 'include_friend': true}, widget.id);
+        ref.read(groupListControllerProvider.notifier).getGroupRole(
+            {'role': 'member', 'exclude_friend': true}, widget.id);
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getMediaImage({'media_type': 'image', 'limit': '10'}, widget.id);
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getAlbum({'limit': '10'}, widget.id);
         ref.read(groupListControllerProvider.notifier).getPostGroup(
             {"sort_by": "new_post", "exclude_replies": true, "limit": 3},
             widget.id);
+        ref.read(groupListControllerProvider.notifier).getGroupPins(widget.id);
+
         ref
             .read(groupListControllerProvider.notifier)
             .getJoinRequest(widget.id);
@@ -72,14 +90,11 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
           ),
         ),
         body: HomeGroup(
-            groupDetail: groupDetail,
-            onTap: () {
-              if (_drawerscaffoldkey.currentState!.isDrawerOpen) {
-                Navigator.pop(context);
-              } else {
-                _drawerscaffoldkey.currentState!.openEndDrawer();
-              }
-            }),
+          groupDetail: groupDetail,
+          onTap: () {
+            _drawerscaffoldkey.currentState!.openEndDrawer();
+          },
+        ),
       ),
     );
   }

@@ -9,9 +9,29 @@ class GroupApi {
     return await Api().getRequestBase('/api/v1/groups/$id', null);
   }
 
+  Future fetchGroupRole(params, id) async {
+    return await Api().getRequestBase('/api/v1/groups/$id/accounts', params);
+  }
+
   fetchListGroupFeed(params) async {
     return await Api()
         .getRequestBase('/api/v1/timelines/group_collection', params);
+  }
+
+  fetchListSuggestions(params) async {
+    return await Api().getRequestBase('/api/v1/suggestions/group', params);
+  }
+
+  fetchListInviteGroup(params) async {
+    return await Api().getRequestBase('/api/v1/group_invitations', params);
+  }
+
+  fetchListJoinRequest(params) async {
+    return await Api().getRequestBase('/api/v1/group_join_requests', params);
+  }
+
+  fetchListGroupPins(id) async {
+    return await Api().getRequestBase('/api/v1/groups/$id/pins', null);
   }
 
   fetchGroupFeed(params, id) async {
@@ -37,6 +57,18 @@ class GroupApi {
 
   fetchPendingStatus(dynamic id) async {
     return Api().getRequestBase("/api/v1/groups/$id/pending_statuses", null);
+  }
+
+  fetchMediaImage(params, dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/media_attachments", params);
+  }
+
+  fetchAlbum(params, dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/albums", params);
+  }
+
+  fetchDetailAlbum(params, dynamic id) async {
+    return Api().getRequestBase("/api/v1/albums/$id/media_attachments", params);
   }
 
   fetchReportedStatus(dynamic id) async {

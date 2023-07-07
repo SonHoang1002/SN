@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/data/groups.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/group_item.dart';
 
-class GroupInvitedRequest extends StatelessWidget {
+class GroupInvitedRequest extends ConsumerStatefulWidget {
   const GroupInvitedRequest({Key? key}) : super(key: key);
 
   @override
+  ConsumerState<GroupInvitedRequest> createState() =>
+      _GroupInvitedRequestState();
+}
+
+class _GroupInvitedRequestState extends ConsumerState<GroupInvitedRequest> {
+  @override
   Widget build(BuildContext context) {
+    dynamic groupInviteAdmin =
+        ref.watch(groupListControllerProvider).groupInviteAdmin;
+    dynamic groupInviteJoin =
+        ref.watch(groupListControllerProvider).groupInviteJoin;
     TextStyle style =
         const TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
 
@@ -20,17 +31,17 @@ class GroupInvitedRequest extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Lời mời tham gia nhóm (${groupInvitations['meta']['total']})',
+                'Lời mời tham gia nhóm (${groupInviteAdmin['meta']['total']})',
                 style: style,
               ),
               const SizedBox(
                 height: 4.0,
               ),
-              groupInvitations['data'].isNotEmpty
+              groupInviteAdmin['data'].isNotEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
                       primary: false,
-                      itemCount: groupInvitations['data'].length,
+                      itemCount: groupInviteAdmin['data'].length,
                       itemBuilder: (context, index) => Container(
                             margin: const EdgeInsets.all(6.0),
                             padding: const EdgeInsets.all(8.0),
@@ -41,7 +52,7 @@ class GroupInvitedRequest extends StatelessWidget {
                             child: Column(
                               children: [
                                 GroupItem(
-                                  group: groupInvitations['data'][index]
+                                  group: groupInviteAdmin['data'][index]
                                       ['group'],
                                 ),
                                 const SizedBox(
@@ -75,13 +86,13 @@ class GroupInvitedRequest extends StatelessWidget {
                       ),
                     ),
               Text(
-                'Yêu cầu đã gửi (${groupJoinRequests['meta']['total']})',
+                'Yêu cầu đã gửi (${groupInviteJoin['meta']['total']})',
                 style: style,
               ),
               const SizedBox(
                 height: 4.0,
               ),
-              groupJoinRequests['data'].isEmpty
+              groupInviteJoin['data'].isEmpty
                   ? Container(
                       margin: const EdgeInsets.all(12.0),
                       child: const Text(
@@ -92,7 +103,7 @@ class GroupInvitedRequest extends StatelessWidget {
                   : ListView.builder(
                       shrinkWrap: true,
                       primary: false,
-                      itemCount: groupJoinRequests['data'].length,
+                      itemCount: groupInviteJoin['data'].length,
                       itemBuilder: (context, index) => InkWell(
                             onTap: () {},
                             borderRadius: BorderRadius.circular(10.0),
@@ -103,7 +114,7 @@ class GroupInvitedRequest extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   GroupItem(
-                                    group: groupJoinRequests['data'][index],
+                                    group: groupInviteJoin['data'][index],
                                   ),
                                   ButtonPrimary(
                                     label: "Hủy bỏ",
