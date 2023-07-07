@@ -21,7 +21,7 @@ import 'package:social_network_app_mobile/widgets/mentions/util/social_text_span
 ///There is also a helper function that can replaces range with the given value. In order to change cursor context, cursor moves to next word after replacement.
 ///
 class SocialTextEditingController extends TextEditingController {
-  StreamController<SocialContentDetection> _detectionStream =
+  final StreamController<SocialContentDetection> _detectionStream =
       StreamController<SocialContentDetection>.broadcast();
 
   @override
@@ -52,10 +52,10 @@ class SocialTextEditingController extends TextEditingController {
     _regularExpressions[type] = regExp;
   }
 
-  void replaceRange(String newValue, TextRange range) { 
+  void replaceRange(String newValue, TextRange range) {
     var newText = text.replaceRange(range.start, range.end, newValue);
     var newRange =
-        TextRange(start: range.start, end: range.start + newValue.length); 
+        TextRange(start: range.start, end: range.start + newValue.length);
     bool isAtTheEndOfText = (newRange.textAfter(newText) == " " &&
         newRange.end == newText.length - 1);
     if (isAtTheEndOfText) {
@@ -95,11 +95,11 @@ class SocialTextEditingController extends TextEditingController {
   @override
   set value(TextEditingValue newValue) {
     if (newValue.selection.baseOffset >= newValue.text.length) {
-      newValue = newValue.copyWith(
-          text: newValue.text.trimRight() + " ",
-          selection: newValue.selection.copyWith(
-              baseOffset: newValue.text.length,
-              extentOffset: newValue.text.length));
+      // newValue = newValue.copyWith(
+      //     text: "${newValue.text.trimRight()} ",
+      //     selection: newValue.selection.copyWith(
+      //         baseOffset: newValue.text.length,
+      //         extentOffset: newValue.text.length));
     }
     if (newValue.text == " ") {
       newValue = newValue.copyWith(

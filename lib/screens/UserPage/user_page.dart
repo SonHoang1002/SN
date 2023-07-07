@@ -496,13 +496,13 @@ class _UserPageState extends ConsumerState<UserPage> {
                                                                 return CupertinoAlertDialog(
                                                                   content:
                                                                       Container(
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            top:
-                                                                                8.0),
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            8.0),
                                                                     child: Text(
                                                                       "Bạn có chắc chắn muốn xóa ${userData?['display_name']} khỏi danh sách bạn bè không?",
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           fontSize:
                                                                               14.0),
                                                                     ),
@@ -674,13 +674,14 @@ class _UserPageState extends ConsumerState<UserPage> {
               ],
             ),
           ),
-          const CrossBar(),
-          UserPageInfomationBlock(
-            user: userData,
-            lifeEvent: lifeEvent,
-            userAbout: userAbout,
-            featureContents: featureContents,
-          ),
+          if (userAbout != null) const CrossBar(),
+          if (userAbout != null)
+            UserPageInfomationBlock(
+              user: userData,
+              lifeEvent: lifeEvent,
+              userAbout: userAbout,
+              featureContents: featureContents,
+            ),
           const CrossBar(),
           UserPageFriendBlock(user: userData, friends: friend),
           const CrossBar(),
