@@ -157,6 +157,7 @@ class _UserPageState extends ConsumerState<UserPage> {
         });
       });
       Future.delayed(Duration.zero, () async {
+        ref.read(userInformationProvider.notifier).getUserInformation(id);
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
         List postUserNew =
             await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
@@ -168,7 +169,7 @@ class _UserPageState extends ConsumerState<UserPage> {
         ref
             .read(postControllerProvider.notifier)
             .getListPostUserPage(id, {"limit": 3, "exclude_replies": true});
-        ref.read(userInformationProvider.notifier).getUserInformation(id);
+
         ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
         ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
         ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
@@ -666,7 +667,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                   height: 35,
                   width: 48,
                   child: ButtonPrimary(
-                    label: "···",
+                    icon: const Icon(FontAwesomeIcons.ellipsis, size: 16),
                     handlePress: () {},
                   ),
                 ),
@@ -677,7 +678,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           UserPageInfomationBlock(
             user: userData,
             lifeEvent: lifeEvent,
-            userAbout: userAbout ?? {},
+            userAbout: userAbout,
             featureContents: featureContents,
           ),
           const CrossBar(),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
 import 'package:countup/countup.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,7 @@ class Moment extends StatefulHookConsumerWidget {
   final bool? isBack;
   final String? typePage;
   final dynamic dataAdditional;
-  final String? imageUpload;
+  final File? imageUpload;
   final dynamic dataUploadMoment;
 
   const Moment({
@@ -62,11 +64,6 @@ class _MomentState extends ConsumerState<Moment>
             .read(momentControllerProvider.notifier)
             .getListMomentSuggest({"limit": 5});
       });
-      Future.delayed(Duration.zero, () {
-        ref
-            .read(momentControllerProvider.notifier)
-            .getListMomentFollow({"limit": 5});
-      });
 
       if (widget.dataUploadMoment != null) {
         Future.delayed(Duration.zero, () {
@@ -77,11 +74,27 @@ class _MomentState extends ConsumerState<Moment>
           ref.read(momentControllerProvider.notifier).updateMomentUpload(
               widget.dataUploadMoment['videoPath'],
               widget.dataUploadMoment['imageCover'],
-              widget.dataUploadMoment,
+              {
+                ...widget.dataUploadMoment,
+                'imageCover': null,
+                'videoPath': null
+              },
               ScaffoldMessenger.of(context));
         });
       }
     }
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging &&
+          _tabController.index == 0 &&
+          ref.read(momentControllerProvider).momentFollow.isNotEmpty) {
+        Future.delayed(Duration.zero, () {
+          ref
+              .read(momentControllerProvider.notifier)
+              .getListMomentFollow({"limit": 5});
+        });
+      }
+    });
   }
 
   final GlobalKey<ScaffoldState> key = GlobalKey();
@@ -219,7 +232,7 @@ class _MomentState extends ConsumerState<Moment>
                               borderRadius: BorderRadius.circular(5),
                               child: Stack(
                                 children: [
-                                  Image.asset(widget.imageUpload!,
+                                  Image.file(widget.imageUpload!,
                                       width: 80, height: 80, fit: BoxFit.cover),
                                   Positioned.fill(
                                     child: Center(
@@ -264,7 +277,7 @@ class _MomentState extends ConsumerState<Moment>
                         child: isFly
                             ? Hero(
                                 tag: widget.imageUpload!,
-                                child: Image.asset(widget.imageUpload!,
+                                child: Image.file(widget.imageUpload!,
                                     fit: BoxFit.cover),
                               )
                             : const SizedBox()),

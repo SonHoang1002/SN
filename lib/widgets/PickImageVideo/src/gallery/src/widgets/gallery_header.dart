@@ -59,7 +59,7 @@ class _GalleryHeaderState extends State<GalleryHeader> {
 
     return Container(
       constraints: BoxConstraints(
-        minHeight: panelSetting.thumbHandlerHeight,
+        minHeight: panelSetting.thumbHandlerHeight + 20,
         maxHeight: panelSetting.headerHeight + panelSetting.thumbHandlerHeight,
       ),
       color: Theme.of(context).scaffoldBackgroundColor,

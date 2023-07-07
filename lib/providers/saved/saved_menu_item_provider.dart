@@ -40,37 +40,40 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
 
   initBookmark() async {
     // get all bookmark of users
-    var bmResult = await BookmarkApi().fetchAllBookmark();
+    var allBookmark = await BookmarkApi().fetchAllBookmark();
 
     // get all collection of users
-    var cltResult = await BookmarkApi().fetchBookmarkCollection();
+    var allCollection = await BookmarkApi().fetchBookmarkCollection();
 
     var renderCollections = [];
 
-    for (var i = 0; i < cltResult.length; i++) {
-      var collection = cltResult[i];
-      var bookmarks = bmResult
+    for (var i = 0; i < allCollection.length; i++) {
+      var collection = allCollection[i];
+      var bookmarks = allBookmark
           .where((e) =>
               e['bookmark_collection'] != null &&
               e['bookmark_collection']['id'] == collection['id'])
           .toList();
 
       if (bookmarks.isNotEmpty) {
-        var earliest =
+        var latest =
             DateTime.parse(bookmarks[0]['created_at']).millisecondsSinceEpoch;
-        var index = 0;
+        var latestId = '';
         for (var j = 0; j < bookmarks.length; j++) {
           int createAt =
               DateTime.parse(bookmarks[j]['created_at']).millisecondsSinceEpoch;
-          if (createAt <= earliest) {
-            earliest = createAt;
-            index = j;
+          if (createAt < latest) {
+            latest = createAt;
+            latestId = bookmarks[j]['bookmark_collection']['id'];
           }
         }
-        collection['imageWidget'] = handleImage(bmResult[index]);
+        final indexLatestId = allBookmark.indexWhere((e) =>
+            e['bookmark_collection'] != null &&
+            e['bookmark_collection']['id'] == latestId);
+        collection['mediaWidget'] = handleMedia(allBookmark[indexLatestId]);
       } else {
         // collections has no bookmark -> default Image;
-        collection['imageWidget'] = ExtendedImage.network(
+        collection['mediaWidget'] = ExtendedImage.network(
           linkBannerDefault,
           fit: BoxFit.cover,
         );
@@ -81,7 +84,7 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
     if (mounted) {
       state = state.copyWith(
         bmCollections: renderCollections,
-        bookmarks: bmResult,
+        bookmarks: allBookmark,
       );
     }
   }
@@ -103,7 +106,7 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
       bookmarks: state.bookmarks,
       bmCollections: [
         {
-          "imageWidget": ExtendedImage.network(
+          "mediaWidget": ExtendedImage.network(
             linkBannerDefault,
             fit: BoxFit.cover,
           ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +18,7 @@ import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/page_visibility.dart';
 
 class CreateMoment extends ConsumerStatefulWidget {
-  final String imageCover;
+  final File imageCover;
   final String videoPath;
   const CreateMoment(
       {Key? key, required this.imageCover, required this.videoPath})
@@ -81,7 +83,7 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
   }
 
   handleSubmit() {
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
             builder: (context) => Moment(
@@ -92,7 +94,8 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
                       "imageCover": widget.imageCover
                     }
                     // dataAdditional: response,
-                    )));
+                    )),
+        ((route) => route.isFirst));
   }
 
   @override
@@ -181,14 +184,13 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
                       child: Hero(
-                        tag: widget.imageCover,
-                        child: Image.asset(
-                          widget.imageCover,
-                          height: 150,
-                          width: 100,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          tag: widget.imageCover,
+                          child: Image.file(
+                            widget.imageCover,
+                            height: 150,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          )),
                     )
                   ],
                 ),

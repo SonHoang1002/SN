@@ -10,8 +10,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_frames.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -22,7 +24,9 @@ import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../apis/page_api.dart' as page;
+import '../../providers/UserPage/user_information_provider.dart';
 import '../../providers/page/page_provider.dart';
+import '../../storage/storage.dart';
 import '../EditImage/edit_img_main.dart';
 
 class PageEditMediaProfile extends ConsumerStatefulWidget {
@@ -50,7 +54,8 @@ class PageEditMediaProfile extends ConsumerStatefulWidget {
 
 class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
   dynamic avatar;
-  dynamic banner;
+  dynamic banner; // anh bia cua trang (page)
+  dynamic header; // anh bia cua nguoi dung
   bool isClick = false;
 
   TextEditingController controller = TextEditingController();
@@ -71,7 +76,13 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
         base64String = base64.encode(bytes);
       }
       FormData formData = FormData.fromMap({
-        (widget.typePage == 'avatar' ? 'avatar' : 'banner'): {
+        (widget.type == 'page'
+            ? widget.typePage == 'avatar'
+                ? 'avatar'
+                : 'banner'
+            : widget.typePage == 'avatar'
+                ? 'avatar'
+                : 'header'): {
           "id": widget.typePage == 'avatar' ? avatar['id'] : banner['id'],
           "status": avatar?['status'],
           "frame_id": avatar?['frame_id'],
@@ -82,20 +93,38 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
         }
       });
 
-      var response = widget.type == 'page'
-          ? await page.PageApi().pagePostMedia(formData, widget.entityObj['id'])
-          : null;
-      if (response != null) {
-        setState(() {
-          isClick = false;
+      if (widget.type == 'page') {
+        var response = await page.PageApi()
+            .pagePostMedia(formData, widget.entityObj['id']);
+        if (response != null) {
+          setState(() {
+            isClick = false;
+            widget.handleChangeDependencies!(response);
+            ref.read(pageControllerProvider.notifier).updateMedata(response);
+          });
 
-          widget.handleChangeDependencies!(response);
+          // ignore: use_build_context_synchronously
+          Navigator.pop(context);
+        }
+      } else if (widget.type == 'user') {
+        var response =
+            await UserPageCredentical().updateCredentialUser(formData);
+        if (response != null) {
+          final deviceUserId = await SecureStorage().getKeyStorage('userId');
+          var newResponse =
+              await ref.read(meControllerProvider.notifier).getMeData();
 
-          ref.read(pageControllerProvider.notifier).updateMedata(response);
-        });
+          await ref
+              .read(userInformationProvider.notifier)
+              .getUserInformation(deviceUserId);
+          setState(() {
+            isClick = false;
+            widget.handleChangeDependencies!(newResponse);
+          });
 
-        // ignore: use_build_context_synchronously
-        Navigator.pop(context);
+          // ignore: use_build_context_synchronously
+          Navigator.pop(context);
+        }
       }
     }
 
@@ -407,7 +436,7 @@ class _AvatarWigetState extends State<AvatarWiget> {
         currentFile = await urlToFile(widget.widget.file['url'] ?? '');
       } else {
         currentFile = await urlToFile(
-            widget.widget.entityObj['avatar_media']['preview_url']);
+            widget.widget.entityObj['avatar_media']?['preview_url']);
       }
     }
   }
@@ -451,7 +480,7 @@ class _AvatarWigetState extends State<AvatarWiget> {
         } else if (widget.widget.entityType == 'image') {
           path = widget.widget.file['url'] ?? '';
         } else {
-          path = widget.widget.entityObj['avatar_media']['preview_url'];
+          path = widget.widget.entityObj['avatar_media']?['preview_url'];
         }
       }
 

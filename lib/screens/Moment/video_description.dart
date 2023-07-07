@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
@@ -15,7 +11,6 @@ import 'package:social_network_app_mobile/screens/Moment/moment_page_hashtag.dar
 import 'package:social_network_app_mobile/screens/Moment/moment_page_profile.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header_action.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/expandable_text.dart';
 import 'package:social_network_app_mobile/widgets/screen_share.dart';
@@ -51,7 +46,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
     }
   }
 
-  checkMomentFollow() async { 
+  checkMomentFollow() async {
     var type;
     var id;
     if (widget.moment['page'] != null &&
@@ -90,20 +85,14 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
           context: context,
           barrierColor: Colors.transparent,
           backgroundColor: Colors.transparent,
-          builder: (context) => SizedBox(
-              height: size.height * 0.7,
-              child: ScreenShare(
-                  entityShare: widget.moment,
-                  type: 'moment',
-                  entityType: 'post')));
+          builder: (context) => ScreenShare(
+              entityShare: widget.moment, type: 'moment', entityType: 'post'));
     } else if (key == 'comment') {
       showBarModalBottomSheet(
           context: context,
           barrierColor: Colors.transparent,
           backgroundColor: Colors.transparent,
-          builder: (context) => SizedBox(
-              height: size.height * 0.7,
-              child: CommentPostModal(post: widget.moment)));
+          builder: (context) => CommentPostModal(post: widget.moment));
     }
   }
 

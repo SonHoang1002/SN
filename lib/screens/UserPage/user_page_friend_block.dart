@@ -135,6 +135,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                                 widget.friends[index]['avatar_media']
                                         ?['preview_url'] ??
                                     linkAvatarDefault,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),

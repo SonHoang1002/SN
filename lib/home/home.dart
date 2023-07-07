@@ -41,8 +41,6 @@ class _HomeState extends ConsumerState<Home>
   int _selectedIndex = 0;
   ValueNotifier<bool> isShowSnackBar = ValueNotifier(false);
   ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(false);
-  bool? _fromPostDetail;
-  bool _connectionStatus = true;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   Size? size;
@@ -116,19 +114,18 @@ class _HomeState extends ConsumerState<Home>
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     if (result != ConnectivityResult.mobile ||
         result != ConnectivityResult.wifi) {
-      setState(() {
-        _connectionStatus = false;
-      });
+      setState(() {});
     } else {
-      setState(() {
-        _connectionStatus = true;
-      });
+      setState(() {});
     }
   }
 
   @override
   void dispose() {
+    isShowSnackBar.dispose();
+    showBottomNavigatorNotifier.dispose();
     _connectivitySubscription.cancel();
+    isDisconnected.dispose();
     super.dispose();
   }
 
@@ -192,19 +189,7 @@ class _HomeState extends ConsumerState<Home>
     } else if (key == 'search') {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Search()));
-    }
-  }
-
-  _buildSnackBar(String title) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text(title),
-          duration: const Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(9)))),
-    );
+    } else if (key == 'chat') {}
   }
 
   _showBottomNavigator(bool value) {
@@ -220,27 +205,14 @@ class _HomeState extends ConsumerState<Home>
   ];
 
   List titles = const [
-    const SizedBox(),
-    const SizedBox(),
-    const SizedBox(),
-    const AppBarTitle(title: 'Watch')
+    SizedBox(),
+    SizedBox(),
+    SizedBox(),
+    AppBarTitle(title: 'Watch')
   ];
 
   @override
   Widget build(BuildContext context) {
-    //test render
-    // if (_connectionStatus == false && !isShowSnackBar.value) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     _buildSnackBar("Không có kết nối mạng");
-
-    //     isShowSnackBar.value = true;
-    //   });
-    // } else if (_connectionStatus == true && isShowSnackBar.value) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     _buildSnackBar("Đã khôi phục kết nối mạng");
-    //     isShowSnackBar.value = false;
-    //   });
-    // }
     size ??= MediaQuery.of(context).size;
     theme ??= pv.Provider.of<ThemeManager>(context);
     String modeTheme = theme!.themeMode == ThemeMode.dark
@@ -335,21 +307,6 @@ class _HomeState extends ConsumerState<Home>
                 color: Theme.of(context).textTheme.displayLarge!.color,
               )))
     ];
-    // test render posts
-    // if (isDisconnected.value == false && !isShowSnackBar.value) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     _buildSnackBar("Không có kết nối mạng");
-
-    //     isShowSnackBar.value = true;
-    //   });
-    // } else if (isDisconnected.value == true && isShowSnackBar.value) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     _buildSnackBar("Đã khôi phục kết nối mạng");
-    //     setState(() {
-    //       isShowSnackBar.value = false;
-    //     });
-    //   });
-    // }
     return Scaffold(
         drawer: _selectedIndex == 1 || _selectedIndex == 4
             ? null

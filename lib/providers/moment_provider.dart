@@ -151,66 +151,71 @@ class MomentController extends StateNotifier<MomentState> {
   }
 
   updateMomentUpload(
-      String videoPath, String imageCover, dynamic data, snackbar) async {
-    Future<String> imageToBase64(String imagePath) async {
-      final bytes = await File(imagePath).readAsBytes();
-      final base64Str = base64Encode(bytes);
-      return 'data:image/jpeg;base64,$base64Str';
-    }
-
-    handleUploadMedia(fileData, imageCover) async {
-      fileData = fileData.replaceAll('file://', '');
-      MediaInfo? info;
-
-      try {
-        info = await VideoCompress.compressVideo(
-          fileData,
-          quality: VideoQuality.DefaultQuality,
-          deleteOrigin: false, // Keeping the original video
-          includeAudio: true, // Including audio
-        );
-
-        if (info != null) {
-          FormData formData = FormData.fromMap({
-            "description": '',
-            "position": 1,
-            "file": await MultipartFile.fromFile(
-              info.path ?? '',
-              filename: info.path!.split('/').last,
-            ),
-            "show_url": await imageToBase64(imageCover),
-          });
-
-          var response = await MediaApi().uploadMediaEmso(formData);
-          // Remember to delete cache
-          VideoCompress.deleteAllCache();
-
-          return response;
-        }
-      } catch (e) {
-        // Remember to cancel compression and delete cache in case of an error
-        VideoCompress.cancelCompression();
-        VideoCompress.deleteAllCache();
-        throw e; // Re-throwing the exception to handle it outside this function
+      String videoPath, File imageCover, dynamic data, snackbar) async {
+    try {
+      Future<String> imageToBase64(String imagePath) async {
+        final bytes = await File(imagePath).readAsBytes();
+        final base64Str = base64Encode(bytes);
+        return 'data:image/jpeg;base64,$base64Str';
       }
-    }
 
-    var mediaUploadResult = await handleUploadMedia(videoPath, imageCover);
-    if (mediaUploadResult == null) {
-      snackbar.showSnackBar(const SnackBar(
-          content: Text(
-              'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
-    }
+      handleUploadMedia(fileData, File imageCover) async {
+        fileData = fileData.replaceAll('file://', '');
+        MediaInfo? info;
 
-    dynamic response = await PostApi().createStatus({
-      ...data,
-      "media_ids": [mediaUploadResult['id']],
-    });
-    if (response != null) {
-      state = state.copyWith(
-          momentFollow: state.momentFollow,
-          momentSuggest: [response] + state.momentSuggest,
-          momentUpload: response);
+        try {
+          info = await VideoCompress.compressVideo(
+            fileData,
+            quality: VideoQuality.Res1280x720Quality,
+            deleteOrigin: false, // Keeping the original video
+            includeAudio: true, // Including audio
+          );
+
+          if (info != null) {
+            FormData formData = FormData.fromMap({
+              "description": '',
+              "position": 1,
+              "file": await MultipartFile.fromFile(
+                info.path ?? '',
+                filename: info.path!.split('/').last,
+              ),
+              "show_url": await imageToBase64(imageCover.path),
+            });
+
+            var response = await MediaApi().uploadMediaEmso(formData);
+            // Remember to delete cache
+            VideoCompress.deleteAllCache();
+
+            return response;
+          }
+        } catch (e) {
+          snackbar.showSnackBar(SnackBar(content: Text(e.toString())));
+          // Remember to cancel compression and delete cache in case of an error
+          VideoCompress.cancelCompression();
+          VideoCompress.deleteAllCache();
+          rethrow; // Re-throwing the exception to handle it outside this function
+        }
+      }
+
+      var mediaUploadResult = await handleUploadMedia(videoPath, imageCover);
+      if (mediaUploadResult == null) {
+        snackbar.showSnackBar(const SnackBar(
+            content: Text(
+                'Có lỗi xảy ra trong quá trình đăng, vui lòng thử lại sau!')));
+      }
+
+      dynamic response = await PostApi().createStatus({
+        ...data,
+        "media_ids": [mediaUploadResult['id']],
+      });
+      if (response != null) {
+        state = state.copyWith(
+            momentFollow: state.momentFollow,
+            momentSuggest: [response] + state.momentSuggest,
+            momentUpload: response);
+      }
+    } catch (e) {
+      snackbar.showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 

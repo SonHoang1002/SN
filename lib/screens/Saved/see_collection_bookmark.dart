@@ -22,8 +22,8 @@ class HandleItem {
 }
 
 class CollectionItem extends StatelessWidget {
-  HandleItem item;
-  CollectionItem({super.key, required this.item});
+  final HandleItem item;
+  const CollectionItem({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +54,16 @@ class CollectionItem extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class SeeCollectionBookmark extends ConsumerStatefulWidget {
   String? type;
-  String? collectionId;
-  String? collectionName;
+  final String? collectionId;
+  final String? collectionName;
 
   SeeCollectionBookmark({
     super.key,
-    this.collectionId,
-    this.collectionName,
+    required this.collectionId,
+    required this.collectionName,
   });
   @override
   SeeCollectionBookmarkState createState() => SeeCollectionBookmarkState();
@@ -127,7 +128,7 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    final size = MediaQuery.of(context).size;
     final theme = pv.Provider.of<ThemeManager>(context);
     final cltBookmarks = ref.watch(savedControllerProvider).currentCltBookmarks;
     final collections = ref.watch(savedControllerProvider).bmCollections;
@@ -149,7 +150,10 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
                 children: [
                   const BackIconAppbar(),
                   const SizedBox(width: 10.0),
-                  AppBarTitle(title: collections[index]['name']),
+                  SizedBox(
+                    width: size.width * 0.6,
+                    child: AppBarTitle(title: collections[index]['name']),
+                  ),
                 ],
               ),
               GestureDetector(
@@ -174,8 +178,8 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return CupertinoAlertDialog(
-                                        title: Column(
-                                          children: const [
+                                        title: const Column(
+                                          children: [
                                             Text('Đổi tên bộ sưu tập'),
                                             TextDescription(
                                               description:

@@ -97,11 +97,11 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                           400)
                                       .toString()),
                                   width: size.width,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: greyColor),
+                                  decoration:
+                                      const BoxDecoration(color: greyColor),
                                 );
                               }
+                              return null;
                             }),
                           ),
                     buildDivider(color: greyColor),
@@ -112,7 +112,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
           );
         } else {
           return Container(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                   // maxHeight: size.height * 0.75,
                   ),
               height: (medias[0]['aspect'] ??
