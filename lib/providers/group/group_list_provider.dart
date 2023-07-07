@@ -727,4 +727,35 @@ class GroupListController extends StateNotifier<GroupListState> {
       );
     }
   }
+
+  getMediaImage(params, id) async {
+    List response = await GroupApi().fetchMediaImage(params, id);
+    if (response.isNotEmpty) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: response,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
+      );
+    }
+  }
 }
