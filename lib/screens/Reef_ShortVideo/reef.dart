@@ -1,18 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/apis/moment_api.dart';
 import 'package:social_network_app_mobile/data/moment.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create_moment.dart';
-import 'package:social_network_app_mobile/screens/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_center.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_footer.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_header.dart';
@@ -34,7 +28,6 @@ class Reef extends ConsumerStatefulWidget {
 class _ReefState extends ConsumerState<Reef> {
   static const channelName = 'startActivity/VideoEditorChannel';
   static const platform = MethodChannel(channelName);
-  String _errorMessage = '';
 
   List momentSuggests = [];
   @override
@@ -181,8 +174,6 @@ class _ReefState extends ConsumerState<Reef> {
         errorMessage = 'unknown error';
     }
 
-    setState(() {
-      _errorMessage = errorMessage;
-    });
+    setState(() {});
   }
 }

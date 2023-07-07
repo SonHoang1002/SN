@@ -1,8 +1,6 @@
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_video.dart';
@@ -21,17 +19,17 @@ class _ReefCenterState extends State<ReefCenter> {
   int currentActiveVideo = 0;
   @override
   Widget build(BuildContext context) {
-    List _reefList = widget.reefList;
+    List reefList = widget.reefList;
     final size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
       height: size.height * 0.52,
       padding: EdgeInsets.zero,
-      child: buildPageView(_reefList, size),
+      child: buildPageView(reefList, size),
     );
   }
 
-  Widget buildPageView(List _reefList, Size size) {
+  Widget buildPageView(List reefList, Size size) {
     return SizedBox(
       height: size.height * 0.5,
       child: PageView.builder(
@@ -41,7 +39,7 @@ class _ReefCenterState extends State<ReefCenter> {
         ),
         clipBehavior: Clip.none,
         scrollDirection: Axis.horizontal,
-        itemCount: _reefList.length,
+        itemCount: reefList.length,
         padEnds: isScrollToLimit ? false : true,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (ctx, index) {
@@ -50,7 +48,7 @@ class _ReefCenterState extends State<ReefCenter> {
               pushToNextScreen(
                   context,
                   Moment(
-                    dataAdditional: _reefList[index],
+                    dataAdditional: reefList[index],
                     isBack: true,
                   ));
             },
@@ -69,7 +67,7 @@ class _ReefCenterState extends State<ReefCenter> {
                         children: [
                           MomentVideo(
                             type: 'momentFeed',
-                            moment: _reefList[index],
+                            moment: reefList[index],
                             isPlayBack: true,
                           ),
                           Container(
@@ -79,7 +77,7 @@ class _ReefCenterState extends State<ReefCenter> {
                         ],
                       )
                     : Image.network(
-                        _reefList[index]["media_attachments"][0]["preview_url"],
+                        reefList[index]["media_attachments"][0]["preview_url"],
                         fit: BoxFit.cover,
                         height: size.height * 0.5,
                         width: size.width * 0.55,
@@ -109,17 +107,16 @@ class _ReefCenterState extends State<ReefCenter> {
     );
   }
 
-  Widget buildCarousel(List _reefList, Size size) {
+  Widget buildCarousel(List reefList, Size size) {
     return CarouselSlider(
-      items: _reefList.map((child) {
-        int index = _reefList.indexOf(child);
-        bool isPlayBack = true;
+      items: reefList.map((child) {
+        int index = reefList.indexOf(child);
         return GestureDetector(
           onTap: () {
             pushToNextScreen(
                 context,
                 Moment(
-                  dataAdditional: _reefList[index],
+                  dataAdditional: reefList[index],
                 ));
           },
           child: Container(
@@ -135,7 +132,7 @@ class _ReefCenterState extends State<ReefCenter> {
                       children: [
                         MomentVideo(
                           type: 'momentFeed',
-                          moment: _reefList[index],
+                          moment: reefList[index],
                           isPlayBack: true,
                         ),
                         Container(
@@ -145,7 +142,7 @@ class _ReefCenterState extends State<ReefCenter> {
                       ],
                     )
                   : ExtendedImage.network(
-                      _reefList[index]["media_attachments"][0]["preview_url"],
+                      reefList[index]["media_attachments"][0]["preview_url"],
                       fit: BoxFit.fitHeight,
                     ),
             ),

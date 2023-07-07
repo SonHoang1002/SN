@@ -52,17 +52,24 @@ class _FeedState extends ConsumerState<Feed> {
   void initState() {
     super.initState();
     if (!mounted) return;
-    Future.delayed(Duration.zero, () async {
-      await ref.read(postControllerProvider.notifier).getListPost(paramsConfig);
-      await IsarPostService()
-          .addPostIsar(ref.read(postControllerProvider).posts);
-    });
-    Future.delayed(Duration.zero, () async {
-      while ((await IsarPostService().getPostIsar()) < 100) {
-        await useIsolate(paramsConfig);
-      }
-    });
 
+    getListPost();
+    updatePostIsar();
+    addScrollListener();
+  }
+
+  Future<void> getListPost() async {
+    await ref.read(postControllerProvider.notifier).getListPost(paramsConfig);
+    await IsarPostService().addPostIsar(ref.read(postControllerProvider).posts);
+  }
+
+  Future<void> updatePostIsar() async {
+    while ((await IsarPostService().getPostIsar()) < 100) {
+      await useIsolate(paramsConfig);
+    }
+  }
+
+  void addScrollListener() {
     scrollController.addListener(() async {
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -74,17 +81,7 @@ class _FeedState extends ConsumerState<Feed> {
                 120.0 ==
             0) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 300), () async {
-            String maxId = ref.watch(postControllerProvider).posts.isNotEmpty
-                ? ref.watch(postControllerProvider).posts.last['score']
-                : '';
-
-            dynamic params = {
-              "max_id": maxId,
-              "multi": 2,
-              ...paramsConfig,
-            };
-          });
+              'my-debouncer', const Duration(milliseconds: 300), () async {});
           getDataFromIsar();
         }
       } else if (scrollController.position.userScrollDirection ==
@@ -229,6 +226,53 @@ class _FeedState extends ConsumerState<Feed> {
                 const CrossBar(
                   height: 5,
                 ),
+                posts.isEmpty || isMore == false
+                    ? const Column(
+                        children: [
+                          Reef(),
+                          CrossBar(
+                            height: 5,
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
+                posts.isEmpty || isMore == false
+                    ? Suggest(
+                        type: suggestGroups,
+                        headerWidget: Image.asset(
+                          'assets/icon/logo_app.png',
+                          height: 20,
+                        ),
+                        subHeaderWidget: Column(children: [
+                          buildSpacer(height: 5),
+                          buildTextContent(
+                              ref.watch(meControllerProvider)[0]
+                                      ['display_name'] +
+                                  " ơi, bạn có thể sẽ thích các nhóm sau ",
+                              true,
+                              fontSize: 17),
+                          buildSpacer(height: 5),
+                          buildTextContent(
+                              "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
+                              false,
+                              fontSize: 16),
+                        ]),
+                        reloadFunction: () {
+                          setState(() {});
+                        },
+                        footerTitle: "Khám phá thêm nhóm")
+                    : const SizedBox(),
+                posts.isEmpty || isMore == false
+                    ? Suggest(
+                        type: suggestFriends,
+                        headerWidget: buildTextContent(
+                            "Những người bạn có thể biết", true,
+                            fontSize: 17),
+                        reloadFunction: () {
+                          setState(() {});
+                        },
+                        footerTitle: "Xem thêm")
+                    : const SizedBox(),
               ])),
               posts.isNotEmpty
                   ? SliverList(
@@ -308,8 +352,12 @@ class _FeedState extends ConsumerState<Feed> {
                       }, childCount: posts.length),
                     )
                   : const SliverToBoxAdapter(child: SizedBox()),
-              SliverToBoxAdapter(
-                  child: Center(child: SkeletonCustom().postSkeleton(context)))
+              isMore
+                  ? SliverToBoxAdapter(
+                      child:
+                          Center(child: SkeletonCustom().postSkeleton(context)))
+                  : const SliverToBoxAdapter(
+                      child: Center(child: Text('Không còn bài post nào')))
             ])
           : Container(
               alignment: Alignment.center,
