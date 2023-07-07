@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/screens/Group/group_invited_request.dart';
-import 'package:social_network_app_mobile/screens/Group/group_list_all.dart';
-import 'package:social_network_app_mobile/screens/Group/group_list_discover.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_feed_all.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_invited_request.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_list_all.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_list_discover.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-
-import '../../providers/group/group_list_provider.dart';
-import 'group_feed_all.dart';
 
 class Group extends ConsumerStatefulWidget {
   const Group({Key? key}) : super(key: key);

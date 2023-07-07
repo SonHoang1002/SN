@@ -47,6 +47,18 @@ class GroupApi {
     return Api().getRequestBase("/api/v1/groups/$id/pending_statuses", null);
   }
 
+  fetchMediaImage(params, dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/media_attachments", params);
+  }
+
+  fetchAlbum(params, dynamic id) async {
+    return Api().getRequestBase("/api/v1/groups/$id/albums", params);
+  }
+
+  fetchDetailAlbum(params, dynamic id) async {
+    return Api().getRequestBase("/api/v1/albums/$id/media_attachments", params);
+  }
+
   fetchReportedStatus(dynamic id) async {
     return Api().getRequestBase("/api/v1/groups/$id/reported_statuses", null);
   }

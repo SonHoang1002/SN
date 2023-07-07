@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
-import 'package:social_network_app_mobile/screens/Group/group_role.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_role.dart';
 import 'package:social_network_app_mobile/widgets/AvatarStack/src/avatar_stack.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
-import '../../widgets/AvatarStack/src/positions/positions.dart';
-import '../../widgets/AvatarStack/src/positions/restricted_positions.dart';
+import '../../../widgets/AvatarStack/positions.dart';
 
 class GroupIntro extends ConsumerStatefulWidget {
   final dynamic groupDetail;

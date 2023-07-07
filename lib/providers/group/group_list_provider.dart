@@ -24,6 +24,9 @@ class GroupListState {
   final List groupRoleFriend;
   final List groupRoleAdmin;
   final List groupRoleMorderator;
+  final List groupImage;
+  final List groupAlbum;
+  final List groupDetailAlbum;
 
   const GroupListState({
     this.groupAdmin = const [],
@@ -46,6 +49,9 @@ class GroupListState {
     this.groupRoleFriend = const [],
     this.groupRoleAdmin = const [],
     this.groupRoleMorderator = const [],
+    this.groupImage = const [],
+    this.groupAlbum = const [],
+    this.groupDetailAlbum = const [],
   });
 
   GroupListState copyWith({
@@ -69,6 +75,9 @@ class GroupListState {
     List groupRoleFriend = const [],
     List groupRoleAdmin = const [],
     List groupRoleMorderator = const [],
+    List groupImage = const [],
+    List groupAlbum = const [],
+    List groupDetailAlbum = const [],
   }) {
     return GroupListState(
       groupAdmin: groupAdmin,
@@ -91,6 +100,9 @@ class GroupListState {
       groupRoleFriend: groupRoleFriend,
       groupRoleAdmin: groupRoleAdmin,
       groupRoleMorderator: groupRoleMorderator,
+      groupImage: groupImage,
+      groupAlbum: groupAlbum,
+      groupDetailAlbum: groupDetailAlbum,
     );
   }
 }
@@ -130,6 +142,9 @@ class GroupListController extends StateNotifier<GroupListState> {
       groupRoleFriend: state.groupRoleFriend,
       groupRoleAdmin: state.groupRoleAdmin,
       groupRoleMorderator: state.groupRoleMorderator,
+      groupImage: state.groupImage,
+      groupAlbum: state.groupAlbum,
+      groupDetailAlbum: state.groupDetailAlbum,
     );
   }
 
@@ -166,6 +181,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -194,6 +212,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -223,6 +244,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -251,6 +275,9 @@ class GroupListController extends StateNotifier<GroupListState> {
       groupRoleFriend: state.groupRoleFriend,
       groupRoleAdmin: state.groupRoleAdmin,
       groupRoleMorderator: state.groupRoleMorderator,
+      groupImage: state.groupImage,
+      groupAlbum: state.groupAlbum,
+      groupDetailAlbum: state.groupDetailAlbum,
     );
   }
 
@@ -278,6 +305,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -307,6 +337,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -335,6 +368,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     } else {
       state = state.copyWith(
@@ -358,6 +394,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -386,6 +425,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     } else {
       state = state.copyWith(
@@ -409,6 +451,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -437,6 +482,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     } else {
       state = state.copyWith(
@@ -460,6 +508,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -488,6 +539,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     } else {
       state = state.copyWith(
@@ -511,6 +565,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -541,6 +598,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -569,6 +629,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     } else {
       state = state.copyWith(
@@ -592,6 +655,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: state.groupRoleFriend,
         groupRoleAdmin: state.groupRoleAdmin,
         groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -625,6 +691,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleAdmin: role == 'admin' ? response : state.groupRoleAdmin,
         groupRoleMorderator:
             role == 'moderator' ? response : state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
       );
     }
   }
@@ -652,6 +721,9 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupRoleFriend: [],
         groupRoleAdmin: [],
         groupRoleMorderator: [],
+        groupImage: [],
+        groupAlbum: [],
+        groupDetailAlbum: [],
       );
     }
   }

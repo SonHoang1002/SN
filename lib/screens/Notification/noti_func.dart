@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group.dart';
 
 import '../../constant/common.dart';
 import '../../constant/post_type.dart';
@@ -7,7 +8,6 @@ import '../../providers/me_provider.dart';
 import '../CreatePost/create_modal_base_menu.dart';
 import '../Event/event_detail.dart';
 import '../Friend/friend_request.dart';
-import '../Group/group.dart';
 import '../Grows/grow_detail.dart';
 import '../LearnSpace/learn_space_detail.dart';
 import '../Page/PageDetail/page_detail.dart';
@@ -272,7 +272,7 @@ Widget? nextScreenFromNoti(item) {
               postId: item['status']['id'],
               preType: postDetail,
             )
-          : DeletedStatus(type: "Bài viết");
+          : const DeletedStatus(type: "Bài viết");
 
     case 'friendship_request':
       return const FriendRequest();
@@ -283,7 +283,7 @@ Widget? nextScreenFromNoti(item) {
       // đã ứng tuyển vào công việc',
       return item['recruit'] != null
           ? RecruitDetail(data: item['recruit'])
-          : DeletedStatus(type: "Công việc");
+          : const DeletedStatus(type: "Công việc");
 
     case 'event_invitation':
     case 'event_invitation_host':
@@ -293,18 +293,18 @@ Widget? nextScreenFromNoti(item) {
       // đã đồng ý đồng tổ chức sự kiện
       return item['event'] != null
           ? EventDetail(eventDetail: item['event'])
-          : DeletedStatus(type: "Sự kiện");
+          : const DeletedStatus(type: "Sự kiện");
 
     case 'course_invitation':
       return item['course'] != null
           ? LearnSpaceDetail(data: item['course'])
-          : DeletedStatus(type: "Khóa học");
+          : const DeletedStatus(type: "Khóa học");
 
     case 'project_invitation':
     case 'project_invitation_host':
       return item['project'] != null
           ? GrowDetail(data: item['project'])
-          : DeletedStatus(type: "Khóa học");
+          : const DeletedStatus(type: "Khóa học");
 
     case 'page_invitation':
     // đã mời bạn like page
@@ -331,7 +331,7 @@ Widget? nextScreenFromNoti(item) {
     case 'accept_moderator_page_invitation':
       return item['page'] != null
           ? PageDetail(pageData: item['page'])
-          : DeletedStatus(type: "Trang");
+          : const DeletedStatus(type: "Trang");
 
     case 'poll':
       // Thăm dò ý kiến
@@ -340,7 +340,7 @@ Widget? nextScreenFromNoti(item) {
               postId: item['status']['id'],
               preType: postDetail,
             )
-          : DeletedStatus(type: "Cuộc thăm dò ý kiến");
+          : const DeletedStatus(type: "Cuộc thăm dò ý kiến");
 
     case 'group_invitation':
     // đã mời bạn tham gia nhóm
