@@ -226,52 +226,48 @@ class _FeedState extends ConsumerState<Feed> {
                 const CrossBar(
                   height: 5,
                 ),
-                posts.isEmpty || isMore == false
-                    ? const Column(
+                posts.isEmpty
+                    ? Column(
                         children: [
-                          Reef(),
-                          CrossBar(
+                          const Reef(),
+                          const CrossBar(
                             height: 5,
                           ),
+                          Suggest(
+                              type: suggestGroups,
+                              headerWidget: Image.asset(
+                                'assets/icon/logo_app.png',
+                                height: 20,
+                              ),
+                              subHeaderWidget: Column(children: [
+                                buildSpacer(height: 5),
+                                buildTextContent(
+                                    ref.watch(meControllerProvider)[0]
+                                            ['display_name'] +
+                                        " ơi, bạn có thể sẽ thích các nhóm sau ",
+                                    true,
+                                    fontSize: 17),
+                                buildSpacer(height: 5),
+                                buildTextContent(
+                                    "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
+                                    false,
+                                    fontSize: 16),
+                              ]),
+                              reloadFunction: () {
+                                setState(() {});
+                              },
+                              footerTitle: "Khám phá thêm nhóm"),
+                          Suggest(
+                              type: suggestFriends,
+                              headerWidget: buildTextContent(
+                                  "Những người bạn có thể biết", true,
+                                  fontSize: 17),
+                              reloadFunction: () {
+                                setState(() {});
+                              },
+                              footerTitle: "Xem thêm")
                         ],
                       )
-                    : const SizedBox(),
-                posts.isEmpty || isMore == false
-                    ? Suggest(
-                        type: suggestGroups,
-                        headerWidget: Image.asset(
-                          'assets/icon/logo_app.png',
-                          height: 20,
-                        ),
-                        subHeaderWidget: Column(children: [
-                          buildSpacer(height: 5),
-                          buildTextContent(
-                              ref.watch(meControllerProvider)[0]
-                                      ['display_name'] +
-                                  " ơi, bạn có thể sẽ thích các nhóm sau ",
-                              true,
-                              fontSize: 17),
-                          buildSpacer(height: 5),
-                          buildTextContent(
-                              "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
-                              false,
-                              fontSize: 16),
-                        ]),
-                        reloadFunction: () {
-                          setState(() {});
-                        },
-                        footerTitle: "Khám phá thêm nhóm")
-                    : const SizedBox(),
-                posts.isEmpty || isMore == false
-                    ? Suggest(
-                        type: suggestFriends,
-                        headerWidget: buildTextContent(
-                            "Những người bạn có thể biết", true,
-                            fontSize: 17),
-                        reloadFunction: () {
-                          setState(() {});
-                        },
-                        footerTitle: "Xem thêm")
                     : const SizedBox(),
               ])),
               posts.isNotEmpty
@@ -291,7 +287,7 @@ class _FeedState extends ConsumerState<Feed> {
                           },
                           child: Column(
                             children: [
-                              index == 4 || isMore == false
+                              index == 4
                                   ? const Column(
                                       children: [
                                         Reef(),
@@ -301,7 +297,7 @@ class _FeedState extends ConsumerState<Feed> {
                                       ],
                                     )
                                   : const SizedBox(),
-                              index == 19 || isMore == false
+                              index == 19
                                   ? Suggest(
                                       type: suggestGroups,
                                       headerWidget: Image.asset(
@@ -327,7 +323,7 @@ class _FeedState extends ConsumerState<Feed> {
                                       },
                                       footerTitle: "Khám phá thêm nhóm")
                                   : const SizedBox(),
-                              index == 39 || isMore == false
+                              index == 39
                                   ? Suggest(
                                       type: suggestFriends,
                                       headerWidget: buildTextContent(
