@@ -49,13 +49,21 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   void initState() {
     if (!mounted) return;
     super.initState();
-    Future.delayed(Duration.zero, () => fetchNotifications(null));
-    connectToWebSocket();
   }
 
   void connectToWebSocket() async {
     webSocketChannel = await WebSocketService().connectToWebSocket();
     listenToWebSocket();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    final meData = ref.watch(meControllerProvider);
+    if (routes.containsKey('/home') && meData.isNotEmpty) {
+      Future.delayed(Duration.zero, () => fetchNotifications(null));
+      connectToWebSocket();
+    }
   }
 
   void listenToWebSocket() {

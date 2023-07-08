@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
@@ -27,7 +28,6 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_wid
 import 'package:social_network_app_mobile/widgets/Suggestions/suggest.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
-import 'package:provider/provider.dart' as pv;
 import 'package:visibility_detector/visibility_detector.dart';
 
 class Feed extends ConsumerStatefulWidget {
