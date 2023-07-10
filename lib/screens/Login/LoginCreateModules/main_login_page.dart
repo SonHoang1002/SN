@@ -11,9 +11,10 @@ import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/confirm_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
+
+import 'begin_join_emso_login_page.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   clientId:
@@ -89,7 +90,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [const BackIconAppbar(), Container()],
+            children: [ Container()],
           ),
         ),
         body: getBody(context, size),
@@ -416,16 +417,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
+                TextButton(
                   onPressed: () {
                     pushToNextScreen(context, const ConfirmLoginPage());
                   },
@@ -433,7 +425,32 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                     "Bạn quên mật khẩu ư?",
                     style: TextStyle(color: primaryColor, fontSize: 17),
                   )),
-            ],
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 25),
+            child: 
+               ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      minimumSize: const Size.fromHeight(47),
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20))),
+                  onPressed: () {
+                    pushToNextScreen(
+                                        context, BeginJoinEmsoLoginPage());
+                  },
+                  child: 
+                      Text(
+                        'Đăng ký tài khoản Emso',
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                  ),
+                ),
           )
         ],
       ),

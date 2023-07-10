@@ -27,7 +27,7 @@ var routes = <String, WidgetBuilder>{
   '/page': (BuildContext context) => const PageDetail(),
   '/user': (BuildContext context) => const UserPageHome(),
   //  SaleInformationMarketPage
-  '/login': (BuildContext context) => const OnboardingLoginPage(),
+  // '/login': (BuildContext context) => const OnboardingLoginPage(),
   '/': (BuildContext context) => const PreviewScreen(),
 };
 

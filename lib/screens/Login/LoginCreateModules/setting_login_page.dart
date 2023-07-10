@@ -1,48 +1,77 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-import '../../../constant/login_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../../../constant/common.dart';
 import '../../../helper/push_to_new_screen.dart';
+import '../../../storage/storage.dart';
 import '../../../theme/colors.dart';
-import '../../../widgets/GeneralWidget/general_component.dart';
-import '../../../widgets/GeneralWidget/text_content_widget.dart';
-import '../../../widgets/appbar_title.dart';
-import 'main_login_page.dart';
+import '../../../widgets/Market/image_cache.dart';
+import '../../../widgets/back_icon_appbar.dart';
+import 'onboarding_login_page.dart';
 
 class SettingLoginPage extends StatefulWidget {
-  const SettingLoginPage({super.key});
+  final index;
+  const SettingLoginPage(this.index, {super.key});
 
   @override
   State<SettingLoginPage> createState() => _SettingLoginPageState();
 }
 
 class _SettingLoginPageState extends State<SettingLoginPage> {
-  late double width = 0;
+  List dataLogin = [];
 
-  late double height = 0;
-  bool _isCheck = false;
-  bool _deleteAccount = false;
+  @override
+  void initState() {
+    super.initState();
+
+    if (mounted) {
+      fetchDataLogin();
+    }
+  }
+
+  fetchDataLogin() async {
+    var newList = await SecureStorage().getKeyStorage('dataLogin');
+
+    if (newList != null && newList != 'noData') {
+      setState(() {
+        dataLogin = jsonDecode(newList) ?? [];
+      });
+    }
+  }
+
+  deleteData(index) async {
+  final secureStorage = FlutterSecureStorage();
+  
+  // Đọc mảng từ "dataLogin"
+  String? value = await secureStorage.read(key: "dataLogin");
+  if (value != null) {
+    // Giải mã giá trị JSON
+    var data = jsonDecode(value) as List<dynamic>;
+
+    // Xóa phần tử tại vị trí cụ thể trong mảng
+    int indexToRemove = index; // Ví dụ xóa phần tử thứ 3
+    data.removeAt(indexToRemove);
+
+    // Mã hóa lại và lưu lại mảng đã cập nhật vào "dataLogin"
+    String updatedValue = jsonEncode(data);
+    await secureStorage.write(key: "dataLogin", value: updatedValue);
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    width = size.width;
-    height = size.height;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const AppBarTitle(title: "Đóng"),
-            ),
-            const AppBarTitle(title: "Cài đặt đăng nhập"),
-            const SizedBox(),
+            BackIconAppbar(),
           ],
         ),
       ),
@@ -65,99 +94,56 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          height: 100,
-                          width: 100,
-                          margin: const EdgeInsets.only(bottom: 5),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            // borderRadius: BorderRadius.all(Radius.circular(20))
+                          height: 150,
+                          width: 150,
+                          margin: const EdgeInsets.only(
+                              bottom: 5, right: 5, left: 5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(width: 0.2, color: greyColor)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: ImageCacheRender(
+                              path: dataLogin[widget.index]['show_url'] ??
+                                  linkAvatarDefault,
+                              width: 99.8,
+                              height: 99.8,
+                            ),
                           ),
-                          child: Image.asset(
-                              LoginConstants.PATH_IMG + "avatar_img.png"),
                         ),
-                        buildTextContent(
-                            OnboardingLoginConstants.ONBOARDING_LOGIN_USERNAME,
-                            true,
-                            fontSize: 16,
-                            colorWord: Colors.black,
-                            isCenterLeft: false)
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                            width: 250,
+                            child: Text(
+                              dataLogin[widget.index]['name'],
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w500),
+                            ))
                       ],
                     ),
                   ),
                   Container(
-                      height: 50,
-                      color: Colors.grey[700],
-                      // color: Colors.purpleAccent[200],
-                      child: GeneralComponent(
-                        [
-                          buildTextContent("Nhận thông báo", false,
-                              fontSize: 16, colorWord: white)
-                        ],
-                        suffixWidget: CupertinoSwitch(
-                          onChanged: (value) {
-                            setState(() {
-                              _isCheck = !_isCheck;
-                            });
-                          },
-                          value: _isCheck,
-                        ),
-                        changeBackground: transparent,
-                        padding: const EdgeInsets.all(5),
-                      )),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  !_deleteAccount
-                      ? ListView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          itemCount: SettingLoginConstants
-                              .GETTING_LOGIN_SELECTIONS["data"].length,
-                          itemBuilder: (context, index) {
-                            final data = SettingLoginConstants
-                                .GETTING_LOGIN_SELECTIONS["data"];
-                            return Container(
-                                // height: 50,
-                                color: Colors.grey[700],
-                                child: GeneralComponent(
-                                  [
-                                    buildTextContent(
-                                        data[index]["title"], false,
-                                        fontSize: 16, colorWord: Colors.red),
-                                    buildTextContent(
-                                        data[index]["subTitle"], false,
-                                        fontSize: 13, colorWord: white)
-                                  ],
-                                  changeBackground: transparent,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 10),
-                                  function: () {
-                                    setState(() {
-                                      _deleteAccount = true;
-                                    });
-                                  },
-                                ));
-                          },
-                        )
-                      : Container(
-                          color: Colors.grey[700],
-                          child: GeneralComponent(
-                            [
-                              buildTextContent(
-                                  SettingLoginConstants
-                                      .GETTING_LOGIN_DELETE_ACCOUNT,
-                                  false,
-                                  fontSize: 16,
-                                  colorWord: Colors.red),
-                            ],
-                            changeBackground: transparent,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 10),
-                            function: () {
-                              pushToNextScreen(context, MainLoginPage(null));
-                            },
-                          ),
-                        )
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          minimumSize: const Size.fromHeight(47),
+                          backgroundColor: Colors.grey[700],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                      onPressed: () {
+                        deleteData(widget.index);
+                        pushAndReplaceToNextScreen(context,const OnboardingLoginPage());
+                      },
+                      child: const Text(
+                        'Gỡ trang cá nhân',
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
