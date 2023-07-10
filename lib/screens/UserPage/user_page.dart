@@ -145,6 +145,10 @@ class _UserPageState extends ConsumerState<UserPage> {
     });
   }
 
+  void onResetContent() {
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
