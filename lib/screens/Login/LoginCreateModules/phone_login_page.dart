@@ -157,7 +157,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
               buildSpacer(height: 15),
               // change status button
               SizedBox(
-                height: 36,
+                height: 40,
                 child: ButtonPrimary(
                   isPrimary: true,
                   label: _onPhoneScreen
@@ -178,7 +178,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
               checkIsValid()
                   ? const SizedBox()
                   : SizedBox(
-                      height: 36,
+                      height: 40,
                       child: ButtonPrimary(
                         label: "Tiếp tục",
                         handlePress: () {

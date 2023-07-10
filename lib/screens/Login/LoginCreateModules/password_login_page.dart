@@ -104,7 +104,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                             _passwordController.trim().isNotEmpty &&
                                     _passwordConfirm == _passwordController
                                 ? SizedBox(
-                                    height: 36,
+                                    height: 40,
                                     child: ButtonPrimary(
                                       label: "Tiếp tục",
                                       handlePress: () {

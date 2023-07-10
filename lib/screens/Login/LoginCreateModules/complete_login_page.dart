@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/save_login_page.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -10,6 +11,7 @@ import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widgets/GeneralWidget/spacer_widget.dart';
 import '../../../widgets/GeneralWidget/text_content_widget.dart';
+import '../widgets/have_account_widget.dart';
 import 'main_login_page.dart';
 
 class CompleteLoginPage extends StatelessWidget {
@@ -50,12 +52,17 @@ class CompleteLoginPage extends StatelessWidget {
           ),
           resizeToAvoidBottomInset: true,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: GestureDetector(
-            onTap: (() {
-              FocusManager.instance.primaryFocus!.unfocus();
+          bottomNavigationBar: SizedBox(
+            height: 80,
+            child: buildHaveAccountWidget(function: () {
+              pushToNextScreen(context, const MainLoginPage(null));
             }),
-            child: Column(children: [
-              Expanded(
+          ),
+          body: GestureDetector(
+              onTap: (() {
+                FocusManager.instance.primaryFocus!.unfocus();
+              }),
+              child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -69,23 +76,26 @@ class CompleteLoginPage extends StatelessWidget {
                                 buildTextContent(
                                     CompleteLoginConstants.COMPLETE_LOGIN_TITLE,
                                     true,
-                                    fontSize: 17,
+                                    fontSize: 25,
                                     colorWord: Theme.of(context)
                                         .textTheme
                                         .bodyLarge
                                         ?.color,
                                     isCenterLeft: false),
-                                buildSpacer(height: 10),
-                                _buildDescription(),
-                                buildSpacer(height: 10),
+                                buildSpacer(height: 20),
+                                 _buildDescription(),
+                                buildSpacer(height: 30),
                                 // button
 
                                 SizedBox(
                                   height: 36,
                                   child: ButtonPrimary(
-                                    label: "Hoàn tất",
+                                    fontSize: 18,
+                                    label: "Tôi đồng ý",
                                     handlePress: () {
                                       handleRegistration();
+                                      pushToNextScreen(
+                                          context, const SaveLoginPage());
                                     },
                                   ),
                                 )
@@ -97,19 +107,17 @@ class CompleteLoginPage extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ]),
-          ),
+              )),
         ));
   }
 
   Widget _buildDescription() {
     final subTitle = CompleteLoginConstants.COMPLETE_LOGIN_SUBTITLE;
     return RichText(
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.justify,
       text: TextSpan(
         text: subTitle[0],
-        style: const TextStyle(color: greyColor),
+        style: const TextStyle(color: greyColor, fontSize: 18),
         children: <TextSpan>[
           TextSpan(
             text: subTitle[1],
@@ -132,6 +140,30 @@ class CompleteLoginPage extends StatelessWidget {
           ),
           TextSpan(
             text: subTitle[6],
+          ),
+          TextSpan(
+            text: subTitle[7],
+            style: const TextStyle(color: primaryColor),
+            recognizer: TapGestureRecognizer()..onTap = () {},
+          ),
+          TextSpan(
+            text: subTitle[8],
+          ),
+          TextSpan(
+            text: subTitle[9],
+            style: const TextStyle(color: primaryColor),
+            recognizer: TapGestureRecognizer()..onTap = () {},
+          ),
+          TextSpan(
+            text: subTitle[10],
+          ),
+          TextSpan(
+            text: subTitle[11],
+          ),
+          TextSpan(
+            text: subTitle[12],
+            style: const TextStyle(color: primaryColor),
+            recognizer: TapGestureRecognizer()..onTap = () {},
           ),
         ],
       ),
