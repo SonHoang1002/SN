@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/screens/UserPage/EditUser/edit_notice_story.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -599,7 +600,14 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
                           )),
                 ),
               ),
-              updateProfile: () {},
+              updateProfile: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const EditNoticeStory(),
+                  ),
+                );
+              },
             ),
           ],
         ),

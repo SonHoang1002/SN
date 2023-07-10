@@ -62,6 +62,15 @@ class UserPageApi {
   Future getHobbiesByCategories(String keyword) async {
     return Api().getRequestBase('/api/v1/categories', {"keyword": keyword});
   }
+
+  Future getMediaAttachment(String userId, params) async {
+    return Api()
+        .getRequestBase('/api/v1/accounts/$userId/media_attachments', params);
+  }
+
+  Future createNoticeCollection(data) async {
+    return Api().postRequestBase('/api/v1/account_featured_contents', data);
+  }
 }
 
 class UserPageCredentical {
