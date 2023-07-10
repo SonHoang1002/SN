@@ -42,12 +42,12 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
   }
 
   void completeLogin() {
-    Navigator.pushReplacement<void, void>(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => const PreviewScreen(),
-      ),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const PreviewScreen(),
+        ),
+        ((route) => false));
   }
 
   handleLogin(token) async {

@@ -16,62 +16,67 @@ class MenuUser extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = pv.Provider.of<ThemeManager>(context);
-    var meData = ref.read(meControllerProvider)[0];
+    var meData = ref.watch(meControllerProvider).isNotEmpty
+        ? ref.watch(meControllerProvider)[0]
+        : null;
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(10.0),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => UserPageHome(),
-            settings: RouteSettings(
-              arguments: {'id': meData['id']},
+    return meData != null
+        ? InkWell(
+            borderRadius: BorderRadius.circular(10.0),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserPageHome(),
+                  settings: RouteSettings(
+                    arguments: {'id': meData['id']},
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                  color: theme.isDarkMode
+                      ? Theme.of(context).cardColor
+                      : const Color(0xfff1f2f5),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ref.watch(meControllerProvider).isNotEmpty
+                      ? UserItem(
+                          user: meData, subText: 'Xem trang cá nhân của bạn')
+                      : const SizedBox(),
+                  InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(15))),
+                          builder: (BuildContext context) {
+                            return const TranferAccount();
+                          });
+                    },
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ChipNoti.Badge(
+                          badgeContent: const Text('2',
+                              style: TextStyle(color: white, fontSize: 13)),
+                          child: const Icon(
+                            Icons.arrow_drop_down_circle_outlined,
+                            color: greyColor,
+                            size: 25,
+                          ),
+                        )),
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-            color: theme.isDarkMode
-                ? Theme.of(context).cardColor
-                : const Color(0xfff1f2f5),
-            borderRadius: BorderRadius.circular(10)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            UserItem(
-                user: ref.watch(meControllerProvider)[0],
-                subText: 'Xem trang cá nhân của bạn'),
-            InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(15))),
-                    builder: (BuildContext context) {
-                      return const TranferAccount();
-                    });
-              },
-              child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ChipNoti.Badge(
-                    badgeContent: const Text('2',
-                        style: TextStyle(color: white, fontSize: 13)),
-                    child: const Icon(
-                      Icons.arrow_drop_down_circle_outlined,
-                      color: greyColor,
-                      size: 25,
-                    ),
-                  )),
-            )
-          ],
-        ),
-      ),
-    );
+          )
+        : const SizedBox();
   }
 }
