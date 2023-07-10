@@ -154,17 +154,35 @@ class EmailLoginConstants {
 }
 
 class CompleteLoginConstants {
-  static String COMPLETE_LOGIN_TITLE = "Hoàn tất đăng ký";
+  static String COMPLETE_LOGIN_TITLE = "Đồng ý với điều khoản và chính sách của Emso";
   static List<String> COMPLETE_LOGIN_SUBTITLE = [
-    "Bằng cách nhấn vào Đăng ký, bạn đồng ý với ",
+    "Những người dùng dịch vụ của chúng tôi có thể đã tải thông tin liên hệ của bạn lên Emso.",
+    " Tìm hiểu thêm",
+    "\n\nBằng cách nhấn vào Tôi đồng ý, bạn đồng ý với ",
     "Điều khoản",
     ", ",
     "Chính sách dữ liệu",
     " và ",
     "Chính sách cookie",
-    " của chúng tôi. Bạn có thể nhận được thông báo của chúng tôi qua SMS và chọn không nhận bất cứ lúc nào."
+    " của Emso.",
+    "\n\nChính sách quyền riêng tư",
+    " mô tả các cách chúng tôi có thể dùng thông tin thu nhập được khi bạn tạo tài khoản. Chẳng hạn, chúng tôi sử dụng thông tin này để cung cấp, cá nhân hóa và cải thiện các sản phẩm của mình, bao gồm quảng cáo.",
+    "\n\nBạn sẽ nhận được thông báo của chúng tôi qua SMS và có thể chọn không nhận bất cứ lúc nào.",
+    " Tìm hiểu thêm",
   ];
-  static String COMPLETE_LOGIN_NAME_PLACEHOLODER = 'Hoàn tất';
+  static String COMPLETE_LOGIN_NAME_PLACEHOLODER = 'Tôi đồng ý';
+}
+
+class SaveLogin{
+  static String SAVE_LOGIN_TITLE = "Lưu thông tin đăng nhập";
+  static String SAVE_LOGIN_SUB = "Chúng tôi sẽ lưu thông tin đăng nhập để bạn không cần nhập vào lần đăng nhập sau";
+  static String SAVE_LOGIN_PLACEHOLODER = "Lưu";
+}
+
+class AddAvatarLoginConstants{
+  static String ADD_AVATAR_LOGIN_TITLE = "Thêm ảnh đại diện";
+  static String ADD_AVATAR_LOGIN_SUB = "Hãy thêm ảnh đại diện để bạn bè nhận ra bạn. Mọi người có thể nhìn thấy ảnh của bạn.";
+  static String ADD_AVATAR_LOGIN_PLACEHOLODER = "Thêm ảnh";
 }
 
 class ConfirmLoginConstants {

@@ -78,7 +78,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
                             buildSpacer(height: 15),
                             name.trim().isNotEmpty
                                 ? SizedBox(
-                                    height: 36,
+                                    height: 40,
                                     child: ButtonPrimary(
                                       label: "Tiếp tục",
                                       handlePress: () {
