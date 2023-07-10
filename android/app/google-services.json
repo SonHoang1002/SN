@@ -7,6 +7,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:352503968807:android:39bcee0ab44eff8744ca02",
+        "android_client_info": {
+          "package_name": "com.example.socialNetworkAppMobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "352503968807-vmjs78b178okvvqd8sl0bmacau0oda97.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.socialNetworkAppMobile",
+            "certificate_hash": "08cae53f6285113ccf95916bd8fc33a4bdc99a23"
+          }
+        },
+        {
+          "client_id": "352503968807-dvv3cusmi8a280l39n7ii1u6o4agokas.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzN0kU5-1nxbGl7ED_wUP_Ktfo0Iyn1Ys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "352503968807-dvv3cusmi8a280l39n7ii1u6o4agokas.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "352503968807-01nk5bd6qfvqq94u6v1v429ndcucr0qe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "sn.emso.social"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:352503968807:android:2b86416fb27bcd6244ca02",
         "android_client_info": {
           "package_name": "com.example.social_network_app_mobile"
@@ -31,10 +75,10 @@
               "client_type": 3
             },
             {
-              "client_id": "352503968807-fc29tgs4mvb29i3puv50s1kdqm0h6hv4.apps.googleusercontent.com",
+              "client_id": "352503968807-01nk5bd6qfvqq94u6v1v429ndcucr0qe.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.social"
+                "bundle_id": "sn.emso.social"
               }
             }
           ]

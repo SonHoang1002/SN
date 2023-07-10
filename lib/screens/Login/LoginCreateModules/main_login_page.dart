@@ -165,7 +165,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+          const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
               "Emso",
               style: TextStyle(
@@ -398,9 +398,9 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                   onPressed: () {
                     _handleSignIn();
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         FontAwesomeIcons.google,
                         size: 18,
