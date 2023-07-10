@@ -60,18 +60,20 @@ class _VideoPlayerHasControllerState
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
       )..initialize().then((value) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            setState(() {
-              chewieController = ChewieController(
-                  placeholder: Container(
-                      decoration: BoxDecoration(
-                    color: Color(int.parse(
-                        '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
-                  )),
-                  showControlsOnInitialize: false,
-                  videoPlayerController: videoPlayerController!,
-                  aspectRatio: videoPlayerController!.value.aspectRatio,
-                  progressIndicatorDelay: const Duration(seconds: 10));
-            });
+            if (mounted) {
+              setState(() {
+                chewieController = ChewieController(
+                    placeholder: Container(
+                        decoration: BoxDecoration(
+                      color: Color(int.parse(
+                          '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
+                    )),
+                    showControlsOnInitialize: false,
+                    videoPlayerController: videoPlayerController!,
+                    aspectRatio: videoPlayerController!.value.aspectRatio,
+                    progressIndicatorDelay: const Duration(seconds: 10));
+              });
+            }
           });
         });
     }

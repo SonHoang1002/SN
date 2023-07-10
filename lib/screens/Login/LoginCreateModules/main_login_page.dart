@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,15 +18,6 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import 'begin_join_emso_login_page.dart';
 
-GoogleSignIn _googleSignIn = GoogleSignIn(
-  clientId:
-      '465933365763-5kq97dko2a2tq95vpb3gna47vm2svna1.apps.googleusercontent.com',
-  scopes: <String>[
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ],
-);
-
 class MainLoginPage extends ConsumerStatefulWidget {
   final accountChoose;
   const MainLoginPage(this.accountChoose, {Key? key}) : super(key: key);
@@ -39,9 +32,24 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   bool showPassword = false;
   bool isLoading = false;
   dynamic currentAccount;
+  late GoogleSignIn _googleSignIn;
+
   @override
   void initState() {
     super.initState();
+
+    if (Platform.isAndroid) {
+      _googleSignIn = GoogleSignIn();
+    } else {
+      _googleSignIn = GoogleSignIn(
+        clientId:
+            '210278496786-7esfchosldt9ontl99089f8hg35ear8i.apps.googleusercontent.com',
+      );
+    }
+
+    if (mounted) {
+      _googleSignIn.signInSilently();
+    }
 
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       if (mounted) {
@@ -50,9 +58,6 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
         });
       }
     });
-    if (mounted) {
-      _googleSignIn.signInSilently();
-    }
     if (widget.accountChoose != null) {
       if (mounted) {
         setState(() {
@@ -90,7 +95,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [ Container()],
+            children: [Container()],
           ),
         ),
         body: getBody(context, size),
@@ -147,12 +152,12 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
         // completeLogin();
         // if (mounted) {
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute<void>(
-            builder: (BuildContext context) => const PreviewScreen(),
-          ),
-        );
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => const PreviewScreen(),
+            ),
+            ((route) => false));
         // }
       });
     }
@@ -418,13 +423,13 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    pushToNextScreen(context, const ConfirmLoginPage());
-                  },
-                  child: const Text(
-                    "Bạn quên mật khẩu ư?",
-                    style: TextStyle(color: primaryColor, fontSize: 17),
-                  )),
+                    onPressed: () {
+                      pushToNextScreen(context, const ConfirmLoginPage());
+                    },
+                    child: const Text(
+                      "Bạn quên mật khẩu ư?",
+                      style: TextStyle(color: primaryColor, fontSize: 17),
+                    )),
               ],
             ),
           ),
@@ -433,24 +438,21 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 25),
-            child: 
-               ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      minimumSize: const Size.fromHeight(47),
-                      backgroundColor: primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20))),
-                  onPressed: () {
-                    pushToNextScreen(
-                                        context, BeginJoinEmsoLoginPage());
-                  },
-                  child: 
-                      Text(
-                        'Đăng ký tài khoản Emso',
-                        style: TextStyle(color: Colors.white, fontSize: 17),
-                  ),
-                ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  minimumSize: const Size.fromHeight(47),
+                  backgroundColor: primaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20))),
+              onPressed: () {
+                pushToNextScreen(context, BeginJoinEmsoLoginPage());
+              },
+              child: Text(
+                'Đăng ký tài khoản Emso',
+                style: TextStyle(color: Colors.white, fontSize: 17),
+              ),
+            ),
           )
         ],
       ),

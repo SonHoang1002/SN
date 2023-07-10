@@ -89,13 +89,11 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
             actions: [
               IconButton(
                   onPressed: () {
-                  if(dataLogin.length>1){
-                    pushToNextScreen(context, AccountManagerment());
-                  }
-                  else{
-                     pushToNextScreen(context, SettingLoginPage(0));
-                  }
-                    
+                    if (dataLogin.length > 1) {
+                      pushToNextScreen(context, AccountManagerment());
+                    } else {
+                      pushToNextScreen(context, SettingLoginPage(0));
+                    }
                   },
                   icon: Icon(Icons.settings)),
             ],
@@ -204,16 +202,16 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                                             borderRadius:
                                                 BorderRadius.circular(20))),
                                     onPressed: () {
-                                     pushToNextScreen(
-                                        context, const MainLoginPage(null));
+                                      pushToNextScreen(
+                                          context, const MainLoginPage(null));
                                     },
                                     child: const Text(
-                                    OnboardingLoginConstants
-                                        .ONBOARDING_LOGIN_LOGIN_WITH_DIFFERENCE_ACCOUNT,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                                      OnboardingLoginConstants
+                                          .ONBOARDING_LOGIN_LOGIN_WITH_DIFFERENCE_ACCOUNT,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ),
                                 buildSpacer(height: 20),

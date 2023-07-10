@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -42,12 +43,12 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
   }
 
   void completeLogin() {
-    Navigator.pushReplacement<void, void>(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => const PreviewScreen(),
-      ),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const PreviewScreen(),
+        ),
+        ((route) => false));
   }
 
   handleLogin(token) async {
@@ -62,6 +63,8 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
       ref.read(postControllerProvider.notifier).reset();
       ref.read(momentControllerProvider.notifier).reset();
       ref.read(watchControllerProvider.notifier).reset();
+      ref.read(watchControllerProvider.notifier).reset();
+      ref.read(pageControllerProvider.notifier).reset();
 
       handleLogin(dataLogin[index]['token']);
     } else {
