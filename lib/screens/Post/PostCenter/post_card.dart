@@ -23,6 +23,8 @@ class PostCard extends StatelessWidget {
     bool isVertical = (axis == Axis.vertical);
     var card = post['card'];
     var size = MediaQuery.of(context).size;
+    var linkTitle =
+        ((card['link'] ?? card['url']).split("//"))[1].split("/").first;
     return card != null
         ? (card['provider_name'] != null && card['provider_name'] != 'GIPHY') ||
                 card['link'] != null
@@ -39,7 +41,7 @@ class PostCard extends StatelessWidget {
                       pushCustomCupertinoPageRoute(
                           context,
                           MyWebView(
-                            title: "abc",
+                            title: linkTitle ?? 'Liên kết ngoài',
                             selectedUrl: card['link'] ?? card['url'],
                             post: post,
                             type: type,
@@ -68,9 +70,7 @@ class PostCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      (card['url'].split("//"))[1]
-                                          .split("/")
-                                          .first,
+                                      linkTitle,
                                       style: const TextStyle(
                                           fontSize: 12,
                                           color: greyColor,

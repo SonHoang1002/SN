@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Bookmark/bookmark_page.dart';
@@ -15,11 +14,9 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/general_componen
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/Payment/modal_donate.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/screen_share.dart';
-import 'package:social_network_app_mobile/widgets/show_modal_message.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -29,7 +26,7 @@ class MyWebView extends StatefulWidget {
   final dynamic post;
   final dynamic type;
 
-  MyWebView(
+  const MyWebView(
       {super.key,
       required this.title,
       required this.selectedUrl,
@@ -44,7 +41,6 @@ class _MyWebViewState extends State<MyWebView> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   WebViewController? _webViewController;
-  dynamic _selectedOption;
 
   List dropDownItems = [
     {
@@ -131,7 +127,7 @@ class _MyWebViewState extends State<MyWebView> {
       //   // call api
       //   break;
       case "setting":
-        pushCustomCupertinoPageRoute(context, BrowserSetting());
+        pushCustomCupertinoPageRoute(context, const BrowserSetting());
         break;
       default:
     }
@@ -221,7 +217,7 @@ class _MyWebViewState extends State<MyWebView> {
 }
 
 class BrowserSetting extends StatefulWidget {
-  BrowserSetting({super.key});
+  const BrowserSetting({super.key});
 
   @override
   State<BrowserSetting> createState() => _BrowserSettingState();
@@ -238,9 +234,9 @@ class _BrowserSettingState extends State<BrowserSetting> {
         appBar: AppBar(
             elevation: 0,
             automaticallyImplyLeading: false,
-            title: Row(
+            title: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 BackIconAppbar(),
                 AppBarTitle(
                   title: "Cài đặt trình duyệt",

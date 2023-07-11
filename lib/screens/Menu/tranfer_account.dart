@@ -8,6 +8,8 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/tranfer_account.dart';
 import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
@@ -72,6 +74,8 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
       ref.read(watchControllerProvider.notifier).reset();
       ref.read(watchControllerProvider.notifier).reset();
       ref.read(pageControllerProvider.notifier).reset();
+      ref.read(friendControllerProvider.notifier).reset();
+      ref.read(groupListControllerProvider.notifier).reset();
 
       handleLogin(dataLogin[index]['token']);
     } else {

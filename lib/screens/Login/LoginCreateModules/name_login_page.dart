@@ -5,7 +5,6 @@ import 'package:social_network_app_mobile/widgets/text_form_field_custom.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
-import '../../../theme/colors.dart';
 import '../../../widgets/GeneralWidget/spacer_widget.dart';
 import '../../../widgets/GeneralWidget/text_content_widget.dart';
 import '../widgets/have_account_widget.dart';
@@ -23,6 +22,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
   late double width = 0;
   late double height = 0;
   String name = '';
+  dynamic errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +69,22 @@ class _NameLoginPageState extends State<NameLoginPage> {
                                 autofocus: true,
                                 hintText: "Họ và tên",
                                 handleGetValue: (value) {
-                                  setState(() {
-                                    name = value;
-                                  });
+                                  if (value.length <= 30) {
+                                    setState(() {
+                                      name = value;
+                                      errorText = null;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      errorText = 'Tên không vượt quá 30 kí tự';
+                                    });
+                                  }
                                 },
+                                errorText: errorText,
                               ),
                             ),
                             buildSpacer(height: 15),
-                            name.trim().isNotEmpty
+                            name.trim().isNotEmpty && errorText == null
                                 ? SizedBox(
                                     height: 40,
                                     child: ButtonPrimary(

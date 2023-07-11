@@ -113,7 +113,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                               right: 16.0,
                                               bottom: 16.0),
                                           child: CircleAvatar(
-                                            radius: 50,
+                                            radius: 46,
                                             backgroundImage:
                                                 CachedNetworkImageProvider(
                                                     friendRequest[indexRequest]
@@ -200,11 +200,12 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                                             0.2,
                                                                         color:
                                                                             greyColor)),
-                                                                child: Row(
+                                                                child:
+                                                                    const Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
                                                                           .center,
-                                                                  children: const [
+                                                                  children: [
                                                                     Text(
                                                                       'Xác nhận',
                                                                       textAlign:
@@ -269,11 +270,12 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                                             0.2,
                                                                         color:
                                                                             greyColor)),
-                                                                child: Row(
+                                                                child:
+                                                                    const Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
                                                                           .center,
-                                                                  children: const [
+                                                                  children: [
                                                                     Text(
                                                                       'Xoá',
                                                                       textAlign:
@@ -345,11 +347,12 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                                             0.2,
                                                                         color:
                                                                             greyColor)),
-                                                                child: Row(
+                                                                child:
+                                                                    const Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
                                                                           .center,
-                                                                  children: const [
+                                                                  children: [
                                                                     Icon(
                                                                         FontAwesomeIcons
                                                                             .hands,
@@ -386,11 +389,11 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                                       ['relationships']
                                                                   ['friendship_status'] ==
                                                               'CAN_REQUEST'
-                                                          ? Column(
+                                                          ? const Column(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
                                                                       .start,
-                                                              children: const [
+                                                              children: [
                                                                 Text(
                                                                     'Đã gỡ lời mời kết bạn',
                                                                     style: TextStyle(
@@ -460,7 +463,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                           right: 16.0,
                                           bottom: 16.0),
                                       child: CircleAvatar(
-                                        radius: 50,
+                                        radius: 46,
                                         backgroundImage:
                                             CachedNetworkImageProvider(
                                                 friendSuggestions[index]
@@ -519,11 +522,11 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                       border: Border.all(
                                                           width: 0.2,
                                                           color: greyColor)),
-                                                  child: Row(
+                                                  child: const Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
-                                                    children: const [
+                                                    children: [
                                                       Text(
                                                         'Thêm bạn bè',
                                                         textAlign:
@@ -571,11 +574,11 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                       border: Border.all(
                                                           width: 0.2,
                                                           color: greyColor)),
-                                                  child: Row(
+                                                  child: const Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
-                                                    children: const [
+                                                    children: [
                                                       Text(
                                                         'Gỡ',
                                                         textAlign:

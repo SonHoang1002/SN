@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/model/post_model.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
@@ -240,10 +241,19 @@ class _FeedState extends ConsumerState<Feed> {
                 posts.isEmpty
                     ? Column(
                         children: [
-                          const Reef(),
-                          const CrossBar(
-                            height: 5,
-                          ),
+                          ref
+                                  .watch(momentControllerProvider)
+                                  .momentSuggest
+                                  .isNotEmpty
+                              ? const Column(
+                                  children: [
+                                    Reef(),
+                                    CrossBar(
+                                      height: 5,
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(),
                           Suggest(
                               type: suggestGroups,
                               headerWidget: Image.asset(
