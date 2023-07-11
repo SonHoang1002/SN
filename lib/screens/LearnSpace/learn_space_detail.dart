@@ -140,9 +140,9 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                   color: Colors.black.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(width: 0.2, color: greyColor)),
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(FontAwesomeIcons.angleLeft,
                       color: Colors.white, size: 16),
                 ],
@@ -242,11 +242,11 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                       border: Border.all(
                                                           width: 0.2,
                                                           color: greyColor)),
-                                                  child: Row(
+                                                  child: const Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children: const [
+                                                      children: [
                                                         Text(
                                                           'Quảng cáo',
                                                           textAlign:
@@ -469,25 +469,25 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                 text: TextSpan(
                                                                     text:
                                                                         'Bạn có muốn đăng ký khoá học ',
-                                                                    style: const TextStyle(
-                                                                        color: Colors
-                                                                            .black),
+                                                                    style: TextStyle(
+                                                                        color: colorWord(
+                                                                            context)),
                                                                     children: [
                                                                   TextSpan(
                                                                       text: courseDetail[
                                                                               'title'] ??
                                                                           '',
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        color: Colors
-                                                                            .black,
+                                                                      style: TextStyle(
+                                                                        color: colorWord(
+                                                                            context)
                                                                       )),
-                                                                  const TextSpan(
+                                                                  TextSpan(
                                                                       text:
                                                                           ' không?',
                                                                       style: TextStyle(
                                                                           color:
-                                                                              Colors.black)),
+                                                                              colorWord(
+                                                                            context))),
                                                                 ])),
                                                             actions: <CupertinoDialogAction>[
                                                               CupertinoDialogAction(
@@ -810,10 +810,10 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                 BorderRadius.circular(4),
                                             border: Border.all(
                                                 width: 0.2, color: greyColor)),
-                                        child: Row(
+                                        child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.ellipsis,
                                                   size: 14)
                                             ])),
@@ -826,7 +826,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                               physics: const NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0.5),
                                 child: Row(
                                   children: List.generate(
                                     itemChipCourse.sublist(0, 4).length,
