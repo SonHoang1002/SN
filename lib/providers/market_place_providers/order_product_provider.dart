@@ -26,7 +26,7 @@ class SellerOrderController extends StateNotifier<SellerOrderState> {
   }
 
   getBuyerOrder() async {
-    final response = await OrderApis().getBuySellerOrderApi();
+    final response = await OrderApis().getBuyerOrdersApi();
     if (response == null) {
       state = state.copyWith([]);
       return;
@@ -52,7 +52,7 @@ class BuyerOrderController extends StateNotifier<BuyerOrderState> {
   BuyerOrderController() : super(BuyerOrderState());
 
   getBuyerOrder({dynamic limit}) async {
-    final response = await OrderApis().getBuySellerOrderApi();
+    final response = await OrderApis().getBuyerOrdersApi();
     if (response == null) {
       state = state.copyWith([]);
       return;

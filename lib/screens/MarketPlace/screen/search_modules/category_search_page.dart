@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
 import 'package:market_place/apis/market_place_apis/category_product_apis.dart';
+import 'package:market_place/apis/market_place_apis/product_categories_api.dart';
+import 'package:market_place/apis/market_place_apis/products_api.dart';
 
 import 'package:market_place/data/market_datas/list_category.dart';
+import 'package:market_place/providers/market_place_providers/campaine_provider.dart';
 import 'package:market_place/providers/market_place_providers/products_provider.dart';
 import 'package:market_place/screens/MarketPlace/screen/see_more_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/banner_widget.dart';
@@ -22,12 +27,17 @@ import 'package:market_place/widgets/cross_bar.dart';
 import 'package:market_place/widgets/messenger_app_bar/app_bar_title.dart';
 
 import '../../../../helpers/routes.dart';
+import '../main_market_page.dart';
 
 class CategorySearchPage extends ConsumerStatefulWidget {
-  // final List<dynamic> categoryList;
+  final String? questionKeyWord;
   final dynamic title;
-  final dynamic id;
-  const CategorySearchPage({super.key, required this.title, this.id});
+  final dynamic categoryObject;
+  const CategorySearchPage(
+      {super.key,
+      required this.title,
+      required this.categoryObject,
+      this.questionKeyWord});
 
   @override
   ConsumerState<CategorySearchPage> createState() => _CategorySearchPageState();
@@ -39,19 +49,17 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
   List? _filteredProductList;
   List? _childCategoryList;
   List<dynamic>? suggestList;
+  var paramConfig = {
+    "limit": 10,
+  };
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
-      _filteredProductList = await SearchProductsApi().searchProduct({
-        "q": widget.title,
-        "limit": 10,
-      });
-      if (ref.watch(productsProvider).list == null ||
-          ref.watch(productsProvider).list.isEmpty) {
-        final suggestProductList =
-            await ref.read(productsProvider.notifier).getProducts();
+      if (ref.watch(productsProvider).list.isEmpty) {
+        await ref.read(productsProvider.notifier).getProducts(paramConfig);
       }
+      await _initData();
     });
   }
 
@@ -78,7 +86,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const BackIconAppbar(),
-            AppBarTitle(text: widget.title.toString()),
+            AppBarTitle(title: widget.title.toString()),
             CartWidget(),
           ],
         ),
@@ -121,7 +129,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
             height: 5,
           ),
           suggestList != null
-              ? buildClassifyCategoryComponent(
+              ? buildSuggestListComponent(
                   context: context,
                   title: buildTitleAndSeeAll(
                     "Có thể bạn sẽ thích",
@@ -131,6 +139,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
                     }),
                     iconData: FontAwesomeIcons.angleRight,
                   ),
+                  axis: Axis.vertical,
                   contentList: suggestList!,
                 )
               : _buildSkeletonWidget()
@@ -184,7 +193,8 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
                                   context,
                                   CategorySearchPage(
                                       title: _childCategoryList?[index]
-                                          ["title"]));
+                                          ["title"],
+                                      categoryObject: widget.categoryObject));
                             }),
                           );
                         })));
@@ -200,35 +210,30 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
   Future _initFilterCategory() async {
     if (_filteredProductList == null) {
       Future.delayed(Duration.zero, () async {
-        _filteredProductList = await SearchProductsApi().searchProduct({
-          "q": widget.title,
-          "limit": 10,
-        });
+        _filteredProductList = await ProductsApi().getProductsApi(
+            widget.questionKeyWord != null
+                ? {"q": widget.questionKeyWord, ...paramConfig}
+                : paramConfig);
       });
-      final response = await SearchProductsApi().searchProduct({
-        "q": widget.title,
-        "limit": 10,
-      });
-      _filteredProductList = response;
     }
   }
 
   Future _initChildCategory() async {
-    if (_childCategoryList == null) {
-      _childCategoryList = await _getChildCategoryList(widget.id);
-    }
+    _childCategoryList ??=
+        await _getChildCategoryList(widget.categoryObject['id']);
   }
 
   Future<dynamic> _getChildCategoryList(dynamic id) async {
-    final response = await CategoryProductApis().getChildCategoryProductApi(id);
+    final response = await CategoryProductApis().getChildCategoryProductApi(id,
+        widget.categoryObject['has_children'] ? {"subcategories": true} : null);
     return response;
   }
 
   Future _initSuggest() async {
-    if (ref.watch(productsProvider).list == null ||
-        ref.watch(productsProvider).list.isEmpty) {
-      final suggestProductList =
-          await ref.read(productsProvider.notifier).getProducts();
+    if (ref.watch(productsProvider).list.isEmpty) {
+      final suggestProductList = await ref
+          .read(productsProvider.notifier)
+          .getProductsSearch(paramConfig);
     }
     if (suggestList == null || suggestList!.isEmpty) {
       suggestList = ref.watch(productsProvider).list;

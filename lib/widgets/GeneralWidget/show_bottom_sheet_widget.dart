@@ -13,7 +13,9 @@ showCustomBottomSheet(BuildContext context, double height,
     double? paddingHorizontal,
     bool? isDismissible = true,
     bool? enableDrag = true,
-    bool? isNoHeader = false}) {
+    bool? isNoHeader = false,
+    bool? isShowCloseButton = true,
+    Function? onEnd}) {
   const Color transparent = Colors.transparent;
   showModalBottomSheet(
       enableDrag: enableDrag!,
@@ -32,42 +34,45 @@ showCustomBottomSheet(BuildContext context, double height,
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(15), topLeft: Radius.circular(15))),
           child: Column(children: [
+            // drag and drop navbar
+            Container(
+              padding: const EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.only(bottom: 15),
+              child: Container(
+                height: 4,
+                width: 40,
+                decoration: const BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(15),
+                        topLeft: Radius.circular(15))),
+              ),
+            ),
             !isNoHeader!
                 ? Column(
                     children: [
-                      // drag and drop navbar
-                      Container(
-                        padding: const EdgeInsets.only(top: 5),
-                        margin: const EdgeInsets.only(bottom: 15),
-                        child: Container(
-                          height: 4,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(15),
-                                  topLeft: Radius.circular(15))),
-                        ),
-                      ),
                       //  title
                       Container(
                         padding: const EdgeInsets.only(left: 5, right: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                prefixFunction != null
-                                    ? prefixFunction()
-                                    : Navigator.pop(context);
-                              },
-                              child: Icon(
-                                iconData ?? FontAwesomeIcons.close,
-                              ),
-                            ),
+                            isShowCloseButton!
+                                ? GestureDetector(
+                                    onTap: () {
+                                      prefixFunction != null
+                                          ? prefixFunction()
+                                          : Navigator.pop(context);
+                                    },
+                                    child: Icon(
+                                      iconData ?? FontAwesomeIcons.close,
+                                    ),
+                                  )
+                                : const SizedBox(),
                             Text(
                               title!,
                               overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
@@ -89,5 +94,7 @@ showCustomBottomSheet(BuildContext context, double height,
             widget ?? Container()
           ]),
         );
-      });
+      }).whenComplete(() {
+    onEnd != null ? onEnd() : null;
+  });
 }

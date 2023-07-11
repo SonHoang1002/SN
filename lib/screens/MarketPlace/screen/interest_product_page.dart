@@ -85,7 +85,7 @@ class _InterestProductMarketPageState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               BackIconAppbar(),
-              AppBarTitle(text: "Quan tâm"),
+              AppBarTitle(title: "Quan tâm"),
               Icon(
                 FontAwesomeIcons.bell,
                 size: 18,

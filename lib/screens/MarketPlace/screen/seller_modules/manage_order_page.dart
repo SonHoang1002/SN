@@ -7,7 +7,7 @@ import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/page_list_provider.dart';
 import 'package:market_place/screens/MarketPlace/screen/review_product_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/see_review_market.dart';
-import 'package:market_place/screens/MarketPlace/screen/seller_orders/prepare_product_market_page.dart';
+import 'package:market_place/screens/MarketPlace/screen/seller_modules/prepare_product_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:market_place/apis/market_place_apis/order_product_apis.dart';
@@ -144,7 +144,7 @@ class _OrderProductMarketPageState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const BackIconAppbar(),
-                  const AppBarTitle(text: "Danh sách đơn hàng"),
+                  const AppBarTitle(title: "Danh sách đơn hàng"),
                   GestureDetector(
                     onTap: () {
                       // pushToNextScreen(context, PrepareProductMarketPage());
@@ -762,9 +762,7 @@ class _OrderProductMarketPageState
   Widget _gotOrder(dynamic data) {
     return buildMarketButton(
         width: width * 0.4,
-        contents:[
-          buildTextContent("Đã nhận hàng", false,fontSize: 13)
-        ] ,
+        contents: [buildTextContent("Đã nhận hàng", false, fontSize: 13)],
         bgColor: blueColor,
         function: () async {
           setState(() {
@@ -778,7 +776,7 @@ class _OrderProductMarketPageState
             }
           }
           final response = await OrderApis()
-              .verifyBuyerOrderApi(data["id"], {"status": "finish"});
+              .postBuyerVerifyOrderApi(data["id"], {"status": "finish"});
 
           setState(() {
             _isLoading = false;

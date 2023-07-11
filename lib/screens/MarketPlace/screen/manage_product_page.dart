@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:market_place/constant/common.dart';
 import 'package:market_place/constant/get_min_max_price.dart';
 import 'package:market_place/constant/marketPlace_constants.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/page_list_provider.dart';
 import 'package:market_place/providers/market_place_providers/products_provider.dart';
+import 'package:market_place/screens/MarketPlace/screen/detail_product_page.dart';
+import 'package:market_place/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/rating_star_widget.dart';
@@ -63,7 +67,9 @@ class _ManageProductMarketPageState
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      final getProduct = ref.read(productsProvider.notifier).getProducts();
+      final getProduct = ref
+          .read(productsProvider.notifier)
+          .getProductsSearch(paramConfigProductSearch);
       if (ref.watch(pageListProvider).listPage.isEmpty) {
         final pageList = ref.read(pageListProvider.notifier).getPageList();
       }
@@ -95,7 +101,7 @@ class _ManageProductMarketPageState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const BackIconAppbar(),
-              const AppBarTitle(text: "Quản lý sản phẩm"),
+              const AppBarTitle(title: "Quản lý sản phẩm"),
               GestureDetector(
                 onTap: () {
                   pushToNextScreen(context, NotificationMarketPage());
@@ -114,8 +120,9 @@ class _ManageProductMarketPageState
             setState(() {
               _productList = [];
               Future.delayed(Duration.zero, () {
-                final getProduct =
-                    ref.read(productsProvider.notifier).getProducts();
+                final getProduct = ref
+                    .read(productsProvider.notifier)
+                    .getProducts(paramConfigProductSearch);
               });
             });
             final b = Future.wait([_initMainData()]);
@@ -209,8 +216,8 @@ class _ManageProductMarketPageState
               Future.delayed(Duration.zero, () async {
                 _detailData =
                     await DetailProductApi().getDetailProductApi(data["id"]);
-                _commentData =
-                    await ReviewProductApi().getReviewProductApi(data["id"]);
+                _commentData = await ReviewProductApi()
+                    .getReviewProductApi(data["id"], configReviewParams);
                 _mediaDetailList = [];
                 if (_detailData["product_video"] != null &&
                     _detailData["product_video"].isNotEmpty) {
@@ -293,7 +300,7 @@ class _ManageProductMarketPageState
                                   Row(
                                     children: [
                                       buildRatingStarWidget(
-                                          _detailData?["rating_count"]),
+                                          _detailData?["rating"]),
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             left: 10, right: 5),
@@ -505,9 +512,10 @@ class _ManageProductMarketPageState
                             children: [
                               ListTile(
                                 leading: const Icon(FontAwesomeIcons.pen),
-                                title: const Text("Giá và tồn kho"),
+                                title: const Text("Cập nhật"),
                                 onTap: () {
-                                  popToPreviousScreen(context);
+                                  pushToNextScreen(
+                                      context, UpdateMarketPage(data['id']));
                                 },
                               ),
                               ListTile(
@@ -650,7 +658,8 @@ class _ManageProductMarketPageState
                   width: 35,
                   child: _selectedPage != null
                       ? ImageCacheRender(
-                          path: _selectedPage["avatar_media"]["url"])
+                          path: _selectedPage?["avatar_media"]?["url"] ??
+                              linkAvatarDefault)
                       : Container(
                           color: greyColor,
                         )),

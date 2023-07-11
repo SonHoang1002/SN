@@ -50,7 +50,7 @@
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             children: [
 //               const BackIconAppbar(),
-//               const AppBarTitle(text: "Cá nhân"),
+//               const AppBarTitle(title: "Cá nhân"),
 //               GestureDetector(
 //                 onTap: () {
 //                   pushToNextScreen(context, NotificationMarketPage());

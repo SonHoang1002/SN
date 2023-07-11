@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:market_place/data/market_datas/dat_data.dart';
 import 'package:market_place/helpers/routes.dart';
+import 'package:market_place/screens/MarketPlace/screen/detail_product_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/review_item_widget.dart';
 import 'package:market_place/apis/market_place_apis/review_product_apis.dart';
@@ -61,11 +62,11 @@ class _SeeReviewShopMarketPageComsumerState
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               BackIconAppbar(),
-              AppBarTitle(text: "Đánh giá Shop của bạn"),
+              AppBarTitle(title: "Đánh giá Shop của bạn"),
               Icon(
                 FontAwesomeIcons.bell,
                 size: 18,
@@ -83,8 +84,8 @@ class _SeeReviewShopMarketPageComsumerState
     if (reviewList!.isEmpty) {
       List<dynamic> newList =
           await Future.wait(widget.reviewData!.map((element) async {
-        List<dynamic> response = await ReviewProductApi()
-            .getReviewProductApi(element["product_variant"]["product_id"]);
+        List<dynamic> response = await ReviewProductApi().getReviewProductApi(
+            element["product_variant"]["product_id"], {"limit": 10});
         return response;
       }).toList());
       List<dynamic> filterReviewList = [];

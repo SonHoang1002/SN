@@ -86,7 +86,7 @@ class _ReviewProductMarketPageState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const BackIconAppbar(),
-              const AppBarTitle(text: "Đánh giá sản phẩm"),
+              const AppBarTitle(title: "Đánh giá sản phẩm"),
               GestureDetector(
                   onTap: () async {
                     setState(() {
@@ -94,7 +94,7 @@ class _ReviewProductMarketPageState
                     });
                     await _createReviewProduct();
                   },
-                  child: const AppBarTitle(text: "Gửi"))
+                  child: const AppBarTitle(title: "Gửi"))
             ],
           ),
         ),
@@ -720,20 +720,21 @@ class _ReviewProductMarketPageState
   }
 
   Future getImage(int index, ImageSource src) async {
-    XFile selectedImage = XFile("");
-    selectedImage = (await ImagePicker().pickImage(source: src))!;
-    setState(() {
-      _imgFileList![index]
-          .add(File(selectedImage.path != null ? selectedImage.path : ""));
-    });
+    XFile? selectedImage;
+    selectedImage = await ImagePicker().pickImage(source: src);
+    if (selectedImage != null) {
+      setState(() {
+        _imgFileList![index].add(File(selectedImage!.path));
+      });
+    }
   }
 
   Future getVideo(int index, ImageSource src) async {
-    XFile selectedVideo = XFile("");
-    selectedVideo = (await ImagePicker().pickVideo(source: src))!;
-    if (selectedVideo.path != "") {
+    XFile? selectedVideo;
+    selectedVideo = await ImagePicker().pickVideo(source: src);
+    if (selectedVideo != null) {
       setState(() {
-        _videoFileList[index] = selectedVideo.path;
+        _videoFileList[index] = selectedVideo!.path;
       });
     }
   }

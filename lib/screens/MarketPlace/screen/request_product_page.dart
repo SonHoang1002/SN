@@ -36,7 +36,7 @@ class _RequestProductMarketPageState extends State<RequestProductMarketPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               BackIconAppbar(),
-              AppBarTitle(text: "Lời mời"),
+              AppBarTitle(title: "Lời mời"),
               Icon(
                 FontAwesomeIcons.bell,
                 size: 18,

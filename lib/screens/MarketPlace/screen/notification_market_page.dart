@@ -23,7 +23,7 @@ class NotificationMarketPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               BackIconAppbar(),
-              AppBarTitle(text: "Thông báo"),
+              AppBarTitle(title: "Thông báo"),
               SizedBox()
             ],
           ),

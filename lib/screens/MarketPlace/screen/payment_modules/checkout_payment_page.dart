@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:market_place/providers/market_place_providers/products_provider.dart';
-import 'package:market_place/screens/MarketPlace/screen/buyer_orders/my_order_page_1.dart';
+import 'package:market_place/screens/MarketPlace/screen/buyer_orders/my_order_page.dart'; 
 import 'package:market_place/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/classify_category_conponent.dart';
 import 'package:market_place/screens/MarketPlace/widgets/voucher_widget.dart';
 import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:market_place/widgets/cross_bar.dart';
-
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:market_place/widgets/back_icon_appbar.dart';
-
 import '../../../../theme/colors.dart';
 
 class CheckoutPaymentPage extends ConsumerStatefulWidget {
@@ -99,7 +97,7 @@ class _CheckoutPaymentPageState extends ConsumerState<CheckoutPaymentPage> {
               padding: const EdgeInsets.symmetric(
                 horizontal: 10,
               ),
-              child: buildClassifyCategoryComponent(
+              child: buildSuggestListComponent(
                   context: context,
                   title: Flex(
                     direction: Axis.horizontal,
@@ -156,7 +154,7 @@ class _CheckoutPaymentPageState extends ConsumerState<CheckoutPaymentPage> {
         }),
         buildSpacer(width: 10),
         _buildSingleButton("Đơn mua", function: () {
-          pushAndReplaceToNextScreen(context, const MyOrderPage1());
+          pushAndReplaceToNextScreen(context, const MyOrderPage());
         })
       ],
     );

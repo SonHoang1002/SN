@@ -22,7 +22,7 @@ class EmsoPayPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               BackIconAppbar(),
-              AppBarTitle(text: "EMSOPAY"),
+              AppBarTitle(title: "EMSOPAY"),
               SizedBox()
             ],
           ),
