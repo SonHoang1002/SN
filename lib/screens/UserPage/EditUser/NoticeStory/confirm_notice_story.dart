@@ -62,7 +62,7 @@ class ConfirmNoticeStoryState extends ConsumerState<ConfirmNoticeStory> {
 
   Future<bool> handleNoticeCollection(ScaffoldMessengerState snackbar) async {
     var mediaIds = widget.mediaIds;
-    var bannerId = '';
+    dynamic bannerId;
     final userId = ref.read(meControllerProvider)[0]['id'];
     bool isSuccess = false;
 
@@ -86,7 +86,7 @@ class ConfirmNoticeStoryState extends ConsumerState<ConfirmNoticeStory> {
       bannerId = mediaUploadBanner['id'];
     } else {
       final index = widget.images.indexWhere((e) => e == bannerImage);
-      bannerId = widget.mediaIds[index]['id'];
+      bannerId = mediaIds[index];
     }
     var response = await UserPageApi().createNoticeCollection({
       "title": title,
@@ -146,9 +146,9 @@ class ConfirmNoticeStoryState extends ConsumerState<ConfirmNoticeStory> {
                 var isSuccess = await handleNoticeCollection(snackbar);
                 if (isSuccess) {
                   // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
-                  // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop();
                 }
                 setState(() {
                   isLoading = false;

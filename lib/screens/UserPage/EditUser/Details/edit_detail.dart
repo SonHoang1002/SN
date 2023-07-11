@@ -141,10 +141,11 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                           )
                         : ListTile(
                             leading: Checkbox(
+                              checkColor: Colors.lightBlue[200],
                               value: true,
                               onChanged: (value) {},
                             ),
-                            title: Text("Đến từ ${infor['hometown']}"),
+                            title: Text("Đến từ ${infor['hometown']['title']}"),
                             trailing: GestureDetector(
                               onTap: () {},
                               child: editIcon(theme),
