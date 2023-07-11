@@ -448,10 +448,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     if (statusActivity != null) {
       _fakeData['status_activity'] = statusActivity;
     }
-    if (content != null) {
-      _fakeData['content'] = content;
-    }
-    if (gifLink != null && gifLink != "") {
+    _fakeData['content'] = content;
+    if (gifLink != "") {
       _fakeData['card']['link'] = gifLink;
     }
     if (backgroundSelected != null) {
@@ -471,11 +469,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   handleCreatePost() async {
     bool isHaveVideo = false;
-    files.forEach((element) {
+    for (var element in files) {
       if (element['type'] != 'image') {
         isHaveVideo = true;
       }
-    });
+    }
     if (isHaveVideo) {
       _buildSnackBar(
           "Video của bạn đang trong quá trình xử lý, chúng tôi sẽ thông báo cho bạn khi video đã sẵn sàng.");
@@ -561,7 +559,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         }
         var results = await Future.wait(listUpload);
         List mediasId = [];
-        if (results != null && results.isNotEmpty) {
+        if (results.isNotEmpty) {
           mediasId = results.map((e) => e['id']).toList();
         }
         data = {...data, "media_ids": mediasId};
