@@ -36,6 +36,7 @@ class _GroupListDiscoverState extends ConsumerState<GroupListDiscover> {
               ListView.builder(
                   shrinkWrap: true,
                   primary: false,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: groupFriend.length,
                   itemBuilder: (context, index) => InkWell(
                         onTap: () {},
@@ -54,6 +55,7 @@ class _GroupListDiscoverState extends ConsumerState<GroupListDiscover> {
               ListView.builder(
                   shrinkWrap: true,
                   primary: false,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: groupOther.length,
                   itemBuilder: (context, index) => InkWell(
                         onTap: () {},
