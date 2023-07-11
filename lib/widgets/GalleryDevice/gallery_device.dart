@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:typed_data';
 
 import 'package:photo_manager/photo_manager.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
@@ -185,9 +184,16 @@ class _GalleryDeviceState extends State<GalleryDevice>
     }
   }
 
+  Widget noData(BuildContext context) => Center(
+        child: Text('Không có file phương tiện nào',
+            style: TextStyle(
+                color: Theme.of(context).textTheme.displayLarge!.color,
+                fontSize: 15)),
+      );
+
   Widget renderTabBarView(size, List<AssetEntity>? listAssets) {
     if (listAssets == null) {
-      return ShimmerLoader(size: size);
+      return noData(context);
     } else {
       return AssetLoader(assets: listAssets, renderWidget: buildAssetWidget);
     }
@@ -317,7 +323,7 @@ class _GalleryDeviceState extends State<GalleryDevice>
                                   )
                                 : const SizedBox();
                           }
-                          return const SizedBox();
+                          return noData(context);
                         });
                   }),
             ),
@@ -336,39 +342,6 @@ class _GalleryDeviceState extends State<GalleryDevice>
               //   renderTabBarView(size, assetVideos),
               // ]),
             )));
-  }
-}
-
-class ShimmerLoader extends StatelessWidget {
-  const ShimmerLoader({
-    super.key,
-    required this.size,
-  });
-
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: const Color.fromARGB(255, 215, 215, 215),
-      highlightColor: const Color.fromARGB(255, 225, 223, 223),
-      child: SizedBox(
-        height: size.height - 100,
-        child: GridView.count(
-          crossAxisCount: 3,
-          crossAxisSpacing: 2,
-          mainAxisSpacing: 2,
-          shrinkWrap: true,
-          children: List.generate(51, (index) {
-            return Container(
-              width: 100,
-              height: 100,
-              color: Colors.white,
-            );
-          }),
-        ),
-      ),
-    );
   }
 }
 
