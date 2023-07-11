@@ -6,9 +6,12 @@ import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
+import 'package:provider/provider.dart' as pv;
 
-import '../../../widgets/appbar_title.dart';
-import '../../../widgets/back_icon_appbar.dart';
+import '../../../../theme/theme_manager.dart';
+
+import '../../../../widgets/appbar_title.dart';
+import '../../../../widgets/back_icon_appbar.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -33,6 +36,9 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
   int fileIndex = 0;
   var chosenImg = <String, String>{}; // những bức ảnh được chọn -> media_ids
   var chosenFileImg = <int, File>{};
+  List images = [];
+  List mediaIds = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -57,6 +63,7 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
           uploadBeforeRes.where((e) => e['type'] == 'image').toList();
       avatars = avatarRes.where((e) => e['type'] == 'image').toList();
       coverImg = coverRes.where((e) => e['type'] == 'image').toList();
+      isLoading = false;
     });
   }
 
@@ -138,8 +145,12 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
         setState(() {
           if (!chosenImg.keys.contains(item['id'])) {
             chosenImg[item['id']] = renderUrl;
+            images.add(renderUrl);
+            mediaIds.add(item['id']);
           } else {
             chosenImg.remove(item['id']);
+            images.remove(renderUrl);
+            mediaIds.remove(item['id']);
           }
         });
       },
@@ -186,8 +197,12 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
         setState(() {
           if (!chosenFileImg.keys.contains(item['id'])) {
             chosenFileImg[item['id']] = item['file'];
+            images.add(item['file']);
+            mediaIds.add(item['id']);
           } else {
             chosenFileImg.remove(item['id']);
+            images.remove(item['file']);
+            mediaIds.remove(item['id']);
           }
         });
       },
@@ -237,7 +252,7 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
           crossAxisSpacing: 4,
           mainAxisSpacing: 4,
           crossAxisCount: 3,
-          childAspectRatio: 0.85,
+          childAspectRatio: 0.7,
         ),
         itemBuilder: (context, int index) {
           return buildImageItem(images[index], height);
@@ -248,6 +263,7 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final length = chosenImg.length + uploadedFiles.length;
+    final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -263,13 +279,14 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
               colorButton: length == 0 ? greyColor[300] : secondaryColor,
               handlePress: () {
                 if (length != 0) {
-                  print(chosenFileImg);
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
                       builder: (context) => ConfirmNoticeStory(
                         chosenImages: chosenImg,
                         chosenFileImages: chosenFileImg,
+                        images: images,
+                        mediaIds: mediaIds,
                       ),
                     ),
                   );
@@ -281,92 +298,105 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
       ),
       body: Container(
         height: size.height,
-        margin: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ButtonPrimary(
-                label: "Tải ảnh lên",
-                icon: const Icon(
-                  FontAwesomeIcons.upload,
-                  size: 15.0,
-                  color: Colors.black,
+        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: isLoading
+            ? Center(
+                child: CupertinoActivityIndicator(
+                color: theme.isDarkMode ? Colors.white : Colors.black,
+              ))
+            : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ButtonPrimary(
+                      label: "Tải ảnh lên",
+                      icon: const Icon(
+                        FontAwesomeIcons.upload,
+                        size: 15.0,
+                        color: Colors.black,
+                      ),
+                      colorText: Colors.black87,
+                      colorButton: greyColor[300],
+                      handlePress: () async {
+                        _image = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                        setState(() {
+                          final newUploadImage = File(_image!.path);
+                          uploadedFiles = [
+                            ...uploadedFiles,
+                            {"id": fileIndex, "file": newUploadImage}
+                          ];
+                          chosenFileImg[fileIndex] = newUploadImage;
+                          images.add(newUploadImage);
+                          mediaIds.add(fileIndex);
+                          fileIndex += 1;
+                        });
+                      },
+                    ),
+                    _buildTitle("Ảnh vừa tải lên"),
+                    uploadedFiles.isEmpty
+                        ? const SizedBox(
+                            height: 30.0,
+                            child: Center(
+                              child: Text('Chưa có ảnh nào vừa được tải lên'),
+                            ),
+                          )
+                        : GridView.builder(
+                            shrinkWrap: true,
+                            itemCount: uploadedFiles.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisSpacing: 4,
+                              mainAxisSpacing: 4,
+                              crossAxisCount: 3,
+                              childAspectRatio: 0.85,
+                            ),
+                            itemBuilder: (context, int index) {
+                              return buildImageFileItem(
+                                  uploadedFiles[index], size.height);
+                            }),
+                    const SizedBox(height: 12.0),
+                    _buildTitle("Ảnh đã tải lên từ trước"),
+                    uploadedBefore.isEmpty
+                        ? _buildEmptyList(
+                            "Chưa có ảnh nào được tải lên từ trước")
+                        : buildGridImages(uploadedBefore, size.height),
+                    showUploadBefore
+                        ? _buildSeeMoreButton(() {
+                            final userId =
+                                ref.read(meControllerProvider)[0]['id'];
+                            loadMoreUploadBefore(
+                                userId, uploadedBefore.last['id']);
+                          })
+                        : const SizedBox(height: 10.0),
+                    const SizedBox(height: 12.0),
+                    _buildTitle("Ảnh đại diện"),
+                    avatars.isEmpty
+                        ? _buildEmptyList("Chưa có ảnh đại diện")
+                        : buildGridImages(avatars, size.height),
+                    showAvatars
+                        ? _buildSeeMoreButton(() {
+                            final userId =
+                                ref.read(meControllerProvider)[0]['id'];
+                            loadMoreAvatar(userId, avatars.last['id']);
+                          })
+                        : const SizedBox(height: 10.0),
+                    const SizedBox(height: 12.0),
+                    _buildTitle("Ảnh bìa"),
+                    coverImg.isEmpty
+                        ? _buildEmptyList("Chưa có ảnh bìa")
+                        : buildGridImages(coverImg, size.height),
+                    showCoverImg
+                        ? _buildSeeMoreButton(() {
+                            final userId =
+                                ref.read(meControllerProvider)[0]['id'];
+                            loadMoreBanner(userId, coverImg.last['id']);
+                          })
+                        : const SizedBox(height: 10.0),
+                  ],
                 ),
-                colorText: Colors.black87,
-                colorButton: greyColor[300],
-                handlePress: () async {
-                  _image = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
-                  setState(() {
-                    uploadedFiles = [
-                      ...uploadedFiles,
-                      {"id": fileIndex, "file": File(_image!.path)}
-                    ];
-                    chosenFileImg[fileIndex] = File(_image!.path);
-                    fileIndex += 1;
-                  });
-                },
               ),
-              _buildTitle("Ảnh vừa tải lên"),
-              uploadedFiles.isEmpty
-                  ? const SizedBox(
-                      height: 30.0,
-                      child: Center(
-                        child: Text('Chưa có ảnh nào vừa được tải lên'),
-                      ),
-                    )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: uploadedFiles.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 4,
-                        crossAxisCount: 3,
-                        childAspectRatio: 0.85,
-                      ),
-                      itemBuilder: (context, int index) {
-                        return buildImageFileItem(
-                            uploadedFiles[index], size.height);
-                      }),
-              const SizedBox(height: 12.0),
-              _buildTitle("Ảnh đã tải lên từ trước"),
-              uploadedBefore.isEmpty
-                  ? _buildEmptyList("Chưa có ảnh nào được tải lên từ trước")
-                  : buildGridImages(uploadedBefore, size.height),
-              showUploadBefore
-                  ? _buildSeeMoreButton(() {
-                      final userId = ref.read(meControllerProvider)[0]['id'];
-                      loadMoreUploadBefore(userId, uploadedBefore.last['id']);
-                    })
-                  : const SizedBox(height: 10.0),
-              const SizedBox(height: 12.0),
-              _buildTitle("Ảnh đại diện"),
-              avatars.isEmpty
-                  ? _buildEmptyList("Chưa có ảnh đại diện")
-                  : buildGridImages(avatars, size.height),
-              showAvatars
-                  ? _buildSeeMoreButton(() {
-                      final userId = ref.read(meControllerProvider)[0]['id'];
-                      loadMoreAvatar(userId, avatars.last['id']);
-                    })
-                  : const SizedBox(height: 10.0),
-              const SizedBox(height: 12.0),
-              _buildTitle("Ảnh bìa"),
-              coverImg.isEmpty
-                  ? _buildEmptyList("Chưa có ảnh bìa")
-                  : buildGridImages(coverImg, size.height),
-              showCoverImg
-                  ? _buildSeeMoreButton(() {
-                      final userId = ref.read(meControllerProvider)[0]['id'];
-                      loadMoreBanner(userId, coverImg.last['id']);
-                    })
-                  : const SizedBox(height: 10.0),
-            ],
-          ),
-        ),
       ),
     );
   }
