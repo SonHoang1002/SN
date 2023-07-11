@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/Friend/friend_search.dart';
@@ -192,8 +193,9 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
                                 MediaQuery.of(context).size.width / 2),
                             child: ExtendedImage.network(
                               friends[index]['avatar_media'] != null
-                                  ? friends[index]['avatar_media']['show_url']
-                                  : friends[index]['avatar_static'],
+                                  ? friends[index]['avatar_media']
+                                      ['preview_url']
+                                  : linkAvatarDefault,
                               width: 100,
                               height: 100,
                             ),
