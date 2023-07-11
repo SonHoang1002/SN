@@ -52,51 +52,7 @@ Widget buildMarketButton(
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: contents!,
-                )
-
-          // ? Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       iconData != null
-          //           ? Padding(
-          //               padding: const EdgeInsets.only(bottom: 5.0),
-          //               child: Icon(
-          //                 iconData,
-          //                 size: 14,
-          //                 color: Colors.white,
-          //               ),
-          //             )
-          //           : const SizedBox(),
-          //       title != null
-          //           ? buildTextContent(title, true,
-          //               fontSize: fontSize ?? 17,
-          //               colorWord: colorText,
-          //               isCenterLeft: false)
-          //           : const SizedBox(),
-          //     ],
-          //   )
-          // : Row(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       iconData != null
-          //           ? Padding(
-          //               padding: const EdgeInsets.only(right: 5.0),
-          //               child: Icon(
-          //                 iconData,
-          //                 size: 14,
-          //                 color: Colors.white,
-          //               ),
-          //             )
-          //           : const SizedBox(),
-          //       title != null
-          //           ? buildTextContent(title, true,
-          //               fontSize: 17,
-          //               colorWord: colorText,
-          //               isCenterLeft: false)
-          //           : const SizedBox(),
-          //     ],
-          //   )
-          ),
+                )),
     ),
   );
 }

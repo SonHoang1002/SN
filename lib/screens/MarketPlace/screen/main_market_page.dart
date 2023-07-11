@@ -1,7 +1,9 @@
+import 'package:easy_debounce/easy_debounce.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:loader_skeleton/loader_skeleton.dart';
+import 'package:loader_skeleton/loader_skeleton.dart'; 
 import 'package:market_place/constant/get_min_max_price.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/cart_product_provider.dart';
@@ -9,7 +11,6 @@ import 'package:market_place/providers/market_place_providers/discover_product_p
 import 'package:market_place/providers/market_place_providers/product_categories_provider.dart';
 import 'package:market_place/providers/market_place_providers/products_provider.dart';
 import 'package:market_place/screens/MarketPlace/screen/buyer_orders/my_order_page.dart';
-import 'package:market_place/screens/MarketPlace/screen/buyer_orders/my_order_page_1.dart';
 import 'package:market_place/screens/MarketPlace/screen/create_product_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/filter_categories_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/interest_product_page.dart';
@@ -19,12 +20,12 @@ import 'package:market_place/screens/MarketPlace/screen/money_modules/emso_pay_p
 import 'package:market_place/screens/MarketPlace/screen/request_product_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/search_modules/search_market_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/see_more_page.dart';
-import 'package:market_place/screens/MarketPlace/screen/seller_orders/manage_order_page.dart';
+import 'package:market_place/screens/MarketPlace/screen/seller_modules/manage_order_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/banner_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/category_product_item.dart';
+import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/title_and_see_all.dart';
-import 'package:market_place/widgets/GeneralWidget/divider_widget.dart';
 import 'package:market_place/widgets/GeneralWidget/information_component_widget.dart';
 import 'package:market_place/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
@@ -34,9 +35,12 @@ import 'package:market_place/widgets/cross_bar.dart';
 
 import '../../../../constant/marketPlace_constants.dart';
 import '../../../../theme/colors.dart';
-import '../../../providers/market_place_providers/interest_product_provider.dart';
 import '../widgets/product_item_widget.dart';
-import 'search_modules/category_search_page.dart';
+
+var paramConfigProductSearch = {
+  "limit": 12,
+  "visibility": "public",
+};
 
 class MainMarketPage extends ConsumerStatefulWidget {
   const MainMarketPage({super.key});
@@ -46,8 +50,6 @@ class MainMarketPage extends ConsumerStatefulWidget {
 }
 
 class _MainMarketPageState extends ConsumerState<MainMarketPage> {
-  late double width = 0;
-  late double height = 0;
   List<dynamic> product_categories = [];
   // List<dynamic>? all_data;
   List<dynamic>? _suggestProductList;
@@ -55,51 +57,63 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   String? _filterTitle;
   Color colorWord = primaryColor;
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _suggestController = ScrollController();
   bool _isScrolled = false;
   double opacityForAppBar = 0.0;
   Offset? offset;
-
-  // double _appBarOpacity = 0.0;
-  // final ScrollController _scrollController1 = ScrollController();
+  bool _isLoading = true;
+  bool isMore = true;
+  Size? size;
   @override
   void initState() {
     if (!mounted) {
       return;
     }
     super.initState();
-
-    Future.delayed(Duration.zero, () {
-      final suggestProduct = ref.read(productsProvider.notifier).getProducts();
+    _filterTitle = "Lọc";
+    Future.delayed(Duration.zero, () async {
+      final suggestProduct = ref
+          .read(productsProvider.notifier)
+          .getProductsSearch(paramConfigProductSearch);
       final categoryParent = ref
           .read(parentCategoryController.notifier)
           .getParentProductCategories();
       final discoverProduct =
           ref.read(discoverProductsProvider.notifier).getDiscoverProducts();
-      // final interestList = ref
-      //     .read(interestProductsProvider.notifier)
-      //     .addInterestProductItem({});
       final cartProduct =
           ref.read(cartProductsProvider.notifier).initCartProductList();
     });
-    _filterTitle = "Lọc";
 
-    _scrollController.addListener(() {
-      if (_scrollController.offset > 100 && !_isScrolled) {
-        setState(() {
-          _isScrolled = true;
-          opacityForAppBar = _scrollController.offset / 100.0;
-        });
-      } else if (_scrollController.offset <= 100 && _isScrolled) {
-        setState(() {
-          _isScrolled = false;
-        });
-      }
-    });
-    // _scrollController1.addListener(() {
-    //   setState(() {
-    //     _appBarOpacity = (_scrollController1.offset / 250).toDouble();
-    //   });
-    // });
+    _scrollController
+      ..addListener(() {
+        if (_scrollController.offset > 100 && !_isScrolled) {
+          setState(() {
+            _isScrolled = true;
+            opacityForAppBar = _scrollController.offset / 100.0;
+          });
+        } else if (_scrollController.offset <= 100 && _isScrolled) {
+          setState(() {
+            _isScrolled = false;
+          });
+        }
+      })
+      ..addListener(() async {
+        if (double.parse((_scrollController.offset).toStringAsFixed(0)) ==
+            (double.parse((_scrollController.position.maxScrollExtent)
+                .toStringAsFixed(0)))) {
+          EasyDebounce.debounce(
+              'my-debouncer', const Duration(milliseconds: 300), () async {
+            dynamic params = {
+              "offset": ref.watch(productsProvider).list.length,
+              ...paramConfigProductSearch,
+            };
+            ref.read(productsProvider.notifier).getProductsSearch(params);
+            setState(() {
+              _isLoading = true;
+            });
+          });
+        }
+      });
   }
 
   @override
@@ -185,15 +199,12 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   void getCategoriesName() {
     if (product_categories.isEmpty) {
       product_categories = ref.watch(parentCategoryController).parentList;
-      setState(() {});
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    width = size.width;
-    height = size.height;
+  Widget build(BuildContext context) { 
+    size ??= MediaQuery.of(context).size;
     getCategoriesName();
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -210,10 +221,8 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
           children: [
             SingleChildScrollView(
               controller: _scrollController,
-              // controller: _scrollController1,
               child: Column(
                 children: [
-                  // buildBanner(context, width: width, height: 300),
                   const CustomBanner(),
                   buildSpacer(height: 10),
                   _rechargeExchangeCoin(),
@@ -229,7 +238,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: _buildSuggestComponent(),
+                    child: _buildLatestSearchComponent(),
                   ),
                   buildSpacer(height: 10),
                   const CrossBar(
@@ -237,33 +246,11 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: _buildLatestSearchComponent(),
-                  ),
-                  const CrossBar(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: _buildDiscoverComponent(),
+                    child: _buildSuggestComponent(),
                   ),
                 ],
               ),
             ),
-            // Column(
-            //   children: [
-            //     Container(
-            //       height: 35,
-            //       // color: _isScrolled
-            //       //     ? Theme.of(context).scaffoldBackgroundColor
-            //       //     : transparent,
-            //     ),
-            //     AnimatedOpacity(
-            //       duration: const Duration(milliseconds: 200),
-            //       opacity: _appBarOpacity > 1 ? 1 : _appBarOpacity,
-            //       child: _customAppBar1(),
-            //     ),
-            //   ],
-            // ),
             Column(
               children: [
                 Container(
@@ -284,7 +271,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   Widget _rechargeExchangeCoin() {
     return Container(
       height: 60,
-      width: width * 0.95,
+      width: size!.width * 0.95,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(7.0),
           color: Theme.of(context).colorScheme.background),
@@ -356,108 +343,13 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     );
   }
 
-  Widget _customAppBar1() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          height: 50,
-          // color: _isScrolled
-          //     ? Theme.of(context).scaffoldBackgroundColor
-          //     : transparent,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: Container(
-                  height: 38,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      border: Border.all(color: greyColor, width: 0.4),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            pushToNextScreen(context, const SearchMarketPage());
-                          },
-                          child: Row(
-                            children: [
-                              buildSpacer(width: 7),
-                              const Icon(
-                                FontAwesomeIcons.magnifyingGlass,
-                                size: 14,
-                              ),
-                              buildSpacer(width: 7),
-                              buildTextContent(
-                                "Tìm kiếm",
-                                false,
-                                fontSize: 12,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            FontAwesomeIcons.camera,
-                            size: 14,
-                          )),
-                      buildSpacer(width: 7)
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    CartWidget(
-                      iconColor:
-                          Theme.of(context).textTheme.displayLarge!.color,
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _showMenuOptions();
-                      },
-                      child: Icon(
-                        FontAwesomeIcons.bars,
-                        size: 18,
-                        color: Theme.of(context).textTheme.displayLarge!.color,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        const SizedBox()
-      ],
-    );
-  }
-
   Widget _customAppBar() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          height: 50,
+          padding: const EdgeInsets.only(top: 20),
+          height: 70,
           color: _isScrolled
               ? Theme.of(context).scaffoldBackgroundColor
               : transparent,
@@ -553,11 +445,6 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       children: [
         buildTitleAndSeeAll(
           "Hạng mục",
-          suffixWidget: buildTextContentButton("Xem tất cả", false,
-              fontSize: 14, colorWord: greyColor, function: () {
-            pushToNextScreen(context, const FilterCategoriesPage());
-          }),
-          iconData: FontAwesomeIcons.angleRight,
         ),
         Container(
             margin: const EdgeInsets.only(bottom: 10),
@@ -592,9 +479,12 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                             width: 100, function: () {
                           pushToNextScreen(
                               context,
-                              CategorySearchPage(
-                                title: product_categories[index]["text"],
-                                id: product_categories[index]["id"],
+                              // CategorySearchPage(
+                              //   title: product_categories[index]["text"],
+                              //   categoryId: product_categories[index]["id"],
+                              // )
+                              FilterPage(
+                                categoryId: product_categories[index]["id"],
                               ));
                         }),
                       );
@@ -617,36 +507,56 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
         FutureBuilder<void>(
             future: getSuggestList(),
             builder: (context, builder) {
-              return SingleChildScrollView(
+              return Container(
                 padding: const EdgeInsets.only(top: 10),
                 child: _suggestProductList != null &&
                         _suggestProductList!.isNotEmpty
-                    ? GridView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisSpacing: 4,
-                            mainAxisSpacing: 4,
-                            crossAxisCount: 2,
-                            childAspectRatio: height > 800
-                                ? 0.78
-                                : (width / (height - 190) > 0
-                                    ? width / (height - 190)
-                                    : .81)),
-                        itemCount: _suggestProductList?.length,
-                        itemBuilder: (context, index) {
-                          return buildProductItem(
-                              context: context,
-                              data: _suggestProductList?[index]);
-                        })
+                    ? Column(
+                        children: [
+                          GridView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              controller: _suggestController,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisSpacing: 4,
+                                      mainAxisSpacing: 4,
+                                      crossAxisCount: 2,
+                                      childAspectRatio: size!.height > 800
+                                          ? 0.75
+                                          : (size!.width /
+                                                      (size!.height - 190) >
+                                                  0
+                                              ? size!.width /
+                                                  (size!.height - 275)
+                                              : 0.81)),
+                              itemCount: _suggestProductList?.length,
+                              itemBuilder: (context, index) {
+                                return buildProductItem(
+                                    context: context,
+                                    data: _suggestProductList?[index]);
+                              }),
+                          ref.watch(productsProvider).isMore
+                              ? _isLoading
+                                  ? buildCircularProgressIndicator()
+                                  : const SizedBox()
+                              : Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 20, top: 10),
+                                  child: buildTextContent(
+                                      "Đã hết sản phẩm gợi ý hôm nay rồi", true,
+                                      isCenterLeft: false),
+                                )
+                        ],
+                      )
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 4,
+                        itemCount: 2,
                         itemBuilder: (context, index) {
                           return SizedBox(
-                              width: width * 0.4,
+                              width: size!.width * 0.4,
                               height: 200,
                               child: CardSkeleton());
                         }),
@@ -672,30 +582,37 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
             builder: (context, builder) {
               return _suggestProductList != null &&
                       _suggestProductList!.isNotEmpty
-                  ? SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Row(
-                          children: List.generate(_suggestProductList!.length,
-                              (index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: InkWell(
-                            onTap: () {},
-                            child: buildProductItem(
-                                context: context,
-                                data: _suggestProductList?[index]),
-                          ),
-                        );
-                      })))
+                  ? SizedBox(
+                      width: size!.width,
+                      height: 250,
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount:
+                              _suggestProductList!.take(8).toList().length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: InkWell(
+                                onTap: () {},
+                                child: buildProductItem(
+                                    context: context,
+                                    data: _suggestProductList?[index],
+                                    isHaveFlagship: true,
+                                    saleBanner: {}),
+                              ),
+                            );
+                          }),
+                    )
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 4,
+                      padding: EdgeInsets.zero,
+                      itemCount: 1,
                       itemBuilder: (context, index) {
                         return SizedBox(
-                            width: width * 0.4,
-                            height: 200,
+                            width: size!.width * 0.4,
+                            height: 240,
                             child: CardSkeleton());
                       });
             }),
@@ -703,146 +620,15 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     );
   }
 
-  Widget _buildDiscoverComponent() {
-    return Column(
-      children: [
-        buildTitleAndSeeAll("Khám phá sản phẩm",
-            suffixWidget:
-                buildTextContentButton(_filterTitle!, false, function: () {
-              showCustomBottomSheet(context, 400,
-                  title: "Sắp xếp theo",
-                  widget: ListView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      itemCount: MainMarketPageConstants
-                          .MAIN_MARKETPLACE_BODY_SORT_SELECTIONS["data"].length,
-                      itemBuilder: (context, index) {
-                        final data = MainMarketPageConstants
-                            .MAIN_MARKETPLACE_BODY_SORT_SELECTIONS["data"];
-                        return Column(
-                          children: [
-                            GeneralComponent(
-                              [
-                                buildTextContent(data[index]["text"], true,
-                                    fontSize: 17),
-                              ],
-                              changeBackground: transparent,
-                              padding: const EdgeInsets.all(5),
-                              function: () {
-                                popToPreviousScreen(context);
-
-                                setState(() {
-                                  _filterDiscover(data[index]["text"]);
-                                  _filterTitle = data[index]["text"];
-                                });
-                              },
-                            ),
-                            buildDivider(color: greyColor),
-                            data[index]["sub_selections"] != null
-                                ? Padding(
-                                    padding: const EdgeInsets.only(left: 5.0),
-                                    child: Column(
-                                      children: [
-                                        GeneralComponent(
-                                          [
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            buildTextContent(
-                                                data[index]["sub_selections"]
-                                                    [0],
-                                                true,
-                                                fontSize: 17),
-                                            const SizedBox(
-                                              height: 5,
-                                            )
-                                          ],
-                                          changeBackground: transparent,
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          function: () {
-                                            popToPreviousScreen(context);
-                                            setState(() {
-                                              _filterDiscover(data[index]
-                                                  ["sub_selections"][0]);
-                                              _filterTitle = data[index]
-                                                  ["sub_selections"][0];
-                                            });
-                                          },
-                                        ),
-                                        buildDivider(color: greyColor),
-                                        GeneralComponent(
-                                          [
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            buildTextContent(
-                                                data[index]["sub_selections"]
-                                                    [1],
-                                                true,
-                                                fontSize: 17),
-                                            const SizedBox(
-                                              height: 5,
-                                            )
-                                          ],
-                                          changeBackground: transparent,
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          function: () {
-                                            popToPreviousScreen(context);
-                                            setState(() {
-                                              _filterDiscover(data[index]
-                                                  ["sub_selections"][1]);
-                                              _filterTitle = data[index]
-                                                  ["sub_selections"][1];
-                                            });
-                                          },
-                                        ),
-                                        buildDivider(color: greyColor),
-                                      ],
-                                    ),
-                                  )
-                                : const SizedBox()
-                          ],
-                        );
-                      }));
-            }),
-            iconData: FontAwesomeIcons.filter),
-        FutureBuilder<void>(
-            future: getDiscoverList(),
-            builder: (context, builder) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.only(top: 10),
-                child: GridView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 4,
-                        crossAxisCount: 2,
-                        childAspectRatio: height > 800
-                            ? 0.78
-                            : (width / (height - 190) > 0
-                                ? width / (height - 190)
-                                : .81)),
-                    itemCount: _discoverProduct?.length,
-                    itemBuilder: (context, index) {
-                      return buildProductItem(
-                          context: context, data: _discoverProduct?[index]);
-                    }),
-              );
-            }),
-      ],
-    );
-  }
-
   Future getSuggestList() async {
-    // if (_suggestProductList == null || _suggestProductList!.isEmpty) {
     setState(() {
-      _suggestProductList = ref.watch(productsProvider).list.take(8).toList();
+      //   final List fakeDataList = [];
+      //   for(int i=0;i<500;i++){
+      //     fakeDataList.add(abc);
+      //   }
+      //   _suggestProductList = fakeDataList;
+      _suggestProductList = ref.watch(productsProvider).list.toList();
     });
-    // }
   }
 
   Future getDiscoverList() async {
@@ -854,7 +640,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   }
 
   dynamic _showMenuOptions() {
-    return showCustomBottomSheet(context, 430,
+    return showCustomBottomSheet(context, 460,
         isNoHeader: true,
         widget: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -946,7 +732,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
         pushToNextScreen(context, const CreateProductMarketPage());
         break;
       case "Đơn mua của tôi":
-        pushToNextScreen(context, const MyOrderPage1());
+        pushToNextScreen(context, const MyOrderPage());
         break;
       case "Lời mời":
         pushToNextScreen(

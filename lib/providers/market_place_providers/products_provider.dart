@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:market_place/apis/market_place_apis/products_api.dart';
+import 'package:market_place/helpers/common.dart';
 
 class ProductsState {
-  List<dynamic> list;
-  ProductsState({this.list = const []});
-  ProductsState copyWith(List<dynamic> list) {
-    return ProductsState(list: list);
+  final List<dynamic> list;
+  final bool isMore;
+  ProductsState({this.list = const [], this.isMore = true});
+  ProductsState copyWith({List<dynamic> list = const [], bool isMore = true}) {
+    return ProductsState(list: list, isMore: isMore);
   }
 }
 
@@ -16,14 +20,23 @@ final productsProvider =
 class ProductsController extends StateNotifier<ProductsState> {
   ProductsController() : super(ProductsState());
 
-  getProducts() async {
-    List<dynamic> response = await ProductsApi().getProductsApi();
-    state = state.copyWith(response);
+  getProductsSearch(dynamic params) async {
+    final response = await ProductsApi().getProductSearchApi(params) ?? [];
+    state = state.copyWith(
+        list: checkObjectUniqueInList(state.list + response, "id"),
+        isMore: response.isNotEmpty);
+  }
+
+  getProducts(dynamic params) async {
+    final response = await ProductsApi().getProductsApi(params);
+    state = state.copyWith(
+        list: checkObjectUniqueInList(state.list + response, "id"),
+        isMore: response.isNotEmpty);
   }
 
   getUserProductList(dynamic pageId) async {
     List<dynamic> response = await ProductsApi().getUserProductList(pageId);
-    state = state.copyWith(response);
+    state = state.copyWith(list: response, isMore: response.isNotEmpty);
   }
 
   deleteProduct(dynamic id) {
@@ -31,11 +44,11 @@ class ProductsController extends StateNotifier<ProductsState> {
   }
 
   updateProductData(List<dynamic> newData) {
-    state = state.copyWith(newData);
+    state = state.copyWith(list: newData);
   }
 
   dynamic createProduct(dynamic data) async {
-    final response = await ProductsApi().postCreateProductApi(data);
+     final response = await ProductsApi().postCreateProductApi(data);
     return response;
   }
 }

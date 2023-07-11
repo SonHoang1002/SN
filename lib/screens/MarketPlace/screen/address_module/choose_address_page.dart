@@ -98,7 +98,7 @@ class _ChooseAddressPageState extends ConsumerState<ChooseAddressPage> {
                   color: Theme.of(context).textTheme.displayLarge!.color,
                 ),
               ),
-              const AppBarTitle(text: "Địa chỉ của bạn"),
+              const AppBarTitle(title: "Địa chỉ của bạn"),
               GestureDetector(
                 onTap: () async {
                   pushToNextScreen(context, NotificationMarketPage());

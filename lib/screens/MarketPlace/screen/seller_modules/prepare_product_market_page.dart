@@ -72,7 +72,7 @@ class _PrepareProductMarketPageState
                   color: Theme.of(context).textTheme.displayLarge!.color,
                 ),
               ),
-              const AppBarTitle(text: "Chuẩn bị hàng"),
+              const AppBarTitle(title: "Chuẩn bị hàng"),
               GestureDetector(
                 onTap: () async {
                   pushToNextScreen(context, NotificationMarketPage());

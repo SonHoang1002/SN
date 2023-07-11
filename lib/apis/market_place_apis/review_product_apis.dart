@@ -1,9 +1,9 @@
 import 'package:market_place/apis/api_root.dart';
 
 class ReviewProductApi {
-  Future getReviewProductApi(dynamic id) async {
+  Future getReviewProductApi(dynamic id,dynamic params) async {
     return await Api()
-        .getRequestBase('/api/v1/products/${id}/list_rating', null);
+        .getRequestBase('/api/v1/products/$id/list_rating', params);
   }
 
   Future createReviewProductApi(dynamic id, dynamic data) async {
