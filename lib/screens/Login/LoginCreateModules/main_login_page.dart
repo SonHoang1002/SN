@@ -121,11 +121,12 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
       "client_secret": "f2PrtRsNb7scscIn_3R_cz6k_fzPUv1uj7ZollSWBBY",
       "grant_type": "password",
       "scope": "write read follow",
-      "username": currentAccount?['username'] ?? username,
-      "password": password,
+      "username": currentAccount?['username'] ?? username.trim(),
+      "password": password.trim(),
     };
 
     var response = await AuthenApi().fetchDataToken(data);
+    print("response $response");
     if (response != null && response['access_token'] != null) {
       await SecureStorage().saveKeyStorage(response['access_token'], 'token');
       completeLogin();

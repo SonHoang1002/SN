@@ -93,12 +93,15 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                   LoadState.completed) {
                                 return Container(
                                   height: double.parse((medias[0]?['meta']
-                                              ?['small']?['height'] ??
-                                          400)
+                                              ?['small']?['height'] *
+                                          (size.width /
+                                              medias[0]?['meta']?['small']
+                                                  ?['width']))
                                       .toString()),
                                   width: size.width,
-                                  decoration:
-                                      const BoxDecoration(color: greyColor),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: white),
                                 );
                               }
                               return null;

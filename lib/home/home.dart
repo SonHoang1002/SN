@@ -44,7 +44,7 @@ class _HomeState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   ValueNotifier<bool> isShowSnackBar = ValueNotifier(false);
-  ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(false);
+  ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(true);
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   Size? size;
@@ -419,7 +419,7 @@ class _HomeState extends ConsumerState<Home>
   }
 
   _showBottomNavigator(bool value) {
-    if (showBottomNavigatorNotifier.value != value) {
+    if (showBottomNavigatorNotifier.value != value ) {
       setState(() {
         showBottomNavigatorNotifier.value = value;
       });

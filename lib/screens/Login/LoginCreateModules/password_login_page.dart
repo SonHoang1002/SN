@@ -68,11 +68,9 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                             },
                                 EmailLoginConstants
                                     .EMAIL_LOGIN_NAME_PLACEHOLODER),
-                            (_passwordController.trim().isEmpty ||
-                                        _passwordController.length < 9) &&
-                                    _passwordController.isNotEmpty
+                            !checkValidate()
                                 ? const Text(
-                                    "Mật khẩu phải lớn hơn 9 kí tự",
+                                    "Mật khẩu phải lớn hơn 9 kí tự, bao gồm số, chữ thường và ký tự đặc biệt :,.?...",
                                     style: TextStyle(
                                       height: 2,
                                       fontSize: 12,
@@ -101,8 +99,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
 
                             buildSpacer(height: 15),
                             // description
-                            _passwordController.trim().isNotEmpty &&
-                                    _passwordConfirm == _passwordController
+                            checkValidate()
                                 ? SizedBox(
                                     height: 40,
                                     child: ButtonPrimary(
@@ -141,6 +138,19 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
         ]),
       ),
     );
+  }
+
+  bool checkValidate() {
+    RegExp numbersRegex = RegExp(r'\d');
+    RegExp specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+    final pass = _passwordConfirm.trim();
+    final passConfirm = _passwordConfirm.trim();
+
+    return pass.length >= 9 &&
+        passConfirm.length >= 9 &&
+        specialCharRegex.hasMatch(pass) &&
+        numbersRegex.hasMatch(pass) &&
+        _passwordConfirm == _passwordController;
   }
 
   Widget _buildTextFormField(Function handleUpdate, String placeHolder,

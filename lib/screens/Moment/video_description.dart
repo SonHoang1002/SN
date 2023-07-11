@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,7 +37,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState(); 
 
     if (widget.moment?['account_relationships']?['following'] == true ||
         widget.moment?["account"]?['relationships']?['following'] == true) {

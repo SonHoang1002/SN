@@ -19,7 +19,9 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
 class TranferAccount extends ConsumerStatefulWidget {
-  const TranferAccount({Key? key}) : super(key: key);
+  final List listLoginUser;
+  const TranferAccount({Key? key, required this.listLoginUser})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -32,14 +34,20 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
   @override
   void initState() {
     if (!mounted) return;
-    SecureStorage().getKeyStorage('dataLogin').then((value) {
-      if (value != 'noData') {
-        setState(() {
-          dataLogin = jsonDecode(value);
-        });
-      }
+    // SecureStorage().getKeyStorage('dataLogin').then((value) {
+    //   if (value != 'noData') {
+    //     setState(() {
+    //       dataLogin = jsonDecode(value);
+    //     });
+    //   }
+    // });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        dataLogin = widget.listLoginUser;
+      });
     });
     super.initState();
+    print("dataLogin.length ${dataLogin.length}");
   }
 
   void completeLogin() {

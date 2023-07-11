@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class Post extends ConsumerStatefulWidget {
   final dynamic data;
   final Function? reloadFunction;
   final bool? isFocus;
+  final bool? visible;
 
   const Post(
       {Key? key,
@@ -38,7 +40,8 @@ class Post extends ConsumerStatefulWidget {
       this.data,
       this.isHiddenFooter,
       this.reloadFunction,
-      this.isFocus})
+      this.isFocus,
+      this.visible})
       : super(key: key);
 
   @override
@@ -53,7 +56,7 @@ class _PostState extends ConsumerState<Post>
   // tranh truong hop tao bai viet moi nhung khong co hieu ung cho va co the reaction o cac loai post khac o cac phan he khac
   bool isNeedInitPost = true;
   String warning = "Không có kết nối";
-  Timer? _timer;
+  dynamic meData;
 
   _changeShowCommentBox() {
     setState(() {
@@ -70,45 +73,45 @@ class _PostState extends ConsumerState<Post>
 
   @override
   void initState() {
+    setState(() {
+      currentPost = widget.post;
+    });
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _startWarningTimer();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    currentPost = widget.post;
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _timer?.cancel();
+    currentPost = null;
+    meData = null;
+    _isShowCommentBox.dispose();
     super.dispose();
-  }
-
-  void _startWarningTimer() {
-    if (ref.read(connectivityControllerProvider).connectInternet == false &&
-        currentPost['processing'] == "isProcessing") {
-      if (warning != "Sẽ thử lại bài viết của bạn") {
-        _timer = Timer(const Duration(seconds: 5), () {
-          if (mounted) {
-            setState(() {
-              warning = "Sẽ thử lại bài viết của bạn";
-            });
-          }
-        });
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    dynamic meData = ref.watch(meControllerProvider)[0];
-
-    return currentPost != null
-        ? Column(
+    meData ??= ref.watch(meControllerProvider)[0];
+    if (isNeedInitPost) {
+      currentPost = widget.post;
+    }
+    if (ref.read(connectivityControllerProvider).connectInternet == false &&
+        currentPost['processing'] == "isProcessing") {
+      if (warning != "Sẽ thử lại bài viết của bạn") {
+        Timer(const Duration(seconds: 5), () {
+          setState(() {
+            warning = "Sẽ thử lại bài viết của bạn";
+          });
+        });
+      }
+    }
+    return
+        // currentPost != null
+        //     ?
+        Column(
+      children: [
+        Visibility.maintain(
+          // visible: widget.visible == true,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               widget.type != postPageUser &&
@@ -117,9 +120,7 @@ class _PostState extends ConsumerState<Post>
                       post: currentPost,
                       type: widget.type,
                       renderFunction: () {
-                        // WidgetsBinding.instance.addPostFrameCallback((_) {
                         isHaveSuggest = false;
-                        // });
                       },
                       updateDataFunction: updateNewPost,
                     )
@@ -195,16 +196,19 @@ class _PostState extends ConsumerState<Post>
                       updateDataFunction: updateNewPost,
                       isShowCommentBox: _isShowCommentBox.value,
                     ),
-              widget.isHiddenCrossbar != null && widget.isHiddenCrossbar == true
-                  ? const SizedBox()
-                  : const CrossBar(
-                      height: 5,
-                      onlyBottom: 12,
-                      onlyTop: 6,
-                    ),
             ],
-          )
-        : const SizedBox();
+          ),
+        ),
+        widget.isHiddenCrossbar != null && widget.isHiddenCrossbar == true
+            ? const SizedBox()
+            : const CrossBar(
+                height: 5,
+                onlyBottom: 12,
+                onlyTop: 6,
+              ),
+      ],
+    );
+    // : const SizedBox();
   }
 
   Widget _buildInternetWarningCreatePost() {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/main_login_page.dart';
 
 import '../../../constant/common.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -21,6 +22,7 @@ class SettingLoginPage extends StatefulWidget {
 
 class _SettingLoginPageState extends State<SettingLoginPage> {
   List dataLogin = [];
+  bool _dataListIsEmpty = false;
 
   @override
   void initState() {
@@ -38,29 +40,36 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
       setState(() {
         dataLogin = jsonDecode(newList) ?? [];
       });
+    } else {
+      setState(() {
+        _dataListIsEmpty = true;
+      });
     }
   }
 
   deleteData(index) async {
-  final secureStorage = FlutterSecureStorage();
-  
-  // Đọc mảng từ "dataLogin"
-  String? value = await secureStorage.read(key: "dataLogin");
-  if (value != null) {
-    // Giải mã giá trị JSON
-    var data = jsonDecode(value) as List<dynamic>;
+    const secureStorage = FlutterSecureStorage();
 
-    // Xóa phần tử tại vị trí cụ thể trong mảng
-    int indexToRemove = index; // Ví dụ xóa phần tử thứ 3
-    data.removeAt(indexToRemove);
+    // Đọc mảng từ "dataLogin"
+    String? value = await secureStorage.read(key: "dataLogin");
+    if (value != null) {
+      // Giải mã giá trị JSON
+      var data = jsonDecode(value) as List<dynamic>;
 
-    // Mã hóa lại và lưu lại mảng đã cập nhật vào "dataLogin"
-    String updatedValue = jsonEncode(data);
-    await secureStorage.write(key: "dataLogin", value: updatedValue);
+      // Xóa phần tử tại vị trí cụ thể trong mảng
+      int indexToRemove = index; // Ví dụ xóa phần tử thứ 3
+      data.removeAt(indexToRemove);
+
+      // Mã hóa lại và lưu lại mảng đã cập nhật vào "dataLogin"
+      String updatedValue = jsonEncode(data);
+      await secureStorage.write(key: "dataLogin", value: updatedValue);
+      if (data.isEmpty) {
+        setState(() {
+          _dataListIsEmpty = true;
+        });
+      }
+    }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +120,7 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         SizedBox(
@@ -126,7 +135,7 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           elevation: 0,
@@ -134,9 +143,19 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                           backgroundColor: Colors.grey[700],
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20))),
-                      onPressed: () {
+                      onPressed: () async {
                         deleteData(widget.index);
-                        pushAndReplaceToNextScreen(context,const OnboardingLoginPage());
+                        if (_dataListIsEmpty) {
+                          print("0");
+                          // ignore: use_build_context_synchronously
+                          pushAndReplaceToNextScreen(
+                              context, const MainLoginPage(Null));
+                        } else {
+                          print("1");
+                          // ignore: use_build_context_synchronously
+                          pushAndReplaceToNextScreen(
+                              context, const OnboardingLoginPage());
+                        }
                       },
                       child: const Text(
                         'Gỡ trang cá nhân',

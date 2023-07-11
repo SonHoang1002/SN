@@ -95,7 +95,10 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                       pushToNextScreen(context, SettingLoginPage(0));
                     }
                   },
-                  icon: Icon(Icons.settings)),
+                  icon: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                  )),
             ],
           ),
           resizeToAvoidBottomInset: true,

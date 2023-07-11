@@ -4,9 +4,17 @@ import 'api_root.dart';
 
 class PostApi {
   Future getListPostApi(params) async {
-    return await Api().getRequestBase('/api/v1/timelines/home', params);
+    final response =
+        await Api().getRequestBase('/api/v1/timelines/home', params);
+    List postList = [];
+    response.forEach((ele) {
+      var newData = ele;
+      newData = {...newData, "visible": true};
+      postList.add(newData);
+    });
+    return postList;
   }
-
+// 0 ms -do chưa có bản ghi nào
   Future getListPostPinApi(accountId) async {
     return await Api().getRequestBase("/api/v1/accounts/$accountId/pin", null);
   }
