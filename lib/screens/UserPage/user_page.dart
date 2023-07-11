@@ -758,16 +758,16 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    // print(userAbout['general_information']);
     pinPost = ref.read(postControllerProvider).postsPin;
     return Scaffold(
       appBar: buildAppBar(context),
       body: RefreshIndicator(
         onRefresh: () async {
-          Future.delayed(const Duration(milliseconds: 800), () {
-            ref.read(postControllerProvider.notifier).getListPostUserPage(
-                id, {"exclude_replies": true, "limit": 20});
-          });
+          // Future.delayed(const Duration(milliseconds: 800), () async{
+          await ref
+              .read(postControllerProvider.notifier)
+              .getListPostUserPage(id, {"exclude_replies": true, "limit": 20});
+          // });
         },
         child: buildUserPageBody(context),
       ),

@@ -113,7 +113,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   final GlobalKey _heightKey = GlobalKey();
   bool _isClickForCreatePost = false;
-
   @override
   void initState() {
     super.initState();

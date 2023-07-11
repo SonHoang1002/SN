@@ -95,7 +95,10 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                       pushToNextScreen(context, SettingLoginPage(0));
                     }
                   },
-                  icon: Icon(Icons.settings)),
+                  icon: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                  )),
             ],
           ),
           resizeToAvoidBottomInset: true,
@@ -197,7 +200,7 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                                     style: ElevatedButton.styleFrom(
                                         elevation: 0,
                                         minimumSize: const Size.fromHeight(47),
-                                        backgroundColor: primaryColor,
+                                        backgroundColor: secondaryColor,
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(20))),
