@@ -76,7 +76,6 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
           'Có lỗi xảy ra trong quá trình upload ảnh, vui lòng thử lại sau!';
       return message;
     }
-
     var response = await LearnSpaceApi().sendRatingPost(
       widget.courseDetail['id'],
       {
