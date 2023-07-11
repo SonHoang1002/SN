@@ -20,7 +20,36 @@ List typeVisibility = [
     "subLabel": 'Không hiển thị trên bảng tin của người khác'
   }
 ];
-
+List<Map<String, dynamic>> isPrivate = [
+  {
+    'is_private': false,
+    'title': 'Công khai',
+    'subTitle':
+        'Bất kỳ ai cũng có thể nhìn thấy mọi người trong nhóm và những gì họ đăng.',
+    'icon': 'assets/groups/publish.png',
+  },
+  {
+    'is_private': true,
+    'title': 'Riêng tư',
+    'subTitle':
+        'Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng.',
+    'icon': 'assets/groups/private.png',
+  },
+];
+List<Map<String, dynamic>> isVisible = [
+  {
+    'is_visible': true,
+    'title': 'Hiển thị',
+    'subTitle': 'Ai cũng có thể tìm thấy nhóm này.',
+    'icon': 'assets/groups/trueVisible.png'
+  },
+  {
+    'is_visible': false,
+    'title': 'Ẩn nhóm',
+    'subTitle': 'Chỉ thành viên mới tìm thấy nhóm này.',
+    'icon': 'assets/groups/falseVisible.png'
+  },
+];
 String linkAvatarDefault =
     'https://snapi.emso.asia/avatars/original/missing.png';
 

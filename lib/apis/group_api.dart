@@ -13,6 +13,10 @@ class GroupApi {
     return await Api().getRequestBase('/api/v1/groups/$id/accounts', params);
   }
 
+  Future createGroup(data) async {
+    return await Api().postRequestBase('/api/v1/groups', data);
+  }
+
   fetchListGroupFeed(params) async {
     return await Api()
         .getRequestBase('/api/v1/timelines/group_collection', params);
