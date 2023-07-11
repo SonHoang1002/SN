@@ -6,12 +6,14 @@ class TextFieldGroup extends StatefulWidget {
   final dynamic initialValue;
   final bool? readOnly;
   final bool? enabled;
+  final TextEditingController? controller;
   const TextFieldGroup(
       {super.key,
       required this.label,
       this.suffixIcon,
       this.initialValue,
       this.readOnly,
+      this.controller,
       this.enabled});
 
   @override
@@ -30,11 +32,10 @@ class _TextFieldGroupState extends State<TextFieldGroup> {
         ),
       ),
       child: TextFormField(
-        key: ValueKey(widget.initialValue),
+        controller: widget.controller,
         readOnly: widget.readOnly ?? false,
         enabled: widget.enabled,
         autofocus: false,
-        initialValue: widget.initialValue,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           labelText: widget.label,
