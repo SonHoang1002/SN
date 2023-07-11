@@ -129,6 +129,11 @@ final groupListControllerProvider =
 
 class GroupListController extends StateNotifier<GroupListState> {
   GroupListController() : super(const GroupListState());
+
+  reset() {
+    state = const GroupListState();
+  }
+
   getListGroupFeed(params) async {
     List response = await GroupApi().fetchListGroupFeed(params);
     final newGroup = response

@@ -233,7 +233,7 @@ class _FeedState extends ConsumerState<Feed> {
                           ref
                                   .watch(momentControllerProvider)
                                   .momentSuggest
-                                  .isEmpty
+                                  .isNotEmpty
                               ? const Column(
                                   children: [
                                     Reef(),

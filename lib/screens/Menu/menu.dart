@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
@@ -74,6 +76,8 @@ class _MenuState extends ConsumerState<Menu> {
       ref.read(watchControllerProvider.notifier).reset();
       ref.read(watchControllerProvider.notifier).reset();
       ref.read(pageControllerProvider.notifier).reset();
+      ref.read(friendControllerProvider.notifier).reset();
+      ref.read(groupListControllerProvider.notifier).reset();
 
       final theme = pv.Provider.of<ThemeManager>(context, listen: false);
       theme.toggleTheme('system');
