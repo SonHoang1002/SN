@@ -142,9 +142,7 @@ dependencies:
   video_compress: ^3.1.2
   video_thumbnail: ^0.5.3
 
-  uni_links: ^0.5.1
-  fluttertoast: ^8.2.2
-  firebase_dynamic_links: ^5.3.3
+  uni_links: ^0.5.1 
   
 dev_dependencies:
   flutter_test:

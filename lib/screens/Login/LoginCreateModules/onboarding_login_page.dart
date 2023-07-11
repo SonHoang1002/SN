@@ -200,7 +200,7 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                                     style: ElevatedButton.styleFrom(
                                         elevation: 0,
                                         minimumSize: const Size.fromHeight(47),
-                                        backgroundColor: primaryColor,
+                                        backgroundColor: secondaryColor,
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(20))),

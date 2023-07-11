@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,6 +52,8 @@ class _VideoPlayerNoneControllerState
   bool isVisible = false;
   bool _isMuted = false;
   bool isPlaying = true;
+  bool _isLoading = true;
+  Size? size;
 
   @override
   void initState() {
@@ -58,11 +61,15 @@ class _VideoPlayerNoneControllerState
     WidgetsBinding.instance.addObserver(this);
     final selectedVideo = ref.read(selectedVideoProvider);
     BetterState betterStatePlayer = ref.read(betterPlayerControllerProvider);
-
     videoPlayerController = (widget.path.startsWith('http')
         ? VideoPlayerController.network(widget.path)
         : VideoPlayerController.file(File(widget.path)))
       ..initialize().then((value) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
         videoPlayerController.setLooping(widget.isLooping!);
         if (widget.timeStart != null) {
           videoPlayerController.seekTo(widget.timeStart!);
@@ -105,6 +112,7 @@ class _VideoPlayerNoneControllerState
 
   @override
   Widget build(BuildContext context) {
+    size ??= MediaQuery.of(context).size;
     if (widget.isPause == true) {
       videoPlayerController.pause();
     } else {
@@ -140,24 +148,6 @@ class _VideoPlayerNoneControllerState
         child: Stack(
           children: [
             GestureDetector(
-                // onTap: () {
-                //   widget.type == 'local'
-                //       ? null
-                //       : widget.post != null &&
-                //               widget.post["post_type"] != null &&
-                //               widget.post["post_type"] == 'moment'
-                //           ? Navigator.push(
-                //               context,
-                //               MaterialPageRoute(
-                //                   builder: (context) => Moment(
-                //                         dataAdditional: widget.post,
-                //                       )))
-                //           : Navigator.push(
-                //               context,
-                //               MaterialPageRoute(
-                //                   builder: (context) => WatchSuggest(
-                //                       post: widget.post, media: widget.media)));
-                // },
                 child: Hero(
                     tag: widget.path,
                     child: AspectRatio(
@@ -218,6 +208,19 @@ class _VideoPlayerNoneControllerState
             //           ),
             //   ),
             // ),
+            if (_isLoading)
+              AspectRatio(
+                  aspectRatio: widget.aspectRatio ??
+                      videoPlayerController.value.aspectRatio,
+                  child: Container(color: greyColor))
+            // Container(
+            //   height: double.parse((widget.media?['meta']?['small']
+            //           ?['height'] *
+            //       (size!.width / widget.media?['meta']?['small']?['width']))),
+            //   width: size!.width,
+            //   color:
+            //       greyColor, // Hiệu ứng chờ (có thể thay đổi thành widget khác)
+            // )
           ],
         ));
   }

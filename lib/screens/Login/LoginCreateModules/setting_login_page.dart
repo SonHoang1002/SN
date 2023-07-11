@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/main_login_page.dart';
@@ -22,7 +23,6 @@ class SettingLoginPage extends StatefulWidget {
 
 class _SettingLoginPageState extends State<SettingLoginPage> {
   List dataLogin = [];
-  bool _dataListIsEmpty = false;
 
   @override
   void initState() {
@@ -40,14 +40,11 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
       setState(() {
         dataLogin = jsonDecode(newList) ?? [];
       });
-    } else {
-      setState(() {
-        _dataListIsEmpty = true;
-      });
     }
   }
 
-  deleteData(index) async {
+  /// return status of dataLogin
+  Future<bool> deleteData(index) async {
     const secureStorage = FlutterSecureStorage();
 
     // Đọc mảng từ "dataLogin"
@@ -63,12 +60,9 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
       // Mã hóa lại và lưu lại mảng đã cập nhật vào "dataLogin"
       String updatedValue = jsonEncode(data);
       await secureStorage.write(key: "dataLogin", value: updatedValue);
-      if (data.isEmpty) {
-        setState(() {
-          _dataListIsEmpty = true;
-        });
-      }
+      return data.isEmpty;
     }
+    return true;
   }
 
   @override
@@ -93,78 +87,75 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
         child: Column(children: [
           // main content
           Expanded(
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    height: 300,
-                    // color: Colors.grey[800],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 150,
-                          width: 150,
-                          margin: const EdgeInsets.only(
-                              bottom: 5, right: 5, left: 5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(width: 0.2, color: greyColor)),
-                          child: ClipRRect(
+            child: Column(
+              children: [
+                Container(
+                  height: 300,
+                  // color: Colors.grey[800],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 150,
+                        width: 150,
+                        margin:
+                            const EdgeInsets.only(bottom: 5, right: 5, left: 5),
+                        decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8.0),
-                            child: ImageCacheRender(
-                              path: dataLogin[widget.index]['show_url'] ??
-                                  linkAvatarDefault,
-                              width: 99.8,
-                              height: 99.8,
-                            ),
+                            border: Border.all(width: 0.2, color: greyColor)),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: ExtendedImage.network(
+                            dataLogin[widget.index]['show_url'] ??
+                                linkAvatarDefault,
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 100,
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                            width: 250,
-                            child: Text(
-                              dataLogin[widget.index]['name'],
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w500),
-                            ))
-                      ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                          width: 250,
+                          child: Text(
+                            dataLogin[widget.index]['name'],
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
+                          ))
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        minimumSize: const Size.fromHeight(47),
+                        backgroundColor: Colors.grey[700],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                    onPressed: () async {
+                      bool dataListIfEmpty = await deleteData(widget.index);
+                      if (dataListIfEmpty) {
+                        // ignore: use_build_context_synchronously
+                        pushAndReplaceToNextScreen(
+                            context, const MainLoginPage(null));
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        pushAndReplaceToNextScreen(
+                            context, const OnboardingLoginPage());
+                      }
+                    },
+                    child: const Text(
+                      'Gỡ trang cá nhân',
+                      style: TextStyle(color: Colors.white, fontSize: 17),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          minimumSize: const Size.fromHeight(47),
-                          backgroundColor: Colors.grey[700],
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      onPressed: () async {
-                        deleteData(widget.index);
-                        if (_dataListIsEmpty) {
-                          print("0");
-                          // ignore: use_build_context_synchronously
-                          pushAndReplaceToNextScreen(
-                              context, const MainLoginPage(Null));
-                        } else {
-                          print("1");
-                          // ignore: use_build_context_synchronously
-                          pushAndReplaceToNextScreen(
-                              context, const OnboardingLoginPage());
-                        }
-                      },
-                      child: const Text(
-                        'Gỡ trang cá nhân',
-                        style: TextStyle(color: Colors.white, fontSize: 17),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ]),

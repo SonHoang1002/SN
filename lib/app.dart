@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/material_app_theme.dart';
 import 'package:social_network_app_mobile/providers/event/selection_private_event_provider.dart';
@@ -44,14 +44,14 @@ class _AppState extends State<App> {
   Future<void> _initURIHandler() async {
     if (!_initialURILinkHandled) {
       _initialURILinkHandled = true;
-       Fluttertoast.showToast(
-          msg: "Invoked _initURIHandler",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white
-      );
+      //  Fluttertoast.showToast(
+      //     msg: "Invoked _initURIHandler",
+      //     toastLength: Toast.LENGTH_SHORT,
+      //     gravity: ToastGravity.BOTTOM,
+      //     timeInSecForIosWeb: 1,
+      //     backgroundColor: Colors.green,
+      //     textColor: Colors.white
+      // );
       try {
         final initialURI = await getInitialUri();
         // Use the initialURI and warn the user if it is not correct,

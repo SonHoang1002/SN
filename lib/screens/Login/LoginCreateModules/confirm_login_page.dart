@@ -124,6 +124,7 @@ class _ConfirmLoginPageState extends State<ConfirmLoginPage> {
                           height: 36,
                           child: ButtonPrimary(
                             label: isNext ? 'Gửi lại' : 'Tiếp tục',
+                            colorText: white,
                             handlePress: email.trim().isNotEmpty
                                 ? isLoad
                                     ? null

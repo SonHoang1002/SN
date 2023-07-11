@@ -46,8 +46,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
         dataLogin = widget.listLoginUser;
       });
     });
-    super.initState();
-    print("dataLogin.length ${dataLogin.length}");
+    super.initState(); 
   }
 
   void completeLogin() {

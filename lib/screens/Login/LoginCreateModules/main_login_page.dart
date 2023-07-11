@@ -82,7 +82,6 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
@@ -126,16 +125,17 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
     };
 
     var response = await AuthenApi().fetchDataToken(data);
-    print("response $response");
-    if (response != null && response['access_token'] != null) {
+    if (response != null && response?['access_token'] != null) {
       await SecureStorage().saveKeyStorage(response['access_token'], 'token');
       completeLogin();
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: Colors.red,
-            content: Text(
-                "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại")));
+            content: response?['status'] == 500
+                ? const Text("Máy chủ đang gặp vấn đề. Vui lòng thử lại sau")
+                : const Text(
+                    "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại")));
       }
     }
     setState(() {
@@ -438,18 +438,18 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
             height: 5,
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 25),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                   elevation: 0,
                   minimumSize: const Size.fromHeight(47),
-                  backgroundColor: primaryColor,
+                  backgroundColor: secondaryColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20))),
               onPressed: () {
                 pushToNextScreen(context, BeginJoinEmsoLoginPage());
               },
-              child: Text(
+              child: const Text(
                 'Đăng ký tài khoản Emso',
                 style: TextStyle(color: Colors.white, fontSize: 17),
               ),

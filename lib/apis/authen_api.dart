@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class AuthenApi {
@@ -9,8 +11,9 @@ class AuthenApi {
     return await Api().postRequestBaseNoTokenDefault(
         '/api/v1/authorization', null, {"access_token": token});
   }
-  
+
   registrationAccount(data) async {
+    print("data from registrationAccount ${jsonEncode(data)}");
     return await Api().postRequestBase('/api/v1/registrations', data);
   }
 
