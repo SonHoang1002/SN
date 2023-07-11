@@ -27,6 +27,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
   XFile? _imageCover;
   bool isLoading = false;
   String errorMessage = '';
+  bool hasImage = false;
 
   final TextEditingController reviewController =
       TextEditingController(text: '');
@@ -65,34 +66,63 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
     }
   }
 
-  handleSubmit(BuildContext context) async {
-    String message = '';
-    // var snackbar = ScaffoldMessenger.of(context);
+    handleSubmit(BuildContext context) async {
+  String message = '';
+
+  if (hasImage) {
     var mediaUploadResult = await handleUploadMedia(_imageCover!.path);
     if (mediaUploadResult == null) {
       message =
           'Có lỗi xảy ra trong quá trình upload ảnh, vui lòng thử lại sau!';
-    } else {
-      var response =
-          await LearnSpaceApi().sendRatingPost(widget.courseDetail['id'], {
+      return message;
+    }
+
+    var response = await LearnSpaceApi().sendRatingPost(
+      widget.courseDetail['id'],
+      {
         "status": reviewController.text.trim(),
         "rating": point.toString(),
         "media_ids": [mediaUploadResult['id']],
-      });
+      },
+    );
 
-      if (response == null) {
-        message = 'Có lỗi xảy ra trong quá trình đăng';
-      } else if (response['error'] != null) {
-        message = response['error'];
-      } else {
-        ref
-            .read(learnSpaceStateControllerProvider.notifier)
-            .getListCourseReview(widget.courseDetail['id']);
-        message = 'Đăng bài đánh giá thành công!';
-      }
+    if (response == null) {
+      message = 'Có lỗi xảy ra trong quá trình đăng';
+    } else if (response['error'] != null) {
+      message = response['error'];
+    } else {
+      ref
+          .read(learnSpaceStateControllerProvider.notifier)
+          .getListCourseReview(widget.courseDetail['id']);
+      message = 'Đăng bài đánh giá thành công!';
     }
-    return message;
+  } else {
+    var response;
+    if(reviewController.text != ""){
+      response = await LearnSpaceApi().sendRatingPost(
+      widget.courseDetail['id'],
+      {
+        "status": reviewController.text.trim(),
+        "rating": point.toString(),
+      },
+    );
+    } 
+
+    if (response == null) {
+      message = 'Có lỗi xảy ra trong quá trình đăng, hãy xem lại bài viết';
+    } else if (response['error'] != null) {
+      message = response['error'];
+    } else {
+      ref
+          .read(learnSpaceStateControllerProvider.notifier)
+          .getListCourseReview(widget.courseDetail['id']);
+      message = 'Đăng bài đánh giá thành công!';
+    }
   }
+
+  return message;
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +175,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.center,
                                       children: List.generate(
                                         5,
                                         (index) => index < point
@@ -176,6 +206,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                     TextFormField(
                                       controller: reviewController,
                                       maxLines: 4,
+                                      style: const TextStyle(color: Colors.black),
                                       decoration: const InputDecoration(
                                           enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -195,7 +226,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                     GestureDetector(
                                       onTap: () async {
                                         setState(() {
-                                          isLoading = true;
+                                            isLoading = true;
                                         });
 
                                         _imageCover = await ImagePicker()
@@ -205,6 +236,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                           _pickedCoverImage =
                                               File(_imageCover!.path);
                                           isLoading = false;
+                                          hasImage = true;
                                         });
                                       },
                                       child: Container(
@@ -278,6 +310,8 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                             reviewController.text = '';
                                             isLoading = false;
                                             _pickedCoverImage = null;
+                                            _imageCover = null;
+                                            hasImage = false;
                                           });
                                         },
                                         child: isLoading
