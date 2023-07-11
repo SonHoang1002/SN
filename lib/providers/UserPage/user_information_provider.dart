@@ -40,8 +40,9 @@ class UserInformationState {
   }
 }
 
-final userInformationProvider = StateNotifierProvider.autoDispose<
-    UserInformationController, UserInformationState>((ref) {
+final userInformationProvider =
+    StateNotifierProvider<UserInformationController, UserInformationState>(
+        (ref) {
   ref.read(meControllerProvider);
   return UserInformationController();
 });

@@ -145,10 +145,6 @@ class _UserPageState extends ConsumerState<UserPage> {
     });
   }
 
-  void onResetContent() {
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
@@ -162,21 +158,21 @@ class _UserPageState extends ConsumerState<UserPage> {
       });
       Future.delayed(Duration.zero, () async {
         ref.read(userInformationProvider.notifier).getUserInformation(id);
+        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
-        List postUserNew =
-            await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
-                [];
+        // List postUserNew =
+        //     await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
+        //         [];
 
         ref.read(postControllerProvider.notifier).getListPostPin(id);
-        List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
+        // List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
 
         ref
             .read(postControllerProvider.notifier)
             .getListPostUserPage(id, {"limit": 3, "exclude_replies": true});
 
-        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
-        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
-        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
         var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
         setState(() {
           userData = ref.watch(userInformationProvider).userInfor;
@@ -318,7 +314,6 @@ class _UserPageState extends ConsumerState<UserPage> {
   Widget buildUserPageBody(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final theme = pv.Provider.of<ThemeManager>(context);
-    List featureContents = ref.watch(userInformationProvider).featureContent;
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
       postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
