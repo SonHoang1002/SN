@@ -20,7 +20,7 @@ class _CreateGroupState extends State<CreateGroup> {
   TextEditingController controllerVisible =
       TextEditingController(text: "Hiển thị");
   TextEditingController controllerTitle = TextEditingController(text: "");
-
+  TextEditingController controllerDes = TextEditingController(text: "");
   dynamic isPrivateValue;
   dynamic isVisibleValue = {
     'is_visible': true,
@@ -30,6 +30,7 @@ class _CreateGroupState extends State<CreateGroup> {
   handlePress(BuildContext context) async {
     FormData formData = FormData.fromMap({
       'title': controllerTitle.text,
+      'description': controllerDes.text,
       'category_id': 1,
       'is_private': isPrivateValue['is_private'],
       'is_visible': isVisibleValue['is_visible'] ?? true,
@@ -71,6 +72,20 @@ class _CreateGroupState extends State<CreateGroup> {
                   TextFieldGroup(
                     controller: controllerTitle,
                     label: 'Đặt tên nhóm',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Mô tả',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFieldGroup(
+                    controller: controllerDes,
+                    label: 'Mô tả',
                   ),
                   const SizedBox(
                     height: 10,
