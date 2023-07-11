@@ -77,10 +77,10 @@ class _MenuState extends ConsumerState<Menu> {
 
       final theme = pv.Provider.of<ThemeManager>(context, listen: false);
       theme.toggleTheme('system');
+      await SecureStorage().saveKeyStorage("token", "noData");
       await SecureStorage().deleteKeyStorage("userId");
       await SecureStorage().deleteKeyStorage('theme');
       ref.read(meControllerProvider.notifier).resetMeData();
-      await SecureStorage().saveKeyStorage("token", "noData");
       if (mounted) {
         pushAndReplaceToNextScreen(context, const OnboardingLoginPage());
       }
