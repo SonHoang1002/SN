@@ -799,7 +799,7 @@ class GroupListController extends StateNotifier<GroupListState> {
     if (mounted) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,
-        groupMember: state.groupAdmin,
+        groupMember: state.groupMember,
         isMoreGroupAdmin: state.isMoreGroupAdmin,
         isMoreGroupMember: state.isMoreGroupMember,
         memberQuestionList: state.memberQuestionList,

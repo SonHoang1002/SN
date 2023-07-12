@@ -210,125 +210,131 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
             ),
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: widget.groupDetail['title'],
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: widget.groupDetail['title'],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        const WidgetSpan(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 5.0),
-                            child: Icon(Icons.chevron_right,
-                                size: 18, color: Colors.grey),
+                          const WidgetSpan(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 5.0),
+                              child: Icon(Icons.chevron_right,
+                                  size: 18, color: Colors.grey),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        const WidgetSpan(
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 1.0, right: 5.0),
-                            child:
-                                Icon(Icons.lock, size: 14, color: Colors.grey),
-                          ),
-                        ),
-                        TextSpan(
-                          text: widget.groupDetail['is_private'] == true
-                              ? 'Nhóm Riêng tư'
-                              : 'Nhóm Công khai',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                        TextSpan(
-                          text:
-                              ' \u{2022} ${widget.groupDetail['member_count']} thành viên',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  AvatarStack(
-                    height: 40,
-                    borderColor: Theme.of(context).scaffoldBackgroundColor,
-                    settings: settings,
-                    iconEllipse: true,
-                    avatars: [
-                      for (var n = 0; n < avatarGroup.length; n++)
-                        NetworkImage(
-                          avatarGroup[n]['account']['avatar_media'] != null
-                              ? avatarGroup[n]['account']['avatar_media']
-                                  ['preview_url']
-                              : linkAvatarDefault,
-                        ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: size.width * 0.45,
-                        child: ButtonPrimary(
-                          label: 'Quản lý',
-                          icon: Image.asset(
-                            'assets/groups/managerGroup.png',
-                            width: 16,
-                            height: 16,
-                          ),
-                          handlePress: () {
-                            widget.onTap!();
-                          },
-                        ),
+                        ],
                       ),
-                      const SizedBox(
-                        width: 8,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          const WidgetSpan(
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 1.0, right: 5.0),
+                              child: Icon(Icons.lock,
+                                  size: 14, color: Colors.grey),
+                            ),
+                          ),
+                          TextSpan(
+                            text: widget.groupDetail['is_private'] == true
+                                ? 'Nhóm Riêng tư'
+                                : 'Nhóm Công khai',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                ' \u{2022} ${widget.groupDetail['member_count']} thành viên',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: size.width * 0.45,
-                        child: ButtonPrimary(
-                          label: 'Mời',
-                          icon: Padding(
-                            padding: const EdgeInsets.only(bottom: 3.0),
-                            child: Image.asset(
-                              'assets/groups/group.png',
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: AvatarStack(
+                        height: 40,
+                        borderColor: Theme.of(context).scaffoldBackgroundColor,
+                        settings: settings,
+                        iconEllipse: true,
+                        avatars: [
+                          for (var n = 0; n < avatarGroup.length; n++)
+                            NetworkImage(
+                              avatarGroup[n]['account']['avatar_media'] != null
+                                  ? avatarGroup[n]['account']['avatar_media']
+                                      ['preview_url']
+                                  : linkAvatarDefault,
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: size.width * 0.45,
+                          child: ButtonPrimary(
+                            label: 'Quản lý',
+                            icon: Image.asset(
+                              'assets/groups/managerGroup.png',
                               width: 16,
                               height: 16,
                             ),
+                            handlePress: () {
+                              widget.onTap!();
+                            },
                           ),
-                          isGrey: true,
-                          handlePress: () {},
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        SizedBox(
+                          width: size.width * 0.45,
+                          child: ButtonPrimary(
+                            label: 'Mời',
+                            icon: Padding(
+                              padding: const EdgeInsets.only(bottom: 3.0),
+                              child: Image.asset(
+                                'assets/groups/group.png',
+                                width: 16,
+                                height: 16,
+                              ),
+                            ),
+                            isGrey: true,
+                            handlePress: () {},
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -448,5 +454,22 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         ],
       ),
     );
+  }
+}
+
+class EditBannerGroup extends StatefulWidget {
+  const EditBannerGroup({super.key});
+
+  @override
+  State<EditBannerGroup> createState() => _EditBannerGroupState();
+}
+
+class _EditBannerGroupState extends State<EditBannerGroup> {
+  
+  @override
+  Widget build(BuildContext context) {
+    return StatefulBuilder(builder: (context, setState) {
+      return Container();
+    });
   }
 }
