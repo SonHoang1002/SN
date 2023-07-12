@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/tranfer_account.dart';
 import 'package:social_network_app_mobile/home/PreviewScreen.dart';
-import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -17,6 +13,7 @@ import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
@@ -48,7 +45,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
         dataLogin = widget.listLoginUser;
       });
     });
-    super.initState(); 
+    super.initState();
   }
 
   void completeLogin() {
@@ -60,8 +57,11 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
         ((route) => false));
   }
 
-  handleLogin(token) async {
+  handleLogin(token, themeData) async {
+    final theme = pv.Provider.of<ThemeManager>(context, listen: false);
+    theme.toggleTheme(themeData);
     await SecureStorage().saveKeyStorage(token, 'token');
+
     completeLogin();
   }
 
@@ -77,7 +77,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
       ref.read(friendControllerProvider.notifier).reset();
       ref.read(groupListControllerProvider.notifier).reset();
 
-      handleLogin(dataLogin[index]['token']);
+      handleLogin(dataLogin[index]['token'], dataLogin[index]['theme']);
     } else {
       Navigator.pop(context);
     }

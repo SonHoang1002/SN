@@ -89,7 +89,7 @@ class _DarkModeSettingState extends State<DarkModeSetting> {
                                         : el)
                                     .toList()),
                                 'dataLogin');
-                            ;
+
                             themeManager.toggleTheme(options[index]['key']);
                           },
                           child: Padding(
