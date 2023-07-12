@@ -2,21 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/apis/market_place_apis/delivery_address_apis.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
 import 'package:social_network_app_mobile/providers/market_place_providers/delivery_addresses_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/delivery_address_apis.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-
-import '../../../../widgets/Market/show_market_bottom_sheet.dart';
+import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart'; 
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 class AddressMarketPage extends ConsumerStatefulWidget {
   final dynamic oldData;
@@ -89,7 +88,7 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const BackIconAppbar(),
+              const BackIconAppbar(), 
               AppBarTitle(
                   title: _isCreate! ? "Địa chỉ mới" : "Cập nhật địa chỉ"),
               const Icon(
@@ -171,21 +170,25 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
                   ),
                 ),
               ),
-              buildMarketButton(
-                  width: width,
-                  height: 40,
-                  bgColor: Colors.orange[300],
-                  contents: [
-                    buildTextContent(_isCreate! ? "Tạo" : "Cập nhật", false,
-                        fontSize: 13)
-                  ],
-                  marginTop: 0,
-                  radiusValue: 0,
-                  isHaveBoder: false,
-                  isVertical: true,
-                  function: () {
-                    _validate();
-                  }),
+              Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).padding.bottom),
+                child: buildMarketButton(
+                    width: width,
+                    height: 40,
+                    bgColor: Colors.orange[300],
+                    contents: [
+                      buildTextContent(_isCreate! ? "Tạo" : "Cập nhật", false,
+                          fontSize: 13, isCenterLeft: false)
+                    ],
+                    marginTop: 0,
+                    radiusValue: 0,
+                    isHaveBoder: false,
+                    isVertical: true,
+                    function: () {
+                      _validate();
+                    }),
+              ),
             ],
           ),
         ));
@@ -441,10 +444,28 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
             function: () {
               switch (title) {
                 case province:
-                  _buildProviceBottomSheet(titleForBottomSheet);
+                  _buildProviceBottomSheet(
+                      titleForBottomSheet: titleForBottomSheet,
+                      controller: _provinceController,
+                      inputPlaceholder: "Nhập tỉnh, thành phố",
+                      additionalFunction: () {
+                        _provinceValue = _provinceController.text.trim();
+                        if (_provinceValue != null && _provinceValue != "") {
+                          _warningSelection[0]["vali"] = true;
+                        }
+                      });
                   break;
                 case location:
-                  _buildLocationBottomSheet(titleForBottomSheet);
+                  _buildProviceBottomSheet(
+                      titleForBottomSheet: titleForBottomSheet,
+                      controller: _addressController,
+                      inputPlaceholder: "Nhập địa chỉ cụ thể",
+                      additionalFunction: () {
+                        _addressValue = _addressController.text.trim();
+                        if (_addressValue != null && _addressValue != "") {
+                          _warningSelection[1]["vali"] = true;
+                        }
+                      });
                   break;
                 default:
                   _buildCategoryBottomSheet(titleForBottomSheet);
@@ -458,17 +479,18 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
   }
 
   dynamic _buildCategoryBottomSheet(String titleForBottomSheet) {
-    showCustomMarketBottomSheet(context, 160,
+    showCustomBottomSheet(context, 200,
         title: titleForBottomSheet,
         widget: ListView.builder(
-            padding: EdgeInsets.zero,
+            padding:
+                EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
             shrinkWrap: true,
             itemCount: addressCategoryList.length,
             itemBuilder: (context, index) {
               return Column(
                 children: [
                   index == 0
-                      ? buildDivider(height: 2, color: red)
+                      ? buildDivider(height: 2, color: greyColor)
                       : const SizedBox(),
                   GeneralComponent(
                     [
@@ -486,54 +508,28 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
                       popToPreviousScreen(context);
                     },
                   ),
-                  buildDivider(height: 2, color: red)
+                  buildDivider(height: 2, color: greyColor)
                 ],
               );
             }));
   }
 
-  dynamic _buildProviceBottomSheet(String titleForBottomSheet) {
-    showCustomMarketBottomSheet(context, height - 50,
-        title: titleForBottomSheet,
+  dynamic _buildProviceBottomSheet(
+      {required String titleForBottomSheet,
+      required TextEditingController controller,
+      required String inputPlaceholder,
+      required Function additionalFunction}) {
+    showCustomBottomSheet(context, height - 200, title: titleForBottomSheet,
         widget: StatefulBuilder(builder: (context, setStatefull) {
       return Column(children: [
         buildTextContent(
-            "Hiện tại chưa làm xong nên bạn hãy chịu khó nhập địa chỉ vào đây :))",
-            true,
-            fontSize: 12,
-            colorWord: red),
-        _informationInput(_provinceController, width, "Nhập tỉnh thành phố",
+            "Chưa có danh sách địa chỉ, vui lòng đợi trong tương lai", true,
+            fontSize: 12, colorWord: red),
+        _informationInput(controller, width, inputPlaceholder,
             additionalFunction: () {
           setStatefull(() {});
           setState(() {
-            _provinceValue = _provinceController.text.trim();
-            if (_provinceValue != null && _provinceValue != "") {
-              _warningSelection[0]["vali"] = true;
-            }
-          });
-        }),
-      ]);
-    }));
-  }
-
-  dynamic _buildLocationBottomSheet(String titleForBottomSheet) {
-    showCustomMarketBottomSheet(context, height - 50,
-        title: titleForBottomSheet,
-        widget: StatefulBuilder(builder: (context, setStatefull) {
-      return Column(children: [
-        buildTextContent(
-            "Hiện tại chưa làm xong nên bạn hãy chịu khó nhập địa chỉ vào đây :))",
-            true,
-            fontSize: 12,
-            colorWord: red),
-        _informationInput(_addressController, width, "Nhập địa chỉ cụ thể",
-            additionalFunction: () {
-          setStatefull(() {});
-          setState(() {
-            _addressValue = _addressController.text.trim();
-            if (_addressValue != null && _addressValue != "") {
-              _warningSelection[1]["vali"] = true;
-            }
+            additionalFunction();
           });
         }),
       ]);

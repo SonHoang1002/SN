@@ -142,7 +142,7 @@ Widget buildReviewItemWidget(BuildContext context, dynamic data,
         ),
       ),
       buildSpacer(height: 10),
-      buildDivider(height: 10, color: red)
+      buildDivider(height: 10, color: greyColor)
     ]),
   );
 }

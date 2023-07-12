@@ -1,7 +1,7 @@
 List<int> getMinAndMaxPrice(List<dynamic> productVariants) {
   List<dynamic> primaryList = productVariants;
 
-  if (productVariants == null || productVariants.isEmpty) {
+  if (productVariants.isEmpty) {
     return [0, 0];
   }
   double min = primaryList[0]["price"];

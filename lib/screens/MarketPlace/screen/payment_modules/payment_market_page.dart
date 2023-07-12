@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
@@ -30,7 +31,10 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import '../../../../widgets/Market/show_market_bottom_sheet.dart';
 
 class PaymentMarketPage extends ConsumerStatefulWidget {
-  const PaymentMarketPage({super.key});
+  final List productDataList;
+  final dynamic addressData;
+  const PaymentMarketPage(
+      {super.key, required this.productDataList, this.addressData});
 
   @override
   ConsumerState<PaymentMarketPage> createState() => _PaymentMarketPageState();
@@ -40,7 +44,7 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
   late double width = 0;
   late double height = 0;
   TextEditingController controller = TextEditingController(text: "");
-  List<dynamic>? _allProductList = [];
+  List<dynamic>? listProduct = [];
   List<dynamic>? _filterProductList = [];
   List<dynamic>? _addressData;
   dynamic _selectedAddress;
@@ -50,22 +54,29 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
   dynamic _mainData = {};
   List<dynamic> paymentMethods = [
     {
-      "key": "wallet",
-      "value": 1,
-      "status": true,
-      "title": "EmsoCoin",
-    },
-    {
-      "key": "direct",
+      "key": cod,
       "value": 0,
-      "status": false,
+      "status": true,
       "title": "Thanh toán khi nhận hàng",
     },
-    // {
-    //   "key": "bank",
-    //   "value":0,"status": false,
-    //   "title": "Thanh toán qua ngân hàng",
-    // }
+    {
+      "key": momo,
+      "value": 1,
+      "status": false,
+      "title": "Thanh toán qua MOMO",
+    },
+    {
+      "key": vtcpay,
+      "value": 2,
+      "status": false,
+      "title": "Thanh toán qua VTCPAY",
+    },
+    {
+      "key": vnpay,
+      "value": 3,
+      "status": false,
+      "title": "Thanh toán qua VNPAY",
+    },
   ];
   @override
   void initState() {
@@ -80,10 +91,11 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
   Future _initData() async {
     _mainData = ref.watch(selectedAddressSaverProvider).selectedAddressSaver;
 
-    if (_allProductList!.isEmpty) {
-      _allProductList = await ref.watch(cartProductsProvider).listCart;
+    if (listProduct!.isEmpty) {
+      listProduct = await widget.productDataList;
       _filterProduct();
     }
+
     if (_addressData == null || _addressData!.isEmpty) {
       _addressData = await ref.watch(deliveryAddressProvider).addressList;
     }
@@ -91,20 +103,19 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
         ref.watch(selectedAddressSaverProvider).selectedAddressSaver;
     if (_selectedAddress.isEmpty) {
       if (_addressData!.isNotEmpty) {
-        _selectedAddress = _addressData![0];
+        _selectedAddress = widget.addressData ?? _addressData![0];
       }
     }
     setState(() {});
   }
 
   void _filterProduct() {
-    List<dynamic> filterProductList = _allProductList!;
-    for (var childShop in _allProductList!) {
+    List<dynamic> filterProductList = listProduct!;
+    for (var childShop in listProduct!) {
       List<dynamic> itemsList = childShop["items"].where((element) {
         return element["check"] == true;
       }).toList();
-      filterProductList[_allProductList!.indexOf(childShop)]["items"] =
-          itemsList;
+      filterProductList[listProduct!.indexOf(childShop)]["items"] = itemsList;
     }
     List<dynamic> primaryFilterList = filterProductList;
     for (var childFilterProduct in List.from(filterProductList)) {
@@ -196,7 +207,7 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
   @override
   void dispose() {
     super.dispose();
-    _allProductList = [];
+    listProduct = [];
   }
 
   @override
@@ -228,6 +239,7 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
         child: _isLoading
             ? buildCircularProgressIndicator()
             : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: SingleChildScrollView(
@@ -238,18 +250,22 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                             color: red,
                           ),
                           _buildGeneralWidget(
-                            "Đã áp dụng Mã miễn phí vận chuyển",
+                            "Đã áp dụng mã miễn phí vận chuyển",
                             isHavePreffixWidget: true,
                             prefixIconData: FontAwesomeIcons.car,
                           ),
                           const CrossBar(
-                            height: 5,
+                            height: 7,
+                            opacity: 0.2,
+                            margin: 0,
                           ),
+                          buildSpacer(height: 7),
                           _buildAddressWidget(),
                           buildSpacer(height: 7),
                           const CrossBar(
                             margin: 0,
-                            height: 5,
+                            height: 7,
+                            opacity: 0.2,
                           ),
                           buildSpacer(height: 3),
                           Column(
@@ -262,7 +278,8 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                           buildSpacer(height: 10),
                           const CrossBar(
                             margin: 0,
-                            height: 5,
+                            height: 7,
+                            opacity: 0.2,
                           ),
                           _buildVoucherAndSelect(
                               title: "Emso Voucher",
@@ -270,7 +287,8 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                                   const EdgeInsets.fromLTRB(10, 15, 10, 15)),
                           const CrossBar(
                             margin: 0,
-                            height: 5,
+                            height: 7,
+                            opacity: 0.2,
                           ),
                           _buildGeneralWidget("Không thể sử dụng xu",
                               isHavePreffixWidget: true,
@@ -282,7 +300,8 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                                       value: true, onChanged: (value) {}))),
                           const CrossBar(
                             margin: 0,
-                            height: 5,
+                            height: 7,
+                            opacity: 0.2,
                           ),
                           _buildGeneralWidget("Phương thức thanh toán",
                               content: paymentMethods.where((element) {
@@ -290,7 +309,7 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                               }).toList()[0]["title"],
                               isHavePreffixWidget: true,
                               isHaveSuffixWidget: true, function: () {
-                            showCustomMarketBottomSheet(context, 500,
+                            showCustomBottomSheet(context, 500,
                                 title: "Phương thức thanh toán", widget:
                                     StatefulBuilder(
                                         builder: (context, setStatefull) {
@@ -298,10 +317,9 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                                   children: List.generate(paymentMethods.length,
                                       (index) {
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
-                                  child: GeneralComponent(
-                                    [
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    child: GeneralComponent([
                                       buildTextContent(
                                           paymentMethods[index]["title"], false,
                                           isCenterLeft: false,
@@ -310,31 +328,34 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                                               ? red
                                               : greyColor),
                                     ],
-                                    isHaveBorder: true,
-                                    borderColor: paymentMethods[index]["status"]
-                                        ? red
-                                        : greyColor,
-                                    changeBackground: transparent,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
-                                    function: () {
-                                      setStatefull(() {
-                                        paymentMethods.forEach((ele) {
-                                          ele["status"] = false;
-                                        });
-                                        paymentMethods[index]["status"] = true;
-                                      });
-                                      setState(() {});
-                                      popToPreviousScreen(context);
-                                    },
-                                  ),
-                                );
+                                        isHaveBorder: true,
+                                        borderColor: paymentMethods[index]
+                                                ["status"]
+                                            ? red
+                                            : greyColor,
+                                        changeBackground: transparent,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 10), function: () {
+                                      setStatefull(
+                                        () {
+                                          paymentMethods.forEach((ele) {
+                                            ele["status"] = false;
+                                          });
+                                          popToPreviousScreen(context);
+                                          paymentMethods[index]["status"] =
+                                              true;
+                                          setState(() {});
+                                        },
+                                      );
+                                    }));
                               }));
                             }));
                           }),
                           const CrossBar(
                             margin: 0,
-                            height: 5,
+                            height: 7,
+                            opacity: 0.2,
                           ),
                           _buildVoucherAndSelect(
                               title: "Thông tin thanh toán",

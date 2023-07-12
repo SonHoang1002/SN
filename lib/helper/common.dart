@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:social_network_app_mobile/apis/media_api.dart';
 
 Function(int num) shortenLargeNumber = (int num) {
   if (num >= 1000000000) {
@@ -221,4 +223,15 @@ String formatCurrency(dynamic number) {
 
 TextStyle customIbmPlexSans(TextStyle textStyle) {
   return GoogleFonts.ibmPlexSans(textStyle: textStyle);
+}
+// return media id list
+Future<List> uploadMedia(List<dynamic> mediaList) async {
+  return Future.wait(mediaList.map((element) async {
+    String fileName = element.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(element.path, filename: fileName),
+    });
+    final response = await MediaApi().uploadMediaEmso(formData);
+    return (response?["id"]).toString();
+  }));
 }

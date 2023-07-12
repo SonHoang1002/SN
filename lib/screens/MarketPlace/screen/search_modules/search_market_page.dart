@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/search_product_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/search_modules/category_search_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/search_product_api.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
@@ -34,14 +38,25 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
       TextEditingController(text: "");
   FocusNode _focusNode = FocusNode();
   bool _isExpand = false;
+  var paramConfig = {"entity_type": "Product", "limit": 10};
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
       _focusNode.requestFocus();
-      final a = ref.read(searchedHistoryProvider.notifier).getHistorySearch();
+      final a = await ref
+          .read(searchedHistoryProvider.notifier)
+          .getHistorySearch(paramConfig);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        final listSearched = ref.watch(searchedHistoryProvider).listSearched;
+        if (listSearched.isNotEmpty) {
+          setState(() {
+            _historyProductList =
+                ref.watch(searchedHistoryProvider).listSearched;
+          });
+        }
+      });
     });
-    // Future.wait([_initData()]);
   }
 
   @override
@@ -50,20 +65,11 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
     _filteredProductList = [];
   }
 
-  Future _initData() async {
-    if (_historyProductList == null || _historyProductList.isEmpty) {
-      setState(() {
-        _historyProductList = ref.watch(searchedHistoryProvider).listSearched;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    Future.wait([_initData()]);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -190,38 +196,40 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(children: [
                 // tim kiem gan day
-                _filteredProductList == null || _filteredProductList.isEmpty
-                    ? Column(
-                        children: List.generate(
-                            _isExpand ? _historyProductList.length : 3,
-                            (index) {
-                          return Column(children: [
-                            _buildSearchItem(_historyProductList.isNotEmpty &&
-                                    _historyProductList[index]
-                                            ["search_params"] !=
-                                        null
-                                ? _historyProductList[index]
-                                : {
-                                    "id": null,
-                                    "search_params": "Không có dữ liệu"
-                                  }),
-                            buildDivider(color: greyColor, height: 10),
-                            !_isExpand && index == 2
-                                ? Padding(
-                                    padding: const EdgeInsets.only(top: 10.0),
-                                    child: buildTextContentButton(
-                                        "Xem thêm", false,
-                                        fontSize: 13,
-                                        isCenterLeft: false, function: () {
-                                      setState(() {
-                                        _isExpand = true;
-                                      });
-                                    }),
-                                  )
-                                : const SizedBox()
-                          ]);
-                        }),
-                      )
+                _filteredProductList.isEmpty
+                    ? _historyProductList.isNotEmpty
+                        ? Column(
+                            children: List.generate(
+                                _isExpand ? _historyProductList.length : 3,
+                                (index) {
+                              return Column(children: [
+                                _buildSearchItem(_historyProductList[index]),
+                                buildDivider(color: greyColor, height: 10),
+                                ((!_isExpand && index == 2) ||
+                                            (_isExpand && index == 8)) &&
+                                        _historyProductList.isNotEmpty
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 10.0),
+                                        child: buildTextContentButton(
+                                            _isExpand ? "Thu gọn" : "Xem thêm",
+                                            false,
+                                            fontSize: 13,
+                                            isCenterLeft: false, function: () {
+                                          setState(() {
+                                            _isExpand = !_isExpand;
+                                          });
+                                        }),
+                                      )
+                                    : const SizedBox()
+                              ]);
+                            }),
+                          )
+                        : Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            height: 40,
+                            width: double.infinity,
+                            child: buildCircularProgressIndicator())
                     : Column(
                         children: [
                           Column(
@@ -238,42 +246,40 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
                           )
                         ],
                       ),
-
                 buildSpacer(height: 10),
                 // hang muc tim kiem
                 buildTextContent("Hạng mục tìm kiếm", true, fontSize: 20),
+                buildSpacer(height: 10),
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                         children: List.generate(
-                      MainMarketPageConstants
-                          .MAIN_MARKETPLACE_BODY_CATEGORY_SELECTIONS["data"]
-                          .length,
+                      ref.watch(parentCategoryController).parentList.length,
                       (index) {
-                        final data = MainMarketPageConstants
-                            .MAIN_MARKETPLACE_BODY_CATEGORY_SELECTIONS["data"];
+                        final data =
+                            ref.watch(parentCategoryController).parentList;
                         return GeneralComponent(
                           [
                             buildTextContent(
-                              data[index]["title"],
+                              data[index]["text"],
                               false,
                             )
                           ],
                           changeBackground: transparent,
                           prefixWidget: Container(
-                              height: 40,
-                              width: 40,
+                              height: 30,
+                              width: 30,
                               margin: const EdgeInsets.only(right: 5),
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
-                                  child: Image.asset(data[index]["icon"]))),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Image.network(data[index]["icon"]))),
                           function: () async {
                             pushToNextScreen(
                                 context,
                                 CategorySearchPage(
-                                    title: data[index]["title"]));
+                                    title: data[index]["text"],
+                                    categoryObject: data[index]));
                           },
                         );
                       },
@@ -291,56 +297,27 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
   Widget _buildSearchItem(dynamic data, {bool isHaveClose = false}) {
     return InkWell(
       onTap: () {
-        if (data["id"] != null) {
-          pushToNextScreen(context,
-              DetailProductMarketPage(simpleData: data, id: data["id"]));
-        }
+        // if (data["id"] != null) {
+        //   pushToNextScreen(context,
+        //       DetailProductMarketPage(simpleData: data, id: data["id"]));
+        // }
       },
       child: Container(
         width: width,
         padding: const EdgeInsets.symmetric(horizontal: 5),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 5),
-                  height: 30,
-                  width: 30,
-                  padding: const EdgeInsets.all(5),
-                  child: data["product_image_attachments"] != null &&
-                          data["product_image_attachments"].isNotEmpty
-                      ? ImageCacheRender(
-                          path: data["product_image_attachments"][0]
-                              ["attachment"]["url"])
-                      : const Icon(
-                          FontAwesomeIcons.clock,
-                          size: 18,
-                        ),
-                ),
-                SizedBox(
-                  width: isHaveClose ? width * 0.69 : width * 0.79,
-                  child: buildTextContent(
-                    "${data["title"] ?? data["search_params"]} ",
-                    false,
-                    fontSize: 17,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+            SizedBox(
+              width: isHaveClose ? width * 0.69 : width * 0.79,
+              child: buildTextContent(
+                "${data["keyword"] ?? data["name"]}",
+                false,
+                fontSize: 17,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            isHaveClose
-                ? Container(
-                    height: 30,
-                    width: 30,
-                    padding: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-                    child: const Icon(
-                      FontAwesomeIcons.close,
-                      size: 18,
-                    ),
-                  )
-                : const SizedBox(),
           ],
         ),
       ),

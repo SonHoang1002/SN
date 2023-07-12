@@ -62,9 +62,9 @@ class _SeeReviewShopMarketPageComsumerState
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               BackIconAppbar(),
               AppBarTitle(title: "Đánh giá Shop của bạn"),
               Icon(
@@ -84,8 +84,8 @@ class _SeeReviewShopMarketPageComsumerState
     if (reviewList!.isEmpty) {
       List<dynamic> newList =
           await Future.wait(widget.reviewData!.map((element) async {
-        List<dynamic> response = await ReviewProductApi()
-            .getReviewProductApi(element["product_variant"]["product_id"]);
+        List<dynamic> response = await ReviewProductApi().getReviewProductApi(
+            element["product_variant"]["product_id"], {"limit": 10});
         return response;
       }).toList());
       List<dynamic> filterReviewList = [];
