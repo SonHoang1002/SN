@@ -50,6 +50,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
     final theme = pv.Provider.of<ThemeManager>(context);
     final userAbout = ref.watch(userInformationProvider).userMoreInfor;
     final infor = userAbout?['general_information'];
+    final relationship = userAbout?['account_relationship'];
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -153,11 +154,26 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                           ),
                     buildDrawer(),
                     buildBoldTxt("Mối quan hệ", theme),
-                    ButtonPrimary(
-                      label: "Thêm mối quan hệ",
-                      colorButton: greyColor[300],
-                      colorText: Colors.black54,
-                    ),
+                    relationship != null &&
+                            relationship['relationship_category'] != null
+                        ? ListTile(
+                            leading: Checkbox(
+                              checkColor: Colors.lightBlue[200],
+                              value: true,
+                              onChanged: (value) {},
+                            ),
+                            title: Text(
+                                "Đã kết hôn với ${relationship['partner']}"),
+                            trailing: GestureDetector(
+                              onTap: () {},
+                              child: editIcon(theme),
+                            ),
+                          )
+                        : ButtonPrimary(
+                            label: "Thêm mối quan hệ",
+                            colorButton: greyColor[300],
+                            colorText: Colors.black54,
+                          ),
                     buildDrawer(),
                     buildBoldTxt("Trang web", theme),
                     buildDrawer(),

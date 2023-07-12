@@ -70,7 +70,8 @@ class SeeCollectionBookmark extends ConsumerStatefulWidget {
 }
 
 class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
+  String cName = '';
   bool isLoading = true;
   final itemList = [
     HandleItem(
@@ -91,9 +92,11 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
   @override
   void initState() {
     super.initState();
-    if (mounted) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(Duration.zero, () => fetchCollectionBookmark());
-    }
+      _controller.text = widget.collectionName!;
+      cName = widget.collectionName!;
+    });
   }
 
   void fetchCollectionBookmark() async {
@@ -121,6 +124,10 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
         .read(savedControllerProvider.notifier)
         .renameOneCollection(collectionId, newName);
     if (mounted) {
+      setState(() {
+        cName = newName;
+      });
+      Navigator.pop(context);
       Navigator.pop(context);
       showSnackbar(context, "Đổi tên thành công");
     }
@@ -131,11 +138,6 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
     final size = MediaQuery.of(context).size;
     final theme = pv.Provider.of<ThemeManager>(context);
     final cltBookmarks = ref.watch(savedControllerProvider).currentCltBookmarks;
-    final collections = ref.watch(savedControllerProvider).bmCollections;
-    final index = collections.indexWhere(
-      (e) => e['id'] == widget.collectionId,
-    );
-    _controller.text = collections[index]['name'];
 
     return Scaffold(
       appBar: AppBar(
@@ -152,7 +154,7 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
                   const SizedBox(width: 10.0),
                   SizedBox(
                     width: size.width * 0.6,
-                    child: AppBarTitle(title: collections[index]['name']),
+                    child: AppBarTitle(title: cName),
                   ),
                 ],
               ),
@@ -188,7 +190,8 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
                                           ],
                                         ),
                                         content: Container(
-                                          margin: EdgeInsets.only(top: 8.0),
+                                          margin:
+                                              const EdgeInsets.only(top: 8.0),
                                           child: CupertinoTextField(
                                             controller: _controller,
                                             autofocus: true,
@@ -232,7 +235,8 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
                                     builder: ((context) {
                                       return CupertinoAlertDialog(
                                         content: Container(
-                                          margin: EdgeInsets.only(top: 8.0),
+                                          margin:
+                                              const EdgeInsets.only(top: 8.0),
                                           child: const Text(
                                             "Bạn có chắc chắn muốn xóa bộ sưu tập không?",
                                             style: TextStyle(fontSize: 14.0),

@@ -48,37 +48,18 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
     var renderCollections = [];
 
     for (var i = 0; i < allCollection.length; i++) {
-      var collection = allCollection[i];
-      var bookmarks = allBookmark
-          .where((e) =>
-              e['bookmark_collection'] != null &&
-              e['bookmark_collection']['id'] == collection['id'])
-          .toList();
+      final collection = allCollection[i];
+      final bookmarkCollections = await BookmarkApi()
+          .getBookmarkOfOneCollection(collection['id'], null);
 
-      if (bookmarks.isNotEmpty) {
-        var latest =
-            DateTime.parse(bookmarks[0]['created_at']).millisecondsSinceEpoch;
-        var latestId = '';
-        for (var j = 0; j < bookmarks.length; j++) {
-          int createAt =
-              DateTime.parse(bookmarks[j]['created_at']).millisecondsSinceEpoch;
-          if (createAt < latest) {
-            latest = createAt;
-            latestId = bookmarks[j]['bookmark_collection']['id'];
-          }
-        }
-        final indexLatestId = allBookmark.indexWhere((e) =>
-            e['bookmark_collection'] != null &&
-            e['bookmark_collection']['id'] == latestId);
-        collection['mediaWidget'] = handleMedia(allBookmark[indexLatestId]);
-      } else {
-        // collections has no bookmark -> default Image;
+      if (bookmarkCollections.isEmpty) {
         collection['mediaWidget'] = ExtendedImage.network(
           linkBannerDefault,
           fit: BoxFit.cover,
         );
+      } else {
+        collection['mediaWidget'] = handleMedia(bookmarkCollections.first);
       }
-
       renderCollections.add(collection);
     }
     if (mounted) {
