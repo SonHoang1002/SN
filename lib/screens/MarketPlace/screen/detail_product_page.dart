@@ -9,7 +9,7 @@ import 'package:social_network_app_mobile/apis/market_place_apis/follwer_product
 import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/get_min_max_price.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
@@ -35,7 +35,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dia
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/video_player.dart'; 
+import 'package:social_network_app_mobile/widgets/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../theme/colors.dart';

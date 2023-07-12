@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
@@ -161,11 +161,11 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   bool isFirstDrag = true;
   double compareWidth = 360;
 
-  late AudioPlayer audioPlayer;
+  // late AudioPlayer audioPlayer;
   @override
   void initState() {
     super.initState();
-    audioPlayer = AudioPlayer();
+    // audioPlayer = AudioPlayer();
     holdTimer = Timer(durationLongPress, showBox);
     _boxSizeController =
         AnimationController(vsync: this, duration: widget.duration);
@@ -1777,10 +1777,10 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   }
 
   Future playSound(String nameSound) async {
-    await audioPlayer.stop();
+    // await audioPlayer.stop();
     final file = File('${(await getTemporaryDirectory()).path}/$nameSound');
     await file.writeAsBytes((await loadAsset(nameSound)).buffer.asUint8List());
-    audioPlayer.play(UrlSource(file.path));
+    // audioPlayer.play(UrlSource(file.path));
   }
 
   Future loadAsset(String nameSound) async {

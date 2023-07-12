@@ -61,17 +61,15 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
   }
 
   checkFollowing() {
-    var account = widget.post?['account'] ?? {};
     var group = widget.post?['group'];
     var page = widget.post?['page'];
-
     return (group != null &&
-                group["group_relationship"] != null &&
-                group["group_relationship"]?["like"] == true) ||
-            (page != null &&
-                widget.post['place']?['id'] != page['id'] &&
-                (page["page_relationship"] != null &&
-                    page["page_relationship"]?["like"] == true));
+            group["group_relationship"] != null &&
+            group["group_relationship"]?["like"] == true) ||
+        (page != null &&
+            widget.post['place']?['id'] != page['id'] &&
+            (page["page_relationship"] != null &&
+                page["page_relationship"]?["like"] == true));
   }
 
   String handleDescription() {
@@ -158,8 +156,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
     var group = widget.post?['group'];
     var page = widget.post?['page'];
     var mentions = widget.post['mentions'] ?? [];
-    var statusActivity = widget.post['status_activity'] ?? {};
-
+    var statusActivity = widget.post['status_activity'] ?? {}; 
     return widget.post != null
         ? InkWell(
             hoverColor: transparent,
@@ -176,10 +173,12 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
               }
             },
             child: Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
+              padding: const EdgeInsets.only(
+                left: 12,
+              ),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -241,7 +240,11 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                                   buildTextContent(
                                                       "Người đăng: ", true,
                                                       fontSize: 14,
-                                                      colorWord: blackColor),
+                                                      colorWord:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .bodyMedium!
+                                                              .color),
                                                   buildTextContent(
                                                       widget.post['account']
                                                               ['display_name'] +

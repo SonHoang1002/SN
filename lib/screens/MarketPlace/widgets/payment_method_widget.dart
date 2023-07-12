@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:market_place/constant/common.dart';
-import 'package:market_place/theme/colors.dart';
-import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_button.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 Widget buildPaymentMethodWidget({required dynamic shippingMethodId}) {
   return Padding(

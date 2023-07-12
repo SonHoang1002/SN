@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class CartProductApi {
@@ -5,9 +7,8 @@ class CartProductApi {
     return await Api().postRequestBase("/api/v1/shopping_carts", data);
   }
 
-  Future updateQuantityProductApi( dynamic data) async {
-    return await Api().patchRequestBase("/api/v1/shopping_carts/2", data);
-    // return await Api().patchRequestBase("/api/v1/shopping_carts/$id", data);
+  Future updateQuantityProductApi(dynamic id, dynamic data) async {
+    return await Api().patchRequestBase("/api/v1/shopping_carts/$id", data);
   }
 
   Future getCartProductApi() async {

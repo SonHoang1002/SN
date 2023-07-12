@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:comment_tree/comment_tree.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,11 +15,13 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/helper/split_any.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_card.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
+import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/feed_video.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/flick_multiple_manager.dart';
@@ -347,7 +351,8 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
       return color;
     }
 
-    GestureRecognizer? getColorCommentGesture(List conditions, dynamic text) {
+    GestureRecognizer? getColorCommentGesture(List tags, dynamic text) {
+      List listName = tags.map((e) => e['name']).toList();
       return TapGestureRecognizer()
         ..onTap = () async {
           if (text.contains("https://") || text.contains("http://")) {
@@ -357,8 +362,10 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
               return;
             }
           }
-          if (conditions.contains(text)) {
-            // tags friends, group
+          if (listName.contains(text)) { 
+            // ignore: use_build_context_synchronously
+            pushToNextScreen(context,
+                UserPageHome(id: tags[listName.indexOf(text)]['entity_id']));
           }
         };
     }
@@ -414,18 +421,19 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
         TextSpan textSpan = TextSpan(
             text: "",
             children: checkHasLink(conditions, subStr).map((e) {
-              String name = e;
+              dynamic name = e;
               tags.forEach((ele) => {
                     if (ele["entity_id"] == e) {name = ele["name"]}
                   });
               return TextSpan(
-                  text: "$name ",
-                  recognizer: getColorCommentGesture(conditions, name),
-                  style: TextStyle(
-                      color: getColorCommentText(conditions, name),
-                      fontWeight: conditions.contains(name)
-                          ? FontWeight.bold
-                          : FontWeight.normal));
+                text: "$name ",
+                recognizer: getColorCommentGesture(tags, name),
+                style: TextStyle(
+                    color: getColorCommentText(conditions, name),
+                    fontWeight: conditions.contains(name)
+                        ? FontWeight.bold
+                        : FontWeight.normal),
+              );
             }).toList());
         listRender.add(textSpan);
       }
@@ -439,35 +447,6 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
       });
       return listRender;
     }
-    // handleGetComment() {
-    //   if (postRender == null) return const [TextSpan(text: '')];
-    //   List tags = postRender['status_tags'] ?? [];
-    //   String str = postRender['content'] ?? '';
-    //   List<TextSpan> listRender = [];
-    //   List matches = str.split(RegExp(r'\[|\]'));
-    //   List listIdTags = tags.map((e) => e['entity_id']).toList();
-    //   for (final subStr in matches) {
-    //     listRender.add(
-    //       TextSpan(
-    //           text: listIdTags.contains(subStr)
-    //               ? tags.firstWhere((element) => element['entity_id'] == subStr,
-    //                   orElse: () => {})['name']
-    //               : subStr,
-    //           style: listIdTags.contains(subStr)
-    //               ? const TextStyle(
-    //                   color: secondaryColor, fontWeight: FontWeight.w500)
-    //               : null),
-    //     );
-    //   }
-    //   String text = postRender['content'];
-    //   for (var mention in tags) {
-    //     text = text.replaceAll('[${mention['entity_id']}]', mention['name']);
-    //   }
-    //   setState(() {
-    //     textRender = text;
-    //   });
-    //   return listRender;
-    // }
 
     handleReaction(react) async {
       var newPost = postRender;
@@ -600,6 +579,7 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            //user name
                             Text(
                               '${widget.data.userName}',
                               style: TextStyle(
@@ -612,6 +592,7 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                             const SizedBox(
                               height: 4,
                             ),
+                            // content comment
                             RichText(
                                 text: TextSpan(
                               text: '',

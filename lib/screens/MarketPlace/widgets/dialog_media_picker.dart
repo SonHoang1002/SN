@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:market_place/helpers/routes.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
 
 void dialogMediaSource(BuildContext context, Function function) {
   showDialog(

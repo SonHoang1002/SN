@@ -2,15 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:market_place/theme/colors.dart';
-import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_button.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 buildOrderCodeWidget(
     {required BuildContext context,
     required String orderCode,
-    DateTime? orderedTime,DateTime? cancelledTime }) {
+    DateTime? orderedTime,
+    DateTime? cancelledTime}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 15),
     child: Column(

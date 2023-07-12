@@ -1,10 +1,10 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:market_place/helpers/format_currency.dart';
-import 'package:market_place/theme/colors.dart';
-import 'package:market_place/widgets/GeneralWidget/divider_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/helper/common.dart'; 
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 Widget buildOrderItem(dynamic productData) {
   return Column(children: [

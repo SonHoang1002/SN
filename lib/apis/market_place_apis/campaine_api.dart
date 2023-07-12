@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:market_place/apis/api_root.dart';
+import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class CampaineProductApi {
   Future getCampaineProductApi() async {

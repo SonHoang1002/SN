@@ -10,7 +10,7 @@ import 'package:social_network_app_mobile/providers/market_place_providers/cart_
 import 'package:social_network_app_mobile/providers/market_place_providers/discover_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/screen/buyer_orders/my_order_page.dart'; 
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/buyer_orders/my_order_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/create_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/filter_categories_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/interest_product_page.dart';
@@ -20,7 +20,7 @@ import 'package:social_network_app_mobile/screens/MarketPlace/screen/money_modul
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/request_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/search_modules/search_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/see_more_page.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/screen/seller_modules/manage_order_page.dart'; 
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/seller_modules/manage_order_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/banner_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/category_product_item.dart';
@@ -207,7 +207,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     size ??= MediaQuery.of(context).size;
     getCategoriesName();
     return Scaffold(
@@ -258,7 +258,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
             Column(
               children: [
                 Container(
-                  height: 35,
+                  height: 30,
                   color: _isScrolled
                       ? Theme.of(context).scaffoldBackgroundColor
                       : transparent,
@@ -448,6 +448,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
+          // padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 2),
           padding: const EdgeInsets.only(top: 20),
           height: 70,
           color: _isScrolled
@@ -874,14 +875,14 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   }
 
   dynamic _showMenuOptions() {
-    return showCustomBottomSheet(context, 430,
+    return showCustomBottomSheet(context, 450,
         isNoHeader: true,
         widget: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.only(top: 15),
+                // margin: const EdgeInsets.only(top: 15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: Theme.of(context).colorScheme.background,

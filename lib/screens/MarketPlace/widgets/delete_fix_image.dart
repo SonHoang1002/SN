@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:market_place/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 Widget deleteOrFixIcon(IconData iconData, {Function? function}) {
   return InkWell(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:market_place/providers/market_place_providers/products_provider.dart';
-import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
-import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'product_item_widget.dart';
 
 Widget buildSuggestListComponent(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:market_place/theme/colors.dart';
-import 'package:market_place/widgets/GeneralWidget/information_component_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 Widget buildTranferFee(BuildContext context) {
   return GeneralComponent(

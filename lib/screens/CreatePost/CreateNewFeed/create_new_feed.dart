@@ -1356,7 +1356,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                       isActiveBackground = false;
                                     });
                                     showCustomBottomSheet(
-                                        context, 500, "Chọn màu nền",
+                                        context, 500,title: "Chọn màu nền",
                                         isHaveCloseButton: false,
                                         widget: PostBackground(
                                           backgroundSelected:

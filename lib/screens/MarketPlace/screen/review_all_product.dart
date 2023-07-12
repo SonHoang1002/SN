@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:market_place/widgets/back_icon_appbar.dart';
-import 'package:market_place/screens/MarketPlace/widgets/review_item_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:market_place/widgets/messenger_app_bar/app_bar_title.dart';
+import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/review_item_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 class ReviewAllProductPage extends StatefulWidget {
   final List<dynamic> listProduct;

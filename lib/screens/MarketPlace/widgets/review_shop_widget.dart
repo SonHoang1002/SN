@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:market_place/helpers/format_currency.dart';
-import 'package:market_place/screens/MarketPlace/widgets/voucher_widget.dart';
-import 'package:market_place/theme/colors.dart';
-import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:market_place/widgets/image_cache.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/voucher_widget.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 Widget buildReviewShop(BuildContext context, dynamic pageData) {
   return Padding(
@@ -56,7 +56,7 @@ Widget buildReviewShop(BuildContext context, dynamic pageData) {
                         ),
                         buildSpacer(width: 5),
                         buildTextContent(
-                            pageData?['location'] ?? "Hà Nội", false,
+                            pageData?['location']['title'] ?? "Hà Nội", false,
                             fontSize: 14),
                       ],
                     ),

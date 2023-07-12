@@ -1,6 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:market_place/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class ExtendedImageNetWorkCustom extends StatelessWidget {
   final String path;
@@ -11,7 +11,8 @@ class ExtendedImageNetWorkCustom extends StatelessWidget {
       {super.key,
       required this.path,
       required this.height,
-      required this.width,this.fit});
+      required this.width,
+      this.fit});
 
   @override
   Widget build(BuildContext context) {
