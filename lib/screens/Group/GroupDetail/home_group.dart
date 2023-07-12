@@ -169,15 +169,44 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         controller: scrollController,
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(
-              width: size.width,
-              height: size.height * 0.25,
-              child: ExtendedImage.network(
-                widget.groupDetail['banner'] != null
-                    ? widget.groupDetail['banner']['preview_url']
-                    : linkBannerDefault,
-                fit: BoxFit.cover,
-              ),
+            child: Stack(
+              children: [
+                SizedBox(
+                  width: size.width,
+                  height: size.height * 0.25,
+                  child: ExtendedImage.network(
+                    widget.groupDetail['banner'] != null
+                        ? widget.groupDetail['banner']['preview_url']
+                        : linkBannerDefault,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  right: 10,
+                  bottom: 0,
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(0, 30),
+                      elevation: 0,
+                      backgroundColor: Colors.transparent.withOpacity(0.5),
+                      shadowColor: Colors.transparent.withOpacity(0.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                    ),
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                    label: const Text(
+                      'Chỉnh sửa',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           SliverToBoxAdapter(
@@ -265,7 +294,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                   Row(
                     children: [
                       SizedBox(
-                        width: size.width * 0.44,
+                        width: size.width * 0.45,
                         child: ButtonPrimary(
                           label: 'Quản lý',
                           icon: Image.asset(
@@ -282,7 +311,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                         width: 8,
                       ),
                       SizedBox(
-                        width: size.width * 0.44,
+                        width: size.width * 0.45,
                         child: ButtonPrimary(
                           label: 'Mời',
                           icon: Padding(
