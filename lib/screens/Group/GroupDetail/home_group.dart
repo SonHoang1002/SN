@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
@@ -185,7 +186,15 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                   right: 10,
                   bottom: 0,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      showBarModalBottomSheet(
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                        context: context,
+                        builder: (context) => const SizedBox(
+                            height: 200, child: EditBannerGroup()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(0, 30),
                       elevation: 0,
@@ -465,11 +474,41 @@ class EditBannerGroup extends StatefulWidget {
 }
 
 class _EditBannerGroupState extends State<EditBannerGroup> {
-  
+  List updateBannerGroup = [
+    {
+      'key': 'upload',
+      'label': 'Tải ảnh lên',
+      'icon': 'assets/groups/upload.png'
+    }
+  ];
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(builder: (context, setState) {
-      return Container();
-    });
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return ListView.builder(
+          itemCount: updateBannerGroup.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: ListTile(
+                minLeadingWidth: 20,
+                dense: true,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+                visualDensity: const VisualDensity(horizontal: -4, vertical: 0),
+                leading: Image.asset(
+                  updateBannerGroup[index]['icon'],
+                  width: 18,
+                  height: 18,
+                ),
+                title: Text(
+                  updateBannerGroup[index]['label'],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
