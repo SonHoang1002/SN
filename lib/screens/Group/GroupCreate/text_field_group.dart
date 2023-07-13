@@ -35,7 +35,6 @@ class _TextFieldGroupState extends State<TextFieldGroup> {
         controller: widget.controller,
         readOnly: widget.readOnly ?? false,
         enabled: widget.enabled,
-        autofocus: false,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           labelText: widget.label,
