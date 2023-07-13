@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
 import 'package:social_network_app_mobile/providers/market_place_providers/page_list_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/review_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/see_review_market.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/screen/seller_orders/prepare_product_market_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/seller_modules/prepare_product_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/order_product_apis.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
-
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
+import 'package:social_network_app_mobile/widgets/image_cache.dart'; 
 import '../../../../theme/colors.dart';
-import '../../../../widgets/Market/show_market_bottom_sheet.dart';
 
 class ManageOrderMarketPage extends ConsumerStatefulWidget {
   const ManageOrderMarketPage({super.key});
@@ -237,8 +234,7 @@ class _OrderProductMarketPageState
                   width: 35,
                   child: _selectedPage != null
                       ? ImageCacheRender(
-                          path: _selectedPage["avatar_media"]?["url"] ??
-                              linkBannerDefault)
+                          path: _selectedPage["avatar_media"]["url"])
                       : Container(
                           color: greyColor,
                         )),
@@ -255,7 +251,7 @@ class _OrderProductMarketPageState
             padding: const EdgeInsets.all(5),
             isHaveBorder: true,
             function: () {
-              showCustomMarketBottomSheet(context, 500,
+              showCustomBottomSheet(context, 500,
                   title: titleForBottomSheet,
                   widget: SizedBox(
                     height: 400,
@@ -780,7 +776,7 @@ class _OrderProductMarketPageState
             }
           }
           final response = await OrderApis()
-              .verifyBuyerOrderApi(data["id"], {"status": "finish"});
+              .postBuyerVerifyOrderApi(data["id"], {"status": "finish"});
 
           setState(() {
             _isLoading = false;

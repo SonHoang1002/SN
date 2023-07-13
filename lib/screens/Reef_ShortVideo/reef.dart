@@ -70,8 +70,8 @@ class _ReefState extends ConsumerState<Reef> {
   }
 
   handleSettingHeader() {
-    showCustomBottomSheet(context, 170, "",
-        isHaveHeader: false,
+    showCustomBottomSheet(context, 170, title: "",
+        isNoHeader: true,
         bgColor: Theme.of(context).colorScheme.background,
         widget: Column(
           children: [

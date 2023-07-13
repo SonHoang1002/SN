@@ -56,11 +56,9 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    print("Page re-render");
+  Widget build(BuildContext context) { 
     List notifications =
-        ref.watch(notificationControllerProvider).notifications;
-    print("page's length: ${notifications.length}");
+        ref.watch(notificationControllerProvider).notifications; 
 
     return Column(
       children: [

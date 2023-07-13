@@ -1,0 +1,737 @@
+{
+    "id": "200",
+    "account_id": "108786718361607198",
+    "title": "hello 123",
+    "description": "\"product\": {      \"title\": \"test tao san pham tren app\",      \"product_category_id\": \"4683\",      \"description\": \"inventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantityinventory_quantity\",      \"brand_id\": \"6001\",      \"visibility\": \"public\",      \"page_id\": \"108277159419224076\",      \"weight_package\": 650,      \"length_package\": 45,      \"width_package\": 45,      \"height_package\": 454,      \"pre_order\": false,      \"condition\": \"new\",      \"days_to_ship\": 2    },",
+    "brand": {
+      "id": "7604",
+      "name": "𝐋𝐔 𝐆𝐄𝐌𝐒",
+      "icon": null
+    },
+    "visibility": "public",
+    "is_active": true,
+    "rating": 0,
+    "rating_count": 0,
+    "sold": 0,
+    "pre_order": false,
+    "condition": "new_product",
+    "days_to_ship": 2,
+    "followers_count": 0,
+    "weight_package": 200,
+    "length_package": 32,
+    "width_package": 32,
+    "height_package": 32,
+    "created_at": "2023-07-04T23:31:38.284+07:00",
+    "updated_at": "2023-07-04T23:31:38.284+07:00",
+    "product_relationships": {
+      "follow_product": false,
+      "host_product": true
+    },
+    "page_relationships": {
+      "following": false,
+      "like": false,
+      "role": "admin"
+    },
+
+    "product_image_attachments": [
+      {
+        "id": "529",
+        "product_id": "200",
+        "created_at": "2023-07-04T23:31:38.316+07:00",
+        "updated_at": "2023-07-04T23:31:38.316+07:00",
+        "attachment": {
+          "id": "110656769098879217",
+          "type": "image",
+          "url": "https://snapi.emso.asia/system/media_attachments/files/110/656/769/098/879/217/original/a2d3d17e46c9d3f4.jpg",
+          "meta": {
+            "original": {
+              "width": 1247,
+              "height": 1663,
+              "size": "1247x1663",
+              "aspect": 0.7498496692723993,
+              "average_color": "#8ab466"
+            },
+            "small": {
+              "width": 346,
+              "height": 461,
+              "size": "346x461",
+              "aspect": 0.7505422993492408,
+              "average_color": "#8ab466"
+            }
+          },
+          "preview_url": "https://snapi.emso.asia/system/media_attachments/files/110/656/769/098/879/217/small/a2d3d17e46c9d3f4.jpg",
+          "remote_url": null,
+          "preview_remote_url": null,
+          "show_url": null,
+          "status_id": "",
+          "description": null,
+          "position": null,
+          "created_at": "2023-07-04T23:31:38.015+07:00",
+          "frame": null,
+          "status_media": null
+        }
+      }
+    ],
+    "product_video": null,
+    
+    "product_category": {
+      "id": 4683,
+      "text": "Vớ/ Tất",
+      "icon": null,
+      "parent_category_id": 4638,
+      "has_children": false,
+      "level": 2,
+      "parent_tree": [
+        {
+          "id": 4638,
+          "text": "Thời Trang Nam",
+          "parent_category_id": null,
+          "has_children": true,
+          "parent_tree": [],
+          "icon": "https://s3-hn-2.cloud.cmctelecom.vn/sn-web/images/product_categories/icon_categories/Th%E1%BB%9Di%20Trang%20Nam.png"
+        }
+      ],
+      "category_attributes": [
+        {
+          "id": "50",
+          "position": 7,
+          "product_attribute": {
+            "id": "48",
+            "name": "Tên tổ chức chịu trách nhiệm sản xuất",
+            "code": "chung_tendonvisanxuat",
+            "data_type": "options",
+            "count_values": 5,
+            "list_units": null,
+            "product_attribute_values": [
+              {
+                "id": "289",
+                "value": "Đang cập nhật",
+                "is_default": true
+              },
+              {
+                "id": "290",
+                "value": "emso",
+                "is_default": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "49",
+          "position": 6,
+          "product_attribute": {
+            "id": "15",
+            "name": "Chiều dài vớ",
+            "code": "thoitrangnam_votat_chieudaivo",
+            "data_type": "options",
+            "count_values": 1,
+            "list_units": null,
+            "product_attribute_values": [
+              {
+                "id": "280",
+                "value": "Khác",
+                "is_default": true
+              },
+              {
+                "id": "279",
+                "value": "Đầu gối",
+                "is_default": true
+              },
+              {
+                "id": "278",
+                "value": "Vô hình",
+                "is_default": true
+              },
+              {
+                "id": "277",
+                "value": "Bắp chân",
+                "is_default": true
+              },
+              {
+                "id": "276",
+                "value": "Mắt cá",
+                "is_default": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "48",
+          "position": 5,
+          "product_attribute": {
+            "id": "45",
+            "name": "Xuất xứ",
+            "code": "thoitrangnam_votat_xuatxu",
+            "data_type": "options",
+            "count_values": 1,
+            "list_units": null,
+            "product_attribute_values": [
+              {
+                "id": "258",
+                "value": "Ấn Độ",
+                "is_default": true
+              },
+              {
+                "id": "257",
+                "value": "Đài Loan",
+                "is_default": true
+              },
+              {
+                "id": "256",
+                "value": "Việt Nam",
+                "is_default": true
+              },
+              {
+                "id": "255",
+                "value": "Trung Quốc",
+                "is_default": true
+              },
+              {
+                "id": "254",
+                "value": "Thái Lan",
+                "is_default": true
+              },
+              {
+                "id": "253",
+                "value": "Nhật Bản",
+                "is_default": true
+              },
+              {
+                "id": "252",
+                "value": "Mỹ",
+                "is_default": true
+              },
+              {
+                "id": "251",
+                "value": "Mexico",
+                "is_default": true
+              },
+              {
+                "id": "250",
+                "value": "Khác",
+                "is_default": true
+              },
+              {
+                "id": "249",
+                "value": "Indonesia",
+                "is_default": true
+              },
+              {
+                "id": "248",
+                "value": "Hàn Quốc",
+                "is_default": true
+              },
+              {
+                "id": "247",
+                "value": "Colombia",
+                "is_default": true
+              },
+              {
+                "id": "246",
+                "value": "Chile",
+                "is_default": true
+              },
+              {
+                "id": "245",
+                "value": "Băng-la-đét",
+                "is_default": true
+              },
+              {
+                "id": "244",
+                "value": "Brasil",
+                "is_default": true
+              },
+              {
+                "id": "243",
+                "value": "Argentina",
+                "is_default": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "47",
+          "position": 4,
+          "product_attribute": {
+            "id": "11",
+            "name": "Chất liệu",
+            "code": "thoitrangnam_votat_chatlieu",
+            "data_type": "options",
+            "count_values": 5,
+            "list_units": null,
+            "product_attribute_values": [
+              {
+                "id": "259",
+                "value": "Chinos",
+                "is_default": true
+              },
+              {
+                "id": "275",
+                "value": "Len",
+                "is_default": true
+              },
+              {
+                "id": "274",
+                "value": "Sợi dệt",
+                "is_default": true
+              },
+              {
+                "id": "273",
+                "value": "Sợi tổng hợp",
+                "is_default": true
+              },
+              {
+                "id": "272",
+                "value": "Khác",
+                "is_default": true
+              },
+              {
+                "id": "271",
+                "value": "Nylon",
+                "is_default": true
+              },
+              {
+                "id": "270",
+                "value": "Lanh",
+                "is_default": true
+              },
+              {
+                "id": "269",
+                "value": "Da",
+                "is_default": true
+              },
+              {
+                "id": "268",
+                "value": "Đan",
+                "is_default": true
+              },
+              {
+                "id": "267",
+                "value": "Kaki",
+                "is_default": true
+              },
+              {
+                "id": "266",
+                "value": "Lông",
+                "is_default": true
+              },
+              {
+                "id": "265",
+                "value": "Lông cừu",
+                "is_default": true
+              },
+              {
+                "id": "264",
+                "value": "Nỉ mỏng",
+                "is_default": true
+              },
+              {
+                "id": "263",
+                "value": "Nỉ",
+                "is_default": true
+              },
+              {
+                "id": "262",
+                "value": "Lông vũ",
+                "is_default": true
+              },
+              {
+                "id": "261",
+                "value": "Denim",
+                "is_default": true
+              },
+              {
+                "id": "260",
+                "value": "Cotton",
+                "is_default": true
+              },
+              {
+                "id": "291",
+                "value": "Nhung",
+                "is_default": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "46",
+          "position": 3,
+          "product_attribute": {
+            "id": "47",
+            "name": "Loại tất/vớ",
+            "code": "thoitrangnam_votat_loaitatvo",
+            "data_type": "options",
+            "count_values": 1,
+            "list_units": null,
+            "product_attribute_values": [
+              {
+                "id": "287",
+                "value": "Vớ ngón chân",
+                "is_default": true
+              },
+              {
+                "id": "286",
+                "value": "Vớ thể thao",
+                "is_default": true
+              },
+              {
+                "id": "285",
+                "value": "Khác",
+                "is_default": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "45",
+          "position": 2,
+          "product_attribute": {
+            "id": "46",
+            "name": "Kiểu đóng gói",
+            "code": "thoitrangnam_votat_kieudonggoi",
+            "data_type": "options",
+            "count_values": 1,
+            "list_units": null,
+            "product_attribute_values": [
+              {
+                "id": "284",
+                "value": "Đơn",
+                "is_default": true
+              },
+              {
+                "id": "283",
+                "value": "Hộp",
+                "is_default": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "44",
+          "position": 1,
+          "product_attribute": {
+            "id": "44",
+            "name": "Địa chỉ tổ chức chịu trách nhiệm sản xuất",
+            "code": "chung_diachidonvisanxuat",
+            "data_type": "options",
+            "count_values": 5,
+            "list_units": null,
+            "product_attribute_values": [
+              {
+                "id": "288",
+                "value": "Đang cập nhật",
+                "is_default": true
+              },
+              {
+                "id": "296",
+                "value": "alo ?",
+                "is_default": false
+              },
+              {
+                "id": "295",
+                "value": "yes sir",
+                "is_default": false
+              },
+              {
+                "id": "297",
+                "value": "abvc",
+                "is_default": false
+              },
+              {
+                "id": "293",
+                "value": "EasyEdu",
+                "is_default": false
+              },
+              {
+                "id": "292",
+                "value": "Emso",
+                "is_default": false
+              },
+              {
+                "id": "294",
+                "value": "vip",
+                "is_default": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "page": {
+      "id": "108277159419224076",
+      "title": "Viettel Store",
+      "username": "viettel_store_cs1a",
+      "avatar_media": {
+        "id": "110546032692135451",
+        "type": "image",
+        "url": "https://snapi.emso.asia/system/media_attachments/files/110/546/032/692/135/451/original/16d3881bbe6f1428.jpg",
+        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/110/546/032/692/135/451/small/16d3881bbe6f1428.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 991,
+            "height": 2092,
+            "size": "991x2092",
+            "aspect": 0.4737093690248566,
+            "average_color": "#d1cecd"
+          },
+          "small": {
+            "width": 275,
+            "height": 581,
+            "size": "275x581",
+            "aspect": 0.47332185886402756,
+            "average_color": "#d1cecd"
+          }
+        },
+        "description": null,
+        "position": null,
+        "blurhash": null,
+        "status_id": "110546032697520581",
+        "show_url": "https://snapi.emso.asia/system/media_attachments/files/110/546/032/692/135/451/original/16d3881bbe6f1428.jpg",
+        "created_at": "2023-06-15T10:09:54.530+07:00",
+        "frame": {
+          "id": 3,
+          "name": "Đảng là cuộc sống",
+          "url": "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/22.png"
+        },
+        "status_media": {
+          "id": "110546032697520581",
+          "favourites_count": 0,
+          "reblogs_count": 0,
+          "replies_total": 0,
+          "post_type": "page_avatar",
+          "reactions": [
+            {
+              "type": "like",
+              "likes_count": 0
+            },
+            {
+              "type": "haha",
+              "hahas_count": 0
+            },
+            {
+              "type": "angry",
+              "angrys_count": 0
+            },
+            {
+              "type": "love",
+              "loves_count": 0
+            },
+            {
+              "type": "sad",
+              "sads_count": 0
+            },
+            {
+              "type": "wow",
+              "wows_count": 0
+            },
+            {
+              "type": "yay",
+              "yays_count": 0
+            }
+          ]
+        }
+      },
+      "location": null,
+      "follow_count": 0,
+      "rating_product_count": 0,
+      "page_relationship": {
+        "following": false,
+        "like": false,
+        "block_page": false,
+        "role": "admin"
+      },
+      "page_categories": [
+        {
+          "id": "541",
+          "text": "Bán buôn"
+        }
+      ],
+      "banner": {
+        "id": "110546041562301361",
+        "type": "image",
+        "url": "https://snapi.emso.asia/system/media_attachments/files/110/546/041/562/301/361/original/9b8b4faf114fc87d.jpg",
+        "meta": {
+          "original": {
+            "width": 991,
+            "height": 2092,
+            "size": "991x2092",
+            "aspect": 0.4737093690248566,
+            "average_color": "#827874"
+          },
+          "small": {
+            "width": 275,
+            "height": 581,
+            "size": "275x581",
+            "aspect": 0.47332185886402756,
+            "average_color": "#827874"
+          }
+        },
+        "preview_url": "https://snapi.emso.asia/system/media_attachments/files/110/546/041/562/301/361/small/9b8b4faf114fc87d.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "show_url": "https://snapi.emso.asia/system/media_attachments/files/110/546/041/562/301/361/original/9b8b4faf114fc87d.jpg",
+        "status_id": "110546041567368281",
+        "description": null,
+        "position": null,
+        "created_at": "2023-06-15T10:12:09.890+07:00",
+        "frame": null,
+        "status_media": {
+          "id": "110546041567368281",
+          "favourites_count": 1,
+          "reblogs_count": 0,
+          "replies_total": 0,
+          "post_type": "page_banner",
+          "reactions": [
+            {
+              "type": "like",
+              "likes_count": 1
+            },
+            {
+              "type": "haha",
+              "hahas_count": 0
+            },
+            {
+              "type": "angry",
+              "angrys_count": 0
+            },
+            {
+              "type": "love",
+              "loves_count": 0
+            },
+            {
+              "type": "sad",
+              "sads_count": 0
+            },
+            {
+              "type": "wow",
+              "wows_count": 0
+            },
+            {
+              "type": "yay",
+              "yays_count": 0
+            }
+          ]
+        }
+      }
+    },
+    "product_variants": [
+      {
+        "id": "652",
+        "product_id": 200,
+        "title": "hello 123",
+        "price": 1200000,
+        "compare_at_price": null,
+        "sku": "1200",
+        "position": 1,
+        "option1": null,
+        "option2": null,
+        "weight": 0.25,
+        "weight_unit": "Kg",
+        "inventory_quantity": 100,
+        "old_inventory_quantity": 100,
+        "requires_shipping": true,
+        "created_at": "2023-07-04T23:31:38.313+07:00",
+        "updated_at": "2023-07-04T23:31:38.313+07:00",
+        "image": {
+          "id": "110656769098879217",
+          "type": "image",
+          "url": "https://snapi.emso.asia/system/media_attachments/files/110/656/769/098/879/217/original/a2d3d17e46c9d3f4.jpg",
+          "meta": {
+            "original": {
+              "width": 1247,
+              "height": 1663,
+              "size": "1247x1663",
+              "aspect": 0.7498496692723993,
+              "average_color": "#8ab466"
+            },
+            "small": {
+              "width": 346,
+              "height": 461,
+              "size": "346x461",
+              "aspect": 0.7505422993492408,
+              "average_color": "#8ab466"
+            }
+          },
+          "preview_url": "https://snapi.emso.asia/system/media_attachments/files/110/656/769/098/879/217/small/a2d3d17e46c9d3f4.jpg",
+          "remote_url": null,
+          "preview_remote_url": null,
+          "show_url": null,
+          "status_id": "",
+          "description": null,
+          "position": null,
+          "created_at": "2023-07-04T23:31:38.015+07:00",
+          "frame": null,
+          "status_media": null
+        }
+      }
+    ],
+    "product_options": [],
+    "product_attribute_informations": [
+      {
+        "id": "70",
+        "product_attribute_id": "48",
+        "name": "Tên tổ chức chịu trách nhiệm sản xuất",
+        "value": [
+          "Đang cập nhật"
+        ],
+        "unit": ""
+      },
+      {
+        "id": "69",
+        "product_attribute_id": "15",
+        "name": "Chiều dài vớ",
+        "value": [
+          "Mắt cá"
+        ],
+        "unit": ""
+      },
+      {
+        "id": "68",
+        "product_attribute_id": "45",
+        "name": "Xuất xứ",
+        "value": [
+          "Việt Nam"
+        ],
+        "unit": ""
+      },
+      {
+        "id": "67",
+        "product_attribute_id": "11",
+        "name": "Chất liệu",
+        "value": [
+          "Len"
+        ],
+        "unit": ""
+      },
+      {
+        "id": "66",
+        "product_attribute_id": "47",
+        "name": "Loại tất/vớ",
+        "value": [
+          "Vớ thể thao"
+        ],
+        "unit": ""
+      },
+      {
+        "id": "65",
+        "product_attribute_id": "46",
+        "name": "Kiểu đóng gói",
+        "value": [
+          "Đơn"
+        ],
+        "unit": ""
+      },
+      {
+        "id": "64",
+        "product_attribute_id": "44",
+        "name": "Địa chỉ tổ chức chịu trách nhiệm sản xuất",
+        "value": [
+          "Đang cập nhật"
+        ],
+        "unit": ""
+      }
+    ]
+  }

@@ -101,8 +101,7 @@ class _AccountManagerment extends State<AccountManagerment> {
                                     dataLogin.length,
                                     (index) => GestureDetector(
                                           onTap: () {
-                                           pushToNextScreen(context, SettingLoginPage(index));
-                                           print("index: "+index.toString());
+                                           pushToNextScreen(context, SettingLoginPage(index)); 
                                           },
                                            child: Column(children: [
                                             Container(

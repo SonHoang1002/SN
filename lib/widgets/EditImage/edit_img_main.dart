@@ -52,18 +52,18 @@ class _EditImageMainState extends State<EditImageMain> {
       "icon": FontAwesomeIcons.xmark,
       'color': white
     },
-    {
-      "key": "music",
-      "title": "",
-      "icon": 'assets/icons/edit_music_icon.png',
-      'color': white
-    },
-    {
-      "key": "tags",
-      "title": "",
-      "icon": 'assets/icons/edit_friend_tags.png',
-      'color': white
-    },
+    // {
+    //   "key": "music",
+    //   "title": "",
+    //   "icon": 'assets/icons/edit_music_icon.png',
+    //   'color': white
+    // },
+    // {
+    //   "key": "tags",
+    //   "title": "",
+    //   "icon": 'assets/icons/edit_friend_tags.png',
+    //   'color': white
+    // },
     {
       "key": "crop",
       "title": "",
@@ -173,17 +173,13 @@ class _EditImageMainState extends State<EditImageMain> {
   bool? _brightnessSelection;
   bool? _saveSelection;
   dynamic _imageData;
-
   List<dynamic> _overlayWidget = [];
   final GlobalKey _imageKey = GlobalKey();
   final GlobalKey _globalKey = GlobalKey();
-
   List<ValueNotifier<Matrix4>> notifiers = [];
-
   bool _isShowDeleteArea = false;
   bool _isCanDeleteObject = false;
   Rect? rect;
-
   // crop property
   File? cropImage;
   Uint8List? _cropImageUnit8List;
@@ -417,14 +413,8 @@ class _EditImageMainState extends State<EditImageMain> {
     }
   }
 
-  Future<void> updateSizeOption(double size) async {
-    setState(() {
-      options.size = size;
-    });
-  }
-
   void onPointerDown(PointerDownEvent details) {
-    options = StrokeOptions(
+    options ??= StrokeOptions(
       simulatePressure: details.kind != PointerDeviceKind.stylus,
     );
 
@@ -655,7 +645,7 @@ class _EditImageMainState extends State<EditImageMain> {
     if (rect == null) {
       Offset deletePoint = Offset(size.width / 2, size.height * 0.8);
       rect = Rect.fromCircle(center: deletePoint, radius: 50);
-    }
+    } 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: blackColor,
@@ -724,7 +714,9 @@ class _EditImageMainState extends State<EditImageMain> {
                               _dataProperties[index] != null
                           ? Listener(
                               onPointerMove: (event) {
-                                if (rect!.contains(event.position)) {
+                                final newRect = Rect.fromLTRB(0, rect!.top - 30,
+                                    size.width, rect!.bottom + 30);
+                                if (newRect.contains(event.position)) {
                                   setState(() {
                                     _isCanDeleteObject = true;
                                   });
@@ -858,14 +850,20 @@ class _EditImageMainState extends State<EditImageMain> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     margin: EdgeInsets.only(bottom: size.height * 0.1),
-                    height: _isCanDeleteObject ? 60 : 40,
-                    width: _isCanDeleteObject ? 60 : 40,
+                    height: _isCanDeleteObject ? 70 : 50,
+                    width: _isCanDeleteObject ? 70 : 50,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         color: red.withOpacity(_isCanDeleteObject ? 0.7 : 0.5),
                         borderRadius: BorderRadius.circular(
-                            _isCanDeleteObject ? 30 : 20)),
-                    child: const Icon(FontAwesomeIcons.xmark),
+                            _isCanDeleteObject ? 35 : 25)),
+                    child: Image.asset(
+                      _isCanDeleteObject
+                          ? "assets/icons/edit_garbage_open.png"
+                          : "assets/icons/edit_garbage_close.png",
+                      height: 20,
+                      color: white,
+                    ),
                   ),
                 )
               : const SizedBox(),
@@ -883,7 +881,7 @@ class _EditImageMainState extends State<EditImageMain> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: iconList
-                              .sublist(0, 7)
+                              .sublist(0, iconList.length - 4)
                               .map((e) => GestureDetector(
                                     onTap: () {
                                       chooseMenu(e['key'],
@@ -892,13 +890,13 @@ class _EditImageMainState extends State<EditImageMain> {
                                     child: e['icon'] is! String
                                         ? Icon(
                                             e['icon'],
-                                            size: 20,
+                                            size: 23,
                                             color: e['color'],
                                           )
                                         : Image.asset(
                                             e['icon'],
-                                            height: 20,
-                                            width: 20,
+                                            height: 23,
+                                            width: 23,
                                             color: e['color'],
                                           ),
                                   ))
@@ -973,8 +971,9 @@ class _EditImageMainState extends State<EditImageMain> {
                               : const SizedBox(),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:
-                                  iconList.sublist(7, iconList.length).map((e) {
+                              children: iconList
+                                  .sublist(iconList.length - 4, iconList.length)
+                                  .map((e) {
                                 if (e['key'] == "complete") {
                                   return GestureDetector(
                                     onTap: () {
@@ -1004,8 +1003,8 @@ class _EditImageMainState extends State<EditImageMain> {
                                       children: [
                                         Image.asset(
                                           e['icon'],
-                                          height: 20,
-                                          width: 20,
+                                          height: 23,
+                                          width: 23,
                                           color: e['color'],
                                         ),
                                         buildTextContent(e['title'], false,
@@ -1054,41 +1053,44 @@ class _EditImageMainState extends State<EditImageMain> {
   }
 
   Widget _buildTextFormField(dynamic data) {
-    return ValueListenableBuilder<double>(
-        valueListenable: data['fontSize'],
-        builder: (context, value, child) {
-          return ValueListenableBuilder<Color>(
-              valueListenable: data['color'],
-              builder: (context, value, child) {
-                return Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  child: TextFormField(
-                    onChanged: (value) {},
-                    maxLines: null,
-                    enableInteractiveSelection:
-                        false, // dissable magnifing glass
-                    // selectionControls: CustomTextSelectionControls(),
-                    focusNode: data["focus_node"],
-                    controller: data['controller'],
-                    autofocus: true,
-                    style: TextStyle(
-                        fontSize: data['fontSize'].value,
-                        color: data['color'].value),
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: 15, bottom: 10, top: 10, right: 15),
-                      border: InputBorder.none,
-                      hintText: "Bắt đầu nhập",
-                      hintStyle: TextStyle(
-                          color: white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 30),
+    return Container(
+      color: greyColor.withOpacity(0.2),
+      child: ValueListenableBuilder<double>(
+          valueListenable: data['fontSize'],
+          builder: (context, value, child) {
+            return ValueListenableBuilder<Color>(
+                valueListenable: data['color'],
+                builder: (context, value, child) {
+                  return Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    child: TextFormField(
+                      onChanged: (value) {},
+                      maxLines: null,
+                      enableInteractiveSelection:
+                          false, // dissable magnifing glass
+                      // selectionControls: CustomTextSelectionControls(),
+                      focusNode: data["focus_node"],
+                      controller: data['controller'],
+                      autofocus: true,
+                      style: TextStyle(
+                          fontSize: data['fontSize'].value,
+                          color: data['color'].value),
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: 15, bottom: 10, top: 10, right: 15),
+                        border: InputBorder.none,
+                        hintText: "Bắt đầu nhập",
+                        hintStyle: TextStyle(
+                            color: white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 30),
+                      ),
                     ),
-                  ),
-                );
-              });
-        });
+                  );
+                });
+          }),
+    );
   }
 
 // music

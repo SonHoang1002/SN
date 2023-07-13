@@ -427,12 +427,15 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                   automaticallyImplyLeading: false,
                   title: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const BackIconAppbar(),
-                      SizedBox(
-                        child: PostHeader(
-                          post: postData,
-                          type: postDetail,
+                      Flexible(
+                        child: SizedBox(
+                          child: PostHeader(
+                            post: postData,
+                            type: postDetail,
+                          ),
                         ),
                       ),
                     ],
@@ -612,7 +615,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   _callApiFilterComment(dynamic key) {}
 
   buildFilterCommentSelectionBottomSheet() {
-    showCustomBottomSheet(context, 365, "Sắp xếp theo",
+    showCustomBottomSheet(context, 365,
+        title: "Sắp xếp theo",
         isHaveCloseButton: false,
         bgColor: Colors.grey[300], widget: StatefulBuilder(
       builder: (ctx, setStatefull) {

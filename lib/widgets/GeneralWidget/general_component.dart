@@ -13,7 +13,9 @@ class GeneralComponent extends StatelessWidget {
   final Color? borderColor;
 
   final Function? function;
-  final bool? isHaveBorder;
+  final bool? isHaveBorder; 
+  final EdgeInsetsGeometry? margin;
+  final CrossAxisAlignment? preffixCrossAxisAlignment;
 
   const GeneralComponent(this.contentWidget,
       {super.key,
@@ -25,7 +27,10 @@ class GeneralComponent extends StatelessWidget {
       this.suffixFlexValue,
       this.preffixFlexValue,
       this.function,
-      this.isHaveBorder,this.borderColor});
+      this.isHaveBorder,
+      this.borderColor,
+      this.margin,
+      this.preffixCrossAxisAlignment});
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +43,7 @@ class GeneralComponent extends StatelessWidget {
           Wrap(
             children: [
               Container(
-                  // height: 77,
-                  // color: Colors.red,
-                  // margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  margin: margin ?? EdgeInsets.zero,
                   padding: padding ?? const EdgeInsets.fromLTRB(10, 10, 10, 10),
                   decoration: BoxDecoration(
                       color: changeBackground ?? Theme.of(context).cardColor,
@@ -52,6 +55,8 @@ class GeneralComponent extends StatelessWidget {
                           Radius.circular(borderRadiusValue ?? 7))),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment:
+                        preffixCrossAxisAlignment ?? CrossAxisAlignment.center,
                     children: [
                       prefixWidget != null &&
                               prefixWidget != Container() &&

@@ -118,7 +118,7 @@ class PhoneAndEmailPage extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: (() {
                                       showCustomBottomSheet(
-                                          context, 300, " lam cai nay di");
+                                          context, 300,title: " lam cai nay di");
                                     }),
                                     child: GeneralComponent(
                                       [
