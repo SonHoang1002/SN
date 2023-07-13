@@ -23,7 +23,6 @@ import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef.dart';
 import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/services/isar_service.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
