@@ -46,7 +46,8 @@ class PostHeader extends ConsumerStatefulWidget {
 
 class _PostHeaderState extends ConsumerState<PostHeader> {
   String description = '';
-  ValueNotifier<bool> _isFollowing = ValueNotifier(false);
+  final ValueNotifier<bool> _isFollowing = ValueNotifier(false);
+
   @override
   void initState() {
     super.initState();
@@ -61,17 +62,16 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
   }
 
   checkFollowing() {
-    var account = widget.post?['account'] ?? {};
     var group = widget.post?['group'];
     var page = widget.post?['page'];
 
     return (group != null &&
-                group["group_relationship"] != null &&
-                group["group_relationship"]?["like"] == true) ||
-            (page != null &&
-                widget.post['place']?['id'] != page['id'] &&
-                (page["page_relationship"] != null &&
-                    page["page_relationship"]?["like"] == true));
+            group["group_relationship"] != null &&
+            group["group_relationship"]?["like"] == true) ||
+        (page != null &&
+            widget.post['place']?['id'] != page['id'] &&
+            (page["page_relationship"] != null &&
+                page["page_relationship"]?["like"] == true));
   }
 
   String handleDescription() {
@@ -214,75 +214,8 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                     _isFollowing.value = true;
                                   }),
                             ),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    group != null
-                                        ? Text(account['display_name'],
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ))
-                                        : const SizedBox(),
-                                    buildSpacer(height: 3),
-                                    Row(
-                                      children: [
-                                        widget.post['page_owner'] != null &&
-                                                widget.post['page'] != null &&
-                                                widget.post?['page_owner']?[
-                                                            'page_relationship']
-                                                        ?['role'] ==
-                                                    "admin" &&
-                                                widget.type != postDetail
-                                            ? Row(
-                                                children: [
-                                                  buildTextContent(
-                                                      "Người đăng: ", true,
-                                                      fontSize: 14,
-                                                      colorWord: blackColor),
-                                                  buildTextContent(
-                                                      widget.post['account']
-                                                              ['display_name'] +
-                                                          " · ",
-                                                      true,
-                                                      colorWord: greyColor,
-                                                      fontSize: 13)
-                                                ],
-                                              )
-                                            : const SizedBox(),
-                                        widget.post['processing'] !=
-                                                "isProcessing"
-                                            ? Text(
-                                                getRefractorTime(
-                                                    widget.post?['created_at']),
-                                                style: const TextStyle(
-                                                    color: greyColor,
-                                                    fontSize: 12),
-                                              )
-                                            : const SizedBox(),
-                                        Text(
-                                            widget.post['processing'] !=
-                                                    "isProcessing"
-                                                ? " · "
-                                                : "",
-                                            style: const TextStyle(
-                                                color: greyColor)),
-                                        Icon(
-                                            typeVisibility.firstWhere(
-                                                (element) =>
-                                                    element['key'] ==
-                                                    widget.post['visibility'],
-                                                orElse: () => {})['icon'],
-                                            size: 13,
-                                            color: greyColor)
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
+                            BlockSubNamePost(
+                                group: group, account: account, widget: widget)
                           ],
                         )
                       ],
@@ -296,58 +229,10 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                     "admin")
                         ? (![postReblog, postMultipleMedia]
                                 .contains(widget.type))
-                            ? Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      showBarModalBottomSheet(
-                                          context: context,
-                                          backgroundColor:
-                                              Theme.of(context).canvasColor,
-                                          barrierColor: Colors.transparent,
-                                          builder: (context) =>
-                                              PostHeaderAction(
-                                                post: widget.post,
-                                                type: widget.type,
-                                                reloadFunction: () {
-                                                  widget.reloadFunction != null
-                                                      ? widget.reloadFunction!()
-                                                      : null;
-                                                },
-                                              ));
-                                    },
-                                    child: const Icon(
-                                      FontAwesomeIcons.ellipsis,
-                                      size: 20,
-                                      color: greyColor,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: widget.type != postDetail ? 10 : 0,
-                                  ),
-                                  [postDetail, postPageUser]
-                                              .contains(widget.type) ||
-                                          widget.post['account']['id'] ==
-                                              meData['id']
-                                      ? const SizedBox()
-                                      : InkWell(
-                                          onTap: () async {
-                                            final data = {"hidden": true};
-                                            await PostApi().updatePost(
-                                                widget.post['id'], data);
-                                            ref
-                                                .read(postControllerProvider
-                                                    .notifier)
-                                                .actionHiddenDeletePost(
-                                                    widget.type, widget.post);
-                                          },
-                                          child: const Icon(
-                                            FontAwesomeIcons.xmark,
-                                            size: 20,
-                                            color: greyColor,
-                                          ),
-                                        )
-                                ],
+                            ? BlockPostHeaderAction(
+                                widget: widget,
+                                meData: meData,
+                                ref: ref,
                               )
                             : const SizedBox()
                         : const SizedBox()
@@ -359,7 +244,143 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
 
   @override
   void dispose() {
+    _isFollowing.dispose();
     super.dispose();
+  }
+}
+
+class BlockPostHeaderAction extends StatelessWidget {
+  const BlockPostHeaderAction({
+    super.key,
+    required this.widget,
+    required this.meData,
+    required this.ref,
+  });
+
+  final PostHeader widget;
+
+  final dynamic meData;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () {
+            showBarModalBottomSheet(
+                context: context,
+                backgroundColor: Theme.of(context).canvasColor,
+                barrierColor: Colors.transparent,
+                builder: (context) => PostHeaderAction(
+                      post: widget.post,
+                      type: widget.type,
+                      reloadFunction: () {
+                        widget.reloadFunction != null
+                            ? widget.reloadFunction!()
+                            : null;
+                      },
+                    ));
+          },
+          child: const Icon(
+            FontAwesomeIcons.ellipsis,
+            size: 20,
+            color: greyColor,
+          ),
+        ),
+        SizedBox(
+          width: widget.type != postDetail ? 10 : 0,
+        ),
+        [postDetail, postPageUser].contains(widget.type) ||
+                widget.post['account']['id'] == meData['id']
+            ? const SizedBox()
+            : InkWell(
+                onTap: () async {
+                  final data = {"hidden": true};
+                  await PostApi().updatePost(widget.post['id'], data);
+                  ref
+                      .read(postControllerProvider.notifier)
+                      .actionHiddenDeletePost(widget.type, widget.post);
+                },
+                child: const Icon(
+                  FontAwesomeIcons.xmark,
+                  size: 20,
+                  color: greyColor,
+                ),
+              )
+      ],
+    );
+  }
+}
+
+class BlockSubNamePost extends StatelessWidget {
+  const BlockSubNamePost({
+    super.key,
+    required this.group,
+    required this.account,
+    required this.widget,
+  });
+
+  final dynamic group;
+  final dynamic account;
+  final PostHeader widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            group != null
+                ? Text(account['display_name'],
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ))
+                : const SizedBox(),
+            buildSpacer(height: 3),
+            Row(
+              children: [
+                widget.post['page_owner'] != null &&
+                        widget.post['page'] != null &&
+                        widget.post?['page_owner']?['page_relationship']
+                                ?['role'] ==
+                            "admin" &&
+                        widget.type != postDetail
+                    ? Row(
+                        children: [
+                          buildTextContent("Người đăng: ", true,
+                              fontSize: 14, colorWord: blackColor),
+                          buildTextContent(
+                              widget.post['account']['display_name'] + " · ",
+                              true,
+                              colorWord: greyColor,
+                              fontSize: 13)
+                        ],
+                      )
+                    : const SizedBox(),
+                widget.post['processing'] != "isProcessing"
+                    ? Text(
+                        getRefractorTime(widget.post?['created_at']),
+                        style: const TextStyle(color: greyColor, fontSize: 12),
+                      )
+                    : const SizedBox(),
+                Text(widget.post['processing'] != "isProcessing" ? " · " : "",
+                    style: const TextStyle(color: greyColor)),
+                Icon(
+                    typeVisibility.firstWhere(
+                        (element) =>
+                            element['key'] == widget.post['visibility'],
+                        orElse: () => {})['icon'],
+                    size: 13,
+                    color: greyColor)
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 

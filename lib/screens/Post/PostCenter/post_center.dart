@@ -19,7 +19,7 @@ import 'post_media.dart';
 import 'post_poll_center.dart';
 import 'post_share.dart';
 
-class PostCenter extends StatefulWidget {
+class PostCenter extends StatelessWidget {
   final dynamic post;
   final String? type;
   final dynamic data;
@@ -43,14 +43,8 @@ class PostCenter extends StatefulWidget {
       : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _PostCenterState createState() => _PostCenterState();
-}
-
-class _PostCenterState extends State<PostCenter> {
-  @override
   Widget build(BuildContext context) {
-    String postType = widget.post['post_type'] ?? '';
+    String postType = post['post_type'] ?? '';
     return Container(
         margin: const EdgeInsets.only(
           top: 10,
@@ -58,107 +52,85 @@ class _PostCenterState extends State<PostCenter> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.type == 'rating'
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-                    child: Row(
-                      children: List.generate(
-                        5,
-                        (index) => index < int.parse(widget.data['rating'])
-                            ? const Icon(Icons.star,
-                                size: 20, color: Colors.yellow)
-                            : const Icon(
-                                Icons.star_border,
-                                size: 20,
-                                color: greyColor,
-                              ),
-                      ),
-                    ),
-                  )
-                : const SizedBox(),
+            type == 'rating' ? BlockRating(data: data) : const SizedBox(),
             PostContent(
-              post: widget.post,
+              post: post,
             ),
-            (widget.post['card'] != null ||
-                    widget.post['poll'] != null ||
-                    widget.post['life_event'] != null ||
+            (post['card'] != null ||
+                    post['poll'] != null ||
+                    post['life_event'] != null ||
                     postType == postAvatarAccount ||
                     postType == postBannerAccount)
                 ? const SizedBox()
                 : PostMedia(
-                    post: widget.post,
-                    type: widget.type,
-                    preType: widget.preType ?? widget.type,
+                    post: post,
+                    type: type,
+                    preType: preType ?? type,
                     backFunction: () {
-                      widget.backFunction != null
-                          ? widget.backFunction!()
-                          : null;
+                      backFunction != null ? backFunction!() : null;
                     },
-                    isFocus: widget.isFocus,
-                    updateDataFunction: widget.updateDataFunction,
+                    isFocus: isFocus,
+                    updateDataFunction: updateDataFunction,
                     reloadFunction: () {
-                      widget.reloadFunction != null
-                          ? widget.reloadFunction!()
-                          : null;
+                      reloadFunction != null ? reloadFunction!() : null;
                     },
-                    showCmtBoxFunction: widget.showCmtBoxFunction),
+                    showCmtBoxFunction: showCmtBoxFunction),
             //
-            widget.post['card'] != null &&
-                    (widget.post['media_attachments'].isEmpty)
-                ? PostCard(post: widget.post, type: widget.type)
+            post['card'] != null && (post['media_attachments'].isEmpty)
+                ? PostCard(post: post, type: type)
                 : const SizedBox(),
-            widget.post['poll'] != null
-                ? PostPollCenter(post: widget.post, type: widget.type)
+            post['poll'] != null
+                ? PostPollCenter(post: post, type: type)
                 : const SizedBox(),
-            widget.post['life_event'] != null
-                ? PostLifeEvent(post: widget.post)
+            post['life_event'] != null
+                ? PostLifeEvent(post: post)
                 : const SizedBox(),
             //have not group detail
-            widget.post['shared_group'] != null
-                ? PostShareGroup(post: widget.post, type: widget.type)
+            post['shared_group'] != null
+                ? PostShareGroup(post: post, type: type)
                 : const SizedBox(),
-            widget.post['shared_page'] != null
-                ? PostSharePage(post: widget.post, type: widget.type)
+            post['shared_page'] != null
+                ? PostSharePage(post: post, type: type)
                 : const SizedBox(),
-            widget.post['reblog'] != null
-                ? PostShare(post: widget.post, type: widget.type)
+            post['reblog'] != null
+                ? PostShare(post: post, type: type)
                 : const SizedBox(),
-            widget.post['place'] != null &&
-                    (widget.post['card'] == null &&
-                        widget.post['media_attachments'].isEmpty &&
-                        widget.post['poll'] == null &&
-                        widget.post['life_event'] == null &&
-                        widget.post['shared_group'] == null &&
-                        widget.post['shared_page'] == null &&
-                        widget.post['reblog'] == null &&
-                        widget.post['shared_course'] == null &&
-                        widget.post['shared_project'] == null &&
-                        widget.post['shared_recruit'] == null &&
-                        widget.post['shared_product'] == null &&
-                        widget.post['shared_event'] == null &&
+            post['place'] != null &&
+                    (post['card'] == null &&
+                        post['media_attachments'].isEmpty &&
+                        post['poll'] == null &&
+                        post['life_event'] == null &&
+                        post['shared_group'] == null &&
+                        post['shared_page'] == null &&
+                        post['reblog'] == null &&
+                        post['shared_course'] == null &&
+                        post['shared_project'] == null &&
+                        post['shared_recruit'] == null &&
+                        post['shared_product'] == null &&
+                        post['shared_event'] == null &&
                         ![postAvatarAccount, postBannerAccount]
                             .contains(postType) &&
                         ![postTarget, postVisibleQuestion].contains(postType))
-                ? MapWidgetItem(checkin: widget.post['place'])
+                ? MapWidgetItem(checkin: post['place'])
                 : const SizedBox(),
-            widget.post['shared_course'] != null
-                ? PostCourse(post: widget.post, type: widget.type)
+            post['shared_course'] != null
+                ? PostCourse(post: post, type: type)
                 : const SizedBox(),
-            widget.post['shared_project'] != null
+            post['shared_project'] != null
                 ? PostProject(
-                    post: widget.post,
-                    type: widget.type,
+                    post: post,
+                    type: type,
                   )
                 : const SizedBox(),
-            widget.post['shared_recruit'] != null
-                ? PostRecruit(post: widget.post, type: widget.type)
+            post['shared_recruit'] != null
+                ? PostRecruit(post: post, type: type)
                 : const SizedBox(),
             // add navi to product when have market place
-            widget.post['shared_product'] != null
-                ? PostProduct(post: widget.post, type: widget.type)
+            post['shared_product'] != null
+                ? PostProduct(post: post, type: type)
                 : const SizedBox(),
-            widget.post['shared_event'] != null
-                ? PostShareEvent(post: widget.post, type: widget.type)
+            post['shared_event'] != null
+                ? PostShareEvent(post: post, type: type)
                 : const SizedBox(),
             postType != '' ? renderPostType(postType) : const SizedBox(),
           ],
@@ -167,12 +139,12 @@ class _PostCenterState extends State<PostCenter> {
 
   renderPostType(postType) {
     if ([postAvatarAccount, postBannerAccount].contains(postType)) {
-      return AvatarBanner(postType: postType, post: widget.post);
+      return AvatarBanner(postType: postType, post: post);
     } else if ([postTarget, postVisibleQuestion].contains(postType)) {
       return PostTarget(
-        post: widget.post,
+        post: post,
         type: postType == postVisibleQuestion ? postQuestionAnwer : postTarget,
-        statusQuestion: widget.post['status_question'],
+        statusQuestion: post['status_question'],
       );
     }
     // else if (postType == postShareEvent) {
@@ -181,5 +153,33 @@ class _PostCenterState extends State<PostCenter> {
     else {
       return const SizedBox();
     }
+  }
+}
+
+class BlockRating extends StatelessWidget {
+  const BlockRating({
+    super.key,
+    required this.data,
+  });
+
+  final dynamic data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+      child: Row(
+        children: List.generate(
+          5,
+          (index) => index < int.parse(data['rating'])
+              ? const Icon(Icons.star, size: 20, color: Colors.yellow)
+              : const Icon(
+                  Icons.star_border,
+                  size: 20,
+                  color: greyColor,
+                ),
+        ),
+      ),
+    );
   }
 }

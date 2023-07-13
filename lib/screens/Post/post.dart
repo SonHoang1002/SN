@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +47,7 @@ class Post extends ConsumerStatefulWidget {
   ConsumerState<Post> createState() => _PostState();
 }
 
-class _PostState extends ConsumerState<Post>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
+class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
   bool isHaveSuggest = true;
   final ValueNotifier<bool> _isShowCommentBox = ValueNotifier(false);
   dynamic currentPost;
@@ -128,7 +126,10 @@ class _PostState extends ConsumerState<Post>
               ref.watch(connectivityControllerProvider).connectInternet ==
                           false &&
                       currentPost['processing'] == "isProcessing"
-                  ? _buildInternetWarningCreatePost()
+                  ? InternetWarningCreatePost(
+                      warning: warning,
+                      showDeletePostPopup: showDeletePostPopup,
+                    )
                   : const SizedBox(),
               currentPost['processing'] == "isProcessing"
                   ? const CustomLinearProgressIndicator()
@@ -211,45 +212,6 @@ class _PostState extends ConsumerState<Post>
     // : const SizedBox();
   }
 
-  Widget _buildInternetWarningCreatePost() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Image.asset(
-                    "assets/icons/retry_create_post.png",
-                    height: 20,
-                    color: secondaryColor,
-                  ),
-                  buildSpacer(width: 5),
-                  buildTextContent(warning, false,
-                      colorWord: secondaryColor, fontSize: 13)
-                ],
-              ),
-              InkWell(
-                onTap: () {
-                  showDeletePostPopup();
-                },
-                child: Image.asset(
-                  "assets/icons/remove_create_post.png",
-                  height: 20,
-                  color: secondaryColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-        buildSpacer(height: 10),
-        buildDivider(color: greyColor)
-      ],
-    );
-  }
-
   showDeletePostPopup() {
     return showCupertinoModalPopup(
         context: context,
@@ -302,5 +264,53 @@ class _PostState extends ConsumerState<Post>
             ],
           );
         });
+  }
+}
+
+class InternetWarningCreatePost extends StatelessWidget {
+  final dynamic warning;
+  final Function showDeletePostPopup;
+  const InternetWarningCreatePost(
+      {Key? key, this.warning, required this.showDeletePostPopup})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Image.asset(
+                    "assets/icons/retry_create_post.png",
+                    height: 20,
+                    color: secondaryColor,
+                  ),
+                  buildSpacer(width: 5),
+                  buildTextContent(warning, false,
+                      colorWord: secondaryColor, fontSize: 13)
+                ],
+              ),
+              InkWell(
+                onTap: () {
+                  showDeletePostPopup();
+                },
+                child: Image.asset(
+                  "assets/icons/remove_create_post.png",
+                  height: 20,
+                  color: secondaryColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+        buildSpacer(height: 10),
+        buildDivider(color: greyColor)
+      ],
+    );
   }
 }
