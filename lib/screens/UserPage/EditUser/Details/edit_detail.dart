@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
+import '../../../../helper/push_to_new_screen.dart';
 import '../../../../providers/UserPage/user_information_provider.dart';
 import '../../../../theme/theme_manager.dart';
+import '../../../../widgets/WebView/my_web_view.dart';
 import '../../../../widgets/appbar_title.dart';
 import '../../../../widgets/back_icon_appbar.dart';
 import '../../../../widgets/button_primary.dart';
@@ -35,13 +38,57 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
     return Container(
       height: 0.75,
       color: greyColor[300],
-      margin: const EdgeInsets.symmetric(vertical: 20.5),
+      margin: const EdgeInsets.symmetric(vertical: 17.5),
     );
   }
 
-  Widget editIcon(ThemeManager theme) {
-    return Icon(Icons.edit,
-        size: 15.0, color: theme.isDarkMode ? Colors.white70 : Colors.black54);
+  Widget buildRowInfo(
+      String title, Widget head, Function onEdit, ThemeManager theme) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: head,
+        ),
+        Expanded(
+          flex: 4,
+          child: InkWell(
+            onTap: () {
+              if (title.contains('https')) {
+                pushCustomCupertinoPageRoute(
+                  context,
+                  MyWebView(
+                    title: 'Liên kết ngoài',
+                    selectedUrl: title,
+                  ),
+                );
+              }
+            },
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontSize: 16.0,
+                  color: title.contains('https')
+                      ? Colors.lightBlue[200]
+                      : theme.isDarkMode
+                          ? Colors.white60
+                          : Colors.black54),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: InkWell(
+            onTap: () {
+              onEdit();
+            },
+            child: Icon(Icons.edit,
+                size: 22.5,
+                color: theme.isDarkMode ? Colors.white70 : Colors.black54),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -50,6 +97,19 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
     final theme = pv.Provider.of<ThemeManager>(context);
     final userAbout = ref.watch(userInformationProvider).userMoreInfor;
     final infor = userAbout?['general_information'];
+    final relationship = userAbout?['account_relationship'];
+    final lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+    final workEvents =
+        lifeEvent.where((e) => e['life_event']['school_type'] == null).toList();
+
+    final highSchoolEvents = lifeEvent
+        .where((e) => e['life_event']['school_type'] == 'HIGH_SCHOOL')
+        .toList();
+
+    final universityEvents = lifeEvent
+        .where((e) => e['life_event']['school_type'] == 'UNIVERSITY')
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -92,6 +152,27 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                     ),
                     buildDrawer(),
                     buildBoldTxt("Công việc hiện tại", theme),
+                    workEvents.isNotEmpty
+                        ? ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: workEvents.length,
+                            itemBuilder: (context, index) {
+                              String preWord = workEvents[index]['life_event']
+                                      ['position'] ??
+                                  'Làm việc';
+                              return Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 7.5),
+                                child: buildRowInfo(
+                                    "$preWord tại ${workEvents[index]['life_event']['company']}",
+                                    const Icon(FontAwesomeIcons.briefcase,
+                                        size: 18),
+                                    () {},
+                                    theme),
+                              );
+                            })
+                        : const SizedBox(),
                     ButtonPrimary(
                       label: "Thêm công việc hiện tại",
                       colorButton: greyColor[300],
@@ -99,6 +180,24 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                     ),
                     buildDrawer(),
                     buildBoldTxt("Trung Học", theme),
+                    highSchoolEvents.isNotEmpty
+                        ? ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: highSchoolEvents.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 7.5),
+                                child: buildRowInfo(
+                                    "Từng học tại ${highSchoolEvents[index]['life_event']['company']}",
+                                    const Icon(FontAwesomeIcons.briefcase,
+                                        size: 18),
+                                    () {},
+                                    theme),
+                              );
+                            })
+                        : const SizedBox(),
                     ButtonPrimary(
                       label: "Thêm trường trung học",
                       colorButton: greyColor[300],
@@ -106,6 +205,24 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                     ),
                     buildDrawer(),
                     buildBoldTxt("Đại học", theme),
+                    universityEvents.isNotEmpty
+                        ? ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: universityEvents.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 7.5),
+                                child: buildRowInfo(
+                                    "Từng học tại ${universityEvents[index]['life_event']['company']}",
+                                    const Icon(FontAwesomeIcons.briefcase,
+                                        size: 18),
+                                    () {},
+                                    theme),
+                              );
+                            })
+                        : const SizedBox(),
                     ButtonPrimary(
                       label: "Thêm trường đại học",
                       colorButton: greyColor[300],
@@ -119,18 +236,14 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             colorButton: greyColor[300],
                             colorText: Colors.black54,
                           )
-                        : ListTile(
-                            leading: Checkbox(
-                              value: true,
-                              onChanged: (value) {},
-                            ),
-                            title: Text(
-                                "Sống tại ${infor['place_live']['title']}"),
-                            trailing: GestureDetector(
-                              onTap: () {},
-                              child: editIcon(theme),
-                            ),
-                          ),
+                        : buildRowInfo(
+                            "Sống tại ${infor['place_live']['title']}",
+                            Checkbox(
+                                activeColor: secondaryColor,
+                                value: true,
+                                onChanged: (value) {}),
+                            () {},
+                            theme),
                     buildDrawer(),
                     buildBoldTxt("Quê quán", theme),
                     infor['hometown'] == null
@@ -139,29 +252,61 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             colorButton: greyColor[300],
                             colorText: Colors.black54,
                           )
-                        : ListTile(
-                            leading: Checkbox(
-                              checkColor: Colors.lightBlue[200],
-                              value: true,
-                              onChanged: (value) {},
-                            ),
-                            title: Text("Đến từ ${infor['hometown']['title']}"),
-                            trailing: GestureDetector(
-                              onTap: () {},
-                              child: editIcon(theme),
-                            ),
-                          ),
+                        : buildRowInfo(
+                            "Đến từ ${infor['hometown']['title']}",
+                            Checkbox(
+                                activeColor: secondaryColor,
+                                value: true,
+                                onChanged: (value) {}),
+                            () {},
+                            theme),
                     buildDrawer(),
                     buildBoldTxt("Mối quan hệ", theme),
+                    relationship != null &&
+                            relationship['relationship_category'] != null
+                        ? buildRowInfo(
+                            "Đã kết hôn với ${relationship['partner']['display_name']}",
+                            Checkbox(
+                                activeColor: secondaryColor,
+                                value: true,
+                                onChanged: (value) {}),
+                            () {},
+                            theme)
+                        : ButtonPrimary(
+                            label: "Thêm mối quan hệ",
+                            colorButton: greyColor[300],
+                            colorText: Colors.black54,
+                          ),
+                    buildDrawer(),
+                    buildBoldTxt("Trang web", theme),
+                    infor['account_web_link'] != null
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: infor['account_web_link'].length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 7.5),
+                                child: buildRowInfo(
+                                    "${infor['account_web_link'][index]['url']}",
+                                    Icon(FontAwesomeIcons.earthAsia,
+                                        size: 22.5,
+                                        color: theme.isDarkMode
+                                            ? Colors.white60
+                                            : Colors.black54),
+                                    () {},
+                                    theme),
+                              );
+                            })
+                        : const SizedBox(),
                     ButtonPrimary(
-                      label: "Thêm mối quan hệ",
+                      label: "Thêm trang web",
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
                     ),
                     buildDrawer(),
-                    buildBoldTxt("Trang web", theme),
-                    buildDrawer(),
                     buildBoldTxt("Liên kết xã hội", theme),
+                    const SizedBox(height: 25.0),
                   ],
                 ),
               ),
