@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/main_login_page.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
@@ -29,8 +30,16 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
                 MaterialPageRoute(builder: ((context) => const Home())));
           });
         } else {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: ((context) => OnboardingLoginPage())));
+            SecureStorage().getKeyStorage("dataLogin").then((value) {
+            if(value.toString() == "[]" || value == "noData"){
+              Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: ((context) => const MainLoginPage(null))));
+            }
+            else{
+              Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: ((context) => const OnboardingLoginPage())));
+            }
+          });
         }
       });
     }

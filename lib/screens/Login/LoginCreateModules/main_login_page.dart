@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,18 +13,10 @@ import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/confirm_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
-GoogleSignIn _googleSignIn = GoogleSignIn(
-  clientId:
-      '465933365763-5kq97dko2a2tq95vpb3gna47vm2svna1.apps.googleusercontent.com',
-  scopes: <String>[
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ],
-);
+import 'begin_join_emso_login_page.dart';
 
 class MainLoginPage extends ConsumerStatefulWidget {
   final accountChoose;
@@ -38,9 +32,24 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   bool showPassword = false;
   bool isLoading = false;
   dynamic currentAccount;
+  late GoogleSignIn _googleSignIn;
+
   @override
   void initState() {
     super.initState();
+
+    if (Platform.isAndroid) {
+      _googleSignIn = GoogleSignIn();
+    } else {
+      _googleSignIn = GoogleSignIn(
+        clientId:
+            '210278496786-7esfchosldt9ontl99089f8hg35ear8i.apps.googleusercontent.com',
+      );
+    }
+
+    if (mounted) {
+      _googleSignIn.signInSilently();
+    }
 
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       if (mounted) {
@@ -49,9 +58,6 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
         });
       }
     });
-    if (mounted) {
-      _googleSignIn.signInSilently();
-    }
     if (widget.accountChoose != null) {
       if (mounted) {
         setState(() {
@@ -76,7 +82,6 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
@@ -89,7 +94,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [const BackIconAppbar(), Container()],
+            children: [Container()],
           ),
         ),
         body: getBody(context, size),
@@ -115,20 +120,22 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
       "client_secret": "f2PrtRsNb7scscIn_3R_cz6k_fzPUv1uj7ZollSWBBY",
       "grant_type": "password",
       "scope": "write read follow",
-      "username": currentAccount?['username'] ?? username,
-      "password": password,
+      "username": currentAccount?['username'] ?? username.trim(),
+      "password": password.trim(),
     };
 
     var response = await AuthenApi().fetchDataToken(data);
-    if (response != null && response['access_token'] != null) {
+    if (response != null && response?['access_token'] != null) {
       await SecureStorage().saveKeyStorage(response['access_token'], 'token');
       completeLogin();
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: Colors.red,
-            content: Text(
-                "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại")));
+            content: response?['status'] == 500
+                ? const Text("Máy chủ đang gặp vấn đề. Vui lòng thử lại sau")
+                : const Text(
+                    "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại")));
       }
     }
     setState(() {
@@ -146,12 +153,12 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
         // completeLogin();
         // if (mounted) {
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute<void>(
-            builder: (BuildContext context) => const PreviewScreen(),
-          ),
-        );
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => const PreviewScreen(),
+            ),
+            ((route) => false));
         // }
       });
     }
@@ -165,7 +172,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+          const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
               "Emso",
               style: TextStyle(
@@ -398,9 +405,9 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                   onPressed: () {
                     _handleSignIn();
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         FontAwesomeIcons.google,
                         size: 18,
@@ -416,24 +423,37 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
                     ],
                   ),
                 ),
+                TextButton(
+                    onPressed: () {
+                      pushToNextScreen(context, const ConfirmLoginPage());
+                    },
+                    child: const Text(
+                      "Bạn quên mật khẩu ư?",
+                      style: TextStyle(color: primaryColor, fontSize: 17),
+                    )),
               ],
             ),
           ),
           const SizedBox(
             height: 5,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                  onPressed: () {
-                    pushToNextScreen(context, const ConfirmLoginPage());
-                  },
-                  child: const Text(
-                    "Bạn quên mật khẩu ư?",
-                    style: TextStyle(color: primaryColor, fontSize: 17),
-                  )),
-            ],
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  minimumSize: const Size.fromHeight(47),
+                  backgroundColor: secondaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20))),
+              onPressed: () {
+                pushToNextScreen(context, BeginJoinEmsoLoginPage());
+              },
+              child: const Text(
+                'Đăng ký tài khoản Emso',
+                style: TextStyle(color: Colors.white, fontSize: 17),
+              ),
+            ),
           )
         ],
       ),

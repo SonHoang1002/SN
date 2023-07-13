@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/model/post_model.dart';
 
 class IsarService {
   static Isar? _instance;
-  static List<CollectionSchema<dynamic>> _schemas = [PostModelSchema];
+  static final List<CollectionSchema<dynamic>> _schemas = [PostModelSchema];
 
   static Future<Isar> get instance async {
     if (_instance == null || !_instance!.isOpen) {

@@ -93,6 +93,10 @@ final pageControllerProvider =
 class PageController extends StateNotifier<PageState> {
   PageController() : super(const PageState());
 
+  reset() {
+    state = const PageState();
+  }
+
   getListPageReview(params, id) async {
     var response = await PageApi().getListReviewPageApi(params, id);
     if (response != null) {

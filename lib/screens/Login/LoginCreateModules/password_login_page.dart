@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -22,8 +23,9 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
 
   late double height = 0;
   bool _iShowPassword = true;
-  String _passwordController = '';
-  String _passwordConfirm = '';
+  TextEditingController _passwordController = TextEditingController(text: "");
+  TextEditingController _passwordConfirmController =
+      TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
@@ -61,18 +63,16 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                             buildSpacer(height: 15),
 
                             // input
-                            _buildTextFormField((value) {
-                              setState(() {
-                                _passwordController = value;
-                              });
-                            },
+                            _buildTextFormField(
+                                _passwordController,
                                 EmailLoginConstants
-                                    .EMAIL_LOGIN_NAME_PLACEHOLODER),
-                            (_passwordController.trim().isEmpty ||
-                                        _passwordController.length < 9) &&
-                                    _passwordController.isNotEmpty
+                                    .EMAIL_LOGIN_NAME_PLACEHOLODER,
+                                handleUpdate: (value) {
+                              setState(() {});
+                            }),
+                            !checkValidate()
                                 ? const Text(
-                                    "Mật khẩu phải lớn hơn 9 kí tự",
+                                    "Mật khẩu phải lớn hơn 9 kí tự, bao gồm số, chữ thường và ký tự đặc biệt :,.?...",
                                     style: TextStyle(
                                       height: 2,
                                       fontSize: 12,
@@ -80,31 +80,34 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                                     ),
                                   )
                                 : const SizedBox(),
-
                             buildSpacer(height: 15),
 
                             // input
-                            _buildTextFormField((value) {
-                              setState(() {
-                                _passwordConfirm = value;
-                              });
-                            }, "Xác nhận mật khẩu"),
-
-                            _passwordConfirm != _passwordController &&
-                                    _passwordConfirm.isNotEmpty
-                                ? const Text(
-                                    "Mật khẩu không trùng khớp",
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.red),
+                            _buildTextFormField(
+                                _passwordConfirmController, "Xác nhận mật khẩu",
+                                handleUpdate: (value) {
+                              setState(() {});
+                            }),
+                            _passwordConfirmController.text.trim() !=
+                                        _passwordController.text.trim() &&
+                                    _passwordConfirmController.text
+                                        .trim()
+                                        .isNotEmpty
+                                ? const Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      "Mật khẩu không trùng khớp",
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.red),
+                                    ),
                                   )
                                 : const SizedBox(),
 
                             buildSpacer(height: 15),
                             // description
-                            _passwordController.trim().isNotEmpty &&
-                                    _passwordConfirm == _passwordController
+                            checkValidate()
                                 ? SizedBox(
-                                    height: 36,
+                                    height: 40,
                                     child: ButtonPrimary(
                                       label: "Tiếp tục",
                                       handlePress: () {
@@ -112,9 +115,13 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                                             context,
                                             CompleteLoginPage(data: {
                                               ...widget.data,
-                                              "password": _passwordController,
+                                              "password": _passwordController
+                                                  .text
+                                                  .trim(),
                                               "password_confirmation":
-                                                  _passwordConfirm,
+                                                  _passwordConfirmController
+                                                      .text
+                                                      .trim(),
                                             }));
                                       },
                                     ),
@@ -143,14 +150,34 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
     );
   }
 
-  Widget _buildTextFormField(Function handleUpdate, String placeHolder,
-      {double? borderRadius = 5, bool? numberType = false}) {
+  bool checkValidate() {
+    RegExp numbersRegex = RegExp(r'\d');
+    RegExp specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+    final pass = _passwordConfirmController.text.trim();
+    final passConfirm = _passwordConfirmController.text.trim();
+    final status = pass.length >= 9 &&
+        passConfirm.length >= 9 &&
+        specialCharRegex.hasMatch(pass) &&
+        numbersRegex.hasMatch(pass) &&
+        pass == passConfirm;
+    if (status) {
+      hiddenKeyboard(context);
+    }
+    return status;
+  }
+
+  Widget _buildTextFormField(
+      TextEditingController controller, String placeHolder,
+      {Function? handleUpdate,
+      double? borderRadius = 5,
+      bool? numberType = false}) {
     return SizedBox(
       height: 40,
       child: TextFormField(
         onChanged: ((value) {
-          handleUpdate(value);
+          handleUpdate != null ? handleUpdate(value) : null;
         }),
+        controller: controller,
         validator: (value) {},
         obscureText: _iShowPassword,
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,

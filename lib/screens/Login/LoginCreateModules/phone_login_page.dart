@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/main_login_page.dart';
+import 'package:social_network_app_mobile/screens/Login/widgets/have_account_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -23,64 +26,64 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   late double height = 0;
   bool _onPhoneScreen = false;
 
-  String _phoneController = '';
-  String _emailController = '';
+  TextEditingController _phoneController = TextEditingController(text: "");
+  TextEditingController _emailController = TextEditingController(text: "");
   String textValidEmail = '';
   List<String> _countryNumberCode = ["VN", "+84"];
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    width = size.width;
-    height = size.height;
-
-    checkIsValid() {
-      if (_onPhoneScreen && _phoneController.trim().isEmpty) {
-        return true;
-      } else if (!_onPhoneScreen && _emailController.trim().isEmpty) {
-        return true;
-      } else {
-        return false;
-      }
+  checkIsValid() {
+    if (_onPhoneScreen && _phoneController.text.trim().isEmpty) {
+      return true;
+    } else if (!_onPhoneScreen && _emailController.text.trim().isEmpty) {
+      return true;
+    } else {
+      return false;
     }
+  }
 
-    handleAction() async {
-      if (_onPhoneScreen) {
+  handleAction() async {
+    if (_onPhoneScreen) {
+      pushToNextScreen(
+          context,
+          PasswordLoginPage(data: {
+            ...widget.data,
+            "phone_number": _phoneController.text.trim().length < 10
+                ? '0${_phoneController.text.trim()}'
+                : _phoneController.text.trim(),
+            "email": _emailController.text.trim()
+          }));
+      setState(() {
+        textValidEmail = "";
+      });
+    } else {
+      var response = await AuthenApi()
+          .validateEmail({"email": _emailController.text.trim()});
+      if (response != null &&
+          response['success'] == true &&
+          response['error'] == false) {
+        // ignore: use_build_context_synchronously
         pushToNextScreen(
             context,
             PasswordLoginPage(data: {
               ...widget.data,
-              "phone_number": _phoneController.length < 10
-                  ? '0$_phoneController'
-                  : _phoneController,
-              "email": _emailController
+              "phone_number": _phoneController.text.trim(),
+              "email": _emailController.text.trim()
             }));
         setState(() {
           textValidEmail = "";
         });
       } else {
-        var response =
-            await AuthenApi().validateEmail({"email": _emailController});
-
-        if (response != null && mounted) {
-          pushToNextScreen(
-              context,
-              PasswordLoginPage(data: {
-                ...widget.data,
-                "phone_number": _phoneController,
-                "email": _emailController
-              }));
-          setState(() {
-            textValidEmail = "";
-          });
-        } else {
-          setState(() {
-            textValidEmail = "Email đã tồn tại, vui lòng sử dụng email khác";
-          });
-        }
+        setState(() {
+          textValidEmail = "Email đã tồn tại, vui lòng sử dụng email khác";
+        });
       }
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    width ??= size.width;
+    height ??= size.height;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -88,9 +91,15 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
       ),
       resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      bottomNavigationBar: SizedBox(
+        height: 80,
+        child: buildHaveAccountWidget(function: () {
+          pushToNextScreen(context, const MainLoginPage(null));
+        }),
+      ),
       body: GestureDetector(
         onTap: (() {
-          FocusManager.instance.primaryFocus!.unfocus();
+          hiddenKeyboard(context);
         }),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
@@ -104,21 +113,17 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                   fontSize: 17,
                   isCenterLeft: false),
               buildSpacer(height: 15),
-
               // input
-
               _onPhoneScreen
-                  ? _buildTextFormField((value) {
+                  ? _buildTextFormField(_phoneController, (value) {
                       setState(() {
-                        _phoneController = value;
-
                         textValidEmail = value.length < 9
                             ? 'Số điện thoại quá ngắn(tối thiểu 10 ký tự).'
                             : '';
                       });
                     }, PhoneLoginConstants.PHONE_LOGIN_PLACEHOLODER[0],
                       isHavePrefix: true, numberType: true)
-                  : _buildTextFormField((value) {
+                  : _buildTextFormField(_emailController, (value) {
                       setState(() {
                         if (!RegExp(
                                 r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
@@ -127,11 +132,9 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                         } else {
                           textValidEmail = '';
                         }
-                        _emailController = value;
                       });
                     }, PhoneLoginConstants.PHONE_LOGIN_PLACEHOLODER[1]),
               buildSpacer(height: 8),
-
               Text(
                 textValidEmail,
                 style: const TextStyle(
@@ -139,11 +142,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                   color: Colors.red,
                 ),
               ),
-
               buildSpacer(height: 15),
-
               // description or navigator button
-
               Text(
                 _onPhoneScreen
                     ? PhoneLoginConstants.PHONE_LOGIN_DESCRIPTION[0]
@@ -157,9 +157,9 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
               buildSpacer(height: 15),
               // change status button
               SizedBox(
-                height: 36,
+                height: 40,
                 child: ButtonPrimary(
-                  isPrimary: true,
+                  colorButton: greyColor,
                   label: _onPhoneScreen
                       ? PhoneLoginConstants
                           .PHONE_LOGIN_CHANGE_SELECTION_TEXT_BUTTON[0]
@@ -172,13 +172,12 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                   },
                 ),
               ),
-
               buildSpacer(height: 15),
               // change status button
               checkIsValid()
                   ? const SizedBox()
                   : SizedBox(
-                      height: 36,
+                      height: 40,
                       child: ButtonPrimary(
                         label: "Tiếp tục",
                         handlePress: () {
@@ -193,7 +192,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
     );
   }
 
-  Widget _buildTextFormField(Function handleUpdate, String placeHolder,
+  Widget _buildTextFormField(TextEditingController controller,
+      Function handleUpdate, String placeHolder,
       {double? borderRadius = 5,
       bool? isHavePrefix = false,
       bool? numberType = false,
@@ -201,6 +201,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
     return SizedBox(
       height: 40,
       child: TextFormField(
+        controller: controller,
         onChanged: ((value) {
           handleUpdate(value);
         }),
@@ -208,7 +209,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
           return null;
         },
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,
-        maxLength: numberType ? 15 : 50,
+        maxLength: numberType ? 10 : 50,
         decoration: InputDecoration(
             counterText: "",
             enabledBorder: OutlineInputBorder(

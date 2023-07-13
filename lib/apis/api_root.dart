@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:easy_debounce/easy_debounce.dart';
+import 'package:logger/logger.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
@@ -48,7 +48,7 @@ class Api {
         return null;
       }
     }
-    return null; // Trả về null nếu không xảy ra lỗi hoặc lỗi không xác định.
+    return null;
   }
 
   Future postRequestBase(String path, data) async {
@@ -58,11 +58,22 @@ class Api {
       var response = await dio.post(path, data: data);
       return response.data;
     } on DioError catch (e) {
+      if (e.response?.statusCode == 400) {
+        Logger logger = Logger();
+        logger.e(e.response?.data.toString());
+        return {"status": e.response?.statusCode, "content": e.response?.data};
+      }
       if (e.response?.statusCode == 401) {
         logOutWhenTokenError();
       }
       if (e.response?.statusCode == 422) {
         return e.response?.data;
+      }
+      if (e.response?.statusCode == 500) {
+        Logger logger = Logger();
+        String message = "Server đang có vấn đề. Hãy thử lại sau";
+        logger.e(message);
+        return {"status": e.response?.statusCode, "content": message};
       }
       rethrow;
     }
@@ -145,5 +156,5 @@ void logOutWhenTokenError() async {
         'dataLogin');
   }
   await SecureStorage().deleteKeyStorage('token');
-  navigateToSecondPageByNameWithoutContext('/login');
+  navigateToSecondPageByNameWithoutContext('/');
 }

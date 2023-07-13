@@ -51,7 +51,7 @@ class BoxMention extends StatelessWidget {
                 decoration: const BoxDecoration(
                     border: Border(
                         bottom: BorderSide(width: 0.2, color: greyColor))),
-                child: itemWidget,
+                child: IgnorePointer(child: itemWidget),
               ),
             );
           }),

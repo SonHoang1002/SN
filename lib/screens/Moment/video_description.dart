@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,7 +22,8 @@ import 'follow_animation.dart';
 
 class VideoDescription extends ConsumerStatefulWidget {
   final dynamic moment;
-  const VideoDescription({super.key, this.moment});
+  final String? type;
+  const VideoDescription({super.key, this.moment, this.type});
 
   @override
   ConsumerState<VideoDescription> createState() => _VideoDescriptionState();
@@ -34,7 +37,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState(); 
 
     if (widget.moment?['account_relationships']?['following'] == true ||
         widget.moment?["account"]?['relationships']?['following'] == true) {
@@ -85,8 +88,10 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
           context: context,
           barrierColor: Colors.transparent,
           backgroundColor: Colors.transparent,
-          builder: (context) => ScreenShare(
-              entityShare: widget.moment, type: 'moment', entityType: 'post'));
+          builder: (context) => ScreenShare(entityShare: {
+                ...widget.moment,
+                'typePage': widget.type,
+              }, type: 'moment', entityType: 'post'));
     } else if (key == 'comment') {
       showBarModalBottomSheet(
           context: context,

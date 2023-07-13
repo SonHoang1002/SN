@@ -126,8 +126,7 @@ class NotiItemState extends ConsumerState<NotiItem> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    print("${widget.index}th noti item re-render");
+  Widget build(BuildContext context) { 
     final item = ref.watch(
       notificationControllerProvider.select(
         (e) => e.notifications[widget.index],

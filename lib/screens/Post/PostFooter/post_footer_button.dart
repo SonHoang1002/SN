@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -69,10 +71,20 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
   List postComment = [];
   dynamic commentSelected;
   FocusNode commentNode = FocusNode();
-  String? viewerReaction;
+  String viewerReaction = "";
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    suggestReactionContent = "";
+    postData = null;
+    postComment = [];
+    commentSelected = null;
+    commentNode.dispose();
   }
 
   List buttonAction = [
@@ -87,7 +99,6 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
       "label": "Chia sẻ",
     }
   ];
-
   handlePress(key) {
     if (key == 'comment') {
       if (![postDetail, postMultipleMedia, postWatch, imagePhotoPage]
@@ -125,7 +136,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     }
   }
 
-  handleReaction(react, viewerReaction) async {
+  handleReaction(react) async {
     // only update reaction in image in media_attachments
     if (([postMultipleMedia, imagePhotoPage].contains(widget.type)) &&
         widget.post['media_attachments'].isNotEmpty &&
@@ -292,21 +303,11 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
   }
 
   handlePressButton() {
-    if (viewerReaction!.isNotEmpty) {
-      handleReaction(null, viewerReaction);
+    if (viewerReaction.isNotEmpty) {
+      handleReaction(null);
     } else {
-      handleReaction('like', viewerReaction);
+      handleReaction('like');
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    suggestReactionContent = "";
-    postData = null;
-    postComment = [];
-    commentSelected = null;
-    commentNode.dispose();
   }
 
   @override
@@ -341,7 +342,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                           flex: 1,
                           child: ReactionButton(
                             onReactionChanged: (value) {
-                              handleReaction(value, viewerReaction);
+                              handleReaction(value);
                             },
                             handlePressButton: handlePressButton,
                             onWaitingReaction: () {
@@ -369,7 +370,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                               ),
                             ],
                             initialReaction: Reaction(
-                                icon: viewerReaction!.isNotEmpty
+                                icon: viewerReaction.isNotEmpty
                                     ? viewerReaction != "like"
                                         ? renderGif(
                                             'png',

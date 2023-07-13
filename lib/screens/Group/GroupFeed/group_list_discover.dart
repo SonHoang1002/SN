@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/data/groups.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/group_item.dart';
 
-class GroupListDiscover extends StatelessWidget {
+class GroupListDiscover extends ConsumerStatefulWidget {
   const GroupListDiscover({Key? key}) : super(key: key);
 
   @override
+  ConsumerState<GroupListDiscover> createState() => _GroupListDiscoverState();
+}
+
+class _GroupListDiscoverState extends ConsumerState<GroupListDiscover> {
+  @override
   Widget build(BuildContext context) {
+    List groupFriend = ref.watch(groupListControllerProvider).groupDiscover;
+    List groupOther = ref.watch(groupListControllerProvider).groupOther;
+
     TextStyle style =
         const TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
     return Expanded(
       child: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(left: 12.0, right: 12.0),
-            child: Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -27,6 +36,7 @@ class GroupListDiscover extends StatelessWidget {
               ListView.builder(
                   shrinkWrap: true,
                   primary: false,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: groupFriend.length,
                   itemBuilder: (context, index) => InkWell(
                         onTap: () {},
@@ -45,6 +55,7 @@ class GroupListDiscover extends StatelessWidget {
               ListView.builder(
                   shrinkWrap: true,
                   primary: false,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: groupOther.length,
                   itemBuilder: (context, index) => InkWell(
                         onTap: () {},

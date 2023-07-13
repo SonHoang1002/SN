@@ -1,21 +1,26 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/tranfer_account.dart';
 import 'package:social_network_app_mobile/home/PreviewScreen.dart';
-import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/moment_provider.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
 class TranferAccount extends ConsumerStatefulWidget {
-  const TranferAccount({Key? key}) : super(key: key);
+  final List listLoginUser;
+  const TranferAccount({Key? key, required this.listLoginUser})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -28,33 +33,58 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
   @override
   void initState() {
     if (!mounted) return;
-    SecureStorage().getKeyStorage('dataLogin').then((value) {
-      if (value != 'noData') {
-        setState(() {
-          dataLogin = jsonDecode(value);
-        });
-      }
+    // SecureStorage().getKeyStorage('dataLogin').then((value) {
+    //   if (value != 'noData') {
+    //     setState(() {
+    //       dataLogin = jsonDecode(value);
+    //     });
+    //   }
+    // });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        dataLogin = widget.listLoginUser;
+      });
     });
     super.initState();
   }
 
   void completeLogin() {
-    Navigator.pushReplacement<void, void>(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => const PreviewScreen(),
-      ),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const PreviewScreen(),
+        ),
+        ((route) => false));
   }
 
-  handleLogin(token) async {
+  handleLogin(token, themeData) async {
+    final theme = pv.Provider.of<ThemeManager>(context, listen: false);
+    theme.toggleTheme(themeData);
     await SecureStorage().saveKeyStorage(token, 'token');
+
     completeLogin();
+  }
+
+  handleTranferAccount(meData, index) {
+    if (meData[0]['username'] != dataLogin[index]['username']) {
+      SecureStorage().deleteKeyStorage('theme');
+
+      ref.read(postControllerProvider.notifier).reset();
+      ref.read(momentControllerProvider.notifier).reset();
+      ref.read(watchControllerProvider.notifier).reset();
+      ref.read(watchControllerProvider.notifier).reset();
+      ref.read(pageControllerProvider.notifier).reset();
+      ref.read(friendControllerProvider.notifier).reset();
+      ref.read(groupListControllerProvider.notifier).reset();
+
+      handleLogin(dataLogin[index]['token'], dataLogin[index]['theme']);
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     var meData = ref.watch(meControllerProvider);
 
     return SizedBox(
@@ -68,15 +98,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
           body: ListView.builder(
               itemCount: dataLogin.length,
               itemBuilder: (context, index) => InkWell(
-                    onTap: () {
-                      if (meData[0]['username'] !=
-                          dataLogin[index]['username']) {
-                        SecureStorage().deleteKeyStorage('theme');
-                        handleLogin(dataLogin[index]['token']);
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
+                    onTap: () => handleTranferAccount(meData, index),
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border(

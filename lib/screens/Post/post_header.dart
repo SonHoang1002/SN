@@ -46,15 +46,32 @@ class PostHeader extends ConsumerStatefulWidget {
 
 class _PostHeaderState extends ConsumerState<PostHeader> {
   String description = '';
+  ValueNotifier<bool> _isFollowing = ValueNotifier(false);
   @override
   void initState() {
     super.initState();
     GetTimeAgo.setDefaultLocale('vi');
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        description = handleDescription();
-      });
+      if (mounted) {
+        setState(() {
+          description = handleDescription();
+        });
+      }
     });
+  }
+
+  checkFollowing() {
+    var account = widget.post?['account'] ?? {};
+    var group = widget.post?['group'];
+    var page = widget.post?['page'];
+
+    return (group != null &&
+                group["group_relationship"] != null &&
+                group["group_relationship"]?["like"] == true) ||
+            (page != null &&
+                widget.post['place']?['id'] != page['id'] &&
+                (page["page_relationship"] != null &&
+                    page["page_relationship"]?["like"] == true));
   }
 
   String handleDescription() {
@@ -183,16 +200,19 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                             SizedBox(
                               width: size.width * 0.6,
                               child: BlockNamePost(
-                                post: widget.post,
-                                account: account,
-                                description: description,
-                                mentions: mentions,
-                                statusActivity: statusActivity,
-                                group: group,
-                                page: page,
-                                textColor: widget.textColor,
-                                type: widget.type,
-                              ),
+                                  post: widget.post,
+                                  account: account,
+                                  description: description,
+                                  mentions: mentions,
+                                  statusActivity: statusActivity,
+                                  group: group,
+                                  page: page,
+                                  textColor: widget.textColor,
+                                  type: widget.type,
+                                  isFollowing: _isFollowing.value,
+                                  handleLike: () {
+                                    _isFollowing.value = true;
+                                  }),
                             ),
                             Row(
                               children: [
@@ -349,6 +369,8 @@ class BlockNamePost extends StatelessWidget {
       required this.account,
       required this.description,
       required this.mentions,
+      required this.isFollowing,
+      this.handleLike,
       this.group,
       this.page,
       this.statusActivity,
@@ -364,6 +386,8 @@ class BlockNamePost extends StatelessWidget {
   final dynamic statusActivity;
   final Color? textColor;
   final dynamic type;
+  final bool isFollowing;
+  final Function? handleLike;
 
   renderDisplayName() {
     if (group != null) {
@@ -381,16 +405,34 @@ class BlockNamePost extends StatelessWidget {
     if (group != null) {
       return (group["group_relationship"] != null &&
               group["group_relationship"]?["like"] == true)
-          ? const TextSpan(
-              text: " Đã thích", style: TextStyle(color: secondaryColor))
+          ? const TextSpan()
+          : const TextSpan(
+              text: " · Thích", style: TextStyle(color: secondaryColor));
+    } else if (page != null) {
+      return post['place']?['id'] != page['id']
+          ? (page["page_relationship"] != null &&
+                  page["page_relationship"]?["like"] == true)
+              ? const TextSpan()
+              : const TextSpan(
+                  text: " ·  Thích", style: TextStyle(color: secondaryColor))
+          : TextSpan(text: account['display_name']);
+    } else {
+      return const TextSpan(text: '');
+    }
+  }
+
+  chooseApi() {
+    if (group != null) {
+      return (group["group_relationship"] != null &&
+              group["group_relationship"]?["like"] == true)
+          ? const TextSpan()
           : const TextSpan(
               text: " Thích", style: TextStyle(color: secondaryColor));
     } else if (page != null) {
       return post['place']?['id'] != page['id']
           ? (page["page_relationship"] != null &&
                   page["page_relationship"]?["like"] == true)
-              ? const TextSpan(
-                  text: " Đã thích", style: TextStyle(color: secondaryColor))
+              ? const TextSpan()
               : const TextSpan(
                   text: " Thích", style: TextStyle(color: secondaryColor))
           : TextSpan(text: account['display_name']);
@@ -471,18 +513,22 @@ class BlockNamePost extends StatelessWidget {
             ),
           ),
         ),
-        group != null || page != null
-            ? RichText(
-                text: TextSpan(
-                  children: [
-                    const TextSpan(text: " · "),
-                    renderLikeTextSpan(),
-                  ],
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: textColor ??
-                          Theme.of(context).textTheme.displayLarge!.color),
+        group != null || page != null || isFollowing
+            ? InkWell(
+                onTap: () {
+                  handleLike != null ? handleLike!() : null;
+                },
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      renderLikeTextSpan(),
+                    ],
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: textColor ??
+                            Theme.of(context).textTheme.displayLarge!.color),
+                  ),
                 ),
               )
             : const SizedBox()

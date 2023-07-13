@@ -3,17 +3,21 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/setting_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
 import '../../../widgets/GeneralWidget/spacer_widget.dart';
+import 'account_management.dart';
 import 'begin_join_login_page.dart';
 import 'main_login_page.dart';
 
@@ -64,7 +68,9 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
     );
   }
 
-  handleLogin(token) async {
+  handleLogin(token, themeData) async {
+    final theme = Provider.of<ThemeManager>(context, listen: false);
+    theme.toggleTheme(themeData);
     await SecureStorage().saveKeyStorage(token, 'token');
     completeLogin();
   }
@@ -84,6 +90,20 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
           appBar: AppBar(
             elevation: 0,
             automaticallyImplyLeading: false,
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    if (dataLogin.length > 1) {
+                      pushToNextScreen(context, AccountManagerment());
+                    } else {
+                      pushToNextScreen(context, SettingLoginPage(0));
+                    }
+                  },
+                  icon: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                  )),
+            ],
           ),
           resizeToAvoidBottomInset: true,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -101,9 +121,9 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
+                          const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
                                   "Emso",
                                   style: TextStyle(
@@ -129,7 +149,8 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                                                 null) {
                                               context.loaderOverlay.show();
                                               handleLogin(
-                                                  dataLogin[index]['token']);
+                                                  dataLogin[index]['token'],
+                                                  dataLogin[index]['theme']);
                                             } else {
                                               pushToNextScreen(
                                                   context,
@@ -178,17 +199,27 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                           Center(
                             child: Column(
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    pushToNextScreen(
-                                        context, const MainLoginPage(null));
-                                  },
-                                  child: const Text(
-                                    OnboardingLoginConstants
-                                        .ONBOARDING_LOGIN_LOGIN_WITH_DIFFERENCE_ACCOUNT,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 25),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        elevation: 0,
+                                        minimumSize: const Size.fromHeight(47),
+                                        backgroundColor: secondaryColor,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20))),
+                                    onPressed: () {
+                                      pushToNextScreen(
+                                          context, const MainLoginPage(null));
+                                    },
+                                    child: const Text(
+                                      OnboardingLoginConstants
+                                          .ONBOARDING_LOGIN_LOGIN_WITH_DIFFERENCE_ACCOUNT,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ),
                                 buildSpacer(height: 20),

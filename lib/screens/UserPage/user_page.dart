@@ -158,21 +158,21 @@ class _UserPageState extends ConsumerState<UserPage> {
       });
       Future.delayed(Duration.zero, () async {
         ref.read(userInformationProvider.notifier).getUserInformation(id);
+        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
-        List postUserNew =
-            await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
-                [];
+        // List postUserNew =
+        //     await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
+        //         [];
 
         ref.read(postControllerProvider.notifier).getListPostPin(id);
-        List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
+        // List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
 
         ref
             .read(postControllerProvider.notifier)
             .getListPostUserPage(id, {"limit": 3, "exclude_replies": true});
 
-        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
-        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
-        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
         var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
         setState(() {
           userData = ref.watch(userInformationProvider).userInfor;
@@ -314,7 +314,6 @@ class _UserPageState extends ConsumerState<UserPage> {
   Widget buildUserPageBody(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final theme = pv.Provider.of<ThemeManager>(context);
-    List featureContents = ref.watch(userInformationProvider).featureContent;
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
       postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
@@ -496,13 +495,13 @@ class _UserPageState extends ConsumerState<UserPage> {
                                                                 return CupertinoAlertDialog(
                                                                   content:
                                                                       Container(
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            top:
-                                                                                8.0),
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            8.0),
                                                                     child: Text(
                                                                       "Bạn có chắc chắn muốn xóa ${userData?['display_name']} khỏi danh sách bạn bè không?",
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           fontSize:
                                                                               14.0),
                                                                     ),
@@ -674,13 +673,14 @@ class _UserPageState extends ConsumerState<UserPage> {
               ],
             ),
           ),
-          const CrossBar(),
-          UserPageInfomationBlock(
-            user: userData,
-            lifeEvent: lifeEvent,
-            userAbout: userAbout,
-            featureContents: featureContents,
-          ),
+          if (userAbout != null) const CrossBar(),
+          if (userAbout != null)
+            UserPageInfomationBlock(
+              user: userData,
+              lifeEvent: lifeEvent,
+              userAbout: userAbout,
+              featureContents: featureContents,
+            ),
           const CrossBar(),
           UserPageFriendBlock(user: userData, friends: friend),
           const CrossBar(),
@@ -758,16 +758,16 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    // print(userAbout['general_information']);
     pinPost = ref.read(postControllerProvider).postsPin;
     return Scaffold(
       appBar: buildAppBar(context),
       body: RefreshIndicator(
         onRefresh: () async {
-          Future.delayed(const Duration(milliseconds: 800), () {
-            ref.read(postControllerProvider.notifier).getListPostUserPage(
-                id, {"exclude_replies": true, "limit": 20});
-          });
+          // Future.delayed(const Duration(milliseconds: 800), () async{
+          await ref
+              .read(postControllerProvider.notifier)
+              .getListPostUserPage(id, {"exclude_replies": true, "limit": 20});
+          // });
         },
         child: buildUserPageBody(context),
       ),

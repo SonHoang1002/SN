@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -49,6 +46,10 @@ final postControllerProvider =
 class PostController extends StateNotifier<PostState> {
   PostController() : super(const PostState());
 
+  reset() {
+    state = const PostState();
+  }
+
   getListPost(params) async {
     List response = await PostApi().getListPostApi(params) ?? [];
     if (mounted) {
@@ -61,7 +62,8 @@ class PostController extends StateNotifier<PostState> {
           isMoreUserPage: state.isMoreUserPage);
     }
   }
-    updatePostWhenScroll(String scrollDirection, dynamic newData) async {
+
+  updatePostWhenScroll(String scrollDirection, dynamic newData) async {
     List result = state.posts;
     switch (scrollDirection) {
       // xóa 1 ở đầu và thêm 1 ở đuôi
@@ -84,7 +86,6 @@ class PostController extends StateNotifier<PostState> {
           isMoreUserPage: state.isMoreUserPage);
     }
   }
-
 
   addListPost(List newData, dynamic params) {
     if (mounted) {

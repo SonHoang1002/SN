@@ -6,11 +6,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
-import '../../../providers/UserPage/user_information_provider.dart';
-import '../../../theme/colors.dart';
-import '../../../theme/theme_manager.dart';
-import '../../../widgets/chip_menu.dart';
-import '../../../widgets/search_input.dart';
+import '../../../../providers/UserPage/user_information_provider.dart';
+import '../../../../theme/colors.dart';
+import '../../../../theme/theme_manager.dart';
+import '../../../../widgets/chip_menu.dart';
+import '../../../../widgets/search_input.dart';
 
 class EditUserHobby extends ConsumerStatefulWidget {
   const EditUserHobby({super.key});

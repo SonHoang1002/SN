@@ -90,6 +90,7 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
 
     return widget.typePage != null && widget.typePage == 'home'
         ? RenderPageView(
+            type: widget.type,
             pageController: _pageController,
             currentPage: currentPage,
             widget: widget)
@@ -98,6 +99,7 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
               SizedBox(
                 height: MediaQuery.of(context).size.height - 80,
                 child: RenderPageView(
+                    type: widget.type,
                     pageController: _pageController,
                     currentPage: currentPage,
                     widget: widget),
@@ -143,11 +145,13 @@ class RenderPageView extends StatelessWidget {
     required PreloadPageController pageController,
     required this.widget,
     required this.currentPage,
+    required this.type,
   }) : _pageController = pageController;
 
   final PreloadPageController _pageController;
   final MomentPageview widget;
   final double currentPage;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +169,7 @@ class RenderPageView extends StatelessWidget {
         return Opacity(
             opacity: opacity,
             child: MomentVideo(
+              type: widget.type,
               key: Key(widget.momentRender[index]['id']),
               moment: widget.momentRender[index],
             ));

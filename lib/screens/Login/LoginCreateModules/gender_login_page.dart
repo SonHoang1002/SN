@@ -129,7 +129,7 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
               ),
 
               SizedBox(
-                height: 36,
+                height: 40,
                 child: ButtonPrimary(
                   label: "Tiếp tục",
                   handlePress: () {

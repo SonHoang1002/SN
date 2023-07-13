@@ -99,6 +99,7 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                                                   400)
                                               .toString()),
                                       width: size.width,
+                                      color: white,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10.0)),

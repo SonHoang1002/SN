@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/Event/CreateEvent/create_event.dart';
 import 'package:social_network_app_mobile/screens/Event/event_render.dart';
 import 'package:social_network_app_mobile/screens/Friend/friend.dart';
 import 'package:social_network_app_mobile/screens/Friend/friend_search.dart';
-import 'package:social_network_app_mobile/screens/Group/group.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group.dart';
 import 'package:social_network_app_mobile/screens/Grows/grow_render.dart';
 import 'package:social_network_app_mobile/screens/Page/page_general.dart';
 import 'package:social_network_app_mobile/screens/Payment/payment.dart';
@@ -17,8 +18,7 @@ import 'package:social_network_app_mobile/screens/Watch/watch_render.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
-import '../../helper/push_to_new_screen.dart';
-import '../Group/GroupCreateModules/screen/create_group_page.dart';
+import '../Group/GroupCreate/create_group_screen.dart';
 import '../LearnSpace/learn_space.dart';
 // import 'package:social_network_app_mobile/screen/Page/page_general.dart';
 
@@ -137,7 +137,7 @@ class MenuSelected extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                pushToNextScreen(context, CreateGroupPage());
+                pushToNextScreen(context, const CreateGroup());
               },
               child: Icon(
                 FontAwesomeIcons.plus,

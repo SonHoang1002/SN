@@ -1,7 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/moment_provider.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Menu/menu_user.dart';
 import 'package:social_network_app_mobile/screens/Setting/setting.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -65,9 +71,17 @@ class _MenuState extends ConsumerState<Menu> {
     ];
 
     logout() async {
+      ref.read(postControllerProvider.notifier).reset();
+      ref.read(momentControllerProvider.notifier).reset();
+      ref.read(watchControllerProvider.notifier).reset();
+      ref.read(watchControllerProvider.notifier).reset();
+      ref.read(pageControllerProvider.notifier).reset();
+      ref.read(friendControllerProvider.notifier).reset();
+      ref.read(groupListControllerProvider.notifier).reset();
+
       final theme = pv.Provider.of<ThemeManager>(context, listen: false);
       theme.toggleTheme('system');
-      await SecureStorage().deleteKeyStorage("token");
+      await SecureStorage().saveKeyStorage("token", "noData");
       await SecureStorage().deleteKeyStorage("userId");
       await SecureStorage().deleteKeyStorage('theme');
       ref.read(meControllerProvider.notifier).resetMeData();

@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/screens/UserPage/EditUser/NoticeStory/edit_notice_story.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -23,7 +24,8 @@ import '../../widgets/StoryView/story_page.dart';
 import '../../widgets/chip_menu.dart';
 import '../../widgets/text_description.dart';
 import '../CreatePost/create_modal_base_menu.dart';
-import 'EditUser/edit_user_hobby.dart';
+import 'EditUser/Details/edit_detail.dart';
+import 'EditUser/Hobbies/edit_user_hobby.dart';
 
 class UserPageEditProfile extends ConsumerStatefulWidget {
   final Function onUpdate;
@@ -455,7 +457,14 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
                   ],
                 ),
               ),
-              updateProfile: () {},
+              updateProfile: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const EditUserDetail(),
+                  ),
+                );
+              },
             ),
             buildLine(),
 
@@ -599,7 +608,14 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
                           )),
                 ),
               ),
-              updateProfile: () {},
+              updateProfile: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const EditNoticeStory(),
+                  ),
+                );
+              },
             ),
           ],
         ),

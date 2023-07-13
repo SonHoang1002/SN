@@ -43,7 +43,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
     GetTimeAgo.setDefaultLocale('vi');
     meData = ref.read(meControllerProvider)[0];
     if (mounted) { 
-      suggestContent = const Text("Gợi ý cho bạn");
+      suggestContent = buildSuggestContent();
     }
     super.initState();
   }

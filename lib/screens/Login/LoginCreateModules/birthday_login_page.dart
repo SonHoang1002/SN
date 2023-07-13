@@ -110,7 +110,7 @@ class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
                     buildSpacer(height: 10),
                     _isValid && _timeComponent.isNotEmpty
                         ? SizedBox(
-                            height: 36,
+                            height: 40,
                             child: ButtonPrimary(
                               label: "Tiếp tục",
                               handlePress: () {

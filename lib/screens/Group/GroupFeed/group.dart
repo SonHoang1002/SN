@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/screens/Group/group_invited_request.dart';
-import 'package:social_network_app_mobile/screens/Group/group_list_all.dart';
-import 'package:social_network_app_mobile/screens/Group/group_list_discover.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_feed_all.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_invited_request.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_list_all.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_list_discover.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-
-import '../../providers/group/group_list_provider.dart';
-import 'group_feed_all.dart';
 
 class Group extends ConsumerStatefulWidget {
   const Group({Key? key}) : super(key: key);
@@ -35,6 +34,19 @@ class _GroupState extends ConsumerState<Group> {
       ref
           .read(groupListControllerProvider.notifier)
           .getListGroupAdminMember({'tab': 'admin', 'limit': 10});
+      ref
+          .read(groupListControllerProvider.notifier)
+          .groupDiscover({'tab': 'friend', 'limit': 10});
+      ref
+          .read(groupListControllerProvider.notifier)
+          .getGroupSuggest({'limit': 10});
+      ref
+          .read(groupListControllerProvider.notifier)
+          .getGroupInvite({'role': 'admin'});
+      ref
+          .read(groupListControllerProvider.notifier)
+          .getGroupInvite({'role': 'member'});
+      ref.read(groupListControllerProvider.notifier).getGroupJoinRequest(null);
     });
   }
 

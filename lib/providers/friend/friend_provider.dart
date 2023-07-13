@@ -45,6 +45,10 @@ final friendControllerProvider =
 class FriendController extends StateNotifier<FriendState> {
   FriendController() : super(const FriendState());
 
+  reset() {
+    state = const FriendState();
+  }
+
   getListFriendExcludes(params) async {
     var response = await FriendsApi().getListFriendsApi(params);
     if (response['data'].isNotEmpty) {
