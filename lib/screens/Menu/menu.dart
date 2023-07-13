@@ -143,7 +143,7 @@ class _MenuState extends ConsumerState<Menu> {
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
-                  MenuUser(),
+                const MenuUser(),
                 const SizedBox(
                   height: 8,
                 ),

@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/setting_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../../constant/login_constants.dart';
@@ -66,7 +68,9 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
     );
   }
 
-  handleLogin(token) async {
+  handleLogin(token, themeData) async {
+    final theme = Provider.of<ThemeManager>(context, listen: false);
+    theme.toggleTheme(themeData);
     await SecureStorage().saveKeyStorage(token, 'token');
     completeLogin();
   }
@@ -145,7 +149,8 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                                                 null) {
                                               context.loaderOverlay.show();
                                               handleLogin(
-                                                  dataLogin[index]['token']);
+                                                  dataLogin[index]['token'],
+                                                  dataLogin[index]['theme']);
                                             } else {
                                               pushToNextScreen(
                                                   context,
