@@ -192,13 +192,13 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
                             borderRadius: BorderRadius.circular(
                                 MediaQuery.of(context).size.width / 2),
                             child: ExtendedImage.network(
-                              friends[index]['avatar_media'] != null
-                                  ? friends[index]['avatar_media']
-                                      ['preview_url']
-                                  : linkAvatarDefault,
-                              width: 100,
-                              height: 100,
-                            ),
+                                friends[index]['avatar_media'] != null
+                                    ? friends[index]['avatar_media']
+                                        ['preview_url']
+                                    : linkAvatarDefault,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover),
                           )),
                           title: Padding(
                             padding: const EdgeInsets.only(top: 25.0),
