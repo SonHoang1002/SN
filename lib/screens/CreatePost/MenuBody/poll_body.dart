@@ -339,7 +339,7 @@ class _PollBodyState extends State<PollBody> {
             padding: const EdgeInsets.all(5),
             isHaveBorder: true,
             function: () {
-              showCustomBottomSheet(context, 500, titleForBottomSheet,
+              showCustomBottomSheet(context, 500,title: titleForBottomSheet,
                   widget: SizedBox(
                       height: 400,
                       child: ListView.builder(

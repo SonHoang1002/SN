@@ -255,3 +255,10 @@ List listMenuPost = [
 ];
 
 double eGLRModalBtmHeight = 250.0; // eGLR = event + grow + learning + recruit
+const String vtcpay = "VTCPAY";
+
+const String momo = "MOMO";
+
+const String cod = "COD";
+
+const String vnpay = "VNPAY";

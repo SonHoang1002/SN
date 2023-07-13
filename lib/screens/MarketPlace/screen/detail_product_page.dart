@@ -1,35 +1,42 @@
 import 'dart:async';
 
+import 'package:easy_debounce/easy_debounce.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/follwer_product_api.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/get_min_max_price.dart';
-import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/review_product_provider.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/screen/buyer_orders/unsucess_transaction_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/review_all_product.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/transfer_order_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/preview_video_image.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/extended_image_custom.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/rating_star_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/review_item_widget.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/widgets/share_and_search.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/review_shop_widget.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/tranfer_fee_widget.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/voucher_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/video_player.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../theme/colors.dart';
 
@@ -38,8 +45,8 @@ const String share_on_story_table = "share_on_story_table";
 const String share_on_group = "share_on_group";
 const String share_on_personal_page_of_friend =
     "share_on_personal_page_of_friend";
-String imageUrl =
-    "https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1200,h_630/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/ype8x0zkqbv239asgx9p/V%C3%A9%20V%C3%A0o%20C%E1%BB%95ng%20IMG%20Worlds%20of%20Adventure,%20Dubai%20.jpg";
+
+const configReviewParams = {"limit": 1};
 
 class DetailProductMarketPage extends ConsumerStatefulWidget {
   dynamic simpleData;
@@ -59,19 +66,18 @@ class _DetailProductMarketPageComsumerState
   late double width = 0;
   late double height = 0;
   int productNumber = 1;
-  int _onMorePart = 0;
   bool? _isConcern;
   Map<String, dynamic>? _detailData;
-  List<dynamic>? _commentData;
-  List<dynamic>? _prices;
+  List<dynamic>? _listComment;
+  List<dynamic>? _listPrice;
   bool _isLoading = true;
-  List<bool> _colorCheckList = [];
-  List<bool> _sizeCheckList = [];
-  dynamic _colorValue;
-  dynamic _sizeValue;
+  List<dynamic> _listCheckedColor = [];
+  List<dynamic> _listCheckedSize = [];
+  dynamic _selectedColorValue;
+  dynamic _selectedSizeValue;
   String? _priceTitle;
   dynamic _productToCart;
-  List<dynamic>? mediaList = [];
+  List<dynamic>? _listMedia = [];
   int mediaIndex = 0;
   dynamic selectedProduct;
   bool _canAddToCart = false;
@@ -80,46 +86,77 @@ class _DetailProductMarketPageComsumerState
   bool _showSelectedProduct = false;
   Offset? offset;
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _suggestController = ScrollController();
   final GlobalKey _animationKey = GlobalKey();
+
+  List? _listProductOfPage;
   @override
   void initState() {
     if (!mounted) {
       return;
     }
     super.initState();
+
     Future.delayed(Duration.zero, () async {
-      final detailData = await ref
-          .read(detailProductProvider.notifier)
-          .getDetailProduct(widget.id);
-      final comment = await ref
-          .read(reviewProductProvider.notifier)
-          .getReviewProduct(widget.id);
-    });
-    _scrollController.addListener(() {
-      if (_scrollController.offset > 40 && !_isScrolled) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+        _detailData = widget.simpleData;
+        if (_detailData != null) {
+          _initData();
+        }
+        final detailData = await ref
+            .read(detailProductProvider.notifier)
+            .getDetailProduct(widget.id);
+        final comment = await ref
+            .read(reviewProductProvider.notifier)
+            .getReviewProduct(widget.id, configReviewParams);
         setState(() {
-          _isScrolled = true;
+          _detailData = ref.watch(detailProductProvider).detail;
         });
-      } else if (_scrollController.offset <= 40 && _isScrolled) {
-        setState(() {
-          _isScrolled = false;
-        });
-      }
+        _initData();
+      });
     });
+    _scrollController
+      ..addListener(() {
+        if (_scrollController.offset > 40 && !_isScrolled) {
+          setState(() {
+            _isScrolled = true;
+          });
+        } else if (_scrollController.offset <= 40 && _isScrolled) {
+          setState(() {
+            _isScrolled = false;
+          });
+        }
+      })
+      ..addListener(() async {
+        if (double.parse((_scrollController.offset).toStringAsFixed(0)) ==
+            (double.parse((_scrollController.position.maxScrollExtent)
+                .toStringAsFixed(0)))) {
+          EasyDebounce.debounce(
+              'my-debouncer', const Duration(milliseconds: 300), () async {
+            dynamic params = {
+              "offset": ref.watch(productsProvider).list.length,
+              ...paramConfigProductSearch,
+            };
+            ref.read(productsProvider.notifier).getProductsSearch(params);
+            setState(() {
+              _isLoading = true;
+            });
+          });
+        }
+      });
+    ;
   }
 
   @override
   void dispose() {
     super.dispose();
-    mediaList = [];
+    _listMedia = [];
     _detailData = {};
-    _commentData = [];
-    int productNumber = 1;
-    _onMorePart = 0;
-    _prices = [];
+    _listComment = [];
+    _listPrice = [];
     _isLoading = true;
-    _colorValue = null;
-    _sizeValue = null;
+    _selectedColorValue = null;
+    _selectedSizeValue = null;
     _priceTitle = null;
     _productToCart = null;
     mediaIndex = 0;
@@ -131,99 +168,67 @@ class _DetailProductMarketPageComsumerState
     final size = MediaQuery.of(context).size;
     width = size.width;
     height = size.height;
-    Future<int> a = _initData();
+    _detailData ??= widget.simpleData;
     final box = _animationKey.currentContext?.findRenderObject() as RenderBox?;
     offset = box?.localToGlobal(Offset.zero);
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            !_isLoading ? _buildDetailBody() : buildCircularProgressIndicator(),
-            Column(
-              children: [
-                Container(
-                  height: 30,
-                  width: width,
-                  color: _isScrolled
-                      ? Theme.of(context).scaffoldBackgroundColor
-                      : transparent,
-                ),
-                _customAppBar()
-              ],
-            ),
-            _showSelectedProduct
-                ? animationWidget(
-                    imgLink: mediaList != null
-                        ? mediaList![0].endsWith(".mp4")
-                            ? mediaList![1]
-                            : mediaList![0]
-                        : null)
-                : const SizedBox()
-          ],
-        ));
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          _buildDetailBody(),
+          Column(
+            children: [
+              Container(
+                height: 30,
+                width: width,
+                color: _isScrolled
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : transparent,
+              ),
+              _customAppBar()
+            ],
+          ),
+          _showSelectedProduct
+              ? animationWidget(
+                  imgLink: _listMedia != null
+                      ? _listMedia![0].endsWith(".mp4")
+                          ? _listMedia![1]
+                          : _listMedia![0]
+                      : null)
+              : const SizedBox()
+        ],
+      ),
+    );
   }
 
   Future<int> _initData() async {
-    // khoi tao general data
-    if (widget.simpleData == null) {
-      if (_detailData == null && _commentData == null) {
-        final detailData = await ref
-            .read(detailProductProvider.notifier)
-            .getDetailProduct(widget.id);
-        final comment = await ref
-            .read(reviewProductProvider.notifier)
-            .getReviewProduct(widget.id);
-      }
-      _detailData = ref.watch(detailProductProvider).detail;
-    } else {
-      _detailData = widget.simpleData;
-    }
-    _commentData = await ref.watch(reviewProductProvider).commentList;
-
-    _prices = getMinAndMaxPrice(_detailData?["product_variants"]);
-    // khoi tao color and size neu co
-    if (_colorCheckList.isEmpty && _sizeCheckList.isEmpty) {
-      if (_detailData?["product_options"] != null &&
-          _detailData?["product_options"].isNotEmpty) {
-        for (int i = 0;
-            i < _detailData?["product_options"][0]["values"].length;
-            i++) {
-          _colorCheckList.add(false);
-        }
-        if (_detailData?["product_options"].length == 2) {
-          for (int i = 0;
-              i < _detailData?["product_options"][1]["values"].length;
-              i++) {
-            _sizeCheckList.add(false);
-          }
-        }
-      }
-    }
-    if (_detailData?["product_variants"] != null ||
-        _detailData?["product_variants"].isNotEmpty) {
-      if (_prices![0] == _prices![1]) {
-        _priceTitle = "₫${_prices![0]}";
-      } else {
-        _priceTitle ??= "₫${_prices![0]} - ₫${_prices![1]}";
-      }
-    } else {
-      _priceTitle ??= "₫0";
-    }
-    // lay các ảnh cha
-    if (mediaList == null || mediaList!.isEmpty) {
+    if (_listMedia == null || _listMedia!.isEmpty) {
       if (_detailData!["product_video"] != null) {
-        mediaList?.add(_detailData!["product_video"]["url"]);
+        _listMedia?.add(_detailData!["product_video"]["url"]);
       }
       if (_detailData!["product_image_attachments"] != null &&
           _detailData!["product_image_attachments"].isNotEmpty) {
         _detailData!["product_image_attachments"].forEach((element) {
-          mediaList?.add(element["attachment"]["url"]);
+          _listMedia?.add(element["attachment"]["url"]);
         });
       }
     }
+    _productToCart = _detailData!["product_variants"][0];
+    selectedProduct = _detailData!["product_variants"][0];
+    _listPrice = getMinAndMaxPrice(_detailData?["product_variants"]);
+    if (_detailData?["product_variants"] != null ||
+        _detailData?["product_variants"].isNotEmpty) {
+      if (_listPrice![0] == _listPrice![1]) {
+        _priceTitle = "₫${_listPrice![0]}";
+      } else {
+        _priceTitle ??= "₫${_listPrice![0]} - ₫${_listPrice![1]}";
+      }
+    } else {
+      _priceTitle ??= "₫0";
+    }
+    // khoi tao general data
     if (_isConcern == null) {
-      final follower =
-          await ref.read(interestProductsProvider.notifier).getFollwerProduct();
+      await ref.read(interestProductsProvider.notifier).getFollwerProduct();
       _isConcern = false;
       final primaryInterestList =
           ref.watch(interestProductsProvider).listInterest;
@@ -235,13 +240,56 @@ class _DetailProductMarketPageComsumerState
         }
       }
     }
-    _productToCart = _detailData!["product_variants"][0];
-    selectedProduct = _detailData!["product_variants"][0];
-    // load xong
-    setState(() {
-      _isLoading = false;
-    });
+    _listComment = ref.watch(reviewProductProvider).commentList;
+    _listProductOfPage = await ProductsApi()
+        .getProductsApi({"limit": 10, "page_id": _detailData?['page']?['id']});
+    // khoi tao color and size neu co
+    _initOptions();
+    setState(() {});
     return 0;
+  }
+
+  _initOptions() {
+    if (_listCheckedColor.isEmpty && _listCheckedSize.isEmpty) {
+      if (_detailData?["product_options"] != null &&
+          _detailData?["product_options"].isNotEmpty) {
+        for (int i = 0;
+            i < _detailData?["product_options"][0]["values"].length;
+            i++) {
+          if (_detailData?["product_variants"]
+              .where((ele) =>
+                  ele['option1'] ==
+                      _detailData?["product_options"][0]["values"][i] ||
+                  ele['option2'] ==
+                      _detailData?["product_options"][0]["values"][i])
+              .toList()
+              .any((e) => e['inventory_quantity'] != 0)) {
+            _listCheckedColor.add({
+              "isActive": false,
+              "value": _detailData?["product_options"][0]["values"][i],
+              "outOfBlock": false
+            });
+          } else {
+            _listCheckedColor.add({
+              "isActive": false,
+              "value": _detailData?["product_options"][0]["values"][i],
+              "outOfBlock": false
+            });
+          }
+        }
+        if (_detailData?["product_options"].length == 2) {
+          for (int i = 0;
+              i < _detailData?["product_options"][1]["values"].length;
+              i++) {
+            _listCheckedSize.add({
+              "isActive": false,
+              "value": _detailData?["product_options"][1]["values"][i],
+              "outOfBlock": false
+            });
+          }
+        }
+      }
+    }
   }
 
   Future _addToCart() async {
@@ -286,7 +334,8 @@ class _DetailProductMarketPageComsumerState
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          height: 50,
+          padding: const EdgeInsets.only(top: 20),
+          height: 70,
           color: _isScrolled
               ? Theme.of(context).scaffoldBackgroundColor
               : transparent,
@@ -327,7 +376,7 @@ class _DetailProductMarketPageComsumerState
                     ),
                     InkWell(
                       onTap: () {
-                        _showShareDetailBottomSheet(context);
+                        // _showShareDetailBottomSheet(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -337,11 +386,11 @@ class _DetailProductMarketPageComsumerState
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: SizedBox(
-                          height: 30,
-                          width: 30,
-                          child: Icon(
-                            FontAwesomeIcons.share,
-                            size: 18,
+                          // height: 30,
+                          // width: 30,
+                          child: Image.asset(
+                            "assets/icons/share_product_icon.png",
+                            height: 20,
                             color: _isScrolled
                                 ? Theme.of(context)
                                     .textTheme
@@ -382,8 +431,7 @@ class _DetailProductMarketPageComsumerState
                     ),
                     GestureDetector(
                       onTap: () {
-                        pushToNextScreen(
-                            context, const UnSuccessTransactionPage());
+                        pushToNextScreen(context, const TransferOrderPage());
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -444,37 +492,39 @@ class _DetailProductMarketPageComsumerState
                       },
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      itemCount: mediaList!.length,
+                      itemCount: _listMedia!.length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
                             pushToNextScreen(
                                 context,
                                 PreviewVideoImage(
-                                  src: mediaList!,
+                                  src: _listMedia!,
                                   index: mediaIndex,
                                 ));
                           },
                           child: SizedBox(
                               height: 350,
                               width: width,
-                              child: mediaList!.isEmpty
+                              child: _listMedia!.isEmpty
                                   ? Image.network(
                                       "https://haycafe.vn/wp-content/uploads/2022/03/anh-ma-cute-de-thuong.jpg")
-                                  : mediaList![mediaIndex]?.endsWith('.mp4')
+                                  : _listMedia![mediaIndex]?.endsWith('.mp4')
                                       ? SizedBox(
                                           height: 300,
                                           width: width,
                                           child: SizedBox(
                                             height: 300,
                                             child: VideoPlayerRender(
-                                              path: mediaList![mediaIndex],
+                                              path: _listMedia![mediaIndex],
                                               autoPlay: true,
                                             ),
                                           ))
-                                      : ImageCacheRender(
-                                          path: mediaList![mediaIndex],
-                                        )),
+                                      : ExtendedImageNetWorkCustom(
+                                          path: _listMedia![mediaIndex],
+                                          width: width,
+                                          fit: BoxFit.cover,
+                                          height: 300)),
                         );
                       }),
                 ),
@@ -485,7 +535,7 @@ class _DetailProductMarketPageComsumerState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      mediaList!.length,
+                      _listMedia!.length,
                       (index) => Padding(
                         padding: const EdgeInsets.all(1.0),
                         child: Icon(
@@ -501,18 +551,18 @@ class _DetailProductMarketPageComsumerState
                 ),
               ],
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildSpacer(height: 10),
-                  // example color or size product
-                  SingleChildScrollView(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildSpacer(height: 10),
+                // example color or size product
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: List.generate(mediaList!.length, (index) {
+                      children: List.generate(_listMedia!.length, (index) {
                         return InkWell(
                           onTap: () {
                             setState(() {
@@ -522,17 +572,18 @@ class _DetailProductMarketPageComsumerState
                           child: Container(
                               decoration: BoxDecoration(
                                   border: mediaIndex == index
-                                      ? Border.all(color: red, width: 0.6)
+                                      ? Border.all(
+                                          color: primaryColor, width: 0.6)
                                       : null),
                               margin: const EdgeInsets.only(right: 10),
-                              child: mediaList![index].endsWith(".mp4")
+                              child: _listMedia![index].endsWith(".mp4")
                                   ? SizedBox(
                                       height: 120,
                                       width: 180,
                                       child: VideoPlayerRender(
-                                          path: mediaList![index]))
-                                  : ImageCacheRender(
-                                      path: mediaList![index],
+                                          path: _listMedia![index]))
+                                  : ExtendedImageNetWorkCustom(
+                                      path: _listMedia![index],
                                       height: 120.0,
                                       width: 120.0,
                                     )),
@@ -540,277 +591,286 @@ class _DetailProductMarketPageComsumerState
                       }).toList(),
                     ),
                   ),
-
-                  buildSpacer(height: 10),
-                  buildDivider(
-                    color: secondaryColor,
-                  ),
-                  // title
-                  buildSpacer(height: 10),
-                  buildTextContent(_detailData?["title"], true, fontSize: 17),
-                  // price
-                  buildSpacer(height: 10),
-                  buildTextContent(
+                ),
+                buildSpacer(height: 10),
+                buildDivider(
+                  color: secondaryColor,
+                ),
+                // title
+                buildSpacer(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: buildTextContent(_detailData?["title"] ?? "", true,
+                      fontSize: 17),
+                ),
+                // price
+                buildSpacer(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: buildTextContent(
                     _priceTitle ?? "₫0.0",
                     true,
                     fontSize: 18,
                     colorWord: red,
                   ),
-                  //rate, selled and heart, share,
-                  buildSpacer(height: 20),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            buildRatingStarWidget(_detailData?["rating_count"]),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 5),
-                              child: buildTextContent(
-                                  "${_detailData?["rating_count"].toString()}",
-                                  false,
-                                  fontSize: 18),
-                            ),
-                            Container(
-                              width: 2,
-                              color: red,
-                              height: 15,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: buildTextContent(
-                                  "đã bán ${_detailData?["sold"].round()}",
-                                  false,
+                ),
+                //rate, selled and heart, share,
+                buildSpacer(height: 20),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          buildRatingStarWidget(_detailData?["rating"]),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 5),
+                            child: buildTextContent(
+                                "${_detailData?["rating"].toString()}", false,
+                                fontSize: 16),
+                          ),
+                          Container(
+                            width: 2,
+                            color: red,
+                            height: 15,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: buildTextContent("đã bán ", false,
+                                    fontSize: 13),
+                              ),
+                              buildTextContent(
+                                  "${_detailData?["sold"].round()}", false,
                                   fontSize: 15),
+                            ],
+                          ),
+                          Container(
+                            height: 20,
+                            width: 20,
+                            padding: const EdgeInsets.only(left: 5),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            //concern
+                            InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  _isConcern = !_isConcern!;
+                                });
+                                if (_isConcern!) {
+                                  await FollwerProductsApi()
+                                      .postFollwerProductsApi(widget.id);
+                                } else {
+                                  await FollwerProductsApi()
+                                      .deleteFollwerProductsApi(widget.id);
+                                }
+                              },
+                              child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: (_isConcern != null && _isConcern!)
+                                      ? Image.asset(
+                                          "assets/icons/concern_fill_product_icon.png",
+                                          height: 18,
+                                          color: primaryColor,
+                                        )
+                                      : Image.asset(
+                                          "assets/icons/concern_product_icon.png",
+                                          height: 18,
+                                          color: primaryColor,
+                                        )),
                             ),
-                            Container(
-                              height: 20,
-                              width: 20,
-                              padding: const EdgeInsets.only(left: 5),
+                            //share
+                            InkWell(
+                              onTap: () {
+                                // _showShareDetailBottomSheet(context);
+                              },
+                              child: Image.asset(
+                                "assets/icons/share_product_icon.png",
+                                height: 16,
+                                color: primaryColor,
+                              ),
+                            ),
+                            //heart
+                            InkWell(
+                              onTap: () {},
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: Image.asset(
+                                    "assets/icons/chat_product_icon.png",
+                                    height: 18,
+                                    color: primaryColor),
+                              ),
                             ),
                           ],
                         ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              //concern
-                              InkWell(
-                                onTap: () async {
-                                  setState(() {
-                                    _isConcern = !_isConcern!;
-                                  });
-                                  if (_isConcern!) {
-                                    await FollwerProductsApi()
-                                        .postFollwerProductsApi(widget.id);
-                                  } else {
-                                    await FollwerProductsApi()
-                                        .deleteFollwerProductsApi(widget.id);
-                                  }
-                                },
-                                child: SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: (_isConcern!)
-                                      ? const Icon(
-                                          Icons.star_purple500_outlined,
-                                          color: Colors.yellow,
-                                          size: 20,
-                                        )
-                                      : const Icon(
-                                          Icons.star_border,
-                                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const CrossBar(height: 7, opacity: 0.2),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                  child: buildVoucherAndSelect(),
+                ),
+                const CrossBar(height: 7, opacity: 0.2),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: buildTranferFee(context),
+                ),
+                const CrossBar(height: 7, opacity: 0.2),
+                _detailData?['page'] != null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                        ),
+                        child: buildReviewShop(context, _detailData?['page']),
+                      )
+                    : const SizedBox(),
+                buildSpacer(height: 10),
+                _buildDescriptionAndReview(),
+                _listProductOfPage != null && _listProductOfPage!.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: buildSuggestListComponent(
+                            context: context,
+                            axis: Axis.horizontal,
+                            title: Flex(
+                              direction: Axis.horizontal,
+                              children: [
+                                Flexible(
+                                  child: buildDivider(color: greyColor),
                                 ),
-                              ),
-                              //share
-                              const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: Icon(
-                                  FontAwesomeIcons.envelope,
-                                  size: 20,
+                                buildTextContent(
+                                    "Sản phẩm khác của shop", false),
+                                Flexible(
+                                  child: buildDivider(color: greyColor),
                                 ),
-                              ),
-                              //heart
-                              InkWell(
-                                onTap: () {
-                                  _showShareDetailBottomSheet(context);
-                                },
-                                child: const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: Icon(
-                                    FontAwesomeIcons.share,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                            contentList: _listProductOfPage ?? []),
+                      )
+                    : const SizedBox(),
+                buildSpacer(height: 10),
+                buildSuggestListComponent(
+                    context: context,
+                    title: Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        Flexible(
+                          child: buildDivider(color: greyColor),
+                        ),
+                        buildTextContent("Có thể bạn sẽ thích", false),
+                        Flexible(
+                          child: buildDivider(color: greyColor),
                         ),
                       ],
                     ),
-                  ),
-                  // tab bar
-                  buildSpacer(height: 10),
-                  Column(
-                    children: [
-                      Container(
-                        color: Colors.blue,
-                        height: 2,
-                      ),
-                      // tabbar
-                      Row(
-                        children: List.generate(
-                            DetailProductMarketConstants
-                                .DETAIL_PRODUCT_MARKET_CONTENTS.length,
-                            (index) => GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _onMorePart = index;
-                                  });
-                                },
-                                child: Container(
-                                  height: 50,
-                                  width: width / 4.25,
-                                  color: _onMorePart == index
-                                      ? Colors.blue
-                                      : transparent,
-                                  child: buildTextContentButton(
-                                    DetailProductMarketConstants
-                                        .DETAIL_PRODUCT_MARKET_CONTENTS[index],
-                                    false,
-                                    isCenterLeft: false,
-                                    fontSize: 13,
-                                    function: () {
-                                      setState(() {
-                                        _onMorePart = index;
-                                      });
-                                    },
-                                  ),
-                                ))),
-                      ),
-                      buildDivider(height: 10, color: red),
-                      _onMorePart == 0
-                          ? Column(children: [
-                              buildSpacer(height: 10),
-                              buildTextContent("Mô tả sản phẩm", true),
-                              buildSpacer(height: 10),
-                              buildTextContent(
-                                  "${_detailData?["description"]}", false)
-                            ])
-                          : const SizedBox(),
-                      _onMorePart == 1
-                          ? Column(
-                              children: [
-                                Column(
-                                  children: _commentData != null &&
-                                          _commentData!.isNotEmpty
-                                      ? List.generate(_commentData!.length,
-                                          (index) {
-                                          final data = _commentData![index];
-                                          return buildReviewItemWidget(
-                                              context, _commentData![index]);
-                                        }).toList()
-                                      : [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10.0),
-                                            child: buildTextContent(
-                                              "Không có bài đánh giá nào",
-                                              true,
-                                              fontSize: 17,
-                                            ),
-                                          )
-                                        ],
-                                ),
-                              ],
-                            )
-                          : const SizedBox()
-                    ],
-                  ),
-                ],
-              ),
+                    isLoading: true,
+                    isLoadingMore: ref.watch(productsProvider).isMore,
+                    contentList: ref.watch(productsProvider).list),
+
+                buildSpacer(height: 90),
+              ],
             )
           ]),
         ),
-        SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(),
-              SizedBox(
-                width: width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(),
+            Column(
+              children: [
+                Stack(
                   children: [
                     Container(
-                      child: buildMarketButton(
-                          width: width * 0.25,
-                          bgColor: Colors.orange[300],
-                          contents: [
-                            const Icon(
-                              FontAwesomeIcons.message,
-                              size: 13,
-                            ),
-                            buildSpacer(height: 3),
-                            buildTextContent("Chat ngay", false, fontSize: 9)
-                          ],
-                          radiusValue: 0,
-                          isHaveBoder: false,
-                          isVertical: true,
-                          function: () async {}),
-                    ),
-                    Container(
-                      child: buildMarketButton(
-                          width: width * 0.25,
-                          bgColor: Colors.orange[300],
-                          contents: [
-                            const Icon(
-                              FontAwesomeIcons.cartArrowDown,
-                              size: 13,
-                            ),
-                            buildSpacer(height: 3),
-                            buildTextContent("Thêm vào giỏ", false, fontSize: 9)
-                          ],
-                          isVertical: true,
-                          radiusValue: 0,
-                          fontSize: 9,
-                          isHaveBoder: false,
-                          function: () async {
-                            if (_detailData!["product_options"].isNotEmpty) {
-                              showBottomColorSelections("Thêm vào giỏ hàng");
-                            } else {
-                              _updateAnimation();
-
-                              _addToCart();
-                            }
-                          }),
-                    ),
-                    Container(
-                      child: buildMarketButton(
-                          width: width * 0.5,
-                          bgColor: red,
-                          contents: [
-                            buildTextContent("Mua ngay", false, fontSize: 13)
-                          ],
-                          function: () async {
-                            if (_detailData!["product_options"].isNotEmpty) {
-                              showBottomColorSelections("Mua ngay");
-                            } else {
-                              _updateAnimation();
-                              _addToCart();
-                            }
-                          }),
+                        height: MediaQuery.of(context).padding.bottom + 50,
+                        color: white),
+                    SizedBox(
+                      width: width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          buildMarketButton(
+                            width: width * 0.25,
+                            bgColor: Colors.orange[300],
+                            contents: [
+                              Image.asset(
+                                "assets/icons/chat_product_icon.png",
+                                height: 18,
+                                color: white,
+                              ),
+                              buildSpacer(height: 3),
+                              buildTextContent("Chat ngay", false,
+                                  fontSize: 9, isCenterLeft: false)
+                            ],
+                            radiusValue: 0,
+                            isHaveBoder: false,
+                            isVertical: true,
+                          ),
+                          buildMarketButton(
+                            width: width * 0.25,
+                            bgColor: Colors.orange[300],
+                            contents: [
+                              Image.asset(
+                                "assets/icons/cart_product_icon.png",
+                                height: 18,
+                                color: white,
+                              ),
+                              buildSpacer(height: 3),
+                              buildTextContent("Thêm vào giỏ", false,
+                                  fontSize: 9)
+                            ],
+                            isVertical: true,
+                            radiusValue: 0,
+                            fontSize: 9,
+                            isHaveBoder: false,
+                            function: () async {
+                              if (_detailData!["product_options"] != null &&
+                                  _detailData!["product_options"].isNotEmpty) {
+                                showBottomColorSelections("Thêm vào giỏ hàng");
+                              } else {
+                                _updateAnimation();
+                                _addToCart();
+                              }
+                            },
+                          ),
+                          buildMarketButton(
+                            width: width * 0.5,
+                            bgColor: red,
+                            contents: [
+                              buildTextContent("Mua ngay", false, fontSize: 13)
+                            ],
+                            function: () async {
+                              if (_detailData!["product_options"].isNotEmpty) {
+                                showBottomColorSelections("Mua ngay");
+                              } else {
+                                _updateAnimation();
+                                _addToCart();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         )
       ],
     );
@@ -821,13 +881,17 @@ class _DetailProductMarketPageComsumerState
     if (_detailData!["product_options"] != null &&
         _detailData!["product_options"].isNotEmpty) {
       if (_detailData!["product_options"].length == 2) {
-        if (_sizeValue != null && _colorValue != null) {
+        if (_selectedSizeValue != null && _selectedColorValue != null) {
           _detailData?["product_variants"].forEach((element) {
-            if (element["option1"] == _colorValue &&
-                element["option2"] == _sizeValue) {
+            if (element["option1"] == _selectedColorValue &&
+                element["option2"] == _selectedSizeValue) {
               _priceTitle = "₫${element["price"].toString()}";
               selectedProduct = element;
-              _canAddToCart = true;
+              if (checkOutOfStock()) {
+                _canAddToCart = false;
+              } else {
+                _canAddToCart = true;
+              }
               setState(() {});
             }
           });
@@ -835,9 +899,9 @@ class _DetailProductMarketPageComsumerState
           return;
         }
       } else {
-        if (_colorValue != null) {
+        if (_selectedColorValue != null) {
           _detailData?["product_variants"].forEach((element) {
-            if (element["option1"] == _colorValue) {
+            if (element["option1"] == _selectedColorValue) {
               _priceTitle = "₫${element["price"].toString()}";
               selectedProduct = element;
               _canAddToCart = true;
@@ -851,8 +915,105 @@ class _DetailProductMarketPageComsumerState
     }
   }
 
-  showBottomColorSelections(String title) {
-    showCustomMarketBottomSheet(context, 550, title: "Chọn kiểu dáng",
+  Widget _buildDescriptionAndReview() {
+    return Column(
+      children: [
+        const CrossBar(height: 7, opacity: 0.2),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: [
+              buildVoucherAndSelect(
+                  title: "Chi tiết sản phẩm",
+                  subTitle: "Kho, bảo hành",
+                  havePrefixIcon: false,
+                  mainFontSize: 17,
+                  subTitleFontSize: 14,
+                  titleBold: true),
+              buildSpacer(height: 10),
+              buildDivider(color: greyColor, left: 20, right: 20, bottom: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ExpandableText(
+                  _detailData?["description"],
+                  expandText: 'Xem thêm',
+                  collapseText: 'Thu gọn',
+                  style: const TextStyle(
+                    fontSize: 15,
+                  ),
+                  linkStyle: const TextStyle(fontWeight: FontWeight.w500),
+                  maxLines: 10,
+                  linkColor: blueColor,
+                  animation: true,
+                  collapseOnTextTap: true,
+                  mentionStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                  onUrlTap: (url) async {
+                    if (await canLaunchUrl(Uri.parse(url))) {
+                      await launchUrl(Uri.parse(url));
+                    } else {
+                      return;
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        const CrossBar(height: 7, opacity: 0.2),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: buildVoucherAndSelect(
+              title: "Đánh giá sản phẩm",
+              subTitle: "Xem tất cả",
+              havePrefixIcon: false,
+              titleBold: true,
+              mainFontSize: 17,
+              subTitleFontSize: 14,
+              addtionalWidget: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    buildRatingStarWidget(4),
+                    buildSpacer(width: 5),
+                    buildTextContent("4/5 (1000 đánh giá)", false, fontSize: 13)
+                  ],
+                ),
+              ),
+              function: () {
+                pushToNextScreen(
+                    context,
+                    ReviewAllProductPage(
+                      listProduct: _listComment!,
+                    ));
+              }),
+        ),
+        _listComment != null && _listComment!.isNotEmpty
+            ? Column(
+                children: [
+                  buildDivider(color: greyColor, left: 10, right: 10, top: 5),
+                  Column(
+                      children: List.generate(_listComment!.length, (index) {
+                    return buildReviewItemWidget(context, _listComment![index]);
+                  }).toList()),
+                ],
+              )
+            : Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: buildTextContent(
+                  "Không có bài đánh giá nào",
+                  false,
+                  fontSize: 15,
+                ),
+              )
+      ],
+    );
+  }
+
+  void showBottomColorSelections(String title) {
+    showCustomBottomSheet(context, 550, title: "Chọn kiểu dáng",
         widget: StatefulBuilder(builder: (context, setStateFull) {
       return Container(
         padding: const EdgeInsets.only(left: 10),
@@ -866,7 +1027,7 @@ class _DetailProductMarketPageComsumerState
               Row(
                 children: [
                   selectedProduct["image"] != null
-                      ? ImageCacheRender(
+                      ? ExtendedImageNetWorkCustom(
                           path: selectedProduct["image"]["url"] ??
                               "https://cea-saigon.edu.vn/img_data/images/error.jpg",
                           height: 120.0,
@@ -941,72 +1102,77 @@ class _DetailProductMarketPageComsumerState
                       buildDivider(
                           height: 10, color: greyColor, top: 10, bottom: 10),
                       // choose number of product
-                      Row(children: [
-                        Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          child: buildTextContent(
-                            "Số lượng:",
-                            true,
-                            fontSize: 14,
-                          ),
-                        ),
-                        buildSpacer(width: 10),
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                if (productNumber > 0) {
-                                  setState(() {
-                                    productNumber--;
-                                  });
-                                  setStateFull(() {});
-                                }
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: greyColor, width: 0.2)),
-                                height: 30,
-                                width: 30,
-                                child: const Center(
-                                    child: Icon(
-                                  FontAwesomeIcons.minus,
-                                  size: 18,
-                                )),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                child: buildTextContent(
+                                  "Số lượng:",
+                                  true,
+                                  fontSize: 14,
+                                ),
                               ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: greyColor, width: 0.2)),
-                              height: 30,
-                              width: 30,
-                              child: buildTextContent("${productNumber}", true,
-                                  isCenterLeft: false),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  productNumber++;
-                                });
-                                setStateFull(() {});
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: greyColor, width: 0.2)),
-                                height: 30,
-                                width: 30,
-                                child: const Center(
-                                    child: Icon(
-                                  FontAwesomeIcons.add,
-                                  size: 18,
-                                )),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      if (productNumber > 0) {
+                                        setState(() {
+                                          productNumber--;
+                                        });
+                                        setStateFull(() {});
+                                      }
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: greyColor, width: 0.2)),
+                                      height: 30,
+                                      width: 30,
+                                      child: const Center(
+                                          child: Icon(
+                                        FontAwesomeIcons.minus,
+                                        size: 18,
+                                      )),
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: greyColor, width: 0.2)),
+                                    height: 30,
+                                    width: 30,
+                                    child: buildTextContent(
+                                        "${productNumber}", true,
+                                        isCenterLeft: false),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        productNumber++;
+                                      });
+                                      setStateFull(() {});
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: greyColor, width: 0.2)),
+                                      height: 30,
+                                      width: 30,
+                                      child: const Center(
+                                          child: Icon(
+                                        FontAwesomeIcons.add,
+                                        size: 18,
+                                      )),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ]),
+                            ]),
+                      ),
                     ],
                   ),
                 ),
@@ -1017,7 +1183,11 @@ class _DetailProductMarketPageComsumerState
               child: buildMarketButton(
                   width: width,
                   bgColor: _canAddToCart ? Colors.orange[500] : greyColor,
-                  contents: [buildTextContent(title, false, fontSize: 13)],
+                  contents: [
+                    buildTextContent(
+                        checkOutOfStock() ? "Sản phẩm hết hàng" : title, false,
+                        fontSize: 13)
+                  ],
                   function: () async {
                     _updateAnimation();
                     popToPreviousScreen(context);
@@ -1034,10 +1204,11 @@ class _DetailProductMarketPageComsumerState
       {Function? additionalFunction}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                   margin: const EdgeInsets.only(
@@ -1045,154 +1216,125 @@ class _DetailProductMarketPageComsumerState
                   ),
                   width: 80,
                   child: buildTextContent(title, true, fontSize: 18)),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: List.generate(data.length, (index) {
-                  return InkWell(
-                    onTap: () {
-                      if (title == "Màu sắc") {
-                        if (_colorCheckList.isNotEmpty) {
-                          for (int i = 0; i < _colorCheckList.length; i++) {
-                            _colorCheckList[i] = false;
-                          }
-                          _colorCheckList[index] = true;
-                          _colorValue = data[index];
-                        }
-                      } else {
-                        if (_sizeCheckList.isNotEmpty) {
-                          for (int i = 0; i < _sizeCheckList.length; i++) {
-                            _sizeCheckList[i] = false;
-                          }
-                          _sizeCheckList[index] = true;
-                          _sizeValue = data[index];
-                        }
-                      }
-                      setState(() {});
-                      _updateInformationCategorySelection();
-                      additionalFunction != null ? additionalFunction() : null;
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      width: 80,
-                      margin: const EdgeInsets.only(right: 10, top: 10),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: title == "Màu sắc"
-                                  ? _colorCheckList.isNotEmpty &&
-                                          _colorCheckList[index]
-                                      ? blueColor
-                                      : greyColor
-                                  : _sizeCheckList.isNotEmpty &&
-                                          _sizeCheckList[index]
-                                      ? blueColor
-                                      : greyColor,
-                              width: 0.6),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: buildTextContent(data[index], false,
-                          colorWord: title == "Màu sắc"
-                              ? _colorCheckList.isNotEmpty &&
-                                      _colorCheckList[index]
-                                  ? blueColor
-                                  : null
-                              : _sizeCheckList.isNotEmpty &&
-                                      _sizeCheckList[index]
-                                  ? blueColor
-                                  : null,
-                          fontSize: 14,
-                          isCenterLeft: false),
-                    ),
-                  );
-                }),
-              )
+              const SizedBox()
             ],
           ),
+          Wrap(
+            spacing: 8.0,
+            runSpacing: 8.0,
+            children: List.generate(data.length, (index) {
+              return InkWell(
+                onTap: () {
+                  if (title == "Màu sắc") {
+                    if (_listCheckedColor.isNotEmpty) {
+                      for (int i = 0; i < _listCheckedColor.length; i++) {
+                        _listCheckedColor[i]['isActive'] = false;
+                      }
+                      _listCheckedColor[index]['isActive'] = true;
+                      _selectedColorValue = data[index];
+                    }
+                  } else {
+                    if (_listCheckedSize.isNotEmpty) {
+                      for (int i = 0; i < _listCheckedSize.length; i++) {
+                        _listCheckedSize[i]['isActive'] = false;
+                      }
+                      _listCheckedSize[index]['isActive'] = true;
+                      _selectedSizeValue = data[index];
+                    }
+                  }
+                  setState(() {});
+                  if (_selectedSizeValue != null &&
+                      _selectedColorValue != null) {
+                    if (_detailData?["product_variants"].firstWhere(
+                          (ele) =>
+                              (ele['option1'] == _selectedColorValue &&
+                                  ele['option2'] == _selectedSizeValue) ||
+                              (ele['option1'] == _selectedSizeValue &&
+                                  ele['option2'] == _selectedColorValue),
+                          orElse: () {
+                            return false;
+                          },
+                        )['inventory_quantity'] ==
+                        0) {}
+                  }
+                  _updateInformationCategorySelection();
+                  additionalFunction != null ? additionalFunction() : null;
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  width: 80,
+                  margin: const EdgeInsets.only(right: 10, top: 10),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: title == "Màu sắc"
+                              ? _listCheckedColor.isNotEmpty &&
+                                      _listCheckedColor[index]['isActive']
+                                  ? blueColor
+                                  : greyColor
+                              : _listCheckedSize.isNotEmpty &&
+                                      _listCheckedSize[index]['isActive']
+                                  ? blueColor
+                                  : greyColor,
+                          width: 0.6),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: buildTextContent(data[index], false,
+                      colorWord: title == "Màu sắc"
+                          ? _listCheckedColor.isNotEmpty &&
+                                  _listCheckedColor[index]['isActive']
+                              ? blueColor
+                              : null
+                          : _listCheckedSize.isNotEmpty &&
+                                  _listCheckedSize[index]['isActive']
+                              ? blueColor
+                              : null,
+                      fontSize: 14,
+                      isCenterLeft: false),
+                ),
+              );
+            }),
+          )
         ],
       ),
     );
   }
 
-  void _showShareDetailBottomSheet(BuildContext context) {
-    showCustomMarketBottomSheet(context, 250,
-        title: "Chia sẻ",
-        widget: ListView.builder(
-            shrinkWrap: true,
-            itemCount: DetailProductMarketConstants
-                .DETAIL_PRODUCT_MARKET_SHARE_SELECTIONS["data"].length,
-            itemBuilder: (context, index) {
-              final data = DetailProductMarketConstants
-                  .DETAIL_PRODUCT_MARKET_SHARE_SELECTIONS["data"];
-              return Column(
-                children: [
-                  GeneralComponent(
-                    [
-                      buildTextContent(data[index]["title"], true, fontSize: 16)
-                    ],
-                    prefixWidget: Container(
-                      height: 25,
-                      width: 25,
-                      margin: const EdgeInsets.only(right: 10),
-                      child: Icon(data[index]["icon"]),
-                    ),
-                    changeBackground: transparent,
-                    padding: const EdgeInsets.all(5),
-                    function: () {
-                      String title = DetailProductMarketConstants
-                              .DETAIL_PRODUCT_MARKET_SHARE_SELECTIONS["data"]
-                          [index]["title"];
-                      Widget body = const SizedBox();
-                      switch (data[index]["key"]) {
-                        // link
-                        case link:
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Sao chép sản phẩm")));
-                          popToPreviousScreen(context);
-                          return;
-                        case share_on_story_table:
-                        //
-                        case share_on_group:
-                          body = ShareAndSearchWidget(
-                              data: DetailProductMarketConstants
-                                  .DETAIL_PRODUCT_MARKET_GROUP_SHARE_SELECTIONS,
-                              placeholder: title);
-                          break;
-                        default:
-                          body = ShareAndSearchWidget(
-                              data: DetailProductMarketConstants
-                                  .DETAIL_PRODUCT_MARKET_FRIEND_SHARE_SELECTIONS,
-                              placeholder: title);
-                          break;
-                      }
-                      showCustomMarketBottomSheet(context, 600,
-                          title: title,
-                          iconData: FontAwesomeIcons.chevronLeft,
-                          isBarrierTransparent: true,
-                          widget: body);
-                    },
-                  ),
-                  buildDivider(color: greyColor)
-                ],
-              );
-            }));
+  bool checkOutOfStock() {
+    if (_selectedSizeValue != null && _selectedColorValue != null) {
+      if (_detailData?["product_variants"].firstWhere(
+            (ele) =>
+                (ele['option1'] == _selectedColorValue &&
+                    ele['option2'] == _selectedSizeValue) ||
+                (ele['option1'] == _selectedSizeValue &&
+                    ele['option2'] == _selectedColorValue),
+            orElse: () {
+              return false;
+            },
+          )['inventory_quantity'] ==
+          0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
   }
 
   Future<dynamic> _getInformationForCart() async {
-    if (_colorValue == null) {
+    if (_selectedColorValue == null) {
       // khong co  sp con nen chon sp duy nhat
       _productToCart = _detailData?["product_variants"][0];
     } else {
-      if (_sizeValue != null) {
+      if (_selectedSizeValue != null) {
         _detailData?["product_variants"].forEach((element) {
-          if (element["option1"] == _colorValue &&
-              element["option2"] == _sizeValue) {
+          if (element["option1"] == _selectedColorValue &&
+              element["option2"] == _selectedSizeValue) {
             _productToCart = element;
             return;
           }
         });
       } else {
         _detailData?["product_variants"].forEach((element) {
-          if (element["option1"] == _colorValue) {
+          if (element["option1"] == _selectedColorValue) {
             _productToCart = element;
             return;
           }
@@ -1248,8 +1390,10 @@ class _DetailProductMarketPageComsumerState
                               ? 0.0
                               : offset!.dy / 400
                       : 1.0,
-                  child: ImageCacheRender(
-                    path: imgLink ?? imageUrl,
+                  child: ExtendedImageNetWorkCustom(
+                    path: imgLink ?? linkBannerDefault,
+                    height: _addProductStatus ? 30 : 100,
+                    width: _addProductStatus ? 30 : 100,
                   ),
                 ))
             : const SizedBox());

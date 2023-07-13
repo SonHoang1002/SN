@@ -106,7 +106,7 @@ class ApplicationAndWebsitePage extends StatelessWidget {
                                   showCustomBottomSheet(
                                       context,
                                       370,
-                                      ApplicationAndWebsiteConstants
+                                     title: ApplicationAndWebsiteConstants
                                               .APPLICATION_AND_WEBSITE_BOTTOM_SHEET_CONTENTS[
                                           'title'],
                                       widget: ListView.builder(

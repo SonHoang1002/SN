@@ -69,9 +69,8 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   }
 
   Future<void> _getImage() {
-    final pickedFileFuture = ImagePicker()
-        // ignore: deprecated_member_use
-        .getImage(source: ImageSource.gallery, imageQuality: 100);
+    final pickedFileFuture = ImagePicker() 
+        .pickImage(source: ImageSource.gallery, imageQuality: 100);
     pickedFileFuture.then((pickedFile) {
       if (pickedFile != null) {
         final imageDataFuture = _load(File(pickedFile.path));

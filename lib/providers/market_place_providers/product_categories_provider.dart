@@ -20,8 +20,8 @@ class ProductParentCategoriesController
   ProductParentCategoriesController() : super(ProductParentCategoriesState());
 
   getParentProductCategories() async {
-    final response = await CategoryProductApis().getParentCategoryProductApi();
-    state = state.copyWith(list: response ?? []);
+    final response = await CategoryProductApis().getParentCategoryProductApi()??[];
+    state = state.copyWith(list: response);
   }
 }
 
@@ -41,8 +41,8 @@ class ProductChildCategoriesController
     extends StateNotifier<ProductChildCategoriesState> {
   ProductChildCategoriesController() : super(ProductChildCategoriesState());
 
-  getChildProductCategories(dynamic id) async {
-    final response = await CategoryProductApis().getChildCategoryProductApi(id);
+  getChildProductCategories(dynamic id,dynamic params) async {
+    final response = await CategoryProductApis().getChildCategoryProductApi(id,params);
     state = state.copyWith(list: response);
   }
 }

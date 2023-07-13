@@ -64,7 +64,6 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
   checkFollowing() {
     var group = widget.post?['group'];
     var page = widget.post?['page'];
-
     return (group != null &&
             group["group_relationship"] != null &&
             group["group_relationship"]?["like"] == true) ||
@@ -159,7 +158,6 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
     var page = widget.post?['page'];
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
-
     return widget.post != null
         ? InkWell(
             hoverColor: transparent,
@@ -176,10 +174,12 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
               }
             },
             child: Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
+              padding: const EdgeInsets.only(
+                left: 12,
+              ),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,

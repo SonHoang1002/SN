@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:social_network_app_mobile/widgets/cross_bar.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
+import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
-import '../../../../theme/colors.dart';
-import '../../../../widgets/appbar_title.dart';
+import '../../../../theme/colors.dart'; 
 
 class SuccessOrderPage extends ConsumerStatefulWidget {
-  const SuccessOrderPage({super.key});
+  final dynamic orderData;
+  const SuccessOrderPage({super.key, required this.orderData});
 
   @override
   ConsumerState<SuccessOrderPage> createState() => _SuccessOrderPageState();
@@ -39,9 +43,9 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               BackIconAppbar(),
               AppBarTitle(title: "Thông tin đơn hàng"),
               SizedBox()
@@ -69,7 +73,7 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
                       ),
                     ],
                     suffixFlexValue: 8,
-                    suffixWidget:  ImageCacheRender(
+                    suffixWidget: const ImageCacheRender(
                       path:
                           "https://snapi.emso.asia/system/media_attachments/files/109/311/682/380/490/462/original/e692f50e243bd484.png",
                       height: 80.0,
@@ -82,16 +86,31 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
                   ),
                   _buildTransferWidget(),
                   buildDivider(height: 10, color: greyColor),
-                  _buildAddressWidget(),
-                  buildSpacer(height: 7),
-                  buildDivider(height: 5, color: greyColor),
-                  buildSpacer(height: 10),
+                  widget.orderData?['delivery_address'] != null
+                      ? Column(
+                          children: [
+                            _buildAddressWidget(),
+                            buildSpacer(height: 7),
+                            buildDivider(height: 5, color: greyColor),
+                            buildSpacer(height: 10),
+                          ],
+                        )
+                      : const SizedBox(),
                 ],
               )),
         ));
   }
 
   Widget _buildAddressWidget() {
+    List address = [
+      widget.orderData?['delivery_address']?['detail_addresses'] ?? "",
+      widget.orderData?['delivery_address']?['ward_name'] ?? "",
+      widget.orderData?['delivery_address']?['district_name'] ?? "",
+      widget.orderData?['delivery_address']?['province_name'] ?? "",
+    ];
+
+    final message =
+        address.any((element) => element != "") ? address.join(",") : "";
     return InkWell(
       onTap: () async {},
       child: Container(
@@ -112,11 +131,10 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
                 color: red,
               ),
               suffixFlexValue: 8,
-              suffixWidget: buildTextContent(
-                "SAO CHÉP",
-                true,
-                fontSize: 16,
-              ),
+              suffixWidget: buildTextContentButton("SAO CHÉP", true,
+                  fontSize: 16, function: () {
+                Clipboard.setData(ClipboardData(text: message));
+              }),
               isHaveBorder: false,
               borderRadiusValue: 0,
               changeBackground: transparent,
@@ -125,8 +143,22 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
             ),
             GeneralComponent(
               [
-                buildTextContent("${"mdhfgjkjdfhgd"}", false, fontSize: 15),
-                buildTextContent("${"mdhfgjkjdfhgd"}", false, fontSize: 15),
+                buildTextContent(
+                    "${widget.orderData?['delivery_address']?['detail_addresses'] ?? ""}",
+                    false,
+                    fontSize: 15),
+                buildTextContent(
+                    "${widget.orderData?['delivery_address']?['ward_name'] ?? ""}",
+                    false,
+                    fontSize: 15),
+                buildTextContent(
+                    "${widget.orderData?['delivery_address']?['district_name'] ?? ""}",
+                    false,
+                    fontSize: 15),
+                buildTextContent(
+                    "${widget.orderData?['delivery_address']?['ward_nprovince_nameame'] ?? ""}",
+                    false,
+                    fontSize: 15),
               ],
               prefixWidget: const Padding(
                 padding: EdgeInsets.only(right: 15),
@@ -175,8 +207,9 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
           ),
           GeneralComponent(
             [
-              buildTextContent("${"Nhanh"}", false, fontSize: 15),
-              buildTextContent("${"Emso Xpress - JSGJSJHFDKSKSDFH"}", false,
+              buildTextContent("Nhanh", false, fontSize: 15),
+              buildSpacer(height: 5),
+              buildTextContent("Emso Xpress - JSGJSJHFDKSKSDFH", false,
                   fontSize: 15),
             ],
             prefixWidget: const Padding(
@@ -192,7 +225,7 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
           buildSpacer(height: 7),
           GeneralComponent(
             [
-              buildTextContent("${"Đơn hàng đã giao thành công"}", false,
+              buildTextContent("Đơn hàng đã giao thành công", false,
                   fontSize: 15, colorWord: Colors.green),
             ],
             prefixWidget: const Icon(
@@ -209,7 +242,9 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
           buildSpacer(height: 7),
           GeneralComponent(
             [
-              buildTextContent("${"3 - 3 - 2023 10:25"}", false, fontSize: 12),
+              buildTextContent(
+                  DateFormat("dd-MM-yyyy hh-mm").format(DateTime.now()), false,
+                  fontSize: 12),
             ],
             prefixWidget: const Padding(
               padding: EdgeInsets.only(right: 15),
@@ -247,55 +282,3 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
     );
   }
 }
-
-List<Map<String, dynamic>> demoDelvered = [
-  {
-    "day": "18 tháng 3",
-    "time": "15:34",
-    "title": "Giao hàng không thành công",
-    "content":
-        "ĐƠn hngf hoàn trả về cho người dùng do gaio hàng không thành công"
-  },
-  {
-    "day": "18 tháng 3",
-    "time": "15:34",
-    "title": "Giao hàng không thành công",
-    "content":
-        "ĐƠn hngf hoàn trả về cho người dùng do gaio hàng không thành công"
-  },
-  {
-    "day": "18 tháng 3",
-    "time": "15:34",
-    "title": "Giao hàng không thành công",
-    "content":
-        "ĐƠn hngf hoàn trả về cho người dùng do gaio hàng không thành công"
-  },
-  {
-    "day": "18 tháng 3",
-    "time": "15:34",
-    "title": "Giao hàng không thành công",
-    "content":
-        "ĐƠn hngf hoàn trả về cho người dùng do gaio hàng không thành công"
-  },
-  {
-    "day": "18 tháng 3",
-    "time": "15:34",
-    "title": "Giao hàng không thành công",
-    "content":
-        "ĐƠn hngf hoàn trả về cho người dùng do gaio hàng không thành công"
-  },
-  {
-    "day": "18 tháng 3",
-    "time": "15:34",
-    "title": "Giao hàng không thành công",
-    "content":
-        "ĐƠn hngf hoàn trả về cho người dùng do gaio hàng không thành công"
-  },
-  {
-    "day": "18 tháng 3",
-    "time": "15:34",
-    "title": "Giao hàng không thành công",
-    "content":
-        "ĐƠn hngf hoàn trả về cho người dùng do gaio hàng không thành công"
-  },
-];

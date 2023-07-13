@@ -452,7 +452,8 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(top: 40),
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top),
                     child: Container(
                       width: size.width - 40,
                       margin: const EdgeInsets.symmetric(horizontal: 20),
