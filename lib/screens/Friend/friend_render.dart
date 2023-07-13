@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/screens/Friend/friend_request.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
@@ -125,10 +126,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                                                     ['account']
                                                                 ['avatar_media']
                                                             ['preview_url']
-                                                        : friendRequest[
-                                                                    indexRequest]
-                                                                ['account']
-                                                            ['avatar_static']),
+                                                        : linkAvatarDefault),
                                           ),
                                         ),
                                         Column(
