@@ -25,6 +25,7 @@ class PostCard extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     var linkTitle =
         ((card['link'] ?? card['url']).split("//"))[1].split("/").first;
+
     return card != null
         ? (card['provider_name'] != null && card['provider_name'] != 'GIPHY') ||
                 card['link'] != null
@@ -36,7 +37,7 @@ class PostCard extends StatelessWidget {
                   top: 8,
                 ),
                 child: InkWell(
-                  onTap: () async {
+                  onTap: () {
                     if (type != "edit_post") {
                       pushCustomCupertinoPageRoute(
                           context,
@@ -59,113 +60,14 @@ class PostCard extends StatelessWidget {
                                 height: 250,
                                 fit: BoxFit.fitWidth,
                                 width: size.width),
-                            Container(
-                              width: size.width,
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              color: Theme.of(context).colorScheme.background,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      linkTitle,
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          color: greyColor,
-                                          overflow: TextOverflow.ellipsis),
-                                    ),
-                                    Text(
-                                      card['title'] ?? "",
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          overflow: TextOverflow.ellipsis),
-                                    ),
-                                    card['description'] != null &&
-                                            card['description'] != ""
-                                        ? Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: buildTextContent(
-                                                card['description'], false,
-                                                fontSize: 12,
-                                                colorWord: greyColor,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                          )
-                                        : const SizedBox(),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            BlockTextCard(
+                                size: size, linkTitle: linkTitle, card: card),
                           ],
                         )
                       : Row(
                           children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  bottomLeft: Radius.circular(20)),
-                              child: ExtendedImage.network(
-                                  card['image'] ??
-                                      card['url'] ??
-                                      card['link'] ??
-                                      linkBannerDefault,
-                                  // fit: BoxFit.cover,
-                                  height: 80.0,
-                                  width: 80.0),
-                            ),
-                            Flexible(
-                              child: Container(
-                                width: size.width,
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                    borderRadius: const BorderRadius.only(
-                                        topRight: Radius.circular(20),
-                                        bottomRight: Radius.circular(20))),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                height: 80.0,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      buildTextContent(
-                                        card['url']
-                                            .split("//")[1]
-                                            .split("/")
-                                            .first,
-                                        true,
-                                        fontSize: 14,
-                                        colorWord: greyColor,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      card['title'] != null ||
-                                              card['title'] != ""
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 8.0),
-                                              child: buildTextContent(
-                                                  card['title'], false,
-                                                  fontSize: 14,
-                                                  overflow:
-                                                      TextOverflow.ellipsis),
-                                            )
-                                          : const SizedBox(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                            ImageCard(card: card),
+                            ContentCard(size: size, card: card),
                           ],
                         ),
                 ),
@@ -185,5 +87,131 @@ class PostCard extends StatelessWidget {
                 ),
               )
         : const SizedBox();
+  }
+}
+
+class BlockTextCard extends StatelessWidget {
+  const BlockTextCard({
+    super.key,
+    required this.size,
+    required this.linkTitle,
+    required this.card,
+  });
+
+  final Size size;
+  final String linkTitle;
+  final dynamic card;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size.width,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      color: Theme.of(context).colorScheme.background,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              linkTitle,
+              style: const TextStyle(
+                  fontSize: 12,
+                  color: greyColor,
+                  overflow: TextOverflow.ellipsis),
+            ),
+            Text(
+              card['title'] ?? "",
+              maxLines: 2,
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  overflow: TextOverflow.ellipsis),
+            ),
+            card['description'] != null && card['description'] != ""
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: buildTextContent(card['description'], false,
+                        fontSize: 12,
+                        colorWord: greyColor,
+                        overflow: TextOverflow.ellipsis),
+                  )
+                : const SizedBox(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ContentCard extends StatelessWidget {
+  const ContentCard({
+    super.key,
+    required this.size,
+    required this.card,
+  });
+
+  final Size size;
+  final dynamic card;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Container(
+        width: size.width,
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20))),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        height: 80.0,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              buildTextContent(
+                card['url'].split("//")[1].split("/").first,
+                true,
+                fontSize: 14,
+                colorWord: greyColor,
+                overflow: TextOverflow.ellipsis,
+              ),
+              card['title'] != null || card['title'] != ""
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: buildTextContent(card['title'], false,
+                          fontSize: 14, overflow: TextOverflow.ellipsis),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ImageCard extends StatelessWidget {
+  const ImageCard({
+    super.key,
+    required this.card,
+  });
+
+  final dynamic card;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+      child: ExtendedImage.network(
+          card['image'] ?? card['url'] ?? card['link'] ?? linkBannerDefault,
+          // fit: BoxFit.cover,
+          height: 80.0,
+          width: 80.0),
+    );
   }
 }

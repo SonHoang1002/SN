@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -660,13 +658,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     if (mounted && newComment != null) {
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newComment['id']);
-      List newListUpdate = [];
 
-      if (indexComment > -1) {
-        newListUpdate = postComment.sublist(0, indexComment) +
-            [newComment] +
-            postComment.sublist(indexComment + 1);
-      }
+      if (indexComment > -1) {}
 
       List dataCommentUpdate = postComment;
 

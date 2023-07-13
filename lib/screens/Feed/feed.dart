@@ -23,7 +23,6 @@ import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef.dart';
 import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/services/isar_service.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -208,16 +207,7 @@ class _FeedState extends ConsumerState<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    Logger logger = Logger();
-    Future.delayed(Duration.zero, () async {
-      logger.d("getPostIsar ${await IsarPostService().getCountPostIsar()}");
-    });
     List posts = List.from(ref.read(postControllerProvider).posts);
-
-    // if (loadingTo40.value == false &&
-    //     ref.read(postControllerProvider).posts.length >= 40) {
-    //   loadingTo40.value = true;
-    // }
     bool isMore = ref.watch(postControllerProvider).isMore;
     theme ??= pv.Provider.of<ThemeManager>(context);
     posts = ref.read(postControllerProvider).posts;
