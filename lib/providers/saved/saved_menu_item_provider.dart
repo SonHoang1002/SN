@@ -123,7 +123,7 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
   }
 
   deleteOneCollection(collectionId) async {
-    var response = await BookmarkApi().deleteBookmarkCollection(collectionId);
+    await BookmarkApi().deleteBookmarkCollection(collectionId);
     state = state.copyWith(
       bookmarks: state.bookmarks,
       bmCollections: state.bmCollections
@@ -134,7 +134,7 @@ class SavedController extends StateNotifier<SavedMenuItemState> {
   }
 
   renameOneCollection(collectionId, String newName) async {
-    var response = await BookmarkApi().renameCollection(collectionId, newName);
+    await BookmarkApi().renameCollection(collectionId, newName);
     var index = state.bmCollections.indexWhere(
       (element) => element['id'] == collectionId,
     );
