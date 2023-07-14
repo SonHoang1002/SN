@@ -66,12 +66,12 @@ class MenuRender extends StatelessWidget {
                         listSocial[index]['icon'].contains('svg')
                             ? SvgPicture.asset(
                                 listSocial[index]['icon'],
-                                width: 20,
+                                width: 19.4,
                               )
                             : Image.asset(
                                 listSocial[index]['icon'],
-                                width: 22,
-                                height: 22,
+                                width: 21.4,
+                                height: 21.4,
                               ),
                         const SizedBox(
                           width: 12,
@@ -83,7 +83,7 @@ class MenuRender extends StatelessWidget {
                             Text(
                               listSocial[index]['label'],
                               style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500),
+                                  fontSize: 13.3, fontWeight: FontWeight.w500),
                             ),
                           ],
                         )
