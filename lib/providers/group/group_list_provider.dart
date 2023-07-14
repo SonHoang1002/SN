@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/group_api.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/services/notification_service.dart';
 
 @immutable
 class GroupListState {
@@ -176,14 +178,13 @@ class GroupListController extends StateNotifier<GroupListState> {
   getListGroupAdminMember(params) async {
     String tab = params['tab'];
     int limit = params['limit'];
-
     dynamic response = await GroupApi().fetchListGroupAdminMember(params);
     if (response != null) {
       state = state.copyWith(
         groupAdmin:
-            tab == 'admin' ? state.groupAdmin + response : state.groupAdmin,
+            tab == 'admin' ? checkObjectUniqueInList(state.groupAdmin + response,"id"):  state.groupAdmin,
         groupMember:
-            tab == 'member' ? state.groupMember + response : state.groupMember,
+            tab == 'member' ? checkObjectUniqueInList(state.groupMember + response, "id")  : state.groupMember,
         isMoreGroupAdmin: tab == 'admin' && response.length < limit
             ? false
             : state.isMoreGroupAdmin,
@@ -214,6 +215,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupInviteMember: state.groupInviteMember,
         groupInviteJoin: state.groupInviteJoin,
       );
+     
     }
   }
 
@@ -394,7 +396,7 @@ class GroupListController extends StateNotifier<GroupListState> {
   }
 
   getJoinRequest(id) async {
-    List response = await GroupApi().fetchJoinRequest(id);
+    List response = await GroupApi().fetchJoinRequest(id)??[];
     if (response.isNotEmpty) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,
@@ -460,7 +462,7 @@ class GroupListController extends StateNotifier<GroupListState> {
 
   getPendingStatus(id) async {
     var response = await GroupApi().fetchPendingStatus(id);
-    if (response['data'] != null) {
+    if (response?['data'] != null) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,
         groupMember: state.groupMember,
@@ -524,7 +526,7 @@ class GroupListController extends StateNotifier<GroupListState> {
   }
 
   getReportedStatus(id) async {
-    List response = await GroupApi().fetchReportedStatus(id);
+    List response = await GroupApi().fetchReportedStatus(id)??[];
     if (response.isNotEmpty) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,

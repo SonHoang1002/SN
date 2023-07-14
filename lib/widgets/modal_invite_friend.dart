@@ -7,6 +7,7 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
 
 import '../apis/events_api.dart';
+import '../apis/learn_space_api.dart';
 
 class InviteFriend extends StatefulWidget {
   final String? id;
@@ -41,8 +42,7 @@ class _InviteFriendState extends State<InviteFriend>
         case 'page':
           if (widget.id != null) {
             paramsExcluded = {"excluded_page": widget.id ?? ''};
-            paramsIncluded = {
-              'included_invitation_follow_page': widget.id ?? ''
+            paramsIncluded = {'included_invitation_follow_page': widget.id ?? ''
             };
           }
           break;
@@ -50,6 +50,12 @@ class _InviteFriendState extends State<InviteFriend>
           if (widget.id != null) {
             paramsExcluded = {"excluded_invitation_event": widget.id};
             paramsIncluded = {"included_invitation_event": widget.id};
+          }
+          break;
+        case 'course':
+          if (widget.id != null) {
+            paramsExcluded = {"excluded_invitation_course": widget.id};
+            paramsIncluded = {"included_invitation_course": widget.id};
           }
           break;
         default:
@@ -128,7 +134,16 @@ class _InviteFriendState extends State<InviteFriend>
           });
         }
         break;
-
+      case 'course':
+        var res = await LearnSpaceApi().sendInvitationFriendCoursesApi(
+            widget.id, {'target_account_ids': value});
+        if (res != null) {
+          setState(() {
+            inviteSuccess = inviteSuccess + value;  
+            fetchInvitedCheck = false;
+          });
+        }
+        break;
       default:
         break;
     }
