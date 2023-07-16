@@ -104,39 +104,55 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
                     currentPage: currentPage,
                     widget: widget),
               ),
-              GestureDetector(
-                onTap: () {
-                  showBarModalBottomSheet(
-                      context: context,
-                      barrierColor: Colors.transparent,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.65,
-                          child: CommentPostModal(
-                              post: widget.momentRender[currentPage.toInt()])));
-                },
-                child: Container(
-                    height: 80,
-                    padding: const EdgeInsets.only(left: 15, bottom: 10),
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                    ),
-                    child: Row(
-                      children: [
-                        Text("Thêm bình luận...",
-                            style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500)),
-                      ],
-                    )),
-              ),
+              BoxCommentMoment(widget: widget, currentPage: currentPage),
             ],
           );
   }
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class BoxCommentMoment extends StatelessWidget {
+  const BoxCommentMoment({
+    super.key,
+    required this.widget,
+    required this.currentPage,
+  });
+
+  final MomentPageview widget;
+  final double currentPage;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showBarModalBottomSheet(
+            context: context,
+            barrierColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+            builder: (context) => SizedBox(
+                height: MediaQuery.of(context).size.height * 0.65,
+                child: CommentPostModal(
+                    post: widget.momentRender[currentPage.toInt()])));
+      },
+      child: Container(
+          height: 80,
+          padding: const EdgeInsets.only(left: 15, bottom: 10),
+          decoration: const BoxDecoration(
+            color: Colors.black,
+          ),
+          child: Row(
+            children: [
+              Text("Thêm bình luận...",
+                  style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500)),
+            ],
+          )),
+    );
+  }
 }
 
 class RenderPageView extends StatelessWidget {
@@ -160,19 +176,25 @@ class RenderPageView extends StatelessWidget {
       controller: _pageController,
       itemCount: widget.momentRender.length,
       scrollDirection: Axis.vertical,
-      preloadPagesCount: 3,
+      preloadPagesCount: 2,
       onPageChanged: (value) {
         widget.handlePageChange(value);
       },
       itemBuilder: (context, index) {
-        double opacity = 1.0 - (index - currentPage).abs().clamp(0.0, 1.0);
-        return Opacity(
-            opacity: opacity,
-            child: MomentVideo(
-              type: widget.type,
-              key: Key(widget.momentRender[index]['id']),
-              moment: widget.momentRender[index],
-            ));
+        // double opacity = 1.0 - (index - currentPage).abs().clamp(0.0, 1.0);
+        // return Opacity(
+        //     opacity: opacity,
+        //     child: MomentVideo(
+        //       type: widget.type,
+        //       key: Key(widget.momentRender[index]['id']),
+        //       moment: widget.momentRender[index],
+        //     ));
+
+        return MomentVideo(
+          type: widget.type,
+          key: Key(widget.momentRender[index]['id']),
+          moment: widget.momentRender[index],
+        );
       },
     );
   }
