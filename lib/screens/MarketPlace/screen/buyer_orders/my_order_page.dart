@@ -272,7 +272,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
     setState(() {
       _isLoading = false;
     });
-   return 0;
+    return 0;
   }
 
   dynamic formatDataList(List<dynamic> dataList) {
@@ -590,7 +590,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
                           case "cancelled":
                             pushToNextScreen(
                                 context,
-                                CancelledReturnOrderPage(
+                                OrderInformationPage(
                                   orderData: data['data'],
                                 ));
                             return;
@@ -891,7 +891,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
           child: buildTextContent("Đã hủy bởi bạn", false,
               colorWord: greyColor, fontSize: 13),
         ));
-        buttonList.add(_buttonCancel(data));
+        buttonList.add(_buttonRebuy(data));
         break;
       case "return":
         buttonList.add(const SizedBox());
