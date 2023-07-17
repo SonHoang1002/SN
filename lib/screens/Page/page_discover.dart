@@ -106,11 +106,12 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
                                   ? const Text('Bạn đã thích Trang này.',
                                       style: TextStyle(color: greyColor))
                                   : Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        ButtonPrimary(
+                                        Expanded(child: ButtonPrimary(
                                           label: "Thích",
                                           handlePress: () {
-                                            ref
+                                                  ref
                                                 .read(pageListControllerProvider
                                                     .notifier)
                                                 .likePageSuggestion(
@@ -118,16 +119,17 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
                                                     'like');
                                           },
                                           icon: const Icon(
-                                              FontAwesomeIcons.solidThumbsUp,
-                                              size: 16,
-                                              color: Colors.white),
+                                            FontAwesomeIcons.solidThumbsUp,
+                                            size: 16,
+                                            color: Colors.white,
+                                          ),
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 30),
-                                        ),
+                                              horizontal: 20),
+                                        ),),
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        ButtonPrimary(
+                                        Expanded(child: ButtonPrimary(
                                           label: "Gỡ",
                                           colorText: theme.isDarkMode
                                               ? Colors.white
@@ -136,7 +138,7 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
                                               ? greyColor.shade800
                                               : greyColor,
                                           handlePress: () {
-                                            ref
+                                             ref
                                                 .read(pageListControllerProvider
                                                     .notifier)
                                                 .likePageSuggestion(
@@ -144,10 +146,10 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
                                                     'filter');
                                           },
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 45),
-                                        )
+                                              horizontal: 40),
+                                        ),),
                                       ],
-                                    )
+                                    ),
                             ],
                           ),
                         ),
