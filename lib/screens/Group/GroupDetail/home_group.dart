@@ -270,10 +270,10 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                         children: [
                           TextSpan(
                             text: widget.groupDetail['title'],
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: colorWord(context),
                             ),
                           ),
                           const WidgetSpan(
@@ -312,9 +312,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                             text: widget.groupDetail['is_private'] == true
                                 ? 'Nhóm Riêng tư'
                                 : 'Nhóm Công khai',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white,
+                              color: colorWord(context),
                             ),
                           ),
                           TextSpan(
@@ -372,7 +372,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                           width: 8,
                         ),
                         SizedBox(
-                          width: size.width * 0.45,
+                          width: size.width * 0.445,
                           child: ButtonPrimary(
                             label: 'Mời',
                             icon: Padding(

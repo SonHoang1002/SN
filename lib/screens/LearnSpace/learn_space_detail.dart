@@ -24,6 +24,7 @@ import 'package:social_network_app_mobile/widgets/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
 
 import '../../widgets/Loading/tiktok_loading.dart';
+import '../../widgets/report_category.dart';
 
 class LearnSpaceDetail extends ConsumerStatefulWidget {
   final dynamic data;
@@ -271,7 +272,11 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                         .scaffoldBackgroundColor,
                                                     context: context,
                                                     builder: (context) =>
-                                                        const InviteFriend());
+                                                        InviteFriend(
+                                                          id: courseDetail[
+                                                              'id'],
+                                                          type: 'course',
+                                                        ));
                                               },
                                               child: Container(
                                                   height: 35,
@@ -481,13 +486,11 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                         color: colorWord(
                                                                             context)
                                                                       )),
-                                                                  TextSpan(
+                                                                   TextSpan(
                                                                       text:
                                                                           ' không?',
                                                                       style: TextStyle(
-                                                                          color:
-                                                                              colorWord(
-                                                                            context))),
+                                                                          color: colorWord(context))),
                                                                 ])),
                                                             actions: <CupertinoDialogAction>[
                                                               CupertinoDialogAction(
@@ -721,7 +724,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                             menuSelected: iconActionEllipsis[
                                                                                 index],
                                                                             type:
-                                                                                'event',
+                                                                                'course',
                                                                             data:
                                                                                 courseDetail),
                                                                       ));
@@ -729,21 +732,29 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                 index]['key'] ==
                                                             'copy') {
                                                           Clipboard.setData(ClipboardData(
-                                                              text: courseDetail
-                                                                  ? 'https://sn.emso.vn/event/${courseDetail['id']}/about'
-                                                                  : 'https://sn.emso.vn/event/${courseDetail['id']}/discussion'));
+                                                              text: courseDetail.isNotEmpty
+                                                                  ? 'https://sn.emso.vn/course/${courseDetail['id']}/about'
+                                                                  : 'https://sn.emso.vn/course/${courseDetail['id']}/discussion'));
                                                           ScaffoldMessenger.of(
                                                                   context)
                                                               .showSnackBar(
-                                                                  const SnackBar(
+                                                              const SnackBar(
                                                             content: Text(
-                                                                'Sao chép thành công'),
+                                                                'Sao chép thành công', style: TextStyle(fontWeight: FontWeight.bold),),
                                                             duration: Duration(
                                                                 seconds: 3),
                                                             backgroundColor:
                                                                 secondaryColor,
-                                                          ));
-                                                        } else {
+                                                          ));}
+                                                        else if(iconActionEllipsis[
+                                                                index]['key'] ==
+                                                            'report'){
+                                                                   showBarModalBottomSheet(
+                                                                context: context,
+                                                                builder: (context) =>
+                                                                    ReportCategory(entityType: 'course', entityReport: widget.data));
+                                                            }
+                                                         else {
                                                           const SizedBox();
                                                         }
                                                       },
@@ -826,7 +837,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                               physics: const NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0.5),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: List.generate(
                                     itemChipCourse.sublist(0, 4).length,

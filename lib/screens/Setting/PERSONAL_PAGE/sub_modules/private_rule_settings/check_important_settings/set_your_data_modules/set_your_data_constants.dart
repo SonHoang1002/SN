@@ -118,7 +118,7 @@ class LocationConstants {
 class AllComplete4Constants {
   static const String ALL_COMPLETED_TITLE = "Tất cả đã xong";
   static const ALL_COMPLETED_SUBTITLE =
-      "Cảm ơn bạn đã xem lại các cài đặt dữ liệu trênEmso. Bạn có thể thay đổi bất kỳ lúc nào trong phân cài đặt.";
+      "Cảm ơn bạn đã xem lại các cài đặt dữ liệu trên Emso. Bạn có thể thay đổi bất kỳ lúc nào trong phân cài đặt.";
   static const Map<String, dynamic> ALL_COMPLETED_CONTENTS = {
     // "key": "set_your_data_on_Emso",
     "data": [

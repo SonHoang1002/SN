@@ -5,6 +5,8 @@ import 'package:social_network_app_mobile/screens/Group/GroupDetail/home_group.d
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
+import '../../../widgets/back_icon_appbar.dart';
+
 class GroupDetail extends ConsumerStatefulWidget {
   final String id;
   const GroupDetail({Key? key, required this.id}) : super(key: key);
@@ -80,6 +82,7 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
         title: AppBarTitle(
           title: groupDetail['title'] ?? '',
         ),
+        leading: const BackIconAppbar(),
       ),
       body: Scaffold(
         endDrawerEnableOpenDragGesture: false,

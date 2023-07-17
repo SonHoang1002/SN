@@ -171,7 +171,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
         }
       },
       child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+          margin: const EdgeInsets.symmetric(vertical: 31, horizontal: 20),
           child: SingleChildScrollView(
               reverse: true,
               child: Column(
@@ -741,10 +741,10 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                   borderRadius: BorderRadius.circular(4),
                                   border:
                                       Border.all(width: 0.2, color: greyColor)),
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
-                                children: const [
+                                children: [
                                   Text(
                                     'Chia sẻ ngay',
                                     textAlign: TextAlign.center,
