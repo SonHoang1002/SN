@@ -71,135 +71,136 @@ class _CancelledReturnOrderPageState
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-              padding: const EdgeInsets.only(top: 20),
+              // padding: const EdgeInsets.only(top: 10),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildDivider(
-                    color: greyColor,
-                  ),
-                  GeneralComponent([
-                    buildTextContent(
-                        widget.orderData['status'] == "cancelled"
-                            ? "Đã hủy đơn hàng"
-                            : "Đã hoàn tiền",
-                        true,
-                        fontSize: 15,
-                        colorWord: red),
-                    buildSpacer(height: 10),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildDivider(
+                color: greyColor,
+              ),
+              GeneralComponent([
+                buildTextContent(
                     widget.orderData['status'] == "cancelled"
-                        ? buildTextContent(
-                            "vào lúc  $timeMessage",
-                            false,
-                            fontSize: 13,
-                          )
+                        ? "Đã hủy đơn hàng"
+                        : "Đã hoàn tiền",
+                    true,
+                    fontSize: 15,
+                    colorWord: red),
+                buildSpacer(height: 10),
+                widget.orderData['status'] == "cancelled"
+                    ? buildTextContent(
+                        "vào lúc  $timeMessage",
+                        false,
+                        fontSize: 13,
+                      )
+                    : const SizedBox(),
+                widget.orderData['status'] == "return"
+                    ? buildTextContent(
+                        "Yêu cầu hoàn tiền được chấp nhận. Chúng tôi sẽ hoàn ${calculateTotalMoney()} vào ví VNPAY của bạn trong vòng 24 giờ",
+                        false,
+                        fontSize: 13,
+                      )
+                    : const SizedBox(),
+              ],
+                  suffixFlexValue: 8,
+                  suffixWidget: Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: Image.asset(
+                      "assets/icons/check_circle_icon.png",
+                      height: 30.0,
+                      width: 30.0,
+                    ),
+                  ),
+                  changeBackground: transparent),
+              buildSpacer(height: 3),
+              const CrossBar(
+                height: 7,
+                opacity: 0.2,
+                margin: 0,
+              ),
+              buildSpacer(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    buildTextContent("LỊCH SỬ CHAT VỚI CHÚNG TÔI", false,
+                        fontSize: 15),
+                    Icon(
+                      FontAwesomeIcons.chevronRight,
+                      size: 12,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                    )
+                  ],
+                ),
+              ),
+              buildSpacer(height: 10),
+              const CrossBar(
+                height: 7,
+                opacity: 0.2,
+                margin: 0,
+              ),
+              buildSpacer(height: 10),
+              buildSeeShopWidget(context, widget.orderData),
+              buildDivider(color: greyColor, bottom: 5),
+              Column(
+                children: List.generate(
+                  widget.orderData["order_items"].length,
+                  (index) {
+                    return buildOrderItem(
+                        widget.orderData["order_items"][index]);
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Column(
+                  children: [
+                    widget.orderData['status'] == "cancelled"
+                        ? _buildBetweenWidget("Yêu cầu bởi", "Người mua")
+                        : const SizedBox(),
+                    widget.orderData['status'] == "cancelled"
+                        ? _buildBetweenWidget("Yêu cầu vào", timeMessage)
+                        : const SizedBox(),
+                    widget.orderData['status'] == "cancelled"
+                        ? _buildBetweenWidget("Lý do",
+                            "https://snapi.emso.asia/api/v1/accounts/108786718361607198/statuses")
+                        : const SizedBox(),
+                    widget.orderData['status'] == "cancelled"
+                        ? _buildBetweenWidget(
+                            "Phương thức thanh toán",
+                            buildPaymentMessage(
+                                widget.orderData['payment_status'],
+                                widget.orderData['shipping_method_id']))
                         : const SizedBox(),
                     widget.orderData['status'] == "return"
-                        ? buildTextContent(
-                            "Yêu cầu hoàn tiền được chấp nhận. Chúng tôi sẽ hoàn ${calculateTotalMoney()} vào ví VNPAY của bạn trong vòng 24 giờ",
-                            false,
-                            fontSize: 13,
-                          )
+                        ? _buildBetweenWidget(
+                            "Số tiền hoàn lại", calculateTotalMoney())
+                        : const SizedBox(),
+                    widget.orderData['status'] == "return"
+                        ? _buildBetweenWidget(
+                            "Hoàn tiền vào",
+                            buildReturnWalletTitle(
+                                widget.orderData['shipping_method_id']))
+                        : const SizedBox(),
+                    widget.orderData['status'] == "return"
+                        ? _buildBetweenWidget(
+                            "Thời gian chấp nhận trả hàng/hoàn tiền",
+                            timeMessage)
+                        : const SizedBox(),
+                    widget.orderData['status'] == "return"
+                        ? _buildBetweenWidget("Mã trả hàng", "S343434SDRFS")
+                        : const SizedBox(),
+                    widget.orderData['status'] == "return"
+                        ? _buildBetweenWidget(
+                            "Lý do trả hàng", "Thiết lập nhầm địa chỉ")
                         : const SizedBox(),
                   ],
-                      suffixFlexValue: 8,
-                      suffixWidget: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Image.asset(
-                          "assets/icons/check_circle_icon.png",
-                          height: 30.0,
-                          width: 30.0,
-                        ),
-                      ),
-                      changeBackground: transparent),
-                  buildSpacer(height: 3),
-                  const CrossBar(
-                    height: 7,
-                    opacity: 0.2,
-                    margin: 0,
-                  ),
-                  buildSpacer(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildTextContent("LỊCH SỬ CHAT VỚI CHÚNG TÔI", false,
-                            fontSize: 15),
-                        Icon(
-                          FontAwesomeIcons.chevronRight,
-                          size: 12,
-                          color: Theme.of(context).textTheme.bodyLarge!.color,
-                        )
-                      ],
-                    ),
-                  ),
-                  buildSpacer(height: 10),
-                  const CrossBar(
-                    height: 7,
-                    opacity: 0.2,
-                    margin: 0,
-                  ),
-                  buildSpacer(height: 10),
-                  buildSeeShopWidget(context, widget.orderData),
-                  buildDivider(color: greyColor, bottom: 5),
-                  Column(
-                    children: List.generate(
-                      widget.orderData["order_items"].length,
-                      (index) {
-                        return buildOrderItem(
-                            widget.orderData["order_items"][index]);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    child: Column(
-                      children: [
-                        widget.orderData['status'] == "cancelled"
-                            ? _buildBetweenWidget("Yêu cầu bởi", "Người mua")
-                            : const SizedBox(),
-                        widget.orderData['status'] == "cancelled"
-                            ? _buildBetweenWidget("Yêu cầu vào", timeMessage)
-                            : const SizedBox(),
-                        widget.orderData['status'] == "cancelled"
-                            ? _buildBetweenWidget("Lý do",
-                                "https://snapi.emso.asia/api/v1/accounts/108786718361607198/statuses")
-                            : const SizedBox(),
-                        widget.orderData['status'] == "cancelled"
-                            ? _buildBetweenWidget(
-                                "Phương thức thanh toán",
-                                buildPaymentMessage(
-                                    widget.orderData['payment_status'],
-                                    widget.orderData['shipping_method_id']))
-                            : const SizedBox(),
-                        widget.orderData['status'] == "return"
-                            ? _buildBetweenWidget(
-                                "Số tiền hoàn lại", calculateTotalMoney())
-                            : const SizedBox(),
-                        widget.orderData['status'] == "return"
-                            ? _buildBetweenWidget(
-                                "Hoàn tiền vào",
-                                buildReturnWalletTitle(
-                                    widget.orderData['shipping_method_id']))
-                            : const SizedBox(),
-                        widget.orderData['status'] == "return"
-                            ? _buildBetweenWidget(
-                                "Thời gian chấp nhận trả hàng/hoàn tiền",
-                                timeMessage)
-                            : const SizedBox(),
-                        widget.orderData['status'] == "return"
-                            ? _buildBetweenWidget("Mã trả hàng", "S343434SDRFS")
-                            : const SizedBox(),
-                        widget.orderData['status'] == "return"
-                            ? _buildBetweenWidget(
-                                "Lý do trả hàng", "Thiết lập nhầm địa chỉ")
-                            : const SizedBox(),
-                      ],
-                    ),
-                  ),
-                  buildMarketButton(
+                ),
+              ),
+              widget.orderData['status'] != "cancelled"
+                  ? buildMarketButton(
                       width: width * 0.9,
                       height: 20,
                       bgColor: transparent,
@@ -220,8 +221,9 @@ class _CancelledReturnOrderPageState
                               orderData: widget.orderData,
                             ));
                       })
-                ],
-              )),
+                  : const SizedBox()
+            ],
+          )),
         ));
   }
 

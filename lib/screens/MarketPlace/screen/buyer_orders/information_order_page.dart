@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:market_place/helpers/format_currency.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/screens/MarketPlace/screen/address_module/create_update_address.dart';
+import 'package:market_place/screens/MarketPlace/screen/buyer_orders/cancelled_return_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/seller_modules/prepare_product_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/order_code_widget.dart';
@@ -267,14 +268,16 @@ class OrderInformationPage extends StatelessWidget {
                             child: buildMarketButton(
                                 // width: width * 0.38,
                                 contents: [
-                                  buildTextContent(
-                                      "Xem chi tiết hủy đơn", false,
+                                  buildTextContent("Chi tiết đơn hủy", false,
                                       fontSize: 14)
                                 ],
                                 bgColor: blueColor,
                                 function: () {
-                                  pushToNextScreen(context,
-                                      const PrepareProductMarketPage());
+                                  pushToNextScreen(
+                                      context,
+                                      CancelledReturnOrderPage(
+                                        orderData: orderData,
+                                      ));
                                 }),
                           ),
                           buildSpacer(width: 20),
@@ -287,8 +290,8 @@ class OrderInformationPage extends StatelessWidget {
                                 ],
                                 bgColor: blueColor,
                                 function: () {
-                                  pushToNextScreen(context,
-                                      const PrepareProductMarketPage());
+                                  // pushToNextScreen(context,
+                                  //     const PrepareProductMarketPage());
                                 }),
                           )
                         ]),
