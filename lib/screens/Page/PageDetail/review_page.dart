@@ -67,7 +67,7 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
             const Icon(Icons.star, size: 22, color: Colors.red),
             const SizedBox(width: 8),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('$point/5', style: const TextStyle(fontSize: 15)),
+              Text('${point.toStringAsFixed(1)}/5', style: const TextStyle(fontSize: 15)),
               Text('Dựa trên đánh giá của $totalReviewer người')
             ])
           ],

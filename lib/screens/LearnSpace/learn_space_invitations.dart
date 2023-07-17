@@ -240,8 +240,7 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                                                   color: colorWord(
                                                                       context))),
                                                         ])),
-                                                    actions: <
-                                                        CupertinoDialogAction>[
+                                                    actions: <CupertinoDialogAction>[
                                                       CupertinoDialogAction(
                                                         isDefaultAction: true,
                                                         onPressed: () {
@@ -287,8 +286,7 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                                                     content:
                                                                         const Text(
                                                                             'Số dư trong ví không đủ để thanh toán khoá học. Vui lòng nạp thêm tiền vào ví để thanh toán khoá học.'),
-                                                                    actions: <
-                                                                        CupertinoDialogAction>[
+                                                                    actions: <CupertinoDialogAction>[
                                                                       CupertinoDialogAction(
                                                                         isDefaultAction:
                                                                             true,
@@ -357,8 +355,7 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                                                   color: Colors
                                                                       .black)),
                                                         ])),
-                                                    actions: <
-                                                        CupertinoDialogAction>[
+                                                    actions: <CupertinoDialogAction>[
                                                       CupertinoDialogAction(
                                                         isDefaultAction: true,
                                                         onPressed: () {
@@ -585,10 +582,10 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                                 BorderRadius.circular(6),
                                             border: Border.all(
                                                 width: 0.2, color: greyColor)),
-                                        child: Row(
+                                        child: const Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(FontAwesomeIcons.share,
                                                 color: Colors.black, size: 14),
                                           ],

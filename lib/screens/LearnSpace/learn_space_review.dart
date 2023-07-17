@@ -143,7 +143,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
               thickness: 1,
             ),
             const Text('Xếp hạng khóa học này', style: TextStyle(fontSize: 17)),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -163,9 +163,9 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                             padding: EdgeInsets.only(
                                 bottom:
                                     MediaQuery.of(context).viewInsets.bottom *
-                                        0.8),
+                                        0.9),
                             child: Padding(
-                              padding: const EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
                               child: SizedBox(
                                 height: 450,
                                 child: Column(
@@ -201,7 +201,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                               ),
                                       ),
                                     ),
-                                    const SizedBox(height: 12),
+                                    const SizedBox(height: 5),
                                     TextFormField(
                                       controller: reviewController,
                                       maxLines: 4,
@@ -273,16 +273,17 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                                         : const Icon(
                                                             Icons.camera_alt,
                                                             size: 25.0,
+                                                            color: Colors.black,
                                                           ),
                                                     const Text(
-                                                        "Chọn ảnh từ thiết bị"),
+                                                        "Chọn ảnh từ thiết bị", style: TextStyle(color: Colors.black),),
                                                   ],
                                                 ),
                                               ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 15.0),
+                                      padding: const EdgeInsets.only(top: 6.0),
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           minimumSize: Size(
@@ -336,7 +337,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
               thickness: 1,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.only(top: 5.0),
               child: ListView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,

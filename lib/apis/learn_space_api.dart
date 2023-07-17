@@ -54,6 +54,10 @@ class LearnSpaceApi {
     return await Api().getRequestBase('/api/v1/courses/$id', null);
   }
 
+  Future sendInvitationFriendCoursesApi(id, data) async {
+    return await Api().postRequestBase('/api/v1/courses/$id/invitations', data);
+  }
+
   Future coursesUpdateStatusApi(id) async {
     try {
       return await Api()

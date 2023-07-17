@@ -131,11 +131,13 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: Colors.red,
-            content: response?['status'] == 500
+          content:  response?['status'] == 500
                 ? const Text("Máy chủ đang gặp vấn đề. Vui lòng thử lại sau")
                 : const Text(
-                    "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại")));
+                    "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại", style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+          duration: const Duration(seconds: 3),
+          backgroundColor: secondaryColor,
+        ));
       }
     }
     setState(() {

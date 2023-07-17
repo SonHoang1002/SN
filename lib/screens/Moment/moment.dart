@@ -42,16 +42,13 @@ class _MomentState extends ConsumerState<Moment>
   bool isShowMediaUpload = true;
 
   final GlobalKey widgetKey = GlobalKey();
+  final GlobalKey<ScaffoldState> key = GlobalKey();
+  GlobalKey<CartIconKey> cartKey = GlobalKey<CartIconKey>();
+  late Function(GlobalKey) runAddToCartAnimation;
 
-  void listClick(GlobalKey widgetKey) async {
-    setState(() {
-      isFly = false;
-    });
-    await runAddToCartAnimation(widgetKey);
-    setState(() {
-      isFlied = true;
-    });
-  }
+  List iconAction = [
+    {"icon": Icons.search, 'type': 'icon'},
+  ];
 
   @override
   void initState() {
@@ -63,7 +60,10 @@ class _MomentState extends ConsumerState<Moment>
         if (ref.read(momentControllerProvider).momentSuggest.isEmpty) {
           ref
               .read(momentControllerProvider.notifier)
-              .getListMomentSuggest({"limit": 5});
+              .getListMomentSuggest({"limit": 3});
+          ref
+              .read(momentControllerProvider.notifier)
+              .getListMomentFollow({"limit": 3});
         }
       });
 
@@ -85,28 +85,17 @@ class _MomentState extends ConsumerState<Moment>
         });
       }
     }
-
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging &&
-          _tabController.index == 0 &&
-          ref.read(momentControllerProvider).momentFollow.isNotEmpty) {
-        Future.delayed(Duration.zero, () {
-          ref
-              .read(momentControllerProvider.notifier)
-              .getListMomentFollow({"limit": 5});
-        });
-      }
-    });
   }
 
-  final GlobalKey<ScaffoldState> key = GlobalKey();
-
-  List iconAction = [
-    {"icon": Icons.search, 'type': 'icon'},
-  ];
-
-  GlobalKey<CartIconKey> cartKey = GlobalKey<CartIconKey>();
-  late Function(GlobalKey) runAddToCartAnimation;
+  void listClick(GlobalKey widgetKey) async {
+    setState(() {
+      isFly = false;
+    });
+    await runAddToCartAnimation(widgetKey);
+    setState(() {
+      isFlied = true;
+    });
+  }
 
   @override
   bool get wantKeepAlive => false;
@@ -125,19 +114,6 @@ class _MomentState extends ConsumerState<Moment>
       }
     }
     var momentUpload = ref.watch(momentControllerProvider).momentUpload;
-
-    final size = MediaQuery.of(context).size;
-
-    Widget noData = Container(
-      color: Colors.black,
-      width: size.width,
-      height: size.height,
-      child: Center(
-        child: Text("Không có dữ liệu hiển thị",
-            style: GoogleFonts.ibmPlexSans(
-                textStyle: const TextStyle(color: white))),
-      ),
-    );
 
     useEffect(
       () {
@@ -182,109 +158,17 @@ class _MomentState extends ConsumerState<Moment>
         child: Scaffold(
             backgroundColor: Colors.black,
             body: Stack(children: <Widget>[
-              TabBarView(controller: _tabController, children: [
-                momentFollow.isNotEmpty
-                    ? MomentPageview(
-                        type: 'follow',
-                        typePage: widget.typePage,
-                        momentRender: momentFollow,
-                        handlePageChange: (value) {
-                          if (value == momentFollow.length - 3) {
-                            ref
-                                .read(momentControllerProvider.notifier)
-                                .getListMomentFollow({
-                              "limit": 5,
-                              "max_id": momentFollow.last['score']
-                            });
-                          }
-                        },
-                      )
-                    : noData,
-                momentSuggests.isNotEmpty
-                    ? Stack(
-                        children: [
-                          MomentPageview(
-                            type: 'suggest',
-                            typePage: widget.typePage,
-                            momentRender: momentSuggests,
-                            handlePageChange: (value) {
-                              if (value == momentSuggests.length - 3) {
-                                ref
-                                    .read(momentControllerProvider.notifier)
-                                    .getListMomentSuggest({
-                                  "limit": 5,
-                                  "max_id": momentSuggests.last['score']
-                                });
-                              }
-                            },
-                          ),
-                        ],
-                      )
-                    : noData
-              ]),
+              MomentTabBarView(
+                  tabController: _tabController,
+                  momentFollow: momentFollow,
+                  widget: widget,
+                  ref: ref,
+                  momentSuggests: momentSuggests),
               if (widget.imageUpload != null && isShowMediaUpload)
-                Positioned(
-                  top: 120,
-                  left: 18,
-                  child: AddToCartIcon(
-                      key: cartKey,
-                      badgeOptions: const BadgeOptions(active: false),
-                      icon: isFlied
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Stack(
-                                children: [
-                                  Image.file(widget.imageUpload!,
-                                      width: 80, height: 80, fit: BoxFit.cover),
-                                  Positioned.fill(
-                                    child: Center(
-                                      child: CircularPercentIndicator(
-                                        radius: 20.0,
-                                        animation: true,
-                                        animationDuration: 2000,
-                                        lineWidth: 3.0,
-                                        percent: 0.99,
-                                        center: Countup(
-                                          begin: 0,
-                                          end: 99,
-                                          duration: const Duration(seconds: 2),
-                                          style: const TextStyle(
-                                              fontSize: 18,
-                                              color: white,
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        circularStrokeCap:
-                                            CircularStrokeCap.butt,
-                                        backgroundColor: Colors.transparent,
-                                        progressColor: white,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          : const SizedBox()),
-                ),
+                ImageUploadProcess(
+                    cartKey: cartKey, isFlied: isFlied, widget: widget),
               if (widget.imageUpload != null)
-                Positioned(
-                  top: 120,
-                  right: 20,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: Container(
-                        key: widgetKey,
-                        width: 100,
-                        height: 150,
-                        color: Colors.transparent,
-                        child: isFly
-                            ? Hero(
-                                tag: widget.imageUpload!,
-                                child: Image.file(widget.imageUpload!,
-                                    fit: BoxFit.cover),
-                              )
-                            : const SizedBox()),
-                  ),
-                ),
+                ImageUpload(widgetKey: widgetKey, isFly: isFly, widget: widget),
               Positioned(
                   //Place it at the top, and not use the entire screen
                   top: 0.0,
@@ -317,42 +201,8 @@ class _MomentState extends ConsumerState<Moment>
                                 width: 7,
                               ),
                             ]),
-                        TabBar(
-                            isScrollable: true,
-                            controller: _tabController,
-                            onTap: (index) {},
-                            indicator: const BoxDecoration(),
-                            indicatorColor: Colors.white,
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white.withOpacity(0.5),
-                            indicatorSize: TabBarIndicatorSize.label,
-                            indicatorWeight: 0,
-                            labelStyle: GoogleFonts.ibmPlexSans(),
-                            tabs: const [
-                              Tab(
-                                text: "Đang theo dõi",
-                              ),
-                              Tab(
-                                text: "Dành cho bạn",
-                              )
-                            ]),
-                        Row(
-                          children: List.generate(
-                              iconAction.length,
-                              (index) => Container(
-                                    width: 30,
-                                    height: 30,
-                                    margin: const EdgeInsets.only(left: 5),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.grey.withOpacity(0.3)),
-                                    child: Icon(
-                                      iconAction[index]['icon'],
-                                      size: 20,
-                                      color: white,
-                                    ),
-                                  )),
-                        ),
+                        MomentTabBar(tabController: _tabController),
+                        MomentIconAction(iconAction: iconAction),
                       ],
                     ),
                     backgroundColor: transparent, //No more green
@@ -366,5 +216,238 @@ class _MomentState extends ConsumerState<Moment>
     _tabController.dispose();
     controller.dispose();
     super.dispose();
+  }
+}
+
+class MomentTabBarView extends StatelessWidget {
+  const MomentTabBarView({
+    super.key,
+    required TabController tabController,
+    required this.momentFollow,
+    required this.widget,
+    required this.ref,
+    required this.momentSuggests,
+  }) : _tabController = tabController;
+
+  final TabController _tabController;
+  final List momentFollow;
+  final Moment widget;
+  final WidgetRef ref;
+  final List momentSuggests;
+
+  @override
+  Widget build(BuildContext context) {
+    return TabBarView(controller: _tabController, children: [
+      momentFollow.isNotEmpty
+          ? MomentPageview(
+              type: 'follow',
+              typePage: widget.typePage,
+              momentRender: momentFollow,
+              handlePageChange: (value) {
+                if (value == momentFollow.length - 2) {
+                  ref
+                      .read(momentControllerProvider.notifier)
+                      .getListMomentFollow(
+                          {"limit": 3, "max_id": momentFollow.last['score']});
+                }
+              },
+            )
+          : const NoData(),
+      momentSuggests.isNotEmpty
+          ? Stack(
+              children: [
+                MomentPageview(
+                  type: 'suggest',
+                  typePage: widget.typePage,
+                  momentRender: momentSuggests,
+                  handlePageChange: (value) {
+                    if (value == momentSuggests.length - 2) {
+                      ref
+                          .read(momentControllerProvider.notifier)
+                          .getListMomentSuggest({
+                        "limit": 3,
+                        "max_id": momentSuggests.last['score']
+                      });
+                    }
+                  },
+                ),
+              ],
+            )
+          : const NoData()
+    ]);
+  }
+}
+
+class ImageUploadProcess extends StatelessWidget {
+  const ImageUploadProcess({
+    super.key,
+    required this.cartKey,
+    required this.isFlied,
+    required this.widget,
+  });
+
+  final GlobalKey<CartIconKey> cartKey;
+  final bool isFlied;
+  final Moment widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 120,
+      left: 18,
+      child: AddToCartIcon(
+          key: cartKey,
+          badgeOptions: const BadgeOptions(active: false),
+          icon: isFlied
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Stack(
+                    children: [
+                      Image.file(widget.imageUpload!,
+                          width: 80, height: 80, fit: BoxFit.cover),
+                      Positioned.fill(
+                        child: Center(
+                          child: CircularPercentIndicator(
+                            radius: 20.0,
+                            animation: true,
+                            animationDuration: 2000,
+                            lineWidth: 3.0,
+                            percent: 0.99,
+                            center: Countup(
+                              begin: 0,
+                              end: 99,
+                              duration: const Duration(seconds: 2),
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  color: white,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            circularStrokeCap: CircularStrokeCap.butt,
+                            backgroundColor: Colors.transparent,
+                            progressColor: white,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              : const SizedBox()),
+    );
+  }
+}
+
+class ImageUpload extends StatelessWidget {
+  const ImageUpload({
+    super.key,
+    required this.widgetKey,
+    required this.isFly,
+    required this.widget,
+  });
+
+  final GlobalKey<State<StatefulWidget>> widgetKey;
+  final bool isFly;
+  final Moment widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 120,
+      right: 20,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: Container(
+            key: widgetKey,
+            width: 100,
+            height: 150,
+            color: Colors.transparent,
+            child: isFly
+                ? Hero(
+                    tag: widget.imageUpload!,
+                    child: Image.file(widget.imageUpload!, fit: BoxFit.cover),
+                  )
+                : const SizedBox()),
+      ),
+    );
+  }
+}
+
+class MomentTabBar extends StatelessWidget {
+  const MomentTabBar({
+    super.key,
+    required TabController tabController,
+  }) : _tabController = tabController;
+
+  final TabController _tabController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TabBar(
+        isScrollable: true,
+        controller: _tabController,
+        onTap: (index) {},
+        indicator: const BoxDecoration(),
+        indicatorColor: Colors.white,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white.withOpacity(0.5),
+        indicatorSize: TabBarIndicatorSize.label,
+        indicatorWeight: 0,
+        labelStyle: GoogleFonts.ibmPlexSans(),
+        tabs: const [
+          Tab(
+            text: "Đang theo dõi",
+          ),
+          Tab(
+            text: "Dành cho bạn",
+          )
+        ]);
+  }
+}
+
+class MomentIconAction extends StatelessWidget {
+  const MomentIconAction({
+    super.key,
+    required this.iconAction,
+  });
+
+  final List iconAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(
+          iconAction.length,
+          (index) => Container(
+                width: 30,
+                height: 30,
+                margin: const EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.grey.withOpacity(0.3)),
+                child: Icon(
+                  iconAction[index]['icon'],
+                  size: 20,
+                  color: white,
+                ),
+              )),
+    );
+  }
+}
+
+class NoData extends StatelessWidget {
+  const NoData({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      color: Colors.black,
+      width: size.width,
+      height: size.height,
+      child: Center(
+        child: Text("Không có dữ liệu hiển thị",
+            style: GoogleFonts.ibmPlexSans(
+                textStyle: const TextStyle(color: white))),
+      ),
+    );
   }
 }
