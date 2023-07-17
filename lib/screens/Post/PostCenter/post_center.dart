@@ -27,7 +27,7 @@ class PostCenter extends StatelessWidget {
   final Function? backFunction;
   final Function? reloadFunction;
   final Function? showCmtBoxFunction;
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   final bool? isFocus;
   const PostCenter(
       {Key? key,
@@ -139,7 +139,13 @@ class PostCenter extends StatelessWidget {
 
   renderPostType(postType) {
     if ([postAvatarAccount, postBannerAccount].contains(postType)) {
-      return AvatarBanner(postType: postType, post: post);
+      return AvatarBanner(
+        postType: postType,
+        post: post,
+        type: type,
+        preType: preType,
+        updateDataFunction: updateDataFunction,
+      );
     } else if ([postTarget, postVisibleQuestion].contains(postType)) {
       return PostTarget(
         post: post,

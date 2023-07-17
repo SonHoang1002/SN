@@ -50,8 +50,7 @@ class _FeedPageState extends ConsumerState<FeedPage> {
     super.dispose();
   }
 
- 
-    _reloadFunction(dynamic type, dynamic newData) {
+  _reloadFunction(dynamic type, dynamic newData) {
     if (type == null && newData == null) {
       setState(() {});
       return;
@@ -61,18 +60,22 @@ class _FeedPageState extends ConsumerState<FeedPage> {
       setState(() {});
     });
   }
+
   @override
   Widget build(BuildContext context) {
     List feedPage = ref.watch(pageControllerProvider).pageFeed;
-    bool isMoreFeed = ref.watch(pageControllerProvider).isMoreFeed;
-
+    bool isMoreFeed = ref.watch(pageControllerProvider).isMoreFeed; 
     return Column(
       children: [
-        CreatePostButton(
-          preType: postPage,
-          reloadFunction: _reloadFunction,
-          pageData: widget.pageData,
-        ),
+        widget.pageData != null &&
+                (widget.pageData?['page_relationship']?['role'] == null ||
+                    widget.pageData?['page_relationship']?['role'] == "")
+            ? CreatePostButton(
+                preType: postPage,
+                reloadFunction: _reloadFunction,
+                pageData: widget.pageData,
+              )
+            : const SizedBox(),
         const CrossBar(height: 5),
         ListView.builder(
           shrinkWrap: true,

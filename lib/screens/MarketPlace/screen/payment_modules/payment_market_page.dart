@@ -179,7 +179,7 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
     _mainData = {
       "order": {
         "delivery_address_id":
-            _selectedAddress["id"] + _selectedAddress["name"],
+            _selectedAddress?["id"] ?? "" + _selectedAddress?["name"] ?? "",
         "shipping_method_id": paymentMethods.where((element) {
           return element["status"] == true;
         }).toList()[0]["value"],
@@ -412,28 +412,38 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                       marginTop: 0,
                       radiusValue: 0,
                       isHaveBoder: false,
-                      function: () async {
-                        buildMessageDialog(
-                            context, "Bạn chắc chắn thanh toán đơn hàng này ??",
-                            oKFunction: () async {
-                          popToPreviousScreen(context);
+                      function: () async { 
+                        if (_selectedAddress != null &&
+                            _selectedAddress.isNotEmpty) {
+                          buildMessageDialog(context,
+                              "Bạn chắc chắn thanh toán đơn hàng này ??",
+                              oKFunction: () async {
+                            popToPreviousScreen(context);
 
-                          final response = await setDataForOrder();
-                          if (response.isNotEmpty) {
-                            // ignore: use_build_context_synchronously
-                            buildMessageDialog(context, "Đặt hàng thành công",
-                                oneButton: true, oKFunction: () {
-                              popToPreviousScreen(context);
-                              pushAndReplaceToNextScreen(
-                                  context,
-                                  CheckoutPaymentPage(
-                                    paymentKey: paymentMethods.where((element) {
-                                      return element["status"] == true;
-                                    }).toList()[0]["value"],
-                                  ));
-                            });
-                          }
-                        });
+                            final response = await setDataForOrder();
+                            if (response.isNotEmpty) {
+                              // ignore: use_build_context_synchronously
+                              buildMessageDialog(context, "Đặt hàng thành công",
+                                  oneButton: true, oKFunction: () {
+                                popToPreviousScreen(context);
+                                pushAndReplaceToNextScreen(
+                                    context,
+                                    CheckoutPaymentPage(
+                                      paymentKey:
+                                          paymentMethods.where((element) {
+                                        return element["status"] == true;
+                                      }).toList()[0]["value"],
+                                    ));
+                              });
+                            }
+                          });
+                        } else {
+                          buildMessageDialog(
+                              context, "Vui lòng chọn địa chỉ giao hàng",
+                              oneButton: true, oKFunction: () {
+                            popToPreviousScreen(context);
+                          });
+                        }
                       }),
                 ],
               ),

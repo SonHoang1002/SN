@@ -826,7 +826,6 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
 
   getListCoursesChapter(params, id) async {
     var response = await LearnSpaceApi().getListCoursesChapterApi(params, id);
-    print("response: $response");
     if (response != null) {
       state = state.copyWith(
         course: state.course,

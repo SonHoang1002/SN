@@ -26,6 +26,7 @@ import 'package:social_network_app_mobile/widgets/Banner/banner_base.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/blue_certified_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -116,7 +117,7 @@ class UserPage extends ConsumerStatefulWidget {
   ConsumerState<UserPage> createState() => _UserPageState();
 }
 
-class _UserPageState extends ConsumerState<UserPage> {
+class _UserPageState extends ConsumerState<UserPage> {  
   dynamic id;
   final scrollController = ScrollController();
   dynamic userData = {};
@@ -150,11 +151,17 @@ class _UserPageState extends ConsumerState<UserPage> {
     super.initState();
     if (mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final queryParams =
-            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-        setState(() {
-          id = widget.id ?? queryParams['id'];
-        });
+        if (widget.id != null) {
+          setState(() {
+            id = widget.id;
+          });
+        } else {
+          final queryParams = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>;
+          setState(() {
+            id = queryParams['id'];
+          });
+        }
       });
       Future.delayed(Duration.zero, () async {
         ref.read(userInformationProvider.notifier).getUserInformation(id);
@@ -273,7 +280,14 @@ class _UserPageState extends ConsumerState<UserPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const BackIconAppbar(),
-          AppBarTitle(title: userData?['display_name'] ?? ''),
+          Row(
+            children: [
+              AppBarTitle(title: userData?['display_name'] ?? ''),
+              userData?['certified'] == true
+                  ? buildBlueCertifiedWidget()
+                  : const SizedBox()
+            ],
+          ),
           Row(
             children: [
               Icon(
@@ -758,7 +772,6 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("widget.id ${widget.id}");
     pinPost = ref.read(postControllerProvider).postsPin;
     return Scaffold(
       appBar: buildAppBar(context),

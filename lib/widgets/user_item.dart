@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
+import 'package:social_network_app_mobile/widgets/blue_certified_widget.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
 
 import '../screens/UserPage/user_page.dart';
@@ -40,12 +41,19 @@ class UserItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                user?['display_name'] ?? 'Không xác định',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                ),
+              Row(
+                children: [
+                  Text(
+                    user?['display_name'] ?? 'Không xác định',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                  user?["certified"]
+                      ? buildBlueCertifiedWidget()
+                      : const SizedBox()
+                ],
               ),
               !['', null].contains(subText)
                   ? Container(

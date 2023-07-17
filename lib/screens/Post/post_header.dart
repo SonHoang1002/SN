@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/apis/group_api.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -12,6 +16,7 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
@@ -19,6 +24,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
+import 'package:social_network_app_mobile/widgets/blue_certified_widget.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import 'post_detail.dart';
@@ -29,7 +35,7 @@ class PostHeader extends ConsumerStatefulWidget {
   final Color? textColor;
   final bool? isHaveAction;
   final Function? reloadFunction;
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   const PostHeader(
       {Key? key,
       this.post,
@@ -200,32 +206,96 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                             SizedBox(
                               width: size.width * 0.6,
                               child: BlockNamePost(
-                                  post: widget.post,
-                                  account: account,
-                                  description: description,
-                                  mentions: mentions,
-                                  statusActivity: statusActivity,
-                                  group: group,
-                                  page: page,
-                                  textColor: widget.textColor,
-                                  type: widget.type,
-                                  isFollowing: _isFollowing.value,
-                                  handleLike: () {
-                                    _isFollowing.value = true;
-                                  }),
+                                post: widget.post,
+                                account: account,
+                                description: description,
+                                mentions: mentions,
+                                statusActivity: statusActivity,
+                                group: group,
+                                page: page,
+                                textColor: widget.textColor,
+                                type: widget.type,
+                              ),
                             ),
-                            BlockSubNamePost(
-                                group: group, account: account, widget: widget)
+                            Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    group != null
+                                        ? Row(
+                                            children: [
+                                              Text(account['display_name'],
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  )),
+                                            ],
+                                          )
+                                        : const SizedBox(),
+                                    buildSpacer(height: 3),
+                                    Row(
+                                      children: [
+                                        widget.post['page_owner'] != null &&
+                                                widget.post['page'] != null &&
+                                                widget.post?['page_owner']?[
+                                                            'page_relationship']
+                                                        ?['role'] ==
+                                                    "admin" &&
+                                                widget.type != postDetail
+                                            ? Row(
+                                                children: [
+                                                  buildTextContent(
+                                                      widget.post['account']
+                                                              ['display_name'] +
+                                                          " · ",
+                                                      true,
+                                                      colorWord: greyColor,
+                                                      fontSize: 13)
+                                                ],
+                                              )
+                                            : const SizedBox(),
+                                        widget.post['processing'] !=
+                                                "isProcessing"
+                                            ? Text(
+                                                getRefractorTime(
+                                                    widget.post?['created_at']),
+                                                style: const TextStyle(
+                                                    color: greyColor,
+                                                    fontSize: 12),
+                                              )
+                                            : const SizedBox(),
+                                        Text(
+                                            widget.post['processing'] !=
+                                                    "isProcessing"
+                                                ? " · "
+                                                : "",
+                                            style: const TextStyle(
+                                                color: greyColor)),
+                                        Icon(
+                                            typeVisibility.firstWhere(
+                                                (element) =>
+                                                    element['key'] ==
+                                                    widget.post['visibility'],
+                                                orElse: () => {})['icon'],
+                                            size: 13,
+                                            color: greyColor)
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
                           ],
                         )
                       ],
                     ),
                     // widget.isHaveAction == true
-                    widget.post['account']['id'] == meData['id'] ||
-                            (widget.post['page'] != null &&
-                                widget.post['page_owner'] != null &&
-                                widget.post['page_owner']['page_relationship']
-                                        ['role'] ==
+                    widget.post?['account']?['id'] == meData['id'] ||
+                            (widget.post?['page'] != null &&
+                                widget.post?['page_owner'] != null &&
+                                widget.post?['page_owner']?['page_relationship']
+                                        ?['role'] ==
                                     "admin")
                         ? (![postReblog, postMultipleMedia]
                                 .contains(widget.type))
@@ -350,8 +420,6 @@ class BlockSubNamePost extends StatelessWidget {
                         widget.type != postDetail
                     ? Row(
                         children: [
-                          buildTextContent("Người đăng: ", true,
-                              fontSize: 14, colorWord: blackColor),
                           buildTextContent(
                               widget.post['account']['display_name'] + " · ",
                               true,
@@ -384,14 +452,12 @@ class BlockSubNamePost extends StatelessWidget {
   }
 }
 
-class BlockNamePost extends StatelessWidget {
+class BlockNamePost extends StatefulWidget {
   const BlockNamePost(
       {super.key,
       required this.account,
       required this.description,
       required this.mentions,
-      required this.isFollowing,
-      this.handleLike,
       this.group,
       this.page,
       this.statusActivity,
@@ -407,74 +473,88 @@ class BlockNamePost extends StatelessWidget {
   final dynamic statusActivity;
   final Color? textColor;
   final dynamic type;
-  final bool isFollowing;
-  final Function? handleLike;
+
+  @override
+  State<BlockNamePost> createState() => _BlockNamePostState();
+}
+
+class _BlockNamePostState extends State<BlockNamePost> {
+  bool isFollowing = false;
 
   renderDisplayName() {
-    if (group != null) {
-      return group['title'];
-    } else if (page != null) {
-      return post['place']?['id'] != page['id']
-          ? page['title']
-          : account['display_name'];
+    if (widget.group != null) {
+      return widget.group['title'];
+    } else if (widget.page != null) {
+      return widget.post['place']?['id'] != widget.page['id']
+          ? widget.page['title']
+          : widget.account['display_name'];
     } else {
-      return account['display_name'];
+      return widget.account['display_name'];
+    }
+  }
+
+  bool checkHasBlueCertification() {
+    if (widget.account?['certified'] == true ||
+        (widget.page != null && widget.page?['certified'] == true)) {
+      return true;
+    } else {
+      return false;
     }
   }
 
   TextSpan renderLikeTextSpan() {
-    if (group != null) {
-      return (group["group_relationship"] != null &&
-              group["group_relationship"]?["like"] == true)
+    if (widget.group != null) {
+      return (widget.group["group_relationship"] != null &&
+              widget.group["group_relationship"]?["like"] == true)
           ? const TextSpan()
           : const TextSpan(
               text: " · Thích", style: TextStyle(color: secondaryColor));
-    } else if (page != null) {
-      return post['place']?['id'] != page['id']
-          ? (page["page_relationship"] != null &&
-                  page["page_relationship"]?["like"] == true)
+    } else if (widget.page != null) {
+      return widget.post['place']?['id'] != widget.page['id']
+          ? (widget.page["page_relationship"] != null &&
+                  widget.page["page_relationship"]?["like"] == true)
               ? const TextSpan()
               : const TextSpan(
                   text: " ·  Thích", style: TextStyle(color: secondaryColor))
-          : TextSpan(text: account['display_name']);
+          : TextSpan(text: widget.account['display_name']);
+
+      // return const TextSpan(text: '');
     } else {
       return const TextSpan(text: '');
     }
   }
 
-  chooseApi() {
-    if (group != null) {
-      return (group["group_relationship"] != null &&
-              group["group_relationship"]?["like"] == true)
-          ? const TextSpan()
-          : const TextSpan(
-              text: " Thích", style: TextStyle(color: secondaryColor));
-    } else if (page != null) {
-      return post['place']?['id'] != page['id']
-          ? (page["page_relationship"] != null &&
-                  page["page_relationship"]?["like"] == true)
-              ? const TextSpan()
-              : const TextSpan(
-                  text: " Thích", style: TextStyle(color: secondaryColor))
-          : TextSpan(text: account['display_name']);
-    } else {
-      return const TextSpan(text: '');
+  chooseApi() async {
+    if (widget.group != null) {
+      //  await GroupApi().
+    } else if (widget.page != null) {
+      await PageApi().likePageSuggestion(widget.page['id']);
     }
   }
 
   void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
-
-    if (type != "edit_post") {
-      if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
-        Navigator.pushNamed(context, '/page', arguments: page);
+    if (widget.type != "edit_post") {
+      if (widget.post['place']?['id'] != widget.page?['id'] &&
+          currentRouter != '/page') {
+        Navigator.pushNamed(context, '/page', arguments: widget.page);
+      } else if (widget.group != null && widget.group['id'] != null) {
+        pushCustomCupertinoPageRoute(
+          context,
+          GroupDetail(id: widget.group['id']),
+        );
       } else {
         pushCustomCupertinoPageRoute(context, const UserPageHome(),
             settings: RouteSettings(
-              arguments: {'id': account['id']},
+              arguments: {'id': widget.account['id']},
             ));
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -491,53 +571,61 @@ class BlockNamePost extends StatelessWidget {
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: textColor ??
+                  color: widget.textColor ??
                       Theme.of(context).textTheme.displayLarge!.color),
               children: [
                 const TextSpan(text: ' '),
-                statusActivity.isNotEmpty
+                WidgetSpan(
+                    child: checkHasBlueCertification()
+                        ? buildBlueCertifiedWidget(
+                            margin: const EdgeInsets.only(bottom: 2))
+                        : const SizedBox()),
+                widget.statusActivity.isNotEmpty
                     ? WidgetSpan(
                         child: ImageCacheRender(
-                          path: statusActivity['url'],
+                          path: widget.statusActivity['url'],
                           width: 18.0,
                           height: 18.0,
                         ),
                       )
                     : const TextSpan(text: ''),
                 TextSpan(
-                    text: description,
+                    text: widget.description,
                     style: const TextStyle(
                         fontWeight: FontWeight.normal, fontSize: 15)),
-                mentions.isNotEmpty
-                    ? TextSpan(text: mentions[0]['display_name'])
+                widget.mentions.isNotEmpty
+                    ? TextSpan(text: widget.mentions[0]['display_name'])
                     : const TextSpan(),
-                mentions.isNotEmpty && mentions.length >= 2
+                widget.mentions.isNotEmpty && widget.mentions.length >= 2
                     ? const TextSpan(
                         text: ' và ',
                         style: TextStyle(fontWeight: FontWeight.normal))
                     : const TextSpan(),
-                mentions.isNotEmpty && mentions.length == 2
+                widget.mentions.isNotEmpty && widget.mentions.length == 2
                     ? TextSpan(
-                        text: mentions[1]['display_name'],
+                        text: widget.mentions[1]['display_name'],
                       )
                     : const TextSpan(),
-                mentions.isNotEmpty && mentions.length > 2
+                widget.mentions.isNotEmpty && widget.mentions.length > 2
                     ? TextSpan(
-                        text: '${mentions.length - 1} người khác',
+                        text: '${widget.mentions.length - 1} người khác',
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            pushCustomCupertinoPageRoute(
-                                context, PageMention(mentions: mentions));
+                            pushCustomCupertinoPageRoute(context,
+                                PageMention(mentions: widget.mentions));
                           })
                     : const TextSpan(),
               ],
             ),
           ),
         ),
-        group != null || page != null || isFollowing
+        (widget.group != null || widget.page != null) && !isFollowing
             ? InkWell(
                 onTap: () {
-                  handleLike != null ? handleLike!() : null;
+                  setState(() {
+                    isFollowing = true;
+                  });
+                  chooseApi();
                 },
                 child: RichText(
                   text: TextSpan(
@@ -547,7 +635,7 @@ class BlockNamePost extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: textColor ??
+                        color: widget.textColor ??
                             Theme.of(context).textTheme.displayLarge!.color),
                   ),
                 ),

@@ -17,7 +17,11 @@ import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 class WatchSuggest extends ConsumerStatefulWidget {
   final dynamic media;
   final dynamic post;
-  const WatchSuggest({Key? key, this.media, this.post}) : super(key: key);
+  final String? preType;
+  final Function? updateData;
+  const WatchSuggest(
+      {Key? key, this.media, this.post, this.preType, this.updateData})
+      : super(key: key);
 
   @override
   ConsumerState<WatchSuggest> createState() => _WatchSuggestState();
@@ -49,7 +53,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
     watchPost = null;
   }
 
-  updateNewPost() {
+  updateNewPost(dynamic newData) {
     setState(() {
       watchPost = ref.watch(currentPostControllerProvider).currentPost;
     });
@@ -112,9 +116,16 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => WatchDetail(
-                                          post: watchPost ?? widget.post,
-                                          media: widget.media,
-                                          type: postWatchDetail)));
+                                            post: watchPost ?? widget.post,
+                                            media: widget.media,
+                                            type: postWatchDetail,
+                                            preType: widget.preType,
+                                            updateDataFunction: () {
+                                              widget.updateData != null
+                                                  ? widget.updateData!()
+                                                  : null;
+                                            },
+                                          )));
                             },
                           ))
                         ],
@@ -123,6 +134,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                         post: watchPost ?? widget.post,
                         type: postWatch,
                         updateDataFunction: updateNewPost,
+                        preType: widget.preType,
                       ),
                     ],
                   ),

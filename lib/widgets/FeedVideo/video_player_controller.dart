@@ -159,6 +159,9 @@ class _VideoPlayerHasControllerState
             children: [
               chewieController != null
                   ? AspectRatio(
+                      // tag: widget.media['file']?.path ??
+                      //       widget.media['remote_url'] ??
+                      //       widget.media['url'],
                       aspectRatio: chewieController!
                           .videoPlayerController.value.aspectRatio,
                       // (widget.type == postWatchDetail ||

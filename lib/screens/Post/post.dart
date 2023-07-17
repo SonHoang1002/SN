@@ -28,8 +28,10 @@ class Post extends ConsumerStatefulWidget {
   final bool? isHiddenFooter;
   final dynamic data;
   final Function? reloadFunction;
+  final Function(dynamic newData)? updateDataFunction;
   final bool? isFocus;
   final bool? visible;
+  final String? preType;
 
   const Post(
       {Key? key,
@@ -40,7 +42,9 @@ class Post extends ConsumerStatefulWidget {
       this.isHiddenFooter,
       this.reloadFunction,
       this.isFocus,
-      this.visible})
+      this.visible,
+      this.preType,
+      this.updateDataFunction})
       : super(key: key);
 
   @override
@@ -62,11 +66,12 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
     });
   }
 
-  updateNewPost() {
+  updateNewPost(dynamic newData) {
     setState(() {
       isNeedInitPost = false;
       currentPost = ref.watch(currentPostControllerProvider).currentPost;
     });
+    widget.updateDataFunction != null ? widget.updateDataFunction!(newData) : null;
   }
 
   @override
@@ -164,6 +169,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                               setState(() {});
                             });
                           },
+                          preType: widget.preType,
                           isFocus: widget.isFocus,
                           updateDataFunction: updateNewPost,
                           showCmtBoxFunction: () {
@@ -196,6 +202,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                       type: widget.type,
                       updateDataFunction: updateNewPost,
                       isShowCommentBox: _isShowCommentBox.value,
+                      preType: widget.preType,
                     ),
             ],
           ),

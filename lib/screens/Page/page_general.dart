@@ -11,6 +11,8 @@ import 'package:social_network_app_mobile/screens/Page/page_liked.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import 'package:social_network_app_mobile/widgets/page_item.dart';
 
+import '../MarketPlace/widgets/circular_progress_indicator.dart';
+
 class PageGeneral extends ConsumerStatefulWidget {
   const PageGeneral({Key? key}) : super(key: key);
 
@@ -20,7 +22,7 @@ class PageGeneral extends ConsumerStatefulWidget {
 
 class _PageGeneralState extends ConsumerState<PageGeneral> {
   final scrollController = ScrollController();
-
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -61,6 +63,11 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
           .read(pageListControllerProvider.notifier)
           .getListPageInvited('manage');
     }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   @override
@@ -166,21 +173,23 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              // physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              controller: scrollController,
-              itemCount: pagesAdmin.length,
-              itemBuilder: (context, i) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: PageItem(page: pagesAdmin[i]),
-                );
-              },
-            ),
-          )
+          _isLoading
+              ? buildCircularProgressIndicator()
+              : Expanded(
+                  child: ListView.builder(
+                    // physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    controller: scrollController,
+                    itemCount: pagesAdmin.length,
+                    itemBuilder: (context, i) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: PageItem(page: pagesAdmin[i]),
+                      );
+                    },
+                  ),
+                )
         ],
       ),
     );

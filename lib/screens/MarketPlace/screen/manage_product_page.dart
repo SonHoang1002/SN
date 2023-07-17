@@ -21,8 +21,6 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/general_componen
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -664,7 +662,8 @@ class _ManageProductMarketPageState
                   width: 35,
                   child: _selectedPage != null
                       ? ImageCacheRender(
-                          path: _selectedPage["avatar_media"]["url"])
+                          path: (_selectedPage?["avatar_media"]?["url"]) ??
+                              linkAvatarDefault)
                       : Container(
                           color: greyColor,
                         )),
@@ -712,7 +711,7 @@ class _ManageProductMarketPageState
                                           GeneralComponent(
                                             [
                                               buildTextContent(
-                                                  data["title"], false)
+                                                  data?["title"], false)
                                             ],
                                             prefixWidget: ClipRRect(
                                               borderRadius:
@@ -720,7 +719,7 @@ class _ManageProductMarketPageState
                                               child: SizedBox(
                                                 height: 35,
                                                 width: 35,
-                                                child: data["avatar_media"] !=
+                                                child: data?["avatar_media"] !=
                                                         null
                                                     ? ImageCacheRender(
                                                         path:

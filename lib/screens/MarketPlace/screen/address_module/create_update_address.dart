@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/delivery_addresses_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/delivery_address_apis.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart'; 
+import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
@@ -88,9 +88,9 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const BackIconAppbar(), 
+              const BackIconAppbar(),
               AppBarTitle(
-                  title: _isCreate! ? "Địa chỉ mới" : "Cập nhật địa chỉ"),
+                  title: _isCreate! ? "Tạo địa chỉ mới" : "Cập nhật địa chỉ"),
               const Icon(
                 FontAwesomeIcons.bell,
                 size: 18,
@@ -258,7 +258,7 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
     }
     var response;
     if (_isCreate!) {
-      response = await DeliveryAddressApis().postDeliveryAddressApi(_mainData);
+      response = await DeliveryAddressApis().postDeliveryAddressApi(_mainData); 
     } else {
       response = await DeliveryAddressApis()
           .updateDeliveryAddressApi(widget.oldData["id"], _mainData);
@@ -266,15 +266,22 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
     await ref.read(deliveryAddressProvider.notifier).getDeliveryAddressList();
     if (response != null) {
       if (response.isNotEmpty) {
+        // ignore: use_build_context_synchronously
         buildMessageDialog(
             context,
             _isCreate!
                 ? "$mainTitleUpper thành công"
                 : "$mainTitleUpper thành công",
-            oneButton: true);
+            oneButton: true, oKFunction: () {
+          popToPreviousScreen(context);
+        });
       } else {
-        buildMessageDialog(context,
-            "${_isCreate! ? "$mainTitleUpper không thành công" : "$mainTitleUpper không thành công"}",
+        // ignore: use_build_context_synchronously
+        buildMessageDialog(
+            context,
+            _isCreate!
+                ? "$mainTitleUpper không thành công"
+                : "$mainTitleUpper không thành công",
             oneButton: true);
       }
     }

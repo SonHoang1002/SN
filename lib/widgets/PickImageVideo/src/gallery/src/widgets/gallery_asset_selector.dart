@@ -128,48 +128,48 @@ class GalleryAssetSelectorState extends State<GalleryAssetSelector>
               child: Stack(
                 children: [
                   // Edit button
-                  if (canEdit)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: AnimatedBuilder(
-                        animation: _editOpa,
-                        builder: (context, child) {
-                          final hide = (value.selectedEntities.isEmpty &&
-                                  !_editOpaController.isAnimating) ||
-                              _editOpa.value == 0.0;
-                          return hide
-                              ? const SizedBox()
-                              : Opacity(opacity: _editOpa.value, child: child);
-                        },
-                        child: SizedBox(
-                            width: buttonWidth,
-                            child: ButtonPrimary(
-                              label: 'Chỉnh sửa',
-                              isPrimary: true,
-                              handlePress: () {
-                                final entity = value.selectedEntities.first;
-                                widget.controller
-                                    // ..select(context, entity)
-                                    .editEntity(context, entity)
-                                    .then((entity) {
-                                  if (entity != null) {
-                                    widget.albums.currentAlbum.value
-                                        .insert(entity);
-                                    widget.controller
-                                        .select(context, entity, edited: true);
-                                  }
-                                });
-                              },
-                            )),
-                      ),
-                    ),
+                  // if (canEdit)
+                  //   Align(
+                  //     alignment: Alignment.centerLeft,
+                  //     child: AnimatedBuilder(
+                  //       animation: _editOpa,
+                  //       builder: (context, child) {
+                  //         final hide = (value.selectedEntities.isEmpty &&
+                  //                 !_editOpaController.isAnimating) ||
+                  //             _editOpa.value == 0.0;
+                  //         return hide
+                  //             ? const SizedBox()
+                  //             : Opacity(opacity: _editOpa.value, child: child);
+                  //       },
+                  //       child: SizedBox(
+                  //           width: buttonWidth,
+                  //           child: ButtonPrimary(
+                  //             label: 'Chỉnh sửa',
+                  //             isPrimary: true,
+                  //             handlePress: () {
+                  //               final entity = value.selectedEntities.first;
+                  //               widget.controller
+                  //                   // ..select(context, entity)
+                  //                   .editEntity(context, entity)
+                  //                   .then((entity) {
+                  //                 if (entity != null) {
+                  //                   widget.albums.currentAlbum.value
+                  //                       .insert(entity);
+                  //                   widget.controller
+                  //                       .select(context, entity, edited: true);
+                  //                 }
+                  //               });
+                  //             },
+                  //           )),
+                  //     ),
+                  //   ),
 
                   // Margin
-                  if (canEdit) const SizedBox(width: 16),
+                  // if (canEdit) const SizedBox(width: 16),
 
                   // Select
                   Align(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.center,
                     child: AnimatedBuilder(
                       animation: _selectOpa,
                       builder: (context, child) {
@@ -188,10 +188,7 @@ class GalleryAssetSelectorState extends State<GalleryAssetSelector>
                         animation: _selectSize,
                         builder: (context, child) {
                           return SizedBox(
-                            width: !canEdit
-                                ? size.width
-                                : buttonWidth +
-                                    _selectSize.value * (buttonWidth + 20.0),
+                            width: size.width,
                             child: child,
                           );
                         },

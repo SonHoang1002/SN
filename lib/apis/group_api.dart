@@ -31,7 +31,9 @@ class GroupApi {
   }
 
   fetchListInviteGroup(params) async {
-    return await Api().getRequestBase('/api/v1/group_invitations', params);
+    final response =
+        await Api().getRequestBase('/api/v1/group_invitations', params);
+    return response;
   }
 
   fetchListJoinRequest(params) async {

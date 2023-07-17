@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
@@ -19,7 +19,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.da
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart'; 
+import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../../../theme/colors.dart';
 import '../../../widgets/GeneralWidget/divider_widget.dart';
@@ -750,15 +750,16 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                     function: () async {
                       if (_allMoney == 0) {
                         buildMessageDialog(
-                          context,
-                          "Bạn chưa chọn sản phẩm nào !",
-                          oneButton: true,
-                        );
+                            context, "Bạn chưa chọn sản phẩm nào để mua.",
+                            oneButton: true, oKFunction: () {
+                          popToPreviousScreen(context);
+                        });
                         return;
                       }
                       await ref
                           .read(cartProductsProvider.notifier)
                           .updateCartProductList(_cartData!);
+                      // ignore: use_build_context_synchronously
                       pushToNextScreen(
                           context,
                           PaymentMarketPage(

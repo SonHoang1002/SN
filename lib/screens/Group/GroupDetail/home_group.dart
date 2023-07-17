@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -189,7 +190,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       mergeAndFilter(groupMember, groupFriend),
     );
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size; 
     return Scaffold(
       body: CustomScrollView(
         shrinkWrap: true,
@@ -205,8 +206,11 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                       ? Image.file(url!, fit: BoxFit.cover)
                       : ExtendedImage.network(
                           widget.groupDetail['banner'] != null
-                              ? widget.groupDetail['banner']['preview_url']
+                              ? (widget.groupDetail?['banner']
+                                      ?['preview_url']) ??
+                                  (widget.groupDetail?['banner']?['url'])
                               : linkBannerDefault,
+                          height: 30,
                           fit: BoxFit.cover,
                         ),
                 ),
@@ -273,7 +277,8 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: colorWord(context),
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
                             ),
                           ),
                           const WidgetSpan(
@@ -314,15 +319,17 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                                 : 'Nhóm Công khai',
                             style: TextStyle(
                               fontSize: 14,
-                              color: colorWord(context),
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
                             ),
                           ),
                           TextSpan(
                             text:
                                 ' \u{2022} ${widget.groupDetail['member_count']} thành viên',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color,
                             ),
                           ),
                         ],
@@ -441,7 +448,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                 const SizedBox(
                   height: 5,
                 ),
-                const Padding(
+                const Padding( 
                   padding: EdgeInsets.only(
                     left: 10.0,
                     right: 10.0,

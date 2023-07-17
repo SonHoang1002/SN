@@ -29,7 +29,6 @@ class MenuRender extends StatelessWidget {
                           menuSelected: menu,
                         )));
     }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
