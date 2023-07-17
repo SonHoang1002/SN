@@ -3,6 +3,8 @@ import 'package:social_network_app_mobile/data/drawer.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
+import '../Group/GroupDetail/group_detail.dart';
+
 class MenuShortcut extends StatelessWidget {
   const MenuShortcut({Key? key}) : super(key: key);
 
@@ -23,8 +25,17 @@ class MenuShortcut extends StatelessWidget {
             child: Row(
               children: List.generate(
                   drawers.length,
-                  (index) => Container(
-                        margin: const EdgeInsets.only(),
+                  (index) => InkWell(
+                        // margin: const EdgeInsets.only(),
+                         onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return GroupDetail(
+                                    id: drawers[index]['id'],
+                                  );
+                                },
+                              ));
+                            },
                         child: Column(
                           children: [
                             Stack(
