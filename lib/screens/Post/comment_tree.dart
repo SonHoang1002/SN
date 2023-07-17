@@ -144,12 +144,13 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
 
     if (widget.commentChildCreate != null) {
       Comment commentCreate = Comment(
-          avatar: widget.commentChildCreate['account']['avatar_media'] != null
-              ? widget.commentChildCreate['account']['avatar_media']
-                  ['preview_url']
-              : linkAvatarDefault,
-          userName: widget.commentChildCreate['account']['display_name'],
-          content: widget.commentChildCreate['id']);
+        avatar: widget.commentChildCreate?['account']?['avatar_media'] != null
+            ? (widget.commentChildCreate?['account']
+                ?['avatar_media'])['preview_url']
+            : linkAvatarDefault,
+        userName: (widget.commentChildCreate?['account']?['display_name']),
+        content: widget.commentChildCreate?['id'],
+      );
 
       if (!checkElement()) {
         setState(() {
@@ -193,11 +194,17 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
             lineWidth: 0.5),
         avatarRoot: (context, data) => PreferredSize(
             preferredSize: const Size.fromRadius(18),
-            child: AvatarSocial(
-                width: 36,
-                height: 36,
-                object: widget.commentParent['account'],
-                path: data.avatar!)),
+            child: InkWell(
+              onTap: () {
+                pushCustomCupertinoPageRoute(context,
+                    UserPageHome(id: widget.commentParent?['account']?['id']));
+              },
+              child: AvatarSocial(
+                  width: 36,
+                  height: 36,
+                  object: widget.commentParent['account'],
+                  path: data.avatar!),
+            )),
         avatarChild: (context, data) => PreferredSize(
           preferredSize: const Size.fromRadius(12),
           child: data.avatar == 'icon'
@@ -209,14 +216,22 @@ class _CommentTreeState extends ConsumerState<CommentTree> {
                     size: 14,
                   ),
                 )
-              : AvatarSocial(
-                  width: 30,
-                  height: 30,
-                  object: postChildComment.firstWhere(
-                    (element) => element['id'] + '' == '${data.content}',
-                    orElse: () => {},
-                  )?['account'],
-                  path: data.avatar!),
+              : InkWell(
+                  onTap: () {
+                    pushCustomCupertinoPageRoute(
+                        context,
+                        UserPageHome(
+                            id: widget.commentParent?['account']?['id']));
+                  },
+                  child: AvatarSocial(
+                      width: 30,
+                      height: 30,
+                      object: postChildComment.firstWhere(
+                        (element) => element['id'] + '' == '${data.content}',
+                        orElse: () => {},
+                      )?['account'],
+                      path: data.avatar!),
+                ),
         ),
         contentChild: (context, data) {
           int index = postChildComment
@@ -362,7 +377,7 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
               return;
             }
           }
-          if (listName.contains(text)) { 
+          if (listName.contains(text)) {
             // ignore: use_build_context_synchronously
             pushToNextScreen(context,
                 UserPageHome(id: tags[listName.indexOf(text)]['entity_id']));
@@ -580,14 +595,22 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             //user name
-                            Text(
-                              '${widget.data.userName}',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: widget.widget.type == postWatch
-                                      ? Colors.white
-                                      : null),
+                            InkWell(
+                              onTap: () {
+                                pushCustomCupertinoPageRoute(
+                                    context,
+                                    UserPageHome(
+                                        id: widget.post?['account']?['id']));
+                              },
+                              child: Text(
+                                '${widget.data.userName}',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: widget.widget.type == postWatch
+                                        ? Colors.white
+                                        : null),
+                              ),
                             ),
                             const SizedBox(
                               height: 4,

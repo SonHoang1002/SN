@@ -16,6 +16,7 @@ class GridLayoutImage extends ConsumerWidget {
   final dynamic post;
   final Function? updateDataFunction;
   final bool? isFocus;
+  final String? preType;
 
   /// id of video
   final dynamic currentFocusVideoId;
@@ -28,7 +29,8 @@ class GridLayoutImage extends ConsumerWidget {
       this.updateDataFunction,
       this.isFocus,
       this.currentFocusVideoId,
-      this.onEnd})
+      this.onEnd,
+      this.preType})
       : super(key: key);
 
   checkIsImage(media) {

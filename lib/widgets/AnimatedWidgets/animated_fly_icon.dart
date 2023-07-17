@@ -29,12 +29,7 @@ class _AnimatedFlyIconWidgetState extends State<AnimatedFlyIconWidget> {
 
   @override
   Widget build(BuildContext context) {
-    size ??= MediaQuery.of(context).size;
-    // if (offset != null) {
-    //   final box =
-    //       _animationKey.currentContext?.findRenderObject() as RenderBox?;
-    //   offset = box?.localToGlobal(Offset.zero);
-    // }
+    size ??= MediaQuery.of(context).size; 
     isShowAnimatedReactionIcon = true;
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {

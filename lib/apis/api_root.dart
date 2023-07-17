@@ -58,23 +58,27 @@ class Api {
       var response = await dio.post(path, data: data);
       return response.data;
     } on DioError catch (e) {
-      if (e.response?.statusCode == 400) {
-        Logger logger = Logger();
-        logger.e(e.response?.data.toString());
-        return {"status": e.response?.statusCode, "content": e.response?.data};
-      }
-      if (e.response?.statusCode == 401) {
-        logOutWhenTokenError();
-      }
-      if (e.response?.statusCode == 422) {
-        return e.response?.data;
-      }
-      if (e.response?.statusCode == 500) {
-        Logger logger = Logger();
-        String message = "Server đang có vấn đề. Hãy thử lại sau";
-        logger.e(message);
-        return {"status": e.response?.statusCode, "content": message};
-      }
+      return {
+        "status_code": e.response?.statusCode,
+        "content": e.response?.data
+      };
+      // if (e.response?.statusCode == 400) {
+      //   Logger logger = Logger();
+      //   logger.e(e.response?.data.toString());
+      //   return {"status": e.response?.statusCode, "content": e.response?.data};
+      // }
+      // if (e.response?.statusCode == 401) {
+      //   logOutWhenTokenError();
+      // }
+      // if (e.response?.statusCode == 422) {
+      //   return e.response?.data;
+      // }
+      // if (e.response?.statusCode == 500) {
+      //   Logger logger = Logger();
+      //   String message = "Server đang có vấn đề. Hãy thử lại sau";
+      //   logger.e(message);
+      //   return {"status": e.response?.statusCode, "content": message};
+      // }
       rethrow;
     }
   }

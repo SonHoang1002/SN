@@ -56,7 +56,7 @@ Widget buildReviewShop(BuildContext context, dynamic pageData) {
                         ),
                         buildSpacer(width: 5),
                         buildTextContent(
-                            pageData?['location']['title'] ?? "Hà Nội", false,
+                            pageData?['location']?['title'] ?? "Hà Nội", false,
                             fontSize: 14),
                       ],
                     ),

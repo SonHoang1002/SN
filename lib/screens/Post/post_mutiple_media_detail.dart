@@ -25,7 +25,7 @@ class PostMutipleMediaDetail extends ConsumerStatefulWidget {
   final int? initialIndex;
   final dynamic post;
   final dynamic preType;
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   const PostMutipleMediaDetail(
       {Key? key,
       this.post,
@@ -398,6 +398,8 @@ class _PostMutipleMediaDetail1State
                                         post: postData,
                                         type: postMultipleMedia,
                                         preType: widget.preType,
+                                        updateDataFunction:
+                                            widget.updateDataFunction,
                                       ),
                                       const CrossBar(
                                         height: 5,
@@ -526,9 +528,9 @@ class _PostMutipleMediaDetail1State
             ? VideoPlayerNoneController(
                 path: medias[index]['file'].path,
                 type: "local",
-                removeObserver: false
+                removeObserver: false, isPause: true,
                 // aspectRatio: size.height / size.width,
-                )
+              )
             : VideoPlayerHasController(
                 media: medias[index],
                 handleAction: () {
@@ -537,7 +539,7 @@ class _PostMutipleMediaDetail1State
                       WatchDetail(
                         post: widget.post,
                         media: medias[index],
-                        type: widget.preType,
+                        preType: widget.preType,
                         updateDataFunction: () {
                           // updateNewPost() {
                           // setState(() {

@@ -13,7 +13,7 @@ class PostMedia extends StatefulWidget {
   final Function? backFunction;
   final Function? reloadFunction;
   final Function? showCmtBoxFunction;
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   final bool? isFocus;
 
   const PostMedia(
@@ -133,6 +133,7 @@ class _PostMediaState extends State<PostMedia> {
               isFocus: widget.isFocus,
               currentFocusVideoId: currentVideoId.value,
               updateDataFunction: widget.updateDataFunction,
+              preType: widget.preType,
               onEnd: () {
                 List mediaList = widget.post['media_attachments'];
                 dynamic startingValue = currentVideoId.value;

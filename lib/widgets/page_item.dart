@@ -2,13 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
 import 'text_description.dart';
 
-class PageItem extends StatelessWidget {
+class PageItem extends ConsumerWidget {
   final dynamic page;
   final double? sizeAvatar;
   final double? sizeTitle;
@@ -32,11 +34,12 @@ class PageItem extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
     return isActiveNewScreen
         ? InkWell(
-            onTap: () {
+            onTap: ()async  {
+              await ref.read(pageControllerProvider.notifier).reset();
               Navigator.pushNamed(context, '/page', arguments: page);
             },
             child: Row(

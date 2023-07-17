@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -6,11 +7,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_edit_media_profile.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_frames.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_media.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
+import 'package:social_network_app_mobile/widgets/blue_certified_widget.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 class BannerBase extends StatefulWidget {
@@ -52,10 +56,22 @@ class _BannerBaseState extends State<BannerBase> {
           constraints: const BoxConstraints(minHeight: 240),
           child: Stack(
             children: [
-              ImageCacheRender(
-                path: path,
-                height: 200.0,
-                width: size.width,
+              InkWell(
+                onTap: () {
+                  pushCustomVerticalPageRoute(
+                      context,
+                      PostOneMediaDetail(
+                        postMedia: widget.object?['banner'],
+                        post: widget.object,
+                        type: widget.type,
+                      ),
+                      opaque: false);
+                },
+                child: ImageCacheRender(
+                  path: path,
+                  height: 200.0,
+                  width: size.width,
+                ),
               ),
               Positioned(
                   top: 100,
@@ -68,11 +84,23 @@ class _BannerBaseState extends State<BannerBase> {
                           border: Border.all(width: 2.0, color: white)),
                       child: Stack(
                         children: [
-                          AvatarSocial(
-                            width: 130.0,
-                            height: 130.0,
-                            path: pathAvatar,
-                            object: widget.object,
+                          InkWell(
+                            onTap: () { 
+                              pushCustomVerticalPageRoute(
+                                  context,
+                                  PostOneMediaDetail(
+                                    postMedia: widget.object?['avatar_media'],
+                                    post: widget.object,
+                                    type: widget.type,
+                                  ),
+                                  opaque: false);
+                            },
+                            child: AvatarSocial(
+                              width: 130.0,
+                              height: 130.0,
+                              path: pathAvatar,
+                              object: widget.object,
+                            ),
                           ),
                           widget.object != null
                               ? Positioned(
@@ -128,6 +156,12 @@ class _BannerBaseState extends State<BannerBase> {
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
                         color: colorWord(context))),
+                WidgetSpan(
+                    child: widget.object?['certified'] == true
+                        ? buildBlueCertifiedWidget(
+                            iconSize: 20,
+                            margin: const EdgeInsets.only(bottom: 2, left: 5))
+                        : const SizedBox())
               ],
             ),
           ),

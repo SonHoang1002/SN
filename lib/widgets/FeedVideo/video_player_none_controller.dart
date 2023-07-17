@@ -122,107 +122,110 @@ class _VideoPlayerNoneControllerState
         videoPlayerController.pause();
       }
     }
-    return VisibilityDetector(
-        onVisibilityChanged: (visibilityInfo) {
-          if (mounted) {
-            setState(() {
-              isVisible = visibilityInfo.visibleFraction == 1;
-              if (isVisible) {
-                videoPlayerController.play();
-                if (ref.read(watchControllerProvider).mediaSelected?['id'] ==
-                    (widget.media?['id'] ?? 0)) {
-                  videoPlayerController.seekTo(Duration(
-                      seconds: ref.read(watchControllerProvider).position));
-                } else {
-                  ref
-                      .read(watchControllerProvider.notifier)
-                      .updateMediaPlaying(widget.media);
-                }
-              } else {
-                videoPlayerController.pause();
-              }
-            });
-          }
-        },
-        key: Key(widget.media?['id'] ?? widget.path ?? '111'),
-        child: Stack(
-          children: [
-            GestureDetector(
-                child: Hero(
-                    tag: widget.path,
-                    child: AspectRatio(
-                        aspectRatio: widget.aspectRatio ??
-                            videoPlayerController.value.aspectRatio,
-                        child: VideoPlayer(videoPlayerController)))),
-            widget.isShowVolumn != null && widget.isShowVolumn == false
-                ? const SizedBox()
-                : Positioned(
-                    bottom: 10,
-                    right: 10,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isMuted = !_isMuted;
-                          if (widget.isPause == true) {
-                            videoPlayerController.setVolume(0);
-                          } else {
-                            videoPlayerController.setVolume(_isMuted ? 0 : 1);
-                          }
-                        });
-                      },
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
-                            shape: BoxShape.circle),
-                        child: Center(
-                          child: Icon(
-                            !_isMuted
-                                ? CupertinoIcons.speaker_2_fill
-                                : CupertinoIcons.speaker_slash_fill,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
+    return
+        // VisibilityDetector(
+        // onVisibilityChanged: (visibilityInfo) {
+        //   if (mounted) {
+        //     setState(() {
+        //       isVisible = visibilityInfo.visibleFraction == 1;
+        //       if (isVisible) {
+        //         videoPlayerController.play();
+        //         if (ref.read(watchControllerProvider).mediaSelected?['id'] ==
+        //             (widget.media?['id'] ?? 0)) {
+        //           videoPlayerController.seekTo(Duration(
+        //               seconds: ref.read(watchControllerProvider).position));
+        //         } else {
+        //           ref
+        //               .read(watchControllerProvider.notifier)
+        //               .updateMediaPlaying(widget.media);
+        //         }
+        //       } else {
+        //         videoPlayerController.pause();
+        //       }
+        //     });
+        //   }
+        // },
+        // key: Key(widget.media?['id'] ?? widget.path ?? '111'),
+        // child:
+        Stack(
+      children: [
+        GestureDetector(
+            child: Hero(
+                tag: widget.path,
+                child: AspectRatio(
+                    aspectRatio: widget.aspectRatio ??
+                        videoPlayerController.value.aspectRatio,
+                    child: VideoPlayer(videoPlayerController)))),
+        widget.isShowVolumn != null && widget.isShowVolumn == false
+            ? const SizedBox()
+            : Positioned(
+                bottom: 10,
+                right: 10,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isMuted = !_isMuted;
+                      if (widget.isPause == true) {
+                        videoPlayerController.setVolume(0);
+                      } else {
+                        videoPlayerController.setVolume(_isMuted ? 0 : 1);
+                      }
+                    });
+                  },
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        shape: BoxShape.circle),
+                    child: Center(
+                      child: Icon(
+                        !_isMuted
+                            ? CupertinoIcons.speaker_2_fill
+                            : CupertinoIcons.speaker_slash_fill,
+                        color: Colors.white,
+                        size: 18,
                       ),
-                    )),
-            // Positioned.fill(
-            //   child: Align(
-            //     alignment: Alignment.center,
-            //     child: isPlaying
-            //         ? const SizedBox(height: 40, width: 40)
-            //         : IconButton(
-            //             icon: const Icon(
-            //               FontAwesomeIcons.play,
-            //               color: Colors.red,
-            //               size: 40,
-            //             ),
-            //             onPressed: () {
-            //               if (widget.isPause != true) {
-            //                 setState(() {
-            //                   isPlaying = !isPlaying;
-            //                 });
-            //               }
-            //             },
-            //           ),
-            //   ),
-            // ),
-            if (_isLoading)
-              AspectRatio(
-                  aspectRatio: widget.aspectRatio ??
-                      videoPlayerController.value.aspectRatio,
-                  child: Container(color: greyColor))
-            // Container(
-            //   height: double.parse((widget.media?['meta']?['small']
-            //           ?['height'] *
-            //       (size!.width / widget.media?['meta']?['small']?['width']))),
-            //   width: size!.width,
-            //   color:
-            //       greyColor, // Hiệu ứng chờ (có thể thay đổi thành widget khác)
-            // )
-          ],
-        ));
+                    ),
+                  ),
+                )),
+        // Positioned.fill(
+        //   child: Align(
+        //     alignment: Alignment.center,
+        //     child: isPlaying
+        //         ? const SizedBox(height: 40, width: 40)
+        //         : IconButton(
+        //             icon: const Icon(
+        //               FontAwesomeIcons.play,
+        //               color: Colors.red,
+        //               size: 40,
+        //             ),
+        //             onPressed: () {
+        //               if (widget.isPause != true) {
+        //                 setState(() {
+        //                   isPlaying = !isPlaying;
+        //                 });
+        //               }
+        //             },
+        //           ),
+        //   ),
+        // ),
+        if (_isLoading)
+          AspectRatio(
+              aspectRatio:
+                  widget.aspectRatio ?? videoPlayerController.value.aspectRatio,
+              child: Container(color: greyColor))
+        // Container(
+        //   height: double.parse((widget.media?['meta']?['small']
+        //           ?['height'] *
+        //       (size!.width / widget.media?['meta']?['small']?['width']))),
+        //   width: size!.width,
+        //   color:
+        //       greyColor, // Hiệu ứng chờ (có thể thay đổi thành widget khác)
+        // )
+      ],
+      // )
+    );
   }
 
   @override

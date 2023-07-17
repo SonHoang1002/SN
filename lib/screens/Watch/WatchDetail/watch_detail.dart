@@ -45,8 +45,14 @@ class WatchDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
   final Function? updateDataFunction;
+  final String? preType;
   const WatchDetail(
-      {Key? key, this.media, this.post, this.type, this.updateDataFunction})
+      {Key? key,
+      this.media,
+      this.post,
+      this.type,
+      this.updateDataFunction,
+      this.preType})
       : super(key: key);
 
   @override
@@ -71,11 +77,10 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   final GlobalKey _animationKey = GlobalKey();
   bool iconFlying = false;
   Offset? offset;
-  bool isShowAnimatedReactionIcon = false;
-  String? _reactName;
+  // bool isShowAnimatedReactionIcon = false;
   Size? size;
-
   ValueNotifier<List> listAnimtedFlyIcon = ValueNotifier([]);
+  dynamic watchData;
 
   @override
   void initState() {
@@ -87,6 +92,11 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
       ref
           .read(currentPostControllerProvider.notifier)
           .saveCurrentPost(widget.post);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {
+          watchData = widget.post;
+        });
+      });
     });
   }
 
@@ -189,7 +199,62 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
     }
   }
 
-  handleReaction(dynamic react) async {
+  handleReaction(dynamic react) async { 
+    final viewerReaction = (widget.post?['viewer_reaction'] ?? "");
+    var newPost = watchData;
+    List newFavourites = newPost['reactions'];
+    int index =
+        newPost['reactions'].indexWhere((element) => element['type'] == react);
+    int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
+        ? newPost['reactions']
+            .indexWhere((element) => element['type'] == viewerReaction)
+        : -1;
+    if (index >= 0) {
+      newFavourites[index] = {
+        "type": react,
+        "${react}s_count": newFavourites[index]['${react}s_count'] + 1
+      };
+    }
+    if (indexCurrent >= 0) {
+      newFavourites[indexCurrent] = {
+        "type": viewerReaction,
+        "${viewerReaction}s_count":
+            newFavourites[indexCurrent]["${viewerReaction}s_count"] - 1
+      };
+    }
+    if (react != null) {
+      dynamic data = {"custom_vote_type": react};
+      newPost = {
+        ...newPost,
+        "favourites_count": newPost['viewer_reaction'] != null
+            ? newPost['favourites_count']
+            : newPost['favourites_count'] + 1,
+        "viewer_reaction": react,
+        "reactions": newFavourites
+      };
+      ref
+          .read(postControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, newPost);
+      ref.read(currentPostControllerProvider.notifier).saveCurrentPost(newPost);
+      widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+      await PostApi().reactionPostApi(widget.post['id'], data);
+    } else {
+      newPost = {
+        ...newPost,
+        "favourites_count": newPost['favourites_count'] != null
+            ? newPost['favourites_count'] - 1
+            : newPost['favourites_count'],
+        "viewer_reaction": null,
+        "reactions": newFavourites
+      };
+      ref
+          .read(postControllerProvider.notifier)
+          .actionUpdateDetailInPost(widget.type, newPost);
+      ref.read(currentPostControllerProvider.notifier).saveCurrentPost(newPost);
+      widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+      await PostApi().unReactionPostApi(widget.post['id']);
+    }
+
     // use status_media_id to react
     // check to see if the user reacted the same way he reacted before
     // var newPost = widget.post;
@@ -557,6 +622,7 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   Widget build(BuildContext context) {
     super.build(context);
     size = MediaQuery.of(context).size;
+    watchData = ref.watch(currentPostControllerProvider).currentPost;
     return GestureDetector(
         onTap: () {
           hiddenKeyboard(context);

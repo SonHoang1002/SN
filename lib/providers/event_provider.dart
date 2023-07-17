@@ -432,7 +432,7 @@ class EventController extends StateNotifier<EventState> {
   }
 
   getEventHosts(id) async {
-    List response = await EventApi().getEventHostApi(id);
+    List response = await EventApi().getEventHostApi(id) ?? [];
     if ((response.isNotEmpty) && mounted) {
       state = state.copyWith(
         hosts: [...response],
@@ -453,7 +453,7 @@ class EventController extends StateNotifier<EventState> {
   }
 
   getListEventHosts(params) async {
-    List response = await EventApi().getListEventApi(params);
+    List response = await EventApi().getListEventApi(params) ?? [];
     if (response.isNotEmpty) {
       final newListEvent =
           response.where((item) => !state.eventHosts.contains(item)).toList();
@@ -503,8 +503,8 @@ class EventController extends StateNotifier<EventState> {
     }
   }
 
-  updateStatusEvent(id, data) {
-    EventApi().statusEventApi(id, data);
+  updateStatusEvent(id, data) async {
+    await EventApi().statusEventApi(id, data);
     final index =
         state.events.indexWhere((element) => element['id'] == id.toString());
     final event = state.events[index];
@@ -536,8 +536,8 @@ class EventController extends StateNotifier<EventState> {
     );
   }
 
-  void updateStatusEventDetail(id, data) {
-    EventApi().statusEventApi(id, data);
+  void updateStatusEventDetail(id, data) async {
+    await EventApi().statusEventApi(id, data);
     state = state.copyWith(
       events: state.events,
       posts: state.posts,
@@ -559,8 +559,8 @@ class EventController extends StateNotifier<EventState> {
     );
   }
 
-  void updateStatusEventSuggested(id, data) {
-    EventApi().statusEventApi(id, data);
+  void updateStatusEventSuggested(id, data) async {
+    await EventApi().statusEventApi(id, data);
     final index = state.eventsSuggested
         .indexWhere((element) => element['id'] == id.toString());
     final eventsSuggested = state.eventsSuggested[index];
@@ -592,8 +592,8 @@ class EventController extends StateNotifier<EventState> {
     );
   }
 
-  void updateStatusInviteHost(id, data) {
-    EventApi().statusEventHostInviteApi(id, data);
+  void updateStatusInviteHost(id, data) async {
+    await EventApi().statusEventHostInviteApi(id, data);
     final index = state.eventsInviteHost
         .indexWhere((element) => element['event']['id'] == id.toString());
     final eventsInviteHost = state.eventsInviteHost[index];
@@ -622,8 +622,8 @@ class EventController extends StateNotifier<EventState> {
     );
   }
 
-  void updateStatusInvite(id, data) {
-    EventApi().statusEventHostInviteApi(id, data);
+  void updateStatusInvite(id, data) async {
+    await EventApi().statusEventHostInviteApi(id, data);
     final index = state.eventsInvite
         .indexWhere((element) => element['event']['id'] == id.toString());
     final eventsInvite = state.eventsInvite[index];
@@ -660,8 +660,8 @@ class EventController extends StateNotifier<EventState> {
     );
   }
 
-  void updateStatusEvents(id, data) {
-    EventApi().statusEventApi(id, data);
+  void updateStatusEvents(id, data) async {
+    await EventApi().statusEventApi(id, data);
     final index = state.eventsOwner
         .indexWhere((element) => element['id'] == id.toString());
     final eventsOwner = state.eventsOwner[index];
@@ -693,8 +693,8 @@ class EventController extends StateNotifier<EventState> {
     );
   }
 
-  void updateStatusEventsGoing(id, data) {
-    EventApi().statusEventApi(id, data);
+  void updateStatusEventsGoing(id, data) async {
+    await EventApi().statusEventApi(id, data);
     final index = state.eventsGoing
         .indexWhere((element) => element['id'] == id.toString());
     final eventsGoing = state.eventsGoing[index];

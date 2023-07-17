@@ -211,7 +211,6 @@ class _FeedState extends ConsumerState<Feed> {
     bool isMore = ref.watch(postControllerProvider).isMore;
     theme ??= pv.Provider.of<ThemeManager>(context);
     posts = ref.read(postControllerProvider).posts;
-
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);

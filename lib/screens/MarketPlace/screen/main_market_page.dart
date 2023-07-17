@@ -46,7 +46,7 @@ var paramConfigProductSearch = {
 };
 
 class MainMarketPage extends ConsumerStatefulWidget {
-  final bool? isBack;
+  final bool isBack;
   const MainMarketPage(this.isBack, {super.key});
 
   @override
@@ -54,8 +54,7 @@ class MainMarketPage extends ConsumerStatefulWidget {
 }
 
 class _MainMarketPageState extends ConsumerState<MainMarketPage> {
-  List<dynamic> product_categories = [];
-  // List<dynamic>? all_data;
+  List<dynamic> product_categories = []; 
   List<dynamic>? _suggestProductList;
   List<dynamic>? _discoverProduct;
   String? _filterTitle;

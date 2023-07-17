@@ -12,7 +12,7 @@ class CartProductsController extends StateNotifier<CartProductsState> {
   CartProductsController() : super(CartProductsState());
 
   initCartProductList() async {
-    final response = await CartProductApi().getCartProductApi();
+    List response = await CartProductApi().getCartProductApi() ?? [];
     for (int i = 0; i < response.length; i++) {
       response[i]["check"] = false;
       for (int j = 0; j < response[i]["items"].length; j++) {
@@ -30,7 +30,7 @@ class CartProductsController extends StateNotifier<CartProductsState> {
     final response = await CartProductApi().updateQuantityProductApi(id, data);
   }
 
-  deleteCartProduct(dynamic id, dynamic data) async { 
+  deleteCartProduct(dynamic id, dynamic data) async {
     final response = await CartProductApi().deleteCartProductApi(id, data);
   }
 

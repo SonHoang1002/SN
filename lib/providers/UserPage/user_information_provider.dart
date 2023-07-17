@@ -51,7 +51,7 @@ class UserInformationController extends StateNotifier<UserInformationState> {
   UserInformationController() : super(const UserInformationState());
 
   getUserInformation(idUser) async {
-    var response = await UserPageApi().getAccountInfor(idUser);
+    var response = await UserPageApi().getAccountInfor(idUser) ?? [];
     if (response != null && mounted) {
       state = state.copyWith(
         userInfor: response,
@@ -74,7 +74,7 @@ class UserInformationController extends StateNotifier<UserInformationState> {
   }
 
   getUserLifeEvent(idUser) async {
-    List response = await UserPageApi().getListLifeEvent(idUser);
+    List response = await UserPageApi().getListLifeEvent(idUser) ?? [];
     if (response.isNotEmpty && mounted) {
       state = state.copyWith(
         userInfor: state.userInfor,
@@ -136,7 +136,7 @@ class UserInformationController extends StateNotifier<UserInformationState> {
   }
 
   getUserFeatureContent(idUser) async {
-    var response = await UserPageApi().getUserFeatureContent(idUser);
+    var response = await UserPageApi().getUserFeatureContent(idUser) ?? [];
     if (response != null && mounted) {
       state = state.copyWith(
         userInfor: state.userInfor,

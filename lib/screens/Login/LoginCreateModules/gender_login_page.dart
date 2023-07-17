@@ -110,6 +110,8 @@ class _GenderLoginPageState extends State<GenderLoginPage> {
                           child: Radio(
                               value: selectionList[index],
                               groupValue: _selection,
+                              fillColor: MaterialStateProperty.resolveWith(
+                                  (states) => secondaryColor),
                               onChanged: (value) {
                                 setState(() {
                                   _selection = value as String;

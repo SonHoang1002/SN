@@ -27,6 +27,9 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
   TextEditingController _passwordConfirmController =
       TextEditingController(text: "");
 
+  RegExp numbersRegex = RegExp(r'\d');
+  RegExp specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -70,7 +73,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                                 handleUpdate: (value) {
                               setState(() {});
                             }),
-                            !checkValidate()
+                            !checkPassValidate()
                                 ? const Text(
                                     "Mật khẩu phải lớn hơn 9 kí tự, bao gồm số, chữ thường và ký tự đặc biệt :,.?...",
                                     style: TextStyle(
@@ -81,7 +84,6 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                                   )
                                 : const SizedBox(),
                             buildSpacer(height: 15),
-
                             // input
                             _buildTextFormField(
                                 _passwordConfirmController, "Xác nhận mật khẩu",
@@ -126,14 +128,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                                       },
                                     ),
                                   )
-                                : Text(
-                                    EmailLoginConstants.EMAIL_LOGIN_SUBTITLE,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      color: greyColor,
-                                    ),
-                                  ),
+                                : const SizedBox(),
                             buildSpacer(height: 15),
                             // change status button
                           ],
@@ -150,19 +145,23 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
     );
   }
 
-  bool checkValidate() {
-    RegExp numbersRegex = RegExp(r'\d');
-    RegExp specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
-    final pass = _passwordConfirmController.text.trim();
-    final passConfirm = _passwordConfirmController.text.trim();
+  bool checkPassValidate() {
+    final pass = _passwordController.text.trim();
     final status = pass.length >= 9 &&
-        passConfirm.length >= 9 &&
         specialCharRegex.hasMatch(pass) &&
-        numbersRegex.hasMatch(pass) &&
-        pass == passConfirm;
-    if (status) {
-      hiddenKeyboard(context);
-    }
+        numbersRegex.hasMatch(pass);
+    return status;
+  }
+
+  bool checkPassConfirmValidate() {
+    final passConfirm = _passwordConfirmController.text.trim();
+    final pass = _passwordController.text.trim();
+    final status = passConfirm.length >= 9 && passConfirm == pass;
+    return status;
+  }
+
+  bool checkValidate() {
+    final status = checkPassConfirmValidate() && checkPassValidate();
     return status;
   }
 

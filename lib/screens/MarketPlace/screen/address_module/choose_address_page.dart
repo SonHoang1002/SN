@@ -7,11 +7,13 @@ import 'package:social_network_app_mobile/providers/market_place_providers/repo_
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/address_module/create_update_address.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../../theme/colors.dart';
 
@@ -88,7 +90,9 @@ class _ChooseAddressPageState extends ConsumerState<ChooseAddressPage> {
             children: [
               InkWell(
                 onTap: () async {
-                  await _updateSelectedData();
+                  if (_addressList!.isNotEmpty) {
+                    await _updateSelectedData();
+                  }
                   popToPreviousScreen(context);
                 },
                 child: Icon(
@@ -96,7 +100,7 @@ class _ChooseAddressPageState extends ConsumerState<ChooseAddressPage> {
                   color: Theme.of(context).textTheme.displayLarge!.color,
                 ),
               ),
-              AppBarTitle(title: "Địa chỉ của bạn"),
+              const AppBarTitle(title: "Địa chỉ của bạn"),
               GestureDetector(
                 onTap: () async {
                   pushToNextScreen(context, NotificationMarketPage());
@@ -118,11 +122,18 @@ class _ChooseAddressPageState extends ConsumerState<ChooseAddressPage> {
                 children: [
                   _isLoading
                       ? buildCircularProgressIndicator()
-                      : Column(
-                          children:
-                              List.generate(_addressList!.length, (index) {
-                          return addressItem(_addressList![index], index);
-                        })),
+                      : _addressList!.isEmpty
+                          ? Container(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: buildTextContent(
+                                  "Bạn chưa có địa chỉ nào", false,
+                                  fontSize: 15, isCenterLeft: false),
+                            )
+                          : Column(
+                              children:
+                                  List.generate(_addressList!.length, (index) {
+                              return addressItem(_addressList![index], index);
+                            })),
                   buildSpacer(height: 10),
                 ],
               ),
@@ -131,16 +142,69 @@ class _ChooseAddressPageState extends ConsumerState<ChooseAddressPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const SizedBox(),
-                Container(
-                  color: white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  // margin:
-                  //     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  width: width,
-                  child: _buildSelectedWidget("Thêm mới địa chỉ", function: () {
-                    pushToNextScreen(context, const AddressMarketPage());
-                  }),
+                Column(
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                            height: MediaQuery.of(context).padding.bottom + 50,
+                            color: white),
+                        SizedBox(
+                          width: width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              buildMarketButton(
+                                width: width * 0.25,
+                                bgColor: Colors.orange[300],
+                                contents: [
+                                  Image.asset(
+                                    "assets/icons/chat_product_icon.png",
+                                    height: 18,
+                                    color: white,
+                                  ),
+                                  buildSpacer(height: 3),
+                                  buildTextContent("Chat ngay", false,
+                                      fontSize: 9, isCenterLeft: false)
+                                ],
+                                radiusValue: 0,
+                                isHaveBoder: false,
+                                isVertical: true,
+                              ),
+                              buildMarketButton(
+                                width: width * 0.25,
+                                bgColor: Colors.orange[300],
+                                contents: [
+                                  Image.asset(
+                                    "assets/icons/cart_product_icon.png",
+                                    height: 18,
+                                    color: white,
+                                  ),
+                                  buildSpacer(height: 3),
+                                  buildTextContent("Thêm vào giỏ", false,
+                                      fontSize: 9)
+                                ],
+                                isVertical: true,
+                                radiusValue: 0,
+                                fontSize: 9,
+                                isHaveBoder: false,
+                                function: () async {},
+                              ),
+                              buildMarketButton(
+                                width: width * 0.5,
+                                bgColor: red,
+                                contents: [
+                                  buildTextContent("Mua ngay", false,
+                                      fontSize: 13)
+                                ],
+                                function: () async {},
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             )
