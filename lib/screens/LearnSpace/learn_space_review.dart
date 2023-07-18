@@ -336,6 +336,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
               height: 20,
               thickness: 1,
             ),
+            if(courseReview.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
               child: ListView.builder(
@@ -351,6 +352,15 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                         type: 'rating');
                   }),
             )
+            else Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text("Chưa có đánh giá nào!",
+                          style: TextStyle(
+                            color: colorWord(context),
+                            fontWeight: FontWeight.bold,
+                          )),
+                    )
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class LearnSpaceDiscusstion extends ConsumerStatefulWidget {
   final dynamic postDiscussion;
@@ -76,6 +77,7 @@ class _LearnSpaceDiscusstionState extends ConsumerState<LearnSpaceDiscusstion> {
           reloadFunction: _reloadFeedFunction,
         ),
         _buildDivider(),
+        if (coursePosts.isNotEmpty)
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: ListView.builder(
@@ -92,6 +94,11 @@ class _LearnSpaceDiscusstionState extends ConsumerState<LearnSpaceDiscusstion> {
                 );
               }),
         )
+        
+        else Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.only(top: 20),
+          child: Text("Hiện chưa có cuộc thảo luận nào!", style: TextStyle(color: colorWord(context), fontWeight: FontWeight.bold,)),) 
       ],
     );
   }

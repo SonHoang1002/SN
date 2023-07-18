@@ -59,8 +59,8 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
 
   @override
   void dispose() {
-    super.dispose();
     _scrollController.dispose();
+    super.dispose();
   }
 
   void loadData() async {
@@ -228,8 +228,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                                 .notifier)
                                             .updateStatusRecruit(
                                                 isRecruitInterested,
-                                                widget.data['id'],
-                                                name: 'detailRecruit');
+                                                widget.data['id'],);
                                       });
                                     },
                                     child: Container(
