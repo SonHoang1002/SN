@@ -19,7 +19,7 @@ List reefSelections = [
     "icon": "assets/icons/star_favorite.png",
     "title": "Yêu thích",
     "content":
-        "Thêm mợi người và Trang để ưu tiên bài viết của họ trong Bảng Feed."
+        "Thêm mọi người và Trang để ưu tiên bài viết của họ trong Bảng Feed."
   },
   {
     "key": "hide",

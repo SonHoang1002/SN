@@ -19,6 +19,29 @@ class Group extends ConsumerStatefulWidget {
 
 class _GroupState extends ConsumerState<Group> {
   String menuSelected = "group-feed";
+  List menuGroup = [
+    {
+      "key": "group-feed",
+      "label": "Bảng tin",
+      "icon": FontAwesomeIcons.newspaper
+    },
+    {
+      "key": "your-group",
+      "label": "Nhóm của bạn",
+      "icon": FontAwesomeIcons.users
+    },
+    {
+      "key": "group-dicover",
+      "label": "Khám phá nhóm",
+      "icon": FontAwesomeIcons.layerGroup
+    },
+    {
+      "key": "group-request",
+      "label": "Lời mời & Yêu cầu",
+      "icon": FontAwesomeIcons.codePullRequest
+    },
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -50,71 +73,58 @@ class _GroupState extends ConsumerState<Group> {
     });
   }
 
+  handlePress(String key) {
+    setState(() {
+      menuSelected = key;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List menuGroup = [
-      {
-        "key": "group-feed",
-        "label": "Bảng tin",
-        "icon": FontAwesomeIcons.newspaper
-      },
-      {
-        "key": "your-group",
-        "label": "Nhóm của bạn",
-        "icon": FontAwesomeIcons.users
-      },
-      {
-        "key": "group-dicover",
-        "label": "Khám phá nhóm",
-        "icon": FontAwesomeIcons.layerGroup
-      },
-      {
-        "key": "group-request",
-        "label": "Lời mời & Yêu cầu",
-        "icon": FontAwesomeIcons.codePullRequest
-      },
-    ];
-
-    handlePress(String key) {
-      setState(() {
-        menuSelected = key;
-      });
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(
-                menuGroup.length,
-                (index) => GestureDetector(
-                      onTap: () => handlePress(menuGroup[index]['key']),
-                      child: ChipMenu(
-                        isSelected: menuSelected == menuGroup[index]['key'],
-                        label: menuGroup[index]['label'],
-                        icon: Icon(
-                          menuGroup[index]['icon'],
-                          size: 16,
-                          color: menuSelected == menuGroup[index]['key']
-                              ? white
-                              : null,
-                        ),
-                      ),
-                    )),
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              Row(
+                children: List.generate(
+                    menuGroup.length,
+                    (index) => GestureDetector(
+                          onTap: () => handlePress(menuGroup[index]['key']),
+                          child: ChipMenu(
+                            isSelected: menuSelected == menuGroup[index]['key'],
+                            label: menuGroup[index]['label'],
+                            icon: Icon(
+                              menuGroup[index]['icon'],
+                              size: 16,
+                              color: menuSelected == menuGroup[index]['key']
+                                  ? white
+                                  : null,
+                            ),
+                          ),
+                        )),
+              ),
+            ],
           ),
         ),
         const CrossBar(),
-        if (menuSelected == 'your-group')
-          const GroupListAll()
-        else if (menuSelected == 'group-dicover')
-          const GroupListDiscover()
-        else if (menuSelected == 'group-request')
-          const GroupInvitedRequest()
-        else
-          const GroupFeedAll()
+        _buildBody()
       ],
     );
+  }
+
+  Widget _buildBody() {
+    if (menuSelected == 'your-group') {
+      return const GroupListAll();
+    } else if (menuSelected == 'group-dicover') {
+      return const GroupListDiscover();
+    } else if (menuSelected == 'group-request') {
+      return const GroupInvitedRequest();
+    } else {
+      return const GroupFeedAll();
+    }
   }
 }

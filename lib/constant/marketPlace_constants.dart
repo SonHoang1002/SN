@@ -464,7 +464,7 @@ class MainMarketPageConstants {
       },
     ]
   };
-  static const Map<String, dynamic> MAIN_MARKETPLACE_BODY_CATEGORY_SELECTIONS =
+  static const Map<String, dynamic> MAIN_MARKETPLACE_BODY_CATEGORY_SELECTIONS_ =
       {
     "key": "",
     "data": [
@@ -811,11 +811,10 @@ class CreateProductMarketConstants {
   static const String CREATE_PRODUCT_MARKET_DESCRIPTION_PLACEHOLDER =
       "Nhập mô tả sản phẩm";
 
-  static String CREATE_PRODUCT_MARKET_BRAND_TITLE = "Nhãn hiệu";
+  static String CREATE_PRODUCT_MARKET_BRAND_TITLE = "Thương hiệu";
   static const String CREATE_PRODUCT_MARKET_BRAND_PLACEHOLDER =
-      "Nhập nhãn hiệu";
-  static String CREATE_PRODUCT_MARKET_BRAND_WARING =
-      "Vui lòng điền vào Nhãn hiệu";
+      "Chọn thương hiệu";
+  static String CREATE_PRODUCT_MARKET_BRAND_WARING = "Sửa lại cái này giùm";
 
   static String CREATE_PRODUCT_MARKET_PRIVATE_RULE_TITLE = "Quyền riêng tư";
   static const List<Map<String, dynamic>>
@@ -852,10 +851,9 @@ class CreateProductMarketConstants {
       "Nhập giá của sản phẩm";
 
   static String CREATE_PRODUCT_MARKET_REPOSITORY_TITLE = "Kho hàng";
-  static String CREATE_PRODUCT_MARKET_REPOSITORY_PLACEHOLDER =
-      "Nhập tên kho hàng";
+  static String CREATE_PRODUCT_MARKET_REPOSITORY_PLACEHOLDER = "Nhập tồn kho";
   static String CREATE_PRODUCT_MARKET_REPOSITORY_WARING =
-      "Vui lòng nhập tên kho hàng";
+      "Vui lòng nhập tồn kho";
 
   static String CREATE_PRODUCT_MARKET_SKU_TITLE = "SKU";
   static String CREATE_PRODUCT_MARKET_SKU_PLACEHOLDER = "Nhập SKU";
@@ -1378,15 +1376,15 @@ class UpdateProductMarketConstants {
 
 class OrderProductMarketConstant {
   static List<Map<String, dynamic>> ORDER_PRODUCT_MARKET_TAB_LIST = [
-    // {
-    //   "key": "all",
-    //   "icon": MarketPlaceConstants.PATH_ICON + "add_img_file_icon.svg",
-    //   "title": "Tất cả",
-    // },
+    {
+      "key": "all",
+      "icon":MarketPlaceConstants.PATH_ICON + "pending.png",
+      "title": "Tất cả",
+    },
     {
       "key": "pending",
       "icon": MarketPlaceConstants.PATH_ICON + "pending.png",
-      "title": "Chờ thanh toán  ",
+      "title": "Chờ xác nhận  ",
     },
     {
       "key": "delivered",

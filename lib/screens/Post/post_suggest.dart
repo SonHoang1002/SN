@@ -21,7 +21,7 @@ class PostSuggest extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic type;
   final Function? renderFunction;
-  final Function? updateDataFunction;
+  final Function(dynamic newData)? updateDataFunction;
   const PostSuggest(
       {Key? key,
       this.post,
@@ -42,7 +42,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
   void initState() {
     GetTimeAgo.setDefaultLocale('vi');
     meData = ref.read(meControllerProvider)[0];
-    if (mounted) { 
+    if (mounted) {
       suggestContent = buildSuggestContent();
     }
     super.initState();
@@ -152,8 +152,9 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
       }
       if (widget.post?['group'] != null) {
         listContent.addAll([
+          TextSpan(text: widget.post?['account']['display_name'], style: bold),
           const TextSpan(
-            text: ' trong nhóm ',
+            text: ' đã đăng bài trong nhóm ',
           ),
           TextSpan(text: '${widget.post?['group']?['title']}.', style: bold),
         ]);
@@ -218,7 +219,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
       if (widget.post?['group'] != null) {
         listContent.addAll([
           const TextSpan(
-            text: ' trong nhóm',
+            text: 'trong nhóm',
           ),
           TextSpan(
             text: '${widget.post?['group']?['title']}',
@@ -246,6 +247,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    suggestContent = buildSuggestContent();
     return isShow && widget.post['account']['id'] != meData['id']
         ? Column(
             children: [

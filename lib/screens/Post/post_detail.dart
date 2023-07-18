@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,7 +33,7 @@ class PostDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic preType;
   final int? indexImagePost;
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   final dynamic postId;
   const PostDetail(
       {Key? key,
@@ -340,7 +342,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     ref
         .read(currentPostControllerProvider.notifier)
         .saveCurrentPost(updateCountPostData);
-    widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+    widget.updateDataFunction != null
+        ? widget.updateDataFunction!(updateCountPostData)
+        : null;
   }
 
   @override
@@ -422,22 +426,25 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         child: postData != null
             ? Scaffold(
                 resizeToAvoidBottomInset: true,
-                appBar: AppBar(
-                  elevation: 0,
-                  automaticallyImplyLeading: false,
-                  title: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const BackIconAppbar(),
-                      SizedBox(
-                        child: PostHeader(
-                          post: postData,
-                          type: postDetail,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // appBar: AppBar(
+                //   elevation: 0,
+                //   automaticallyImplyLeading: false,
+                //   title: Row(
+                //     crossAxisAlignment: CrossAxisAlignment.center,
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       const BackIconAppbar(),
+                //       Flexible(
+                //         child: SizedBox(
+                //           child: PostHeader(
+                //             post: postData,
+                //             type: postDetail,
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 body: SafeArea(
                   child: GestureDetector(
                     onTap: () {
@@ -447,6 +454,24 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const BackIconAppbar(),
+                                Flexible(
+                                  child: SizedBox(
+                                    child: PostHeader(
+                                      post: postData,
+                                      type: postDetail,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           Expanded(
                             child: SingleChildScrollView(
                               child: Column(
@@ -612,7 +637,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   _callApiFilterComment(dynamic key) {}
 
   buildFilterCommentSelectionBottomSheet() {
-    showCustomBottomSheet(context, 365, "Sắp xếp theo",
+    showCustomBottomSheet(context, 365,
+        title: "Sắp xếp theo",
         isHaveCloseButton: false,
         bgColor: Colors.grey[300], widget: StatefulBuilder(
       builder: (ctx, setStatefull) {

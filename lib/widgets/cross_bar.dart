@@ -9,6 +9,7 @@ class CrossBar extends StatelessWidget {
   final double? onlyTop;
   final double? onlyRight;
   final double? onlyLeft;
+  final double? opacity;
   const CrossBar(
       {Key? key,
       this.height,
@@ -16,7 +17,7 @@ class CrossBar extends StatelessWidget {
       this.onlyBottom,
       this.onlyTop,
       this.onlyLeft,
-      this.onlyRight})
+      this.onlyRight,this.opacity})
       : super(key: key);
 
   @override
@@ -31,7 +32,7 @@ class CrossBar extends StatelessWidget {
           left: onlyLeft ?? 0),
       color: isDarkMode
           ? MyThemes.darkTheme.canvasColor
-          : Colors.grey.withOpacity(0.5),
+          : Colors.grey.withOpacity(opacity??0.5),
     );
   }
 }

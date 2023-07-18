@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:social_network_app_mobile/widgets/modal_bookmark.dart';
 import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
 import 'package:social_network_app_mobile/widgets/report_category.dart';
@@ -23,7 +24,7 @@ class ActionEllipsis extends StatelessWidget {
             ? InviteFriend(type: type, id: data['id'])
             : const InviteFriend();
       case 'report':
-        return const ReportCategory(entityReport: 'event', entityType: "event");
+        return  ReportCategory(entityReport: data, entityType: type);
       case 'share':
         return SingleChildScrollView(
           padding: EdgeInsets.only(

@@ -79,7 +79,7 @@ class PostAndStoryPage extends StatelessWidget {
                           .POST_AND_STORY_OLD_STORY_LIMITATION["data"]),
                   ElevatedButton(
                     onPressed: () {
-                      showCustomBottomSheet(context, 200, "Giới hạn tất cả ?",
+                      showCustomBottomSheet(context, 200,title: "Giới hạn tất cả ?",
                           widget: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Column(children: [

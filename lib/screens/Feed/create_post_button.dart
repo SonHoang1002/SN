@@ -10,13 +10,13 @@ class CreatePostButton extends ConsumerWidget {
   final dynamic postDiscussion;
   final dynamic preType;
   final Function? reloadFunction;
-  final dynamic pageData;
+  final dynamic pageData; 
   const CreatePostButton(
       {Key? key,
       this.postDiscussion,
       this.preType,
       this.reloadFunction,
-      this.pageData})
+      this.pageData,})
       : super(key: key);
 
   @override

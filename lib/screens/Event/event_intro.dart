@@ -687,8 +687,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700),
-                                                            children: <
-                                                                InlineSpan>[
+                                                            children: <InlineSpan>[
                                                               TextSpan(
                                                                 text: ' Bạn bè',
                                                                 style: TextStyle(
@@ -1036,7 +1035,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               size: 12),
                                           const SizedBox(width: 15),
                                           Text(
-                                            '${groupSuggest[indexGroup]['member_count'].toString()} thành viên',
+                                            '${(groupSuggest[indexGroup]['member_count'] ?? 0).toString()} thành viên',
                                             maxLines: 2,
                                             style: const TextStyle(
                                               fontSize: 12.0,

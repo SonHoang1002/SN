@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
@@ -16,11 +17,9 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_shee
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
-import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
+import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../../../theme/colors.dart';
 import '../../../widgets/GeneralWidget/divider_widget.dart';
@@ -51,21 +50,12 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      if (ref.watch(cartProductsProvider).listCart == null ||
-          ref.watch(cartProductsProvider).listCart.isEmpty) {
-        final initCartData =
-            await ref.read(cartProductsProvider.notifier).initCartProductList();
-      }
-    });
   }
 
   Future _initData() async {
     Future.delayed(Duration.zero, () async {
-      if (ref.watch(cartProductsProvider).listCart == null ||
-          ref.watch(cartProductsProvider).listCart.isEmpty) {
-        final initCartData =
-            await ref.read(cartProductsProvider.notifier).initCartProductList();
+      if (ref.watch(cartProductsProvider).listCart.isEmpty) {
+        await ref.read(cartProductsProvider.notifier).initCartProductList();
       }
     });
     _cartData = ref.watch(cartProductsProvider).listCart;
@@ -120,8 +110,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   _updateQuantity(bool isPlus, dynamic indexCategory, dynamic indexProduct) {
     // call api
     _callUpdateQuantityApi(
-        // _cartData![indexCategory]["items"][indexProduct]["product_variant"]
-        //     ["product_id"],
+        _cartData![indexCategory]["items"][indexProduct]["product_variant"]
+            ["product_id"],
         {
           "product_variant_id": _cartData![indexCategory]["items"][indexProduct]
               ["product_variant"]["id"],
@@ -141,12 +131,11 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   }
 
   Future _callDeleteProductApi(dynamic id, dynamic data) async {
-    final response = await CartProductApi().deleteCartProductApi(id, data);
+    await CartProductApi().deleteCartProductApi(id, data);
   }
 
-  _callUpdateQuantityApi(dynamic data) async {
-    final response =
-        await ref.read(cartProductsProvider.notifier).updateCartQuantity(data);
+  _callUpdateQuantityApi(dynamic id, dynamic data) async {
+    await ref.read(cartProductsProvider.notifier).updateCartQuantity(id, data);
   }
 
   @override
@@ -228,7 +217,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.only(left: 5, right: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -270,7 +259,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                         SizedBox(
                             width: 180,
                             child: buildTextContent(data["title"], true,
-                                fontSize: 17, overflow: TextOverflow.ellipsis)),
+                                fontSize: 16, overflow: TextOverflow.ellipsis)),
                         const SizedBox(
                           height: 40,
                           width: 40,
@@ -301,7 +290,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                     ),
               // fix
               buildTextContent("Sửa", false,
-                  fontSize: 15, colorWord: blueColor),
+                  fontSize: 15, colorWord: greyColor),
             ],
           ),
         ),
@@ -467,21 +456,21 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                                                 ],
                                               ),
                                               buildSpacer(height: 8),
-                                              Text(
-                                                itemData["product_variant"]
-                                                                ["option1"] ==
-                                                            null &&
-                                                        itemData["product_variant"]
-                                                                ["option2"] ==
-                                                            null
-                                                    ? "Phân loại: Không có"
-                                                    : "Phân loại  ${itemData["product_variant"]["option1"] ?? ""} ${itemData["product_variant"]["option2"] ?? ""}",
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
+                                              buildTextContent(
+                                                  itemData["product_variant"]
+                                                                  ["option1"] ==
+                                                              null &&
+                                                          itemData["product_variant"]
+                                                                  ["option2"] ==
+                                                              null
+                                                      ? "Phân loại: Không có"
+                                                      : "Phân loại  ${itemData["product_variant"]["option1"] ?? ""} ${itemData["product_variant"]["option2"] ?? ""}",
+                                                  false,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  fontSize: 11,
+                                                  colorWord: greyColor),
                                               buildSpacer(height: 8),
                                               buildTextContent(
                                                   "₫ ${formatCurrency(itemData["product_variant"]["price"]).toString()}",
@@ -577,7 +566,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
           ),
         ),
         const CrossBar(
-          height: 5,
+          height: 7,
+          opacity: 0.2,
         )
       ],
     );
@@ -615,7 +605,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                     ),
                     InkWell(
                       onTap: () {
-                        showCustomMarketBottomSheet(context, height - 50,
+                        showCustomBottomSheet(context, height - 50,
                             title: "Chọn voucher của bạn",
                             suffixWidget: const Icon(
                               FontAwesomeIcons.circleInfo,
@@ -760,17 +750,21 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                     function: () async {
                       if (_allMoney == 0) {
                         buildMessageDialog(
-                          context,
-                          "Bạn chưa chọn sản phẩm nào !",
-                          oneButton: true,
-                        );
+                            context, "Bạn chưa chọn sản phẩm nào để mua.",
+                            oneButton: true, oKFunction: () {
+                          popToPreviousScreen(context);
+                        });
                         return;
                       }
                       await ref
                           .read(cartProductsProvider.notifier)
                           .updateCartProductList(_cartData!);
                       // ignore: use_build_context_synchronously
-                      pushToNextScreen(context, const PaymentMarketPage());
+                      pushToNextScreen(
+                          context,
+                          PaymentMarketPage(
+                            productDataList: _cartData!,
+                          ));
                     }),
               ),
             ],

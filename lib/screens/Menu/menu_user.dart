@@ -39,8 +39,10 @@ class _MenuUserState extends ConsumerState<MenuUser> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
-    var meData = ref.read(meControllerProvider)[0];
-    return meData != null
+    var meData = ref.watch(meControllerProvider).isNotEmpty
+        ? ref.watch(meControllerProvider)[0]
+        : {};
+    return meData.isNotEmpty
         ? InkWell(
             borderRadius: BorderRadius.circular(10.0),
             onTap: () {

@@ -7,6 +7,8 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/page_list_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/rating_star_widget.dart';
@@ -19,8 +21,6 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/general_componen
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -68,7 +68,9 @@ class _ManageProductMarketPageState
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      final getProduct = ref.read(productsProvider.notifier).getProducts();
+      final getProduct = ref
+          .read(productsProvider.notifier)
+          .getProductsSearch(paramConfigProductSearch);
       if (ref.watch(pageListProvider).listPage.isEmpty) {
         final pageList = ref.read(pageListProvider.notifier).getPageList();
       }
@@ -119,8 +121,9 @@ class _ManageProductMarketPageState
             setState(() {
               _productList = [];
               Future.delayed(Duration.zero, () {
-                final getProduct =
-                    ref.read(productsProvider.notifier).getProducts();
+                final getProduct = ref
+                    .read(productsProvider.notifier)
+                    .getProducts(paramConfigProductSearch);
               });
             });
             final b = Future.wait([_initMainData()]);
@@ -214,8 +217,8 @@ class _ManageProductMarketPageState
               Future.delayed(Duration.zero, () async {
                 _detailData =
                     await DetailProductApi().getDetailProductApi(data["id"]);
-                _commentData =
-                    await ReviewProductApi().getReviewProductApi(data["id"]);
+                _commentData = await ReviewProductApi()
+                    .getReviewProductApi(data["id"], configReviewParams);
                 _mediaDetailList = [];
                 if (_detailData["product_video"] != null &&
                     _detailData["product_video"].isNotEmpty) {
@@ -298,7 +301,7 @@ class _ManageProductMarketPageState
                                   Row(
                                     children: [
                                       buildRatingStarWidget(
-                                          _detailData?["rating_count"]),
+                                          _detailData?["rating"]),
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             left: 10, right: 5),
@@ -510,9 +513,10 @@ class _ManageProductMarketPageState
                             children: [
                               ListTile(
                                 leading: const Icon(FontAwesomeIcons.pen),
-                                title: const Text("Giá và tồn kho"),
+                                title: const Text("Cập nhật"),
                                 onTap: () {
-                                  popToPreviousScreen(context);
+                                  pushToNextScreen(
+                                      context, UpdateMarketPage(data['id']));
                                 },
                               ),
                               ListTile(
@@ -658,8 +662,8 @@ class _ManageProductMarketPageState
                   width: 35,
                   child: _selectedPage != null
                       ? ImageCacheRender(
-                          path: _selectedPage["avatar_media"]?["url"] ??
-                              linkBannerDefault)
+                          path: (_selectedPage?["avatar_media"]?["url"]) ??
+                              linkAvatarDefault)
                       : Container(
                           color: greyColor,
                         )),
@@ -707,7 +711,7 @@ class _ManageProductMarketPageState
                                           GeneralComponent(
                                             [
                                               buildTextContent(
-                                                  data["title"], false)
+                                                  data?["title"], false)
                                             ],
                                             prefixWidget: ClipRRect(
                                               borderRadius:
@@ -715,7 +719,7 @@ class _ManageProductMarketPageState
                                               child: SizedBox(
                                                 height: 35,
                                                 width: 35,
-                                                child: data["avatar_media"] !=
+                                                child: data?["avatar_media"] !=
                                                         null
                                                     ? ImageCacheRender(
                                                         path:

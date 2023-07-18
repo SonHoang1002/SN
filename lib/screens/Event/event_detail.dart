@@ -17,6 +17,7 @@ import 'package:social_network_app_mobile/widgets/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
 
 import '../../widgets/Loading/tiktok_loading.dart';
+import '../../widgets/report_category.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
   final dynamic eventDetail;
@@ -462,11 +463,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                   width: 0.2,
                                                                   color:
                                                                       greyColor)),
-                                                          child: Row(
+                                                          child: const Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .center,
-                                                            children: const [
+                                                            children: [
                                                               Icon(
                                                                   FontAwesomeIcons
                                                                       .envelope,
@@ -562,7 +563,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                     .showSnackBar(
                                                                         const SnackBar(
                                                                   content: Text(
-                                                                      'Sao chép thành công'),
+                                                                      'Sao chép thành công', style: TextStyle(fontWeight: FontWeight.bold),),
                                                                   duration:
                                                                       Duration(
                                                                           seconds:
@@ -570,8 +571,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                   backgroundColor:
                                                                       secondaryColor,
                                                                 ));
-                                                              } else {
-                                                                const SizedBox();
+                                                              } 
+                                                              else if (iconActionEllipsis[
+                                                                          index]
+                                                                      ['key'] =='report') {
+                                                                showBarModalBottomSheet(
+                                                                context: context,
+                                                                builder: (context) =>
+                                                                    ReportCategory(entityType: 'page', entityReport: widget.eventDetail));
                                                               }
                                                             },
                                                             child: Padding(

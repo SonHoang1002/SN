@@ -88,6 +88,12 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
     }
   }
 
+  @override
+  void dispose() {
+    descriptionTxtCtrl.dispose();
+    super.dispose();
+  }
+
   void handleSaveHobbies() {
     final newHobbies =
         ref.read(userInformationProvider).userMoreInfor['tempHobbies'];
@@ -271,7 +277,6 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
         ? DateTime.parse(meData['created_at'])
         : null;
     final relationshipPartner = userAbout['account_relationship'];
-
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.all(15),
@@ -331,7 +336,7 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
             BlockProfile(
               title: "Tiểu sử",
               widgetChild: Text(
-                '${userAbout['general_information']['description']}',
+                '${(((userAbout['general_information']['description'] != null) && (userAbout['general_information']['description'] != ""))) ? userAbout['general_information']['description'] : "Mô tả bản thân ..."}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 18, color: greyColor),
               ),
@@ -346,13 +351,21 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
                           TextDescription(description: "Nhập tiểu sử mới"),
                         ],
                       ),
-                      content: Container(
-                        margin: const EdgeInsets.only(top: 8.0),
-                        child: CupertinoTextField(
-                          controller: descriptionTxtCtrl,
-                          autofocus: true,
-                        ),
-                      ),
+                      content: StatefulBuilder(builder: (context, setStateful) {
+                        return  Material(
+                          child: TextFormField(
+                            autofocus: true,
+                            maxLines: 2,
+                            maxLength: 100,
+                            controller: descriptionTxtCtrl,
+                            textCapitalization:
+                                TextCapitalization.sentences,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        );
+                      }),
                       actions: [
                         CupertinoDialogAction(
                           isDefaultAction: true,
@@ -363,22 +376,31 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
                         ),
                         CupertinoDialogAction(
                           isDestructiveAction: true,
-                          onPressed: descriptionTxtCtrl.text
-                                  .split('')
-                                  .isNotEmpty
-                              ? () {
-                                  ref
-                                      .read(userInformationProvider.notifier)
-                                      .updateDescription(
-                                        dataPage['id'],
-                                        descriptionTxtCtrl.text.trim(),
-                                      );
-                                  Navigator.pop(context);
-                                  widget.onUpdate();
-                                  setState(() {});
-                                }
-                              : null,
-                          child: const Text('Đổi tên'),
+                          onPressed: () {
+                            if (descriptionTxtCtrl.text.split('').isNotEmpty) {
+                              ref
+                                  .read(userInformationProvider.notifier)
+                                  .updateDescription(
+                                    dataPage['id'],
+                                    descriptionTxtCtrl.text.trim(),
+                                  );
+                              Navigator.pop(context);
+                              widget.onUpdate();
+                            }
+                            else{
+                               ref
+                                  .read(userInformationProvider.notifier)
+                                  .updateDescription(
+                                    dataPage['id'],
+                                    descriptionTxtCtrl.text.trim(),
+                                  );
+                              Navigator.pop(context);
+                              widget.onUpdate();
+                            }
+
+                            setState(() {});
+                          },
+                          child: const Text('Lưu'),
                         ),
                       ],
                     );

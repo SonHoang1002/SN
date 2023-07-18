@@ -44,8 +44,8 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         vsync: this, duration: const Duration(milliseconds: 500));
     _animation =
         CurvedAnimation(parent: _animationController, curve: Curves.easeOut);
-    videoPlayerController = VideoPlayerController.network(
-        widget.moment['media_attachments'][0]['url'])
+    videoPlayerController = VideoPlayerController.networkUrl(
+        Uri.parse(widget.moment['media_attachments'][0]['url']))
       ..initialize().then((value) {
         videoPlayerController.setVolume(1);
         videoPlayerController.setLooping(true);
@@ -163,11 +163,11 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
                           ? AspectRatio(
                               aspectRatio:
                                   videoPlayerController.value.aspectRatio,
-                              child: renderVideoMoment(size,
-                                  videoPlayerController.value.aspectRatio),
+                              child: RenderMomentVideo(
+                                  videoPlayerController: videoPlayerController),
                             )
-                          : renderVideoMoment(
-                              size, videoPlayerController.value.aspectRatio),
+                          : RenderMomentVideo(
+                              videoPlayerController: videoPlayerController),
                     )),
                 if (_xPosition != 0 && _yPosition != 0)
                   Positioned(
@@ -293,8 +293,15 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
       ),
     );
   }
+}
 
-  Widget renderVideoMoment(Size size, double ratio) {
+class RenderMomentVideo extends StatelessWidget {
+  final VideoPlayerController videoPlayerController;
+  const RenderMomentVideo({Key? key, required this.videoPlayerController})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return VideoPlayer(
       videoPlayerController,
     );

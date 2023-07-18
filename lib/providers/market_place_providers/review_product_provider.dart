@@ -16,8 +16,8 @@ final reviewProductProvider =
 class ReviewProductController extends StateNotifier<ReviewProductState> {
   ReviewProductController() : super(ReviewProductState());
 
-  getReviewProduct(dynamic id) async {
-    final response = await ReviewProductApi().getReviewProductApi(id);
+  getReviewProduct(dynamic id,dynamic params) async {
+    final response = await ReviewProductApi().getReviewProductApi(id,params);
     final data = List.from(response);
     state = state.copyWith(response);
   }

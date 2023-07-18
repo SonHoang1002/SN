@@ -71,7 +71,7 @@ class WatchController extends StateNotifier<WatchState> {
     }
   }
 
-  updateWatchDetail(type, newWatch) {
+  updateWatchDetail(type, newWatch) { 
     int index = -1;
 
     if (type == 'follow') {

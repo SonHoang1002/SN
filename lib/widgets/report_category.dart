@@ -123,17 +123,39 @@ class ReportChildren extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List children = report['children'] ?? [];
-
     handleReport() async {
-      var data = {
-        "account_id": entityReport['account']['id'],
-        "status_ids": [entityReport['id']],
+      var data;
+      var response;
+      if(entityType == "post" )
+      {
+        data = {
+        "account_id": entityReport['account']["id"],
+        "status_ids": entityReport['id'],
         "comment": "",
         "forward": false,
         "report_category_id": report['id']
-      };
-
-      var response = await PostApi().reportPostApi(jsonEncode(data));
+        };
+        response= await PostApi().reportPostApi(jsonEncode(data));
+      }
+      else if(entityReport['account'] == null){
+        data = {
+        "id": entityReport['id'],
+        "comment": "",
+        "forward": false,
+        "report_category_id": report['id']
+        };
+        response= await PostApi().reportEventPostApi(jsonEncode(data));
+      }
+      else{
+          data = {
+          "account_id": entityReport['account']["id"],
+          "status_ids": entityReport['id'],
+          "comment": "",
+          "forward": false,
+          "report_category_id": report['id']
+        };
+         response= await PostApi().reportEventPostApi(jsonEncode(data));
+      }
       if (response != null) {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

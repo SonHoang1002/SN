@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
 
 final cartProductsProvider =
@@ -9,7 +12,7 @@ class CartProductsController extends StateNotifier<CartProductsState> {
   CartProductsController() : super(CartProductsState());
 
   initCartProductList() async {
-    final response = await CartProductApi().getCartProductApi() ?? [];
+    List response = await CartProductApi().getCartProductApi() ?? [];
     for (int i = 0; i < response.length; i++) {
       response[i]["check"] = false;
       for (int j = 0; j < response[i]["items"].length; j++) {
@@ -23,8 +26,8 @@ class CartProductsController extends StateNotifier<CartProductsState> {
     state = state.copyWith(newList);
   }
 
-  updateCartQuantity( dynamic data) async {
-    final response = await CartProductApi().updateQuantityProductApi( data);
+  updateCartQuantity(dynamic id, dynamic data) async {
+    final response = await CartProductApi().updateQuantityProductApi(id, data);
   }
 
   deleteCartProduct(dynamic id, dynamic data) async {

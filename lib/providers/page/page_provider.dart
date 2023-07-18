@@ -97,6 +97,12 @@ class PageController extends StateNotifier<PageState> {
     state = const PageState();
   }
 
+  resetWithId(String id) { 
+    if (state.pageDetail['id'] != id) { 
+      state = const PageState();
+    }
+  }
+
   getListPageReview(params, id) async {
     var response = await PageApi().getListReviewPageApi(params, id);
     if (response != null) {

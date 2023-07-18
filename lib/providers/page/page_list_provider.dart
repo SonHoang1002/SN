@@ -68,7 +68,7 @@ class PageListController extends StateNotifier<PageListState> {
   PageListController() : super(const PageListState());
 
   getListPageAdmin(params) async {
-    var response = await PageApi().fetchListPageAdmin(params);
+    var response = await PageApi().fetchListPageAdmin(params) ?? [];
     final newListPage =
         response.where((item) => !state.pageAdmin.contains(item)).toList();
     if (response != null) {
@@ -112,7 +112,7 @@ class PageListController extends StateNotifier<PageListState> {
   }
 
   getListPageSuggest(params) async {
-    List response = await PageApi().fetchListPageSuggest(params);
+    List response = await PageApi().fetchListPageSuggest(params) ?? [];
     if (response.isNotEmpty) {
       final newList = response
           .where((item) => !state.pageSuggestions
@@ -302,7 +302,7 @@ class PageListController extends StateNotifier<PageListState> {
         break;
     }
     type == "like"
-        ? await PageApi().likePageSuggestion(id)
-        : await PageApi().unLikePageSuggestion(id);
+        ? await PageApi().likePageSuggestion(id) ?? []
+        : await PageApi().unLikePageSuggestion(id) ?? [];
   }
 }

@@ -4,7 +4,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 
 // ignore: must_be_immutable
-class GridViewBuilderMedia extends StatefulWidget {
+class GridViewBuilderMedia extends StatelessWidget {
   final List medias;
   final double aspectRatio;
   final int crossAxisCount;
@@ -28,22 +28,18 @@ class GridViewBuilderMedia extends StatefulWidget {
       this.mediasNoneCheck})
       : super(key: key);
 
-  @override
-  State<GridViewBuilderMedia> createState() => _GridViewBuilderMediaState();
-}
-
-class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
   checkIsImage(media) {
     return media['type'] == 'image' ? true : false;
   }
 
+  checkIsPlayVideo(int index) {
+    return currentFocusVideoId != medias[index]['id'];
+  }
+
   @override
   Widget build(BuildContext context) {
-    checkIsImage(media) {
-      return media['type'] == 'image' ? true : false;
-    }
-
     final size = MediaQuery.of(context).size;
+
     return GridView.builder(
         shrinkWrap: true,
         primary: false,
@@ -51,27 +47,26 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisSpacing: 3,
             mainAxisSpacing: 3,
-            crossAxisCount: widget.crossAxisCount,
-            childAspectRatio: widget.aspectRatio),
-        itemCount: widget.medias.length,
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: aspectRatio),
+        itemCount: medias.length,
         itemBuilder: (context, indexBg) {
           return GestureDetector(
               onTap: () {
-                if (widget.handlePress != null) {
-                  widget.handlePress!(widget.medias[indexBg]);
+                if (handlePress != null) {
+                  handlePress!(medias[indexBg]);
                 }
               },
-              child: checkIsImage(widget.medias[indexBg])
+              child: checkIsImage(medias[indexBg])
                   ? Stack(
                       fit: StackFit.expand,
                       children: [
-                        widget.medias[indexBg]['subType'] == 'local'
-                            ? widget.medias[indexBg]['newUint8ListFile'] != null
+                        medias[indexBg]['subType'] == 'local'
+                            ? medias[indexBg]['newUint8ListFile'] != null
                                 ? Hero(
                                     tag: indexBg,
                                     child: Image.memory(
-                                      widget.medias[indexBg]
-                                          ['newUint8ListFile'],
+                                      medias[indexBg]['newUint8ListFile'],
                                       fit: BoxFit.fitWidth,
                                       width: size.width,
                                     ),
@@ -79,25 +74,25 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                                 : Hero(
                                     tag: indexBg,
                                     child: Image.file(
-                                      widget.medias[indexBg]['file'],
+                                      medias[indexBg]['file'],
                                       fit: BoxFit.cover,
                                     ),
                                   )
                             : Hero(
-                                tag: widget.medias[indexBg]['id'] ?? indexBg,
+                                tag: medias[indexBg]['id'] ?? indexBg,
                                 child: ExtendedImage.network(
-                                    widget.medias[indexBg]['url'],
+                                    medias[indexBg]['url'],
                                     fit: BoxFit.cover,
                                     width: size.width, loadStateChanged:
                                         (ExtendedImageState state) {
                                   if (state.extendedImageLoadState !=
                                       LoadState.completed) {
                                     return Container(
-                                      height: double.parse(
-                                          (widget.medias[indexBg]?['meta']
-                                                      ?['small']?['height'] ??
-                                                  400)
-                                              .toString()),
+                                      height: double.parse((medias[indexBg]
+                                                      ?['meta']?['small']
+                                                  ?['height'] ??
+                                              400)
+                                          .toString()),
                                       width: size.width,
                                       color: white,
                                       decoration: BoxDecoration(
@@ -106,15 +101,15 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                                     );
                                   }
                                 })),
-                        widget.imageRemain != null &&
-                                widget.imageRemain! > 0 &&
-                                indexBg + 1 == widget.medias.length
+                        imageRemain != null &&
+                                imageRemain! > 0 &&
+                                indexBg + 1 == medias.length
                             ? Positioned.fill(
                                 child: Container(
                                   alignment: Alignment.center,
                                   color: Colors.black54,
                                   child: Text(
-                                    '+ ${widget.imageRemain}',
+                                    '+ $imageRemain',
                                     style: const TextStyle(
                                         fontSize: 32,
                                         color: white,
@@ -129,27 +124,22 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                           VideoPlayerNoneController(
-                              aspectRatio: widget.aspectRatio,
-                              path: widget.medias[indexBg]['file']?.path ??
-                                  widget.medias[indexBg]['remote_url'] ??
-                                  widget.medias[indexBg]['url'],
-                              media: widget.medias[indexBg],
-                              isPause: (widget.isFocus != true ||
-                                  widget.currentFocusVideoId !=
-                                      widget.medias[indexBg]['id']),
+                              aspectRatio: aspectRatio,
+                              path: medias[indexBg]['file']?.path ??
+                                  medias[indexBg]['remote_url'] ??
+                                  medias[indexBg]['url'],
+                              media: medias[indexBg],
+                              isPause: (isFocus != true ||
+                                  currentFocusVideoId != medias[indexBg]['id']),
                               // removeObserver:false,
-                              type: widget.medias[indexBg]['file']?.path != null
+                              type: medias[indexBg]['file']?.path != null
                                   ? 'local'
                                   : 'network',
                               index: indexBg,
                               onEnd: () {
-                                widget.onEnd != null ? widget.onEnd!() : null;
+                                onEnd != null ? onEnd!() : null;
                               })
                         ]));
         });
-  }
-
-  checkIsPlayVideo(int index) {
-    return widget.currentFocusVideoId != widget.medias[index]['id'];
   }
 }

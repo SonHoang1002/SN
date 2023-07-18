@@ -14,11 +14,11 @@ import 'package:social_network_app_mobile/widgets/reaction_list.dart';
 class PostFooter extends StatelessWidget {
   final dynamic post;
   final dynamic type;
-  final dynamic preType;
+  final String? preType;
   final int? indexOfImage;
   final Function? reloadDetailFunction;
   final bool? isShowCommentBox;
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   const PostFooter(
       {Key? key,
       this.post,
@@ -43,7 +43,7 @@ class PostFooter extends StatelessWidget {
                           context,
                           PostDetail(
                               post: post,
-                              preType: type,
+                              preType: preType ?? type,
                               indexImagePost: indexOfImage,
                               updateDataFunction: updateDataFunction))
                       : showBarModalBottomSheet(

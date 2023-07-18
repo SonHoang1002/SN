@@ -52,10 +52,10 @@ class _WatchHomeState extends ConsumerState<WatchHome>
               controller: scrollController,
               itemCount: watchData.length,
               itemBuilder: (context, index) => Post(
-                    key: Key(watchData[index]['id']),
-                    post: watchData[index],
-                    type: postWatch,
-                  ))
+                  key: Key(watchData[index]['id']),
+                  post: watchData[index],
+                  type: postWatch,
+                  preType: widget.type == 'watch_home' ? "suggest" : "follow"))
           : const Center(child: Text('Không còn bài viết nào')),
     );
   }

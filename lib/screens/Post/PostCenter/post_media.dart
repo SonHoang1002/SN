@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Post/post_detail.dart';
@@ -14,7 +13,7 @@ class PostMedia extends StatefulWidget {
   final Function? backFunction;
   final Function? reloadFunction;
   final Function? showCmtBoxFunction;
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   final bool? isFocus;
 
   const PostMedia(
@@ -134,6 +133,7 @@ class _PostMediaState extends State<PostMedia> {
               isFocus: widget.isFocus,
               currentFocusVideoId: currentVideoId.value,
               updateDataFunction: widget.updateDataFunction,
+              preType: widget.preType,
               onEnd: () {
                 List mediaList = widget.post['media_attachments'];
                 dynamic startingValue = currentVideoId.value;

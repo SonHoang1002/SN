@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +15,7 @@ import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Bookmark/bookmark_page.dart';
 import 'package:social_network_app_mobile/widgets/page_permission_comment.dart';
 import 'package:social_network_app_mobile/widgets/page_visibility.dart';
@@ -69,19 +72,25 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
     dynamic response;
     if (type == 'pin_post') {
       response = await PostApi().pinPostApi(widget.post['id']);
-      if (response == null) return;
     } else {
       response = await PostApi().unPinPostApi(widget.post['id']);
-      if (response == null) return;
     }
-
-    ref.read(postControllerProvider.notifier).actionPinPost(type, response);
-
-    if (mounted) {
+    if (response == null) return;
+    if (response['status_code'] != null) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text("${type == 'pin_post' ? "Ghim" : "Bỏ ghim"} thành công")));
+          content: Text(
+        "${response?['content']?['error']}",
+        style: const TextStyle(color: red),
+      )));
+    } else {
+      ref.read(postControllerProvider.notifier).actionPinPost(type, response);
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text("${type == 'pin_post' ? "Ghim" : "Bỏ ghim"} thành công")));
+      }
     }
   }
 

@@ -77,6 +77,10 @@ class PostApi {
     return await Api().postRequestBase("/api/v1/reports", data);
   }
 
+  Future reportEventPostApi(data) async {
+    return await Api().postRequestBase("/api/v1/report_violations", data);
+  }
+
   Future reactionPostApi(idPost, data) async {
     return await Api()
         .postRequestBase("/api/v1/statuses/$idPost/favourite", data);

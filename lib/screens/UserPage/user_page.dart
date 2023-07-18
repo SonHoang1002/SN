@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
@@ -26,6 +27,7 @@ import 'package:social_network_app_mobile/widgets/Banner/banner_base.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
+import 'package:social_network_app_mobile/widgets/blue_certified_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -150,11 +152,17 @@ class _UserPageState extends ConsumerState<UserPage> {
     super.initState();
     if (mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final queryParams =
-            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-        setState(() {
-          id = widget.id ?? queryParams['id'];
-        });
+        if (widget.id != null) {
+          setState(() {
+            id = widget.id;
+          });
+        } else {
+          final queryParams = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>;
+          setState(() {
+            id = queryParams['id'];
+          });
+        }
       });
       Future.delayed(Duration.zero, () async {
         ref.read(userInformationProvider.notifier).getUserInformation(id);
@@ -273,7 +281,14 @@ class _UserPageState extends ConsumerState<UserPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const BackIconAppbar(),
-          AppBarTitle(title: userData?['display_name'] ?? ''),
+          Row(
+            children: [
+              AppBarTitle(title: userData?['display_name'] ?? ''),
+              userData?['certified'] == true
+                  ? buildBlueCertifiedWidget()
+                  : const SizedBox()
+            ],
+          ),
           Row(
             children: [
               Icon(
@@ -681,24 +696,29 @@ class _UserPageState extends ConsumerState<UserPage> {
               userAbout: userAbout,
               featureContents: featureContents,
             ),
-          const CrossBar(),
+          const CrossBar(
+            height: 7,
+            opacity: 0.1,
+          ),
           UserPageFriendBlock(user: userData, friends: friend),
-          const CrossBar(),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: const Text(
-              "Bài viết của bạn",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-            ),
+          id == ref.watch(meControllerProvider)[0]['id']
+              ? Column(
+                  children: [
+                    const CrossBar(
+                      height: 7,
+                      opacity: 0.1,
+                    ),
+                    CreatePostButton(
+                      preType: postPageUser,
+                      reloadFunction: _reloadFunction,
+                    ),
+                  ],
+                )
+              : const SizedBox(),
+          const CrossBar(
+            height: 7,
+            opacity: 0.1,
           ),
-          const SizedBox(
-            height: 12.0,
-          ),
-          CreatePostButton(
-            preType: postPageUser,
-            reloadFunction: _reloadFunction,
-          ),
-          const CrossBar(),
           InkWell(
             onTap: () {
               pushToNextScreen(context, UserPhotoVideo(id: id));
@@ -716,7 +736,28 @@ class _UserPageState extends ConsumerState<UserPage> {
               ),
             ),
           ),
-          const CrossBar(),
+          id == ref.watch(meControllerProvider)[0]['id']
+              ? Column(
+                  children: [
+                    const CrossBar(
+                      height: 7,
+                      opacity: 0.1,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: const Text(
+                        "Bài viết của bạn",
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                )
+              : const SizedBox(),
+          const CrossBar(
+            height: 7,
+            opacity: 0.1,
+          ),
           UserPagePinPost(user: userData, pinPosts: pinPost)
         ],
       )),
@@ -726,8 +767,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           return VisibilityDetector(
             key: Key(postUser[index]['id']),
             onVisibilityChanged: (info) {
-              double visibleFraction = info.visibleFraction;
-              if (visibleFraction > 0.6) {
+              if (info.visibleFraction > 0.6) {
                 if (focusCurrentPostIndex.value != postUser[index]['id']) {
                   focusCurrentPostIndex.value = postUser[index]['id'];
                 }

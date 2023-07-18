@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -12,6 +10,7 @@ import 'package:social_network_app_mobile/helper/split_link.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_post_modal.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_tree.dart';
 import 'package:social_network_app_mobile/screens/Post/post_detail.dart';
@@ -44,7 +43,7 @@ class PostFooterButton extends ConsumerStatefulWidget {
   final bool? fromOneMediaPost;
 
   /// update data from post and post detail screen
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   const PostFooterButton(
       {Key? key,
       this.post,
@@ -192,7 +191,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(newPost);
-        widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+        widget.updateDataFunction != null
+            ? widget.updateDataFunction!(newPost)
+            : null;
         if (widget.type == imagePhotoPage) {
           widget.updateDataPhotoPage != null
               ? widget.updateDataPhotoPage!(newPost)
@@ -232,7 +233,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         }
         await PostApi().unReactionPostApi(widget.post['media_attachments']
             [widget.indexImage]['status_media']['id']);
-        widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+        widget.updateDataFunction != null
+            ? widget.updateDataFunction!(newPost)
+            : null;
       }
       widget.reloadDetailFunction != null
           ? widget.reloadDetailFunction!()
@@ -240,8 +243,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     } else {
       // only update reaction in post
       var newPost = widget.post;
-      List newFavourites = newPost['reactions'];
-      int index = newPost['reactions']
+      List newFavourites = newPost?['reactions'] ??
+          newPost?["avatar_media"]?["status_media"]?['reactions'];
+      int index = newPost?['reactions']
           .indexWhere((element) => element['type'] == react);
       int indexCurrent = viewerReaction.isNotEmpty && react != viewerReaction
           ? newPost['reactions']
@@ -272,13 +276,21 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
           "viewer_reaction": react,
           "reactions": newFavourites
         };
+        if (widget.type == postWatch) {
+          ref.read(watchControllerProvider.notifier).updateWatchDetail(
+                widget.preType ?? widget.type,
+                newPost,
+              );
+        }
         ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
             widget.type, newPost,
             preType: widget.preType);
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(newPost);
-        widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+        widget.updateDataFunction != null
+            ? widget.updateDataFunction!(newPost)
+            : null;
         await PostApi().reactionPostApi(widget.post['id'], data);
       } else {
         newPost = {
@@ -295,7 +307,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(newPost);
-        widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+        widget.updateDataFunction != null
+            ? widget.updateDataFunction!(newPost)
+            : null;
         await PostApi().unReactionPostApi(widget.post['id']);
       }
       widget.reloadFunction != null ? widget.reloadFunction!(newPost) : null;
@@ -660,13 +674,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     if (mounted && newComment != null) {
       int indexComment = postComment
           .indexWhere((element) => element['id'] == newComment['id']);
-      List newListUpdate = [];
 
-      if (indexComment > -1) {
-        newListUpdate = postComment.sublist(0, indexComment) +
-            [newComment] +
-            postComment.sublist(indexComment + 1);
-      }
+      if (indexComment > -1) {}
 
       List dataCommentUpdate = postComment;
 
@@ -721,7 +730,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     ref
         .read(currentPostControllerProvider.notifier)
         .saveCurrentPost(updateCountPostData);
-    widget.updateDataFunction != null ? widget.updateDataFunction!() : null;
+    widget.updateDataFunction != null
+        ? widget.updateDataFunction!(updateCountPostData)
+        : null;
   }
 }
 

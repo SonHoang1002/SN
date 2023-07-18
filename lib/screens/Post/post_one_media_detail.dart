@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -15,6 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/constant/config.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
@@ -69,7 +71,7 @@ class PostOneMediaDetail extends ConsumerStatefulWidget {
   final dynamic preType;
 
   /// This function is called when we want update data post component
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
 
   /// This function is called when we want back to previous screen
   final Function? backFunction;
@@ -122,30 +124,30 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
           .read(currentPostControllerProvider.notifier)
           .saveCurrentPost(widget.post);
     });
-
-    if (mounted && widget.postMedia != null) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(() {
         postRender = widget.postMedia ?? widget.post;
-        userData = widget.postMedia ?? widget.post;
+        userData = widget.postMedia;
       });
-    }
-    if (widget.post != null) {
-      setState(() {
-        userData = widget.post;
-      });
-    }
-    if (widget.currentIndex != null) {
-      setState(() {
-        indexRender = widget.currentIndex ?? 0;
-      });
-    }
-    _initialPosition = 0;
-    _currentPosition = _initialPosition;
+      if (widget.post != null) {
+        setState(() {
+          userData = widget.post;
+        });
+      }
+      if (widget.currentIndex != null) {
+        setState(() {
+          indexRender = widget.currentIndex ?? 0;
+        });
+      }
+      _initialPosition = 0;
+      _currentPosition = _initialPosition;
 
-    tag = postRender?['media_attachments']?[widget.currentIndex ?? 0]?['id'] ??
-        postRender['id'];
+      tag = postRender?['media_attachments']?[widget.currentIndex ?? 0]
+              ?['id'] ??
+          postRender['id'];
 
-    Future.wait([getDataOfImagePhotoPage()]);
+      Future.wait([getDataOfImagePhotoPage()]);
+    });
   }
 
   @override
@@ -252,8 +254,11 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 ? ref.watch(currentPostControllerProvider).currentPost
                 : userData)
         : null;
-    String path =
-        postRender['media_attachments']?[0]?['url'] ?? postRender['url'];
+    String path = (postRender?['media_attachments']?[0]?['url']) ??
+        postRender?['url'] ??
+        (postRender?['avatar_media']?['url']) ??
+        postRender?['banner']?['preview_url'] ??
+        linkSocialNetwork;
     final size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
@@ -280,14 +285,15 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 child: ExtendedImageGesturePageView.builder(
                   itemCount: widget.medias != null
                       ? widget.medias!.length
-                      : postRender['media_attachments'] != null
+                      : postRender?['media_attachments'] != null
                           ? postRender['media_attachments'].length
                           : 1,
                   itemBuilder: (BuildContext context, int index) {
                     dynamic pathImg = path;
-                    if (postRender['media_attachments'] != null &&
-                        postRender['media_attachments'].isNotEmpty) {
-                      pathImg = postRender['media_attachments'][index]['url'];
+                    if (postRender?['media_attachments'] != null &&
+                        postRender?['media_attachments'].isNotEmpty) {
+                      pathImg =
+                          postRender?['media_attachments']?[index]?['url'];
                     } else {
                       if (widget.medias != null && widget.medias!.isNotEmpty) {
                         pathImg = widget.medias![index]['url'];
@@ -340,9 +346,9 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                             });
                           },
                           child: Hero(
-                            tag: postRender['media_attachments']?[index]
-                                    ?['id'] ??
-                                postRender['id'] ??
+                            tag: (postRender?['media_attachments']?[index]
+                                    ?['id']) ??
+                                (postRender?['id']) ??
                                 index,
                             child: ExtendedImage.network(
                               pathImg,
@@ -452,7 +458,8 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(top: 40),
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top),
                     child: Container(
                       width: size.width - 40,
                       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -505,116 +512,146 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 15),
-                    color: blackColor.withOpacity(0.4),
-                    width: size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          constraints: BoxConstraints(
-                              maxHeight: size.height * 0.6, minHeight: 10),
-                          child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 15),
+                  userData != null
+                      ? Container(
+                          padding: const EdgeInsets.only(top: 15),
+                          color: blackColor.withOpacity(0.4),
+                          width: size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                constraints: BoxConstraints(
+                                    maxHeight: size.height * 0.6,
+                                    minHeight: 10),
+                                child: SingleChildScrollView(
+                                  physics: const BouncingScrollPhysics(),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
                                     children: [
-                                      //down
-                                      buildTextContentButton(
-                                          userData["group"] != null
-                                              ? userData["group"]['title'] ?? ""
-                                              : userData["page"] != null
-                                                  ? userData["page"]['title'] ??
-                                                      ""
-                                                  : userData["account"]
-                                                          ['display_name'] ??
-                                                      "",
-                                          true,
-                                          colorWord: white,
-                                          fontSize: 14, function: () {
-                                        pushToScreen();
-                                      }),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            //down
+                                            buildTextContentButton(
+                                                userData?["group"] != null &&
+                                                        userData?["group"]
+                                                            is! bool
+                                                    ? (userData?["group"]
+                                                            ?['title']) ??
+                                                        (userData?[
+                                                            'display_name']) ??
+                                                        ""
+                                                    : userData?["page"] !=
+                                                                null &&
+                                                            userData?["page"]
+                                                                is! bool
+                                                        ? (userData?["page"]
+                                                                ?['title']) ??
+                                                            (userData?[
+                                                                'display_name']) ??
+                                                            ""
+                                                        : (userData?["account"]
+                                                                ?[
+                                                                'display_name']) ??
+                                                            (userData?[
+                                                                'display_name']) ??
+                                                            (userData?[
+                                                                'title']) ??
+                                                            "",
+                                                true,
+                                                colorWord: white,
+                                                fontSize: 14, function: () {
+                                              pushToScreen();
+                                            }),
+                                            buildSpacer(height: 7),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  GetTimeAgo.parse(
+                                                      DateTime.parse(userData?[
+                                                              'created_at'] ??
+                                                          userData?[
+                                                                  'avatar_media']
+                                                              ?['created_at'])),
+                                                  style: const TextStyle(
+                                                      color: greyColor,
+                                                      fontSize: 12),
+                                                ),
+                                                const Text(" · ",
+                                                    style: TextStyle(
+                                                        color: greyColor)),
+                                                Icon(
+                                                    typeVisibility.firstWhere(
+                                                        (element) =>
+                                                            element['key'] ==
+                                                            userData[
+                                                                'visibility'],
+                                                        orElse: () =>
+                                                            {})['icon'],
+                                                    size: 13,
+                                                    color: greyColor)
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       buildSpacer(height: 7),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            GetTimeAgo.parse(DateTime.parse(
-                                                userData['created_at'])),
-                                            style: const TextStyle(
-                                                color: greyColor, fontSize: 12),
-                                          ),
-                                          const Text(" · ",
-                                              style:
-                                                  TextStyle(color: greyColor)),
-                                          Icon(
-                                              typeVisibility.firstWhere(
-                                                  (element) =>
-                                                      element['key'] ==
-                                                      userData['visibility'],
-                                                  orElse: () => {})['icon'],
-                                              size: 13,
-                                              color: greyColor)
-                                        ],
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: PostContent(
+                                          key: _contentKey,
+                                          post: userData,
+                                          textColor: white,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                buildSpacer(height: 7),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: PostContent(
-                                    key: _contentKey,
-                                    post: userData,
-                                    textColor: white,
-                                  ),
+                              ),
+                              PostFooterInformation(
+                                  post: userData,
+                                  preType: checkPreType(),
+                                  indexImagePost: widget.type == imagePhotoPage
+                                      ? 0
+                                      : widget.currentIndex,
+                                  updateDataFunction:
+                                      widget.updateDataFunction),
+                              buildDivider(),
+                              SizedBox(
+                                height: 40,
+                                child: PostFooterButton(
+                                  post: userData,
+                                  type: widget.type ?? postMultipleMedia,
+                                  preType: checkPreType(),
+                                  reloadFunction: (dynamic newData) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      widget.reloadFunction != null
+                                          ? widget.reloadFunction!()
+                                          : null;
+                                    });
+                                  },
+                                  fromOneMediaPost: true,
+                                  updateDataPhotoPage:
+                                      _reloadDataPostOneMediaDetail,
+                                  updateDataFunction: widget.updateDataFunction,
+                                  indexImage: widget.type == imagePhotoPage
+                                      ? 0
+                                      : widget.currentIndex,
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              )
+                            ],
                           ),
-                        ),
-                        PostFooterInformation(
-                            post: userData,
-                            preType: checkPreType(),
-                            indexImagePost: widget.type == imagePhotoPage
-                                ? 0
-                                : widget.currentIndex,
-                            updateDataFunction: widget.updateDataFunction),
-                        buildDivider(),
-                        SizedBox(
-                          height: 40,
-                          child: PostFooterButton(
-                            post: userData,
-                            type: widget.type ?? postMultipleMedia,
-                            preType: checkPreType(),
-                            reloadFunction: (dynamic newData) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                widget.reloadFunction != null
-                                    ? widget.reloadFunction!()
-                                    : null;
-                              });
-                            },
-                            fromOneMediaPost: true,
-                            updateDataPhotoPage: _reloadDataPostOneMediaDetail,
-                            updateDataFunction: widget.updateDataFunction,
-                            indexImage: widget.type == imagePhotoPage
-                                ? 0
-                                : widget.currentIndex,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
                         )
-                      ],
-                    ),
-                  ),
+                      : const SizedBox(),
                 ],
               )
             : const SizedBox();

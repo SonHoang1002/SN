@@ -1,0 +1,174 @@
+{
+  "product": {
+    "page_id": "108277159419224076",
+    "title": "7867676tytytytytytytytytyt",
+    "description": "rituyoirtoirtuoyirutoiyu8956t598t989g89g8h9f898f9h89f8h98f9h8f9h89f8h9f8h9f8h9f8f9h",
+    "product_category_id": 4637,
+    "brand_id": "3301",
+    "weight_package": "6878",
+    "length_package": "78",
+    "width_package": "78",
+    "height_package": "78",
+    "pre_order": true,
+    "condition": "new_product",
+    "days_to_ship": 7
+  },
+  "product_options_attributes": [
+    {
+      "name": "kich co",
+      "position": 1,
+      "values": [
+        "s",
+        "m",
+        "n"
+      ]
+    },
+    {
+      "name": "mau sac",
+      "position": 2,
+      "values": [
+        "xanh",
+        "tim",
+        "den"
+      ]
+    }
+  ],
+  "product_variants_attributes": [
+    {
+      "title": "7867676tytytytytytytytytyt - s - xanh ",
+      "price": "98899910.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "s",
+      "option2": "xanh",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 700,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    },
+    {
+      "title": "7867676tytytytytytytytytyt - s - tim ",
+      "price": "98899911.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "s",
+      "option2": "tim",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 786,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    },
+    {
+      "title": "7867676tytytytytytytytytyt - s - den ",
+      "price": "98899912.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "s",
+      "option2": "den",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 100,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    },
+    {
+      "title": "7867676tytytytytytytytytyt - m - xanh ",
+      "price": "98899913.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "m",
+      "option2": "xanh",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 786,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    },
+    {
+      "title": "7867676tytytytytytytytytyt - m - tim ",
+      "price": "98899914.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "m",
+      "option2": "tim",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 200,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    },
+    {
+      "title": "7867676tytytytytytytytytyt - m - den ",
+      "price": "98899915.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "m",
+      "option2": "den",
+      "image_id": "",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 786,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    },
+    {
+      "title": "7867676tytytytytytytytytyt - n - xanh ",
+      "price": "98899916.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "n",
+      "option2": "xanh",
+      "image_id": "110656847766985190",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 222,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    },
+    {
+      "title": "7867676tytytytytytytytytyt - n - tim ",
+      "price": "98899917.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "n",
+      "option2": "tim",
+      "image_id": "110656847766985190",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 786,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    },
+    {
+      "title": "7867676tytytytytytytytytyt - n - den ",
+      "price": "98899918.0",
+      "sku": "6n6h6h6h6",
+      "position": 1,
+      "compare_at_price": null,
+      "option1": "n",
+      "option2": "den",
+      "image_id": "110656847766985190",
+      "weight": 0.25,
+      "weight_unit": "Kg",
+      "inventory_quantity": 786,
+      "old_inventory_quantity": 100,
+      "requires_shipping": true
+    }
+  ],
+  "product_attribute_informations_attributes": []
+}

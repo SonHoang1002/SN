@@ -16,12 +16,16 @@ class CreateGroup extends StatefulWidget {
 }
 
 class _CreateGroupState extends State<CreateGroup> {
+  List categories = [];
   TextEditingController controllerPrivate = TextEditingController(text: "");
   TextEditingController controllerVisible =
       TextEditingController(text: "Hiển thị");
   TextEditingController controllerTitle = TextEditingController(text: "");
   TextEditingController controllerDes = TextEditingController(text: "");
+  TextEditingController controllerCate = TextEditingController(text: "");
+
   dynamic isPrivateValue;
+  dynamic isCategoriesValue;
   dynamic isVisibleValue = {
     'is_visible': true,
     'title': 'Hiển thị',
@@ -31,11 +35,27 @@ class _CreateGroupState extends State<CreateGroup> {
     FormData formData = FormData.fromMap({
       'title': controllerTitle.text,
       'description': controllerDes.text,
-      'category_id': 1,
+      'category_id': isCategoriesValue['id'],
       'is_private': isPrivateValue['is_private'],
       'is_visible': isVisibleValue['is_visible'] ?? true,
     });
     await GroupApi().createGroup(formData);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCategories();
+  }
+
+  void fetchCategories() async {
+    final res = await GroupApi().fetchCategories(null);
+
+    if (res != null) {
+      setState(() {
+        categories = res;
+      });
+    }
   }
 
   @override
@@ -90,6 +110,47 @@ class _CreateGroupState extends State<CreateGroup> {
                   const SizedBox(
                     height: 10,
                   ),
+                  const Text(
+                    'Danh mục nhóm',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      showBarModalBottomSheet(
+                        barrierColor: Colors.transparent,
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                        context: context,
+                        builder: (context) {
+                          return Categories(
+                            data: categories,
+                            title: 'Chọn danh mục nhóm',
+                            isValue: isCategoriesValue,
+                            onSelected: (value) {
+                              setState(() {
+                                isCategoriesValue = value;
+                                controllerCate.text = value['text'];
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
+                    },
+                    child: TextFieldGroup(
+                      controller: controllerCate,
+                      label: 'Danh mục nhóm',
+                      readOnly: true,
+                      enabled: false,
+                      suffixIcon: const Icon(Icons.arrow_drop_down),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   const Divider(
                     thickness: 1,
                   ),
@@ -113,6 +174,7 @@ class _CreateGroupState extends State<CreateGroup> {
                         builder: (context) {
                           return _PrivacyBottomSheet(
                             data: isPrivate,
+                            title: 'Chọn quyền riêng tư',
                             isValue: isPrivateValue,
                             onSelected: (value) {
                               setState(() {
@@ -157,6 +219,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                   builder: (context) {
                                     return _PrivacyBottomSheet(
                                       data: isVisible,
+                                      title: 'Ẩn nhóm',
                                       isValue: isVisibleValue,
                                       onSelected: (value) {
                                         setState(() {
@@ -215,11 +278,13 @@ class _CreateGroupState extends State<CreateGroup> {
 class _PrivacyBottomSheet extends StatefulWidget {
   final dynamic isValue;
   final dynamic data;
+  final String title;
   final Function(dynamic) onSelected;
 
   const _PrivacyBottomSheet({
     required this.isValue,
     required this.data,
+    required this.title,
     required this.onSelected,
   });
 
@@ -238,7 +303,7 @@ class _PrivacyBottomSheetState extends State<_PrivacyBottomSheet> {
             const SizedBox(
               height: 20,
             ),
-            const Text('Chọn quyền riêng tư'),
+            widget.title != '' ? Text(widget.title) : const SizedBox(),
             ListView.separated(
               separatorBuilder: (BuildContext context, int index) =>
                   const Divider(),
@@ -279,6 +344,88 @@ class _PrivacyBottomSheetState extends State<_PrivacyBottomSheet> {
                   },
                 );
               },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Categories extends StatefulWidget {
+  final dynamic isValue;
+  final dynamic data;
+  final String title;
+  final Function(dynamic) onSelected;
+
+  const Categories({
+    super.key,
+    required this.isValue,
+    required this.data,
+    required this.title,
+    required this.onSelected,
+  });
+
+  @override
+  State<Categories> createState() => _CategoriesState();
+}
+
+class _CategoriesState extends State<Categories> {
+  @override
+  Widget build(BuildContext context) {
+    return StatefulBuilder(
+      builder: (context, setState) => SizedBox(
+        height: 300,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            widget.title != '' ? Text(widget.title) : const SizedBox(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                  shrinkWrap: true,
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  itemCount: widget.data.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      dense: true,
+                      minLeadingWidth: 30,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 0.0,
+                      ),
+                      visualDensity:
+                          const VisualDensity(horizontal: -4, vertical: 0),
+                      leading: widget.data[index]['icon'] != null
+                          ? Image.network(
+                              widget.data[index]['icon'],
+                              width: 22,
+                              height: 22,
+                            )
+                          : const SizedBox(),
+                      title: Text(
+                        widget.data[index]['text'] ?? "",
+                      ),
+                      trailing: widget.isValue != null &&
+                              widget.isValue['text'] ==
+                                  widget.data[index]['text']
+                          ? const Icon(
+                              Icons.check,
+                              color: Colors.blue,
+                            )
+                          : const SizedBox(),
+                      onTap: () {
+                        widget.onSelected(widget.data[index] ?? "");
+                      },
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),

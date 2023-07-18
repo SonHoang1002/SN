@@ -27,9 +27,6 @@ class Reef extends ConsumerStatefulWidget {
 }
 
 class _ReefState extends ConsumerState<Reef> {
-  static const channelName = 'startActivity/VideoEditorChannel';
-  static const platform = MethodChannel(channelName);
-
   List momentSuggests = [];
 
   @override
@@ -37,41 +34,44 @@ class _ReefState extends ConsumerState<Reef> {
     momentSuggests =
         ref.watch(momentControllerProvider).momentSuggest.isNotEmpty
             ? ref.watch(momentControllerProvider).momentSuggest
-            : momentSuggests.isEmpty
-                ? moments.sublist(1, 7)
-                : momentSuggests;
+            : [];
     momentSuggests.shuffle();
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          ReefHeader(
-            function: () {
-              handleSettingHeader();
-            },
-          ),
-          buildSpacer(height: 10),
-          ReefCenter(reefList: momentSuggests),
-          buildSpacer(height: 10),
-          ReefFooter(
-            firstFunction: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CameraMomentController()));
-            },
-            secondFunction: () {
-              pushCustomCupertinoPageRoute(context, const UserPageHome());
-            },
+    return momentSuggests.isNotEmpty
+        ? Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              children: [
+                ReefHeader(
+                  function: () {
+                    handleSettingHeader();
+                  },
+                ),
+                buildSpacer(height: 10),
+                ReefCenter(reefList: momentSuggests),
+                buildSpacer(height: 10),
+                ReefFooter(
+                  firstFunction: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const CameraMomentController()));
+                  },
+                  secondFunction: () {
+                    pushCustomCupertinoPageRoute(context, const UserPageHome());
+                  },
+                )
+              ],
+            ),
           )
-        ],
-      ),
-    );
+        : buildTextContent("Chưa có video ngắn nào !!!", true,
+            fontSize: 16, isCenterLeft: false);
   }
 
   handleSettingHeader() {
-    showCustomBottomSheet(context, 170, "",
-        isHaveHeader: false,
+    showCustomBottomSheet(context, 170,
+        title: "",
+        isNoHeader: true,
         bgColor: Theme.of(context).colorScheme.background,
         widget: Column(
           children: [

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/apis/group_api.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -12,6 +16,7 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header_action.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
@@ -19,6 +24,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
+import 'package:social_network_app_mobile/widgets/blue_certified_widget.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import 'post_detail.dart';
@@ -29,7 +35,7 @@ class PostHeader extends ConsumerStatefulWidget {
   final Color? textColor;
   final bool? isHaveAction;
   final Function? reloadFunction;
-  final Function? updateDataFunction;
+  final Function(dynamic)? updateDataFunction;
   const PostHeader(
       {Key? key,
       this.post,
@@ -46,7 +52,8 @@ class PostHeader extends ConsumerStatefulWidget {
 
 class _PostHeaderState extends ConsumerState<PostHeader> {
   String description = '';
-  ValueNotifier<bool> _isFollowing = ValueNotifier(false);
+  final ValueNotifier<bool> _isFollowing = ValueNotifier(false);
+
   @override
   void initState() {
     super.initState();
@@ -61,17 +68,15 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
   }
 
   checkFollowing() {
-    var account = widget.post?['account'] ?? {};
     var group = widget.post?['group'];
     var page = widget.post?['page'];
-
     return (group != null &&
-                group["group_relationship"] != null &&
-                group["group_relationship"]?["like"] == true) ||
-            (page != null &&
-                widget.post['place']?['id'] != page['id'] &&
-                (page["page_relationship"] != null &&
-                    page["page_relationship"]?["like"] == true));
+            group["group_relationship"] != null &&
+            group["group_relationship"]?["like"] == true) ||
+        (page != null &&
+            widget.post['place']?['id'] != page['id'] &&
+            (page["page_relationship"] != null &&
+                page["page_relationship"]?["like"] == true));
   }
 
   String handleDescription() {
@@ -159,7 +164,6 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
     var page = widget.post?['page'];
     var mentions = widget.post['mentions'] ?? [];
     var statusActivity = widget.post['status_activity'] ?? {};
-
     return widget.post != null
         ? InkWell(
             hoverColor: transparent,
@@ -176,10 +180,12 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
               }
             },
             child: Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
+              padding: const EdgeInsets.only(
+                left: 12,
+              ),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -200,19 +206,16 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                             SizedBox(
                               width: size.width * 0.6,
                               child: BlockNamePost(
-                                  post: widget.post,
-                                  account: account,
-                                  description: description,
-                                  mentions: mentions,
-                                  statusActivity: statusActivity,
-                                  group: group,
-                                  page: page,
-                                  textColor: widget.textColor,
-                                  type: widget.type,
-                                  isFollowing: _isFollowing.value,
-                                  handleLike: () {
-                                    _isFollowing.value = true;
-                                  }),
+                                post: widget.post,
+                                account: account,
+                                description: description,
+                                mentions: mentions,
+                                statusActivity: statusActivity,
+                                group: group,
+                                page: page,
+                                textColor: widget.textColor,
+                                type: widget.type,
+                              ),
                             ),
                             Row(
                               children: [
@@ -220,11 +223,21 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     group != null
-                                        ? Text(account['display_name'],
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ))
+                                        ? InkWell(
+                                            onTap: () {
+                                              pushCustomCupertinoPageRoute(
+                                                  context,
+                                                  UserPageHome(
+                                                    id: account['id']
+                                                        .toString(),
+                                                  ));
+                                            },
+                                            child: Text(account['display_name'],
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                )),
+                                          )
                                         : const SizedBox(),
                                     buildSpacer(height: 3),
                                     Row(
@@ -239,10 +252,6 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                             ? Row(
                                                 children: [
                                                   buildTextContent(
-                                                      "Người đăng: ", true,
-                                                      fontSize: 14,
-                                                      colorWord: blackColor),
-                                                  buildTextContent(
                                                       widget.post['account']
                                                               ['display_name'] +
                                                           " · ",
@@ -253,7 +262,9 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                               )
                                             : const SizedBox(),
                                         widget.post['processing'] !=
-                                                "isProcessing"
+                                                    "isProcessing" &&
+                                                widget.post?['created_at'] !=
+                                                    null
                                             ? Text(
                                                 getRefractorTime(
                                                     widget.post?['created_at']),
@@ -288,66 +299,18 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                       ],
                     ),
                     // widget.isHaveAction == true
-                    widget.post['account']['id'] == meData['id'] ||
-                            (widget.post['page'] != null &&
-                                widget.post['page_owner'] != null &&
-                                widget.post['page_owner']['page_relationship']
-                                        ['role'] ==
+                    widget.post?['account']?['id'] == meData['id'] ||
+                            (widget.post?['page'] != null &&
+                                widget.post?['page_owner'] != null &&
+                                widget.post?['page_owner']?['page_relationship']
+                                        ?['role'] ==
                                     "admin")
                         ? (![postReblog, postMultipleMedia]
                                 .contains(widget.type))
-                            ? Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      showBarModalBottomSheet(
-                                          context: context,
-                                          backgroundColor:
-                                              Theme.of(context).canvasColor,
-                                          barrierColor: Colors.transparent,
-                                          builder: (context) =>
-                                              PostHeaderAction(
-                                                post: widget.post,
-                                                type: widget.type,
-                                                reloadFunction: () {
-                                                  widget.reloadFunction != null
-                                                      ? widget.reloadFunction!()
-                                                      : null;
-                                                },
-                                              ));
-                                    },
-                                    child: const Icon(
-                                      FontAwesomeIcons.ellipsis,
-                                      size: 20,
-                                      color: greyColor,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: widget.type != postDetail ? 10 : 0,
-                                  ),
-                                  [postDetail, postPageUser]
-                                              .contains(widget.type) ||
-                                          widget.post['account']['id'] ==
-                                              meData['id']
-                                      ? const SizedBox()
-                                      : InkWell(
-                                          onTap: () async {
-                                            final data = {"hidden": true};
-                                            await PostApi().updatePost(
-                                                widget.post['id'], data);
-                                            ref
-                                                .read(postControllerProvider
-                                                    .notifier)
-                                                .actionHiddenDeletePost(
-                                                    widget.type, widget.post);
-                                          },
-                                          child: const Icon(
-                                            FontAwesomeIcons.xmark,
-                                            size: 20,
-                                            color: greyColor,
-                                          ),
-                                        )
-                                ],
+                            ? BlockPostHeaderAction(
+                                widget: widget,
+                                meData: meData,
+                                ref: ref,
                               )
                             : const SizedBox()
                         : const SizedBox()
@@ -359,18 +322,150 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
 
   @override
   void dispose() {
+    _isFollowing.dispose();
     super.dispose();
   }
 }
 
-class BlockNamePost extends StatelessWidget {
+class BlockPostHeaderAction extends StatelessWidget {
+  const BlockPostHeaderAction({
+    super.key,
+    required this.widget,
+    required this.meData,
+    required this.ref,
+  });
+
+  final PostHeader widget;
+
+  final dynamic meData;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () {
+            showBarModalBottomSheet(
+                context: context,
+                backgroundColor: Theme.of(context).canvasColor,
+                barrierColor: Colors.transparent,
+                builder: (context) => PostHeaderAction(
+                      post: widget.post,
+                      type: widget.type,
+                      reloadFunction: () {
+                        widget.reloadFunction != null
+                            ? widget.reloadFunction!()
+                            : null;
+                      },
+                    ));
+          },
+          child: const Icon(
+            FontAwesomeIcons.ellipsis,
+            size: 20,
+            color: greyColor,
+          ),
+        ),
+        SizedBox(
+          width: widget.type != postDetail ? 10 : 0,
+        ),
+        [postDetail, postPageUser].contains(widget.type) ||
+                widget.post['account']['id'] == meData['id']
+            ? const SizedBox()
+            : InkWell(
+                onTap: () async {
+                  final data = {"hidden": true};
+                  await PostApi().updatePost(widget.post['id'], data);
+                  ref
+                      .read(postControllerProvider.notifier)
+                      .actionHiddenDeletePost(widget.type, widget.post);
+                },
+                child: const Icon(
+                  FontAwesomeIcons.xmark,
+                  size: 20,
+                  color: greyColor,
+                ),
+              )
+      ],
+    );
+  }
+}
+
+class BlockSubNamePost extends StatelessWidget {
+  const BlockSubNamePost({
+    super.key,
+    required this.group,
+    required this.account,
+    required this.widget,
+  });
+
+  final dynamic group;
+  final dynamic account;
+  final PostHeader widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            group != null
+                ? Text(account['display_name'],
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ))
+                : const SizedBox(),
+            buildSpacer(height: 3),
+            Row(
+              children: [
+                widget.post['page_owner'] != null &&
+                        widget.post['page'] != null &&
+                        widget.post?['page_owner']?['page_relationship']
+                                ?['role'] ==
+                            "admin" &&
+                        widget.type != postDetail
+                    ? Row(
+                        children: [
+                          buildTextContent(
+                              widget.post['account']['display_name'] + " · ",
+                              true,
+                              colorWord: greyColor,
+                              fontSize: 13)
+                        ],
+                      )
+                    : const SizedBox(),
+                widget.post['processing'] != "isProcessing"
+                    ? Text(
+                        getRefractorTime(widget.post?['created_at']),
+                        style: const TextStyle(color: greyColor, fontSize: 12),
+                      )
+                    : const SizedBox(),
+                Text(widget.post['processing'] != "isProcessing" ? " · " : "",
+                    style: const TextStyle(color: greyColor)),
+                Icon(
+                    typeVisibility.firstWhere(
+                        (element) =>
+                            element['key'] == widget.post['visibility'],
+                        orElse: () => {})['icon'],
+                    size: 13,
+                    color: greyColor)
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class BlockNamePost extends StatefulWidget {
   const BlockNamePost(
       {super.key,
       required this.account,
       required this.description,
       required this.mentions,
-      required this.isFollowing,
-      this.handleLike,
       this.group,
       this.page,
       this.statusActivity,
@@ -386,74 +481,94 @@ class BlockNamePost extends StatelessWidget {
   final dynamic statusActivity;
   final Color? textColor;
   final dynamic type;
-  final bool isFollowing;
-  final Function? handleLike;
+
+  @override
+  State<BlockNamePost> createState() => _BlockNamePostState();
+}
+
+class _BlockNamePostState extends State<BlockNamePost> {
+  bool isFollowing = false;
 
   renderDisplayName() {
-    if (group != null) {
-      return group['title'];
-    } else if (page != null) {
-      return post['place']?['id'] != page['id']
-          ? page['title']
-          : account['display_name'];
+    if (widget.group != null) {
+      return widget.group['title'];
+    } else if (widget.page != null) {
+      return widget.post['place']?['id'] != widget.page['id']
+          ? widget.page['title']
+          : widget.account['display_name'];
     } else {
-      return account['display_name'];
+      return widget.account['display_name'];
+    }
+  }
+
+  bool checkHasBlueCertification() {
+    if ((widget.page == null && widget.account?['certified'] == true) ||
+        (widget.page != null && widget.page?['certified'] == true)) {
+      return true;
+    } else {
+      return false;
     }
   }
 
   TextSpan renderLikeTextSpan() {
-    if (group != null) {
-      return (group["group_relationship"] != null &&
-              group["group_relationship"]?["like"] == true)
+    if (widget.group != null) {
+      return (widget.group["group_relationship"] != null &&
+              widget.group["group_relationship"]?["like"] == true)
           ? const TextSpan()
           : const TextSpan(
               text: " · Thích", style: TextStyle(color: secondaryColor));
-    } else if (page != null) {
-      return post['place']?['id'] != page['id']
-          ? (page["page_relationship"] != null &&
-                  page["page_relationship"]?["like"] == true)
+    } else if (widget.page != null) {
+      return widget.post['place']?['id'] != widget.page['id']
+          ? (widget.page["page_relationship"] != null &&
+                  widget.page["page_relationship"]?["like"] == true)
               ? const TextSpan()
               : const TextSpan(
                   text: " ·  Thích", style: TextStyle(color: secondaryColor))
-          : TextSpan(text: account['display_name']);
+          : TextSpan(text: widget.account['display_name']);
+
+      // return const TextSpan(text: '');
     } else {
       return const TextSpan(text: '');
     }
   }
 
-  chooseApi() {
-    if (group != null) {
-      return (group["group_relationship"] != null &&
-              group["group_relationship"]?["like"] == true)
-          ? const TextSpan()
-          : const TextSpan(
-              text: " Thích", style: TextStyle(color: secondaryColor));
-    } else if (page != null) {
-      return post['place']?['id'] != page['id']
-          ? (page["page_relationship"] != null &&
-                  page["page_relationship"]?["like"] == true)
-              ? const TextSpan()
-              : const TextSpan(
-                  text: " Thích", style: TextStyle(color: secondaryColor))
-          : TextSpan(text: account['display_name']);
-    } else {
-      return const TextSpan(text: '');
+  chooseApi() async {
+    if (widget.group != null) {
+      //  await GroupApi().
+    } else if (widget.page != null) {
+      await PageApi().likePageSuggestion(widget.page['id']);
     }
   }
 
   void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
-
-    if (type != "edit_post") {
-      if (post['place']?['id'] != page?['id'] && currentRouter != '/page') {
-        Navigator.pushNamed(context, '/page', arguments: page);
+    if (widget.type != "edit_post") {
+      if ((widget.post['place']?['id'] != widget.page?['id'] ||
+          widget.post['place']?['id'] != widget.post['page']['id'])) {
+        if (currentRouter != '/page') {
+          Navigator.pushNamed(context, '/page', arguments: widget.page);
+          return;
+        } else {}
+      } else if ((widget.group != null || widget.post?['group'] != null) &&
+          (widget.group?['id'] != null ||
+              widget.post?['group']?['id'] != null)) {
+        pushCustomCupertinoPageRoute(
+          context,
+          GroupDetail(id: widget.group['id']),
+        );
+        return;
       } else {
         pushCustomCupertinoPageRoute(context, const UserPageHome(),
             settings: RouteSettings(
-              arguments: {'id': account['id']},
+              arguments: {'id': widget.account['id']},
             ));
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -470,53 +585,61 @@ class BlockNamePost extends StatelessWidget {
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: textColor ??
+                  color: widget.textColor ??
                       Theme.of(context).textTheme.displayLarge!.color),
               children: [
                 const TextSpan(text: ' '),
-                statusActivity.isNotEmpty
+                WidgetSpan(
+                    child: checkHasBlueCertification()
+                        ? buildBlueCertifiedWidget(
+                            margin: const EdgeInsets.only(bottom: 2))
+                        : const SizedBox()),
+                widget.statusActivity.isNotEmpty
                     ? WidgetSpan(
                         child: ImageCacheRender(
-                          path: statusActivity['url'],
+                          path: widget.statusActivity['url'],
                           width: 18.0,
                           height: 18.0,
                         ),
                       )
                     : const TextSpan(text: ''),
                 TextSpan(
-                    text: description,
+                    text: widget.description,
                     style: const TextStyle(
                         fontWeight: FontWeight.normal, fontSize: 15)),
-                mentions.isNotEmpty
-                    ? TextSpan(text: mentions[0]['display_name'])
+                widget.mentions.isNotEmpty
+                    ? TextSpan(text: widget.mentions[0]['display_name'])
                     : const TextSpan(),
-                mentions.isNotEmpty && mentions.length >= 2
+                widget.mentions.isNotEmpty && widget.mentions.length >= 2
                     ? const TextSpan(
                         text: ' và ',
                         style: TextStyle(fontWeight: FontWeight.normal))
                     : const TextSpan(),
-                mentions.isNotEmpty && mentions.length == 2
+                widget.mentions.isNotEmpty && widget.mentions.length == 2
                     ? TextSpan(
-                        text: mentions[1]['display_name'],
+                        text: widget.mentions[1]['display_name'],
                       )
                     : const TextSpan(),
-                mentions.isNotEmpty && mentions.length > 2
+                widget.mentions.isNotEmpty && widget.mentions.length > 2
                     ? TextSpan(
-                        text: '${mentions.length - 1} người khác',
+                        text: '${widget.mentions.length - 1} người khác',
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            pushCustomCupertinoPageRoute(
-                                context, PageMention(mentions: mentions));
+                            pushCustomCupertinoPageRoute(context,
+                                PageMention(mentions: widget.mentions));
                           })
                     : const TextSpan(),
               ],
             ),
           ),
         ),
-        group != null || page != null || isFollowing
+        (widget.group != null || widget.page != null) && !isFollowing
             ? InkWell(
                 onTap: () {
-                  handleLike != null ? handleLike!() : null;
+                  setState(() {
+                    isFollowing = true;
+                  });
+                  chooseApi();
                 },
                 child: RichText(
                   text: TextSpan(
@@ -526,7 +649,7 @@ class BlockNamePost extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: textColor ??
+                        color: widget.textColor ??
                             Theme.of(context).textTheme.displayLarge!.color),
                   ),
                 ),
@@ -555,10 +678,21 @@ class AvatarPost extends StatelessWidget {
   void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
     if (type != "edit_post") {
-      if (page != null &&
-          post['place']?['id'] != page['id'] &&
-          currentRouter != '/page') {
-        Navigator.pushNamed(context, '/page', arguments: page);
+      if ((page != null || post['page'] != null) &&
+          (post?['place']?['id'] != page['id'] ||
+              post?['place']?['id'] != post?['page']?['id'])) {
+        if (currentRouter != '/page') {
+          Navigator.pushNamed(context, '/page', arguments: page);
+          return;
+        }
+      } else if ((group != null || post['group'] != null)) {
+        pushCustomCupertinoPageRoute(context, GroupDetail(id: group['id']));
+        return;
+      } else {
+        pushCustomCupertinoPageRoute(context, const UserPageHome(),
+            settings: RouteSettings(
+              arguments: {'id': account['id']},
+            ));
       }
     }
   }
@@ -571,38 +705,40 @@ class AvatarPost extends StatelessWidget {
     String pageLink = page != null && page['avatar_media'] != null
         ? page['avatar_media']['preview_url']
         : linkAvatarDefault;
-    return group != null
-        ? SizedBox(
-            width: 50,
-            height: 50,
-            child: Stack(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      image: DecorationImage(
-                          image: NetworkImage(group['banner']?['preview_url'] ??
-                              linkBannerDefault),
-                          onError: (exception, stackTrace) => const SizedBox(),
-                          fit: BoxFit.cover)),
-                ),
-                Container(
-                    margin: const EdgeInsets.only(right: 7, bottom: 7),
-                    child: Avatar(
-                      type: 'group',
-                      path: accountLink,
-                      object: account,
-                    ))
-              ],
-            ),
-          )
-        : InkWell(
-            onTap: () {
-              pushToScreen(context);
-            },
-            child: Padding(
+    return InkWell(
+      onTap: () {
+        pushToScreen(context);
+      },
+      child: group != null
+          ? SizedBox(
+              width: 50,
+              height: 50,
+              child: Stack(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        image: DecorationImage(
+                            image: NetworkImage(group['banner']
+                                    ?['preview_url'] ??
+                                linkBannerDefault),
+                            onError: (exception, stackTrace) =>
+                                const SizedBox(),
+                            fit: BoxFit.cover)),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only(right: 7, bottom: 7),
+                      child: Avatar(
+                        type: 'group',
+                        path: accountLink,
+                        object: account,
+                      ))
+                ],
+              ),
+            )
+          : Padding(
               padding: const EdgeInsets.only(top: 1),
               child: Avatar(
                 path: page != null && post['place']?['id'] != page['id']
@@ -611,7 +747,7 @@ class AvatarPost extends StatelessWidget {
                 object: page,
               ),
             ),
-          );
+    );
   }
 }
 

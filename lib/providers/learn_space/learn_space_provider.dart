@@ -825,8 +825,8 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
   }
 
   getListCoursesChapter(params, id) async {
-    List response = await LearnSpaceApi().getListCoursesChapterApi(params, id);
-    if (response.isNotEmpty) {
+    var response = await LearnSpaceApi().getListCoursesChapterApi(params, id);
+    if (response != null) {
       state = state.copyWith(
         course: state.course,
         courseInvitations: state.courseInvitations,
@@ -834,7 +834,7 @@ class LearnSpaceController extends StateNotifier<LearnSpaceState> {
         courseLibrary: state.courseLibrary,
         isMore: state.isMore,
         courseLessonChapter: state.courseLessonChapter,
-        courseChapter: response,
+        courseChapter: response["data"],
         coursePosts: state.coursePosts,
         courseFAQ: state.courseFAQ,
         coursePurchased: state.coursePurchased,
