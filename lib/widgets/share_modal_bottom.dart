@@ -82,21 +82,6 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
     super.dispose();
   }
 
-  String renderTitle(type) {
-    switch (type) {
-      case "event":
-        return '${widget.data['account']['display_name']} đã tạo một sự kiện.';
-      case "grow":
-        return '${widget.data['account']['display_name']} đã tạo một dự án.';
-      case "recruit":
-        return '${widget.data['account']['display_name']} đã tạo một tuyển dụng.';
-      case "course":
-        return '${widget.data['account']['display_name']} đã tạo một khoá học.';
-      default:
-        return '';
-    }
-  }
-
   dynamic renderParams(type) {
     switch (type) {
       case "event":
@@ -176,39 +161,6 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
               reverse: true,
               child: Column(
                 children: [
-                  Visibility(
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: !focusNode.hasFocus,
-                    child: Row(children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: ExtendedImage.network(
-                            widget.data['banner'] != null
-                                ? widget.data['banner']['url']
-                                : linkBannerDefault,
-                            fit: BoxFit.cover,
-                            width: 44,
-                            height: 44),
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            renderTitle(widget.type),
-                            style: const TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.normal),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            widget.data['account']['display_name'],
-                            style: const TextStyle(color: Colors.grey),
-                          )
-                        ],
-                      )
-                    ]),
-                  ),
                   Visibility(
                     visible: focusNode.hasFocus,
                     maintainAnimation: true,
@@ -716,7 +668,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                             focusNode: focusNode,
                             controller: valueStatus,
                             keyboardType: TextInputType.multiline,
-                            maxLines: null,
+                            maxLines: 7,
                             minLines: 1,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
