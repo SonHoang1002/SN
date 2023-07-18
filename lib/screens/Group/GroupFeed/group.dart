@@ -109,7 +109,7 @@ class _GroupState extends ConsumerState<Group> {
               ),
             ],
           ),
-        ), 
+        ),
         const CrossBar(),
         _buildBody()
       ],

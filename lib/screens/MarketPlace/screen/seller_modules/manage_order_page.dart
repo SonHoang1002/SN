@@ -656,7 +656,7 @@ class _OrderProductMarketPageState
       case "cancelled":
         buttonList.add(_contactWithSellerButton(data));
         buttonList.add(_reBuyButton(data));
-        // buttonList.add(_detailCanceledButton(data));
+        // buttonList.add(_detailCancelledButton(data));
         break;
       case "return":
         break;

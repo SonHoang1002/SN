@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
+import 'dart:math';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
@@ -284,7 +285,8 @@ class _FeedState extends ConsumerState<Feed> {
                   ? SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                         return VisibilityDetector(
-                          key: Key(posts[index]['id']),
+                          key: Key(posts[index]?['id'] ??
+                              Random().nextInt(10000).toString()),
                           onVisibilityChanged: (info) {
                             double visibleFraction = info.visibleFraction;
                             if (visibleFraction > 0.6) {

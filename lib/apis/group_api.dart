@@ -58,42 +58,54 @@ class GroupApi {
   }
 
   getMemberQuestion(dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/member_questions", null);
+    return await Api().getRequestBase("/api/v1/groups/$id/member_questions", null);
   }
 
   fetchJoinRequest(dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/join_requests", null);
+    return await Api().getRequestBase("/api/v1/groups/$id/join_requests", null);
   }
 
   fetchPendingStatus(dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/pending_statuses", null);
+    return await Api().getRequestBase("/api/v1/groups/$id/pending_statuses", null);
+  }
+
+  fetchUpdatePendingStatus(
+      String groupId, String postId, dynamic params) async {
+    return await Api().patchRequestBase(
+        "/api/v1/groups/$groupId/pending_statuses?status_id=$postId", params);
+  }
+
+  fetchPostUpdateJoinRequest(dynamic groupId, dynamic params) async {
+    final response = await Api()
+        .postRequestBase("/api/v1/groups/$groupId/invitations/respond", params);
+    return response;
   }
 
   fetchMediaImage(params, dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/media_attachments", params);
+    return await Api().getRequestBase("/api/v1/groups/$id/media_attachments", params);
   }
 
   fetchAlbum(params, dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/albums", params);
+    return await  Api().getRequestBase("/api/v1/groups/$id/albums", params);
   }
 
   fetchDetailAlbum(params, dynamic id) async {
-    return Api().getRequestBase("/api/v1/albums/$id/media_attachments", params);
+    return await Api().getRequestBase("/api/v1/albums/$id/media_attachments", params);
   }
 
   fetchReportedStatus(dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/reported_statuses", null);
+    return await Api().getRequestBase("/api/v1/groups/$id/reported_statuses", null);
   }
 
   fetchStatusAlert(dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/status_alerts", null);
+    return await Api().getRequestBase("/api/v1/groups/$id/status_alerts", null);
   }
 
   fetchScheduledStatus(dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/scheduled_statuses", null);
+    return await Api().getRequestBase("/api/v1/groups/$id/scheduled_statuses", null);
   }
 
   fetchRules(dynamic id) async {
-    return Api().getRequestBase("/api/v1/groups/$id/rules", null);
+    return await Api().getRequestBase("/api/v1/groups/$id/rules", null);
   }
 }

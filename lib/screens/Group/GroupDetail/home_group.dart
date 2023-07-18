@@ -166,8 +166,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
     return mergedList;
   }
 
-  void handleGetBanner(value) async {
-    String? fileName = '';
+  void handleGetBanner(value) async { 
     setState(() {
       url = value;
     });

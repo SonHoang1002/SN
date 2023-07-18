@@ -31,7 +31,7 @@ class _ReefCenterState extends State<ReefCenter> {
   @override
   Widget build(BuildContext context) {
     List reefList = widget.reefList;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size; 
     return Container(
       width: size.width,
       height: size.height * 0.45,
@@ -74,6 +74,7 @@ class _ReefCenterState extends State<ReefCenter> {
                       moment: reefList[index],
                       isPlayBack: true,
                     ),
+                    Container(height: size.height * 0.45, color: transparent),
                     if (currentActiveVideo != index)
                       SizedBox(
                         height: size.height * 0.45,

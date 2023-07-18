@@ -797,74 +797,99 @@ class _DetailProductMarketPageComsumerState
                 Stack(
                   children: [
                     Container(
-                        height: MediaQuery.of(context).padding.bottom + 50,
-                        color: white),
-                    SizedBox(
-                      width: width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          buildMarketButton(
-                            width: width * 0.25,
-                            bgColor: Colors.orange[300],
-                            contents: [
-                              Image.asset(
-                                "assets/icons/chat_product_icon.png",
-                                height: 18,
-                                color: white,
+                      height: 80,
+                      color: Theme.of(context).cardColor,
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).padding.bottom),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: width * 0.9,
+                          alignment: Alignment.center,
+                          child: Flex(
+                            direction: Axis.horizontal,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                flex: 3,
+                                child: buildMarketButton(
+                                  // width: width * 0.25,
+                                  bgColor: Colors.orange[300],
+                                  contents: [
+                                    Image.asset(
+                                      "assets/icons/chat_product_icon.png",
+                                      height: 18,
+                                      color: white,
+                                    ),
+                                    buildSpacer(height: 3),
+                                    buildTextContent("Chat ngay", false,
+                                        fontSize: 9, isCenterLeft: false)
+                                  ],
+                                  radiusValue: 0,
+                                  isHaveBoder: false,
+                                  isVertical: true,
+                                ),
                               ),
-                              buildSpacer(height: 3),
-                              buildTextContent("Chat ngay", false,
-                                  fontSize: 9, isCenterLeft: false)
-                            ],
-                            radiusValue: 0,
-                            isHaveBoder: false,
-                            isVertical: true,
-                          ),
-                          buildMarketButton(
-                            width: width * 0.25,
-                            bgColor: Colors.orange[300],
-                            contents: [
-                              Image.asset(
-                                "assets/icons/cart_product_icon.png",
-                                height: 18,
-                                color: white,
+                              Flexible(
+                                flex: 3,
+                                child: buildMarketButton(
+                                  // width: width * 0.25,
+                                  bgColor: primaryColor,
+                                  contents: [
+                                    Image.asset(
+                                      "assets/icons/cart_product_icon.png",
+                                      height: 18,
+                                      color: white,
+                                    ),
+                                    buildSpacer(height: 3),
+                                    buildTextContent("Thêm vào giỏ", false,
+                                        fontSize: 9)
+                                  ],
+                                  isVertical: true,
+                                  radiusValue: 0,
+                                  fontSize: 9,
+                                  isHaveBoder: false,
+                                  function: () async {
+                                    if (_detailData!["product_options"] !=
+                                            null &&
+                                        _detailData!["product_options"]
+                                            .isNotEmpty) {
+                                      showBottomColorSelections(
+                                          "Thêm vào giỏ hàng");
+                                    } else {
+                                      _updateAnimation();
+                                      _addToCart();
+                                    }
+                                  },
+                                ),
                               ),
-                              buildSpacer(height: 3),
-                              buildTextContent("Thêm vào giỏ", false,
-                                  fontSize: 9)
+                              Flexible(
+                                flex: 5,
+                                child: buildMarketButton(
+                                  // width: width * 0.5,
+                                  bgColor: red,
+                                  contents: [
+                                    buildTextContent("Mua ngay", false,
+                                        fontSize: 13)
+                                  ],
+                                  function: () async {
+                                    if (_detailData!["product_options"]
+                                        .isNotEmpty) {
+                                      showBottomColorSelections("Mua ngay");
+                                    } else {
+                                      _updateAnimation();
+                                      _addToCart();
+                                    }
+                                  },
+                                ),
+                              ),
                             ],
-                            isVertical: true,
-                            radiusValue: 0,
-                            fontSize: 9,
-                            isHaveBoder: false,
-                            function: () async {
-                              if (_detailData!["product_options"] != null &&
-                                  _detailData!["product_options"].isNotEmpty) {
-                                showBottomColorSelections("Thêm vào giỏ hàng");
-                              } else {
-                                _updateAnimation();
-                                _addToCart();
-                              }
-                            },
                           ),
-                          buildMarketButton(
-                            width: width * 0.5,
-                            bgColor: red,
-                            contents: [
-                              buildTextContent("Mua ngay", false, fontSize: 13)
-                            ],
-                            function: () async {
-                              if (_detailData!["product_options"].isNotEmpty) {
-                                showBottomColorSelections("Mua ngay");
-                              } else {
-                                _updateAnimation();
-                                _addToCart();
-                              }
-                            },
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

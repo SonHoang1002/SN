@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/group_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
@@ -19,6 +20,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.d
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/Posts/processing_indicator_widget.dart';
+import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
 class Post extends ConsumerStatefulWidget {
@@ -32,6 +34,10 @@ class Post extends ConsumerStatefulWidget {
   final bool? isFocus;
   final bool? visible;
   final String? preType;
+  // sử dụng trong trường hợp các bài post đang được chờ phê duyệt
+  final bool? waitingForApproval;
+  // trong trường hợp bài post đang chờ duyệt thì bắt buộc phải truyền pageId
+  final dynamic groupId;
 
   const Post(
       {Key? key,
@@ -44,7 +50,9 @@ class Post extends ConsumerStatefulWidget {
       this.isFocus,
       this.visible,
       this.preType,
-      this.updateDataFunction})
+      this.updateDataFunction,
+      this.waitingForApproval = false,
+      this.groupId})
       : super(key: key);
 
   @override
@@ -71,7 +79,9 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
       isNeedInitPost = false;
       currentPost = ref.watch(currentPostControllerProvider).currentPost;
     });
-    widget.updateDataFunction != null ? widget.updateDataFunction!(newData) : null;
+    widget.updateDataFunction != null
+        ? widget.updateDataFunction!(newData)
+        : null;
   }
 
   @override
@@ -188,35 +198,79 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                       .heightOfProcessingPost -
                                   80)
                               : 0,
-                          color: greyColor.withOpacity(0.4),
+                          color: white.withOpacity(0.2),
                         )
                       : const SizedBox()
                 ],
               ),
-              (widget.isHiddenFooter != null &&
-                          widget.isHiddenFooter == true) ||
-                      currentPost['processing'] == "isProcessing"
-                  ? const SizedBox()
-                  : PostFooter(
-                      post: currentPost,
-                      type: widget.type,
-                      updateDataFunction: updateNewPost,
-                      isShowCommentBox: _isShowCommentBox.value,
-                      preType: widget.preType,
-                    ),
+              widget.waitingForApproval == true && widget.groupId != null
+                  ? Flex(
+                      direction: Axis.horizontal,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Flexible(
+                          child: ButtonPrimary(
+                              label: "Phê duyệt",
+                              handlePress: () async {
+                                handleApprovePost(true);
+                              }),
+                        ),
+                        Flexible(
+                          child: ButtonPrimary(
+                              label: "Từ chối",
+                              handlePress: () async {
+                                handleApprovePost(false);
+                              }),
+                        )
+                      ],
+                    )
+                  : ((widget.isHiddenFooter != null &&
+                              widget.isHiddenFooter == true) ||
+                          currentPost['processing'] == "isProcessing")
+                      ? const SizedBox()
+                      : PostFooter(
+                          post: currentPost,
+                          type: widget.type,
+                          updateDataFunction: updateNewPost,
+                          isShowCommentBox: _isShowCommentBox.value,
+                          preType: widget.preType,
+                        ),
             ],
           ),
         ),
         widget.isHiddenCrossbar != null && widget.isHiddenCrossbar == true
             ? const SizedBox()
             : const CrossBar(
-                height: 5,
+                height: 7,
                 onlyBottom: 12,
                 onlyTop: 6,
+                opacity: 0.2,
               ),
       ],
     );
     // : const SizedBox();
+  }
+
+  handleApprovePost(bool approve) async {
+    // approve : true -> phê duyệt
+    // approve : false -> từ chối phê duyệt
+    final response = await GroupApi().fetchUpdatePendingStatus(
+        widget.groupId,
+        widget.post['id'],
+        {"note": "", "visibility": approve ? "public" : "rejected"});
+    String message = approve
+        ? "Đã phê duyệt bài viết thành công"
+        : "Đã từ chối phê duyệt bài viết thành công";
+    Color messageColor = Colors.green;
+    if (response['status_code'] != null) {
+      message = (response?['content']?['error']).toString();
+      messageColor = red;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+      message,
+      style: TextStyle(color: messageColor),
+    )));
   }
 
   showDeletePostPopup() {

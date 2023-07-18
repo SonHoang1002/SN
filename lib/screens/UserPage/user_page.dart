@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
@@ -117,7 +118,7 @@ class UserPage extends ConsumerStatefulWidget {
   ConsumerState<UserPage> createState() => _UserPageState();
 }
 
-class _UserPageState extends ConsumerState<UserPage> {  
+class _UserPageState extends ConsumerState<UserPage> {
   dynamic id;
   final scrollController = ScrollController();
   dynamic userData = {};
@@ -695,24 +696,29 @@ class _UserPageState extends ConsumerState<UserPage> {
               userAbout: userAbout,
               featureContents: featureContents,
             ),
-          const CrossBar(),
+          const CrossBar(
+            height: 7,
+            opacity: 0.1,
+          ),
           UserPageFriendBlock(user: userData, friends: friend),
-          const CrossBar(),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: const Text(
-              "Bài viết của bạn",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-            ),
+          id == ref.watch(meControllerProvider)[0]['id']
+              ? Column(
+                  children: [
+                    const CrossBar(
+                      height: 7,
+                      opacity: 0.1,
+                    ),
+                    CreatePostButton(
+                      preType: postPageUser,
+                      reloadFunction: _reloadFunction,
+                    ),
+                  ],
+                )
+              : const SizedBox(),
+          const CrossBar(
+            height: 7,
+            opacity: 0.1,
           ),
-          const SizedBox(
-            height: 12.0,
-          ),
-          CreatePostButton(
-            preType: postPageUser,
-            reloadFunction: _reloadFunction,
-          ),
-          const CrossBar(),
           InkWell(
             onTap: () {
               pushToNextScreen(context, UserPhotoVideo(id: id));
@@ -730,7 +736,28 @@ class _UserPageState extends ConsumerState<UserPage> {
               ),
             ),
           ),
-          const CrossBar(),
+          id == ref.watch(meControllerProvider)[0]['id']
+              ? Column(
+                  children: [
+                    const CrossBar(
+                      height: 7,
+                      opacity: 0.1,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: const Text(
+                        "Bài viết của bạn",
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                )
+              : const SizedBox(),
+          const CrossBar(
+            height: 7,
+            opacity: 0.1,
+          ),
           UserPagePinPost(user: userData, pinPosts: pinPost)
         ],
       )),
@@ -740,8 +767,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           return VisibilityDetector(
             key: Key(postUser[index]['id']),
             onVisibilityChanged: (info) {
-              double visibleFraction = info.visibleFraction;
-              if (visibleFraction > 0.6) {
+              if (info.visibleFraction > 0.6) {
                 if (focusCurrentPostIndex.value != postUser[index]['id']) {
                   focusCurrentPostIndex.value = postUser[index]['id'];
                 }

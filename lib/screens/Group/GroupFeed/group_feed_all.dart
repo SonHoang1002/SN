@@ -43,6 +43,7 @@ class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
     final groupMember = ref.watch(groupListControllerProvider).groupMember;
     return Expanded(
         child: SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
           SizedBox(
@@ -115,7 +116,6 @@ class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
                   child: CircularProgressIndicator(),
                 )
               : SizedBox(
-                  height: MediaQuery.of(context).size.height - 230,
                   child: ListView.builder(
                       shrinkWrap: true,
                       controller: scrollController,
