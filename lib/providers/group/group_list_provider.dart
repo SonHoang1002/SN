@@ -1,8 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/group_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/services/notification_service.dart';
 
 @immutable
 class GroupListState {
@@ -89,9 +90,9 @@ class GroupListState {
     List groupAlbum = const [],
     List groupDetailAlbum = const [],
     List groupOther = const [],
-    dynamic groupInviteAdmin = const [],
+    dynamic groupInviteAdmin = const {},
     dynamic groupInviteMember = const [],
-    dynamic groupInviteJoin = const [],
+    dynamic groupInviteJoin = const {},
   }) {
     return GroupListState(
       groupAdmin: groupAdmin,
@@ -137,7 +138,7 @@ class GroupListController extends StateNotifier<GroupListState> {
   }
 
   getListGroupFeed(params) async {
-    List response = await GroupApi().fetchListGroupFeed(params);
+    List response = await GroupApi().fetchListGroupFeed(params) ?? [];
     final newGroup = response
         .where((item) =>
             !state.groupFeed.map((el) => el['id']).contains(item['id']))
@@ -181,10 +182,12 @@ class GroupListController extends StateNotifier<GroupListState> {
     dynamic response = await GroupApi().fetchListGroupAdminMember(params);
     if (response != null) {
       state = state.copyWith(
-        groupAdmin:
-            tab == 'admin' ? checkObjectUniqueInList(state.groupAdmin + response,"id"):  state.groupAdmin,
-        groupMember:
-            tab == 'member' ? checkObjectUniqueInList(state.groupMember + response, "id")  : state.groupMember,
+        groupAdmin: tab == 'admin'
+            ? checkObjectUniqueInList(state.groupAdmin + response, "id")
+            : state.groupAdmin,
+        groupMember: tab == 'member'
+            ? checkObjectUniqueInList(state.groupMember + response, "id")
+            : state.groupMember,
         isMoreGroupAdmin: tab == 'admin' && response.length < limit
             ? false
             : state.isMoreGroupAdmin,
@@ -215,7 +218,6 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupInviteMember: state.groupInviteMember,
         groupInviteJoin: state.groupInviteJoin,
       );
-     
     }
   }
 
@@ -362,7 +364,7 @@ class GroupListController extends StateNotifier<GroupListState> {
   getGroupDetail(id) async {
     resetGroupDetail();
     var response = await GroupApi().fetchGroupDetail(id);
-    if (response.isNotEmpty) {
+    if (response != null) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,
         groupMember: state.groupMember,
@@ -396,7 +398,7 @@ class GroupListController extends StateNotifier<GroupListState> {
   }
 
   getJoinRequest(id) async {
-    List response = await GroupApi().fetchJoinRequest(id)??[];
+    List response = await GroupApi().fetchJoinRequest(id) ?? [];
     if (response.isNotEmpty) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,
@@ -935,7 +937,7 @@ class GroupListController extends StateNotifier<GroupListState> {
   getGroupInvite(params) async {
     var role = params['role'];
     var response = await GroupApi().fetchListInviteGroup(params);
-    if (response != null && response['data'].isNotEmpty) {
+    if (response != null) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,
         groupMember: state.groupMember,
@@ -971,6 +973,7 @@ class GroupListController extends StateNotifier<GroupListState> {
 
   getGroupJoinRequest(params) async {
     var response = await GroupApi().fetchListJoinRequest(params);
+    print("response getGroupJoinRequest ${jsonEncode(response)}");
     if (response != null) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,
@@ -999,7 +1002,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupOther: state.groupOther,
         groupInviteAdmin: state.groupInviteAdmin,
         groupInviteMember: state.groupInviteMember,
-        groupInviteJoin: response['data'],
+        groupInviteJoin: response,
       );
     }
   }

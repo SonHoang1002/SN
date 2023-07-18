@@ -223,14 +223,20 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     group != null
-                                        ? Row(
-                                            children: [
-                                              Text(account['display_name'],
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w600,
-                                                  )),
-                                            ],
+                                        ? InkWell(
+                                            onTap: () {
+                                              pushCustomCupertinoPageRoute(
+                                                  context,
+                                                  UserPageHome(
+                                                    id: account['id']
+                                                        .toString(),
+                                                  ));
+                                            },
+                                            child: Text(account['display_name'],
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                )),
                                           )
                                         : const SizedBox(),
                                     buildSpacer(height: 3),
@@ -256,7 +262,9 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                               )
                                             : const SizedBox(),
                                         widget.post['processing'] !=
-                                                "isProcessing"
+                                                    "isProcessing" &&
+                                                widget.post?['created_at'] !=
+                                                    null
                                             ? Text(
                                                 getRefractorTime(
                                                     widget.post?['created_at']),
@@ -494,7 +502,7 @@ class _BlockNamePostState extends State<BlockNamePost> {
   }
 
   bool checkHasBlueCertification() {
-    if (widget.account?['certified'] == true ||
+    if ((widget.page == null && widget.account?['certified'] == true) ||
         (widget.page != null && widget.page?['certified'] == true)) {
       return true;
     } else {
@@ -535,14 +543,20 @@ class _BlockNamePostState extends State<BlockNamePost> {
   void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
     if (widget.type != "edit_post") {
-      if (widget.post['place']?['id'] != widget.page?['id'] &&
-          currentRouter != '/page') {
-        Navigator.pushNamed(context, '/page', arguments: widget.page);
-      } else if (widget.group != null && widget.group['id'] != null) {
+      if ((widget.post['place']?['id'] != widget.page?['id'] ||
+          widget.post['place']?['id'] != widget.post['page']['id'])) {
+        if (currentRouter != '/page') {
+          Navigator.pushNamed(context, '/page', arguments: widget.page);
+          return;
+        } else {}
+      } else if ((widget.group != null || widget.post?['group'] != null) &&
+          (widget.group?['id'] != null ||
+              widget.post?['group']?['id'] != null)) {
         pushCustomCupertinoPageRoute(
           context,
           GroupDetail(id: widget.group['id']),
         );
+        return;
       } else {
         pushCustomCupertinoPageRoute(context, const UserPageHome(),
             settings: RouteSettings(
@@ -664,10 +678,21 @@ class AvatarPost extends StatelessWidget {
   void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
     if (type != "edit_post") {
-      if (page != null &&
-          post['place']?['id'] != page['id'] &&
-          currentRouter != '/page') {
-        Navigator.pushNamed(context, '/page', arguments: page);
+      if ((page != null || post['page'] != null) &&
+          (post?['place']?['id'] != page['id'] ||
+              post?['place']?['id'] != post?['page']?['id'])) {
+        if (currentRouter != '/page') {
+          Navigator.pushNamed(context, '/page', arguments: page);
+          return;
+        }
+      } else if ((group != null || post['group'] != null)) {
+        pushCustomCupertinoPageRoute(context, GroupDetail(id: group['id']));
+        return;
+      } else {
+        pushCustomCupertinoPageRoute(context, const UserPageHome(),
+            settings: RouteSettings(
+              arguments: {'id': account['id']},
+            ));
       }
     }
   }
@@ -680,38 +705,40 @@ class AvatarPost extends StatelessWidget {
     String pageLink = page != null && page['avatar_media'] != null
         ? page['avatar_media']['preview_url']
         : linkAvatarDefault;
-    return group != null
-        ? SizedBox(
-            width: 50,
-            height: 50,
-            child: Stack(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      image: DecorationImage(
-                          image: NetworkImage(group['banner']?['preview_url'] ??
-                              linkBannerDefault),
-                          onError: (exception, stackTrace) => const SizedBox(),
-                          fit: BoxFit.cover)),
-                ),
-                Container(
-                    margin: const EdgeInsets.only(right: 7, bottom: 7),
-                    child: Avatar(
-                      type: 'group',
-                      path: accountLink,
-                      object: account,
-                    ))
-              ],
-            ),
-          )
-        : InkWell(
-            onTap: () {
-              pushToScreen(context);
-            },
-            child: Padding(
+    return InkWell(
+      onTap: () {
+        pushToScreen(context);
+      },
+      child: group != null
+          ? SizedBox(
+              width: 50,
+              height: 50,
+              child: Stack(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        image: DecorationImage(
+                            image: NetworkImage(group['banner']
+                                    ?['preview_url'] ??
+                                linkBannerDefault),
+                            onError: (exception, stackTrace) =>
+                                const SizedBox(),
+                            fit: BoxFit.cover)),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only(right: 7, bottom: 7),
+                      child: Avatar(
+                        type: 'group',
+                        path: accountLink,
+                        object: account,
+                      ))
+                ],
+              ),
+            )
+          : Padding(
               padding: const EdgeInsets.only(top: 1),
               child: Avatar(
                 path: page != null && post['place']?['id'] != page['id']
@@ -720,7 +747,7 @@ class AvatarPost extends StatelessWidget {
                 object: page,
               ),
             ),
-          );
+    );
   }
 }
 

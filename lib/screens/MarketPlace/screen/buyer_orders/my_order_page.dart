@@ -65,14 +65,14 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
   List<dynamic>? _deliveredList;
   List<dynamic>? _shippingList;
   List<dynamic>? _finishList;
-  List<dynamic>? _canceledList;
+  List<dynamic>? _cancelledList;
   List<dynamic>? _returnList;
   late ScrollController _allScrollController;
   late ScrollController _pendingScrollController;
   late ScrollController _deliveredScrollController;
   late ScrollController _shippingScrollController;
   late ScrollController _finishScrollController;
-  late ScrollController _canceledScrollController;
+  late ScrollController _cancelledScrollController;
   late ScrollController _returnScrollController;
   late ScrollController _suggestScrollController;
 
@@ -82,7 +82,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
   // bool? _deliveredLoading = true;
   // bool? _shippingLoading = true;
   // bool? _finishLoading = true;
-  // bool? _canceledLoading = true;
+  // bool? _cancelledLoading = true;
   // bool? _returnLoading = true;
 
   @override
@@ -93,7 +93,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
     _deliveredScrollController = ScrollController();
     _shippingScrollController = ScrollController();
     _finishScrollController = ScrollController();
-    _canceledScrollController = ScrollController();
+    _cancelledScrollController = ScrollController();
     _returnScrollController = ScrollController();
     _suggestScrollController = ScrollController();
     Future.delayed(Duration.zero, () async {
@@ -127,9 +127,9 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
         _loadMoreFunction(_finishScrollController.offset,
             _finishScrollController.position.maxScrollExtent, "finish");
       });
-      _canceledScrollController.addListener(() {
-        _loadMoreFunction(_canceledScrollController.offset,
-            _canceledScrollController.position.maxScrollExtent, "canceled");
+      _cancelledScrollController.addListener(() {
+        _loadMoreFunction(_cancelledScrollController.offset,
+            _cancelledScrollController.position.maxScrollExtent, "cancelled");
       });
       _returnScrollController.addListener(() {
         _loadMoreFunction(_returnScrollController.offset,
@@ -186,11 +186,11 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
           _finishList = formatDataList(
               [..._finishList!.map((e) => e['data']).toList(), ...response]);
           return;
-        case "canceled":
+        case "cancelled":
           final response = await getBuyerStatusApi(
-              maxId: _canceledList!.last['data']['id'], limit: 10, status: key);
-          _canceledList = formatDataList(
-              [..._canceledList!.map((e) => e['data']).toList(), ...response]);
+              maxId: _cancelledList!.last['data']['id'], limit: 10, status: key);
+          _cancelledList = formatDataList(
+              [..._cancelledList!.map((e) => e['data']).toList(), ...response]);
           return;
         case "return":
           final response = await getBuyerStatusApi(
@@ -212,7 +212,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
     _deliveredList = [];
     _shippingList = [];
     _finishList = [];
-    _canceledList = [];
+    _cancelledList = [];
     _returnList = [];
     _filteredOrderData = [];
     _allScrollController.dispose();
@@ -220,7 +220,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
     _deliveredScrollController.dispose();
     _shippingScrollController.dispose();
     _finishScrollController.dispose();
-    _canceledScrollController.dispose();
+    _cancelledScrollController.dispose();
     _returnScrollController.dispose();
     listSuggestProduct = null;
   }
@@ -261,9 +261,9 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
       _finishList = await getBuyerStatusApi(status: "finish");
       _finishList = formatDataList(_finishList!);
     }
-    if (_canceledList == null) {
-      _canceledList = await getBuyerStatusApi(status: "canceled");
-      _canceledList = formatDataList(_canceledList!);
+    if (_cancelledList == null) {
+      _cancelledList = await getBuyerStatusApi(status: "cancelled");
+      _cancelledList = formatDataList(_cancelledList!);
     }
     if (_returnList == null) {
       _returnList = await getBuyerStatusApi(status: "return");
@@ -272,7 +272,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
     setState(() {
       _isLoading = false;
     });
-   return 0;
+    return 0;
   }
 
   dynamic formatDataList(List<dynamic> dataList) {
@@ -303,7 +303,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
       _deliveredList = null;
       _shippingList = null;
       _finishList = null;
-      _canceledList = null;
+      _cancelledList = null;
       _returnList = null;
     });
   }
@@ -404,8 +404,8 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
                         ? _buildFinishBody()
                         : _buildEmptyMessageAndSuggestList()
                     : buildCircularProgressIndicator(),
-                _canceledList != null
-                    ? _canceledList!.isNotEmpty
+                _cancelledList != null
+                    ? _cancelledList!.isNotEmpty
                         ? _buildCancelBody()
                         : _buildEmptyMessageAndSuggestList()
                     : buildCircularProgressIndicator(),
@@ -447,7 +447,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
   }
 
   Widget _buildCancelBody() {
-    return _buildOrderComponent(_canceledList!, _canceledScrollController);
+    return _buildOrderComponent(_cancelledList!, _cancelledScrollController);
   }
 
   Widget _buildReturnBody() {
@@ -477,8 +477,8 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
             ? _finishList!.length.toString()
             : "0";
       case "cancelled":
-        return _canceledList != null && _canceledList!.isNotEmpty
-            ? _canceledList!.length.toString()
+        return _cancelledList != null && _cancelledList!.isNotEmpty
+            ? _cancelledList!.length.toString()
             : "0";
       case "return":
         return _returnList != null && _returnList!.isNotEmpty
@@ -590,7 +590,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
                           case "cancelled":
                             pushToNextScreen(
                                 context,
-                                CancelledReturnOrderPage(
+                                OrderInformationPage(
                                   orderData: data['data'],
                                 ));
                             return;
@@ -891,7 +891,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
           child: buildTextContent("Đã hủy bởi bạn", false,
               colorWord: greyColor, fontSize: 13),
         ));
-        buttonList.add(_buttonCancel(data));
+        buttonList.add(_buttonRebuy(data));
         break;
       case "return":
         buttonList.add(const SizedBox());
