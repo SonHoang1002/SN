@@ -195,10 +195,7 @@ class _LearnSpaceCourseState extends ConsumerState<LearnSpaceCourse> {
                         padding: EdgeInsets.all(16.0),
                         child: Text('Không có bài học nào!'),
                       )
-            : const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text('Chưa có bài học nào!'),
-                      )
+            : const SizedBox()
       ],
     );
   }

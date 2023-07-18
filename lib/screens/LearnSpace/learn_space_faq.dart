@@ -4,6 +4,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/learn_space_api.dart';
 
 import '../../providers/learn_space/learn_space_provider.dart';
+import '../../theme/colors.dart';
 
 class LearnSpaceFAQ extends ConsumerStatefulWidget {
   final dynamic courseDetail;
@@ -191,6 +192,16 @@ class _LearnSpaceFAQState extends ConsumerState<LearnSpaceFAQ> {
           thickness: 1,
         ),
         _buildPanel(),
+        if(_courseFAQ.isEmpty)
+        Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.only(top: 20),
+          child: Text("Chưa có câu hỏi nào!",
+              style: TextStyle(
+                color: colorWord(context),
+                fontWeight: FontWeight.bold,
+              )),
+        )
       ],
     );
   }
