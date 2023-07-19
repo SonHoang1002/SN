@@ -460,8 +460,10 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const BackIconAppbar(),
-                                Flexible(
+                                Container(
+                                    // color: blueColor,
+                                    child: const BackIconAppbar()),
+                                Expanded(
                                   child: SizedBox(
                                     child: PostHeader(
                                       post: postData,

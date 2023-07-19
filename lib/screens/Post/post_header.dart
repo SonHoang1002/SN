@@ -516,17 +516,15 @@ class _BlockNamePostState extends State<BlockNamePost> {
               widget.group["group_relationship"]?["like"] == true)
           ? const TextSpan()
           : const TextSpan(
-              text: " · Thích", style: TextStyle(color: secondaryColor));
+              text: " · Theo dõi", style: TextStyle(color: secondaryColor));
     } else if (widget.page != null) {
       return widget.post['place']?['id'] != widget.page['id']
           ? (widget.page["page_relationship"] != null &&
                   widget.page["page_relationship"]?["like"] == true)
               ? const TextSpan()
               : const TextSpan(
-                  text: " ·  Thích", style: TextStyle(color: secondaryColor))
+                  text: " ·  Theo dõi", style: TextStyle(color: secondaryColor))
           : TextSpan(text: widget.account['display_name']);
-
-      // return const TextSpan(text: '');
     } else {
       return const TextSpan(text: '');
     }
@@ -543,12 +541,12 @@ class _BlockNamePostState extends State<BlockNamePost> {
   void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
     if (widget.type != "edit_post") {
-      if ((widget.post['place']?['id'] != widget.page?['id'] ||
-          widget.post['place']?['id'] != widget.post['page']['id'])) {
+      if ((widget.post?['place']?['id'] != widget.page?['id'] ||
+          widget.post?['place']?['id'] != widget.post?['page']?['id'])) {
         if (currentRouter != '/page') {
           Navigator.pushNamed(context, '/page', arguments: widget.page);
           return;
-        } else {}
+        }
       } else if ((widget.group != null || widget.post?['group'] != null) &&
           (widget.group?['id'] != null ||
               widget.post?['group']?['id'] != null)) {
@@ -575,86 +573,82 @@ class _BlockNamePostState extends State<BlockNamePost> {
   Widget build(BuildContext context) {
     return Wrap(
       children: [
-        InkWell(
-          onTap: () {
-            pushToScreen(context);
-          },
-          child: RichText(
-            text: TextSpan(
-              text: renderDisplayName(),
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: widget.textColor ??
-                      Theme.of(context).textTheme.displayLarge!.color),
-              children: [
-                const TextSpan(text: ' '),
-                WidgetSpan(
-                    child: checkHasBlueCertification()
-                        ? buildBlueCertifiedWidget(
-                            margin: const EdgeInsets.only(bottom: 2))
-                        : const SizedBox()),
-                widget.statusActivity.isNotEmpty
-                    ? WidgetSpan(
-                        child: ImageCacheRender(
-                          path: widget.statusActivity['url'],
-                          width: 18.0,
-                          height: 18.0,
-                        ),
-                      )
-                    : const TextSpan(text: ''),
-                TextSpan(
-                    text: widget.description,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.normal, fontSize: 15)),
-                widget.mentions.isNotEmpty
-                    ? TextSpan(text: widget.mentions[0]['display_name'])
-                    : const TextSpan(),
-                widget.mentions.isNotEmpty && widget.mentions.length >= 2
-                    ? const TextSpan(
-                        text: ' và ',
-                        style: TextStyle(fontWeight: FontWeight.normal))
-                    : const TextSpan(),
-                widget.mentions.isNotEmpty && widget.mentions.length == 2
-                    ? TextSpan(
-                        text: widget.mentions[1]['display_name'],
-                      )
-                    : const TextSpan(),
-                widget.mentions.isNotEmpty && widget.mentions.length > 2
-                    ? TextSpan(
-                        text: '${widget.mentions.length - 1} người khác',
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            pushCustomCupertinoPageRoute(context,
-                                PageMention(mentions: widget.mentions));
-                          })
-                    : const TextSpan(),
-              ],
-            ),
+        RichText(
+          text: TextSpan(
+            text: renderDisplayName(),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                pushToScreen(context);
+              },
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: widget.textColor ??
+                    Theme.of(context).textTheme.displayLarge!.color),
+            children: [
+              const TextSpan(text: ' '),
+              WidgetSpan(
+                  child: checkHasBlueCertification()
+                      ? buildBlueCertifiedWidget(
+                          margin: const EdgeInsets.only(bottom: 2))
+                      : const SizedBox()),
+              widget.statusActivity.isNotEmpty
+                  ? WidgetSpan(
+                      child: ImageCacheRender(
+                        path: widget.statusActivity['url'],
+                        width: 18.0,
+                        height: 18.0,
+                      ),
+                    )
+                  : const TextSpan(text: ''),
+              TextSpan(
+                  text: widget.description,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.normal, fontSize: 15)),
+              widget.mentions.isNotEmpty
+                  ? TextSpan(text: widget.mentions[0]['display_name'])
+                  : const TextSpan(),
+              widget.mentions.isNotEmpty && widget.mentions.length >= 2
+                  ? const TextSpan(
+                      text: ' và ',
+                      style: TextStyle(fontWeight: FontWeight.normal))
+                  : const TextSpan(),
+              widget.mentions.isNotEmpty && widget.mentions.length == 2
+                  ? TextSpan(
+                      text: widget.mentions[1]['display_name'],
+                    )
+                  : const TextSpan(),
+              widget.mentions.isNotEmpty && widget.mentions.length > 2
+                  ? TextSpan(
+                      text: '${widget.mentions.length - 1} người khác',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          pushCustomCupertinoPageRoute(
+                              context, PageMention(mentions: widget.mentions));
+                        })
+                  : const TextSpan(),
+              (widget.group != null || widget.page != null) && !isFollowing
+                  ? TextSpan(
+                      children: [
+                        renderLikeTextSpan(),
+                      ],
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          setState(() {
+                            isFollowing = true;
+                          });
+                          chooseApi();
+                        },
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: widget.textColor ??
+                              Theme.of(context).textTheme.displayLarge!.color),
+                    )
+                  : const TextSpan()
+            ],
           ),
         ),
-        (widget.group != null || widget.page != null) && !isFollowing
-            ? InkWell(
-                onTap: () {
-                  setState(() {
-                    isFollowing = true;
-                  });
-                  chooseApi();
-                },
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      renderLikeTextSpan(),
-                    ],
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: widget.textColor ??
-                            Theme.of(context).textTheme.displayLarge!.color),
-                  ),
-                ),
-              )
-            : const SizedBox()
       ],
     );
   }
@@ -675,7 +669,7 @@ class AvatarPost extends StatelessWidget {
   final dynamic account;
   final dynamic type;
 
-  void pushToScreen(BuildContext context) {
+  void pushToScreen(BuildContext context) { 
     final currentRouter = ModalRoute.of(context)?.settings.name;
     if (type != "edit_post") {
       if ((page != null || post['page'] != null) &&

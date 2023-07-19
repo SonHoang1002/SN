@@ -20,6 +20,7 @@ import 'package:social_network_app_mobile/screens/Group/GroupUpdate/crop_image.d
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/AvatarStack/avatar_stack.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 
@@ -166,7 +167,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
     return mergedList;
   }
 
-  void handleGetBanner(value) async { 
+  void handleGetBanner(value) async {
     setState(() {
       url = value;
     });
@@ -189,7 +190,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       mergeAndFilter(groupMember, groupFriend),
     );
 
-    final size = MediaQuery.of(context).size; 
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: CustomScrollView(
         shrinkWrap: true,
@@ -213,46 +214,50 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                           fit: BoxFit.cover,
                         ),
                 ),
-                Positioned(
-                  right: 10,
-                  bottom: 0,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      showBarModalBottomSheet(
-                        backgroundColor:
-                            Theme.of(context).scaffoldBackgroundColor,
-                        context: context,
-                        builder: (context) => SizedBox(
-                          height: 200,
-                          child: EditBannerGroup(
-                            handleGetBanner: handleGetBanner,
+                widget.groupDetail?['group_relationship']?['admin']
+                    //  || widget.groupDetail?['group_relationship']?['moderator']
+                    ? Positioned(
+                        right: 10,
+                        bottom: 0,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            showBarModalBottomSheet(
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              context: context,
+                              builder: (context) => SizedBox(
+                                height: 200,
+                                child: EditBannerGroup(
+                                  handleGetBanner: handleGetBanner,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(0, 30),
+                            elevation: 0,
+                            backgroundColor:
+                                Colors.transparent.withOpacity(0.5),
+                            shadowColor: Colors.transparent.withOpacity(0.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          label: const Text(
+                            'Chỉnh sửa',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(0, 30),
-                      elevation: 0,
-                      backgroundColor: Colors.transparent.withOpacity(0.5),
-                      shadowColor: Colors.transparent.withOpacity(0.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    icon: const Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                    label: const Text(
-                      'Chỉnh sửa',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                      )
+                    : const SizedBox(),
               ],
             ),
           ),
@@ -358,43 +363,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: size.width * 0.45,
-                          child: ButtonPrimary(
-                            label: 'Quản lý',
-                            icon: Image.asset(
-                              'assets/groups/managerGroup.png',
-                              width: 16,
-                              height: 16,
-                            ),
-                            handlePress: () {
-                              widget.onTap!();
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        SizedBox(
-                          width: size.width * 0.445,
-                          child: ButtonPrimary(
-                            label: 'Mời',
-                            icon: Padding(
-                              padding: const EdgeInsets.only(bottom: 3.0),
-                              child: Image.asset(
-                                'assets/groups/group.png',
-                                width: 16,
-                                height: 16,
-                              ),
-                            ),
-                            isGrey: true,
-                            handlePress: () {},
-                          ),
-                        ),
-                      ],
-                    ),
+                    _buildButtonActionGroup()
                   ],
                 ),
               ),
@@ -431,112 +400,299 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Divider(
-                  height: 20,
-                  thickness: 1,
-                ),
-                const CreatePostButton(),
-                const Divider(
-                  height: 20,
-                  thickness: 1,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const Padding( 
-                  padding: EdgeInsets.only(
-                    left: 10.0,
-                    right: 10.0,
-                  ),
-                  child: Text(
-                    'Đáng chú ý',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+          checkVisible()
+              ? SliverToBoxAdapter(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(
-                      groupPins.length,
-                      (index) => Container(
-                        width: size.width * 0.85,
-                        height: size.height * 0.62,
-                        margin: const EdgeInsets.only(
+                    children: [
+                      widget.groupDetail?['group_relationship']?['admin'] ||
+                              widget.groupDetail?['group_relationship']
+                                  ?['moderator']
+                          ? const Column(
+                              children: [
+                                Divider(
+                                  height: 20,
+                                  thickness: 1,
+                                ),
+                                CreatePostButton(),
+                              ],
+                            )
+                          : const SizedBox(),
+                      const Divider(
+                        height: 20,
+                        thickness: 1,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              left: 10.0,
+                              right: 10.0,
+                            ),
+                            child: Text(
+                              'Đáng chú ý',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                groupPins.length,
+                                (index) => Container(
+                                  width: size.width * 0.85,
+                                  height: size.height * 0.62,
+                                  margin: const EdgeInsets.only(
+                                    left: 10.0,
+                                    right: 10.0,
+                                  ),
+                                  padding: const EdgeInsets.only(
+                                    top: 15.0,
+                                    bottom: 7.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.3, color: greyColor),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: ClipRect(
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      heightFactor: 1.0,
+                                      widthFactor: 1.0,
+                                      child: Post(
+                                          type: postPageUser,
+                                          isHiddenCrossbar: true,
+                                          isHiddenFooter: true,
+                                          post: groupPins[index],
+                                          haveSuggest: false),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Divider(
+                            height: 20,
+                            thickness: 2,
+                          ),
+                        ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(
                           left: 10.0,
                           right: 10.0,
                         ),
-                        padding: const EdgeInsets.only(
-                          top: 15.0,
-                          bottom: 7.0,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.3, color: greyColor),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        child: ClipRect(
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            heightFactor: 1.0,
-                            widthFactor: 1.0,
-                            child: Post(
-                              type: postPageUser,
-                              isHiddenCrossbar: true,
-                              isHiddenFooter: true,
-                              post: groupPins[index],
-                            ),
+                        child: Text(
+                          'Bài viết',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                    ),
+                      const Divider(
+                        height: 20,
+                        thickness: 2,
+                      ),
+                    ],
                   ),
-                ),
-                const Divider(
-                  height: 20,
-                  thickness: 2,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(
-                    left: 10.0,
-                    right: 10.0,
-                  ),
-                  child: Text(
-                    'Bài viết',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const Divider(
-                  height: 20,
-                  thickness: 2,
-                ),
-              ],
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return Post(
-                  post: postGroup[index],
-                );
-              },
-              childCount: postGroup.length,
-            ),
-          ),
+                )
+              : const SliverToBoxAdapter(),
+          checkVisible()
+              ? postGroup.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: buildTextContent("Chưa có bài viết nào", false,
+                          fontSize: 14, isCenterLeft: false),
+                    )
+                  : SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return Post(
+                              post: postGroup[index], haveSuggest: false);
+                        },
+                        childCount: postGroup.length,
+                      ),
+                    )
+              : SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return const SizedBox();
+                  },
+                  childCount: 0,
+                )),
         ],
       ),
+    );
+  }
+
+  bool checkVisible() {
+    // hiện bài viết trong nhóm
+    // trường hợp nhóm công khai
+    // trường hợp nhóm private và nguowif dungf là (admin ||  member || moder)
+    if ((widget.groupDetail?['is_private']) == false &&
+        (widget.groupDetail?['is_visible'])) {
+      return true;
+    } else if ((widget.groupDetail?['is_private']) &&
+        (widget.groupDetail?['is_visible']) &&
+        (widget.groupDetail?['group_relationship']?['admin'] ||
+            widget.groupDetail?['group_relationship']?['moderator'] ||
+            widget.groupDetail?['group_relationship']?['member'])) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Widget _buildButtonActionGroup() {
+    final size = MediaQuery.of(context).size;
+    //   "group_relationship": {
+    //   "member": false,
+    //   "admin": false,
+    //   "moderator": false,
+    //   "requested": false,
+    //   "invited": false,
+    //   "follow": false,
+    //   "admin_invitation": false,
+    //   "moderator_invitation": false
+    // },
+    // (1) nút quản lý: admin, moderator
+    // (2) nút tham gia: không là admin, moder, member, chưa gửi lời mời tham gia nhóm, chưa đc mời tham gia nhóm
+    // (3) nút xác nhận tham gia: khi nhận được lời mời
+    // (4) nút hủy thma gia: khi đã gửi lời mời tham gia nhóm
+    // (5) nút mời : khi là admin, moder, member
+
+    List listButtons = [const SizedBox(), const SizedBox()];
+    //(1)
+    if (widget.groupDetail?['group_relationship']?['admin'] ||
+        widget.groupDetail?['group_relationship']?['moderator']) {
+      listButtons[0] = (SizedBox(
+        width: size.width * 0.45,
+        child: ButtonPrimary(
+          label: 'Quản lý',
+          icon: Image.asset(
+            'assets/groups/managerGroup.png',
+            width: 16,
+            height: 16,
+          ),
+          handlePress: () {
+            widget.onTap!();
+          },
+        ),
+      ));
+      listButtons[1] = (SizedBox(
+        width: size.width * 0.445,
+        child: ButtonPrimary(
+          label: 'Mời',
+          icon: Padding(
+            padding: const EdgeInsets.only(bottom: 3.0),
+            child: Image.asset(
+              'assets/groups/group.png',
+              width: 16,
+              height: 16,
+            ),
+          ),
+          isGrey: true,
+          handlePress: () {},
+        ),
+      ));
+    }
+    //(2)
+    else if ((!widget.groupDetail?['group_relationship']?['member']) &&
+        (!widget.groupDetail?['group_relationship']?['moderator']) &&
+        (!widget.groupDetail?['group_relationship']?['admin']) &&
+        (!widget.groupDetail?['group_relationship']?['requested']) &&
+        (!widget.groupDetail?['group_relationship']?['invited'])) {
+      listButtons[0] = (SizedBox(
+        width: size.width * 0.44,
+        child: ButtonPrimary(
+          label: 'Tham gia nhóm',
+          handlePress: () {
+            widget.onTap!();
+          },
+        ),
+      ));
+      listButtons[1] = (const SizedBox());
+    }
+    //(3)
+    else if (widget.groupDetail?['group_relationship']?['invited']) {
+      listButtons[0] = (SizedBox(
+        width: size.width * 0.44,
+        child: ButtonPrimary(
+          label: 'Xác nhận',
+          handlePress: () {
+            widget.onTap!();
+          },
+        ),
+      ));
+      listButtons[1] = (const SizedBox());
+    }
+    //(4)
+    else if (widget.groupDetail?['group_relationship']?['requested']) {
+      listButtons[0] = (SizedBox(
+        width: size.width * 0.45,
+        child: ButtonPrimary(
+          label: 'Hủy lời mời',
+          handlePress: () {
+            widget.onTap!();
+          },
+        ),
+      ));
+      listButtons[1] = (const SizedBox());
+    }
+    //(5)
+    else if (widget.groupDetail?['group_relationship']?['invited']) {
+      listButtons[0] = (SizedBox(
+        width: size.width * 0.45,
+        child: ButtonPrimary(
+          label: 'Xác nhận',
+          handlePress: () {
+            widget.onTap!();
+          },
+        ),
+      ));
+      listButtons[1] = (const SizedBox());
+    }
+    //(6)
+     else if (widget.groupDetail?['group_relationship']?['member']) {
+      listButtons[0] = (SizedBox(
+        width: size.width * 0.45,
+        child: ButtonPrimary(
+          label: 'Đã tham gia',
+          handlePress: () {
+            widget.onTap!();
+          },
+        ),
+      ));
+      listButtons[1] = ((SizedBox(
+        width: size.width * 0.45,
+        child: ButtonPrimary(
+          label: 'Mời',
+          handlePress: () {
+            widget.onTap!();
+          },
+        ),
+      )));
+    }
+
+    return Row(
+      children: [
+        listButtons[0],
+        const SizedBox(
+          width: 8,
+        ),
+        listButtons[1],
+      ],
     );
   }
 }

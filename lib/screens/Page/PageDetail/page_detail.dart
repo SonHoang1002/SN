@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +9,6 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/about_page.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/box_quick_update_page.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/feed_page.dart';
@@ -45,6 +46,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
   bool showHeaderTabFixed = false;
   String typeMedia = 'image';
   bool _isLoading = true;
+  bool isUser = false;
 
   @override
   void initState() {
@@ -257,7 +259,10 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   }),
               const SizedBox(height: 8),
               const PagePinPost(),
-              FeedPage(pageData: data),
+              FeedPage(
+                pageData: data,
+                isUser: isUser,
+              ),
             ],
           );
         case 'group_page':
@@ -317,6 +322,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         showModalSwitchRole(context, listSwitch, rolePage, size);
       });
     }
+    print("pageData ${jsonEncode(pageData)}");
 
     return Scaffold(
       appBar: AppBar(
@@ -624,6 +630,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                 ref
                                     .read(pageControllerProvider.notifier)
                                     .switchToRolePage(false);
+                                setState(() {
+                                  isUser = true;
+                                });
                               } else {
                                 ref
                                     .read(pageControllerProvider.notifier)
@@ -676,7 +685,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                       (rolePage && index == 1) ||
                                               (!rolePage && index == 0)
                                           ? FontAwesomeIcons.circleDot
-                                          : FontAwesomeIcons.circle,  
+                                          : FontAwesomeIcons.circle,
                                       size: 16,
                                       color: secondaryColor,
                                     ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/group_item.dart';
 
@@ -39,7 +42,10 @@ class _GroupListDiscoverState extends ConsumerState<GroupListDiscover> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: groupFriend.length,
                   itemBuilder: (context, index) => InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          pushCustomCupertinoPageRoute(context,
+                              GroupDetail(id: groupFriend[index]['id']));
+                        },
                         borderRadius: BorderRadius.circular(10.0),
                         child: GroupItemInkwell(
                           group: groupFriend[index],
@@ -83,12 +89,16 @@ class GroupItemInkwell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(6.0),
-      child: Row(
+      child: Flex(
+        direction: Axis.horizontal,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GroupItem(
-            group: group,
+          Flexible(
+            child: GroupItem(
+              group: group,
+            ),
           ),
+          buildSpacer(width: 5),
           ButtonPrimary(
             label: "Tham gia",
             isPrimary: false,

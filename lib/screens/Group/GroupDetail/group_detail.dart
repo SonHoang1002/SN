@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/home_group.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/manager.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
 import '../../../widgets/back_icon_appbar.dart';
@@ -16,13 +19,14 @@ class GroupDetail extends ConsumerStatefulWidget {
 }
 
 class _GroupDetailState extends ConsumerState<GroupDetail> {
-  var groupDetail = {};
+  dynamic groupDetail;
   final GlobalKey<ScaffoldState> _drawerscaffoldkey =
       GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
-    Future.microtask(
+    Future.delayed(
+      Duration.zero,
       () async {
         await ref
             .read(groupListControllerProvider.notifier)
@@ -75,29 +79,36 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
 
   @override
   Widget build(BuildContext context) {
+    print("groupDetail ${jsonEncode(groupDetail)}");
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
         title: AppBarTitle(
-          title: groupDetail['title'] ?? '',
+          title: groupDetail != null && groupDetail.isNotEmpty
+              ? (groupDetail?['title'])
+              : '',
         ),
         leading: const BackIconAppbar(),
       ),
       body: Scaffold(
         endDrawerEnableOpenDragGesture: false,
         key: _drawerscaffoldkey,
-        endDrawer: SafeArea(
-          child: ManagerDetail(
-            groupDetail: groupDetail,
-          ),
-        ),
-        body: HomeGroup(
-          groupDetail: groupDetail,
-          onTap: () {
-            _drawerscaffoldkey.currentState!.openEndDrawer();
-          },
-        ),
+        endDrawer: groupDetail != null && groupDetail.isNotEmpty
+            ? SafeArea(
+                child: ManagerDetail(
+                  groupDetail: groupDetail,
+                ),
+              )
+            : buildCircularProgressIndicator(),
+        body: groupDetail != null && groupDetail.isNotEmpty
+            ? HomeGroup(
+                groupDetail: groupDetail,
+                onTap: () {
+                  _drawerscaffoldkey.currentState!.openEndDrawer();
+                },
+              )
+            : buildCircularProgressIndicator(),
       ),
     );
   }
