@@ -327,10 +327,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               BorderRadius.circular(6),
                                           border: Border.all(
                                               width: 0.2, color: greyColor)),
-                                      child: Row(
+                                      child: const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Icon(FontAwesomeIcons.user, size: 14),
                                           SizedBox(
                                             width: 5.0,
@@ -369,12 +369,12 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     height: 20,
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
+                  const Padding(
+                    padding: EdgeInsets.only(
                         left: 4.0, bottom: 8.0, right: 4.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Thông tin về địa điểm',
                           textAlign: TextAlign.center,
@@ -432,12 +432,12 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     height: 20,
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
+                  const Padding(
+                    padding: EdgeInsets.only(
                         left: 4.0, bottom: 8.0, right: 4.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Sự kiện gợi ý',
                           textAlign: TextAlign.center,
@@ -757,10 +757,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                           ['event_relationship']
                                                       ['status'] ==
                                                   'interested'
-                                              ? Row(
+                                              ? const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(
                                                           bottom: 3.0),
@@ -801,11 +801,11 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                               'event_relationship']
                                                           ['status'] ==
                                                       'going'
-                                                  ? Row(
+                                                  ? const Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children: const [
+                                                      children: [
                                                         Icon(
                                                             FontAwesomeIcons
                                                                 .circleCheck,
@@ -842,11 +842,11 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                         )
                                                       ],
                                                     )
-                                                  : Row(
+                                                  : const Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children: const [
+                                                      children: [
                                                         Padding(
                                                           padding:
                                                               EdgeInsets.only(
@@ -914,10 +914,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               border: Border.all(
                                                   width: 0.2,
                                                   color: greyColor)),
-                                          child: Row(
+                                          child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.share,
                                                   size: 14),
                                             ],
@@ -943,12 +943,12 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     height: 20,
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
+                  const Padding(
+                    padding: EdgeInsets.only(
                         left: 4.0, bottom: 8.0, right: 4.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Nhóm liên quan',
                           textAlign: TextAlign.center,
@@ -1074,10 +1074,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               border: Border.all(
                                                   width: 0.2,
                                                   color: greyColor)),
-                                          child: Row(
+                                          child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Padding(
                                                 padding: EdgeInsets.only(
                                                     bottom: 3.0),

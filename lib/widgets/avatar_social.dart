@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 class AvatarSocial extends StatelessWidget {
@@ -22,10 +23,16 @@ class AvatarSocial extends StatelessWidget {
     dynamic frame = object?['avatar_media']?['frame'];
     return Stack(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(
-              isGroup != null && isGroup == true ? 10 : width / 2),
-          child: ImageCacheRender(path: path, width: width, height: height),
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: greyColor, width: 0.2),
+              borderRadius: BorderRadius.circular(
+                  isGroup != null && isGroup == true ? 10 : width / 2)),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(
+                  isGroup != null && isGroup == true ? 10 : width / 2),
+              child:
+                  ImageCacheRender(path: path, width: width, height: height)),
         ),
         frame != null
             ? ClipRRect(

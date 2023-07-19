@@ -41,7 +41,7 @@ class AvatarBanner extends StatelessWidget {
             opaque: false);
       },
       child: Hero(
-        tag: post['media_attachments'][0]?['id'],
+        tag: (post?['media_attachments']?[0]?['id']) ?? "0",
         child: postType == postAvatarAccount
             ? Center(
                 child: Container(
@@ -55,7 +55,7 @@ class AvatarBanner extends StatelessWidget {
                       height: size.width * 0.7,
                       object: {
                         'avatar_media': post['media_attachments'].isNotEmpty
-                            ? post['media_attachments'][0]
+                            ? post?['media_attachments']?[0]
                             : {}
                       },
                       path: path),

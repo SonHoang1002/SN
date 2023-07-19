@@ -364,8 +364,12 @@ class _FeedState extends ConsumerState<Feed> {
                   ? SliverToBoxAdapter(
                       child:
                           Center(child: SkeletonCustom().postSkeleton(context)))
-                  : const SliverToBoxAdapter(
-                      child: Center(child: Text('Không còn bài post nào')))
+                  : SliverToBoxAdapter(
+                      child: Container(
+                          margin: const EdgeInsets.only(bottom: 40),
+                          child: buildTextContent(
+                              "Không còn bài viết nào", false,
+                              fontSize: 15, isCenterLeft: false)))
             ])
           : Container(
               alignment: Alignment.center,
