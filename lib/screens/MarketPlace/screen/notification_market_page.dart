@@ -19,9 +19,9 @@ class NotificationMarketPage extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               BackIconAppbar(),
               AppBarTitle(title: "Thông báo"),
               SizedBox()

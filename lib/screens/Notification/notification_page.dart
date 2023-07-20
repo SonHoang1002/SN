@@ -56,10 +56,9 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     List notifications =
-        ref.watch(notificationControllerProvider).notifications; 
-
+        ref.watch(notificationControllerProvider).notifications;
     return Column(
       children: [
         notifications.isNotEmpty
@@ -122,9 +121,9 @@ class NotiItemState extends ConsumerState<NotiItem> {
           .notifications[widget.index]['read'];
     });
   }
-
+  
   @override
-  Widget build(BuildContext context) { 
+   Widget build(BuildContext context) { 
     final item = ref.watch(
       notificationControllerProvider.select(
         (e) => e.notifications[widget.index],

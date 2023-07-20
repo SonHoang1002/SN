@@ -176,6 +176,43 @@ class GroupListController extends StateNotifier<GroupListState> {
     );
   }
 
+  removeApproval(id) async {
+    final newApprovalList = state.waitingApproval
+        .where((item) =>
+            !state.groupFeed.map((el) => el[id]).contains(id))
+        .toList();
+        print("newApprovalList: ${newApprovalList.length}");
+    state = state.copyWith(
+      groupAdmin: state.groupAdmin,
+      groupMember: state.groupMember,
+      isMoreGroupAdmin: state.isMoreGroupAdmin,
+      isMoreGroupMember: state.isMoreGroupMember,
+      memberQuestionList: state.memberQuestionList,
+      groupFeed: state.groupFeed,
+      yourGroup: state.yourGroup,
+      groupDiscover: state.groupDiscover,
+      groupInvitedRequest: state.groupInvitedRequest,
+      groupDetail: state.groupDetail,
+      contentReported: state.contentReported,
+      waitingApproval: newApprovalList,
+      requestMember: state.requestMember,
+      notiApproval: state.notiApproval,
+      groupPost: state.groupPost,
+      groupPins: state.groupPins,
+      groupRoleMember: state.groupRoleMember,
+      groupRoleFriend: state.groupRoleFriend,
+      groupRoleAdmin: state.groupRoleAdmin,
+      groupRoleMorderator: state.groupRoleMorderator,
+      groupImage: state.groupImage,
+      groupAlbum: state.groupAlbum,
+      groupDetailAlbum: state.groupDetailAlbum,
+      groupOther: state.groupOther,
+      groupInviteAdmin: state.groupInviteAdmin,
+      groupInviteMember: state.groupInviteMember,
+      groupInviteJoin: state.groupInviteJoin,
+    );
+  }
+
   getListGroupAdminMember(params) async {
     String tab = params['tab'];
     int limit = params['limit'];
