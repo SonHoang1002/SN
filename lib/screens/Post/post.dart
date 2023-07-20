@@ -39,6 +39,7 @@ class Post extends ConsumerStatefulWidget {
   // trong trường hợp bài post đang chờ duyệt thì bắt buộc phải truyền pageId
   final dynamic groupId;
   final Function? approvalFunction;
+  final bool? haveSuggest;
 
   const Post(
       {Key? key,
@@ -55,6 +56,7 @@ class Post extends ConsumerStatefulWidget {
       this.waitingForApproval = false,
       this.groupId,
       this.approvalFunction,})
+      this.haveSuggest = true})
       : super(key: key);
 
   @override
@@ -125,12 +127,12 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
         Column(
       children: [
         Visibility.maintain(
-          // visible: widget.visible == true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              widget.type != postPageUser &&
-                      currentPost?['account']?['id'] != meData['id']
+              (widget.type != postPageUser &&
+                          currentPost?['account']?['id'] != meData['id']) &&
+                      widget.haveSuggest == true
                   ? PostSuggest(
                       post: currentPost,
                       type: widget.type,
