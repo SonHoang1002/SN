@@ -38,6 +38,7 @@ class Post extends ConsumerStatefulWidget {
   final bool? waitingForApproval;
   // trong trường hợp bài post đang chờ duyệt thì bắt buộc phải truyền pageId
   final dynamic groupId;
+  final Function? approvalFunction;
 
   const Post(
       {Key? key,
@@ -52,7 +53,8 @@ class Post extends ConsumerStatefulWidget {
       this.preType,
       this.updateDataFunction,
       this.waitingForApproval = false,
-      this.groupId})
+      this.groupId,
+      this.approvalFunction,})
       : super(key: key);
 
   @override
@@ -67,7 +69,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
   bool isNeedInitPost = true;
   String warning = "Không có kết nối";
   dynamic meData;
-
+  
   _changeShowCommentBox() {
     setState(() {
       _isShowCommentBox.value = true;
@@ -140,13 +142,13 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                   : const SizedBox(),
               ref.watch(connectivityControllerProvider).connectInternet ==
                           false &&
-                      currentPost['processing'] == "isProcessing"
+                      currentPost?['processing'] == "isProcessing"
                   ? InternetWarningCreatePost(
                       warning: warning,
                       showDeletePostPopup: showDeletePostPopup,
                     )
                   : const SizedBox(),
-              currentPost['processing'] == "isProcessing"
+              currentPost?['processing'] == "isProcessing"
                   ? const CustomLinearProgressIndicator()
                   : const SizedBox(),
               Stack(
@@ -154,7 +156,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                   Column(
                     children: [
                       Container(
-                        padding: currentPost['processing'] == "isProcessing"
+                        padding: currentPost?['processing'] == "isProcessing"
                             ? const EdgeInsets.only(top: 7)
                             : null,
                         child: PostHeader(
@@ -187,7 +189,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                           }),
                     ],
                   ),
-                  currentPost['processing'] == "isProcessing"
+                  currentPost?['processing'] == "isProcessing"
                       ? Container(
                           height: ref
                                       .watch(processingPostController)
@@ -204,7 +206,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                 ],
               ),
               widget.waitingForApproval == true && widget.groupId != null
-                  ? Flex(
+                  ? Padding(padding: EdgeInsets.symmetric(horizontal: 10),child: Flex(
                       direction: Axis.horizontal,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -215,6 +217,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                 handleApprovePost(true);
                               }),
                         ),
+                        const SizedBox(width: 10,),
                         Flexible(
                           child: ButtonPrimary(
                               label: "Từ chối",
@@ -223,10 +226,10 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                               }),
                         )
                       ],
-                    )
+                    ),)
                   : ((widget.isHiddenFooter != null &&
                               widget.isHiddenFooter == true) ||
-                          currentPost['processing'] == "isProcessing")
+                          currentPost?['processing'] == "isProcessing")
                       ? const SizedBox()
                       : PostFooter(
                           post: currentPost,
@@ -262,7 +265,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
         ? "Đã phê duyệt bài viết thành công"
         : "Đã từ chối phê duyệt bài viết thành công";
     Color messageColor = Colors.green;
-    if (response['status_code'] != null) {
+    if (response?['status_code'] != null) {
       message = (response?['content']?['error']).toString();
       messageColor = red;
     }
@@ -271,6 +274,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
       message,
       style: TextStyle(color: messageColor),
     )));
+    widget.approvalFunction !=null?widget.approvalFunction!():null;
   }
 
   showDeletePostPopup() {

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group.dart';
+import 'package:social_network_app_mobile/screens/Group/group_approval.dart';
 
 import '../../constant/common.dart';
 import '../../constant/post_type.dart';
@@ -172,7 +175,8 @@ dynamic renderContent(noti, WidgetRef ref) {
       }
     }
   } else {
-    return {'textNone': ' đã tạo bài viết mới'};
+    return {'textNone': ' đang chờ phê duyệt bài viết tại ',
+      'textBold': '${status['group']?['title']}',};
   }
 }
 
@@ -362,6 +366,9 @@ Widget? nextScreenFromNoti(item) {
     case 'approved_group_join_request':
     // Quản trị viên đã phê duyệt yêu cầu tham gia của bạn. Chào mừng bạn đến với'
     // return GroupDetail()
+    case 'group_pending_status':
+    // Đang chờ phê duyệt bài duyệt
+    return item["status"] != null?  GroupApproval(groupID: item!["status"]?["group"]?["id"]) : const DeletedStatus(type: "Bài viết đang chờ phê duyệt");
 
     default:
       return null;
