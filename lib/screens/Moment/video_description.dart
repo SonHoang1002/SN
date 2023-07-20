@@ -30,8 +30,7 @@ class VideoDescription extends ConsumerStatefulWidget {
 }
 
 class _VideoDescriptionState extends ConsumerState<VideoDescription> {
-  bool _isFollowing = false;
-  bool showTick = false;
+  bool _isFollowing = false; 
   // bool isWidgetExpanded = false;
   bool isEyeVisible = false;
 

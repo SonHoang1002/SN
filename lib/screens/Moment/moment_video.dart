@@ -149,6 +149,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         },
         onDoubleTapDown: (TapDownDetails tapDetails) {
           _handleOnDoubleTap(tapDetails);
+           
         },
         child: Stack(
           children: [

@@ -346,14 +346,27 @@ class _FeedState extends ConsumerState<Feed> {
                                       },
                                       footerTitle: "Xem thêm")
                                   : const SizedBox(),
-                              Post(
-                                  type: feedPost,
-                                  post: posts[index],
-                                  reloadFunction: () {
-                                    setState(() {});
-                                  },
-                                  isFocus: focusCurrentPostIndex.value ==
-                                      posts[index]['id']),
+                              VisibilityDetector(
+                                key: Key(posts[index]['id']),
+                                onVisibilityChanged: (info) {
+                                  double visibleFraction = info.visibleFraction;
+                                  if (visibleFraction > 0.6) {
+                                    if (focusCurrentPostIndex.value !=
+                                        posts[index]['id']) {
+                                      focusCurrentPostIndex.value =
+                                          posts[index]['id'];
+                                    }
+                                  }
+                                },
+                                child: Post(
+                                    type: feedPost,
+                                    post: posts[index],
+                                    reloadFunction: () {
+                                      setState(() {});
+                                    },
+                                    isFocus: focusCurrentPostIndex.value ==
+                                        posts[index]['id']),
+                              )
                             ],
                           ),
                         );

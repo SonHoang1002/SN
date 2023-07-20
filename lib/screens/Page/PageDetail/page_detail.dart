@@ -321,8 +321,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalSwitchRole(context, listSwitch, rolePage, size);
       });
-    }
-    print("pageData ${jsonEncode(pageData)}");
+    } 
 
     return Scaffold(
       appBar: AppBar(
