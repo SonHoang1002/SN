@@ -65,33 +65,31 @@ class _DarkModeSettingState extends State<DarkModeSetting> {
                     "Nếu bạn chọn hệ thống, chúng tôi sẽ tự động điều chỉnh giao diện theo phần cài đặt trên hệ thống thiết bị."),
           ),
           const SizedBox(height: 15),
-          Container(
-            width: size.width - 30,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: Column(
-                children: List.generate(
-                    options.length,
-                    (index) => GestureDetector(
-                          onTap: () async {
-                            // updateDart(options[index]['key']);
-                            var token =
-                                await SecureStorage().getKeyStorage("token");
-                            var newList = await SecureStorage()
-                                .getKeyStorage('dataLogin');
-                            await SecureStorage().saveKeyStorage(
-                                jsonEncode(jsonDecode(newList)
-                                    .toList()
-                                    .map((el) => el['token'] == token
-                                        ? {
-                                            ...el,
-                                            'theme': options[index]['key']
-                                          }
-                                        : el)
-                                    .toList()),
-                                'dataLogin');
+          Column(
+              children: List.generate(
+                  options.length,
+                  (index) => GestureDetector(
+                        onTap: () async {
+                          // updateDart(options[index]['key']);
+                          var token =
+                              await SecureStorage().getKeyStorage("token");
+                          var newList =
+                              await SecureStorage().getKeyStorage('dataLogin');
+                          await SecureStorage().saveKeyStorage(
+                              jsonEncode(jsonDecode(newList)
+                                  .toList()
+                                  .map((el) => el['token'] == token
+                                      ? {...el, 'theme': options[index]['key']}
+                                      : el)
+                                  .toList()),
+                              'dataLogin');
 
-                            themeManager.toggleTheme(options[index]['key']);
-                          },
+                          themeManager.toggleTheme(options[index]['key']);
+                        },
+                        child: Container(
+                          width: size.width - 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10)),
                           child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 12),
@@ -125,8 +123,8 @@ class _DarkModeSettingState extends State<DarkModeSetting> {
                                       : Container()
                                 ],
                               )),
-                        ))),
-          ),
+                        ),
+                      ))),
         ],
       ),
     );

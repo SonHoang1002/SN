@@ -121,7 +121,9 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                               title: "Chỉnh sửa vị trí",
                               onChange: (value) {
                                 setState(() {
-                                  editPage['address'] = value;
+                                  if (value != "" && value != null) {
+                                    editPage['address'] = value;
+                                  }
                                 });
                               })),
                     );
@@ -149,7 +151,9 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                                   "Số điện thoại này sẽ hiển thị trên Trang của bạn. EMSO sẽ không dùng thông tin này để liên hệ bạn",
                               onChange: (value) {
                                 setState(() {
-                                  editPage['phone_number'] = value;
+                                  if (value != "" && value != null) {
+                                    editPage['phone_number'] = value;
+                                  }
                                 });
                               })),
                     );
@@ -186,7 +190,11 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                                   "Email này sẽ hiển thị trên Trang của bạn. EMSO sẽ không dùng thông tin này để liên hệ bạn",
                               onChange: (value) {
                                 setState(() {
-                                  editPage['email'] = value;
+                                  if (value != "" && value != null) {
+                                    if (value != "" && value != null) {
+                                      editPage['email'] = value;
+                                    }
+                                  }
                                 });
                               })),
                     );
@@ -223,7 +231,9 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                               title: "Chỉnh sửa tên Trang",
                               onChange: (value) {
                                 setState(() {
-                                  editPage['title'] = value;
+                                  if (value != "" && value != null) {
+                                    editPage['title'] = value;
+                                  }
                                 });
                               })),
                     );
@@ -256,7 +266,9 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                               },
                               onChange: (value) {
                                 setState(() {
-                                  editPage['username'] = value;
+                                  if (value != "" && value != null) {
+                                    editPage['username'] = value;
+                                  }
                                 });
                               })),
                     );
@@ -277,10 +289,12 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                               label: "Mô tả",
                               field: 'description',
                               initialValue: editPage?['description'],
-                              title: "Chỉnh sửa tên người dùng",
+                              title: "Chỉnh sửa mô tả trang",
                               onChange: (value) {
                                 setState(() {
-                                  editPage['description'] = value;
+                                  if (value != "" && value != null) {
+                                    editPage['description'] = value;
+                                  }
                                 });
                               })),
                     );
