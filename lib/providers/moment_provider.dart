@@ -55,42 +55,41 @@ class MomentController extends StateNotifier<MomentState> {
         momentSuggest: state.momentSuggest);
   }
 
-  updateReaction(reaction, id) async {
+  updateReaction(reaction, id) async { 
+    if (mounted) {
+      var tempDataFollow = state.momentFollow.map((e) { 
+        return e['id'] == id && e['viewer_reaction'] != "love"
+            ? {
+                ...e,
+                'viewer_reaction': reaction,
+                'favourites_count': reaction == 'love'
+                    ? e['favourites_count'] + 1
+                    : e['favourites_count'] - 1
+              }
+            : e;
+      }).toList();
+      var tempDataSuggest = state.momentSuggest
+          .map((e) => e['id'] == id && e['viewer_reaction'] != "love"
+              ? {
+                  ...e,
+                  'viewer_reaction': reaction,
+                  'favourites_count': reaction == 'love'
+                      ? e['favourites_count'] + 1
+                      : e['favourites_count'] - 1
+                }
+              : e)
+          .toList();
+      state = state.copyWith(
+          momentFollow: tempDataFollow, momentSuggest: tempDataSuggest);
+    }
     var response;
     if (reaction == 'love') {
-      response = await MomentApi().favoriteReactionMoment(id);
+      response = await MomentApi()
+          .favoriteReactionMoment(id, {"custom_vote_type": reaction});
     } else if (reaction == null) {
       response = await MomentApi().unfavoriteReactionMoment(id);
-    }
-    if (response['id'] == id) {
-      if (mounted) {
-        var tempDataFollow = state.momentFollow
-            .map((e) => e['id'] == id
-                ? {
-                    ...e,
-                    'viewer_reaction': reaction,
-                    'favourites_count': reaction == 'love'
-                        ? e['favourites_count'] + 1
-                        : e['favourites_count'] - 1
-                  }
-                : e)
-            .toList();
-        var tempDataSuggest = state.momentSuggest
-            .map((e) => e['id'] == id
-                ? {
-                    ...e,
-                    'viewer_reaction': reaction,
-                    'favourites_count': reaction == 'love'
-                        ? e['favourites_count'] + 1
-                        : e['favourites_count'] - 1
-                  }
-                : e)
-            .toList();
-
-        state = state.copyWith(
-            momentFollow: tempDataFollow, momentSuggest: tempDataSuggest);
-      }
-    }
+    } 
+    return response;
   }
 
   getListMomentSuggest(params) async {

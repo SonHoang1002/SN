@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 
 import 'home/PreviewScreen.dart';
@@ -32,10 +33,12 @@ class MaterialAppWithTheme extends ConsumerStatefulWidget {
 }
 
 class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
+  bool _isPlaying = true;
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     final selectedVideo = ref.watch(selectedVideoProvider);
+
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Stack(
@@ -62,20 +65,36 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
                     elevation: 10,
                     child: Row(
                       children: [
-                        Container(
-                          width: 100,
-                          height: 100,
-                          color: Color(int.parse(
-                              '0xFF${selectedVideo['media_attachments'][0]['meta']['small']['average_color'].substring(1)}')),
-                          child: Center(
-                            child: VideoPlayerNoneController(
-                              isShowVolumn: false,
-                              media: selectedVideo['media_attachments'][0],
-                              type: 'miniPlayer',
-                              path: selectedVideo['media_attachments'][0]
-                                  ['remote_url'],
+                        Stack(
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 100,
+                              color: Color(int.parse(
+                                  '0xFF${selectedVideo['media_attachments'][0]['meta']['small']['average_color'].substring(1)}')),
+                              child: Center(
+                                child: VideoPlayerNoneController(
+                                  isShowVolumn: false,
+                                  media: selectedVideo['media_attachments'][0],
+                                  type: 'miniPlayer',
+                                  path: selectedVideo['media_attachments'][0]
+                                      ['remote_url'],
+                                  aspectRatio: 1.0,
+                                  isPause: !_isPlaying,
+                                ),
+                              ),
                             ),
-                          ),
+                            Positioned.fill(child: InkWell(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    _isPlaying = !_isPlaying;
+                                  },
+                                );
+                              },
+                              // child: AnimatedIcon(icon: AnimatedIcons.pause_play,progress: ,)
+                            ))
+                          ],
                         ),
                         Flexible(
                             child: Row(
@@ -93,7 +112,8 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
                                             height: 20,
                                             width: 150,
                                             child: Marquee(
-                                              text: selectedVideo['content'],
+                                              text:
+                                                  "${selectedVideo['content']}   ",
                                               velocity: 30,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.w500),
@@ -135,7 +155,6 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
                                                 ));
                                       }
                                     });
-
                                     ref
                                         .read(selectedVideoProvider.notifier)
                                         .update((state) => null);

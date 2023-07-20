@@ -419,7 +419,7 @@ class _HomeState extends ConsumerState<Home>
   }
 
   _showBottomNavigator(bool value) {
-    if (showBottomNavigatorNotifier.value != value ) {
+    if (showBottomNavigatorNotifier.value != value) {
       setState(() {
         showBottomNavigatorNotifier.value = value;
       });

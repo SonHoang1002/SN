@@ -55,7 +55,7 @@ class Post extends ConsumerStatefulWidget {
       this.updateDataFunction,
       this.waitingForApproval = false,
       this.groupId,
-      this.approvalFunction,})
+      this.approvalFunction,
       this.haveSuggest = true})
       : super(key: key);
 
@@ -71,7 +71,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
   bool isNeedInitPost = true;
   String warning = "Không có kết nối";
   dynamic meData;
-  
+
   _changeShowCommentBox() {
     setState(() {
       _isShowCommentBox.value = true;
@@ -208,27 +208,32 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                 ],
               ),
               widget.waitingForApproval == true && widget.groupId != null
-                  ? Padding(padding: EdgeInsets.symmetric(horizontal: 10),child: Flex(
-                      direction: Axis.horizontal,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Flexible(
-                          child: ButtonPrimary(
-                              label: "Phê duyệt",
-                              handlePress: () async {
-                                handleApprovePost(true);
-                              }),
-                        ),
-                        const SizedBox(width: 10,),
-                        Flexible(
-                          child: ButtonPrimary(
-                              label: "Từ chối",
-                              handlePress: () async {
-                                handleApprovePost(false);
-                              }),
-                        )
-                      ],
-                    ),)
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Flex(
+                        direction: Axis.horizontal,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Flexible(
+                            child: ButtonPrimary(
+                                label: "Phê duyệt",
+                                handlePress: () async {
+                                  handleApprovePost(true);
+                                }),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Flexible(
+                            child: ButtonPrimary(
+                                label: "Từ chối",
+                                handlePress: () async {
+                                  handleApprovePost(false);
+                                }),
+                          )
+                        ],
+                      ),
+                    )
                   : ((widget.isHiddenFooter != null &&
                               widget.isHiddenFooter == true) ||
                           currentPost?['processing'] == "isProcessing")
@@ -276,7 +281,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
       message,
       style: TextStyle(color: messageColor),
     )));
-    widget.approvalFunction !=null?widget.approvalFunction!():null;
+    widget.approvalFunction != null ? widget.approvalFunction!() : null;
   }
 
   showDeletePostPopup() {

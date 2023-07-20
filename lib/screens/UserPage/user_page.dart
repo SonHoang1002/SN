@@ -798,7 +798,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    pinPost = ref.read(postControllerProvider).postsPin;
+    pinPost = ref.read(postControllerProvider).postsPin; 
     return Scaffold(
       appBar: buildAppBar(context),
       body: RefreshIndicator(

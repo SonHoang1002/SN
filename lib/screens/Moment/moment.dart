@@ -156,59 +156,65 @@ class _MomentState extends ConsumerState<Moment>
           this.runAddToCartAnimation = runAddToCartAnimation;
         },
         child: Scaffold(
-            backgroundColor: Colors.black,
+            // backgroundColor: Colors.black,
             body: Stack(children: <Widget>[
-              MomentTabBarView(
-                  tabController: _tabController,
-                  momentFollow: momentFollow,
-                  widget: widget,
-                  ref: ref,
-                  momentSuggests: momentSuggests),
-              if (widget.imageUpload != null && isShowMediaUpload)
-                ImageUploadProcess(
-                    cartKey: cartKey, isFlied: isFlied, widget: widget),
-              if (widget.imageUpload != null)
-                ImageUpload(widgetKey: widgetKey, isFly: isFly, widget: widget),
-              Positioned(
-                  //Place it at the top, and not use the entire screen
-                  top: 0.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: AppBar(
-                    automaticallyImplyLeading: false,
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              widget.isBack != null
-                                  ? const BackButton()
-                                  : InkWell(
-                                      onTap: () =>
-                                          key.currentState!.openDrawer(),
-                                      child: const Padding(
-                                        padding: EdgeInsets.only(top: 0),
-                                        child: Icon(
-                                          Icons.menu,
-                                          color: white,
-                                        ),
+          MomentTabBarView(
+              tabController: _tabController,
+              momentFollow: momentFollow,
+              widget: widget,
+              ref: ref,
+              momentSuggests: momentSuggests),
+          if (widget.imageUpload != null && isShowMediaUpload)
+            ImageUploadProcess(
+                cartKey: cartKey, isFlied: isFlied, widget: widget),
+          if (widget.imageUpload != null)
+            ImageUpload(widgetKey: widgetKey, isFly: isFly, widget: widget),
+          Positioned(
+              //Place it at the top, and not use the entire screen
+              top: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: AppBar(
+                automaticallyImplyLeading: false,
+                title: Container(
+                  color: white.withOpacity(0.1),
+                  padding: const EdgeInsets.symmetric(horizontal: 7),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            widget.isBack != null
+                                ? const BackButton()
+                                : InkWell(
+                                    onTap: () => key.currentState!.openDrawer(),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 0),
+                                      child: Icon(
+                                        Icons.menu,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color,
                                       ),
                                     ),
-                              const SizedBox(
-                                width: 7,
-                              ),
-                            ]),
-                        MomentTabBar(tabController: _tabController),
-                        MomentIconAction(iconAction: iconAction),
-                      ],
-                    ),
-                    backgroundColor: transparent, //No more green
-                    elevation: 0.0, //Shadow gone
-                  ))
-            ])));
+                                  ),
+                            const SizedBox(
+                              width: 7,
+                            ),
+                          ]),
+                      MomentTabBar(tabController: _tabController),
+                      MomentIconAction(iconAction: iconAction),
+                    ],
+                  ),
+                ),
+                backgroundColor: transparent, //No more green
+                elevation: 0.0, //Shadow gone
+              ))
+        ])));
   }
 
   @override
@@ -386,12 +392,14 @@ class MomentTabBar extends StatelessWidget {
         controller: _tabController,
         onTap: (index) {},
         indicator: const BoxDecoration(),
-        indicatorColor: Colors.white,
-        labelColor: Colors.white,
-        unselectedLabelColor: Colors.white.withOpacity(0.5),
+        indicatorColor: Theme.of(context).textTheme.bodyLarge!.color,
+        labelColor: secondaryColor,
+        unselectedLabelStyle: const TextStyle(),
+        unselectedLabelColor: Theme.of(context).textTheme.bodyLarge!.color,
         indicatorSize: TabBarIndicatorSize.label,
         indicatorWeight: 0,
-        labelStyle: GoogleFonts.ibmPlexSans(),
+        labelStyle: GoogleFonts.ibmPlexSans(
+            textStyle: const TextStyle(fontWeight: FontWeight.w700)),
         tabs: const [
           Tab(
             text: "Đang theo dõi",
@@ -422,12 +430,11 @@ class MomentIconAction extends StatelessWidget {
                 margin: const EdgeInsets.only(left: 5),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.grey.withOpacity(0.3)),
-                child: Icon(
-                  iconAction[index]['icon'],
-                  size: 20,
-                  color: white,
-                ),
+                    color: Colors.grey.withOpacity(0.3),
+                    border: Border.all(color: primaryColor, width: 0.2)),
+                child: Icon(iconAction[index]['icon'],
+                    size: 20,
+                    color: Theme.of(context).textTheme.bodyLarge!.color),
               )),
     );
   }
@@ -440,13 +447,14 @@ class NoData extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      color: Colors.black,
+      // color: Colors.black,
       width: size.width,
       height: size.height,
       child: Center(
         child: Text("Không có dữ liệu hiển thị",
             style: GoogleFonts.ibmPlexSans(
-                textStyle: const TextStyle(color: white))),
+                textStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge!.color))),
       ),
     );
   }

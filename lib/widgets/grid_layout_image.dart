@@ -133,6 +133,9 @@ class GridLayoutImage extends ConsumerWidget {
                     )
                   : VideoPlayerHasController(
                       media: medias[0],
+                      isFocus: isFocus,
+                      // (isFocus == true &&
+                      //     currentFocusVideoId == medias[0]['id']),
                       handleAction: () {
                         medias[0]['file']?.path != null
                             ? null
@@ -154,7 +157,6 @@ class GridLayoutImage extends ConsumerWidget {
                       },
                     ));
         }
-
       case 2:
         return GridViewBuilderMedia(
           handlePress: handlePress,
