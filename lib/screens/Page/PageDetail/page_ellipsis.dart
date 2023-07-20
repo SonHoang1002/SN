@@ -206,11 +206,13 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
         updatePageEllipsis();
         break;
       case 'edit':
+        // Lấy data pag mới nếu đã được người dùng edit
+        var pageInfo = ref.read(pageControllerProvider).pageDetail;
         Navigator.push(
             context,
             CupertinoPageRoute(
                 builder: (context) => PageEdit(
-                    data: widget.data,
+                    data: pageInfo ?? widget.data,
                     handleChangeDependencies:
                         widget.handleChangeDependencies)));
         break;

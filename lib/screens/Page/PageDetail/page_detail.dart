@@ -486,9 +486,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                       width: size.width * 0.38,
                       height: 35,
                       child: ButtonPrimary(
+                        colorText:
+                            modeTheme == 'dark' ? Colors.white : Colors.black,
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
-                            : greyColor,
+                            : greyColorOutlined,
                         label: data?['page_relationship']?['like'] == true
                             ? "Đã thích"
                             : "Thích",
@@ -510,14 +512,17 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                     ),
                     const SizedBox(width: 8),
                     SizedBox(
-                      width: size.width * 0.12,
+                      width: size.width * 0.117,
                       height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
-                            : greyColor,
-                        icon: const Icon(FontAwesomeIcons.ellipsis,
-                            size: 16, color: Colors.white),
+                            : greyColorOutlined,
+                        icon: Icon(FontAwesomeIcons.ellipsis,
+                            size: 11,
+                            color: modeTheme == 'dark'
+                                ? Colors.white
+                                : Colors.black),
                         handlePress: () {
                           Navigator.push(
                             context,

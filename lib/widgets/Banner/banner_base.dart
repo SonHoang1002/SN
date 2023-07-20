@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:provider/provider.dart' as pv;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_edit_media_profile.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_frames.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_media.dart';
@@ -85,7 +87,7 @@ class _BannerBaseState extends State<BannerBase> {
                       child: Stack(
                         children: [
                           InkWell(
-                            onTap: () { 
+                            onTap: () {
                               pushCustomVerticalPageRoute(
                                   context,
                                   PostOneMediaDetail(
@@ -314,13 +316,16 @@ class CameraIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = pv.Provider.of<ThemeManager>(context);
     return Container(
       width: 35,
       height: 35,
       decoration: BoxDecoration(
           color: white,
           shape: BoxShape.circle,
-          border: Border.all(width: 1.0, color: Colors.black)),
+          border: Border.all(
+              width: 1.0,
+              color: theme.isDarkMode ? Colors.black : Colors.white)),
       child: const Icon(
         FontAwesomeIcons.camera,
         size: 18,
