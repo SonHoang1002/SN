@@ -510,20 +510,36 @@ class _BlockNamePostState extends State<BlockNamePost> {
     }
   }
 
-  TextSpan renderLikeTextSpan() {
+  TextSpan renderJoinTextSpan() {
     if (widget.group != null) {
       return (widget.group["group_relationship"] != null &&
               widget.group["group_relationship"]?["like"] == true)
           ? const TextSpan()
-          : const TextSpan(
-              text: " · Theo dõi", style: TextStyle(color: secondaryColor));
+          : TextSpan(
+              text: " · Tham gia",
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  setState(() {
+                    isFollowing = true;
+                  });
+                  chooseApi();
+                },
+              style: const TextStyle(color: secondaryColor));
     } else if (widget.page != null) {
       return widget.post['place']?['id'] != widget.page['id']
           ? (widget.page["page_relationship"] != null &&
                   widget.page["page_relationship"]?["like"] == true)
               ? const TextSpan()
-              : const TextSpan(
-                  text: " ·  Theo dõi", style: TextStyle(color: secondaryColor))
+              : TextSpan(
+                  text: " ·  Tham gia",
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      setState(() {
+                        isFollowing = true;
+                      });
+                      chooseApi();
+                    },
+                  style: const TextStyle(color: secondaryColor))
           : TextSpan(text: widget.account['display_name']);
     } else {
       return const TextSpan(text: '');
@@ -630,15 +646,8 @@ class _BlockNamePostState extends State<BlockNamePost> {
               (widget.group != null || widget.page != null) && !isFollowing
                   ? TextSpan(
                       children: [
-                        renderLikeTextSpan(),
+                        renderJoinTextSpan(),
                       ],
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          setState(() {
-                            isFollowing = true;
-                          });
-                          chooseApi();
-                        },
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -669,7 +678,7 @@ class AvatarPost extends StatelessWidget {
   final dynamic account;
   final dynamic type;
 
-  void pushToScreen(BuildContext context) { 
+  void pushToScreen(BuildContext context) {
     final currentRouter = ModalRoute.of(context)?.settings.name;
     if (type != "edit_post") {
       if ((page != null || post['page'] != null) &&

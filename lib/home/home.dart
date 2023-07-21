@@ -50,7 +50,7 @@ class _HomeState extends ConsumerState<Home>
   Size? size;
   ThemeManager? theme;
   ValueNotifier<bool?> isDisconnected = ValueNotifier(null);
-  late WebSocketChannel webSocketChannel;
+    WebSocketChannel? webSocketChannel;
   StreamSubscription<dynamic>? subscription;
   double valueFromPercentageInRange(
       {required final double min, max, percentage}) {
@@ -108,7 +108,7 @@ class _HomeState extends ConsumerState<Home>
   }
 
   void listenToWebSocket() {
-    subscription = webSocketChannel.stream.listen(
+    subscription = webSocketChannel?.stream.listen(
       (data) {
         if (data.contains('42')) {
           int startIndex = data.indexOf('[') + 1;
@@ -148,7 +148,7 @@ class _HomeState extends ConsumerState<Home>
   }
 
   void cancelListening() {
-    webSocketChannel.sink.close();
+    webSocketChannel?.sink.close();
   }
 
   dynamic renderContent(noti) {

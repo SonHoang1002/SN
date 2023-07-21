@@ -10,6 +10,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/helper/split_link.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -73,8 +74,6 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   bool isHiddenAction = true;
   bool isDragVideo = false;
   bool isDismissed = false;
-
-  final GlobalKey _animationKey = GlobalKey();
   bool iconFlying = false;
   Offset? offset;
   // bool isShowAnimatedReactionIcon = false;
@@ -143,7 +142,7 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                   .chewieController!
                   .pause();
               Future.delayed(Duration.zero, () {
-                Navigator.pop(context);
+                popToPreviousScreen(context);
               });
             },
             child: Hero(
@@ -199,7 +198,7 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
     }
   }
 
-  handleReaction(dynamic react) async { 
+  handleReaction(dynamic react) async {
     final viewerReaction = (widget.post?['viewer_reaction'] ?? "");
     var newPost = watchData;
     List newFavourites = newPost['reactions'];

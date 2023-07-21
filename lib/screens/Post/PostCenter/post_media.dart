@@ -3,6 +3,7 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Post/post_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/post_mutiple_media_detail.dart';
 import 'package:social_network_app_mobile/screens/Post/post_one_media_detail.dart';
+import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 
@@ -78,20 +79,32 @@ class _PostMediaState extends State<PostMedia> {
         widget.showCmtBoxFunction != null ? widget.showCmtBoxFunction!() : null;
         int initialIndex =
             medias.indexWhere((element) => element['id'] == media['id']);
-        pushCustomCupertinoPageRoute(
-            context,
-            PostMutipleMediaDetail(
-                post: widget.post,
-                initialIndex: initialIndex,
-                preType: widget.preType,
-                updateDataFunction: widget.updateDataFunction
-                // reloadPostFunction: () {
-                //     WidgetsBinding.instance.addPostFrameCallback((_) {
-                //       reloadFunction != null ? reloadFunction!() : null;
-                //     });
-                //   }
-                ),
-            opaque: false);
+        if (medias[initialIndex]['type'] == "video") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => WatchDetail(
+                        post: widget.post,
+                        media: medias[initialIndex],
+                        type: widget.type,
+                        preType: widget.preType,
+                      )));
+        } else {
+          pushCustomCupertinoPageRoute(
+              context,
+              PostMutipleMediaDetail(
+                  post: widget.post,
+                  initialIndex: initialIndex,
+                  preType: widget.preType,
+                  updateDataFunction: widget.updateDataFunction
+                  // reloadPostFunction: () {
+                  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+                  //       reloadFunction != null ? reloadFunction!() : null;
+                  //     });
+                  //   }
+                  ),
+              opaque: false);
+        }
       } else {
         widget.showCmtBoxFunction != null ? widget.showCmtBoxFunction!() : null;
         pushCustomCupertinoPageRoute(

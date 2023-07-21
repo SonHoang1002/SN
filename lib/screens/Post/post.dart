@@ -130,9 +130,13 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              (widget.type != postPageUser &&
-                          currentPost?['account']?['id'] != meData['id']) &&
-                      widget.haveSuggest == true
+              ((widget.type != postPageUser &&
+                              currentPost?['account']?['id'] != meData['id']) &&
+                          widget.haveSuggest == true) ||
+                      (currentPost?['group'] == null ||
+                          currentPost?['group'].isEmpty) ||
+                      (currentPost?['page'] == null ||
+                          currentPost?['page'].isEmpty)
                   ? PostSuggest(
                       post: currentPost,
                       type: widget.type,
@@ -164,8 +168,9 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                         child: PostHeader(
                             post: currentPost,
                             type: widget.type,
-                            // isHaveAction:
-                            //     widget.type != postPageUser ? !isHaveSuggest : true,
+                            isHaveAction: widget.type != postPageUser
+                                ? !isHaveSuggest
+                                : true,
                             reloadFunction: () {
                               setState(() {});
                             },

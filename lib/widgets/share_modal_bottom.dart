@@ -138,8 +138,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
         default:
           res = await PostApi().createStatus(renderParams(widget.type));
           break;
-      }
-      print("res: ${jsonEncode(res)}");
+      } 
       if(checkShareGroupAdmin){
         showSnackbar(context, 'Nhóm chỉ cho phép ADMIN đăng bài');
       }

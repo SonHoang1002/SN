@@ -102,16 +102,16 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       });
       // change count to
       final currentPost = ref.watch(currentPostControllerProvider).currentPost;
-      if (currentPost['media_attachments'].isNotEmpty &&
+      if (currentPost?['media_attachments'].isNotEmpty &&
           widget.indexImagePost != null &&
           newList.isNotEmpty) {
         int sumComment = postComment.length;
         newList.forEach((element) {
           sumComment += int.parse(
-              (element['replies_count'] ?? element['replies_total'])
+              ((element?['replies_count']) ?? (element?['replies_total']))
                   .toString());
         });
-        currentPost['media_attachments'][widget.indexImagePost]['status_media']
+        currentPost?['media_attachments']?[widget.indexImagePost]?['status_media']?
             ['replies_total'] = sumComment;
         ref
             .read(currentPostControllerProvider.notifier)
@@ -130,9 +130,9 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       final preCardData = await getPreviewUrl(previewLinkText);
       final cardData = preCardData != null
           ? {
-              "url": preCardData[0]['link'],
-              "title": preCardData[0]['title'],
-              "description": preCardData[0]['description'],
+              "url": preCardData?[0]?['link'],
+              "title": preCardData?[0]?['title'],
+              "description": preCardData?[0]?['description'],
               "type": "link",
               "author_name": "",
               "author_url": "",

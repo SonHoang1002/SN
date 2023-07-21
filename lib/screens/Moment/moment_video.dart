@@ -100,7 +100,7 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         .then((value) => _animationController.repeat(max: 0));
     Future.delayed(Duration.zero, () {
       ref.read(momentControllerProvider.notifier).updateReaction(
-            widget.moment['viewer_reaction'] == 'love' ? null : 'love',
+            'love',
             widget.moment['id'],
           );
     });
@@ -149,7 +149,6 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         },
         onDoubleTapDown: (TapDownDetails tapDetails) {
           _handleOnDoubleTap(tapDetails);
-           
         },
         child: Stack(
           children: [

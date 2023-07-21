@@ -131,10 +131,10 @@ class _VideoPlayerHasControllerState
   @override
   Widget build(BuildContext context) {
     dynamic selectedVideo = ref.watch(selectedVideoProvider);
-    Size? sizeOfVideo;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      sizeOfVideo = globalKey.currentContext?.size;
-    });
+    // Size? sizeOfVideo;
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   sizeOfVideo = globalKey.currentContext?.size;
+    // });
     return VisibilityDetector(
         onVisibilityChanged: (visibilityInfo) {
           // if (widget.isFocus!) {
@@ -145,15 +145,15 @@ class _VideoPlayerHasControllerState
                 if (chewieController == null) return;
                 if (isVisible) {
                   if (selectedVideo == null) {
-                    chewieController!.videoPlayerController.play();
+                    chewieController?.videoPlayerController.play();
                   } else {
-                    chewieController!.videoPlayerController.pause();
+                    chewieController?.videoPlayerController.pause();
                   }
                 }
               }
             });
           } else {
-            chewieController!.videoPlayerController.pause();
+            chewieController?.videoPlayerController.pause();
           }
           // }
         },
@@ -188,7 +188,7 @@ class _VideoPlayerHasControllerState
                                       (widget.media['preview_url'] ??
                                           widget.media['preview_remote_url']),
                                       width: MediaQuery.of(context).size.width,
-                                      height: sizeOfVideo?.height,
+                                      // height: sizeOfVideo?.height,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -244,15 +244,24 @@ class _VideoPlayerHasControllerState
                                   ))
                                 ],
                               )
-                        : ExtendedImage.network(
-                            (widget.media['preview_remote_url'] ??
-                                widget.media['preview_url']),
-                            width: MediaQuery.of(context).size.width,
-                          ))
-                : ExtendedImage.network(
-                    (widget.media['preview_remote_url'] ??
-                        widget.media['preview_url']),
-                    width: MediaQuery.of(context).size.width,
+                        : Positioned.fill(
+                            child: ExtendedImage.network(
+                              (widget.media['preview_url'] ??
+                                  widget.media['preview_remote_url']),
+                              width: MediaQuery.of(context).size.width,
+                              // height: sizeOfVideo?.height,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                  )
+                : Positioned.fill(
+                    child: ExtendedImage.network(
+                      (widget.media['preview_url'] ??
+                          widget.media['preview_remote_url']),
+                      width: MediaQuery.of(context).size.width,
+                      // height: sizeOfVideo?.height,
+                      fit: BoxFit.cover,
+                    ),
                   ),
             // const Positioned.fill(
             //   child: Align(
