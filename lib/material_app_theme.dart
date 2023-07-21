@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 
@@ -34,10 +35,23 @@ class MaterialAppWithTheme extends ConsumerStatefulWidget {
 
 class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
   bool _isPlaying = true;
+  bool startApp = true;
+
+  Future<void> getLocalTheme(ThemeManager themeData) async {
+    var theme = await SecureStorage().getKeyStorage('theme');
+    if (mounted) {
+      themeData.toggleTheme(theme);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
     final selectedVideo = ref.watch(selectedVideoProvider);
+    if (startApp) {
+      getLocalTheme(theme);
+      startApp = false;
+    }
 
     return Directionality(
       textDirection: TextDirection.ltr,
