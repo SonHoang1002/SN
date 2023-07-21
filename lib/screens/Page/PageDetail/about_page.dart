@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/expandable_text.dart';
 
-class AboutPage extends StatefulWidget {
+class AboutPage extends ConsumerStatefulWidget {
   final dynamic aboutPage;
   final bool? isQuickShow;
   final Function? changeMenuSelected;
@@ -13,12 +15,54 @@ class AboutPage extends StatefulWidget {
       {super.key, this.aboutPage, this.isQuickShow, this.changeMenuSelected});
 
   @override
-  State<AboutPage> createState() => _AboutPageState();
+  ConsumerState<AboutPage> createState() => _AboutPageState();
 }
 
-class _AboutPageState extends State<AboutPage> {
+class _AboutPageState extends ConsumerState<AboutPage> {
   List listAboutPage = [];
   bool? quickShow = false;
+
+  setDataList() {
+    var pageDetail = ref.read(pageControllerProvider).pageDetail;
+    listAboutPage = [
+      {
+        'key': 'description',
+        'title': 'Mô tả',
+        'subtitle': pageDetail['description'],
+        'icon': Icons.info
+      },
+      {
+        'key': 'like',
+        'title': 'Lượt thích',
+        'subtitle': pageDetail['like_count'].toString(),
+        'icon': FontAwesomeIcons.solidThumbsUp
+      },
+      {
+        'key': 'follow',
+        'title': 'Lượt theo dõi',
+        'subtitle': pageDetail['follow_count'].toString(),
+        'icon': FontAwesomeIcons.boxArchive
+      },
+      {
+        'key': 'email',
+        'title': 'Email',
+        'subtitle': pageDetail['email'],
+        'icon': Icons.email
+      },
+      {
+        'key': 'website',
+        'title': 'Website',
+        'subtitle': pageDetail['website'],
+        'icon': Icons.link
+      },
+      {
+        'key': 'phone',
+        'title': 'Số điện thoại',
+        'subtitle': pageDetail['phone_number'],
+        'icon': Icons.phone
+      },
+    ];
+  }
 
   @override
   void initState() {
@@ -26,50 +70,14 @@ class _AboutPageState extends State<AboutPage> {
     if (mounted) {
       setState(() {
         quickShow = widget.isQuickShow;
-        listAboutPage = [
-          {
-            'key': 'description',
-            'title': 'Mô tả',
-            'subtitle': widget.aboutPage['description'],
-            'icon': Icons.info
-          },
-          {
-            'key': 'like',
-            'title': 'Lượt thích',
-            'subtitle': widget.aboutPage['like_count'].toString(),
-            'icon': FontAwesomeIcons.solidThumbsUp
-          },
-          {
-            'key': 'follow',
-            'title': 'Lượt theo dõi',
-            'subtitle': widget.aboutPage['follow_count'].toString(),
-            'icon': FontAwesomeIcons.boxArchive
-          },
-          {
-            'key': 'email',
-            'title': 'Email',
-            'subtitle': widget.aboutPage['email'],
-            'icon': Icons.email
-          },
-          {
-            'key': 'website',
-            'title': 'Website',
-            'subtitle': widget.aboutPage['website'],
-            'icon': Icons.link
-          },
-          {
-            'key': 'phone',
-            'title': 'Số điện thoại',
-            'subtitle': widget.aboutPage['phone_number'],
-            'icon': Icons.phone
-          },
-        ];
+        setDataList();
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    setDataList();
     return Container(
       padding: EdgeInsets.fromLTRB(12, 12, 12, quickShow == true ? 0 : 50),
       child: Column(

@@ -160,7 +160,7 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
                                                     colorButton:
                                                         theme.isDarkMode
                                                             ? greyColor.shade800
-                                                            : greyColor,
+                                                            : greyColorOutlined,
                                                     fontSize: 13,
                                                     handlePress: () {
                                                       ref
