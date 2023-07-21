@@ -101,24 +101,37 @@ class _GroupApproval extends ConsumerState<GroupApproval> {
                   ),
                   Container(
                     height: MediaQuery.of(context).size.height - 98,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: listWaitingApproval!.length,
-                        itemBuilder: (context, index) =>
-                            // Kiểm tra điều kiện nếu type bằng "group_pending_status"
-                            Post(
-                              waitingForApproval: true,
-                              post: listWaitingApproval![index],
-                              groupId: widget.groupID,
-                              data: listWaitingApproval,
-                              approvalFunction: () {
-                                removeItem(index);
-                                ref
-                                    .read(groupListControllerProvider.notifier)
-                                    .removeApproval(
-                                        listWaitingApproval![index]["id"]);
-                              },
-                            )),
+                    child: listWaitingApproval!.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: listWaitingApproval!.length,
+                            itemBuilder: (context, index) =>
+                                // Kiểm tra điều kiện nếu type bằng "group_pending_status"
+                                Post(
+                                  waitingForApproval: true,
+                                  post: listWaitingApproval![index],
+                                  groupId: widget.groupID,
+                                  data: listWaitingApproval,
+                                  approvalFunction: () {
+                                    if (listWaitingApproval!.length >= 0) {
+                                      ref
+                                          .read(groupListControllerProvider
+                                              .notifier)
+                                          .removeApproval(
+                                              listWaitingApproval![index]
+                                                  ["id"]);
+                                      removeItem(index);
+                                    }
+                                  },
+                                ))
+                        : Container(
+                            alignment: Alignment.center,
+                            child: Text("Hiện không có bài viết nào chờ phê duyệt",
+                                style: TextStyle(
+                                  color: colorWord(context),
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
                   )
                 ],
               )
