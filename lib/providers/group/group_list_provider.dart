@@ -177,11 +177,8 @@ class GroupListController extends StateNotifier<GroupListState> {
   }
 
   removeApproval(id) async {
-    final newApprovalList = state.waitingApproval
-        .where((item) =>
-            !state.groupFeed.map((el) => el[id]).contains(id))
-        .toList();
-        print("newApprovalList: ${newApprovalList.length}");
+    final newApprovalList =
+        state.waitingApproval.where((item) => item["id"] != id).toList();
     state = state.copyWith(
       groupAdmin: state.groupAdmin,
       groupMember: state.groupMember,

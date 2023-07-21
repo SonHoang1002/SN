@@ -55,7 +55,7 @@ class Post extends ConsumerStatefulWidget {
       this.updateDataFunction,
       this.waitingForApproval = false,
       this.groupId,
-      this.approvalFunction,})
+      this.approvalFunction,
       this.haveSuggest = true})
       : super(key: key);
 

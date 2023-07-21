@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -115,24 +117,36 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
 
   Future handleShare(data, context) async {
     try {
+      var res;
+      bool checkShareGroupAdmin = false;
       switch (renderShareType) {
         case 'group':
-          var res = await PostApi().createStatus({
+          res = await PostApi().createStatus({
             "group_id": shareGroupSelected['id'],
             ...renderParams(widget.type),
           });
+          if (res["group"]["post_approval_setting"].toString() != "NONE") {
+            checkShareGroupAdmin = true;
+          }
           break;
         case 'friend':
-          var res = await PostApi().createStatus({
+          res = await PostApi().createStatus({
             "target_account_id": shareFriendSelected['id'],
             ...renderParams(widget.type),
           });
           break;
         default:
-          var res = await PostApi().createStatus(renderParams(widget.type));
+          res = await PostApi().createStatus(renderParams(widget.type));
           break;
       }
-      showSnackbar(context, 'chia sẻ thành công');
+      print("res: ${jsonEncode(res)}");
+      if(checkShareGroupAdmin){
+        showSnackbar(context, 'Nhóm chỉ cho phép ADMIN đăng bài');
+      }
+      else{
+        showSnackbar(context, 'chia sẻ thành công');
+      }
+      checkShareGroupAdmin = false;
     } on DioError catch (e) {
       showSnackbar(
         context,
