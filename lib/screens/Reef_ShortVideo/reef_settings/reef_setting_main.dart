@@ -39,7 +39,7 @@ List reefSelections = [
     "icon": "assets/icons/plus_favorite.png",
     "title": "Kết nối lại",
     "content":
-        "kết nối lại với những người, Trang và Nhóm mà bạn đã bỏ theo dỡi"
+        "kết nối lại với những người, Trang và Nhóm mà bạn đã bỏ theo dõi"
   },
 ];
 

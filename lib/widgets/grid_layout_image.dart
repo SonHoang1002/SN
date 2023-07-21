@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +12,7 @@ import 'package:social_network_app_mobile/widgets/gridview_builder_media.dart';
 
 import '../theme/colors.dart';
 
-class GridLayoutImage extends ConsumerWidget {
+class GridLayoutImage extends ConsumerStatefulWidget {
   final List medias;
   final Function handlePress;
   final dynamic post;
@@ -32,6 +34,13 @@ class GridLayoutImage extends ConsumerWidget {
       this.onEnd,
       this.preType})
       : super(key: key);
+
+  @override
+  ConsumerState<GridLayoutImage> createState() => _GridLayoutImageState();
+}
+
+class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
+  List listStatusMedia = [];
 
   checkIsImage(media) {
     return media['type'] == 'image' ? true : false;
@@ -62,7 +71,7 @@ class GridLayoutImage extends ConsumerWidget {
                   : 1,
               child: GestureDetector(
                 onTap: () {
-                  handlePress(medias[0]);
+                  widget.handlePress(medias[0]);
                 },
                 child: Column(
                   children: [
@@ -126,71 +135,72 @@ class GridLayoutImage extends ConsumerWidget {
                   ? VideoPlayerNoneController(
                       path: medias[0]['file'].path,
                       type: "local",
-                      isPause: (isFocus != true ||
-                          currentFocusVideoId != medias[0]['id']),
-                      onEnd: onEnd != null ? onEnd!() : null,
+                      isPause: (widget.isFocus != true ||
+                          widget.currentFocusVideoId != medias[0]['id']),
+                      onEnd: widget.onEnd != null ? widget.onEnd!() : null,
                       // removeObserver: false
                     )
                   : VideoPlayerHasController(
                       media: medias[0],
-                      isFocus: isFocus,
+                      isFocus: (widget.isFocus == true),
                       // (isFocus == true &&
                       //     currentFocusVideoId == medias[0]['id']),
                       handleAction: () {
                         medias[0]['file']?.path != null
                             ? null
-                            : post != null &&
-                                    post["post_type"] != null &&
-                                    post["post_type"] == 'moment'
+                            : widget.post != null &&
+                                    widget.post["post_type"] != null &&
+                                    widget.post["post_type"] == 'moment'
                                 ? Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Moment(
-                                              dataAdditional: post,
+                                              dataAdditional: widget.post,
                                               isBack: true,
                                             )))
                                 : Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => WatchSuggest(
-                                            post: post, media: medias[0])));
+                                            post: widget.post,
+                                            media: medias[0])));
                       },
                     ));
         }
       case 2:
         return GridViewBuilderMedia(
-          handlePress: handlePress,
+          handlePress: widget.handlePress,
           crossAxisCount: getAspectMedia(medias[0]) > 1 ? 1 : 2,
           aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
           medias: medias,
-          onEnd: onEnd,
-          isFocus: isFocus,
-          currentFocusVideoId: currentFocusVideoId,
+          onEnd: widget.onEnd,
+          isFocus: widget.isFocus,
+          currentFocusVideoId: widget.currentFocusVideoId,
         );
       case 3:
         if (getAspectMedia(medias[0]) > 1) {
           return Column(
             children: [
               GridViewBuilderMedia(
-                handlePress: handlePress,
+                handlePress: widget.handlePress,
                 crossAxisCount: 1,
                 aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
                 medias: medias.sublist(0, 1),
-                onEnd: onEnd,
-                isFocus: isFocus,
-                currentFocusVideoId: currentFocusVideoId,
+                onEnd: widget.onEnd,
+                isFocus: widget.isFocus,
+                currentFocusVideoId: widget.currentFocusVideoId,
               ),
               const SizedBox(
                 height: 3,
               ),
               GridViewBuilderMedia(
-                handlePress: handlePress,
+                handlePress: widget.handlePress,
                 crossAxisCount: 2,
                 aspectRatio: 1,
                 medias: medias.sublist(1, 3),
-                onEnd: onEnd,
-                isFocus: isFocus,
-                currentFocusVideoId: currentFocusVideoId,
+                onEnd: widget.onEnd,
+                isFocus: widget.isFocus,
+                currentFocusVideoId: widget.currentFocusVideoId,
               ),
             ],
           );
@@ -199,15 +209,15 @@ class GridLayoutImage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: size.width * 0.65 - 3,
+                width: size.width * 0.65 - 4,
                 child: GridViewBuilderMedia(
-                  handlePress: handlePress,
+                  handlePress: widget.handlePress,
                   crossAxisCount: 1,
                   aspectRatio: 0.682,
                   medias: medias.sublist(0, 1),
-                  onEnd: onEnd,
-                  isFocus: isFocus,
-                  currentFocusVideoId: currentFocusVideoId,
+                  onEnd: widget.onEnd,
+                  isFocus: widget.isFocus,
+                  currentFocusVideoId: widget.currentFocusVideoId,
                 ),
               ),
               const SizedBox(
@@ -216,13 +226,13 @@ class GridLayoutImage extends ConsumerWidget {
               SizedBox(
                 width: size.width * 0.35,
                 child: GridViewBuilderMedia(
-                  handlePress: handlePress,
+                  handlePress: widget.handlePress,
                   crossAxisCount: 1,
                   aspectRatio: 0.75,
                   medias: medias.sublist(1, 3),
-                  onEnd: onEnd,
-                  isFocus: isFocus,
-                  currentFocusVideoId: currentFocusVideoId,
+                  onEnd: widget.onEnd,
+                  isFocus: widget.isFocus,
+                  currentFocusVideoId: widget.currentFocusVideoId,
                 ),
               )
             ],
@@ -232,30 +242,30 @@ class GridLayoutImage extends ConsumerWidget {
       case 4:
         if (getAspectMedia(medias[0]) == 1) {
           return GridViewBuilderMedia(
-            handlePress: handlePress,
+            handlePress: widget.handlePress,
             crossAxisCount: 2,
             aspectRatio: 1,
             medias: medias,
             mediasNoneCheck: medias,
-            onEnd: onEnd,
-            isFocus: isFocus,
-            currentFocusVideoId: currentFocusVideoId,
+            onEnd: widget.onEnd,
+            isFocus: widget.isFocus,
+            currentFocusVideoId: widget.currentFocusVideoId,
           );
         } else if (getAspectMedia(medias[0]) < 0.67) {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: size.width * 0.65 - 3,
+                width: size.width * 0.65 - 4,
                 child: GridViewBuilderMedia(
-                  handlePress: handlePress,
+                  handlePress: widget.handlePress,
                   crossAxisCount: 1,
                   aspectRatio: 0.639,
                   medias: medias.sublist(0, 1),
                   mediasNoneCheck: medias,
-                  onEnd: onEnd,
-                  isFocus: isFocus,
-                  currentFocusVideoId: currentFocusVideoId,
+                  onEnd: widget.onEnd,
+                  isFocus: widget.isFocus,
+                  currentFocusVideoId: widget.currentFocusVideoId,
                 ),
               ),
               const SizedBox(
@@ -264,14 +274,14 @@ class GridLayoutImage extends ConsumerWidget {
               SizedBox(
                 width: size.width * 0.35,
                 child: GridViewBuilderMedia(
-                  handlePress: handlePress,
+                  handlePress: widget.handlePress,
                   crossAxisCount: 1,
                   aspectRatio: 1.06,
                   medias: medias.sublist(1),
                   mediasNoneCheck: medias,
-                  onEnd: onEnd,
-                  isFocus: isFocus,
-                  currentFocusVideoId: currentFocusVideoId,
+                  onEnd: widget.onEnd,
+                  isFocus: widget.isFocus,
+                  currentFocusVideoId: widget.currentFocusVideoId,
                 ),
               )
             ],
@@ -280,27 +290,27 @@ class GridLayoutImage extends ConsumerWidget {
           return Column(
             children: [
               GridViewBuilderMedia(
-                handlePress: handlePress,
+                handlePress: widget.handlePress,
                 crossAxisCount: 1,
                 aspectRatio: double.parse(getAspectMedia(medias[0]).toString()),
                 medias: medias.sublist(0, 1),
                 mediasNoneCheck: medias,
-                onEnd: onEnd,
-                isFocus: isFocus,
-                currentFocusVideoId: currentFocusVideoId,
+                onEnd: widget.onEnd,
+                isFocus: widget.isFocus,
+                currentFocusVideoId: widget.currentFocusVideoId,
               ),
               const SizedBox(
                 height: 3,
               ),
               GridViewBuilderMedia(
-                handlePress: handlePress,
+                handlePress: widget.handlePress,
                 crossAxisCount: 3,
                 aspectRatio: 1,
                 medias: medias.sublist(1),
                 mediasNoneCheck: medias,
-                onEnd: onEnd,
-                isFocus: isFocus,
-                currentFocusVideoId: currentFocusVideoId,
+                onEnd: widget.onEnd,
+                isFocus: widget.isFocus,
+                currentFocusVideoId: widget.currentFocusVideoId,
               ),
             ],
           );
@@ -323,14 +333,14 @@ class GridLayoutImage extends ConsumerWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: GridViewBuilderMedia(
-                              handlePress: handlePress,
+                              handlePress: widget.handlePress,
                               crossAxisCount: 1,
                               aspectRatio: 0.37,
                               medias: [medias[index]],
-                              onEnd: onEnd,
+                              onEnd: widget.onEnd,
                               mediasNoneCheck: medias,
-                              isFocus: isFocus,
-                              currentFocusVideoId: currentFocusVideoId,
+                              isFocus: widget.isFocus,
+                              currentFocusVideoId: widget.currentFocusVideoId,
                             ),
                           ),
                         ],
@@ -344,26 +354,26 @@ class GridLayoutImage extends ConsumerWidget {
           return Column(
             children: [
               GridViewBuilderMedia(
-                handlePress: handlePress,
+                handlePress: widget.handlePress,
                 crossAxisCount: 2,
                 aspectRatio: 1,
                 medias: medias.sublist(0, 2),
-                onEnd: onEnd,
-                isFocus: isFocus,
-                currentFocusVideoId: currentFocusVideoId,
+                onEnd: widget.onEnd,
+                isFocus: widget.isFocus,
+                currentFocusVideoId: widget.currentFocusVideoId,
               ),
               const SizedBox(
                 height: 3,
               ),
               GridViewBuilderMedia(
-                handlePress: handlePress,
+                handlePress: widget.handlePress,
                 crossAxisCount: 3,
                 aspectRatio: 1,
                 imageRemain: medias.length - 5,
                 medias: medias.sublist(2, 5),
-                onEnd: onEnd,
-                isFocus: isFocus,
-                currentFocusVideoId: currentFocusVideoId,
+                onEnd: widget.onEnd,
+                isFocus: widget.isFocus,
+                currentFocusVideoId: widget.currentFocusVideoId,
               ),
             ],
           );
@@ -375,26 +385,26 @@ class GridLayoutImage extends ConsumerWidget {
               SizedBox(
                 width: size.width * 0.5 - 1.5,
                 child: GridViewBuilderMedia(
-                  handlePress: handlePress,
+                  handlePress: widget.handlePress,
                   crossAxisCount: 1,
                   aspectRatio: 0.995,
                   medias: medias.sublist(0, 2),
-                  onEnd: onEnd,
-                  isFocus: isFocus,
-                  currentFocusVideoId: currentFocusVideoId,
+                  onEnd: widget.onEnd,
+                  isFocus: widget.isFocus,
+                  currentFocusVideoId: widget.currentFocusVideoId,
                 ),
               ),
               SizedBox(
                 width: size.width * 0.5 - 1.5,
                 child: GridViewBuilderMedia(
-                  handlePress: handlePress,
+                  handlePress: widget.handlePress,
                   crossAxisCount: 1,
                   aspectRatio: 1.503,
                   imageRemain: medias.length - 5,
                   medias: medias.sublist(2, 5),
-                  onEnd: onEnd,
-                  isFocus: isFocus,
-                  currentFocusVideoId: currentFocusVideoId,
+                  onEnd: widget.onEnd,
+                  isFocus: widget.isFocus,
+                  currentFocusVideoId: widget.currentFocusVideoId,
                 ),
               )
             ],
@@ -404,7 +414,33 @@ class GridLayoutImage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return renderLayoutMedia(context, medias);
+  void initState() {
+    super.initState();
+    final newListStatusMedia = widget.medias.map((e) {
+      if (e['type'] == 'video') {
+        return false;
+      } else {
+        return null;
+      }
+    }).toList();
+    final index = checkFirstEqualValue(newListStatusMedia, false);
+    if (index != -1) {
+      newListStatusMedia[index] = true;
+    }
+    listStatusMedia = newListStatusMedia;
+  }
+
+  int checkFirstEqualValue(List<bool?> arr, bool value) {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] == value) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return renderLayoutMedia(context, widget.medias);
   }
 }

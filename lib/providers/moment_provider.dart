@@ -55,30 +55,56 @@ class MomentController extends StateNotifier<MomentState> {
         momentSuggest: state.momentSuggest);
   }
 
-  updateReaction(reaction, id) async { 
+  updateReaction(reaction, id) async {
     if (mounted) {
-      var tempDataFollow = state.momentFollow.map((e) { 
-        return e['id'] == id && e['viewer_reaction'] != "love"
-            ? {
-                ...e,
-                'viewer_reaction': reaction,
-                'favourites_count': reaction == 'love'
-                    ? e['favourites_count'] + 1
-                    : e['favourites_count'] - 1
-              }
-            : e;
+      var tempDataFollow = state.momentFollow.map((e) {
+        if (e['id'] == id) {
+          // nếu  viewer_reaction đã là love thì xóa viewer_reaction và trừ đi count 1
+          // nếu  viewer_reaction không là love thì viewer_reaction bằng viewer_reaction và count +1
+          if (e['viewer_reaction'] != "love") {
+            return {
+              ...e,
+              'viewer_reaction': reaction,
+              'favourites_count': e['favourites_count'] + 1
+            };
+          } else {
+            if (reaction == "love") {
+              return e;
+            } else {
+              dynamic newFollow = e;
+              newFollow['viewer_reaction'] = null;
+              newFollow['favourites_count'] = e['favourites_count'] - 1;
+              return newFollow;
+            }
+          }
+        } else {
+          return e;
+        }
       }).toList();
-      var tempDataSuggest = state.momentSuggest
-          .map((e) => e['id'] == id && e['viewer_reaction'] != "love"
-              ? {
-                  ...e,
-                  'viewer_reaction': reaction,
-                  'favourites_count': reaction == 'love'
-                      ? e['favourites_count'] + 1
-                      : e['favourites_count'] - 1
-                }
-              : e)
-          .toList();
+      var tempDataSuggest = state.momentSuggest.map((e) {
+        if (e['id'] == id) {
+          // nếu  viewer_reaction đã là love thì xóa viewer_reaction và trừ đi count 1
+          // nếu  viewer_reaction không là love thì viewer_reaction bằng viewer_reaction và count +1
+          if (e['viewer_reaction'] != "love") {
+            return {
+              ...e,
+              'viewer_reaction': reaction,
+              'favourites_count': e['favourites_count'] + 1
+            };
+          } else {
+            if (reaction == "love") {
+              return e;
+            } else {
+              dynamic newFollow = e;
+              newFollow['viewer_reaction'] = null;
+              newFollow['favourites_count'] = e['favourites_count'] - 1;
+              return newFollow;
+            }
+          }
+        } else {
+          return e;
+        }
+      }).toList();
       state = state.copyWith(
           momentFollow: tempDataFollow, momentSuggest: tempDataSuggest);
     }
@@ -88,7 +114,7 @@ class MomentController extends StateNotifier<MomentState> {
           .favoriteReactionMoment(id, {"custom_vote_type": reaction});
     } else if (reaction == null) {
       response = await MomentApi().unfavoriteReactionMoment(id);
-    } 
+    }
     return response;
   }
 

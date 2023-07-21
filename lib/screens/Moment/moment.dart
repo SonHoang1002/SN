@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
+import 'package:social_network_app_mobile/screens/Menu/menu.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
@@ -156,65 +157,66 @@ class _MomentState extends ConsumerState<Moment>
           this.runAddToCartAnimation = runAddToCartAnimation;
         },
         child: Scaffold(
-            // backgroundColor: Colors.black,
+            backgroundColor: Colors.black,
+            key: key,
+            drawer: Drawer(
+              width: MediaQuery.of(context).size.width - 20,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              child: const Menu(),
+            ),
             body: Stack(children: <Widget>[
-          MomentTabBarView(
-              tabController: _tabController,
-              momentFollow: momentFollow,
-              widget: widget,
-              ref: ref,
-              momentSuggests: momentSuggests),
-          if (widget.imageUpload != null && isShowMediaUpload)
-            ImageUploadProcess(
-                cartKey: cartKey, isFlied: isFlied, widget: widget),
-          if (widget.imageUpload != null)
-            ImageUpload(widgetKey: widgetKey, isFly: isFly, widget: widget),
-          Positioned(
-              //Place it at the top, and not use the entire screen
-              top: 0.0,
-              left: 0.0,
-              right: 0.0,
-              child: AppBar(
-                automaticallyImplyLeading: false,
-                title: Container(
-                  color: white.withOpacity(0.1),
-                  padding: const EdgeInsets.symmetric(horizontal: 7),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            widget.isBack != null
-                                ? const BackButton()
-                                : InkWell(
-                                    onTap: () => key.currentState!.openDrawer(),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 0),
-                                      child: Icon(
-                                        Icons.menu,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .color,
+              MomentTabBarView(
+                  tabController: _tabController,
+                  momentFollow: momentFollow,
+                  widget: widget,
+                  ref: ref,
+                  momentSuggests: momentSuggests),
+              if (widget.imageUpload != null && isShowMediaUpload)
+                ImageUploadProcess(
+                    cartKey: cartKey, isFlied: isFlied, widget: widget),
+              if (widget.imageUpload != null)
+                ImageUpload(widgetKey: widgetKey, isFly: isFly, widget: widget),
+              Positioned(
+                  //Place it at the top, and not use the entire screen
+                  top: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: AppBar(
+                    automaticallyImplyLeading: false,
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              widget.isBack != null
+                                  ? const BackButton()
+                                  : InkWell(
+                                      onTap: () {
+                                        key.currentState?.openDrawer();
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(top: 0),
+                                        child: Icon(
+                                          Icons.menu,
+                                          color: white,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                            const SizedBox(
-                              width: 7,
-                            ),
-                          ]),
-                      MomentTabBar(tabController: _tabController),
-                      MomentIconAction(iconAction: iconAction),
-                    ],
-                  ),
-                ),
-                backgroundColor: transparent, //No more green
-                elevation: 0.0, //Shadow gone
-              ))
-        ])));
+                              const SizedBox(
+                                width: 7,
+                              ),
+                            ]),
+                        MomentTabBar(tabController: _tabController),
+                        MomentIconAction(iconAction: iconAction),
+                      ],
+                    ),
+                    backgroundColor: transparent, //No more green
+                    elevation: 0.0, //Shadow gone
+                  ))
+            ])));
   }
 
   @override
@@ -392,14 +394,14 @@ class MomentTabBar extends StatelessWidget {
         controller: _tabController,
         onTap: (index) {},
         indicator: const BoxDecoration(),
-        indicatorColor: Theme.of(context).textTheme.bodyLarge!.color,
-        labelColor: secondaryColor,
-        unselectedLabelStyle: const TextStyle(),
-        unselectedLabelColor: Theme.of(context).textTheme.bodyLarge!.color,
+        indicatorColor: Colors.white,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white.withOpacity(0.5),
         indicatorSize: TabBarIndicatorSize.label,
         indicatorWeight: 0,
         labelStyle: GoogleFonts.ibmPlexSans(
             textStyle: const TextStyle(fontWeight: FontWeight.w700)),
+        unselectedLabelStyle: const TextStyle(),
         tabs: const [
           Tab(
             text: "Đang theo dõi",
@@ -432,9 +434,7 @@ class MomentIconAction extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.grey.withOpacity(0.3),
                     border: Border.all(color: primaryColor, width: 0.2)),
-                child: Icon(iconAction[index]['icon'],
-                    size: 20,
-                    color: Theme.of(context).textTheme.bodyLarge!.color),
+                child: Icon(iconAction[index]['icon'], size: 20, color: white),
               )),
     );
   }
@@ -447,14 +447,13 @@ class NoData extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      // color: Colors.black,
+      color: Colors.black,
       width: size.width,
       height: size.height,
       child: Center(
         child: Text("Không có dữ liệu hiển thị",
             style: GoogleFonts.ibmPlexSans(
-                textStyle: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge!.color))),
+                textStyle: const TextStyle(color: white))),
       ),
     );
   }

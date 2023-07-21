@@ -31,7 +31,9 @@ class _BottomNavigatorBarEmsoState extends State<BottomNavigatorBarEmso> {
       selectedLabelStyle: const TextStyle(fontSize: 0),
       unselectedLabelStyle: const TextStyle(fontSize: 0),
       elevation: 0,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: _selectedIndex == 1
+          ? Colors.black
+          : Theme.of(context).scaffoldBackgroundColor,
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(

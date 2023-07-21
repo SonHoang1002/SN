@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/gradient_color.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -28,7 +29,7 @@ class PostTarget extends ConsumerWidget {
             postCreateQuestionAnwer,
             postQuestionAnwer,
             'target_create'
-          ].contains(type) ? statusQuestion['color'] : post['status_target']['color']).replaceAll('-', '').replaceAll(' ', '')}')),
+          ].contains(type) ? statusQuestion['color'] : post?['status_target']?['color']).replaceAll('-', '').replaceAll(' ', '')}')),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -43,11 +44,12 @@ class PostTarget extends ConsumerWidget {
                       width: size.width * 0.35,
                       height: size.width * 0.35,
                       object: ref.watch(meControllerProvider)[0],
-                      path: (post?['account'] ??
-                              ref.watch(
-                                  meControllerProvider)[0])['avatar_media']
-                          ['preview_url'])
-              : post['status_target']['target_status'] == postTargetStatus
+                      path: ((post?['account']) ??
+                                  (ref.watch(
+                                      meControllerProvider)[0])?['avatar_media']
+                              ?['preview_url']) ??
+                          linkAvatarDefault)
+              : post?['status_target']?['target_status'] == postTargetStatus
                   ? SvgPicture.asset(
                       "assets/win.svg",
                       width: size.width * 0.5,
