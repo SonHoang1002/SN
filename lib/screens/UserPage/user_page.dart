@@ -681,7 +681,11 @@ class _UserPageState extends ConsumerState<UserPage> {
                   height: 35,
                   width: 48,
                   child: ButtonPrimary(
-                    icon: const Icon(FontAwesomeIcons.ellipsis, size: 16),
+                    icon: const Icon(
+                      FontAwesomeIcons.ellipsis,
+                      size: 16,
+                      color: Colors.white,
+                    ),
                     handlePress: () {},
                   ),
                 ),
@@ -798,7 +802,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    pinPost = ref.read(postControllerProvider).postsPin; 
+    pinPost = ref.read(postControllerProvider).postsPin;
     return Scaffold(
       appBar: buildAppBar(context),
       body: RefreshIndicator(
