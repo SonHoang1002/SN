@@ -92,7 +92,7 @@ class NotificationMarketPage extends StatelessWidget {
       child: Column(children: [
         const CrossBar(
           height: 7,
-          margin: 0,
+          opacity: 0.2,
         ),
         _customGeneralComponent([
           buildTextContent("Khuyến mãi", false, fontSize: 16),
@@ -103,13 +103,13 @@ class NotificationMarketPage extends StatelessWidget {
               fontSize: 14),
         ],
             prefixWidget: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: boxDecoration,
-              child: const Icon(
-                FontAwesomeIcons.moneyBill,
-                size: 14,
-              ),
-            ),
+                padding: const EdgeInsets.all(10),
+                decoration: boxDecoration,
+                child: Image.asset(
+                  "assets/icons/noti_market_voucher_icon.png",
+                  height: 14,
+                  color: secondaryColor,
+                )),
             padding: const EdgeInsets.fromLTRB(7, 10, 7, 5),
             suffixWidget: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -134,13 +134,13 @@ class NotificationMarketPage extends StatelessWidget {
           ),
         ],
             prefixWidget: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: boxDecoration,
-              child: const Icon(
-                FontAwesomeIcons.moneyBill,
-                size: 14,
-              ),
-            ),
+                padding: const EdgeInsets.all(10),
+                decoration: boxDecoration,
+                child: Image.asset(
+                  "assets/icons/noti_market_activity_icon.png",
+                  height: 14,
+                  color: secondaryColor,
+                )),
             padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
             suffixWidget: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -163,13 +163,13 @@ class NotificationMarketPage extends StatelessWidget {
               fontSize: 14),
         ],
             prefixWidget: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: boxDecoration,
-              child: const Icon(
-                FontAwesomeIcons.moneyBill,
-                size: 14,
-              ),
-            ),
+                padding: const EdgeInsets.all(10),
+                decoration: boxDecoration,
+                child: Image.asset(
+                  "assets/icons/noti_market_cart_icon.png",
+                  height: 14,
+                  color: secondaryColor,
+                )),
             padding: const EdgeInsets.fromLTRB(7, 5, 7, 10),
             suffixWidget: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -208,7 +208,7 @@ class NotificationMarketPage extends StatelessWidget {
       child: Column(children: [
         const CrossBar(
           height: 7,
-          margin: 0,
+          opacity: 0.2,
         ),
         _customGeneralComponent([
           buildTextContent("Cập nhật đơn hàng", false, fontSize: 16),
