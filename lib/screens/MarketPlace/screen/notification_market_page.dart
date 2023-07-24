@@ -221,10 +221,12 @@ class NotificationMarketPage extends StatelessWidget {
             prefixWidget: Container(
               padding: const EdgeInsets.all(10),
               decoration: boxDecoration,
-              child: const Icon(
-                FontAwesomeIcons.moneyBill,
-                size: 14,
-              ),
+              child: 
+              Image.asset(
+                  "assets/icons/noti_market_update_order_icon.png",
+                  height: 14,
+                  color: secondaryColor,
+                ),
             ),
             padding: const EdgeInsets.fromLTRB(7, 10, 7, 5),
             suffixWidget: Row(
@@ -252,10 +254,11 @@ class NotificationMarketPage extends StatelessWidget {
             prefixWidget: Container(
               padding: const EdgeInsets.all(10),
               decoration: boxDecoration,
-              child: const Icon(
-                FontAwesomeIcons.moneyBill,
-                size: 14,
-              ),
+              child: Image.asset(
+                  "assets/icons/noti_market_seller_wallet_icon.png",
+                  height: 14,
+                  color: secondaryColor,
+                ),
             ),
             padding: const EdgeInsets.fromLTRB(7, 5, 7, 5),
             suffixWidget: Row(
@@ -280,10 +283,11 @@ class NotificationMarketPage extends StatelessWidget {
             prefixWidget: Container(
               padding: const EdgeInsets.all(10),
               decoration: boxDecoration,
-              child: const Icon(
-                FontAwesomeIcons.moneyBill,
-                size: 14,
-              ),
+              child: Image.asset(
+                  "assets/icons/noti_market_marketing_channel_icon.png",
+                  height: 14,
+                  color: secondaryColor,
+                ),
             ),
             padding: const EdgeInsets.fromLTRB(7, 5, 7, 10),
             suffixWidget: Row(
