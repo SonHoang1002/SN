@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:market_place/data/market_datas/dat_data.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/screens/MarketPlace/screen/detail_product_page.dart';
+import 'package:market_place/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/review_item_widget.dart';
 import 'package:market_place/apis/market_place_apis/review_product_apis.dart';
@@ -62,16 +63,21 @@ class _SeeReviewShopMarketPageComsumerState
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: const Row(
+          title:   Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BackIconAppbar(),
-              AppBarTitle(title: "Đánh giá Shop của bạn"),
-              Icon(
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Đánh giá Shop của bạn"),
+              InkWell(
+              onTap: () {
+                pushToNextScreen(context, NotificationMarketPage());
+              },
+              child: const Icon(
                 FontAwesomeIcons.bell,
                 size: 18,
                 color: Colors.black,
-              )
+              ),
+            )
             ],
           ),
         ),

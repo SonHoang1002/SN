@@ -7,6 +7,7 @@ import 'package:market_place/constant/get_min_max_price.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/product_categories_provider.dart';
 import 'package:market_place/providers/market_place_providers/products_provider.dart';
+import 'package:market_place/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/classify_category_conponent.dart';
 import 'package:market_place/theme/colors.dart';
@@ -151,15 +152,20 @@ class _FilterPageState extends ConsumerState<FilterPage> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BackIconAppbar(),
-            AppBarTitle(title: "Lọc theo hạng mục"),
-            Icon(
-              FontAwesomeIcons.bell,
-              size: 18,
-              color: Colors.black,
+            const BackIconAppbar(),
+            const AppBarTitle(title: "Lọc theo hạng mục"),
+            InkWell(
+              onTap: () {
+                pushToNextScreen(context, NotificationMarketPage());
+              },
+              child: const Icon(
+                FontAwesomeIcons.bell,
+                size: 18,
+                color: Colors.black,
+              ),
             )
           ],
         ),

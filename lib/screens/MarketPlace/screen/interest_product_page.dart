@@ -7,6 +7,7 @@ import 'package:market_place/constant/marketPlace_constants.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/interest_product_provider.dart';
 import 'package:market_place/screens/MarketPlace/screen/detail_product_page.dart';
+import 'package:market_place/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/share_and_search.dart';
@@ -83,12 +84,17 @@ class _InterestProductMarketPageState
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              BackIconAppbar(),
-              AppBarTitle(title: "Quan tâm"),
-              Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
+            children: [
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Quan tâm"),
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                ),
               )
             ],
           ),

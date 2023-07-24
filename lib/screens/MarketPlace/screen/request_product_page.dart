@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:market_place/widgets/back_icon_appbar.dart';
 import 'package:market_place/widgets/messenger_app_bar/app_bar_title.dart';
+
+import 'notification_market_page.dart';
 
 class RequestProductMarketPage extends StatefulWidget {
   final List<dynamic> listProduct;
@@ -34,13 +37,18 @@ class _RequestProductMarketPageState extends State<RequestProductMarketPage> {
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              BackIconAppbar(),
-              AppBarTitle(title: "Lời mời"),
-              Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
+            children: [
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Lời mời"),
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                  color: Colors.black,
+                ),
               )
             ],
           ),

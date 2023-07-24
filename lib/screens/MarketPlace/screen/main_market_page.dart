@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:loader_skeleton/loader_skeleton.dart'; 
+import 'package:loader_skeleton/loader_skeleton.dart';
 import 'package:market_place/constant/get_min_max_price.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/cart_product_provider.dart';
@@ -196,14 +196,14 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     setState(() {});
   }
 
-  void getCategoriesName() {
+  getCategoriesName() async {
     if (product_categories.isEmpty) {
       product_categories = ref.watch(parentCategoryController).parentList;
     }
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     size ??= MediaQuery.of(context).size;
     getCategoriesName();
     return Scaffold(
@@ -213,9 +213,9 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
           setState(() {
             _suggestProductList = [];
             _discoverProduct = [];
+            product_categories = [];
           });
-          product_categories = [];
-          getCategoriesName();
+          await getCategoriesName();
         },
         child: Stack(
           children: [

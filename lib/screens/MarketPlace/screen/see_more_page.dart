@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/products_provider.dart';
 import 'package:market_place/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
@@ -14,6 +15,7 @@ import 'package:market_place/widgets/back_icon_appbar.dart';
 import 'package:market_place/widgets/messenger_app_bar/app_bar_title.dart';
 
 import '../widgets/product_item_widget.dart';
+import 'notification_market_page.dart';
 
 class SeeMoreMarketPage extends ConsumerStatefulWidget {
   const SeeMoreMarketPage({super.key});
@@ -62,15 +64,20 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Row(
+        title:   Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BackIconAppbar(),
-            AppBarTitle(title: "Danh sách sản phẩm"),
-            Icon(
-              FontAwesomeIcons.bell,
-              size: 18,
-              color: Colors.black,
+            const BackIconAppbar(),
+            const AppBarTitle(title: "Danh sách sản phẩm"),
+            InkWell(
+              onTap: () {
+                pushToNextScreen(context, NotificationMarketPage());
+              },
+              child: const Icon(
+                FontAwesomeIcons.bell,
+                size: 18,
+                color: Colors.black,
+              ),
             )
           ],
         ),

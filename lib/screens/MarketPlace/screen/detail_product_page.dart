@@ -49,13 +49,11 @@ const String share_on_personal_page_of_friend =
 const configReviewParams = {"limit": 1};
 
 class DetailProductMarketPage extends ConsumerStatefulWidget {
-  dynamic simpleData;
+  final dynamic simpleData;
   final dynamic id;
-  DetailProductMarketPage({
-    super.key,
-    required this.id,
-    this.simpleData,
-  });
+  final String? heroImageLink;
+  DetailProductMarketPage(
+      {super.key, required this.id, this.simpleData, this.heroImageLink});
   @override
   ConsumerState<DetailProductMarketPage> createState() =>
       _DetailProductMarketPageComsumerState();
@@ -102,17 +100,18 @@ class _DetailProductMarketPageComsumerState
         _detailData = widget.simpleData;
         if (_detailData != null) {
           _initData();
+        } else {
+          final detailData = await ref
+              .read(detailProductProvider.notifier)
+              .getDetailProduct(widget.id);
+          final comment = await ref
+              .read(reviewProductProvider.notifier)
+              .getReviewProduct(widget.id, configReviewParams);
+          setState(() {
+            _detailData = ref.watch(detailProductProvider).detail;
+          });
+          _initData();
         }
-        final detailData = await ref
-            .read(detailProductProvider.notifier)
-            .getDetailProduct(widget.id);
-        final comment = await ref
-            .read(reviewProductProvider.notifier)
-            .getReviewProduct(widget.id, configReviewParams);
-        setState(() {
-          _detailData = ref.watch(detailProductProvider).detail;
-        });
-        _initData();
       });
     });
     _scrollController
@@ -203,15 +202,17 @@ class _DetailProductMarketPageComsumerState
 
   Future<int> _initData() async {
     if (_listMedia == null || _listMedia!.isEmpty) {
-      if (_detailData!["product_video"] != null) {
-        _listMedia?.add(_detailData!["product_video"]["url"]);
-      }
-      if (_detailData!["product_image_attachments"] != null &&
-          _detailData!["product_image_attachments"].isNotEmpty) {
-        _detailData!["product_image_attachments"].forEach((element) {
-          _listMedia?.add(element["attachment"]["url"]);
-        });
-      }
+      setState(() {
+        if (_detailData!["product_video"] != null) {
+          _listMedia?.add(_detailData!["product_video"]["url"]);
+        }
+        if (_detailData!["product_image_attachments"] != null &&
+            _detailData!["product_image_attachments"].isNotEmpty) {
+          _detailData!["product_image_attachments"].forEach((element) {
+            _listMedia?.add(element["attachment"]["url"]);
+          });
+        }
+      });
     }
     _productToCart = _detailData!["product_variants"][0];
     selectedProduct = _detailData!["product_variants"][0];
@@ -302,20 +303,14 @@ class _DetailProductMarketPageComsumerState
             return AlertDialog(
                 backgroundColor: transparent,
                 content: Container(
-                  height: 60,
-                  width: 60,
+                  height: 100,
+                  width: 100,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(7),
                       color: blackColor.withOpacity(0.4)),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          FontAwesomeIcons.ticket,
-                          size: 18,
-                          color: white,
-                        ),
-                        buildSpacer(height: 10),
                         buildTextContent("Đã thêm vào giỏ", false,
                             colorWord: white, fontSize: 16, isCenterLeft: false)
                       ]),
@@ -431,7 +426,7 @@ class _DetailProductMarketPageComsumerState
                     ),
                     GestureDetector(
                       onTap: () {
-                        pushToNextScreen(context, const TransferOrderPage());
+                        // pushToNextScreen(context, const TransferOrderPage());
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -742,6 +737,7 @@ class _DetailProductMarketPageComsumerState
                     : const SizedBox(),
                 buildSpacer(height: 10),
                 _buildDescriptionAndReview(),
+                buildSpacer(height: 10),
                 _listProductOfPage != null && _listProductOfPage!.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.only(top: 10),
@@ -752,30 +748,33 @@ class _DetailProductMarketPageComsumerState
                               direction: Axis.horizontal,
                               children: [
                                 Flexible(
-                                  child: buildDivider(color: greyColor),
+                                  child:
+                                      buildDivider(color: greyColor, right: 10),
                                 ),
-                                buildTextContent(
-                                    "Sản phẩm khác của shop", false),
+                                buildTextContent("Sản phẩm khác của shop", true,
+                                    fontSize: 16),
                                 Flexible(
-                                  child: buildDivider(color: greyColor),
+                                  child:
+                                      buildDivider(color: greyColor, left: 10),
                                 ),
                               ],
                             ),
                             contentList: _listProductOfPage ?? []),
                       )
                     : const SizedBox(),
-                buildSpacer(height: 10),
+                buildSpacer(height: 15),
                 buildSuggestListComponent(
                     context: context,
                     title: Flex(
                       direction: Axis.horizontal,
                       children: [
                         Flexible(
-                          child: buildDivider(color: greyColor),
+                          child: buildDivider(color: greyColor, right: 10),
                         ),
-                        buildTextContent("Có thể bạn sẽ thích", false),
+                        buildTextContent("Có thể bạn sẽ thích", true,
+                            fontSize: 16),
                         Flexible(
-                          child: buildDivider(color: greyColor),
+                          child: buildDivider(color: greyColor, left: 10),
                         ),
                       ],
                     ),
@@ -797,74 +796,99 @@ class _DetailProductMarketPageComsumerState
                 Stack(
                   children: [
                     Container(
-                        height: MediaQuery.of(context).padding.bottom + 50,
-                        color: white),
-                    SizedBox(
-                      width: width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          buildMarketButton(
-                            width: width * 0.25,
-                            bgColor: Colors.orange[300],
-                            contents: [
-                              Image.asset(
-                                "assets/icons/chat_product_icon.png",
-                                height: 18,
-                                color: white,
+                      height: 80,
+                      color: Theme.of(context).cardColor,
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).padding.bottom),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: width * 0.9,
+                          alignment: Alignment.center,
+                          child: Flex(
+                            direction: Axis.horizontal,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                flex: 3,
+                                child: buildMarketButton(
+                                  // width: width * 0.25,
+                                  bgColor: Colors.orange[300],
+                                  contents: [
+                                    Image.asset(
+                                      "assets/icons/chat_product_icon.png",
+                                      height: 18,
+                                      color: white,
+                                    ),
+                                    buildSpacer(height: 3),
+                                    buildTextContent("Chat ngay", false,
+                                        fontSize: 9, isCenterLeft: false)
+                                  ],
+                                  radiusValue: 0,
+                                  isHaveBoder: false,
+                                  isVertical: true,
+                                ),
                               ),
-                              buildSpacer(height: 3),
-                              buildTextContent("Chat ngay", false,
-                                  fontSize: 9, isCenterLeft: false)
-                            ],
-                            radiusValue: 0,
-                            isHaveBoder: false,
-                            isVertical: true,
-                          ),
-                          buildMarketButton(
-                            width: width * 0.25,
-                            bgColor: Colors.orange[300],
-                            contents: [
-                              Image.asset(
-                                "assets/icons/cart_product_icon.png",
-                                height: 18,
-                                color: white,
+                              Flexible(
+                                flex: 3,
+                                child: buildMarketButton(
+                                  // width: width * 0.25,
+                                  bgColor: primaryColor,
+                                  contents: [
+                                    Image.asset(
+                                      "assets/icons/cart_product_icon.png",
+                                      height: 18,
+                                      color: white,
+                                    ),
+                                    buildSpacer(height: 3),
+                                    buildTextContent("Thêm vào giỏ", false,
+                                        fontSize: 9)
+                                  ],
+                                  isVertical: true,
+                                  radiusValue: 0,
+                                  fontSize: 9,
+                                  isHaveBoder: false,
+                                  function: () async {
+                                    if (_detailData!["product_options"] !=
+                                            null &&
+                                        _detailData!["product_options"]
+                                            .isNotEmpty) {
+                                      showBottomColorSelections(
+                                          "Thêm vào giỏ hàng");
+                                    } else {
+                                      _updateAnimation();
+                                      _addToCart();
+                                    }
+                                  },
+                                ),
                               ),
-                              buildSpacer(height: 3),
-                              buildTextContent("Thêm vào giỏ", false,
-                                  fontSize: 9)
+                              Flexible(
+                                flex: 5,
+                                child: buildMarketButton(
+                                  // width: width * 0.5,
+                                  bgColor: red,
+                                  contents: [
+                                    buildTextContent("Mua ngay", false,
+                                        fontSize: 13)
+                                  ],
+                                  function: () async {
+                                    if (_detailData!["product_options"]
+                                        .isNotEmpty) {
+                                      showBottomColorSelections("Mua ngay");
+                                    } else {
+                                      _updateAnimation();
+                                      _addToCart();
+                                    }
+                                  },
+                                ),
+                              ),
                             ],
-                            isVertical: true,
-                            radiusValue: 0,
-                            fontSize: 9,
-                            isHaveBoder: false,
-                            function: () async {
-                              if (_detailData!["product_options"] != null &&
-                                  _detailData!["product_options"].isNotEmpty) {
-                                showBottomColorSelections("Thêm vào giỏ hàng");
-                              } else {
-                                _updateAnimation();
-                                _addToCart();
-                              }
-                            },
                           ),
-                          buildMarketButton(
-                            width: width * 0.5,
-                            bgColor: red,
-                            contents: [
-                              buildTextContent("Mua ngay", false, fontSize: 13)
-                            ],
-                            function: () async {
-                              if (_detailData!["product_options"].isNotEmpty) {
-                                showBottomColorSelections("Mua ngay");
-                              } else {
-                                _updateAnimation();
-                                _addToCart();
-                              }
-                            },
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -1189,15 +1213,36 @@ class _DetailProductMarketPageComsumerState
                         fontSize: 13)
                   ],
                   function: () async {
-                    _updateAnimation();
-                    popToPreviousScreen(context);
-                    _canAddToCart ? _addToCart() : null;
+                    _callAddToCartFunction();
                   }),
             ),
           ],
         ),
       );
     }));
+  }
+
+// ba truong hop: có màu, cớ cỡ; không màu, có cỡ; có màu, không cỡ
+  _callAddToCartFunction() {
+    if (_listCheckedColor.isNotEmpty && _listCheckedSize.isNotEmpty) {
+      if (_selectedColorValue != null && _selectedSizeValue != null) {
+        _updateAnimation();
+        popToPreviousScreen(context);
+        _canAddToCart ? _addToCart() : null;
+      }
+    } else if (_listCheckedColor.isNotEmpty && _listCheckedSize.isEmpty) {
+      if (_selectedColorValue != null) {
+        _updateAnimation();
+        popToPreviousScreen(context);
+        _canAddToCart ? _addToCart() : null;
+      }
+    } else if (_listCheckedColor.isEmpty && _listCheckedSize.isNotEmpty) {
+      if (_selectedSizeValue != null) {
+        _updateAnimation();
+        popToPreviousScreen(context);
+        _canAddToCart ? _addToCart() : null;
+      }
+    }
   }
 
   Widget _buildColorOrSizeWidget(String title, List<dynamic> data,
