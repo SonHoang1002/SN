@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/delivery_addresses_provider.dart';
+import 'package:market_place/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:market_place/apis/market_place_apis/delivery_address_apis.dart';
 import 'package:market_place/theme/colors.dart';
@@ -86,13 +87,18 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const BackIconAppbar(), 
+              const BackIconAppbar(),
               AppBarTitle(
                   title: _isCreate! ? "Địa chỉ mới" : "Cập nhật địa chỉ"),
-              const Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                  color: Colors.black,
+                ),
               )
             ],
           ),

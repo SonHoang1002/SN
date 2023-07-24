@@ -17,6 +17,7 @@ import 'package:market_place/providers/market_place_providers/page_list_provider
 import 'package:market_place/providers/market_place_providers/product_categories_provider.dart';
 import 'package:market_place/providers/market_place_providers/products_provider.dart';
 import 'package:market_place/screens/MarketPlace/screen/manage_product_page.dart';
+import 'package:market_place/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:market_place/apis/market_place_apis/detail_product_api.dart';
@@ -155,10 +156,15 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
                 ),
               ),
               const AppBarTitle(title: "Cập nhật sản phẩm"),
-              const Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                  color: Colors.black,
+                ),
               )
             ],
           ),

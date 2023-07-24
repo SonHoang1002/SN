@@ -5,6 +5,7 @@ import 'package:market_place/constant/marketPlace_constants.dart';
 import 'package:market_place/helpers/format_currency.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/page_list_provider.dart';
+import 'package:market_place/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/review_product_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/see_review_market.dart';
 import 'package:market_place/screens/MarketPlace/screen/seller_modules/prepare_product_market_page.dart';
@@ -145,13 +146,16 @@ class _OrderProductMarketPageState
                 children: [
                   const BackIconAppbar(),
                   const AppBarTitle(title: "Danh sách đơn hàng"),
-                  GestureDetector(
-                    onTap: () {
-                      // pushToNextScreen(context, PrepareProductMarketPage());
-                    },
-                    child:
-                        Icon(FontAwesomeIcons.bell, size: 18, color: colorWord),
-                  )
+                  InkWell(
+              onTap: () {
+                pushToNextScreen(context, NotificationMarketPage());
+              },
+              child: const Icon(
+                FontAwesomeIcons.bell,
+                size: 18,
+                color: Colors.black,
+              ),
+            )
                 ],
               ),
               bottom: TabBar(

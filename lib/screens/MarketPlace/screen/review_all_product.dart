@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/widgets/back_icon_appbar.dart';
 import 'package:market_place/screens/MarketPlace/widgets/review_item_widget.dart';
 import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:market_place/widgets/messenger_app_bar/app_bar_title.dart';
+
+import 'notification_market_page.dart';
 
 class ReviewAllProductPage extends StatefulWidget {
   final List<dynamic> listProduct;
@@ -32,15 +35,20 @@ class _ReviewAllProductPageState extends State<ReviewAllProductPage> {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: const Row(
+          title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BackIconAppbar(),
-              AppBarTitle(title: "Đánh giá sản phẩm"),
-              Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Đánh giá sản phẩm"),
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                  color: Colors.black,
+                ),
               )
             ],
           ),

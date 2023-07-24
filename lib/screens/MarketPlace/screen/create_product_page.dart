@@ -18,6 +18,7 @@ import 'package:market_place/providers/market_place_providers/page_list_provider
 import 'package:market_place/providers/market_place_providers/product_categories_provider.dart';
 import 'package:market_place/providers/market_place_providers/products_provider.dart';
 import 'package:market_place/screens/MarketPlace/screen/manage_product_page.dart';
+import 'package:market_place/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/add_media_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:market_place/screens/MarketPlace/widgets/delete_fix_image.dart';
@@ -215,10 +216,15 @@ class _DemoCreateProductMarketPageState
                 ),
               ),
               const AppBarTitle(title: "Tạo sản phẩm"),
-              const Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
+              InkWell(
+                onTap: () {
+                pushToNextScreen(context, NotificationMarketPage());
+              },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                  color: Colors.black,
+                ),
               )
             ],
           ),
