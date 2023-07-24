@@ -89,7 +89,9 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
               ? (groupDetail?['title'])
               : '',
         ),
-        leading: const BackIconAppbar(),
+        leading: const BackIconAppbar(
+          isGroup: true,
+        ),
       ),
       body: Scaffold(
         endDrawerEnableOpenDragGesture: false,
