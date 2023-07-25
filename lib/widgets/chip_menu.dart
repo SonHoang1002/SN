@@ -6,18 +6,27 @@ class ChipMenu extends StatelessWidget {
   final bool isSelected;
   final Widget? icon;
   final Widget? endIcon;
+  final double? width;
+  final double? height;
+  final AlignmentGeometry? Alignment;
 
   const ChipMenu(
       {Key? key,
       this.icon,
       required this.isSelected,
       required this.label,
+      this.width,
+      this.height,
+      this.Alignment,
       this.endIcon})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
+      height: height,
+      alignment: Alignment,
       margin: endIcon != null
           ? const EdgeInsets.only(left: 3, right: 3)
           : const EdgeInsets.only(left: 6, right: 6),
