@@ -57,7 +57,7 @@ class _LearnSpaceLibraryState extends ConsumerState<LearnSpaceLibrary> {
   Widget build(BuildContext context) {
     List courseLibrary =
         ref.watch(learnSpaceStateControllerProvider).courseLibrary;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(

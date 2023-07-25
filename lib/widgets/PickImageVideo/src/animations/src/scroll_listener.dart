@@ -117,7 +117,7 @@ class ScrollListenerState extends State<ScrollListener> {
     //     final scrolledPixel =
     //     (_pointerInitialPosition?.dy ?? 0.0) - currentPosition.dy;
 
-    // final height = MediaQuery.of(context).size.height;
+    // final height = MediaQuery.sizeOf(context).height;
 
     // final factor = (scrolledPixel.abs() / height).clamp(0.0, 1.0);
 

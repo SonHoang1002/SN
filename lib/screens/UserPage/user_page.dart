@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +62,7 @@ class _UserPageHomeState extends State<UserPageHome> {
     const Moment(typePage: 'home'),
     const SizedBox(),
     const Watch(),
-    const MainMarketPage(false)
+    const MainMarketPage(isBack: false)
   ];
   void _onItemTapped(int index) {
     if (index == 2) {
@@ -94,7 +96,7 @@ class _UserPageHomeState extends State<UserPageHome> {
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
-      const MainMarketPage(false)
+      const MainMarketPage(isBack: false)
     ];
     return Scaffold(
         body: IndexedStack(
@@ -327,7 +329,7 @@ class _UserPageState extends ConsumerState<UserPage> {
   }
 
   Widget buildUserPageBody(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
       postUser = ref.read(postControllerProvider).postUserPage;
@@ -769,23 +771,22 @@ class _UserPageState extends ConsumerState<UserPage> {
           delegate: SliverChildBuilderDelegate(
         (context, index) {
           return VisibilityDetector(
-            key: Key(postUser[index]['id']),
-            onVisibilityChanged: (info) {
-              if (info.visibleFraction > 0.6) {
-                if (focusCurrentPostIndex.value != postUser[index]['id']) {
-                  focusCurrentPostIndex.value = postUser[index]['id'];
+              key: Key((postUser[index]?['id']).toString()),
+              onVisibilityChanged: (info) {
+                if (info.visibleFraction > 0.6) {
+                  if (focusCurrentPostIndex.value != postUser[index]['id']) {
+                    focusCurrentPostIndex.value = postUser[index]['id'];
+                  }
                 }
-              }
-            },
-            child: Post(
-              type: postPageUser,
-              post: postUser[index],
-              isFocus: focusCurrentPostIndex.value == postUser[index]['id'],
-              reloadFunction: () {
-                setState(() {});
               },
-            ),
-          );
+              child: Post(
+                type: postPageUser,
+                post: postUser[index],
+                isFocus: focusCurrentPostIndex.value == postUser[index]['id'],
+                reloadFunction: () {
+                  setState(() {});
+                },
+              ));
         },
         childCount: postUser.length,
       )),

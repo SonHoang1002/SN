@@ -81,7 +81,7 @@ class _PagePickFramesState extends State<PagePickFrames> {
                                 width: 8.0,
                               ),
                               SizedBox(
-                                  width: MediaQuery.of(context).size.width - 70,
+                                  width: MediaQuery.sizeOf(context).width - 70,
                                   child: Text(frames[index]['name']))
                             ],
                           ),

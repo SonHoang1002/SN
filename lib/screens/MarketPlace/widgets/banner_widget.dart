@@ -18,7 +18,9 @@ import '../../../providers/market_place_providers/campaine_provider.dart';
 // ];
 
 class CustomBanner extends ConsumerStatefulWidget {
-  const CustomBanner({super.key,});
+  const CustomBanner({
+    super.key,
+  });
 
   @override
   CustomBannerState createState() => CustomBannerState();
@@ -49,7 +51,7 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
           });
         }
       });
-    }); 
+    });
 
     _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
       if (_currentPage < images.length - 1) {
@@ -96,7 +98,7 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
                     return SizedBox(
                       child: ExtendedImage.network(
                         images[index],
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery.sizeOf(context).width,
                         fit: BoxFit.cover,
                         height: 200.0,
                       ),

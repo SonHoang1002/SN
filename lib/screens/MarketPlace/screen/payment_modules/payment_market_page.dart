@@ -212,7 +212,7 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     Future.wait([_initData()]);
@@ -412,7 +412,7 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                       marginTop: 0,
                       radiusValue: 0,
                       isHaveBoder: false,
-                      function: () async { 
+                      function: () async {
                         if (_selectedAddress != null &&
                             _selectedAddress.isNotEmpty) {
                           buildMessageDialog(context,

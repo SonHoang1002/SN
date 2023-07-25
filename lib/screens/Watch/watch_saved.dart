@@ -9,7 +9,7 @@ class WatchSaved extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Container(
         color: Theme.of(context).canvasColor,
         height: size.height - 120,

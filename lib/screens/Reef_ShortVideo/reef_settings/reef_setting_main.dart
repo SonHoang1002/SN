@@ -71,7 +71,7 @@ class _ReefSettingMain1State extends State<ReefSettingMain> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final width = size.width;
     final bgColor =
         ThemeMode.dark == true ? blackColor.withOpacity(0.4) : greyColor[200];

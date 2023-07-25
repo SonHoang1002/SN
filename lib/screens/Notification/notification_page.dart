@@ -121,9 +121,9 @@ class NotiItemState extends ConsumerState<NotiItem> {
           .notifications[widget.index]['read'];
     });
   }
-  
+
   @override
-   Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     final item = ref.watch(
       notificationControllerProvider.select(
         (e) => e.notifications[widget.index],
@@ -186,7 +186,7 @@ class NotiItemState extends ConsumerState<NotiItem> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.75,
+                  width: MediaQuery.sizeOf(context).width * 0.75,
                   child: Text.rich(
                     TextSpan(
                       text: renderName(item),

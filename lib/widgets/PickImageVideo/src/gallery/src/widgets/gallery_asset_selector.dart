@@ -105,7 +105,7 @@ class GalleryAssetSelectorState extends State<GalleryAssetSelector>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     const padding = 20.0 + 16.0 + 20.0;
     final buttonWidth = (size.width - padding) / 2;
 

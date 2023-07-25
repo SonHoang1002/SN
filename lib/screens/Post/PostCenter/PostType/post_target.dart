@@ -12,13 +12,14 @@ class PostTarget extends ConsumerWidget {
   final dynamic post;
   final String? type;
   final dynamic statusQuestion;
-  const PostTarget({Key? key, this.post, this.type, this.statusQuestion})
+  PostTarget({Key? key, this.post, this.type, this.statusQuestion})
       : super(key: key);
+  dynamic meData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.of(context).size;
-
+    final size = MediaQuery.sizeOf(context);
+    // meData ??= ref.watch(meControllerProvider)[0];
     return Container(
       width: size.width,
       height: size.width + 100,
@@ -44,12 +45,12 @@ class PostTarget extends ConsumerWidget {
                       width: size.width * 0.35,
                       height: size.width * 0.35,
                       object: ref.watch(meControllerProvider)[0],
-                      path: ((post?['account']) ??
-                                  (ref.watch(
-                                      meControllerProvider)[0])?['avatar_media']
+                      path: ((post?['account']?['avatar_media']
                               ?['preview_url']) ??
-                          linkAvatarDefault)
-              : post?['status_target']?['target_status'] == postTargetStatus
+                          (ref.watch(meControllerProvider)[0]?['avatar_media']
+                              ?['preview_url']) ??
+                          linkAvatarDefault))
+              : (post?['status_target']?['target_status']) == postTargetStatus
                   ? SvgPicture.asset(
                       "assets/win.svg",
                       width: size.width * 0.5,

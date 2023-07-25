@@ -191,7 +191,7 @@ class _EmojiModalBottomState extends State<EmojiModalBottom>
   }
 
   Widget renderSticker() {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return isLoadingMenuSticky
         ? const Center(child: CupertinoActivityIndicator())
         : SizedBox(

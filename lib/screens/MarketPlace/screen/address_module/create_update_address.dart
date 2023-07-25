@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/delivery_addresses_provider.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/delivery_address_apis.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -77,7 +78,7 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(
@@ -90,11 +91,16 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
             children: [
               const BackIconAppbar(),
               AppBarTitle(
-                  title: _isCreate! ? "Tạo địa chỉ mới" : "Cập nhật địa chỉ"),
-              const Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
+                  title: _isCreate! ? "Địa chỉ mới" : "Cập nhật địa chỉ"),
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                  color: Colors.black,
+                ),
               )
             ],
           ),
@@ -258,7 +264,7 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
     }
     var response;
     if (_isCreate!) {
-      response = await DeliveryAddressApis().postDeliveryAddressApi(_mainData); 
+      response = await DeliveryAddressApis().postDeliveryAddressApi(_mainData);
     } else {
       response = await DeliveryAddressApis()
           .updateDeliveryAddressApi(widget.oldData["id"], _mainData);

@@ -259,7 +259,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
         (postRender?['avatar_media']?['url']) ??
         postRender?['banner']?['preview_url'] ??
         linkSocialNetwork;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return WillPopScope(
       onWillPop: () async {
         widget.backFunction != null ? widget.backFunction!() : null;

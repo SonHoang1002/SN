@@ -50,7 +50,7 @@ class _HomeState extends ConsumerState<Home>
   Size? size;
   ThemeManager? theme;
   ValueNotifier<bool?> isDisconnected = ValueNotifier(null);
-    WebSocketChannel? webSocketChannel;
+  WebSocketChannel? webSocketChannel;
   StreamSubscription<dynamic>? subscription;
   double valueFromPercentageInRange(
       {required final double min, max, percentage}) {
@@ -439,7 +439,7 @@ class _HomeState extends ConsumerState<Home>
 
   @override
   Widget build(BuildContext context) {
-    size ??= MediaQuery.of(context).size;
+    size ??= MediaQuery.sizeOf(context);
     theme ??= pv.Provider.of<ThemeManager>(context);
     String modeTheme = theme!.themeMode == ThemeMode.dark
         ? 'dark'
@@ -482,7 +482,10 @@ class _HomeState extends ConsumerState<Home>
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
-      const MainMarketPage(false)
+      MainMarketPage(
+        isBack: false,
+        callbackFunction: _showBottomNavigator,
+      )
     ];
     List actions = [
       List.generate(

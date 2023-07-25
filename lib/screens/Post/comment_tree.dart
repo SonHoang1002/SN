@@ -964,7 +964,7 @@ class _PostMediaCommentState extends State<PostMediaComment> {
   Widget build(BuildContext context) {
     dynamic card = widget.post['card'];
     List medias = widget.post['media_attachments'] ?? [];
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     renderCard() {
       // if (card['image'] == null) return const SizedBox();
       if (card['description'] == 'sticky') {

@@ -54,7 +54,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
     bool isMore = ref.watch(eventControllerProvider).isMore;
     final theme = pv.Provider.of<ThemeManager>(context);
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
 
@@ -308,8 +308,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w700),
-                                                          children: <
-                                                              InlineSpan>[
+                                                          children: <InlineSpan>[
                                                             TextSpan(
                                                               text: ' Bạn bè',
                                                               style: TextStyle(

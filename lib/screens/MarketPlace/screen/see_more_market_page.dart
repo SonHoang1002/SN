@@ -29,7 +29,7 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     _initData();
@@ -72,7 +72,7 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
                         itemCount: _seeMoreProductList!.length,
                         itemBuilder: (context, index) {
                           return buildProductItem(
-                              context: context, 
+                              context: context,
                               data: _seeMoreProductList?[index]);
                         }),
                   ),

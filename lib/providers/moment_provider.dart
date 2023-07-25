@@ -107,15 +107,14 @@ class MomentController extends StateNotifier<MomentState> {
       }).toList();
       state = state.copyWith(
           momentFollow: tempDataFollow, momentSuggest: tempDataSuggest);
+      var response;
+      if (reaction == 'love') {
+        response = await MomentApi()
+            .favoriteReactionMoment(id, {"custom_vote_type": reaction});
+      } else if (reaction == null) {
+        response = await MomentApi().unfavoriteReactionMoment(id);
+      } else {}
     }
-    var response;
-    if (reaction == 'love') {
-      response = await MomentApi()
-          .favoriteReactionMoment(id, {"custom_vote_type": reaction});
-    } else if (reaction == null) {
-      response = await MomentApi().unfavoriteReactionMoment(id);
-    }
-    return response;
   }
 
   getListMomentSuggest(params) async {

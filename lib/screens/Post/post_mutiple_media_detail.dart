@@ -232,7 +232,7 @@ class _PostMutipleMediaDetail1State
       medias = postData['media_attachments'];
     }
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final height = size.height;
     final width = size.width;
     return Scaffold(
@@ -515,14 +515,14 @@ class _PostMutipleMediaDetail1State
   }
 
   Widget _buildVideoMedia(int index) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return SizedBox(
         height: (medias[index]['aspect'] ??
                     medias[index]['meta']['small']['aspect']) <
                 1
             ? size.width
             : null,
-        // width: MediaQuery.of(context).size.width,
+        // width: MediaQuery.sizeOf(context).width,
         // width: double.infinity,
         child: medias[index]['file'] != null
             ? VideoPlayerNoneController(
@@ -558,7 +558,7 @@ class _PostMutipleMediaDetail1State
       medias[index]['url'],
       key: Key(medias[index]['id']),
       fit: BoxFit.fitWidth,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.sizeOf(context).width,
       loadStateChanged: (state) {
         _buildLoadingExtendexImage(state, index);
         return null;
@@ -571,7 +571,7 @@ class _PostMutipleMediaDetail1State
       return Container(
         height: double.parse(
             (medias[index]?['meta']?['small']?['height'] ?? 400).toString()),
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(
             color: greyColor.withOpacity(0.3),
             borderRadius: BorderRadius.circular(10.0)),
@@ -581,7 +581,7 @@ class _PostMutipleMediaDetail1State
   }
 
   Widget buildAppbar() {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return AppBar(
       elevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

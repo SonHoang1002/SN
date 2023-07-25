@@ -38,7 +38,7 @@ class _LearnSpacePurchasedState extends ConsumerState<LearnSpacePurchased> {
               'Danh sách những người mua khóa học (${coursePurchased.length})'),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.sizeOf(context).width,
           child: ListView.builder(
             padding: EdgeInsets.zero,
             scrollDirection: Axis.vertical,

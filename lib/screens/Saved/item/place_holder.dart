@@ -116,8 +116,8 @@ class ContentPlaceholder extends StatelessWidget {
 class CollectionRowSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

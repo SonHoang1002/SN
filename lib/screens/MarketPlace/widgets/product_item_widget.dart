@@ -17,7 +17,7 @@ Widget buildProductItem(
     dynamic saleBanner}) {
   final List<dynamic> prices =
       getMinAndMaxPrice(data?["product_variants"] ?? []);
-  double childWidth = MediaQuery.of(context).size.width * 0.45;
+  double childWidth = MediaQuery.sizeOf(context).width * 0.45;
   return InkWell(
     onTap: () {
       pushToNextScreen(

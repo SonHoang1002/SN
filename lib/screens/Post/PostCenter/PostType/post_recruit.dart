@@ -15,7 +15,7 @@ class PostRecruit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recruit = post['shared_recruit'];
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         type != 'edit_post'

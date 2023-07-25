@@ -103,7 +103,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
   Widget build(BuildContext context) {
     var valueLinearProgressBar = ((growDetail['real_value'] ?? 0 - 0) * 100) /
         (growDetail['target_value'] ?? 0 - 0);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(
@@ -156,8 +156,8 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                   Stack(
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.sizeOf(context).height * 0.3,
+                        width: MediaQuery.sizeOf(context).width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30.0),
                           boxShadow: const [
@@ -1072,7 +1072,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                       child: Container(
                                         height: 35,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            MediaQuery.sizeOf(context).width *
                                                 0.44,
                                         decoration: BoxDecoration(
                                             color: growStatus
@@ -1109,7 +1109,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                                     },
                                     child: Container(
                                       height: 35,
-                                      width: MediaQuery.of(context).size.width *
+                                      width: MediaQuery.sizeOf(context).width *
                                           0.44,
                                       decoration: BoxDecoration(
                                           color: !growStatus
@@ -1179,7 +1179,7 @@ class _GrowDetailState extends ConsumerState<GrowDetail> {
                             } else {
                               return Container(
                                 height: 35,
-                                width: MediaQuery.of(context).size.width *
+                                width: MediaQuery.sizeOf(context).width *
                                     0.38, // 0.4 overflow
                                 decoration: BoxDecoration(
                                   color: secondaryColor,

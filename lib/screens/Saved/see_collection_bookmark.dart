@@ -135,7 +135,7 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
     final cltBookmarks = ref.watch(savedControllerProvider).currentCltBookmarks;
 

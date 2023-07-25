@@ -34,7 +34,7 @@ class _MenuState extends ConsumerState<Menu> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> key = GlobalKey();
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     List iconAction = [
       {

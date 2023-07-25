@@ -32,7 +32,7 @@ class _SuggestCenterState extends State<SuggestCenter> {
   @override
   Widget build(BuildContext context) {
     List suggestList = widget.suggestList;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Container(
       width: size.width,
       height: size.height * 0.52,

@@ -70,7 +70,7 @@ class MeetingEventState extends State<MeetingEvent>
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.sizeOf(context).height,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

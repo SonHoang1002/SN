@@ -261,7 +261,7 @@ class EditNoticeStoryState extends ConsumerState<EditNoticeStory> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final length = chosenImg.length + uploadedFiles.length;
     final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(

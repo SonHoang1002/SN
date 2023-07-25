@@ -92,7 +92,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     final theme = pv.Provider.of<ThemeManager>(context);
@@ -145,8 +145,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     Stack(
                       children: <Widget>[
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.sizeOf(context).height * 0.3,
+                          width: MediaQuery.sizeOf(context).width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30.0),
                             boxShadow: const [
@@ -563,7 +563,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                     .showSnackBar(
                                                                         const SnackBar(
                                                                   content: Text(
-                                                                      'Sao chép thành công', style: TextStyle(fontWeight: FontWeight.bold),),
+                                                                    'Sao chép thành công',
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
                                                                   duration:
                                                                       Duration(
                                                                           seconds:
@@ -571,14 +575,18 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                   backgroundColor:
                                                                       secondaryColor,
                                                                 ));
-                                                              } 
-                                                              else if (iconActionEllipsis[
+                                                              } else if (iconActionEllipsis[
                                                                           index]
-                                                                      ['key'] =='report') {
+                                                                      ['key'] ==
+                                                                  'report') {
                                                                 showBarModalBottomSheet(
-                                                                context: context,
-                                                                builder: (context) =>
-                                                                    ReportCategory(entityType: 'page', entityReport: widget.eventDetail));
+                                                                    context:
+                                                                        context,
+                                                                    builder: (context) => ReportCategory(
+                                                                        entityType:
+                                                                            'page',
+                                                                        entityReport:
+                                                                            widget.eventDetail));
                                                               }
                                                             },
                                                             child: Padding(
@@ -988,7 +996,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                 child: Container(
                                     height: 32,
                                     width:
-                                        MediaQuery.of(context).size.width * 0.4,
+                                        MediaQuery.sizeOf(context).width * 0.4,
                                     decoration: BoxDecoration(
                                         color: eventDetail['event_relationship']
                                                     ['status'] !=
@@ -1051,7 +1059,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                               },
                               child: Container(
                                 height: 32,
-                                width: MediaQuery.of(context).size.width * 0.35,
+                                width: MediaQuery.sizeOf(context).width * 0.35,
                                 decoration: BoxDecoration(
                                     color: eventDetail['event_relationship']
                                                 ['status'] !=
@@ -1106,9 +1114,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                     builder: (context) => Container(
                                       margin: const EdgeInsets.only(
                                           left: 8.0, top: 15.0),
-                                      width: MediaQuery.of(context).size.width,
+                                      width: MediaQuery.sizeOf(context).width,
                                       height:
-                                          MediaQuery.of(context).size.height *
+                                          MediaQuery.sizeOf(context).height *
                                                   0.3 +
                                               30,
                                       child: Column(
@@ -1189,8 +1197,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                 },
                                 child: Container(
                                   height: 32,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.1,
+                                  width: MediaQuery.sizeOf(context).width * 0.1,
                                   decoration: BoxDecoration(
                                       color: const Color.fromARGB(
                                           189, 202, 202, 202),

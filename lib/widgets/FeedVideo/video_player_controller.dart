@@ -60,8 +60,8 @@ class _VideoPlayerHasControllerState
       videoPlayerController = betterPlayer!.videoPlayerController;
       chewieController = betterPlayer!.chewieController;
     } else {
-      videoPlayerController = VideoPlayerController.network(
-        widget.media['remote_url'] ?? widget.media['url'],
+      videoPlayerController = VideoPlayerController.networkUrl(
+        Uri.parse(widget.media['remote_url'] ?? widget.media['url']),
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
       )..initialize().then((value) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -107,7 +107,7 @@ class _VideoPlayerHasControllerState
             placeholder: Container(
                 decoration: BoxDecoration(
               color: Color(int.parse(
-                  '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
+                  '0xFF${(widget.media?['meta']?['small']?['average_color']).substring(1)}')),
             )),
             showControlsOnInitialize: true,
             videoPlayerController: videoPlayerController!,
@@ -135,144 +135,155 @@ class _VideoPlayerHasControllerState
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   sizeOfVideo = globalKey.currentContext?.size;
     // });
-    return VisibilityDetector(
-        onVisibilityChanged: (visibilityInfo) {
-          // if (widget.isFocus!) {
-          if (isPlaying && visibilityInfo.visibleFraction > 0.7) {
-            setState(() {
-              isVisible = visibilityInfo.visibleFraction > 0.7;
-              if (mounted) {
-                if (chewieController == null) return;
-                if (isVisible) {
-                  if (selectedVideo == null) {
-                    chewieController?.videoPlayerController.play();
-                  } else {
-                    chewieController?.videoPlayerController.pause();
+    return AspectRatio(
+      aspectRatio: videoPlayerController!.value.aspectRatio > 1
+          ? 1
+          : videoPlayerController!.value.aspectRatio,
+      child: VisibilityDetector(
+          onVisibilityChanged: (visibilityInfo) {
+            // if (widget.isFocus!) {
+            if (isPlaying && visibilityInfo.visibleFraction > 0.7) {
+              setState(() {
+                isVisible = visibilityInfo.visibleFraction > 0.7;
+                if (mounted) {
+                  if (chewieController == null) return;
+                  if (isVisible) {
+                    if (selectedVideo == null) {
+                      chewieController?.videoPlayerController.play();
+                    } else {
+                      chewieController?.videoPlayerController.pause();
+                    }
                   }
                 }
-              }
-            });
-          } else {
-            chewieController?.videoPlayerController.pause();
-          }
-          // }
-        },
-        key: Key(widget.media['id']),
-        child: Stack(
-          children: [
-            chewieController != null
-                ? AspectRatio(
-                    key: globalKey,
-                    // tag: widget.media['file']?.path ??
-                    //       widget.media['remote_url'] ??
-                    //       widget.media['url'],
-                    aspectRatio: chewieController!
-                        .videoPlayerController.value.aspectRatio,
-                    // (widget.type == postWatchDetail ||
-                    //         chewieController!
-                    //                 .videoPlayerController.value.aspectRatio >=
-                    //             3 / 4)
-                    //     ? chewieController!
-                    //         .videoPlayerController.value.aspectRatio
-                    // : 3 / 4,
-                    child: chewieController!
-                            .videoPlayerController.value.isInitialized
-                        ? selectedVideo != null &&
-                                widget.type != 'miniPlayer' &&
-                                widget.media['id'] ==
-                                    selectedVideo['media_attachments'][0]['id']
-                            ? Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: ExtendedImage.network(
-                                      (widget.media['preview_url'] ??
-                                          widget.media['preview_remote_url']),
-                                      width: MediaQuery.of(context).size.width,
-                                      // height: sizeOfVideo?.height,
-                                      fit: BoxFit.cover,
+              });
+            } else {
+              chewieController?.videoPlayerController.pause();
+            }
+            // }
+          },
+          key: Key(widget.media['id']),
+          child: Stack(
+            children: [
+              chewieController != null
+                  ? AspectRatio(
+                      key: globalKey,
+                      // tag: widget.media['file']?.path ??
+                      //       widget.media['remote_url'] ??
+                      //       widget.media['url'],
+                      aspectRatio: videoPlayerController!.value.aspectRatio > 1
+                          ? 1
+                          : videoPlayerController!.value.aspectRatio,
+                      // (widget.type == postWatchDetail ||
+                      //         chewieController!
+                      //                 .videoPlayerController.value.aspectRatio >=
+                      //             3 / 4)
+                      //     ? chewieController!
+                      //         .videoPlayerController.value.aspectRatio
+                      // : 3 / 4,
+                      child: chewieController!
+                              .videoPlayerController.value.isInitialized
+                          ? selectedVideo != null &&
+                                  widget.type != 'miniPlayer' &&
+                                  widget.media['id'] ==
+                                      selectedVideo['media_attachments'][0]
+                                          ['id']
+                              ? Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: ExtendedImage.network(
+                                        (widget.media['preview_url'] ??
+                                            widget.media['preview_remote_url']),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        // height: sizeOfVideo?.height,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                                  Positioned.fill(
-                                      child: Container(
-                                    color: Colors.black.withOpacity(0.4),
-                                    child: const Center(
-                                      child: Text("Đang phát",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: white,
-                                              fontWeight: FontWeight.w500)),
-                                    ),
-                                  ))
-                                ],
-                              )
-                            : Stack(
-                                children: [
-                                  Material(
-                                      child: Chewie(
-                                          controller: chewieController!)),
-                                  Positioned.fill(
-                                      child: GestureDetector(
-                                    onTap: () {
-                                      if (betterPlayer!.videoId !=
-                                          widget.media['id']) {
-                                        ref
-                                            .read(betterPlayerControllerProvider
-                                                .notifier)
-                                            .initializeBetterPlayerController(
-                                                widget.media['id'],
-                                                videoPlayerController!,
-                                                chewieController!);
-                                      }
-                                      setState(() {
-                                        isPlaying = !isPlaying;
-                                      });
-                                      // if (widget.isFocus!) {
-                                      if (isPlaying) {
-                                        chewieController!.videoPlayerController
-                                            .play();
-                                      } else {
-                                        chewieController!.videoPlayerController
-                                            .pause();
-                                      }
-                                      // }
-                                    },
-                                    onDoubleTap: () {
-                                      if (widget.handleAction != null) {
-                                        widget.handleAction!();
-                                      }
-                                    },
-                                  ))
-                                ],
-                              )
-                        : Positioned.fill(
-                            child: ExtendedImage.network(
-                              (widget.media['preview_url'] ??
-                                  widget.media['preview_remote_url']),
-                              width: MediaQuery.of(context).size.width,
-                              // height: sizeOfVideo?.height,
-                              fit: BoxFit.cover,
+                                    Positioned.fill(
+                                        child: Container(
+                                      color: Colors.black.withOpacity(0.4),
+                                      child: const Center(
+                                        child: Text("Đang phát",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: white,
+                                                fontWeight: FontWeight.w500)),
+                                      ),
+                                    ))
+                                  ],
+                                )
+                              : Stack(
+                                  children: [
+                                    Material(
+                                        child: Chewie(
+                                            controller: chewieController!)),
+                                    Positioned.fill(
+                                        child: GestureDetector(
+                                      onTap: () {
+                                        if (betterPlayer!.videoId !=
+                                            widget.media['id']) {
+                                          ref
+                                              .read(
+                                                  betterPlayerControllerProvider
+                                                      .notifier)
+                                              .initializeBetterPlayerController(
+                                                  widget.media['id'],
+                                                  videoPlayerController!,
+                                                  chewieController!);
+                                        }
+                                        setState(() {
+                                          isPlaying = !isPlaying;
+                                        });
+                                        // if (widget.isFocus!) {
+                                        if (isPlaying) {
+                                          chewieController!
+                                              .videoPlayerController
+                                              .play();
+                                        } else {
+                                          chewieController!
+                                              .videoPlayerController
+                                              .pause();
+                                        }
+                                        // }
+                                      },
+                                      onDoubleTap: () {
+                                        if (widget.handleAction != null) {
+                                          widget.handleAction!();
+                                        }
+                                      },
+                                    ))
+                                  ],
+                                )
+                          : Positioned.fill(
+                              child: ExtendedImage.network(
+                                (widget.media['preview_url'] ??
+                                    widget.media['preview_remote_url']),
+                                width: MediaQuery.of(context).size.width,
+                                // height: sizeOfVideo?.height,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                  )
-                : Positioned.fill(
-                    child: ExtendedImage.network(
-                      (widget.media['preview_url'] ??
-                          widget.media['preview_remote_url']),
-                      width: MediaQuery.of(context).size.width,
-                      // height: sizeOfVideo?.height,
-                      fit: BoxFit.cover,
+                    )
+                  : Positioned.fill(
+                      child: ExtendedImage.network(
+                        (widget.media['preview_url'] ??
+                            widget.media['preview_remote_url']),
+                        width: MediaQuery.of(context).size.width,
+                        // height: sizeOfVideo?.height,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-            // const Positioned.fill(
-            //   child: Align(
-            //       alignment: Alignment.center,
-            //       child: Icon(
-            //         FontAwesomeIcons.play,
-            //         color: Colors.green,
-            //         size: 40,
-            //       )),
-            // ),
-          ],
-        ));
+              // const Positioned.fill(
+              //   child: Align(
+              //       alignment: Alignment.center,
+              //       child: Icon(
+              //         FontAwesomeIcons.play,
+              //         color: Colors.green,
+              //         size: 40,
+              //       )),
+              // ),
+            ],
+          )),
+    );
   }
 }

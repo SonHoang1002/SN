@@ -63,7 +63,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
       behavior: HitTestBehavior.opaque,
       child: Container(
         color: theme.isDarkMode ? Colors.black : Colors.white,
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.sizeOf(context).height * 0.4,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -71,7 +71,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.5,
+                  width: MediaQuery.sizeOf(context).width * 0.5,
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
@@ -89,7 +89,7 @@ class _ModalPaymentState extends ConsumerState<ModalPayment> {
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.5,
+                  width: MediaQuery.sizeOf(context).width * 0.5,
                   child: Align(
                     alignment: Alignment.topRight,
                     child: Padding(

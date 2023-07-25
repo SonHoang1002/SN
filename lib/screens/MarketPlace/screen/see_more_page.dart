@@ -4,13 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
-import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/messenger_app_bar/app_bar_title.dart';
 
 import '../widgets/product_item_widget.dart';
+import 'notification_market_page.dart';
 
 class SeeMoreMarketPage extends ConsumerStatefulWidget {
   const SeeMoreMarketPage({super.key});
@@ -52,22 +57,27 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     _seeMoreProductList = ref.watch(productsProvider).list;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BackIconAppbar(),
-            AppBarTitle(title: "Danh sách sản phẩm"),
-            Icon(
-              FontAwesomeIcons.bell,
-              size: 18,
-              color: Colors.black,
+            const BackIconAppbar(),
+            const AppBarTitle(title: "Danh sách sản phẩm"),
+            InkWell(
+              onTap: () {
+                pushToNextScreen(context, NotificationMarketPage());
+              },
+              child: const Icon(
+                FontAwesomeIcons.bell,
+                size: 18,
+                color: Colors.black,
+              ),
             )
           ],
         ),

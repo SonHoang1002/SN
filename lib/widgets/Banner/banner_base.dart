@@ -50,7 +50,7 @@ class _BannerBaseState extends State<BannerBase> {
         widget.object?['display_name'] ?? widget.object?['title'] ?? '';
     String subTitle =
         widget.objectMore?['general_information']?['other_name'] ?? '';
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return Column(
       children: [

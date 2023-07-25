@@ -80,8 +80,7 @@ class PageVisibility extends StatelessWidget {
                                   height: 4.0,
                                 ),
                                 SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width - 110,
+                                  width: MediaQuery.sizeOf(context).width - 110,
                                   child: TextDescription(
                                       description: typeVisibility[index]
                                           ['subLabel']),

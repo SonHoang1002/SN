@@ -78,7 +78,7 @@ class _RecruitNewsState extends ConsumerState<RecruitNews> {
     List recruits = !recruitStatus ? recruitsNew : recruitsPast;
     bool isMore = ref.watch(recruitControllerProvider).isMore;
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(

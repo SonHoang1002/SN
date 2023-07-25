@@ -109,7 +109,7 @@ class EditUserBiographyState extends ConsumerState<EditUserBiography> {
               height: 20,
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 3 - 38,
+              height: MediaQuery.sizeOf(context).height / 3 - 38,
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   border: Border.all(color: colorWord(context), width: 1)),

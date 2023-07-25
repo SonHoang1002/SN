@@ -35,7 +35,7 @@ class _RecruitCVState extends ConsumerState<RecruitCV> {
 
     final Completer<WebViewController> controller =
         Completer<WebViewController>();
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(
@@ -93,7 +93,7 @@ class _RecruitCVState extends ConsumerState<RecruitCV> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SizedBox(
-                                  width: MediaQuery.of(context).size.width,
+                                  width: MediaQuery.sizeOf(context).width,
                                   child: WebView(
                                     initialUrl:
                                         '$urlWebEmso/recruit_detail/$id',

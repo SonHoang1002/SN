@@ -43,7 +43,7 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     var width = size.width;
     var height = size.height;
     List grows = ref.watch(growControllerProvider).growsOwner;

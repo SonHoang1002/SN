@@ -26,7 +26,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(
@@ -64,7 +64,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
                                 isCenterLeft: false),
                             buildSpacer(height: 25),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width - 20,
+                              width: MediaQuery.sizeOf(context).width - 20,
                               child: TextFormFieldCustom(
                                 autofocus: true,
                                 hintText: "Họ và tên",
@@ -99,7 +99,7 @@ class _NameLoginPageState extends State<NameLoginPage> {
                                   )
                                 : SizedBox(
                                     width:
-                                        MediaQuery.of(context).size.width - 50,
+                                        MediaQuery.sizeOf(context).width - 50,
                                     child: buildTextContent(
                                       NameLoginConstants.NAME_LOGIN_SUBTITLE,
                                       true,

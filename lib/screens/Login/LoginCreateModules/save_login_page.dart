@@ -44,7 +44,7 @@ class SaveLoginPage extends StatelessWidget {
                             isCenterLeft: false),
                         buildSpacer(height: 20),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
+                          width: MediaQuery.sizeOf(context).width - 50,
                           child: buildTextContent(
                             SaveLogin.SAVE_LOGIN_SUB,
                             false,

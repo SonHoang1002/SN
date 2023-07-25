@@ -50,7 +50,7 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     String description = '';
 
     if (widget.statusActivity == null) {
@@ -189,7 +189,7 @@ class PostBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     dynamic listGroupBg =
         groupBy(backgroundPost, (obj) => obj['category_name']);
     List<dynamic> listKeysBg = listGroupBg.keys.toList();

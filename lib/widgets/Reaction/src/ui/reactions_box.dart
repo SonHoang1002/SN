@@ -196,8 +196,8 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.sizeOf(context).width;
+    height = MediaQuery.sizeOf(context).height;
     return Material(
         elevation: 0,
         color: Colors.transparent,
@@ -1031,7 +1031,7 @@ class _ReactionsBoxState extends ConsumerState<ReactionsBox>
   }
 
   double _getHorizontalPosition() {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
     return screenWidth * .09 / 2;
   }
 

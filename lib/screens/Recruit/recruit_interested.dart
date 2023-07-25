@@ -44,7 +44,7 @@ class _RecruitInterestedState extends ConsumerState<RecruitInterested> {
   Widget build(BuildContext context) {
     List recruits = ref.watch(recruitControllerProvider).recruitsInterest;
     bool isMore = ref.watch(recruitControllerProvider).isMore;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(

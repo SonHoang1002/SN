@@ -68,7 +68,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
     List events = ref.watch(eventControllerProvider).eventsInvite;
     List eventsInviteHost = ref.watch(eventControllerProvider).eventsInviteHost;
     final theme = pv.Provider.of<ThemeManager>(context);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(
@@ -104,7 +104,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                       },
                       child: Container(
                         height: 38,
-                        width: MediaQuery.of(context).size.width * 0.43,
+                        width: MediaQuery.sizeOf(context).width * 0.43,
                         decoration: BoxDecoration(
                             color: eventAction
                                 ? secondaryColor
@@ -137,7 +137,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                       },
                       child: Container(
                         height: 38,
-                        width: MediaQuery.of(context).size.width * 0.43,
+                        width: MediaQuery.sizeOf(context).width * 0.43,
                         decoration: BoxDecoration(
                             color: !eventAction
                                 ? secondaryColor
@@ -401,8 +401,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700),
-                                                            children: <
-                                                                InlineSpan>[
+                                                            children: <InlineSpan>[
                                                               TextSpan(
                                                                 text: ' Bạn bè',
                                                                 style: TextStyle(
@@ -883,8 +882,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700),
-                                                            children: <
-                                                                InlineSpan>[
+                                                            children: <InlineSpan>[
                                                               TextSpan(
                                                                 text: ' Bạn bè',
                                                                 style: TextStyle(

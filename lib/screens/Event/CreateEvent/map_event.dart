@@ -49,7 +49,7 @@ class _MapEventState extends ConsumerState<MapEvent> {
   @override
   Widget build(BuildContext context) {
     List checkin = ref.watch(mapControllerProvider).checkin;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return checkin.isNotEmpty
         ? SizedBox(
             height: size.height * 0.8,

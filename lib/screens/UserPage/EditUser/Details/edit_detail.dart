@@ -98,7 +98,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
     final userAbout = ref.watch(userInformationProvider).userMoreInfor;
     final infor = userAbout?['general_information'];

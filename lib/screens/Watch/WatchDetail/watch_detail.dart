@@ -17,6 +17,7 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_tree.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
@@ -620,7 +621,7 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    size = MediaQuery.of(context).size;
+    size = MediaQuery.sizeOf(context);
     watchData = ref.watch(currentPostControllerProvider).currentPost;
     return GestureDetector(
         onTap: () {
@@ -821,7 +822,7 @@ class _BottomActionState extends State<BottomAction> {
                               backgroundColor: Colors.transparent,
                               builder: (context) => SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.7,
+                                      MediaQuery.sizeOf(context).height * 0.7,
                                   child: ScreenShare(
                                       entityShare: widget.widget.post,
                                       type: 'post',
@@ -835,7 +836,7 @@ class _BottomActionState extends State<BottomAction> {
                       ),
                     ),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width - 70,
+                        width: MediaQuery.sizeOf(context).width - 70,
                         child: CommentTextfield(
                             commentSelected: widget.commentSelected,
                             getCommentSelected: widget.getCommentSelected,

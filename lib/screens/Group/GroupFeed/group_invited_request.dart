@@ -35,7 +35,7 @@ class _GroupInvitedRequestState extends ConsumerState<GroupInvitedRequest> {
     groupInviteJoin = ref.watch(groupListControllerProvider).groupInviteJoin;
     groupInviteMember =
         ref.watch(groupListControllerProvider).groupInviteMember;
-    final height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.sizeOf(context).height;
     return Expanded(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -262,9 +262,7 @@ class _GroupInvitedRequestState extends ConsumerState<GroupInvitedRequest> {
                                           ButtonPrimary(
                                             label: "Hủy bỏ",
                                             isPrimary: false,
-                                            handlePress: () {
-                                              
-                                            },
+                                            handlePress: () {},
                                           )
                                         ],
                                       ),

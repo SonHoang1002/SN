@@ -56,7 +56,7 @@ class _RecruitNewsPastState extends ConsumerState<RecruitNewsPast> {
   Widget build(BuildContext context) {
     List recruits = ref.watch(recruitControllerProvider).recruitsNewPast;
     bool isMore = ref.watch(recruitControllerProvider).isMore;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(
