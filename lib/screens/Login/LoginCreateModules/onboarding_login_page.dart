@@ -77,7 +77,7 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
 
@@ -200,7 +200,8 @@ class _OnboardingLoginPageState extends State<OnboardingLoginPage> {
                             child: Column(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25),
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                         elevation: 0,

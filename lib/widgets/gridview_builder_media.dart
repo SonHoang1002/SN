@@ -44,7 +44,7 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size; 
+    final size = MediaQuery.sizeOf(context);
     return GridView.builder(
         shrinkWrap: true,
         primary: false,

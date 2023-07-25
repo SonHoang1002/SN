@@ -98,7 +98,7 @@ class _PageEditMediaUploadState extends State<PageEditMediaUpload> {
   }
 
   Widget renderMedia(index) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     final file = filesRender[index];
     return Column(

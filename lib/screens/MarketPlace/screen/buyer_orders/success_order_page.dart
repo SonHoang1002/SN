@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -14,7 +14,7 @@ import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
-import '../../../../theme/colors.dart'; 
+import '../../../../theme/colors.dart';
 
 class SuccessOrderPage extends ConsumerStatefulWidget {
   final dynamic orderData;
@@ -34,7 +34,7 @@ class _SuccessOrderPageState extends ConsumerState<SuccessOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     Future.wait([_initData()]);

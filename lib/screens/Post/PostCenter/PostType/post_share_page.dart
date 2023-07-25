@@ -12,7 +12,7 @@ class PostSharePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final page = post['shared_page'];
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         type != "edit_post"

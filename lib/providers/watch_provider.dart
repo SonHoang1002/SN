@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/watch_api.dart';
@@ -71,32 +73,34 @@ class WatchController extends StateNotifier<WatchState> {
     }
   }
 
-  updateWatchDetail(type, newWatch) { 
-    int index = -1;
+  updateWatchDetail(type, newWatch) {
+    int indexFollow = -1;
+    int indexSuggest = -1;
 
-    if (type == 'follow') {
-      index = state.watchFollow
-          .indexWhere((element) => element['id'] == newWatch['id']);
-    } else if (type == 'suggest') {
-      index = state.watchSuggest
-          .indexWhere((element) => element['id'] == newWatch['id']);
-    }
+    // if (type == 'follow') {
+    indexFollow = state.watchFollow
+        .indexWhere((element) => element['id'] == newWatch['id']);
+    // } else if (type == 'suggest') {
+    indexSuggest = state.watchSuggest
+        .indexWhere((element) => element['id'] == newWatch['id']);
+    // }
 
-    if (mounted && index >= 0) {
+    if (mounted && (indexFollow >= 0 || indexSuggest >= 0)) {
       state = state.copyWith(
           mediaSelected: state.mediaSelected,
           position: state.position,
-          watchFollow: type == 'follow'
-              ? state.watchFollow.sublist(0, index) +
+          watchFollow: indexFollow != -1
+              ? state.watchFollow.sublist(0, indexFollow) +
                   [newWatch] +
-                  state.watchFollow.sublist(index + 1)
+                  state.watchFollow.sublist(indexFollow + 1)
               : state.watchFollow,
-          watchSuggest: type == 'forget'
-              ? state.watchSuggest.sublist(0, index) +
+          watchSuggest: indexSuggest != -1
+              ? state.watchSuggest.sublist(0, indexSuggest) +
                   [newWatch] +
-                  state.watchSuggest.sublist(index + 1)
+                  state.watchSuggest.sublist(indexSuggest + 1)
               : state.watchSuggest);
     }
+    print("newWatch ${jsonEncode(newWatch)}");
   }
 
   updatePositionPlaying(position) {

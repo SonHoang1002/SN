@@ -19,7 +19,7 @@ buildSeeShopWidget(BuildContext context, dynamic data) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5,
+              width: MediaQuery.sizeOf(context).width * 0.5,
               child: buildTextContent(data['page']['title'], true,
                   fontSize: 14, overflow: TextOverflow.ellipsis, maxLines: 1),
             ),

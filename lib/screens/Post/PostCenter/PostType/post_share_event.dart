@@ -15,7 +15,7 @@ class PostShareEvent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final event = post['shared_event'];
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return GestureDetector(
       onTap: () {

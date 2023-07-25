@@ -42,7 +42,7 @@ class ModalBookmarkState extends State<ModalBookmark> {
     );
     return SingleChildScrollView(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.55,
+        height: MediaQuery.sizeOf(context).height * 0.55,
         padding: const EdgeInsets.symmetric(vertical: 25.0),
         child: Column(
           children: [

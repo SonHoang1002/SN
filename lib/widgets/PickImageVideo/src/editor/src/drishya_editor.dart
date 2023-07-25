@@ -95,8 +95,8 @@ class _DrishyaEditorState extends State<DrishyaEditor> {
                   Stack(
                     children: [
                       Positioned(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.sizeOf(context).width,
+                        height: MediaQuery.sizeOf(context).height,
                         child: ValueListenableBuilder<EditorBackground>(
                           valueListenable: _controller.backgroundNotifier,
                           builder: (context, bg, child) => bg.build(context),

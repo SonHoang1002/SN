@@ -25,8 +25,8 @@ class CollectionItemState extends ConsumerState<CollectionItem> {
       (element) => element['id'] == widget.item['id'],
     );
 
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
     final theme = pv.Provider.of<ThemeManager>(context);
     return CardComponents(
       imageCard: SizedBox(

@@ -937,7 +937,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     height = size.height;
     width = size.width;
     return WillPopScope(
@@ -995,7 +995,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                         backgroundWidget: mainBody(),
                         expandedWidget: _menuOptions(),
                         onDragging: (pos) {},
-                        maxExtent: MediaQuery.of(context).size.height * 0.8,
+                        maxExtent: MediaQuery.sizeOf(context).height * 0.8,
                         minExtent: height / 2,
                         useSafeArea: false,
                         curve: Curves.easeIn,
@@ -1019,7 +1019,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   }
 
   Widget mainBody() {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Container(
       key: _heightKey,
       // decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
@@ -1355,8 +1355,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                     setState(() {
                                       isActiveBackground = false;
                                     });
-                                    showCustomBottomSheet(
-                                        context, 500,title: "Chọn màu nền",
+                                    showCustomBottomSheet(context, 500,
+                                        title: "Chọn màu nền",
                                         isHaveCloseButton: false,
                                         widget: PostBackground(
                                           backgroundSelected:
@@ -1387,7 +1387,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         // zoom in options
         Container(
             height: 60 + 30,
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.sizeOf(context).width,
             decoration:
                 getDecoration(Theme.of(context).scaffoldBackgroundColor),
             child: GridView.builder(
@@ -1528,7 +1528,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             child: ListView.builder(
               controller: menuController,
               physics: const NeverScrollableScrollPhysics(),
-              //  MediaQuery.of(context).size.height * 0.8 > 550
+              //  MediaQuery.sizeOf(context).height * 0.8 > 550
               //     ? const NeverScrollableScrollPhysics()
               //     : const BouncingScrollPhysics(),
               shrinkWrap: true,
@@ -1617,7 +1617,7 @@ class PreviewUrlPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         showCupertinoModalPopup(

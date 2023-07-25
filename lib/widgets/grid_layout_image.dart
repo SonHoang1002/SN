@@ -57,7 +57,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
   }
 
   Widget renderLayoutMedia(context, medias) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     switch (medias.length) {
       case 1:
         if (checkIsImage(medias[0])) {
@@ -124,13 +124,16 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
               constraints: const BoxConstraints(
                   // maxHeight: size.height * 0.75,
                   ),
-              height: (medias[0]['aspect'] ??
-                          medias[0]['meta']['original']['aspect'] ??
-                          1) <
+              height: (medias[0]?['aspect'] ??
+                          (medias[0]?['meta']?['small']?['aspect'])) <
                       1
-                  ? size.width
+                  ? size.width / (medias[0]?['meta']?['small']?['aspect'])
                   : null,
-              // width: size.width,
+
+              //  medias[0]?['meta']?['small']?['aspect'] != null
+              //     ? size.width / (medias[0]?['meta']?['small']?['aspect'])
+              //     : size.width,
+              width: size.width,
               child: medias[0]['file'] != null
                   ? VideoPlayerNoneController(
                       path: medias[0]['file'].path,
@@ -163,6 +166,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                     MaterialPageRoute(
                                         builder: (context) => WatchSuggest(
                                             post: widget.post,
+                                            preType: widget.preType,
                                             media: medias[0])));
                       },
                     ));

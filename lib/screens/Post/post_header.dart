@@ -158,7 +158,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
   @override
   Widget build(BuildContext context) {
     final meData = ref.watch(meControllerProvider)[0];
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery.sizeOf(context);
     var account = widget.post?['account'] ?? {};
     var group = widget.post?['group'];
     var page = widget.post?['page'];
@@ -298,22 +298,21 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                         )
                       ],
                     ),
-                    // widget.isHaveAction == true
-                    widget.post?['account']?['id'] == meData['id'] ||
-                            (widget.post?['page'] != null &&
-                                widget.post?['page_owner'] != null &&
-                                widget.post?['page_owner']?['page_relationship']
-                                        ?['role'] ==
-                                    "admin")
-                        ? (![postReblog, postMultipleMedia]
-                                .contains(widget.type))
-                            ? BlockPostHeaderAction(
-                                widget: widget,
-                                meData: meData,
-                                ref: ref,
-                              )
-                            : const SizedBox()
+                    // (widget.post?['account']?['id'] == meData['id'] ||
+                    //     (widget.post?['page'] != null &&
+                    //         widget.post?['page_owner'] != null &&
+                    //         widget.post?['page_owner']?['page_relationship']
+                    //                 ?['role'] ==
+                    //             "admin"))
+                    // ?
+                    (![postReblog, postMultipleMedia].contains(widget.type))
+                        ? BlockPostHeaderAction(
+                            widget: widget,
+                            meData: meData,
+                            ref: ref,
+                          )
                         : const SizedBox()
+                    // : const SizedBox()
                   ]),
             ),
           )
@@ -369,7 +368,11 @@ class BlockPostHeaderAction extends StatelessWidget {
         SizedBox(
           width: widget.type != postDetail ? 10 : 0,
         ),
-        [postDetail, postPageUser].contains(widget.type) ||
+        ((widget.post?['page_owner'] != null &&
+                    !['moderator', 'admin', 'member'].contains(
+                        widget.post?['page_owner']?['page_relationship']
+                            ?['role']))) ||
+                [postDetail, postPageUser].contains(widget.type) ||
                 widget.post['account']['id'] == meData['id']
             ? const SizedBox()
             : InkWell(

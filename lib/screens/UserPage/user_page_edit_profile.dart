@@ -268,7 +268,7 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
     final userData = ref.watch(userInformationProvider).userInfor;
     final meData = ref.watch(meControllerProvider)[0];

@@ -98,6 +98,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
       "label": "Chia sẻ",
     }
   ];
+
   handlePress(key) {
     if (key == 'comment') {
       if (![postDetail, postMultipleMedia, postWatch, imagePhotoPage]
@@ -333,7 +334,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             widget.post['viewer_reaction'] ??
             '')
         : (widget.post?['viewer_reaction'] ?? ""));
-    postData = widget.post;
+    postData ??= widget.post;
 
     return Column(
       children: [
@@ -364,13 +365,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                                 suggestReactionContent = "Trượt để chọn";
                                 // suggestReactionStatus = false;
                               });
-                            },
-                            // onHoverReaction: () {
-                            //   setState(() {
-                            //     suggestReactionContent = "";
-                            //     suggestReactionStatus = false;
-                            //   });
-                            // },
+                            }, 
                             onCancelReaction: () {
                               setState(() {
                                 suggestReactionContent = "";

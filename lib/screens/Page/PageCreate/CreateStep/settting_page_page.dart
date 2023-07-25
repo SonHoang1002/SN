@@ -17,7 +17,7 @@ class _SettingsPageState extends State<SettingsPage> {
   List<bool> listSwitch = [true, true];
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,

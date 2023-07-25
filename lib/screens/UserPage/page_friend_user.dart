@@ -66,7 +66,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     List listMenu = [
       {"key": 'all', "label": "Tất cả"},
       {"key": 'new', "label": "Gần đây"}
@@ -281,7 +281,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                                     children: [
                                       SizedBox(
                                         width:
-                                            MediaQuery.of(context).size.width -
+                                            MediaQuery.sizeOf(context).width -
                                                 90,
                                         child: Text(listMenu[index]['label'],
                                             style: const TextStyle(

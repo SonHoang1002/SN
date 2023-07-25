@@ -106,7 +106,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     double width = size.width;
     double height = size.height;
 
@@ -155,8 +155,8 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                   Stack(
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.sizeOf(context).height * 0.3,
+                        width: MediaQuery.sizeOf(context).width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30.0),
                           boxShadow: const [
@@ -227,13 +227,14 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                             .read(recruitControllerProvider
                                                 .notifier)
                                             .updateStatusRecruit(
-                                                isRecruitInterested,
-                                                widget.data['id'],);
+                                              isRecruitInterested,
+                                              widget.data['id'],
+                                            );
                                       });
                                     },
                                     child: Container(
                                       height: 35,
-                                      width: MediaQuery.of(context).size.width *
+                                      width: MediaQuery.sizeOf(context).width *
                                           0.4,
                                       decoration: BoxDecoration(
                                           color: !recruitDetail[
@@ -323,7 +324,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                     child: Container(
                                         height: 35,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            MediaQuery.sizeOf(context).width *
                                                 0.35,
                                         decoration: BoxDecoration(
                                             color: const Color.fromARGB(
@@ -361,7 +362,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                           margin: const EdgeInsets.only(
                                               left: 8.0, top: 15.0),
                                           width:
-                                              MediaQuery.of(context).size.width,
+                                              MediaQuery.sizeOf(context).width,
                                           height: eGLRModalBtmHeight,
                                           child: Column(
                                             children: [
@@ -484,7 +485,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                     child: Container(
                                         height: 35,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            MediaQuery.sizeOf(context).width *
                                                 0.1,
                                         decoration: BoxDecoration(
                                             color: const Color.fromARGB(
@@ -545,7 +546,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                               },
                               child: Container(
                                 height: 32,
-                                width: MediaQuery.of(context).size.width * 0.4,
+                                width: MediaQuery.sizeOf(context).width * 0.4,
                                 decoration: BoxDecoration(
                                   color: !isRecruitInterested
                                       ? const Color.fromARGB(189, 202, 202, 202)
@@ -591,7 +592,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                               },
                               child: Container(
                                 height: 32,
-                                width: MediaQuery.of(context).size.width * 0.35,
+                                width: MediaQuery.sizeOf(context).width * 0.35,
                                 decoration: BoxDecoration(
                                   color:
                                       const Color.fromARGB(189, 202, 202, 202),
@@ -649,8 +650,8 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                   builder: (context) => Container(
                                     margin: const EdgeInsets.only(
                                         left: 8.0, top: 15.0),
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height *
+                                    width: MediaQuery.sizeOf(context).width,
+                                    height: MediaQuery.sizeOf(context).height *
                                             0.3 +
                                         30,
                                     child: Column(
@@ -730,7 +731,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                               },
                               child: Container(
                                 height: 32,
-                                width: MediaQuery.of(context).size.width * 0.1,
+                                width: MediaQuery.sizeOf(context).width * 0.1,
                                 decoration: BoxDecoration(
                                   color:
                                       const Color.fromARGB(189, 202, 202, 202),
@@ -773,7 +774,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                               onTap: () {},
                               child: Container(
                                 height: 32,
-                                width: MediaQuery.of(context).size.width * 0.7,
+                                width: MediaQuery.sizeOf(context).width * 0.7,
                                 decoration: BoxDecoration(
                                   color: isAdvertised
                                       ? const Color.fromARGB(189, 202, 202, 202)
@@ -820,8 +821,8 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                   builder: (context) => Container(
                                     margin: const EdgeInsets.only(
                                         left: 8.0, top: 15.0),
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height *
+                                    width: MediaQuery.sizeOf(context).width,
+                                    height: MediaQuery.sizeOf(context).height *
                                             0.3 +
                                         30,
                                     child: Column(
@@ -901,7 +902,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                               },
                               child: Container(
                                 height: 32,
-                                width: MediaQuery.of(context).size.width * 0.1,
+                                width: MediaQuery.sizeOf(context).width * 0.1,
                                 decoration: BoxDecoration(
                                   color:
                                       const Color.fromARGB(189, 202, 202, 202),

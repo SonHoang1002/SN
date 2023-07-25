@@ -10,7 +10,7 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final size = MediaQuery.of(context).size;
+//     final size = MediaQuery.sizeOf(context);
 //     return InkWell(
 //       onTap: () {
 //         // pushCustomCupertinoPageRoute(context, const Moment());

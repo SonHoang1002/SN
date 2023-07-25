@@ -81,8 +81,8 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   Future<void> _handleSignOut() => _googleSignIn.disconnect();
 
   @override
-  Widget build(BuildContext context) { 
-    final size = MediaQuery.of(context).size;
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
@@ -125,7 +125,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
       "password": password.trim(),
     };
 
-    var response = await AuthenApi().fetchDataToken(data); 
+    var response = await AuthenApi().fetchDataToken(data);
     if (response != null && response?['access_token'] != null) {
       await SecureStorage().saveKeyStorage(response['access_token'], 'token');
       completeLogin();

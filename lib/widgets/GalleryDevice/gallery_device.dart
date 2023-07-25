@@ -201,7 +201,7 @@ class _GalleryDeviceState extends State<GalleryDevice>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return Scaffold(
         appBar: AppBar(

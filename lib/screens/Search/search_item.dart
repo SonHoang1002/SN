@@ -68,7 +68,7 @@ class SearchItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
+                      width: MediaQuery.sizeOf(context).width * 0.7,
                       child: Text(
                         item['display_name'] ?? item['title'],
                         style: const TextStyle(fontSize: 13),

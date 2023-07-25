@@ -314,14 +314,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     var rolePage = ref.watch(pageControllerProvider).rolePage;
     List<dynamic> listSwitch = [meData[0], pageData];
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     if (!isModalOpen && pageData?['page_relationship']?['role'] == 'admin') {
       isModalOpen = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showModalSwitchRole(context, listSwitch, rolePage, size);
       });
-    } 
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -385,7 +385,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           getBody(size, modeTheme, pageData, rolePage),
           if (showHeaderTabFixed)
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery.sizeOf(context).width,
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
               decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor),
@@ -555,7 +555,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             ],
           ),
           Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.sizeOf(context).width,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Column(

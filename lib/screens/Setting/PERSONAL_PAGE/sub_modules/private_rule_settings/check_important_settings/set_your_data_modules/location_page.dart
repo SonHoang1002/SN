@@ -20,7 +20,7 @@ class LocationPage extends StatelessWidget {
   late double height = 0;
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(

@@ -22,7 +22,7 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isVertical = (axis == Axis.vertical);
     var card = post['card'];
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery.sizeOf(context);
     var linkTitle =
         ((card['link'] ?? card['url']).split("//"))[1].split("/").first;
 

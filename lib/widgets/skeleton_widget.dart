@@ -71,8 +71,8 @@ class _CardSkeletonState extends State<CardSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -229,8 +229,8 @@ class _DarkCardSkeletonState extends State<DarkCardSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -413,8 +413,8 @@ class _CardProfileSkeletonState extends State<CardProfileSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -562,8 +562,8 @@ class _DarkCardProfileSkeletonState extends State<DarkCardProfileSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -706,8 +706,8 @@ class _CardPageSkeletonState extends State<CardPageSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -796,8 +796,8 @@ class _DarkCardPageSkeletonState extends State<DarkCardPageSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {

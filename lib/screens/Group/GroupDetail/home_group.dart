@@ -190,7 +190,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       mergeAndFilter(groupMember, groupFriend),
     );
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       body: CustomScrollView(
         shrinkWrap: true,
@@ -555,7 +555,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
   }
 
   Widget _buildButtonActionGroup() {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     //   "group_relationship": {
     //   "member": false,
     //   "admin": false,
@@ -664,7 +664,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       listButtons[1] = (const SizedBox());
     }
     //(6)
-     else if (widget.groupDetail?['group_relationship']?['member']) {
+    else if (widget.groupDetail?['group_relationship']?['member']) {
       listButtons[0] = (SizedBox(
         width: size.width * 0.45,
         child: ButtonPrimary(

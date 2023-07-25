@@ -160,7 +160,7 @@ class _MomentState extends ConsumerState<Moment>
             backgroundColor: Colors.black,
             key: key,
             drawer: Drawer(
-              width: MediaQuery.of(context).size.width - 20,
+              width: MediaQuery.sizeOf(context).width - 20,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               child: const Menu(),
             ),
@@ -445,7 +445,7 @@ class NoData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Container(
       color: Colors.black,
       width: size.width,

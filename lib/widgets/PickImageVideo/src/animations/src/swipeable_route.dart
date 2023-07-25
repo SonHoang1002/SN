@@ -394,7 +394,7 @@ class SwipeablePageTransition extends StatelessWidget {
             SizedBox(
               height: slidingDown && primaryRouteAnimation.value > 0.4
                   ? (1 - primaryRouteAnimation.value) *
-                      MediaQuery.of(context).size.height
+                      MediaQuery.sizeOf(context).height
                   : 0.0,
             ),
           ],

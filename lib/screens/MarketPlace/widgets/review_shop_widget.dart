@@ -36,7 +36,7 @@ Widget buildReviewShop(BuildContext context, dynamic pageData) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.sizeOf(context).width * 0.5,
                       child: buildTextContent(pageData?['title'] ?? "--", false,
                           fontSize: 14,
                           maxLines: 1,
@@ -100,7 +100,7 @@ Widget buildSingleButton(BuildContext context, String title,
       function != null ? function() : null;
     },
     child: Container(
-      width: width ?? MediaQuery.of(context).size.width * 0.43,
+      width: width ?? MediaQuery.sizeOf(context).width * 0.43,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(color: greyColor, width: 0.4),

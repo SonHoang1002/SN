@@ -29,7 +29,7 @@ class _AnimatedFlyIconWidgetState extends State<AnimatedFlyIconWidget> {
 
   @override
   Widget build(BuildContext context) {
-    size ??= MediaQuery.of(context).size; 
+    size ??= MediaQuery.sizeOf(context);
     isShowAnimatedReactionIcon = true;
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
@@ -42,7 +42,7 @@ class _AnimatedFlyIconWidgetState extends State<AnimatedFlyIconWidget> {
   Widget animationWidget() {
     return AnimatedPositioned(
       key: _animationKey,
-      onEnd: () { 
+      onEnd: () {
         // setState(() {
         //   isShowAnimatedReactionIcon = false;
         // });

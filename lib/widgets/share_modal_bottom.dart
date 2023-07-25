@@ -138,11 +138,10 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
         default:
           res = await PostApi().createStatus(renderParams(widget.type));
           break;
-      } 
-      if(checkShareGroupAdmin){
-        showSnackbar(context, 'Nhóm chỉ cho phép ADMIN đăng bài');
       }
-      else{
+      if (checkShareGroupAdmin) {
+        showSnackbar(context, 'Nhóm chỉ cho phép ADMIN đăng bài');
+      } else {
         showSnackbar(context, 'chia sẻ thành công');
       }
       checkShareGroupAdmin = false;
@@ -161,7 +160,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
   @override
   Widget build(BuildContext context) {
     var meData = ref.watch(meControllerProvider)[0];
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         if (focusNode.hasFocus) {
@@ -790,7 +789,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
                                     alignment: Alignment.centerLeft,
                                     constraints: BoxConstraints(
                                         minWidth:
-                                            MediaQuery.of(context).size.width *
+                                            MediaQuery.sizeOf(context).width *
                                                 0.1),
                                     child: Text(
                                       iconShareModal[index]['label'],

@@ -102,7 +102,7 @@ class PickNoticeCoverImageState extends ConsumerState<PickNoticeCoverImage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
     return Scaffold(
       appBar: AppBar(

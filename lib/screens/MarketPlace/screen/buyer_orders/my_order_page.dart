@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/order_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/buyer_orders/cancelled_return_page.dart';
@@ -28,7 +28,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_but
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
-import 'package:social_network_app_mobile/widgets/cross_bar.dart'; 
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import '../../../../theme/colors.dart';
 
 class MyOrderPage extends ConsumerStatefulWidget {
@@ -188,7 +188,9 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
           return;
         case "cancelled":
           final response = await getBuyerStatusApi(
-              maxId: _cancelledList!.last['data']['id'], limit: 10, status: key);
+              maxId: _cancelledList!.last['data']['id'],
+              limit: 10,
+              status: key);
           _cancelledList = formatDataList(
               [..._cancelledList!.map((e) => e['data']).toList(), ...response]);
           return;
@@ -310,7 +312,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     // if (_returnList != null && _returnList!.isEmpty) {

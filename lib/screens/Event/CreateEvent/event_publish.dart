@@ -81,7 +81,7 @@ class _EventPublishState extends State<EventPublish> {
             ),
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(MediaQuery.of(context).size.width, 45),
+                  minimumSize: Size(MediaQuery.sizeOf(context).width, 45),
                   foregroundColor: Colors.white, // foreground
                 ),
                 onPressed: () {

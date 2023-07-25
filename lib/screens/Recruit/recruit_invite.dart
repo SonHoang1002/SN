@@ -47,7 +47,7 @@ class _RecruitInviteState extends ConsumerState<RecruitInvite> {
     List recruits = ref.watch(recruitControllerProvider).recruitsInvite;
     bool isMore = ref.watch(recruitControllerProvider).isMore;
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(

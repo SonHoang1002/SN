@@ -74,7 +74,7 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
   Widget build(BuildContext context) {
     List pagesAdmin = ref.watch(pageListControllerProvider).pageAdmin;
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     handlePressMenu(menu) {
       Widget body = const SizedBox();
       switch (menu['key']) {

@@ -115,7 +115,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
         Padding(
           padding: const EdgeInsets.only(right: 16.0, left: 16.0),
           child: SizedBox(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.sizeOf(context).width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -130,7 +130,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                 SizedBox(
                     height: 340,
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
+                      width: MediaQuery.sizeOf(context).width,
                       margin: const EdgeInsets.only(top: 10),
                       child: CardComponents(
                         imageCard: Column(
@@ -149,7 +149,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                         fit: BoxFit.cover,
                                         height: 180.0,
                                         width:
-                                            MediaQuery.of(context).size.width),
+                                            MediaQuery.sizeOf(context).width),
                                   )
                                 : Center(
                                     child: ClipOval(
@@ -246,7 +246,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                               },
                               child: Container(
                                 height: 35,
-                                width: MediaQuery.of(context).size.width * 0.8,
+                                width: MediaQuery.sizeOf(context).width * 0.8,
                                 decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                         189, 202, 202, 202),
@@ -315,7 +315,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                           ? courseDetail['introduction_video']['meta']['small']
                                       ['aspect'] <
                                   0.58
-                              ? MediaQuery.of(context).size.height - 66
+                              ? MediaQuery.sizeOf(context).height - 66
                               : null
                           : 200,
                       width: 500,
@@ -370,8 +370,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                               shrinkWrap: true,
                               itemBuilder: (context, indexPropose) {
                                 return Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
+                                  width: MediaQuery.sizeOf(context).width * 0.6,
                                   margin: const EdgeInsets.only(top: 10),
                                   child: CardComponents(
                                     imageCard: Column(
@@ -667,8 +666,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                               shrinkWrap: true,
                               itemBuilder: (context, indexSimilar) {
                                 return Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
+                                  width: MediaQuery.sizeOf(context).width * 0.6,
                                   margin: const EdgeInsets.only(top: 10),
                                   child: CardComponents(
                                     imageCard: Column(

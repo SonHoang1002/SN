@@ -35,7 +35,7 @@ class _PasswordPageState extends State<PasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(
@@ -193,8 +193,7 @@ class _PasswordPageState extends State<PasswordPage> {
                               padding: const EdgeInsets.only(top: 10.0),
                               child: Center(
                                   child: GestureDetector(
-                                onTap: (() { 
-                                }),
+                                onTap: (() {}),
                                 child: buildTextContent(
                                     PasswordConstants.PASSWORD_FORGOT_PASSWORD,
                                     false,

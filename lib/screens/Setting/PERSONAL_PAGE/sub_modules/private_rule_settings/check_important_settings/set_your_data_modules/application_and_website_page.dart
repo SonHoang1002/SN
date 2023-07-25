@@ -19,7 +19,7 @@ class ApplicationAndWebsitePage extends StatelessWidget {
   late double height = 0;
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(
@@ -103,10 +103,8 @@ class ApplicationAndWebsitePage extends StatelessWidget {
                                   // )
                                   GestureDetector(
                                 onTap: (() {
-                                  showCustomBottomSheet(
-                                      context,
-                                      370,
-                                     title: ApplicationAndWebsiteConstants
+                                  showCustomBottomSheet(context, 370,
+                                      title: ApplicationAndWebsiteConstants
                                               .APPLICATION_AND_WEBSITE_BOTTOM_SHEET_CONTENTS[
                                           'title'],
                                       widget: ListView.builder(

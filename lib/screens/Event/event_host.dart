@@ -81,7 +81,7 @@ class _EventHostState extends ConsumerState<EventHost> {
     List eventPast = ref.watch(eventControllerProvider).eventHosts;
     bool isMore = ref.watch(eventControllerProvider).isMore;
     final theme = pv.Provider.of<ThemeManager>(context);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
 
@@ -118,7 +118,7 @@ class _EventHostState extends ConsumerState<EventHost> {
                         },
                         child: Container(
                           height: 38,
-                          width: MediaQuery.of(context).size.width * 0.43,
+                          width: MediaQuery.sizeOf(context).width * 0.43,
                           decoration: BoxDecoration(
                               color: eventHost
                                   ? secondaryColor
@@ -151,7 +151,7 @@ class _EventHostState extends ConsumerState<EventHost> {
                         },
                         child: Container(
                           height: 38,
-                          width: MediaQuery.of(context).size.width * 0.43,
+                          width: MediaQuery.sizeOf(context).width * 0.43,
                           decoration: BoxDecoration(
                               color: !eventHost
                                   ? secondaryColor

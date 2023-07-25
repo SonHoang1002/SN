@@ -69,8 +69,8 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   }
 
   Future<void> _getImage() {
-    final pickedFileFuture = ImagePicker() 
-        .pickImage(source: ImageSource.gallery, imageQuality: 100);
+    final pickedFileFuture =
+        ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 100);
     pickedFileFuture.then((pickedFile) {
       if (pickedFile != null) {
         final imageDataFuture = _load(File(pickedFile.path));
@@ -237,7 +237,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                           if (files != null)
                             SizedBox(
                                 height: 200,
-                                width: MediaQuery.of(context).size.width,
+                                width: MediaQuery.sizeOf(context).width,
                                 child: files == null
                                     ? const SizedBox.shrink()
                                     : isCropping
@@ -369,7 +369,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                                   context: context,
                                   builder: (context) => SizedBox(
                                       height:
-                                          MediaQuery.of(context).size.height *
+                                          MediaQuery.sizeOf(context).height *
                                               0.8,
                                       child: MeetingEvent(
                                           checkinSelected: checkinSelected,
@@ -403,7 +403,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                                   context: context,
                                   builder: (context) => SizedBox(
                                       height:
-                                          MediaQuery.of(context).size.height *
+                                          MediaQuery.sizeOf(context).height *
                                               0.6,
                                       child: EventPublish(
                                         privateEventOnChanged:
@@ -442,7 +442,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 minimumSize:
-                                    Size(MediaQuery.of(context).size.width, 45),
+                                    Size(MediaQuery.sizeOf(context).width, 45),
                                 foregroundColor: Colors.white, // foreground
                               ),
                               onPressed: createEvent,

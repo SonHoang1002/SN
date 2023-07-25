@@ -94,7 +94,7 @@ class ReportItem extends StatelessWidget {
           },
           borderRadius: BorderRadius.circular(8.0),
           child: Container(
-            width: MediaQuery.of(context).size.width - 38,
+            width: MediaQuery.sizeOf(context).width - 38,
             padding: const EdgeInsets.all(8.0),
             child: Text(
               report['text'],
@@ -126,35 +126,32 @@ class ReportChildren extends ConsumerWidget {
     handleReport() async {
       var data;
       var response;
-      if(entityType == "post" )
-      {
+      if (entityType == "post") {
         data = {
-        "account_id": entityReport['account']["id"],
-        "status_ids": entityReport['id'],
-        "comment": "",
-        "forward": false,
-        "report_category_id": report['id']
-        };
-        response= await PostApi().reportPostApi(jsonEncode(data));
-      }
-      else if(entityReport['account'] == null){
-        data = {
-        "id": entityReport['id'],
-        "comment": "",
-        "forward": false,
-        "report_category_id": report['id']
-        };
-        response= await PostApi().reportEventPostApi(jsonEncode(data));
-      }
-      else{
-          data = {
           "account_id": entityReport['account']["id"],
           "status_ids": entityReport['id'],
           "comment": "",
           "forward": false,
           "report_category_id": report['id']
         };
-         response= await PostApi().reportEventPostApi(jsonEncode(data));
+        response = await PostApi().reportPostApi(jsonEncode(data));
+      } else if (entityReport['account'] == null) {
+        data = {
+          "id": entityReport['id'],
+          "comment": "",
+          "forward": false,
+          "report_category_id": report['id']
+        };
+        response = await PostApi().reportEventPostApi(jsonEncode(data));
+      } else {
+        data = {
+          "account_id": entityReport['account']["id"],
+          "status_ids": entityReport['id'],
+          "comment": "",
+          "forward": false,
+          "report_category_id": report['id']
+        };
+        response = await PostApi().reportEventPostApi(jsonEncode(data));
       }
       if (response != null) {
         // ignore: use_build_context_synchronously

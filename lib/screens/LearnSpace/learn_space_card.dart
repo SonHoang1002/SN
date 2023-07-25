@@ -142,7 +142,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
             ? coursesFee
             : coursesNoFee;
     bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(

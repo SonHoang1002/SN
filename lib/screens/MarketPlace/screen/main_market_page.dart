@@ -1,6 +1,6 @@
 import 'package:easy_debounce/easy_debounce.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
@@ -46,15 +46,16 @@ var paramConfigProductSearch = {
 };
 
 class MainMarketPage extends ConsumerStatefulWidget {
-  final bool isBack;
-  const MainMarketPage(this.isBack, {super.key});
+  final bool? isBack;
+  final Function? callbackFunction;
+  const MainMarketPage({super.key, this.isBack, this.callbackFunction});
 
   @override
   ConsumerState<MainMarketPage> createState() => _MainMarketPageState();
 }
 
 class _MainMarketPageState extends ConsumerState<MainMarketPage> {
-  List<dynamic> product_categories = []; 
+  List<dynamic> product_categories = [];
   List<dynamic>? _suggestProductList;
   List<dynamic>? _discoverProduct;
   String? _filterTitle;
@@ -88,6 +89,19 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     });
 
     _scrollController
+      ..addListener(() {
+        if (_scrollController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          widget.callbackFunction != null
+              ? widget.callbackFunction!(false)
+              : null;
+        } else if (_scrollController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          widget.callbackFunction != null
+              ? widget.callbackFunction!(true)
+              : null;
+        }
+      })
       ..addListener(() {
         if (_scrollController.offset > 100 && !_isScrolled) {
           setState(() {
@@ -199,7 +213,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     setState(() {});
   }
 
-  void getCategoriesName() {
+  getCategoriesName() async {
     if (product_categories.isEmpty) {
       product_categories = ref.watch(parentCategoryController).parentList;
     }
@@ -207,7 +221,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
 
   @override
   Widget build(BuildContext context) {
-    size ??= MediaQuery.of(context).size;
+    size ??= MediaQuery.sizeOf(context);
     getCategoriesName();
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -216,9 +230,9 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
           setState(() {
             _suggestProductList = [];
             _discoverProduct = [];
+            product_categories = [];
           });
-          product_categories = [];
-          getCategoriesName();
+          await getCategoriesName();
         },
         child: Stack(
           children: [

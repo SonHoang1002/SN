@@ -57,7 +57,7 @@ class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
   Widget build(BuildContext context) {
     bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
     List course = ref.watch(learnSpaceStateControllerProvider).coursesHost;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(

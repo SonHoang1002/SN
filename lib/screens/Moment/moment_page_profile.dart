@@ -193,7 +193,7 @@ class _MomentPageProfileState extends State<MomentPageProfile> {
                         ImageCacheRender(
                           path: listVideos[index]['media_attachments'][0]
                               ['preview_url'],
-                          width: (MediaQuery.of(context).size.width - 4) / 3,
+                          width: (MediaQuery.sizeOf(context).width - 4) / 3,
                         ),
                         Positioned(
                             bottom: 5,

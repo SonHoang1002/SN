@@ -98,8 +98,8 @@
 //       child: RepaintBoundary(
 //         child: Container(
 //             color: Colors.transparent,
-//             width: MediaQuery.of(context).size.width,
-//             height: MediaQuery.of(context).size.height,
+//             width: MediaQuery.sizeOf(context).width,
+//             height: MediaQuery.sizeOf(context).height,
 //             child: StreamBuilder<Stroke>(
 //                 stream: currentLineStreamController.stream,
 //                 builder: (context, snapshot) {
@@ -117,8 +117,8 @@
 //   Widget buildAllPaths(BuildContext context) {
 //     return RepaintBoundary(
 //       child: SizedBox(
-//         width: MediaQuery.of(context).size.width,
-//         height: MediaQuery.of(context).size.height,
+//         width: MediaQuery.sizeOf(context).width,
+//         height: MediaQuery.sizeOf(context).height,
 //         child: StreamBuilder<List<Stroke>>(
 //           stream: linesStreamController.stream,
 //           builder: (context, snapshot) {

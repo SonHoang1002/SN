@@ -41,7 +41,7 @@ class _DarkModeSettingState extends State<DarkModeSetting> {
     // }
 
     ThemeManager themeManager = Provider.of<ThemeManager>(context);
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

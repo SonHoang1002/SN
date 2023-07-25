@@ -77,7 +77,7 @@ class UserPageInfomationBlock extends StatelessWidget {
     List hobbies = userAbout['hobbies'] ?? [];
     final relationshipPartner = userAbout['account_relationship'];
     final theme = Provider.of<ThemeManager>(context);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final createdDate =
         user['created_at'] != null ? DateTime.parse(user['created_at']) : null;
     return generalInformation == null
@@ -364,7 +364,7 @@ class ItemInformation extends StatelessWidget {
           width: 12.0,
         ),
         SizedBox(
-            width: MediaQuery.of(context).size.width - 80,
+            width: MediaQuery.sizeOf(context).width - 80,
             child: Text(text, style: const TextStyle(fontSize: 15)))
       ],
     );

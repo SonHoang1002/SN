@@ -57,7 +57,7 @@ class _GroupPageState extends ConsumerState<GroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     List groupPage = ref.watch(pageControllerProvider).pageGroup;
     List groupAdmin = ref.watch(groupListControllerProvider).groupAdmin;
     bool isMoreAdmin = ref.watch(groupListControllerProvider).isMoreGroupAdmin;

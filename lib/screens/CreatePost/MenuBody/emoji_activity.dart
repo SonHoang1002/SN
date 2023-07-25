@@ -190,7 +190,7 @@ class _ItemState extends State<Item> {
     var response = await CommonApi().fetchDataActivityListApi(id);
     if (response != null) {
       if (mounted) {
-        final size = MediaQuery.of(context).size;
+        final size = MediaQuery.sizeOf(context);
         Navigator.push(
             context,
             CupertinoPageRoute(

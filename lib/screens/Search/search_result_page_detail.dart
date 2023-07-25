@@ -77,7 +77,7 @@ class _SearchResultPageDetailState
         ),
       ),
       body: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.sizeOf(context).height,
         child: TabSocial(
             tabHeader: const [
               'Tất cả',

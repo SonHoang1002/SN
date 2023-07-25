@@ -100,7 +100,7 @@ class _GroupApproval extends ConsumerState<GroupApproval> {
                     height: 15,
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height - 98,
+                    height: MediaQuery.sizeOf(context).height - 98,
                     child: listWaitingApproval!.isNotEmpty
                         ? ListView.builder(
                             shrinkWrap: true,
@@ -126,11 +126,12 @@ class _GroupApproval extends ConsumerState<GroupApproval> {
                                 ))
                         : Container(
                             alignment: Alignment.center,
-                            child: Text("Hiện không có bài viết nào chờ phê duyệt",
-                                style: TextStyle(
-                                  color: colorWord(context),
-                                  fontWeight: FontWeight.bold,
-                                )),
+                            child:
+                                Text("Hiện không có bài viết nào chờ phê duyệt",
+                                    style: TextStyle(
+                                      color: colorWord(context),
+                                      fontWeight: FontWeight.bold,
+                                    )),
                           ),
                   )
                 ],

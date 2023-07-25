@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/page_list_provider.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/review_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/see_review_market.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/seller_modules/prepare_product_market_page.dart';
@@ -12,7 +13,7 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_p
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/order_product_apis.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
@@ -21,7 +22,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_wid
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart'; 
+import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import '../../../../theme/colors.dart';
 
 class ManageOrderMarketPage extends ConsumerStatefulWidget {
@@ -120,7 +121,7 @@ class _OrderProductMarketPageState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     colorTheme = ThemeMode.dark == true
@@ -145,12 +146,15 @@ class _OrderProductMarketPageState
                 children: [
                   const BackIconAppbar(),
                   const AppBarTitle(title: "Danh sách đơn hàng"),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
-                      // pushToNextScreen(context, PrepareProductMarketPage());
+                      pushToNextScreen(context, NotificationMarketPage());
                     },
-                    child:
-                        Icon(FontAwesomeIcons.bell, size: 18, color: colorWord),
+                    child: const Icon(
+                      FontAwesomeIcons.bell,
+                      size: 18,
+                      color: Colors.black,
+                    ),
                   )
                 ],
               ),

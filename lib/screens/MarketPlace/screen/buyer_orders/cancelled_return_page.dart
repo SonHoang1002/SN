@@ -5,19 +5,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/buyer_orders/information_order_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/order_item_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/see_shop_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import '../../../../theme/colors.dart'; 
+import '../../../../theme/colors.dart';
 
 class CancelledReturnOrderPage extends ConsumerStatefulWidget {
   final dynamic orderData;
@@ -48,7 +48,7 @@ class _CancelledReturnOrderPageState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     Future.wait([_initData()]);

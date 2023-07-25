@@ -31,11 +31,8 @@ class _ReefState extends ConsumerState<Reef> {
 
   @override
   Widget build(BuildContext context) {
-    momentSuggests =
-        ref.watch(momentControllerProvider).momentSuggest.isNotEmpty
-            ? ref.watch(momentControllerProvider).momentSuggest
-            : [];
-    momentSuggests.shuffle();
+    momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
+
     return momentSuggests.isNotEmpty
         ? Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),

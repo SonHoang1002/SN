@@ -62,7 +62,7 @@ class _PageEditMediaProfileState extends ConsumerState<PageEditMediaProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     handleUpdateMediaProfile() async {
       String fileName = '';

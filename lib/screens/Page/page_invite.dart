@@ -102,7 +102,7 @@ class _RenderInvitePageState extends ConsumerState<RenderInvitePage> {
   List<int> hiddenIndexesLike = [];
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -25,11 +25,11 @@ class InformationOnPersonalPagePage extends StatelessWidget {
       .toList();
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     // listChooseObject.forEach(
-    //   (element) { 
+    //   (element) {
     //   },
     // );
     return Scaffold(
@@ -171,7 +171,7 @@ _buildContentForBottomSheet(
   dynamic data,
 ) {
   final listChoose = data.map((e) => e["key"]).toList();
-  showCustomBottomSheet(context, height,title: "Chọn đối tượng",
+  showCustomBottomSheet(context, height, title: "Chọn đối tượng",
       widget: StatefulBuilder(builder: (context, setStateFull) {
     return ListView.builder(
         padding: EdgeInsets.zero,

@@ -175,8 +175,8 @@ class SavedState extends ConsumerState<Saved> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
     final theme = pv.Provider.of<ThemeManager>(context);
     var bookmarks = ref.watch(savedControllerProvider).bookmarks;
     var collections = ref.watch(savedControllerProvider).bmCollections;

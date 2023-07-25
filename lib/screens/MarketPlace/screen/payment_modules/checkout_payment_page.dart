@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/buyer_orders/my_order_page.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/widgets/voucher_widget.dart'; 
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/voucher_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
@@ -44,7 +44,7 @@ class _CheckoutPaymentPageState extends ConsumerState<CheckoutPaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     Future.wait([_initData()]);
@@ -152,7 +152,8 @@ class _CheckoutPaymentPageState extends ConsumerState<CheckoutPaymentPage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _buildSingleButton("Trang chủ", function: () {
-          pushAndReplaceToNextScreen(context, const MainMarketPage(true));
+          pushAndReplaceToNextScreen(
+              context, const MainMarketPage(isBack: true));
         }),
         buildSpacer(width: 10),
         _buildSingleButton("Đơn mua", function: () {

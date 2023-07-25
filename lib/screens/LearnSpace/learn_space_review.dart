@@ -66,68 +66,67 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
     }
   }
 
-    handleSubmit(BuildContext context) async {
-  String message = '';
+  handleSubmit(BuildContext context) async {
+    String message = '';
 
-  if (hasImage) {
-    var mediaUploadResult = await handleUploadMedia(_imageCover!.path);
-    if (mediaUploadResult == null) {
-      message =
-          'Có lỗi xảy ra trong quá trình upload ảnh, vui lòng thử lại sau!';
-      return message;
-    }
-    var response = await LearnSpaceApi().sendRatingPost(
-      widget.courseDetail['id'],
-      {
-        "status": reviewController.text.trim(),
-        "rating": point.toString(),
-        "media_ids": [mediaUploadResult['id']],
-      },
-    );
+    if (hasImage) {
+      var mediaUploadResult = await handleUploadMedia(_imageCover!.path);
+      if (mediaUploadResult == null) {
+        message =
+            'Có lỗi xảy ra trong quá trình upload ảnh, vui lòng thử lại sau!';
+        return message;
+      }
+      var response = await LearnSpaceApi().sendRatingPost(
+        widget.courseDetail['id'],
+        {
+          "status": reviewController.text.trim(),
+          "rating": point.toString(),
+          "media_ids": [mediaUploadResult['id']],
+        },
+      );
 
-    if (response == null) {
-      message = 'Có lỗi xảy ra trong quá trình đăng';
-    } else if (response['error'] != null) {
-      message = response['error'];
+      if (response == null) {
+        message = 'Có lỗi xảy ra trong quá trình đăng';
+      } else if (response['error'] != null) {
+        message = response['error'];
+      } else {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .getListCourseReview(widget.courseDetail['id']);
+        message = 'Đăng bài đánh giá thành công!';
+      }
     } else {
-      ref
-          .read(learnSpaceStateControllerProvider.notifier)
-          .getListCourseReview(widget.courseDetail['id']);
-      message = 'Đăng bài đánh giá thành công!';
-    }
-  } else {
-    var response;
-    if(reviewController.text != ""){
-      response = await LearnSpaceApi().sendRatingPost(
-      widget.courseDetail['id'],
-      {
-        "status": reviewController.text.trim(),
-        "rating": point.toString(),
-      },
-    );
-    } 
+      var response;
+      if (reviewController.text != "") {
+        response = await LearnSpaceApi().sendRatingPost(
+          widget.courseDetail['id'],
+          {
+            "status": reviewController.text.trim(),
+            "rating": point.toString(),
+          },
+        );
+      }
 
-    if (response == null) {
-      message = 'Có lỗi xảy ra trong quá trình đăng, hãy xem lại bài viết';
-    } else if (response['error'] != null) {
-      message = response['error'];
-    } else {
-      ref
-          .read(learnSpaceStateControllerProvider.notifier)
-          .getListCourseReview(widget.courseDetail['id']);
-      message = 'Đăng bài đánh giá thành công!';
+      if (response == null) {
+        message = 'Có lỗi xảy ra trong quá trình đăng, hãy xem lại bài viết';
+      } else if (response['error'] != null) {
+        message = response['error'];
+      } else {
+        ref
+            .read(learnSpaceStateControllerProvider.notifier)
+            .getListCourseReview(widget.courseDetail['id']);
+        message = 'Đăng bài đánh giá thành công!';
+      }
     }
+
+    return message;
   }
-
-  return message;
-}
-
 
   @override
   Widget build(BuildContext context) {
     final courseReview =
         ref.watch(learnSpaceStateControllerProvider).courseReview;
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
 
     return InkWell(
       onTap: () {
@@ -165,7 +164,8 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                     MediaQuery.of(context).viewInsets.bottom *
                                         0.9),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5.0, horizontal: 10),
                               child: SizedBox(
                                 height: 450,
                                 child: Column(
@@ -205,7 +205,8 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                     TextFormField(
                                       controller: reviewController,
                                       maxLines: 4,
-                                      style: const TextStyle(color: Colors.black),
+                                      style:
+                                          const TextStyle(color: Colors.black),
                                       decoration: const InputDecoration(
                                           enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -225,7 +226,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                     GestureDetector(
                                       onTap: () async {
                                         setState(() {
-                                            isLoading = true;
+                                          isLoading = true;
                                         });
 
                                         _imageCover = await ImagePicker()
@@ -276,7 +277,10 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                                             color: Colors.black,
                                                           ),
                                                     const Text(
-                                                        "Chọn ảnh từ thiết bị", style: TextStyle(color: Colors.black),),
+                                                      "Chọn ảnh từ thiết bị",
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -287,7 +291,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           minimumSize: Size(
-                                              MediaQuery.of(context).size.width,
+                                              MediaQuery.sizeOf(context).width,
                                               45),
                                           foregroundColor:
                                               Colors.white, // foreground
@@ -336,31 +340,32 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
               height: 20,
               thickness: 1,
             ),
-            if(courseReview.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  primary: false,
-                  itemCount: courseReview.length,
-                  itemBuilder: (context, index) {
-                    return Post(
-                        post: courseReview[index]['comment'],
-                        data: courseReview[index],
-                        type: 'rating');
-                  }),
-            )
-            else Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Text("Chưa có đánh giá nào!",
-                          style: TextStyle(
-                            color: colorWord(context),
-                            fontWeight: FontWeight.bold,
-                          )),
-                    )
+            if (courseReview.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    primary: false,
+                    itemCount: courseReview.length,
+                    itemBuilder: (context, index) {
+                      return Post(
+                          post: courseReview[index]['comment'],
+                          data: courseReview[index],
+                          type: 'rating');
+                    }),
+              )
+            else
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(top: 20),
+                child: Text("Chưa có đánh giá nào!",
+                    style: TextStyle(
+                      color: colorWord(context),
+                      fontWeight: FontWeight.bold,
+                    )),
+              )
           ],
         ),
       ),

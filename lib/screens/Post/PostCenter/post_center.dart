@@ -93,7 +93,7 @@ class PostCenter extends StatelessWidget {
                 ? PostSharePage(post: post, type: type)
                 : const SizedBox(),
             post['reblog'] != null
-                ? PostShare(post: post, type: type)
+                ? PostShare(post: post, type: postReblog)
                 : const SizedBox(),
             post['place'] != null &&
                     (post['card'] == null &&

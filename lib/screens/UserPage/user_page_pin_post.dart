@@ -29,7 +29,7 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return widget.pinPosts.isNotEmpty
         ? Column(

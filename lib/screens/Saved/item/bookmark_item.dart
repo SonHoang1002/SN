@@ -39,8 +39,8 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
     final theme = pv.Provider.of<ThemeManager>(context);
 
     return GestureDetector(

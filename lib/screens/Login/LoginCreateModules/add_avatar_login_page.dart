@@ -98,7 +98,7 @@ class _AddAvatarLoginPageState extends State<AddAvatarLoginPage> {
       resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
-        height: MediaQuery.of(context).size.height - 120,
+        height: MediaQuery.sizeOf(context).height - 120,
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,7 +117,7 @@ class _AddAvatarLoginPageState extends State<AddAvatarLoginPage> {
                   ),
                   buildSpacer(height: 20),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width - 50,
+                    width: MediaQuery.sizeOf(context).width - 50,
                     child: buildTextContent(
                       AddAvatarLoginConstants.ADD_AVATAR_LOGIN_SUB,
                       false,

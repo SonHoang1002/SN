@@ -190,7 +190,7 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
                           leading: FittedBox(
                               child: ClipRRect(
                             borderRadius: BorderRadius.circular(
-                                MediaQuery.of(context).size.width / 2),
+                                MediaQuery.sizeOf(context).width / 2),
                             child: ExtendedImage.network(
                                 friends[index]['avatar_media'] != null
                                     ? friends[index]['avatar_media']

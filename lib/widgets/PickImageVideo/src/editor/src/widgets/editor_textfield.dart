@@ -145,7 +145,7 @@ class _EditorTextfieldState extends State<EditorTextfield>
               child: ValueListenableBuilder<StickerAsset?>(
                 valueListenable: _controller.currentAsset,
                 builder: (context, asset, child) {
-                  final deviceSize = MediaQuery.of(context).size;
+                  final deviceSize = MediaQuery.sizeOf(context);
 
                   // Center X position of the screen
                   final centerX = deviceSize.width / 2;
