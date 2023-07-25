@@ -41,6 +41,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   String courseMenu = 'intro';
   String currentMenu = 'intro';
   String menuCourse = '';
+  final scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -52,6 +53,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   @override
   void dispose() {
     super.dispose();
+    scrollController.dispose();
   }
 
   void loadData() async {
@@ -160,6 +162,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                   .getDetailCourses(widget.data['id']);
             },
             child: SingleChildScrollView(
+              controller: scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -943,7 +946,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                   })
                                 : const SizedBox.shrink(),
                             currentMenu == 'course'
-                                ? LearnSpaceCourse(id: courseDetail['id'])
+                                ? LearnSpaceCourse(id: courseDetail['id'], scrollController: scrollController)
                                 : const SizedBox.shrink(),
                             menuCourse == 'faq'
                                 ? LearnSpaceFAQ(courseDetail: courseDetail)

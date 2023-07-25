@@ -340,7 +340,8 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
             BlockProfile(
               title: "Tiểu sử",
               widgetChild: Text(
-                '${(((userAbout['general_information']['description'] != null) && (userAbout['general_information']['description'] != ""))) ? userAbout['general_information']['description'] : "Mô tả bản thân ..."}',
+                '${((userAbout['general_information']['description'] != null) && (userAbout['general_information']['description'] != "")) 
+                    ? userAbout['general_information']['description'] : "Mô tả bản thân ..."}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 18, color: greyColor),
               ),
