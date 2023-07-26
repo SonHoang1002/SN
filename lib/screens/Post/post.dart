@@ -40,6 +40,7 @@ class Post extends ConsumerStatefulWidget {
   final dynamic groupId;
   final Function? approvalFunction;
   final bool? haveSuggest;
+  final bool? isInGroup;
 
   const Post(
       {Key? key,
@@ -56,7 +57,8 @@ class Post extends ConsumerStatefulWidget {
       this.waitingForApproval = false,
       this.groupId,
       this.approvalFunction,
-      this.haveSuggest = true})
+      this.haveSuggest = true,
+      this.isInGroup = false})
       : super(key: key);
 
   @override

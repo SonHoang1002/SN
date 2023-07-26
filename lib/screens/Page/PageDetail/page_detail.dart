@@ -312,6 +312,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     final theme = pv.Provider.of<ThemeManager>(context);
     var meData = ref.watch(meControllerProvider);
     var rolePage = ref.watch(pageControllerProvider).rolePage;
+    var namePage = ref.read(pageControllerProvider).pageDetail;
     List<dynamic> listSwitch = [meData[0], pageData];
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     final size = MediaQuery.sizeOf(context);
@@ -351,10 +352,10 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
                 rolePage
-                    ? (pageData?['title'] != null &&
-                            pageData?['title'].length >= 32
-                        ? '${pageData?['title'].substring(0, 32)}...'
-                        : pageData?['title'] ?? "")
+                    ? (namePage?['title'] != null &&
+                            namePage?['title'].length >= 32
+                        ? '${namePage?['title'].substring(0, 32)}...'
+                        : namePage?['title'] ?? "")
                     : meData[0]['display_name'],
                 style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -382,7 +383,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
       ),
       body: Stack(
         children: [
-          getBody(size, modeTheme, pageData, rolePage),
+          getBody(
+              size,
+              modeTheme,
+              /* pageData */ ref.read(pageControllerProvider).pageDetail,
+              rolePage),
           if (showHeaderTabFixed)
             Container(
               width: MediaQuery.sizeOf(context).width,

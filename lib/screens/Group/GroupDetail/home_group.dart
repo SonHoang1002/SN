@@ -519,7 +519,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           return Post(
-                              post: postGroup[index], haveSuggest: false);
+                              post: postGroup[index],
+                              haveSuggest: false,
+                              isInGroup: true);
                         },
                         childCount: postGroup.length,
                       ),
