@@ -33,6 +33,7 @@ class PostDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic preType;
   final int? indexImagePost;
+  final bool? isInGroup;
   final Function(dynamic)? updateDataFunction;
   final dynamic postId;
   const PostDetail(
@@ -41,7 +42,8 @@ class PostDetail extends ConsumerStatefulWidget {
       this.post,
       this.indexImagePost,
       this.updateDataFunction,
-      this.postId})
+      this.postId,
+      this.isInGroup})
       : super(key: key);
 
   @override
@@ -468,6 +470,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                                     child: PostHeader(
                                       post: postData,
                                       type: postDetail,
+                                      isInGroup: widget.isInGroup,
                                     ),
                                   ),
                                 ),

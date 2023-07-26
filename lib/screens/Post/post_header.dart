@@ -14,6 +14,7 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/refractor_time.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
@@ -36,6 +37,7 @@ class PostHeader extends ConsumerStatefulWidget {
   final bool? isHaveAction;
   final Function? reloadFunction;
   final Function(dynamic)? updateDataFunction;
+  final bool? isInGroup;
   const PostHeader(
       {Key? key,
       this.post,
@@ -43,7 +45,8 @@ class PostHeader extends ConsumerStatefulWidget {
       this.textColor,
       this.isHaveAction,
       this.reloadFunction,
-      this.updateDataFunction})
+      this.updateDataFunction,
+      this.isInGroup = false})
       : super(key: key);
 
   @override
@@ -146,7 +149,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
     }
 
     if (statusActivity['data_type'] == postStatusEmoji) {
-      description = ' đang cảm thấy ${statusActivity['name']}';
+      description = ' đang cảm thấy ${statusActivity['name']} cùng với ';
     } else if (statusActivity['data_type'] == postStatusActivity) {
       description =
           ' ${statusActivity['parent']['name'].toLowerCase()} ${statusActivity['name'].toLowerCase()}';
@@ -206,16 +209,16 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                             SizedBox(
                               width: size.width * 0.6,
                               child: BlockNamePost(
-                                post: widget.post,
-                                account: account,
-                                description: description,
-                                mentions: mentions,
-                                statusActivity: statusActivity,
-                                group: group,
-                                page: page,
-                                textColor: widget.textColor,
-                                type: widget.type,
-                              ),
+                                  post: widget.post,
+                                  account: account,
+                                  description: description,
+                                  mentions: mentions,
+                                  statusActivity: statusActivity,
+                                  group: group,
+                                  page: page,
+                                  textColor: widget.textColor,
+                                  type: widget.type,
+                                  isInGroup: widget.isInGroup),
                             ),
                             Row(
                               children: [
@@ -463,7 +466,7 @@ class BlockSubNamePost extends StatelessWidget {
   }
 }
 
-class BlockNamePost extends StatefulWidget {
+class BlockNamePost extends ConsumerStatefulWidget {
   const BlockNamePost(
       {super.key,
       required this.account,
@@ -474,7 +477,8 @@ class BlockNamePost extends StatefulWidget {
       this.statusActivity,
       this.post,
       this.textColor,
-      this.type});
+      this.type,
+      this.isInGroup = false});
   final dynamic post;
   final dynamic account;
   final String description;
@@ -484,12 +488,13 @@ class BlockNamePost extends StatefulWidget {
   final dynamic statusActivity;
   final Color? textColor;
   final dynamic type;
+  final bool? isInGroup;
 
   @override
-  State<BlockNamePost> createState() => _BlockNamePostState();
+  ConsumerState<BlockNamePost> createState() => _BlockNamePostState();
 }
 
-class _BlockNamePostState extends State<BlockNamePost> {
+class _BlockNamePostState extends ConsumerState<BlockNamePost> {
   bool isFollowing = false;
 
   renderDisplayName() {
@@ -513,28 +518,42 @@ class _BlockNamePostState extends State<BlockNamePost> {
     }
   }
 
+  bool checkInGroup(id) {
+    List groupAdmin = ref.read(groupListControllerProvider).groupAdmin;
+    List groupMember = ref.read(groupListControllerProvider).groupMember;
+    bool isIdExistAdmin = groupAdmin.any((map) => map['id'] == id);
+    bool isIdExistMember = groupMember.any((map) => map['id'] == id);
+    if (isIdExistAdmin || isIdExistMember) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   TextSpan renderJoinTextSpan() {
     if (widget.group != null) {
       return (widget.group["group_relationship"] != null &&
               widget.group["group_relationship"]?["like"] == true)
           ? const TextSpan()
-          : TextSpan(
-              text: " · Tham gia",
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  setState(() {
-                    isFollowing = true;
-                  });
-                  chooseApi();
-                },
-              style: const TextStyle(color: secondaryColor));
+          : checkInGroup(widget.group["id"])
+              ? const TextSpan()
+              : TextSpan(
+                  text: " · Tham gia",
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      setState(() {
+                        isFollowing = true;
+                      });
+                      chooseApi();
+                    },
+                  style: const TextStyle(color: secondaryColor));
     } else if (widget.page != null) {
       return widget.post['place']?['id'] != widget.page['id']
           ? (widget.page["page_relationship"] != null &&
                   widget.page["page_relationship"]?["like"] == true)
               ? const TextSpan()
               : TextSpan(
-                  text: " ·  Tham gia",
+                  text: " ·  Theo dõi",
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       setState(() {
