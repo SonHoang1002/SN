@@ -27,6 +27,20 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
   bool isSearch = false;
   List friendsAll = [];
   late ScrollController scrollController;
+  bool isLoading = false;
+
+  @override
+  Future<void> didChangeDependencies() async {
+    super.didChangeDependencies();
+    await ref
+        .read(userInformationProvider.notifier)
+        .getUserFriend(widget.user['id'], {"limit": 20});
+    if (mounted) {
+      setState(() {
+        friendsAll = ref.watch(userInformationProvider).friends;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -35,26 +49,59 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
     scrollController = ScrollController();
 
     if (ref.read(userInformationProvider).friends.isNotEmpty && mounted) {
-      setState(() {
-        friendsAll = ref.read(userInformationProvider).friends;
-      });
-
       if (mounted && ref.read(userInformationProvider).friendsNear.isEmpty) {
         ref.read(userInformationProvider.notifier).getUserFriend(
             widget.user['id'], {"limit": 20, "order_by_column": "created_at"});
       }
     }
 
-    scrollController.addListener(() {
+    scrollController.addListener(() async{
       if (scrollController.position.maxScrollExtent ==
-          scrollController.offset) {
-        ref
+              scrollController.offset &&
+          !isLoading) {
+        if (mounted) {
+          setState(() {
+            isLoading = true;
+          });
+        }
+        if (friendsAll != []) {
+      await ref
             .read(userInformationProvider.notifier)
             .getUserFriend(widget.user['id'], {
           "limit": 10,
           "max_id": ref.watch(userInformationProvider).friends.last['id'],
         });
+        }
+        if (mounted) {
+          setState(() {
+            if (ref.watch(userInformationProvider).friends != []) {
+              friendsAll = ref.watch(userInformationProvider).friends;
+               isLoading = false; // Kết thúc quá trình tải dữ liệu
+            }
+          });
+        }
       }
+    });
+  }
+
+  handleSearch(text) {
+    setState(() {
+      isSearch = true;
+    });
+    EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 500),
+        () async {
+      if (text.isEmpty) {
+        setState(() {
+          friendsAll = ref.watch(userInformationProvider).friends;
+        });
+      } else {
+        var response = await UserPageApi()
+            .getUserFriend(widget.user['id'], {'keyword': text});
+        setState(() => friendsAll = response);
+      }
+      setState(() {
+        isSearch = false;
+      });
     });
   }
 
@@ -71,27 +118,6 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
       {"key": 'all', "label": "Tất cả"},
       {"key": 'new', "label": "Gần đây"}
     ];
-
-    handleSearch(text) {
-      setState(() {
-        isSearch = true;
-      });
-      EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 500),
-          () async {
-        if (text.isEmpty) {
-          setState(() {
-            friendsAll = ref.watch(userInformationProvider).friends;
-          });
-        } else {
-          var response = await UserPageApi()
-              .getUserFriend(widget.user['id'], {'keyword': text});
-          setState(() => friendsAll = response);
-        }
-        setState(() {
-          isSearch = false;
-        });
-      });
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -186,7 +212,11 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                                     ],
                                   ),
                                 )),
-                      )
+                      ),
+                      isLoading? const Center(
+                                                  child: CupertinoActivityIndicator(),
+                                                )
+                                              : const SizedBox()
           ],
         ),
       ),
