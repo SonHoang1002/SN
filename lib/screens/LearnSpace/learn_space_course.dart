@@ -81,8 +81,7 @@ class _LearnSpaceCourseState extends ConsumerState<LearnSpaceCourse> {
     if (mounted) {
       setState(() {
         if (ref.watch(learnSpaceStateControllerProvider).courseChapter != []) {
-          addCourseChapter =
-              ref.watch(learnSpaceStateControllerProvider).courseChapter;
+          addCourseChapter = ref.watch(learnSpaceStateControllerProvider).courseChapter;
           courseChapter.addAll(addCourseChapter);
           isLoading = false; // Kết thúc quá trình tải dữ liệu
         }

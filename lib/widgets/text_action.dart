@@ -21,7 +21,7 @@ class TextAction extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-                color: primaryColor,
+                color: secondaryColor,
                 fontSize: fontSize ?? 13,
                 fontWeight: FontWeight.w500),
           ),

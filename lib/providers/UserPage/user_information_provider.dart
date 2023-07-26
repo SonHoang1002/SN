@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
@@ -127,9 +128,9 @@ class UserInformationController extends StateNotifier<UserInformationState> {
           userMoreInfor: state.userMoreInfor,
           friends: params['order_by_column'] != null
               ? state.friends
-              : state.friends + response,
+              : checkObjectUniqueInList(state.friends + response, "id"),
           friendsNear: params['order_by_column'] != null
-              ? state.friendsNear + response
+              ? checkObjectUniqueInList(state.friendsNear+ response, "id")
               : state.friendsNear,
           featureContent: state.featureContent);
     }
