@@ -314,7 +314,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   Widget _buildSendMessage() {
     // Nhắn tin cho ai đó -> điều hướng sang app nhắn tin
-    return Expanded(
+    return Flexible(
       child: ButtonPrimary(
         icon: const Icon(
           FontAwesomeIcons.facebookMessenger,
@@ -391,7 +391,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
-                                      Expanded(
+                                      Flexible(
                                         child: ButtonPrimary(
                                           icon: const Icon(
                                             FontAwesomeIcons.userCheck,
@@ -419,7 +419,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                                         MainAxisAlignment
                                                             .spaceAround,
                                                     children: [
-                                                      Expanded(
+                                                      Flexible(
                                                         child: InkWell(
                                                           onTap: () {
                                                             if (following
@@ -503,7 +503,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                                           ),
                                                         ),
                                                       ),
-                                                      Expanded(
+                                                      Flexible(
                                                         child: InkWell(
                                                           onTap: () {
                                                             showCupertinoDialog(
@@ -626,7 +626,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          Expanded(
+                                          Flexible(
                                             child: ButtonPrimary(
                                               icon: const Icon(
                                                 FontAwesomeIcons.userPlus,
@@ -655,7 +655,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          Expanded(
+                                          Flexible(
                                             child: ButtonPrimary(
                                               icon: const Icon(
                                                 FontAwesomeIcons.userPlus,
