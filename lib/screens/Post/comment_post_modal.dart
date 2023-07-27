@@ -95,7 +95,6 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
     });
     List newList =
         await PostApi().getListCommentPost(postId.toString(), params) ?? [];
-    print("111");
     if (mounted) {
       setState(() {
         isLoadComment = false;

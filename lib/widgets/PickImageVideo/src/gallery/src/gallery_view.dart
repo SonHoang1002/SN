@@ -85,13 +85,13 @@ class _GalleryViewState extends State<GalleryView> {
     super.initState();
     _controller = widget.controller ?? GalleryController();
 
-    _controller.addListener(() {
+    _controller.addListener(() async {
       if (mounted) {
         final entities = _controller.value.selectedEntities;
 
         if (widget.isMutipleFile != null && widget.isMutipleFile == true) {
-          fetchDataMutipleFile(entities);
-        } else {
+          await fetchDataMutipleFile(entities);
+        } else { 
           widget.handleGetFiles!(entities);
           Navigator.pop(context);
         }
@@ -122,7 +122,7 @@ class _GalleryViewState extends State<GalleryView> {
           "subType": "local"
         });
       }
-    }
+    } 
 
     if (primaryList.isNotEmpty) {
       widget.handleGetFiles!('update_file', primaryList);

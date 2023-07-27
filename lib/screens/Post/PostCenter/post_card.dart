@@ -78,8 +78,8 @@ class PostCard extends StatelessWidget {
                   children: [
                     buildDivider(color: greyColor),
                     ClipRect(
-                      child: ImageCacheRender(
-                        path: card?['link'] ?? linkBannerDefault,
+                      child: ExtendedImage.network(
+                        card?['link'] ?? linkBannerDefault,
                         width: size.width,
                       ),
                     ),

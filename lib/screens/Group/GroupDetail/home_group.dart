@@ -408,9 +408,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                       widget.groupDetail?['group_relationship']?['admin'] ||
                               widget.groupDetail?['group_relationship']
                                   ?['moderator']
-                          ? const Column(
+                          ?   Column(
                               children: [
-                                Divider(
+                                const Divider(
                                   height: 20,
                                   thickness: 1,
                                 ),

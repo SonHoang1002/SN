@@ -4,23 +4,51 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
 class CreatePostButton extends ConsumerWidget {
   final dynamic postDiscussion;
   final dynamic preType;
   final Function? reloadFunction;
-  final dynamic pageData; 
+  final dynamic pageData;
+
+  /// data from current user
+  final dynamic friendData;
+
+  /// This type is transfered from user page, to check that you can have permission to create post in friend wall
+  /// You must transfer both [friendData] and [userType] if you want check permission to create post in friend wall
+  final dynamic userType;
+
   const CreatePostButton(
       {Key? key,
       this.postDiscussion,
       this.preType,
       this.reloadFunction,
-      this.pageData,})
-      : super(key: key);
+      this.pageData,
+      this.friendData,
+      this.userType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    dynamic _userType;
+    if (friendData != null) {
+      if (userType != null) {
+        _userType = userType;
+      } else {
+        _userType = 'me';
+        if (friendData?['relationships'] != null &&
+            friendData?['relationships']?['friendship_status'] == 'ARE_FRIENDS') {
+          _userType = 'friend';
+        } else if (friendData['relationships'] != null &&
+            friendData?['relationships']?['friendship_status'] ==
+                'OUTGOING_REQUEST') {
+          _userType = 'requested';
+        } else {
+          _userType = 'stranger';
+        }
+      }
+    }
     return InkWell(
       borderRadius: BorderRadius.circular(10.0),
       onTap: () {
@@ -55,10 +83,13 @@ class CreatePostButton extends ConsumerWidget {
                   const SizedBox(
                     width: 10,
                   ),
-                  const Text(
-                    "Bạn đang nghĩ gì?",
-                    style: TextStyle(fontSize: 15),
-                  ),
+                  buildTextContent(
+                      friendData != null && (_userType == "friend")
+                          ? "Hãy viết gì đó cho ${friendData['display_name']}"
+                          : "Bạn đang nghĩ gì?",
+                      false,
+                      fontSize: 15,
+                      overflow: TextOverflow.ellipsis),
                 ],
               ),
               Image.asset(
