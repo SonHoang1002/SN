@@ -130,7 +130,7 @@ class UserInformationController extends StateNotifier<UserInformationState> {
               ? state.friends
               : checkObjectUniqueInList(state.friends + response, "id"),
           friendsNear: params['order_by_column'] != null
-              ? checkObjectUniqueInList(state.friendsNear+ response, "id")
+              ? checkObjectUniqueInList(state.friendsNear + response, "id")
               : state.friendsNear,
           featureContent: state.featureContent);
     }

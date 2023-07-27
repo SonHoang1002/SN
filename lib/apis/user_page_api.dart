@@ -13,15 +13,18 @@ class UserPageApi {
     return await Api()
         .getRequestBase('/api/v1/accounts/$accountId/statuses', params);
   }
+
 // 500ms - 1.5 s
   Future getListLifeEvent(accountId) async {
     return await Api()
         .getRequestBase('/api/v1/accounts/$accountId/life_events', null);
   }
+
   // 284 ms
   Future getAccountInfor(idUser) async {
     return await Api().getRequestBase('/api/v1/accounts/$idUser', null);
   }
+
   // 131ms
   Future getAccountAboutInformation(idUser) async {
     return await Api().getRequestBase('/api/v1/accounts/$idUser/abouts', null);
@@ -44,6 +47,7 @@ class UserPageApi {
     return Api()
         .getRequestBase('/api/v1/albums/$idAlbum/media_attachments', params);
   }
+
 //1,2 s
   Future getUserFriend(idUser, params) async {
     return Api().getRequestBase('/api/v1/accounts/$idUser/friendships', params);
@@ -72,6 +76,10 @@ class UserPageApi {
 
   Future createNoticeCollection(data) async {
     return Api().postRequestBase('/api/v1/account_featured_contents', data);
+  }
+
+  Future getLivingPlaceByKeyword(String keyword) async {
+    return Api().getRequestBase('/api/v1/places', {"keyword": keyword});
   }
 }
 
