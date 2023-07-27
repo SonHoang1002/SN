@@ -126,12 +126,9 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                                 initialValue: editPage?['address'],
                                 title: "Chỉnh sửa vị trí",
                                 validateInput: (value) {
-                                  final regex = RegExp(r"^[a-zA-Z0-9\s]+$");
+                                  // Biểu thức chính quy để kiểm tra xem có ký tự không hợp lệ không
                                   if (value.isEmpty) {
                                     return false;
-                                  }
-                                  if (!regex.hasMatch(value)) {
-                                    return true;
                                   }
                                   return false;
                                 },
@@ -258,12 +255,8 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                                 initialValue: editPage?['title'],
                                 title: "Chỉnh sửa tên Trang",
                                 validateInput: (value) {
-                                  final regex = RegExp(r"^[a-zA-Z0-9\s]+$");
                                   if (value.isEmpty) {
                                     return false;
-                                  }
-                                  if (!regex.hasMatch(value)) {
-                                    return true;
                                   }
                                   return false;
                                 },
