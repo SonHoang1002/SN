@@ -1054,7 +1054,7 @@ class _EditImageMainState extends State<EditImageMain> {
 
   Widget _buildTextFormField(dynamic data) {
     return Container(
-      color: greyColor.withOpacity(0.2),
+      // color: greyColor.withOpacity(0.2),
       child: ValueListenableBuilder<double>(
           valueListenable: data['fontSize'],
           builder: (context, value, child) {

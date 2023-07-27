@@ -42,6 +42,8 @@ class Post extends ConsumerStatefulWidget {
   final bool? haveSuggest;
   final bool? isInGroup;
 
+  final Function(Offset)? jumpToOffsetFunction;
+
   const Post(
       {Key? key,
       this.post,
@@ -58,7 +60,8 @@ class Post extends ConsumerStatefulWidget {
       this.groupId,
       this.approvalFunction,
       this.haveSuggest = true,
-      this.isInGroup = false})
+      this.isInGroup = false,
+      this.jumpToOffsetFunction})
       : super(key: key);
 
   @override
@@ -92,9 +95,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    setState(() {
-      currentPost = widget.post;
-    });
+    currentPost = widget.post;
     super.initState();
   }
 
@@ -252,7 +253,8 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                 updateDataFunction: updateNewPost,
                                 isShowCommentBox: _isShowCommentBox.value,
                                 preType: widget.preType,
-                              ),
+                                jumpToOffsetFunction:
+                                    widget.jumpToOffsetFunction),
                   ],
                 ),
               ),

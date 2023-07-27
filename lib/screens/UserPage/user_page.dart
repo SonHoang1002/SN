@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_debounce/easy_debounce.dart';
@@ -330,7 +331,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   Widget buildUserPageBody(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final theme = pv.Provider.of<ThemeManager>(context);
+    final theme = pv.Provider.of<ThemeManager>(context); 
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
       postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
@@ -707,7 +708,7 @@ class _UserPageState extends ConsumerState<UserPage> {
             opacity: 0.1,
           ),
           UserPageFriendBlock(user: userData, friends: friend),
-          id == ref.watch(meControllerProvider)[0]['id']
+          id == ref.watch(meControllerProvider)[0]['id'] || userType == "friend"
               ? Column(
                   children: [
                     const CrossBar(
@@ -717,6 +718,8 @@ class _UserPageState extends ConsumerState<UserPage> {
                     CreatePostButton(
                       preType: postPageUser,
                       reloadFunction: _reloadFunction,
+                      friendData: userData,
+                      userType: userType,
                     ),
                   ],
                 )

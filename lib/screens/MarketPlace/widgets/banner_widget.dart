@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
@@ -97,7 +98,7 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
                   itemBuilder: (context, index) {
                     return SizedBox(
                       child: ExtendedImage.network(
-                        images[index],
+                        images[index] ?? linkBannerDefault,
                         width: MediaQuery.sizeOf(context).width,
                         fit: BoxFit.cover,
                         height: 200.0,
