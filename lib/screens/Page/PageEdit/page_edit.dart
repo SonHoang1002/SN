@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
 import '../../../constant/common.dart';
@@ -17,16 +19,16 @@ import '../../../widgets/appbar_title.dart';
 import '../../../widgets/avatar_social.dart';
 import 'edit_detail.dart';
 
-class PageEdit extends StatefulWidget {
+class PageEdit extends ConsumerStatefulWidget {
   final dynamic data;
   final Function? handleChangeDependencies;
   const PageEdit({super.key, this.data, this.handleChangeDependencies});
 
   @override
-  State<PageEdit> createState() => _PageEditState();
+  ConsumerState<PageEdit> createState() => _PageEditState();
 }
 
-class _PageEditState extends State<PageEdit> {
+class _PageEditState extends ConsumerState<PageEdit> {
   late File image;
   dynamic dataPage;
   List detailPage = [];
@@ -34,36 +36,37 @@ class _PageEditState extends State<PageEdit> {
   void initState() {
     super.initState();
     dataPage = widget.data;
-    updateDetailPage();
+    //updateDetailPage();
   }
 
   void updateDetailPage() {
-    setState(() {
-      detailPage = [
-        {
-          "key": "page",
-          "label": dataPage?['page_categories'].isNotEmpty
-              ? "Trang \u2022 ${dataPage?['page_categories']?[0]?['text']}"
-              : "Trang",
-          "icon": 'assets/pages/circleWarning.png',
-        },
-        {
-          "key": "andress",
-          "label": "${dataPage?['address'] ?? "Địa chỉ"}",
-          "icon": 'assets/pages/direction.png',
-        },
-        {
-          "key": "phone",
-          "label": "${dataPage?['phone_number'] ?? "Điện thoại"}",
-          "icon": 'assets/pages/phone.png',
-        },
-        {
-          "key": "email",
-          "label": "${dataPage?['email'] ?? "Email"}",
-          "icon": 'assets/pages/email.png',
-        }
-      ];
-    });
+    final pageEditedData = ref.read(pageControllerProvider).pageDetail;
+    //setState(() {
+    detailPage = [
+      {
+        "key": "page",
+        "label": pageEditedData?['page_categories'].isNotEmpty
+            ? "Trang \u2022 ${pageEditedData?['page_categories']?[0]?['text']}"
+            : "Trang",
+        "icon": 'assets/pages/circleWarning.png',
+      },
+      {
+        "key": "andress",
+        "label": "${pageEditedData?['address'] ?? "Địa chỉ"}",
+        "icon": 'assets/pages/direction.png',
+      },
+      {
+        "key": "phone",
+        "label": "${pageEditedData?['phone_number'] ?? "Điện thoại"}",
+        "icon": 'assets/pages/phone.png',
+      },
+      {
+        "key": "email",
+        "label": "${pageEditedData?['email'] ?? "Email"}",
+        "icon": 'assets/pages/email.png',
+      }
+    ];
+    //});
   }
 
   Future<dynamic> showModal(BuildContext context, typePage) {
@@ -215,7 +218,7 @@ class _PageEditState extends State<PageEdit> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
-
+    updateDetailPage();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

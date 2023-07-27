@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/screens/Friend/friend.dart';
 import 'package:social_network_app_mobile/screens/Friend/friend_search.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group.dart';
 import 'package:social_network_app_mobile/screens/Grows/grow_render.dart';
+import 'package:social_network_app_mobile/screens/Memories/memories_page.dart';
 import 'package:social_network_app_mobile/screens/Page/page_general.dart';
 import 'package:social_network_app_mobile/screens/Payment/payment.dart';
 import 'package:social_network_app_mobile/screens/Recruit/recruit_render.dart';
@@ -209,6 +210,9 @@ class MenuSelected extends StatelessWidget {
         break;
       case 'saveSocial':
         body = const Saved();
+        break;
+      case 'storyHistory':
+        body = const MemoriesPage();
         break;
       case 'marketPlace':
         break;

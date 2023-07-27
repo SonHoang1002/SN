@@ -177,6 +177,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                   reloadFunction: () {
                                     setState(() {});
                                   },
+                                  isInGroup: widget.isInGroup,
                                   updateDataFunction: updateNewPost),
                             ),
                             PostCenter(

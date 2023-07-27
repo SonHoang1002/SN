@@ -535,7 +535,7 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
       return (widget.group["group_relationship"] != null &&
               widget.group["group_relationship"]?["like"] == true)
           ? const TextSpan()
-          : checkInGroup(widget.group["id"])
+          : checkInGroup(widget.group["id"]) || widget.isInGroup == true
               ? const TextSpan()
               : TextSpan(
                   text: " · Tham gia",
