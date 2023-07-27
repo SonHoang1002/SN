@@ -7,8 +7,8 @@ class FriendsApi {
   }
 
   Future getListFriendsApi(Map<String, dynamic>? params) async {
-  return await Api().getRequestBase('/api/v1/friendships', params);
-}
+    return await Api().getRequestBase('/api/v1/friendships', params);
+  }
 
   Future getListFriendRequestApi(params) async {
     return await Api().getRequestBase('/api/v1/friendship_requests', params);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_persistent_keyboard_height/flutter_persistent_keyboard_height.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:marquee/marquee.dart';
@@ -65,6 +66,9 @@ class _MaterialAppWithThemeState extends ConsumerState<MaterialAppWithTheme> {
             darkTheme: MyThemes.darkTheme,
             initialRoute: '/',
             routes: routes,
+            builder: (context, child) => PersistentKeyboardHeightProvider(
+              child: child!,
+            ),
           ),
           if (selectedVideo != null)
             Container(

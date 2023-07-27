@@ -159,10 +159,10 @@ class _FriendSuggestState extends ConsumerState<FriendSuggest> {
                                                   border: Border.all(
                                                       width: 0.2,
                                                       color: greyColor)),
-                                              child: Row(
+                                              child: const Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: const [
+                                                children: [
                                                   Text(
                                                     'Thêm bạn bè',
                                                     textAlign: TextAlign.center,
@@ -203,10 +203,10 @@ class _FriendSuggestState extends ConsumerState<FriendSuggest> {
                                                   border: Border.all(
                                                       width: 0.2,
                                                       color: greyColor)),
-                                              child: Row(
+                                              child: const Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: const [
+                                                children: [
                                                   Text(
                                                     'Gỡ',
                                                     textAlign: TextAlign.center,

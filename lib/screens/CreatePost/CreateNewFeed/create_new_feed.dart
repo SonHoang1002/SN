@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -304,7 +305,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         setState(() {
           files = newFiles;
           _isShow = false;
-        });
+        }); 
         break;
       case 'update_file_description':
         setState(() {
@@ -315,7 +316,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           }
           _isShow = false;
         });
-
         break;
       case 'update_poll':
         setState(() {
@@ -1120,7 +1120,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    files.length == 1 && widget.post == null
+                    files.length == 1 &&
+                            widget.post == null &&
+                            files[0]['type'] != "video"
                         ? Container(
                             margin: const EdgeInsets.only(
                               top: 2,

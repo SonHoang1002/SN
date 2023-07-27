@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_persistent_keyboard_height/flutter_persistent_keyboard_height.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
@@ -88,6 +89,7 @@ class _FeedState extends ConsumerState<Feed> {
         widget.callbackFunction != null
             ? widget.callbackFunction!(false)
             : null;
+        hiddenKeyboard(context);
 
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
                 120.0 ==
@@ -99,11 +101,11 @@ class _FeedState extends ConsumerState<Feed> {
       } else if (scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
         widget.callbackFunction != null ? widget.callbackFunction!(true) : null;
+        hiddenKeyboard(context);
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
                 120.0 ==
             0) {}
       }
-      hiddenKeyboard(context);
     });
   }
 
@@ -194,6 +196,20 @@ class _FeedState extends ConsumerState<Feed> {
     }
   }
 
+  _jumpToOffsetFunction(Offset currentOffset) {
+    double keyboardHeight = PersistentKeyboardHeight.of(context).keyboardHeight;
+    final screenHeight = MediaQuery.sizeOf(context).height; 
+    if (keyboardHeight == 0) {
+      keyboardHeight = 320.3809523809524;
+    }
+    scrollController.animateTo(
+        scrollController.offset -
+            (screenHeight - keyboardHeight - currentOffset.dy),
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeIn);
+    setState(() {});
+  }
+
   _buildSnackBar(String title) {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -226,7 +242,8 @@ class _FeedState extends ConsumerState<Feed> {
                   reloadFunction: _reloadFeedFunction,
                 ),
                 const CrossBar(
-                  height: 5,
+                  height: 7,
+                  opacity: 0.2,
                 ),
                 posts.isEmpty
                     ? Column(
@@ -239,44 +256,14 @@ class _FeedState extends ConsumerState<Feed> {
                                   children: [
                                     Reef(),
                                     CrossBar(
-                                      height: 5,
+                                      height: 7,
+                                      opacity: 0.2,
                                     ),
                                   ],
                                 )
                               : const SizedBox(),
-                          Suggest(
-                              type: suggestGroups,
-                              headerWidget: Image.asset(
-                                'assets/icon/logo_app.png',
-                                height: 20,
-                              ),
-                              subHeaderWidget: Column(children: [
-                                buildSpacer(height: 5),
-                                buildTextContent(
-                                    ref.watch(meControllerProvider)[0]
-                                            ['display_name'] +
-                                        " ơi, bạn có thể sẽ thích các nhóm sau ",
-                                    true,
-                                    fontSize: 17),
-                                buildSpacer(height: 5),
-                                buildTextContent(
-                                    "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
-                                    false,
-                                    fontSize: 16),
-                              ]),
-                              reloadFunction: () {
-                                setState(() {});
-                              },
-                              footerTitle: "Khám phá thêm nhóm"),
-                          Suggest(
-                              type: suggestFriends,
-                              headerWidget: buildTextContent(
-                                  "Những người bạn có thể biết", true,
-                                  fontSize: 17),
-                              reloadFunction: () {
-                                setState(() {});
-                              },
-                              footerTitle: "Xem thêm")
+                          _buildSuggestGroupWidget(),
+                          _buildSuggestFriendsWidget()
                         ],
                       )
                     : const SizedBox(),
@@ -304,50 +291,20 @@ class _FeedState extends ConsumerState<Feed> {
                                       children: [
                                         Reef(),
                                         CrossBar(
-                                          height: 5,
+                                          height: 7,
+                                          opacity: 0.2,
                                         ),
                                       ],
                                     )
                                   : const SizedBox(),
                               index == 19
-                                  ? Suggest(
-                                      type: suggestGroups,
-                                      headerWidget: Image.asset(
-                                        'assets/icon/logo_app.png',
-                                        height: 20,
-                                      ),
-                                      subHeaderWidget: Column(children: [
-                                        buildSpacer(height: 5),
-                                        buildTextContent(
-                                            ref.watch(meControllerProvider)[0]
-                                                    ['display_name'] +
-                                                " ơi, bạn có thể sẽ thích các nhóm sau ",
-                                            true,
-                                            fontSize: 17),
-                                        buildSpacer(height: 5),
-                                        buildTextContent(
-                                            "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
-                                            false,
-                                            fontSize: 16),
-                                      ]),
-                                      reloadFunction: () {
-                                        setState(() {});
-                                      },
-                                      footerTitle: "Khám phá thêm nhóm")
+                                  ? _buildSuggestGroupWidget()
                                   : const SizedBox(),
                               index == 39
-                                  ? Suggest(
-                                      type: suggestFriends,
-                                      headerWidget: buildTextContent(
-                                          "Những người bạn có thể biết", true,
-                                          fontSize: 17),
-                                      reloadFunction: () {
-                                        setState(() {});
-                                      },
-                                      footerTitle: "Xem thêm")
+                                  ? _buildSuggestFriendsWidget()
                                   : const SizedBox(),
                               VisibilityDetector(
-                                key: Key(posts[index]['id']),
+                                key: Key(posts[index]['id'] ?? "000"),
                                 onVisibilityChanged: (info) {
                                   double visibleFraction = info.visibleFraction;
                                   if (visibleFraction > 0.6) {
@@ -364,6 +321,7 @@ class _FeedState extends ConsumerState<Feed> {
                                     reloadFunction: () {
                                       setState(() {});
                                     },
+                                    jumpToOffsetFunction: _jumpToOffsetFunction,
                                     isFocus: focusCurrentPostIndex.value ==
                                         posts[index]['id']),
                               )
@@ -390,6 +348,51 @@ class _FeedState extends ConsumerState<Feed> {
               child: CupertinoActivityIndicator(
                   color: theme!.isDarkMode ? Colors.white : Colors.black)),
     );
+  }
+
+  Widget _buildSuggestGroupWidget() {
+    return Suggest(
+        type: suggestGroups,
+        headerWidget: Image.asset(
+          'assets/icon/logo_app.png',
+          height: 20,
+        ),
+        subHeaderWidget: Column(children: [
+          buildSpacer(height: 5),
+          buildTextContent(
+              ref.watch(meControllerProvider)[0]['display_name'] +
+                  " ơi, bạn có thể sẽ thích các nhóm sau ",
+              true,
+              fontSize: 17),
+          buildSpacer(height: 5),
+          buildTextContent(
+              "Kết nối với và học hỏi từ những người có chung sở thích với bạn",
+              false,
+              fontSize: 16),
+        ]),
+        cancellMessage: const [
+          "Tạm thời, phần Những nhóm được gợi ý đã ẩn khỏi Bảng Feed",
+          "Đã ẩn phần những nhóm bạn có thể tham gia"
+        ],
+        reloadFunction: () {
+          setState(() {});
+        },
+        footerTitle: "Khám phá thêm nhóm");
+  }
+
+  Widget _buildSuggestFriendsWidget() {
+    return Suggest(
+        type: suggestFriends,
+        headerWidget:
+            buildTextContent("Những người bạn có thể biết", true, fontSize: 17),
+        reloadFunction: () {
+          setState(() {});
+        },
+        cancellMessage: const [
+          "Tạm thời, phần Những người bạn có thể biết đã ẩn khỏi Bảng Feed",
+          "Đã ẩn phần những người bạn có thể biết"
+        ],
+        footerTitle: "Xem thêm");
   }
 
   @override

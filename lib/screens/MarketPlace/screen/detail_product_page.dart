@@ -842,7 +842,7 @@ class _DetailProductMarketPageComsumerState
                                     ),
                                     buildSpacer(height: 3),
                                     buildTextContent("Thêm vào giỏ", false,
-                                        fontSize: 9)
+                                        fontSize: 9,isCenterLeft: false)
                                   ],
                                   isVertical: true,
                                   radiusValue: 0,

@@ -19,20 +19,22 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
   final ValueNotifier<int>? videoPositionNotifier;
   final bool? isHiddenControl;
   final double? timeStart;
-  final Function? handleAction;
+  final Function? handleDoubleTapAction;
+  final Function? handleTapAction;
   final bool? isFocus;
 
   const VideoPlayerHasController(
       {Key? key,
       this.media,
       this.type,
-      this.handleAction,
+      this.handleDoubleTapAction,
       this.overlayWidget,
       this.aspectRatio,
       this.hasDispose,
       this.isHiddenControl,
       this.timeStart,
       this.videoPositionNotifier,
+      this.handleTapAction,
       this.isFocus})
       : super(key: key);
 
@@ -220,35 +222,40 @@ class _VideoPlayerHasControllerState
                                     Positioned.fill(
                                         child: GestureDetector(
                                       onTap: () {
-                                        if (betterPlayer!.videoId !=
-                                            widget.media['id']) {
-                                          ref
-                                              .read(
-                                                  betterPlayerControllerProvider
-                                                      .notifier)
-                                              .initializeBetterPlayerController(
-                                                  widget.media['id'],
-                                                  videoPlayerController!,
-                                                  chewieController!);
-                                        }
-                                        setState(() {
-                                          isPlaying = !isPlaying;
-                                        });
-                                        // if (widget.isFocus!) {
-                                        if (isPlaying) {
-                                          chewieController!
-                                              .videoPlayerController
-                                              .play();
+                                        if (widget.handleTapAction != null) {
+                                          widget.handleTapAction!();
                                         } else {
-                                          chewieController!
-                                              .videoPlayerController
-                                              .pause();
+                                          if (betterPlayer!.videoId !=
+                                              widget.media['id']) {
+                                            ref
+                                                .read(
+                                                    betterPlayerControllerProvider
+                                                        .notifier)
+                                                .initializeBetterPlayerController(
+                                                    widget.media['id'],
+                                                    videoPlayerController!,
+                                                    chewieController!);
+                                          }
+                                          setState(() {
+                                            isPlaying = !isPlaying;
+                                          });
+                                          // if (widget.isFocus!) {
+                                          if (isPlaying) {
+                                            chewieController!
+                                                .videoPlayerController
+                                                .play();
+                                          } else {
+                                            chewieController!
+                                                .videoPlayerController
+                                                .pause();
+                                          }
                                         }
                                         // }
                                       },
                                       onDoubleTap: () {
-                                        if (widget.handleAction != null) {
-                                          widget.handleAction!();
+                                        if (widget.handleDoubleTapAction !=
+                                            null) {
+                                          widget.handleDoubleTapAction!();
                                         }
                                       },
                                     ))

@@ -533,7 +533,7 @@ class _PostMutipleMediaDetail1State
               )
             : VideoPlayerHasController(
                 media: medias[index],
-                handleAction: () {
+                handleDoubleTapAction: () {
                   pushCustomVerticalPageRoute(
                       context,
                       WatchDetail(

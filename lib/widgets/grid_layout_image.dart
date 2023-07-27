@@ -128,11 +128,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                           (medias[0]?['meta']?['small']?['aspect'])) <
                       1
                   ? size.width / (medias[0]?['meta']?['small']?['aspect'])
-                  : null,
-
-              //  medias[0]?['meta']?['small']?['aspect'] != null
-              //     ? size.width / (medias[0]?['meta']?['small']?['aspect'])
-              //     : size.width,
+                  : null, 
               width: size.width,
               child: medias[0]['file'] != null
                   ? VideoPlayerNoneController(
@@ -143,32 +139,35 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                       onEnd: widget.onEnd != null ? widget.onEnd!() : null,
                       // removeObserver: false
                     )
-                  : VideoPlayerHasController(
-                      media: medias[0],
-                      isFocus: (widget.isFocus == true),
-                      // (isFocus == true &&
-                      //     currentFocusVideoId == medias[0]['id']),
-                      handleAction: () {
-                        medias[0]['file']?.path != null
-                            ? null
-                            : widget.post != null &&
-                                    widget.post["post_type"] != null &&
-                                    widget.post["post_type"] == 'moment'
-                                ? Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Moment(
-                                              dataAdditional: widget.post,
-                                              isBack: true,
-                                            )))
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => WatchSuggest(
-                                            post: widget.post,
-                                            preType: widget.preType,
-                                            media: medias[0])));
-                      },
+                  : Hero(
+                      tag: (medias[0]?['remote_url']) ?? (medias[0]?['url']),
+                      child: VideoPlayerHasController(
+                        media: medias[0],
+                        isFocus: (widget.isFocus == true),
+                        // (isFocus == true &&
+                        //     currentFocusVideoId == medias[0]['id']),
+                        handleTapAction: () {
+                          medias[0]['file']?.path != null
+                              ? null
+                              : widget.post != null &&
+                                      widget.post["post_type"] != null &&
+                                      widget.post["post_type"] == 'moment'
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Moment(
+                                                dataAdditional: widget.post,
+                                                isBack: true,
+                                              )))
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => WatchSuggest(
+                                              post: widget.post,
+                                              preType: widget.preType,
+                                              media: medias[0])));
+                        },
+                      ),
                     ));
         }
       case 2:
