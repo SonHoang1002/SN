@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/screens/UserPage/EditUser/Details/change_place_live.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import '../../../../helper/push_to_new_screen.dart';
@@ -15,7 +16,6 @@ import 'package:provider/provider.dart' as pv;
 
 import '../../../CreatePost/MenuBody/life_event_categories.dart';
 import '../../../CreatePost/create_modal_base_menu.dart';
-import 'add_life_event.dart';
 import 'add_website_link.dart';
 
 class EditUserDetail extends ConsumerStatefulWidget {
@@ -283,15 +283,34 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             label: "Thêm tỉnh/thành phố hiện tại",
                             colorButton: greyColor[300],
                             colorText: Colors.black54,
+                            handlePress: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) =>
+                                      const ChangeLivingPlace(),
+                                ),
+                              );
+                            },
                           )
                         : buildRowInfo(
                             "Sống tại ${infor['place_live']['title']}",
                             Checkbox(
-                                activeColor: secondaryColor,
-                                value: true,
-                                onChanged: (value) {}),
-                            () {},
-                            theme),
+                              activeColor: secondaryColor,
+                              value: true,
+                              onChanged: (value) {},
+                            ),
+                            () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) =>
+                                      const ChangeLivingPlace(),
+                                ),
+                              );
+                            },
+                            theme,
+                          ),
                     buildDrawer(),
                     buildBoldTxt("Quê quán", theme),
                     infor['hometown'] == null
