@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -31,6 +32,7 @@ class CreateEvents extends ConsumerStatefulWidget {
 class _CreateEventsState extends ConsumerState<CreateEvents> {
   TextEditingController nameController = TextEditingController();
   TextEditingController detailController = TextEditingController();
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   DateTime selectedDateTime = DateTime(
       DateTime.now().year,
       DateTime.now().month,
@@ -141,12 +143,17 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         formLoading = false;
       });
       if (context.mounted) {
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => EventDetail(
-                      eventDetail: response,
-                    )));
+        if (response["status_code"] == 422) {
+          showSnackBar(context,
+              /* response["content"]["error"] */ "Thời gian bắt đầu sự kiện không hợp lệ");
+        } else {
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => EventDetail(
+                        eventDetail: response,
+                      )));
+        }
       }
     } catch (e) {
       print(e);
@@ -215,253 +222,296 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               BackIconAppbar(),
             ],
           ),
         ),
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 200,
-                      color: Colors.black12,
-                      child: Stack(
-                        children: [
-                          if (files != null)
-                            SizedBox(
-                                height: 200,
-                                width: MediaQuery.sizeOf(context).width,
-                                child: files == null
-                                    ? const SizedBox.shrink()
-                                    : isCropping
-                                        ? const Center(
-                                            child: CupertinoActivityIndicator())
-                                        : Image.file(
-                                            files!,
-                                            fit: BoxFit.cover,
-                                          )),
-                          Positioned(
-                            bottom: 8,
-                            right: 12,
-                            child: GestureDetector(
-                              onTap: () {
-                                _getImage();
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: theme.isDarkMode
-                                      ? Colors.black
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                child: Row(
-                                  children: [
-                                    Image.asset('assets/Plus_2.png',
-                                        width: 18,
-                                        height: 18,
-                                        color: theme.isDarkMode
-                                            ? Colors.white
-                                            : Colors.black),
-                                    const SizedBox(width: 8.0),
-                                    Text(
-                                      _croppedImage == null
-                                          ? 'Thêm ảnh'
-                                          : 'Chỉnh sửa',
-                                      style: TextStyle(
+        body: Form(
+          key: _formKey,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 200,
+                        color: Colors.black12,
+                        child: Stack(
+                          children: [
+                            if (files != null)
+                              SizedBox(
+                                  height: 200,
+                                  width: MediaQuery.sizeOf(context).width,
+                                  child: files == null
+                                      ? const SizedBox.shrink()
+                                      : isCropping
+                                          ? const Center(
+                                              child:
+                                                  CupertinoActivityIndicator())
+                                          : Image.file(
+                                              files!,
+                                              fit: BoxFit.cover,
+                                            )),
+                            Positioned(
+                              bottom: 8,
+                              right: 12,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _getImage();
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: theme.isDarkMode
+                                        ? Colors.black
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  child: Row(
+                                    children: [
+                                      Image.asset('assets/Plus_2.png',
+                                          width: 18,
+                                          height: 18,
                                           color: theme.isDarkMode
                                               ? Colors.white
                                               : Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: nameController,
-                            autofocus: false,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Tên sự kiện',
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          GestureDetector(
-                            onTap: () {
-                              _onPressDatePicker();
-                            },
-                            child: TextFormField(
-                              key: UniqueKey(),
-                              readOnly: true,
-                              autofocus: false,
-                              enabled: false,
-                              initialValue: DateFormat('MMM d, y, h:mm a')
-                                  .format(selectedDateTime),
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Ngày và giờ bắt đầu',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          eventDateEnd
-                              ? InkWell(
-                                  onTap: () {
-                                    _onPressDatePicker();
-                                  },
-                                  child: TextFormField(
-                                    key: UniqueKey(),
-                                    readOnly: true,
-                                    autofocus: false,
-                                    enabled: false,
-                                    initialValue: DateFormat('MMM d, y, h:mm a')
-                                        .format(selectedEndDate!),
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Ngày và giờ kết thúc',
-                                    ),
+                                      const SizedBox(width: 8.0),
+                                      Text(
+                                        _croppedImage == null
+                                            ? 'Thêm ảnh'
+                                            : 'Chỉnh sửa',
+                                        style: TextStyle(
+                                            color: theme.isDarkMode
+                                                ? Colors.white
+                                                : Colors.black),
+                                      ),
+                                    ],
                                   ),
-                                )
-                              : InkWell(
-                                  onTap: () {
-                                    _onPressDatePicker();
-                                    setState(() {
-                                      eventDateEnd = true;
-                                      selectedEndDate = DateTime(
-                                          selectedDateTime.year,
-                                          selectedDateTime.month,
-                                          selectedDateTime.day,
-                                          selectedDateTime.hour + 3,
-                                          0);
-                                    });
-                                  },
-                                  child: Row(children: const [
-                                    Icon(FontAwesomeIcons.circlePlus, size: 14),
-                                    SizedBox(width: 8),
-                                    Text('Thêm ngày kết thúc'),
-                                  ]),
                                 ),
-                          const SizedBox(height: 16),
-                          InkWell(
-                            onTap: () {
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(16))),
-                                  context: context,
-                                  builder: (context) => SizedBox(
-                                      height:
-                                          MediaQuery.sizeOf(context).height *
-                                              0.8,
-                                      child: MeetingEvent(
-                                          checkinSelected: checkinSelected,
-                                          onCheckinSelectedChanged:
-                                              _updateCheckinSelected)));
-                            },
-                            child: TextFormField(
-                              key: UniqueKey(),
-                              readOnly: true,
-                              enabled: false,
-                              initialValue: checkinSelected.isNotEmpty
-                                  ? '${checkinSelected[0]['title']}'
-                                  : '',
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                labelText: !checkinSelected.isNotEmpty
-                                    ? 'Đây là sự kiện gặp mặt trực tiếp hay trên mạng'
-                                    : 'Trực tiếp',
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          InkWell(
-                            onTap: () {
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(16))),
-                                  context: context,
-                                  builder: (context) => SizedBox(
-                                      height:
-                                          MediaQuery.sizeOf(context).height *
-                                              0.6,
-                                      child: EventPublish(
-                                        privateEventOnChanged:
-                                            _updatePrivateEvent,
-                                      )));
-                            },
-                            child: TextFormField(
-                              key: UniqueKey(),
-                              readOnly: true,
-                              enabled: false,
-                              initialValue: privateEvent != ''
-                                  ? privateEvent == 'private'
-                                      ? 'Riêng tư'
-                                      : privateEvent == 'public'
-                                          ? 'Công khai'
-                                          : 'Bạn bè'
-                                  : '',
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: nameController,
+                              autofocus: false,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Ai có thể nhìn thấy sự kiện này?',
+                                labelText: 'Tên sự kiện',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Vui lòng nhập tên sự kiện.';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            InkWell(
+                              onTap: () {
+                                _onPressDatePicker();
+                              },
+                              child: IgnorePointer(
+                                child: TextFormField(
+                                  key: UniqueKey(),
+                                  readOnly: true,
+                                  //enabled: false,
+                                  initialValue: DateFormat('MMM d, y, h:mm a')
+                                      .format(selectedDateTime),
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Ngày và giờ bắt đầu',
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: detailController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Có thông tin chi tiết gì?',
-                              alignLabelWithHint: true,
-                            ),
-                            minLines: 3,
-                            maxLines: null,
-                          ),
-                          const SizedBox(height: 32),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize:
-                                    Size(MediaQuery.sizeOf(context).width, 45),
-                                foregroundColor: Colors.white, // foreground
+                            const SizedBox(height: 16),
+                            eventDateEnd
+                                ? InkWell(
+                                    onTap: () {
+                                      _onPressDatePicker();
+                                    },
+                                    child: IgnorePointer(
+                                      child: TextFormField(
+                                        key: UniqueKey(),
+                                        readOnly: true,
+                                        autofocus: false,
+                                        //enabled: false,
+                                        initialValue:
+                                            DateFormat('MMM d, y, h:mm a')
+                                                .format(selectedEndDate!),
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: 'Ngày và giờ kết thúc',
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : InkWell(
+                                    onTap: () {
+                                      _onPressDatePicker();
+                                      setState(() {
+                                        eventDateEnd = true;
+                                        selectedEndDate = DateTime(
+                                            selectedDateTime.year,
+                                            selectedDateTime.month,
+                                            selectedDateTime.day,
+                                            selectedDateTime.hour + 3,
+                                            0);
+                                      });
+                                    },
+                                    child: const Row(children: [
+                                      Icon(FontAwesomeIcons.circlePlus,
+                                          size: 14),
+                                      SizedBox(width: 8),
+                                      Text('Thêm ngày kết thúc'),
+                                    ]),
+                                  ),
+                            const SizedBox(height: 16),
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16))),
+                                    context: context,
+                                    builder: (context) => SizedBox(
+                                        height:
+                                            MediaQuery.sizeOf(context).height *
+                                                0.8,
+                                        child: MeetingEvent(
+                                            checkinSelected: checkinSelected,
+                                            onCheckinSelectedChanged:
+                                                _updateCheckinSelected)));
+                              },
+                              child: IgnorePointer(
+                                child: TextFormField(
+                                  key: UniqueKey(),
+                                  readOnly: true,
+                                  //enabled: false,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Vui lòng nhập thông tin sự kiện.';
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: checkinSelected.isNotEmpty
+                                      ? '${checkinSelected[0]['title']}'
+                                      : '',
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    labelText: !checkinSelected.isNotEmpty
+                                        ? 'Đây là sự kiện gặp mặt trực tiếp hay trên mạng'
+                                        : 'Trực tiếp',
+                                  ),
+                                ),
                               ),
-                              onPressed: createEvent,
-                              child: const Text('Tạo sự kiện'))
-                        ],
+                            ),
+                            const SizedBox(height: 16),
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16))),
+                                    context: context,
+                                    builder: (context) => SizedBox(
+                                        height:
+                                            MediaQuery.sizeOf(context).height *
+                                                0.6,
+                                        child: EventPublish(
+                                          privateEventOnChanged:
+                                              _updatePrivateEvent,
+                                        )));
+                              },
+                              child: IgnorePointer(
+                                child: TextFormField(
+                                  key: UniqueKey(),
+                                  readOnly: true,
+                                  //enabled: false,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Vui lòng nhập đầy đủ thông tin.';
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: privateEvent != ''
+                                      ? privateEvent == 'private'
+                                          ? 'Riêng tư'
+                                          : privateEvent == 'public'
+                                              ? 'Công khai'
+                                              : 'Bạn bè'
+                                      : '',
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText:
+                                        'Ai có thể nhìn thấy sự kiện này?',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: detailController,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Có thông tin chi tiết gì?',
+                                alignLabelWithHint: true,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Vui lòng nhập đầy đủ thông tin.';
+                                }
+                                return null;
+                              },
+                              minLines: 3,
+                              maxLines: null,
+                            ),
+                            const SizedBox(height: 32),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(
+                                      MediaQuery.sizeOf(context).width, 45),
+                                  foregroundColor: Colors.white, // foreground
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
+                                    createEvent();
+                                  }
+                                },
+                                child: const Text('Tạo sự kiện'))
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            if (formLoading)
-              Container(
-                color: Colors.transparent,
-                child: const Center(
-                  child: CupertinoActivityIndicator(),
-                ),
-              )
-          ],
+              if (formLoading)
+                Container(
+                  color: Colors.transparent,
+                  child: const Center(
+                    child: CupertinoActivityIndicator(),
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -552,4 +602,15 @@ class _CropImageScreenState extends State<CropImageScreen> {
       ),
     );
   }
+}
+
+void showSnackBar(BuildContext context, String message) {
+  final snackBar = SnackBar(
+    content: Text(message),
+    duration: Duration(seconds: 3), // Thời gian hiển thị Snackbar
+    // Các tùy chọn thêm nếu cần thiết, ví dụ: action, backgroundColor, behavior, v.v.
+  );
+
+  // Hiển thị Snackbar
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
