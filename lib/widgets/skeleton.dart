@@ -12,6 +12,44 @@ class SkeletonCustom {
             ? 'light'
             : 'system';
 
-    return modeTheme == 'dark' ? const DarkCardSkeleton() : const CardSkeleton();
+    return modeTheme == 'dark'
+        ? const DarkCardSkeleton()
+        : const CardSkeleton();
+  }
+
+  postSkeletonInList(context) {
+    final theme = Provider.of<ThemeManager>(context);
+    String modeTheme = theme.themeMode == ThemeMode.dark
+        ? 'dark'
+        : theme.themeMode == ThemeMode.light
+            ? 'light'
+            : 'system';
+
+    return modeTheme == 'dark'
+        ? const DarkCardSkeletonInList(
+            isBottomLinesActive: false,
+          )
+        : const CardSkeletonInList(
+            isBottomLinesActive: false,
+          );
+  }
+
+  postSkeletonDiscovery(context) {
+    final theme = Provider.of<ThemeManager>(context);
+    String modeTheme = theme.themeMode == ThemeMode.dark
+        ? 'dark'
+        : theme.themeMode == ThemeMode.light
+            ? 'light'
+            : 'system';
+
+    return modeTheme == 'dark'
+        ? const DarkCardSkeleton(
+            isBottomLinesActive: false,
+            isPaddingActive: false,
+          )
+        : const CardSkeleton(
+            isBottomLinesActive: false,
+            isPaddingActive: false,
+          );
   }
 }
