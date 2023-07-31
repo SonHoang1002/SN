@@ -30,6 +30,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'Standards_Violation.dart';
 
 class Home extends ConsumerStatefulWidget {
   final int? selectedIndex;
@@ -124,15 +125,20 @@ class _HomeState extends ConsumerState<Home>
                   .where((element) => element['id'] == object['id'])
                   .toList();
               if (dataFilter != null && dataFilter.isNotEmpty) {
-                await NotificationService().showNotification(
-                    title: 'EMSO',
-                    payLoad: jsonEncode(dataFilter),
-                    largeIcon: dataFilter[0]['account']['avatar_media'] != null
-                        ? dataFilter[0]['account']['avatar_media']
-                            ['preview_url']
-                        : dataFilter[0]['account']['avatar_static'],
-                    body:
-                        '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
+                if (dataFilter[0]["type"] == "bad_status") {
+                  AlertDialogUtils.showAlertDialog(context, dataFilter);
+                } else {
+                  await NotificationService().showNotification(
+                      title: 'EMSO',
+                      payLoad: jsonEncode(dataFilter),
+                      largeIcon:
+                          dataFilter[0]['account']['avatar_media'] != null
+                              ? dataFilter[0]['account']['avatar_media']
+                                  ['preview_url']
+                              : dataFilter[0]['account']['avatar_static'],
+                      body:
+                          '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
+                }
               }
             });
           }
@@ -252,7 +258,12 @@ class _HomeState extends ConsumerState<Home>
         'textNone':
             ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận' : 'bài viết'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content'] ?? ""}'
       };
-    } else if (type == 'status') {
+      
+    }else if (type == 'bad_status') {
+      return {
+        'textNone': ' , bài viết của bạn đã vi phạm tiểu chuẩn cộng đồng'
+      };
+    }  else if (type == 'status') {
       if (status['reblog'] != null) {
         return {
           'textNone':

@@ -168,6 +168,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   @override
   void dispose() {
+    menuController.dispose();
     super.dispose();
   }
 
